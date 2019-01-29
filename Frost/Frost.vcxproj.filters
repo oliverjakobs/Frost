@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+      <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\shader">
+      <UniqueIdentifier>{35FAD04E-21B2-129C-8AB9-EBF77690AD8C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Scrapbook">
+      <UniqueIdentifier>{40B27A85-AC72-F6BB-75AD-3F39E12C3B98}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Scrapbook\Buffer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Camera.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Framebuffer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Image.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Scrapbook.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Shader.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Texture.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Timer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tilemap.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Scrapbook\Camera.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Framebuffer.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Image.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Scrapbook.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Shader.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Texture.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Timer.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tilemap.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shader\shader.frag">
+      <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\shader\shader.vert">
+      <Filter>res\shader</Filter>
+    </None>
+  </ItemGroup>
+</Project>

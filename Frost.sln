@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frost", "Frost\Frost.vcxproj", "{131E320D-7F32-5ABE-48B4-FD1DB48756EF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLAD", "Frost\external\glad\GLAD.vcxproj", "{5D4A857C-4981-860D-F26D-6C10DE83020F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Frost\external\glfw\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Debug|Win32.Build.0 = Debug|Win32
+		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Release|Win32.ActiveCfg = Release|Win32
+		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Release|Win32.Build.0 = Release|Win32
+		{5D4A857C-4981-860D-F26D-6C10DE83020F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5D4A857C-4981-860D-F26D-6C10DE83020F}.Debug|Win32.Build.0 = Debug|Win32
+		{5D4A857C-4981-860D-F26D-6C10DE83020F}.Release|Win32.ActiveCfg = Release|Win32
+		{5D4A857C-4981-860D-F26D-6C10DE83020F}.Release|Win32.Build.0 = Release|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|Win32.Build.0 = Debug|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.ActiveCfg = Release|Win32
+		{154B857C-0182-860D-AA6E-6C109684020F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
