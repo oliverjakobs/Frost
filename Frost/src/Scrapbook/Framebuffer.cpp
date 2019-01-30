@@ -71,6 +71,5 @@ namespace sb
 		glBindVertexArray(m_vao);
 		glBindTexture(GL_TEXTURE_2D, m_texture);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-
 	}
 }

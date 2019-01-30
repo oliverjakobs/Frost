@@ -16,31 +16,30 @@ namespace sb
 	{
 	}
 
-	void Timer::start(float time)
+	void Timer::Start(float time)
 	{
-		float currentFrame = time;
-		m_deltaTime = currentFrame - m_lastFrame;
-		m_lastFrame = currentFrame;
+		Get()->m_deltaTime = time - Get()->m_lastFrame;
+		Get()->m_lastFrame = time;
 	}
 
-	void Timer::end(float time)
+	void Timer::End(float time)
 	{
-		m_frames++;
-		if (time - m_timer > 1.0f)
+		Get()->m_frames++;
+		if (time - Get()->m_timer > 1.0f)
 		{
-			m_timer += 1.0f;
-			m_fps = m_frames;
-			m_frames = 0;
+			Get()->m_timer += 1.0f;
+			Get()->m_fps = Get()->m_frames;
+			Get()->m_frames = 0;
 		}
 	}
 
-	float Timer::getDeltaTime() const
+	float Timer::GetDeltaTime()
 	{
-		return m_deltaTime;
+		return Get()->m_deltaTime;
 	}
 
-	int Timer::getFPS() const
+	int Timer::GetFPS()
 	{
-		return m_fps;
+		return Get()->m_fps;
 	}
 }

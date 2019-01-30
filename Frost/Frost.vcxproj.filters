@@ -18,9 +18,6 @@
     <ClInclude Include="src\Scrapbook\Buffer.h">
       <Filter>src\Scrapbook</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scrapbook\Camera.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scrapbook\Framebuffer.h">
       <Filter>src\Scrapbook</Filter>
     </ClInclude>
@@ -42,11 +39,25 @@
     <ClInclude Include="src\Tilemap.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scrapbook\Util\fileutils.h" />
+    <ClInclude Include="src\Scrapbook\Util\stringutils.h" />
+    <ClInclude Include="src\Scrapbook\Util\utils.h" />
+    <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\Scrapbook\Util\Singelton.h" />
+    <ClInclude Include="src\ECS\Component.h" />
+    <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\ECS\PhysicsComponent.h" />
+    <ClInclude Include="src\ECS\PlayerComponent.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Body.h" />
+    <ClInclude Include="src\aabb.h" />
+    <ClInclude Include="src\ECS\ImageComponent.h" />
+    <ClInclude Include="src\Scrapbook\Renderer.h" />
+    <ClInclude Include="src\Scrapbook\ResourceManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Scrapbook\Camera.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scrapbook\Framebuffer.cpp">
       <Filter>src\Scrapbook</Filter>
     </ClCompile>
@@ -71,6 +82,15 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\ECS\Entity.cpp" />
+    <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
+    <ClCompile Include="src\ECS\PlayerComponent.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Body.cpp" />
+    <ClCompile Include="src\ECS\ImageComponent.cpp" />
+    <ClCompile Include="src\Scrapbook\Renderer.cpp" />
+    <ClCompile Include="src\Scrapbook\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
@@ -79,5 +99,8 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\maps\map.txt" />
   </ItemGroup>
 </Project>

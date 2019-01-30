@@ -5,6 +5,7 @@
 namespace sb
 {
 	Image::Image(const std::string& src, float width, float height)
+		: m_width(width), m_height(height)
 	{
 		float vertices[] =
 		{
@@ -36,18 +37,15 @@ namespace sb
 		glDeleteVertexArrays(1, &m_vao);
 	}
 
-	void Image::render(float x, float y, Shader* shader)
+	void Image::render(float x, float y, const std::string& shader)
 	{
-		shader->setUniformMat4("model", glm::translate(glm::mat4(), glm::vec3(x, y, 0.0f)));
-
-		m_texture->bind();
-
-		glBindVertexArray(m_vao);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		render(glm::vec2(x, y), shader);
 	}
 
-	void Image::render(const glm::vec2& pos, Shader* shader)
+	void Image::render(const glm::vec2& pos, const std::string& shader)
 	{
-		render(pos.x, pos.y, shader);
+		glBindVertexArray(m_vao);
+
+		Renderer::RenderTexture(m_texture, pos, shader);
 	}
 }

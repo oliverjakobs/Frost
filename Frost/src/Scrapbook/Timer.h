@@ -1,8 +1,10 @@
 #pragma once
 
+#include "Util\Singelton.h"
+
 namespace sb
 {
-	class Timer
+	class Timer : private Singleton<Timer>
 	{
 	private:
 		float m_timer;
@@ -15,10 +17,10 @@ namespace sb
 		Timer();
 		~Timer();
 
-		void start(float time);
-		void end(float time);
+		static void Start(float time);
+		static void End(float time);
 
-		float getDeltaTime() const;
-		int getFPS() const;
+		static float GetDeltaTime();
+		static int GetFPS();
 	};
 }

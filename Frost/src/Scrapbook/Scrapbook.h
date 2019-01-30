@@ -5,9 +5,7 @@
 
 #include "Buffer.h"
 
-#include "Shader.h"
 #include "Image.h"
-#include "Camera.h"
 
 #include "Timer.h"
 
@@ -25,8 +23,6 @@ namespace sb
 			int width;
 			int height;
 		} m_data;
-
-		Timer m_timer;
 	public:
 		Scrapbook(const std::string& title, int width, int height);
 		~Scrapbook();

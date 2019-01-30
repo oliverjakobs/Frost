@@ -1,21 +1,25 @@
 #include "Tilemap.h"
-#include "Scrapbook\Framebuffer.h"
 
 #include <iostream>
 
-using namespace sb;
+#include "Input.h"
 
+#include "ECS\Entity.h"
+#include "ECS\PlayerComponent.h"
+#include "ECS\ImageComponent.h"
+
+#include "Scrapbook\Util\utils.h"
+
+using namespace sb;
 
 class TileMapExample : public Scrapbook
 {
 private:
 	TileMap* map;
+	Entity* entity;
 
-	Shader* shader;
-
-	FrameBuffer* frameBuffer;
 public:
-	TileMapExample() : Scrapbook("TileMap", 1200, 800)
+	TileMapExample() : Scrapbook("TileMap", 1024, 800)
 	{
 		setClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
@@ -24,84 +28,62 @@ public:
 
 		glfwSwapInterval(0);
 
-		// ------------------------------------------------
-		shader = new Shader("res/shader/shader.vert", "res/shader/shader.frag");
-
-		frameBuffer = new FrameBuffer(m_data.width, m_data.height);
-
-		std::vector<int> m =
+		glfwSetKeyCallback(getContext(), [](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
-			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-			0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
-			0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
-			0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-		};
+			switch (action)
+			{
+			case GLFW_PRESS:
+				Input::SetKeyState(key, true, false);
+				break;
+			case GLFW_RELEASE:
+				Input::SetKeyState(key, false, true);
+				break;
+			}
+		});
 
-		map = new TileMap("res/images/box.png", 24, 16, 50.0f, m);
+		// ------------------------------------------------
+		Renderer::Init(0.0f, 0.0f, (float)m_data.width, (float)m_data.height);
+		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
+
+		map = new TileMap("res/images/box.png", "res/maps/map.txt");
+
+		entity = new Entity("player", 400, 300, 20, 20);
+
+		entity->addComponent(new PhysicsComponent(map->createBody(400, 300, 30, 60)));
+		entity->addComponent(new ImageComponent(new Image("res/images/player.png", 40, 60)));
+		entity->addComponent(new PlayerComponent(400, 800));
 	}
 
 	void onInput() override
 	{
-		if (glfwGetKey(getContext(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
+
+		if (Input::KeyPressed(GLFW_KEY_ESCAPE))
 			glfwSetWindowShouldClose(getContext(), true);
-
-		if (glfwGetKey(getContext(), GLFW_KEY_1) == GLFW_PRESS)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		if (glfwGetKey(getContext(), GLFW_KEY_2) == GLFW_PRESS)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-		if (glfwGetKey(getContext(), GLFW_KEY_3) == GLFW_PRESS)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-
-		if (glfwGetKey(getContext(), GLFW_KEY_F1) == GLFW_PRESS)
+		
+		if (Input::KeyPressed(GLFW_KEY_F1))
 			glViewport(0.0f, 0.0f, getWidth(), getHeight());
 
-		if (glfwGetKey(getContext(), GLFW_KEY_F2) == GLFW_PRESS)
+		if (Input::KeyPressed(GLFW_KEY_F2))
 			glViewport(0.0f, 0.0f, getWidth() / 2.0f, getHeight() / 2.0f);
+
+		entity->onInput();
 	}
 
 	void onUpdate() override
 	{
-		setTitle(m_data.title + "  |  " + std::to_string(m_timer.getFPS()));
+		Input::OnUpdate();
+
+		setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
+		
+		map->onUpdate();
+		entity->onUpdate();
 	}
 
 	void onRender() override
 	{
-		frameBuffer->bind();
+		map->onRender();
 
-		// camera/view transformation
-		glm::mat4 projection = glm::mat4();
-		glm::mat4 view = glm::ortho(0.0f, (float)m_data.width, 0.0f, (float)m_data.height);
-
-		// render box
-		shader->use();
-
-		shader->setUniformMat4("projection", projection);
-		shader->setUniformMat4("view", view);
-
-		map->onRender(shader);
-
-		frameBuffer->unbind();
-
-		shader->use();
-		shader->setUniformMat4("projection", glm::mat4(1.0f));
-		shader->setUniformMat4("view", glm::mat4(1.0f));
-		shader->setUniformMat4("model", glm::mat4(1.0f));
-
-		frameBuffer->render();
+		entity->onRender();
 	}
 };
 
