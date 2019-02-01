@@ -21,8 +21,8 @@ namespace sb
 		Image(const std::string& src, float width, float height);
 		~Image();
 
-		void render(float x, float y, const std::string& shader);
-		void render(const glm::vec2& pos, const std::string& shader);
+		void render(float x, float y, Shader* shader);
+		void render(const glm::vec2& pos, Shader* shader);
 
 		inline float getWidth() const { return m_width; }
 		inline float getHeight() const { return m_height; }

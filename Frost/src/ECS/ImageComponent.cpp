@@ -1,5 +1,7 @@
 #include "ImageComponent.h"
 
+#include "Scrapbook\ResourceManager.h"
+
 ImageComponent::ImageComponent(sb::Image* sprite)
 {
 	m_sprite = sprite;
@@ -25,5 +27,5 @@ void ImageComponent::onRender() const
 	float y = m_entity->getPosition().y;
 
 	if (m_sprite != nullptr)
-		m_sprite->render(x, y, "shader");
+		m_sprite->render(x, y, sb::ResourceManager::GetShader("shader"));
 }

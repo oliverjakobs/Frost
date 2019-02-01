@@ -3,6 +3,7 @@
 #include "Scrapbook\Util\stringutils.h"
 #include "Scrapbook\Util\fileutils.h"
 #include "Scrapbook\Util\utils.h"
+#include "Scrapbook\ResourceManager.h"
 
 #include "Body.h"
 
@@ -66,7 +67,7 @@ void TileMap::onChange()
 	for (auto& tile : m_tiles)
 	{
 		if (tile.id > 0)
-			m_image->render(tile.position, "shader");
+			m_image->render(tile.position, ResourceManager::GetShader("shader"));
 	}
 
 	m_frameBuffer->unbind();
@@ -84,7 +85,7 @@ void TileMap::onUpdate()
 
 void TileMap::onRender()
 {
-	/*if (m_changed)
+	if (m_changed)
 		onChange();
 
 	Shader* shader = ResourceManager::GetShader("shader");
@@ -92,20 +93,24 @@ void TileMap::onRender()
 	shader->use();
 	shader->setUniformMat4("projection", glm::mat4(1.0f));
 	shader->setUniformMat4("view", glm::mat4(1.0f));
-	shader->setUniformMat4("model", glm::mat4(1.0f));*/
-
-	for (auto& tile : m_tiles)
-	{
-		if (tile.id > 0)
-			m_image->render(tile.position, "shader");
-	}
-
+	shader->setUniformMat4("model", glm::mat4(1.0f));
+	
 	m_frameBuffer->render();
 }
 
 void TileMap::onRenderDebug() const
 {
-	
+	for (auto& tile : m_tiles)
+	{
+		if (tile.type == Solid)
+			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, RED);
+		else if (tile.type == Platform)
+			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, BLUE);
+		else if (tile.type == SlopeLeft)
+			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(0.0f, m_tileSize) }, MAGENTA);
+		else if (tile.type == SlopeRight)
+			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA);
+	}
 }
 
 float TileMap::getTileSize() const

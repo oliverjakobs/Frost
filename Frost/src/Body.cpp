@@ -59,14 +59,14 @@ void Body::onUpdate()
 
 void Body::onRender() const
 {
-	/*Renderer::DrawRect(Rect(m_aabb.center - m_aabb.halfDimension, m_aabb.halfDimension * 2.0f), m_onSlope ? BLUE : GREEN);
+	Renderer::DrawRect(m_aabb.center - m_aabb.halfDimension, m_aabb.halfDimension * 2.0f, m_onSlope ? BLUE : GREEN);
 
 	Renderer::DrawLine(getSensorBottom(m_position + m_aabbOffset, m_offsetVertical), RED);
 	Renderer::DrawLine(getSensorTop(m_position + m_aabbOffset, m_offsetVertical), RED);
 	Renderer::DrawLine(getSensorLeft(m_position + m_aabbOffset, m_offsetHorizontal), RED);
 	Renderer::DrawLine(getSensorRight(m_position + m_aabbOffset, m_offsetHorizontal), RED);
 
-	Renderer::FillCircle(m_position, 0.04f, BLACK);*/
+	Renderer::FillCircle(m_position, 0.04f, BLACK);
 }
 
 void Body::setPosition(const glm::vec2& pos)

@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "Component.h"
+#include "Scrapbook\Renderer.h"
 
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
 	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h))
@@ -48,6 +49,8 @@ void Entity::onRender() const
 
 void Entity::onRenderDebug() const
 {
+	sb::Renderer::DrawRect(m_position - glm::vec2(m_dimension.x / 2.0f, 0.0f), m_dimension, sb::CYAN);
+
 	for (auto comp : m_components)
 	{
 		if (comp->isActive())

@@ -2,7 +2,7 @@
 
 #include <glad\glad.h>
 
-#include <iostream>
+#include "Util\utils.h"
 
 namespace sb
 {
@@ -43,7 +43,7 @@ namespace sb
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
 		
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+			DEBUG_MESSAGE("Framebuffer is not complete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}

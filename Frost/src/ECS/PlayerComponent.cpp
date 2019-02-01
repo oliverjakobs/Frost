@@ -1,7 +1,7 @@
 #include "PlayerComponent.h"
 
 #include "Scrapbook\Util\utils.h"
-#include "Input.h"
+#include "Scrapbook\Input.h"
 
 
 PlayerComponent::PlayerComponent(float ms, float jp)

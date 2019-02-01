@@ -83,42 +83,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\aabb.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Body.h" />
-    <ClInclude Include="src\ECS\ImageComponent.h" />
     <ClInclude Include="src\ECS\Component.h" />
     <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\ECS\ImageComponent.h" />
     <ClInclude Include="src\ECS\PhysicsComponent.h" />
     <ClInclude Include="src\ECS\PlayerComponent.h" />
-    <ClInclude Include="src\Input.h" />
-    <ClInclude Include="src\Scrapbook\ResourceManager.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scrapbook\Buffer.h" />
     <ClInclude Include="src\Scrapbook\Framebuffer.h" />
     <ClInclude Include="src\Scrapbook\Image.h" />
+    <ClInclude Include="src\Scrapbook\Input.h" />
+    <ClInclude Include="src\Scrapbook\Math.h" />
+    <ClInclude Include="src\Scrapbook\Primitives.h" />
     <ClInclude Include="src\Scrapbook\Renderer.h" />
+    <ClInclude Include="src\Scrapbook\ResourceManager.h" />
     <ClInclude Include="src\Scrapbook\Scrapbook.h" />
     <ClInclude Include="src\Scrapbook\Shader.h" />
     <ClInclude Include="src\Scrapbook\Texture.h" />
     <ClInclude Include="src\Scrapbook\Timer.h" />
-    <ClInclude Include="src\Scrapbook\Util\fileutils.h" />
     <ClInclude Include="src\Scrapbook\Util\Singelton.h" />
+    <ClInclude Include="src\Scrapbook\Util\fileutils.h" />
     <ClInclude Include="src\Scrapbook\Util\stringutils.h" />
     <ClInclude Include="src\Scrapbook\Util\utils.h" />
     <ClInclude Include="src\Tilemap.h" />
+    <ClInclude Include="src\aabb.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Body.cpp" />
-    <ClCompile Include="src\ECS\ImageComponent.cpp" />
     <ClCompile Include="src\ECS\Entity.cpp" />
+    <ClCompile Include="src\ECS\ImageComponent.cpp" />
     <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
     <ClCompile Include="src\ECS\PlayerComponent.cpp" />
-    <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Scrapbook\ResourceManager.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scrapbook\Framebuffer.cpp" />
     <ClCompile Include="src\Scrapbook\Image.cpp" />
+    <ClCompile Include="src\Scrapbook\Input.cpp" />
+    <ClCompile Include="src\Scrapbook\Primitives.cpp" />
     <ClCompile Include="src\Scrapbook\Renderer.cpp" />
+    <ClCompile Include="src\Scrapbook\ResourceManager.cpp" />
     <ClCompile Include="src\Scrapbook\Scrapbook.cpp" />
     <ClCompile Include="src\Scrapbook\Shader.cpp" />
     <ClCompile Include="src\Scrapbook\Texture.cpp" />
@@ -137,9 +143,6 @@
     <ProjectReference Include="external\glad\GLAD.vcxproj">
       <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="res\maps\map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

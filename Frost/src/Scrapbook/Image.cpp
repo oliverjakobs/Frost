@@ -2,6 +2,7 @@
 
 #include <glm\gtc\matrix_transform.hpp>
 
+
 namespace sb
 {
 	Image::Image(const std::string& src, float width, float height)
@@ -36,13 +37,13 @@ namespace sb
 		
 		glDeleteVertexArrays(1, &m_vao);
 	}
-
-	void Image::render(float x, float y, const std::string& shader)
+	
+	void Image::render(float x, float y, Shader* shader)
 	{
 		render(glm::vec2(x, y), shader);
 	}
 
-	void Image::render(const glm::vec2& pos, const std::string& shader)
+	void Image::render(const glm::vec2& pos, Shader* shader)
 	{
 		glBindVertexArray(m_vao);
 

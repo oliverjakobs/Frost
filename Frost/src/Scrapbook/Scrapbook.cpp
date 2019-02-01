@@ -1,7 +1,5 @@
 #include "Scrapbook.h"
 
-#include <iostream>
-
 namespace sb
 {
 	Scrapbook::Scrapbook(const std::string& title, int width, int height)
@@ -16,11 +14,13 @@ namespace sb
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+		m_debug = false;
+
 		// creating the window
 		m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 		if (m_window == NULL)
 		{
-			std::cout << "Failed to create GLFW window" << std::endl;
+			DEBUG_MESSAGE("Failed to create GLFW window");
 			glfwTerminate();
 			return;
 		}
@@ -41,16 +41,33 @@ namespace sb
 		// loading glad
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
-			std::cout << "Failed to initialize GLAD" << std::endl;
+			DEBUG_MESSAGE("Failed to initialize GLAD");
 			glfwTerminate();
 			return;
 		}
+
+		Renderer::Init(0.0f, 0.0f, (float)width, (float)height);
 	}
 
 	Scrapbook::~Scrapbook()
 	{
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
+	}
+
+	void Scrapbook::close()
+	{
+		glfwSetWindowShouldClose(m_window, true);
+	}
+
+	void Scrapbook::setDebugMode(bool b)
+	{
+		m_debug = b;
+	}
+
+	void Scrapbook::toggleDebugMode()
+	{
+		m_debug = !m_debug;
 	}
 
 	void Scrapbook::run()
@@ -62,11 +79,14 @@ namespace sb
 			onInput();
 			onUpdate();
 
-			glClear(GL_COLOR_BUFFER_BIT);
+			Renderer::Start();
 
 			onRender();
 
-			glBindVertexArray(0);
+			if (m_debug)
+				onRenderDebug();
+
+			Renderer::Flush();
 
 			glfwSwapBuffers(m_window);
 

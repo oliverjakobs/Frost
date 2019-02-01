@@ -11,6 +11,15 @@ namespace sb
 		s_instance = new ResourceManager();
 	}
 
+	void ResourceManager::Free()
+	{
+		for (auto& s : s_instance->m_shaders)
+			delete s.second;
+
+		s_instance->m_shaders.clear();
+		s_instance = nullptr;
+	}
+
 	void ResourceManager::AddShader(const std::string& name, Shader* shader)
 	{
 		s_instance->m_shaders[name] = shader;
