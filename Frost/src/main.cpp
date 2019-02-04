@@ -1,15 +1,9 @@
+
 #include "Tilemap.h"
-
-#include <iostream>
-
-#include "Scrapbook\Input.h"
-#include "Scrapbook\ResourceManager.h"
 
 #include "ECS\Entity.h"
 #include "ECS\PlayerComponent.h"
 #include "ECS\ImageComponent.h"
-
-#include "Scrapbook\Util\utils.h"
 
 #include "Scene\Scene.h"
 

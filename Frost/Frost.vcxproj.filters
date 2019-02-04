@@ -13,6 +13,9 @@
     <Filter Include="src\ECS">
       <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Scene">
+      <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Scrapbook">
       <UniqueIdentifier>{40B27A85-AC72-F6BB-75AD-3F39E12C3B98}</UniqueIdentifier>
     </Filter>
@@ -42,53 +45,14 @@
     <ClInclude Include="src\ECS\PlayerComponent.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scrapbook\Buffer.h">
-      <Filter>src\Scrapbook</Filter>
+    <ClInclude Include="src\Scene\Scene.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scrapbook\Framebuffer.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Image.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Input.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Math.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Primitives.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Renderer.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\ResourceManager.h">
-      <Filter>src\Scrapbook</Filter>
+    <ClInclude Include="src\Scene\SceneManager.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scrapbook\Scrapbook.h">
       <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Shader.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Texture.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Timer.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Util\Singelton.h">
-      <Filter>src\Scrapbook\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Util\fileutils.h">
-      <Filter>src\Scrapbook\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Util\stringutils.h">
-      <Filter>src\Scrapbook\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Util\utils.h">
-      <Filter>src\Scrapbook\Util</Filter>
     </ClInclude>
     <ClInclude Include="src\Tilemap.h">
       <Filter>src</Filter>
@@ -96,8 +60,54 @@
     <ClInclude Include="src\aabb.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Buffer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Framebuffer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Image.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\Input.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Primitives.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Renderer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\ResourceManager.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Shader.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics\Texture.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\fileutils.h">
+      <Filter>src\Scrapbook\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\Singelton.h">
+      <Filter>src\Scrapbook\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\stringutils.h">
+      <Filter>src\Scrapbook\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\utils.h">
+      <Filter>src\Scrapbook\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Utility\Timer.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scrapbook\Graphics.h" />
+    <ClInclude Include="src\Scrapbook\Maths.h" />
+    <ClInclude Include="src\Scrapbook\Utility.h" />
+    <ClInclude Include="src\Scrapbook\Maths\Geometry.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -118,34 +128,10 @@
     <ClCompile Include="src\ECS\PlayerComponent.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scrapbook\Framebuffer.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Image.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Input.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Primitives.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Renderer.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\ResourceManager.cpp">
-      <Filter>src\Scrapbook</Filter>
+    <ClCompile Include="src\Scene\Scene.cpp">
+      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scrapbook\Scrapbook.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Shader.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Texture.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Timer.cpp">
       <Filter>src\Scrapbook</Filter>
     </ClCompile>
     <ClCompile Include="src\Tilemap.cpp">
@@ -154,7 +140,33 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\Image.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Utility\Input.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\Primitives.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\Renderer.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\ResourceManager.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\Shader.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Graphics\Texture.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scrapbook\Utility\Timer.cpp">
+      <Filter>src\Scrapbook</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

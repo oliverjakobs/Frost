@@ -1,10 +1,5 @@
 #include "Tilemap.h"
 
-#include "Scrapbook\Util\stringutils.h"
-#include "Scrapbook\Util\fileutils.h"
-#include "Scrapbook\Util\utils.h"
-#include "Scrapbook\ResourceManager.h"
-
 #include "Body.h"
 
 TileMap::TileMap(const std::string& image, const std::string& map)

@@ -1,8 +1,6 @@
 #include "PlayerComponent.h"
 
-#include "Scrapbook\Util\utils.h"
-#include "Scrapbook\Input.h"
-
+#include "Scrapbook/Utility.h"
 
 PlayerComponent::PlayerComponent(float ms, float jp)
 	: m_movementSpeed(ms), m_jumpPower(jp)

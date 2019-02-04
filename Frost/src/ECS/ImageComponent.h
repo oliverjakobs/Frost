@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scrapbook\Image.h"
+#include "Scrapbook/Graphics.h"
 #include "Component.h"
 
 class ImageComponent : public Component

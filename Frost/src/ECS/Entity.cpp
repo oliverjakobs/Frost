@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 #include "Component.h"
-#include "Scrapbook\Renderer.h"
+#include "Scrapbook/Graphics.h"
 
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
 	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h))

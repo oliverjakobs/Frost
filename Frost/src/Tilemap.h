@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Scrapbook\Scrapbook.h"
-#include "Scrapbook\Framebuffer.h"
-
-#include <vector>
+#include "Scrapbook/Scrapbook.h"
 
 using namespace sb;
 

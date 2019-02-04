@@ -15,7 +15,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Frost</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -92,22 +92,25 @@
     <ClInclude Include="src\ECS\PlayerComponent.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Scrapbook\Buffer.h" />
-    <ClInclude Include="src\Scrapbook\Framebuffer.h" />
-    <ClInclude Include="src\Scrapbook\Image.h" />
-    <ClInclude Include="src\Scrapbook\Input.h" />
-    <ClInclude Include="src\Scrapbook\Math.h" />
-    <ClInclude Include="src\Scrapbook\Primitives.h" />
-    <ClInclude Include="src\Scrapbook\Renderer.h" />
-    <ClInclude Include="src\Scrapbook\ResourceManager.h" />
+    <ClInclude Include="src\Scrapbook\Graphics.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Buffer.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Framebuffer.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Image.h" />
+    <ClInclude Include="src\Scrapbook\Maths.h" />
+    <ClInclude Include="src\Scrapbook\Utility.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Input.h" />
+    <ClInclude Include="src\Scrapbook\Maths\Geometry.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Primitives.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Renderer.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Scrapbook\Scrapbook.h" />
-    <ClInclude Include="src\Scrapbook\Shader.h" />
-    <ClInclude Include="src\Scrapbook\Texture.h" />
-    <ClInclude Include="src\Scrapbook\Timer.h" />
-    <ClInclude Include="src\Scrapbook\Util\Singelton.h" />
-    <ClInclude Include="src\Scrapbook\Util\fileutils.h" />
-    <ClInclude Include="src\Scrapbook\Util\stringutils.h" />
-    <ClInclude Include="src\Scrapbook\Util\utils.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Shader.h" />
+    <ClInclude Include="src\Scrapbook\Graphics\Texture.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Timer.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Singelton.h" />
+    <ClInclude Include="src\Scrapbook\Utility\fileutils.h" />
+    <ClInclude Include="src\Scrapbook\Utility\stringutils.h" />
+    <ClInclude Include="src\Scrapbook\Utility\utils.h" />
     <ClInclude Include="src\Tilemap.h" />
     <ClInclude Include="src\aabb.h" />
   </ItemGroup>
@@ -119,16 +122,16 @@
     <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
     <ClCompile Include="src\ECS\PlayerComponent.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Scrapbook\Framebuffer.cpp" />
-    <ClCompile Include="src\Scrapbook\Image.cpp" />
-    <ClCompile Include="src\Scrapbook\Input.cpp" />
-    <ClCompile Include="src\Scrapbook\Primitives.cpp" />
-    <ClCompile Include="src\Scrapbook\Renderer.cpp" />
-    <ClCompile Include="src\Scrapbook\ResourceManager.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Image.cpp" />
+    <ClCompile Include="src\Scrapbook\Utility\Input.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Primitives.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Scrapbook\Scrapbook.cpp" />
-    <ClCompile Include="src\Scrapbook\Shader.cpp" />
-    <ClCompile Include="src\Scrapbook\Texture.cpp" />
-    <ClCompile Include="src\Scrapbook\Timer.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Scrapbook\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Scrapbook\Utility\Timer.cpp" />
     <ClCompile Include="src\Tilemap.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-#include <vector>
-#include <glm\glm.hpp>
+#include "Scrapbook/Utility.h"
+#include "Scrapbook/Maths.h"
 
 class Component;
 

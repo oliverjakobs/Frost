@@ -1,13 +1,10 @@
 #pragma once
 
-#include "Util\utils.h"
+#include "Graphics.h"
+#include "Utility.h"
+#include "Maths.h"
 
-#include "Buffer.h"
-#include <GLFW\glfw3.h>
-
-#include "Image.h"
-
-#include "Timer.h"
+#include <GLFW/glfw3.h>
 
 namespace sb
 {

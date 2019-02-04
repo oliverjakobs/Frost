@@ -1,7 +1,5 @@
 #include "ImageComponent.h"
 
-#include "Scrapbook\ResourceManager.h"
-
 ImageComponent::ImageComponent(sb::Image* sprite)
 {
 	m_sprite = sprite;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scrapbook\Math.h"
+#include "Scrapbook\Maths.h"
 
 struct AABB
 {

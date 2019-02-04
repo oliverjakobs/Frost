@@ -74,7 +74,7 @@ namespace sb
 	{
 		while (!glfwWindowShouldClose(m_window))
 		{
-			Timer::Start(glfwGetTime());
+			Timer::Start();
 
 			onInput();
 			onUpdate();
@@ -90,7 +90,7 @@ namespace sb
 
 			glfwSwapBuffers(m_window);
 
-			Timer::End(glfwGetTime());
+			Timer::End();
 
 			glfwPollEvents();
 		}

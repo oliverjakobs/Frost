@@ -3,8 +3,6 @@
 #include "aabb.h"
 #include "Tilemap.h"
 
-#include "Scrapbook\Timer.h"
-
 class Body
 {
 private:
