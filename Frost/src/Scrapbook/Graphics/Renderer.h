@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad\glad.h>
+#include <glad/glad.h>
 
 #include "Texture.h"
 #include "Shader.h"
@@ -29,17 +29,24 @@ namespace sb
 	private:
 		glm::mat4 m_view;
 
+		bool m_initialized;
+
 		Primitives m_primitives;
 	public:
 		static void Init(float x, float y, float w, float h);
+		static void Destroy();
 		
 		static void Start();
 		static void Flush();
 
 		static void EnableBlend(GLenum sfactor, GLenum dfactor);
+		static void SetClearColor(float r, float g, float b, float a);
+		static void SetClearColor(const glm::vec4& color);
 
 		// ----------------------------texture---------------------------------------------------------------------------
 		static void RenderTexture(Texture* tex, const glm::vec2& position, Shader* shader = nullptr);
+		static void RenderTexture(Texture* tex, const glm::vec2& position, const std::vector<GLuint>& indices, Shader* shader = nullptr);
+		static void RenderTextureF(Texture* tex, const glm::vec2& position, const glm::vec2& framePos, const std::vector<GLuint>& indices, Shader* shader = nullptr);
 
 		// ----------------------------primitives------------------------------------------------------------------------
 		static void DrawLine(const Line& line, const glm::vec4& color);

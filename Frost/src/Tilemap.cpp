@@ -14,7 +14,7 @@ TileMap::TileMap(const std::string& image, const std::string& map)
 
 	m_tileSize = std::stof(config[2]);
 
-	m_image = new Image(image, m_tileSize, m_tileSize);
+	m_image = new Image(image, m_tileSize, m_tileSize, 1, 2);
 
 	m_frameBuffer = new FrameBuffer(m_width * m_tileSize, m_height * m_tileSize);
 
@@ -61,8 +61,7 @@ void TileMap::onChange()
 
 	for (auto& tile : m_tiles)
 	{
-		if (tile.id > 0)
-			m_image->render(tile.position, ResourceManager::GetShader("shader"));
+		m_image->renderF(tile.position, tile.id, ResourceManager::GetShader("shader"));
 	}
 
 	m_frameBuffer->unbind();
@@ -86,6 +85,7 @@ void TileMap::onRender()
 	Shader* shader = ResourceManager::GetShader("shader");
 
 	shader->use();
+	shader->setUniform2f("uFramePos", glm::vec2());
 	shader->setUniformMat4("projection", glm::mat4(1.0f));
 	shader->setUniformMat4("view", glm::mat4(1.0f));
 	shader->setUniformMat4("model", glm::mat4(1.0f));

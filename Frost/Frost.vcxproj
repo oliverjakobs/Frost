@@ -15,7 +15,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Frost</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -83,11 +83,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Body.h" />
+    <ClInclude Include="src\ECS\AnimationComponent.h" />
     <ClInclude Include="src\ECS\Component.h" />
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\ImageComponent.h" />
+    <ClInclude Include="src\ECS\InteractionComponent.h" />
     <ClInclude Include="src\ECS\PhysicsComponent.h" />
     <ClInclude Include="src\ECS\PlayerComponent.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -96,18 +97,19 @@
     <ClInclude Include="src\Scrapbook\Graphics\Buffer.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Framebuffer.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Image.h" />
-    <ClInclude Include="src\Scrapbook\Maths.h" />
-    <ClInclude Include="src\Scrapbook\Utility.h" />
-    <ClInclude Include="src\Scrapbook\Utility\Input.h" />
-    <ClInclude Include="src\Scrapbook\Maths\Geometry.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Primitives.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Renderer.h" />
     <ClInclude Include="src\Scrapbook\Graphics\ResourceManager.h" />
-    <ClInclude Include="src\Scrapbook\Scrapbook.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Shader.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Texture.h" />
-    <ClInclude Include="src\Scrapbook\Utility\Timer.h" />
+    <ClInclude Include="src\Scrapbook\Maths.h" />
+    <ClInclude Include="src\Scrapbook\Maths\Geometry.h" />
+    <ClInclude Include="src\Scrapbook\Scrapbook.h" />
+    <ClInclude Include="src\Scrapbook\Utility.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Flags.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Input.h" />
     <ClInclude Include="src\Scrapbook\Utility\Singelton.h" />
+    <ClInclude Include="src\Scrapbook\Utility\Timer.h" />
     <ClInclude Include="src\Scrapbook\Utility\fileutils.h" />
     <ClInclude Include="src\Scrapbook\Utility\stringutils.h" />
     <ClInclude Include="src\Scrapbook\Utility\utils.h" />
@@ -115,22 +117,23 @@
     <ClInclude Include="src\aabb.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Body.cpp" />
+    <ClCompile Include="src\ECS\AnimationComponent.cpp" />
     <ClCompile Include="src\ECS\Entity.cpp" />
     <ClCompile Include="src\ECS\ImageComponent.cpp" />
+    <ClCompile Include="src\ECS\InteractionComponent.cpp" />
     <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
     <ClCompile Include="src\ECS\PlayerComponent.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Image.cpp" />
-    <ClCompile Include="src\Scrapbook\Utility\Input.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Primitives.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Renderer.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\ResourceManager.cpp" />
-    <ClCompile Include="src\Scrapbook\Scrapbook.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Shader.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Scrapbook\Scrapbook.cpp" />
+    <ClCompile Include="src\Scrapbook\Utility\Input.cpp" />
     <ClCompile Include="src\Scrapbook\Utility\Timer.cpp" />
     <ClCompile Include="src\Tilemap.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -150,4 +153,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-</Project>
+</Project> 

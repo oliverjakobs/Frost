@@ -45,8 +45,6 @@ namespace sb
 			glfwTerminate();
 			return;
 		}
-
-		Renderer::Init(0.0f, 0.0f, (float)width, (float)height);
 	}
 
 	Scrapbook::~Scrapbook()
@@ -68,6 +66,11 @@ namespace sb
 	void Scrapbook::toggleDebugMode()
 	{
 		m_debug = !m_debug;
+	}
+
+	void Scrapbook::enableVsync(bool b)
+	{
+		glfwSwapInterval(b);
 	}
 
 	void Scrapbook::run()
@@ -94,16 +97,6 @@ namespace sb
 
 			glfwPollEvents();
 		}
-	}
-
-	void Scrapbook::setClearColor(float r, float g, float b, float a)
-	{
-		glClearColor(r, g, b, a);
-	}
-
-	void Scrapbook::setClearColor(const glm::vec4& color)
-	{
-		glClearColor(color.r, color.g, color.b, color.a);
 	}
 
 	void Scrapbook::setTitle(const std::string& title)

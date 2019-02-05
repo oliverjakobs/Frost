@@ -11,9 +11,12 @@ PlayerComponent::~PlayerComponent()
 {
 }
 
-bool PlayerComponent::setEntity(Entity* e)
+bool PlayerComponent::setEntity(Entity* entity)
 {
-	m_physComp = getComponent<PhysicsComponent>(e);
+	if (entity)
+		entity->setFlag(FlagPlayer);
+
+	m_physComp = getComponent<PhysicsComponent>(entity);
 
 	if (m_physComp == nullptr)
 	{
@@ -21,7 +24,15 @@ bool PlayerComponent::setEntity(Entity* e)
 		return false;
 	}
 
-	return (m_entity = e) != nullptr;
+	m_animComp = getComponent<AnimationComponent>(entity);
+
+	if (m_animComp == nullptr)
+	{
+		DEBUG_MESSAGE("No Animation Component");
+		return false;
+	}
+
+	return (m_entity = entity) != nullptr;
 }
 
 void PlayerComponent::onInput()
@@ -47,7 +58,26 @@ void PlayerComponent::onInput()
 
 void PlayerComponent::onUpdate()
 {
-	
+	if (m_physComp->getDirection() == LEFT)
+		m_animComp->flip(FLIP_HORIZONTAL);
+	else
+		m_animComp->flip(FLIP_NONE);
+
+	if (m_physComp->isJumping())
+	{
+		m_animComp->play("jump");
+	}
+	else if (m_physComp->isFalling())
+	{
+		m_animComp->play("fall");
+	}
+	else
+	{
+		if (m_physComp->isMoving())
+			m_animComp->play("walk");
+		else
+			m_animComp->play("idle");
+	}
 
 	//Renderer::SetViewPos(m_entity->getCenter().x, m_entity->getCenter().y, new Rect(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize()));
 }

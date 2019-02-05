@@ -6,3 +6,4 @@
 #include "Utility/Singelton.h"
 #include "Utility/Input.h"
 #include "Utility/Timer.h"
+#include "Utility/Flags.h"

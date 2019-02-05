@@ -6,6 +6,11 @@
 
 namespace sb
 {
+	inline float distance(const glm::vec2& a, const glm::vec2& b)
+	{
+		return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+	}
+
 	struct Line
 	{
 		glm::vec2 start;

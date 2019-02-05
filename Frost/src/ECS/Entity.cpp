@@ -1,6 +1,7 @@
 #include "Entity.h"
 
 #include "Component.h"
+#include "Scene/Scene.h"
 #include "Scrapbook/Graphics.h"
 
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
@@ -60,6 +61,26 @@ void Entity::onRenderDebug() const
 	}
 }
 
+void Entity::setScene(Scene* scene)
+{
+	m_scene = scene;
+}
+
+Scene* Entity::getScene() const
+{
+	return m_scene;
+}
+
+void Entity::setFlag(unsigned int flag)
+{
+	m_flags.addFlag(flag);
+}
+
+bool Entity::hasFlag(unsigned int flag)
+{
+	return m_flags.hasFlag(flag);
+}
+
 void Entity::setPosition(glm::vec2 pos)
 {
 	m_position = pos;
@@ -87,6 +108,16 @@ glm::vec2 Entity::getSize() const
 std::string Entity::getName() const
 {
 	return m_name;
+}
+
+float Entity::getDistance(Entity* entity)
+{
+	return sb::distance(getPosition(), entity->getPosition());
+}
+
+Entity* Entity::getNearestEntity()
+{
+	return m_scene->getNearestEntity(this);
 }
 
 void Entity::addComponent(Component* c)

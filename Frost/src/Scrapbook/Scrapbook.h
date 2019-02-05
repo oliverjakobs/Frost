@@ -31,16 +31,15 @@ namespace sb
 		void setDebugMode(bool b);
 		void toggleDebugMode();
 
+		void enableVsync(bool b);
+
 		void run();
 
 		virtual void onInput() = 0;
 		virtual void onUpdate() = 0;
 		virtual void onRender() = 0;
 		virtual void onRenderDebug() {}
-
-		void setClearColor(float r, float g, float b, float a);
-		void setClearColor(const glm::vec4& color);
-
+		
 		void setTitle(const std::string& title);
 
 		int getWidth() const;
