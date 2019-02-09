@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "Body.h"
+#include "TilePhysics/Body.h"
 
 enum Direction
 {
@@ -17,9 +17,12 @@ private:
 	bool m_isMoving;
 	bool m_isJumping;
 
+	glm::vec2 m_bodyPos;
+
 	Direction m_direction;
 public:
 	PhysicsComponent(Body* body);
+	PhysicsComponent(Body* body, const glm::vec2& bodyPos);
 	~PhysicsComponent();
 
 	void onInput() override;
