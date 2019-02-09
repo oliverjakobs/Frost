@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ECS\Entity.h"
-#include "Tilemap.h"
+#include "ECS/Entity.h"
+#include "TilePhysics/Tilemap.h"
 
 class Scene
 {
@@ -15,6 +15,7 @@ public:
 
 	void addEntity(Entity* entity);
 
+	// loop functions
 	void onInput();
 	void onUpdate();
 	void onRender();

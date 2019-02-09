@@ -1,5 +1,5 @@
 
-#include "Tilemap.h"
+#include "TilePhysics/Body.h"
 
 #include "ECS/Entity.h"
 #include "ECS/PlayerComponent.h"
@@ -7,8 +7,6 @@
 #include "ECS/InteractionComponent.h"
 
 #include "Scene/Scene.h"
-
-using namespace sb;
 
 class Frost : public Scrapbook
 {
@@ -45,7 +43,7 @@ public:
 		scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/map.txt"));
 
 		Entity* entity = new Entity("player", 400, 300, 20, 20);
-		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 40, 60)));
+		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
 		entity->addComponent(new AnimationComponent(new Image("res/images/player.png", 40, 60, 4, 6),
 			{
 				AnimationDef("idle", new Animation(0, 4, 0.2f)),
@@ -59,6 +57,11 @@ public:
 		door->addComponent(new ImageComponent(new Image("res/images/door.png", 46, 64)));
 		door->addComponent(new InteractionComponent(40.0f, GLFW_KEY_W, []() { DEBUG_MESSAGE("Interacting"); }));
 
+		Entity* wall = new Entity("wall", 200, 64, 20, 200);
+		wall->addComponent(new PhysicsComponent(scene->getMap()->createBody(200, 164, 10, 100, BodyTypeStatic)));
+		wall->addComponent(new ImageComponent(new Image("res/images/door.png", 20, 200)));
+
+		scene->addEntity(wall);
 		scene->addEntity(door);
 		scene->addEntity(entity);
 	}

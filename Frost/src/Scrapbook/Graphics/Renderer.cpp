@@ -111,6 +111,12 @@ namespace sb
 			Get()->m_primitives.drawLine(line.start, line.end, color, GetView());
 	}
 
+	void Renderer::DrawLine(float x1, float y1, float x2, float y2, const glm::vec4 & color)
+	{
+		if (Get()->m_initialized)
+			Get()->m_primitives.drawLine(glm::vec2(x1, y1), glm::vec2(x2, y2), color, GetView());
+	}
+
 	void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color)
 	{
 		if (Get()->m_initialized)

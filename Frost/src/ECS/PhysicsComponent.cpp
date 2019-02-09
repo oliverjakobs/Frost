@@ -1,7 +1,16 @@
 #include "PhysicsComponent.h"
 
-PhysicsComponent::PhysicsComponent(Body* body)
+PhysicsComponent::PhysicsComponent(Body * body)
 	: m_body(body), m_direction(RIGHT)
+{
+	m_bodyPos = glm::vec2(0.0f, body->getHeight() / 2.0f);
+
+	m_isMoving = false;
+	m_isJumping = false;
+}
+
+PhysicsComponent::PhysicsComponent(Body* body, const glm::vec2& bodyPos)
+	: m_body(body), m_bodyPos(bodyPos), m_direction(RIGHT)
 {
 	m_isMoving = false;
 	m_isJumping = false;
@@ -18,7 +27,7 @@ void PhysicsComponent::onInput()
 
 void PhysicsComponent::onUpdate()
 {
-	m_entity->setPosition(m_body->getPosition());
+	m_entity->setPosition(m_body->getPosition() - m_bodyPos);
 }
 
 void PhysicsComponent::onRender() const

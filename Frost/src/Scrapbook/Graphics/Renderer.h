@@ -50,6 +50,7 @@ namespace sb
 
 		// ----------------------------primitives------------------------------------------------------------------------
 		static void DrawLine(const Line& line, const glm::vec4& color);
+		static void DrawLine(float x1, float y1, float x2, float y2, const glm::vec4& color);
 		static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
 		static void DrawRect(float x, float y, float w, float h, const glm::vec4& color);
 		static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const glm::vec4& color);

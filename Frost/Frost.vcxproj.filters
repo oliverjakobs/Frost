@@ -30,9 +30,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Body.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\AnimationComponent.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
@@ -120,17 +117,14 @@
     <ClInclude Include="src\Scrapbook\Utility\utils.h">
       <Filter>src\Scrapbook\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Tilemap.h">
+    <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\aabb.h">
+    <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Body.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\ECS\AnimationComponent.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
@@ -182,10 +176,13 @@
     <ClCompile Include="src\Scrapbook\Utility\Timer.cpp">
       <Filter>src\Scrapbook\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tilemap.cpp">
+    <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\TilePhysics\Body.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
