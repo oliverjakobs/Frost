@@ -19,4 +19,5 @@ public:
 	static void OnRenderDebug();
 
 	static Scene* GetScene(const std::string& name);
+	static Scene* GetActiveScene();
 };

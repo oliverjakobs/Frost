@@ -8,10 +8,12 @@
 
 #include "Scene/SceneManager.h"
 
+#include "Font/BitmapFont.h"
+
 class Frost : public Scrapbook
 {
 private:
-
+	Font* font;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -40,7 +42,7 @@ public:
 		});
 
 		// ------------------------------------------------
-		Scene* scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/map.txt"));
+		Scene* scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
 
 		Entity* entity = new Entity("player", 400, 300, 20, 20);
 		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
@@ -66,6 +68,9 @@ public:
 		scene->addEntity(entity);
 
 		SceneManager::AddScene("station", scene);
+
+		// Font
+		font = new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f);
 	}
 
 	~Frost()
@@ -88,7 +93,7 @@ public:
 	{
 		Input::OnUpdate();
 
-		setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
+		//setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
 
 		SceneManager::OnUpdate();
 	}
@@ -101,6 +106,11 @@ public:
 	void onRenderDebug() override
 	{
 		SceneManager::OnRenderDebug();
+
+		// Debug Info
+		font->onRender(std::to_string(Timer::GetFPS()), 2.0f, getHeight() - 30.0f, WHITE, ResourceManager::GetShader("shader"));
+
+		font->onRender(stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, WHITE, ResourceManager::GetShader("shader"));
 	}
 };
 

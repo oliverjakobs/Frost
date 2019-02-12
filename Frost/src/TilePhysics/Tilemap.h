@@ -32,6 +32,8 @@ private:
 
 	float m_tileSize;
 
+	float m_simTime;
+
 	glm::vec2 m_gravity;
 
 	std::vector<Tile> m_tiles;
@@ -75,6 +77,7 @@ public:
 	const Tile* getTileM(const glm::ivec2& pos) const;
 
 	glm::vec2 getGravity() const;
+	float getSimulationTime() const;
 
 	// get bodies
 	std::vector<Body*> getBodies() const;

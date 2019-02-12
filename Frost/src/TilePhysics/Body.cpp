@@ -1,6 +1,5 @@
 #include "Body.h"
 
-#include <algorithm>
 #include "Tilemap.h"
 
 Body::Body(TileMap* map, float x, float y, float hW, float hH, BodyType type)

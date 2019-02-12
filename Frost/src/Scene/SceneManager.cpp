@@ -56,3 +56,8 @@ Scene* SceneManager::GetScene(const std::string & name)
 		return nullptr;
 	}
 }
+
+Scene* SceneManager::GetActiveScene()
+{
+	return Get()->m_activeScene;
+}

@@ -126,6 +126,8 @@
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Font\BitmapFont.h" />
+    <ClInclude Include="src\Font\Font.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ECS\AnimationComponent.cpp">
@@ -147,6 +149,9 @@
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
+      <Filter>src\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp">
@@ -188,7 +193,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Font\BitmapFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

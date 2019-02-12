@@ -91,7 +91,7 @@ void TileMap::onUpdate()
 
 	float end = Timer::GetTimeMS();
 
-	//DEBUG_MESSAGE("Simulation time: " << end - start);
+	m_simTime = end - start;
 }
 
 void TileMap::onRender()
@@ -220,6 +220,11 @@ const Tile* TileMap::getTileM(const glm::ivec2& pos) const
 glm::vec2 TileMap::getGravity() const
 {
 	return m_gravity;
+}
+
+float TileMap::getSimulationTime() const
+{
+	return m_simTime;
 }
 
 std::vector<Body*> TileMap::getBodies() const
