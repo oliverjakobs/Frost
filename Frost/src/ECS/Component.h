@@ -7,11 +7,12 @@
 class Component
 {
 protected:
-	Entity * m_entity;
+	Entity* m_entity;
 
 	bool m_active;
 public:
 	Component() : m_entity(nullptr), m_active(true) {}
+	virtual ~Component() {}
 
 	virtual bool setEntity(Entity* e) { m_entity = e; return m_entity != nullptr; }
 	virtual Entity* getEntity() { return m_entity; }

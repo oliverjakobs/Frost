@@ -1,15 +1,21 @@
 #pragma once
 
+#include "Shader.h"
+#include "Buffer.h"
+
 namespace sb
 {
 	class FrameBuffer
 	{
 	private:
 		unsigned int m_fbo;
-		unsigned int m_vao;
+		VAO m_vao;
 
 		int m_width;
 		int m_height;
+
+		glm::mat4 m_view;
+		glm::mat4 m_model;
 
 		unsigned int m_texture;
 	public:
@@ -19,6 +25,8 @@ namespace sb
 		void bind();
 		void unbind();
 
-		void render();
+		void render(const std::string& shader) const;
+
+		glm::mat4 getView() const;
 	};
 }

@@ -15,7 +15,7 @@ private:
 	int m_frame;
 public:
 	Animation(int start, int length, float delay);
-	virtual ~Animation();
+	~Animation();
 
 	void setStart(int s);
 

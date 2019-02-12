@@ -12,8 +12,8 @@ public:
 	BitmapFont(const std::string& path, float width, float height, float charSpacing);
 	~BitmapFont();
 
-	void onRender(const std::string& text, float x, float y, const glm::vec4& color, sb::Shader* shader) const override;
-	void onRender(const std::string& text, const glm::vec2& position, const glm::vec4& color, sb::Shader* shader) const override;
+	void onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
+	void onRender(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
 };
 
 class BitmapNumFont : public Font
@@ -26,6 +26,6 @@ public:
 	BitmapNumFont(const std::string& path, float width, float height, float charSpacing);
 	~BitmapNumFont();
 
-	void onRender(const std::string& text, float x, float y, const glm::vec4& color, sb::Shader* shader) const override;
-	void onRender(const std::string& text, const glm::vec2& position, const glm::vec4& color, sb::Shader* shader) const override;
+	void onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
+	void onRender(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
 };

@@ -24,7 +24,7 @@ namespace sb
 		} m_data;
 	public:
 		Scrapbook(const std::string& title, int width, int height);
-		~Scrapbook();
+		virtual ~Scrapbook();
 
 		void close();
 
@@ -44,6 +44,8 @@ namespace sb
 
 		int getWidth() const;
 		int getHeight() const;
+		float getWidthF() const;
+		float getHeightF() const;
 		GLFWwindow* getContext() const;
 	};
 }

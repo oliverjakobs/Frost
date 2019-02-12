@@ -17,32 +17,17 @@ private:
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
-		Renderer::Init(0.0f, 0.0f, (float)m_data.width, (float)m_data.height);
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		// load resources
-		ResourceManager::Load();
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
 
 		setDebugMode(true);
 		enableVsync(false);
 
-		glfwSetKeyCallback(getContext(), [](GLFWwindow* window, int key, int scancode, int action, int mods)
-		{
-			switch (action)
-			{
-			case GLFW_PRESS:
-				Input::SetKeyState(key, true, false);
-				break;
-			case GLFW_RELEASE:
-				Input::SetKeyState(key, false, true);
-				break;
-			}
-		});
-
 		// ------------------------------------------------
-		Scene* scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
+		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/train.txt"));
 
 		Entity* entity = new Entity("player", 400, 300, 20, 20);
 		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
@@ -75,7 +60,7 @@ public:
 
 	~Frost()
 	{
-		ResourceManager::Free();
+		SceneManager::Free();
 	}
 
 	void onInput() override
@@ -91,13 +76,12 @@ public:
 
 	void onUpdate() override
 	{
-		Input::OnUpdate();
-
 		//setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
 
 		SceneManager::OnUpdate();
 	}
 
+	// TODO: make rendering const
 	void onRender() override
 	{
 		SceneManager::OnRender();
@@ -108,9 +92,9 @@ public:
 		SceneManager::OnRenderDebug();
 
 		// Debug Info
-		font->onRender(std::to_string(Timer::GetFPS()), 2.0f, getHeight() - 30.0f, WHITE, ResourceManager::GetShader("shader"));
+		font->onRender(std::to_string(Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
 
-		font->onRender(stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, WHITE, ResourceManager::GetShader("shader"));
+		font->onRender(stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, Renderer::GetScreenView(), "shader");
 	}
 };
 

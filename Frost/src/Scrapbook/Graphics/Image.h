@@ -17,9 +17,7 @@ namespace sb
 	{
 	private:
 		Texture* m_texture;
-		VBO m_vbo;
-
-		unsigned int m_vao;
+		VAO m_vao;
 
 		RenderFlip m_flip;
 
@@ -35,11 +33,11 @@ namespace sb
 
 		void setRenderFlip(RenderFlip flip);
 
-		void render(float x, float y, Shader* shader);
-		void render(const glm::vec2& pos, Shader* shader);
+		void render(float x, float y, const glm::mat4& view, const std::string& shader) const;
+		void render(const glm::vec2& pos, const glm::mat4& view, const std::string& shader) const;
 
-		void renderF(float x, float y, int frame, Shader* shader);
-		void renderF(const glm::vec2& pos, int frame, Shader* shader);
+		void renderF(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const;
+		void renderF(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& shader) const;
 
 		inline float getWidth() const { return m_width; }
 		inline float getHeight() const { return m_height; }

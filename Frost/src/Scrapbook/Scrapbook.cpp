@@ -38,6 +38,19 @@ namespace sb
 			glViewport(0, 0, width, height);
 		});
 
+		glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			switch (action)
+			{
+			case GLFW_PRESS:
+				Input::SetKeyState(key, true, false);
+				break;
+			case GLFW_RELEASE:
+				Input::SetKeyState(key, false, true);
+				break;
+			}
+		});
+
 		// loading glad
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		{
@@ -45,10 +58,16 @@ namespace sb
 			glfwTerminate();
 			return;
 		}
+
+		Renderer::Init(0.0f, 0.0f, (float)m_data.width, (float)m_data.height);
+		ResourceManager::Load();
 	}
 
 	Scrapbook::~Scrapbook()
 	{
+		Renderer::Destroy();
+		ResourceManager::Free();
+
 		glfwDestroyWindow(m_window);
 		glfwTerminate();
 	}
@@ -79,7 +98,12 @@ namespace sb
 		{
 			Timer::Start();
 
+			glfwPollEvents();
+
 			onInput();
+
+			Input::OnUpdate();
+
 			onUpdate();
 
 			Renderer::Start();
@@ -94,8 +118,6 @@ namespace sb
 			glfwSwapBuffers(m_window);
 
 			Timer::End();
-
-			glfwPollEvents();
 		}
 	}
 
@@ -112,6 +134,16 @@ namespace sb
 	int Scrapbook::getHeight() const
 	{
 		return m_data.height;
+	}
+
+	float Scrapbook::getWidthF() const
+	{
+		return static_cast<float>(m_data.width);
+	}
+
+	float Scrapbook::getHeightF() const
+	{
+		return static_cast<float>(m_data.height);
 	}
 
 	GLFWwindow* Scrapbook::getContext() const

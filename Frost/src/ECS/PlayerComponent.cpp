@@ -9,6 +9,8 @@ PlayerComponent::PlayerComponent(float ms, float jp)
 
 PlayerComponent::~PlayerComponent()
 {
+	m_physComp = nullptr;
+	m_animComp = nullptr;
 }
 
 bool PlayerComponent::setEntity(Entity* entity)
@@ -79,7 +81,8 @@ void PlayerComponent::onUpdate()
 			m_animComp->play("idle");
 	}
 
-	//Renderer::SetViewPos(m_entity->getCenter().x, m_entity->getCenter().y, new Rect(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize()));
+	Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, new Rect(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize()));
+	//Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, nullptr);
 }
 
 void PlayerComponent::onRender() const

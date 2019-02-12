@@ -18,7 +18,7 @@ PhysicsComponent::PhysicsComponent(Body* body, const glm::vec2& bodyPos)
 
 PhysicsComponent::~PhysicsComponent()
 {
-
+	// TODO: body destruction
 }
 
 void PhysicsComponent::onInput()

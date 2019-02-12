@@ -5,7 +5,6 @@
 Animation::Animation(int start, int length, float delay)
 	: m_start(start), m_length(length), m_delay(delay), m_frameCounter(0.0f)
 {
-
 }
 
 Animation::~Animation()
@@ -57,6 +56,15 @@ AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Anim
 
 AnimationComponent::~AnimationComponent()
 {
+	SAFE_DELETE(m_sprite);
+
+	for (auto& a : m_animations)
+	{
+		SAFE_DELETE(a.second);
+	}
+
+	m_animations.clear();
+	m_currentAnimation = nullptr;
 }
 
 void AnimationComponent::flip(RenderFlip flip)
@@ -108,5 +116,5 @@ void AnimationComponent::onRender() const
 	float y = m_entity->getPosition().y;
 
 	if (m_currentAnimation != nullptr)
-		m_sprite->renderF(x, y, m_currentAnimation->getFrame(), sb::ResourceManager::GetShader("shader"));
+		m_sprite->renderF(x, y, m_currentAnimation->getFrame(), Renderer::GetViewMat(), "shader");
 }

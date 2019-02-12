@@ -27,13 +27,12 @@ namespace sb
 
 		m_flip = FLIP_NONE;
 		
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
+		m_vao.bind();
 
-		m_vbo.bind();
-		m_vbo.setBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-		m_vbo.setAttribPointer(0, 3, 5, 0);
-		m_vbo.setAttribPointer(1, 2, 5, 3);
+		m_vao.bindVertexBuffer();
+		m_vao.setVertexBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+		m_vao.setVertexAttribPointer(0, 3, 5, 0);
+		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
 		m_texture = new Texture(src.c_str(), 0);
 	}
@@ -49,13 +48,12 @@ namespace sb
 
 		m_flip = FLIP_NONE;
 
-		glGenVertexArrays(1, &m_vao);
-		glBindVertexArray(m_vao);
+		m_vao.bind();
 
-		m_vbo.bind();
-		m_vbo.setBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-		m_vbo.setAttribPointer(0, 3, 5, 0);
-		m_vbo.setAttribPointer(1, 2, 5, 3);
+		m_vao.bindVertexBuffer();
+		m_vao.setVertexBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+		m_vao.setVertexAttribPointer(0, 3, 5, 0);
+		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
 		m_texture = new Texture(src.c_str(), 0);
 	}
@@ -64,8 +62,6 @@ namespace sb
 	{
 		if (m_texture != nullptr)
 			delete m_texture;
-		
-		glDeleteVertexArrays(1, &m_vao);
 	}
 
 	void Image::setRenderFlip(RenderFlip flip)
@@ -73,34 +69,34 @@ namespace sb
 		m_flip = flip;
 	}
 	
-	void Image::render(float x, float y, Shader* shader)
+	void Image::render(float x, float y, const glm::mat4& view, const std::string& shader) const
 	{
-		render(glm::vec2(x, y), shader);
+		render(glm::vec2(x, y), view, shader);
 	}
 
-	void Image::render(const glm::vec2& pos, Shader* shader)
+	void Image::render(const glm::vec2& pos, const glm::mat4& view, const std::string& shader) const
 	{
-		glBindVertexArray(m_vao);
+		m_vao.bind();
 
 		std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
 
-		Renderer::RenderTexture(m_texture, pos, indices, shader);
+		Renderer::RenderTexture(m_texture, shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices);
 	}
 
-	void Image::renderF(float x, float y, int frame, Shader* shader)
+	void Image::renderF(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const
 	{
-		renderF(glm::vec2(x, y), frame, shader);
+		renderF(glm::vec2(x, y), frame, view, shader);
 	}
 
-	void Image::renderF(const glm::vec2& pos, int frame, Shader* shader)
+	void Image::renderF(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& shader) const
 	{
 		float fX = (frame % m_columns) * (1.0f / m_columns);
 		float fY = 1 - (1.0f / m_rows) - ((frame / m_columns) * (1.0f / m_rows));
 
-		glBindVertexArray(m_vao);
+		m_vao.bind();
 
 		std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
 
-		Renderer::RenderTextureF(m_texture, pos, glm::vec2(fX, fY), indices, shader);
+		Renderer::RenderTexture(m_texture, shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices, glm::vec2(fX, fY));
 	}
 }

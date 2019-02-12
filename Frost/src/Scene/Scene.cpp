@@ -7,6 +7,13 @@ Scene::Scene(float w, float h, TileMap* map)
 
 Scene::~Scene()
 {
+	for (auto& e : m_entities)
+	{
+		SAFE_DELETE(e);
+	}
+	m_entities.clear();
+
+	SAFE_DELETE(m_map);
 }
 
 void Scene::addEntity(Entity* entity)

@@ -12,7 +12,13 @@ Entity::Entity(const std::string& name, float x, float y, float w, float h)
 
 Entity::~Entity()
 {
+	for (auto& c : m_components)
+	{
+		SAFE_DELETE(c);
+	}
+	m_components.clear();
 
+	m_scene = nullptr;
 }
 
 void Entity::onInput()

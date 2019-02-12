@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "TilePhysics/Body.h"
+#include "TilePhysics/Tilemap.h"
 
 enum Direction
 {

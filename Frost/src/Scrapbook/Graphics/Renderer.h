@@ -24,18 +24,27 @@ namespace sb
 		return glm::vec4(color.r, color.g, color.b, alpha);
 	}
 
+	struct View
+	{
+		float x;
+		float y;
+		float w;
+		float h;
+
+		glm::mat4 mat;
+	};
+
 	class Renderer : private Singleton<Renderer>
 	{
 	private:
-		glm::mat4 m_view;
-
-		bool m_initialized;
-
+		View m_view;
+		glm::mat4 m_screenView;
+		
 		Primitives m_primitives;
 	public:
 		static void Init(float x, float y, float w, float h);
 		static void Destroy();
-		
+
 		static void Start();
 		static void Flush();
 
@@ -44,22 +53,28 @@ namespace sb
 		static void SetClearColor(const glm::vec4& color);
 
 		// ----------------------------texture---------------------------------------------------------------------------
-		static void RenderTexture(Texture* tex, const glm::vec2& position, Shader* shader = nullptr);
-		static void RenderTexture(Texture* tex, const glm::vec2& position, const std::vector<GLuint>& indices, Shader* shader = nullptr);
-		static void RenderTextureF(Texture* tex, const glm::vec2& position, const glm::vec2& framePos, const std::vector<GLuint>& indices, Shader* shader = nullptr);
+		static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const glm::vec2& framePos = glm::vec2());
+		static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const std::vector<GLuint>& indices, const glm::vec2& framePos = glm::vec2());
 
 		// ----------------------------primitives------------------------------------------------------------------------
-		static void DrawLine(const Line& line, const glm::vec4& color);
-		static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
-		static void DrawRect(float x, float y, float w, float h, const glm::vec4& color);
-		static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const glm::vec4& color);
-		static void DrawCircle(const glm::vec2& center, float radius, const glm::vec4& color);
-		static void DrawPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color);
+		static void DrawLine(const Line& line, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void DrawRect(float x, float y, float w, float h, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void DrawCircle(const glm::vec2& center, float radius, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void DrawPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
 
-		static void FillRect(float x, float y, float w, float h, const glm::vec4& color);
-		static void FillCircle(const glm::vec2& center, float radius, const glm::vec4& color);
-		static void FillPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color);
+		static void FillRect(float x, float y, float w, float h, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void FillCircle(const glm::vec2& center, float radius, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
+		static void FillPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());
 
-		static glm::mat4 GetView();
+		// ----------------------------view------------------------------------------------------------------------------
+		static void SetView(float x, float y);
+		static void SetView(float x, float y, float width, float height);
+		static void SetViewCenter(float x, float y, Rect* constraint);
+
+		static View GetView();
+		static glm::mat4 GetViewMat();
+		static glm::mat4 GetScreenView();
 	};
 }

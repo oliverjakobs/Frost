@@ -7,8 +7,7 @@ ImageComponent::ImageComponent(sb::Image* sprite)
 
 ImageComponent::~ImageComponent()
 {
-	if (m_sprite != nullptr)
-		delete m_sprite;
+	SAFE_DELETE(m_sprite);
 }
 
 void ImageComponent::onInput()
@@ -25,5 +24,5 @@ void ImageComponent::onRender() const
 	float y = m_entity->getPosition().y;
 
 	if (m_sprite != nullptr)
-		m_sprite->render(x, y, sb::ResourceManager::GetShader("shader"));
+		m_sprite->render(x, y, sb::Renderer::GetViewMat(), "shader");
 }

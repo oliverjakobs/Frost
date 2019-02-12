@@ -10,6 +10,8 @@ private:
 	Scene* m_activeScene;
 	std::string m_activeName;
 public:
+	static void Free();
+
 	static void AddScene(const std::string& name, Scene* scene);
 	static void ChangeScene(const std::string& name);
 

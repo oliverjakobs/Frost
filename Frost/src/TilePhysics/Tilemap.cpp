@@ -50,8 +50,8 @@ TileMap::TileMap(const std::string& image, const std::string& map, const glm::ve
 
 TileMap::~TileMap()
 {
-	if (m_image != nullptr)
-		delete m_image;
+	SAFE_DELETE(m_image);
+	SAFE_DELETE(m_frameBuffer);
 
 	m_tiles.clear();
 }
@@ -69,9 +69,11 @@ void TileMap::onChange()
 {
 	m_frameBuffer->bind();
 
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	for (auto& tile : m_tiles)
 	{
-		m_image->renderF(tile.position, tile.id, ResourceManager::GetShader("shader"));
+		m_image->renderF(tile.position, tile.id, m_frameBuffer->getView(), "shader");
 	}
 
 	m_frameBuffer->unbind();
@@ -99,16 +101,8 @@ void TileMap::onRender()
 	// if the map changed render to the framebuffer first
 	if (m_changed)
 		onChange();
-
-	Shader* shader = ResourceManager::GetShader("shader");
-
-	shader->use();
-	shader->setUniform2f("uFramePos", glm::vec2());
-	shader->setUniformMat4("projection", glm::mat4(1.0f));
-	shader->setUniformMat4("view", glm::mat4(1.0f));
-	shader->setUniformMat4("model", glm::mat4(1.0f));
-
-	m_frameBuffer->render();
+	
+	m_frameBuffer->render("shader");
 }
 
 void TileMap::onRenderDebug() const

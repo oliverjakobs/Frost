@@ -1,5 +1,16 @@
 #include "SceneManager.h"
 
+void SceneManager::Free()
+{
+	for (auto& s : Get()->m_scenes)
+	{
+		SAFE_DELETE(s.second);
+	}
+
+	Get()->m_scenes.clear();
+	Get()->m_activeScene = nullptr;
+}
+
 void SceneManager::AddScene(const std::string& name, Scene* scene)
 {
 	Get()->m_scenes[name] = scene;

@@ -20,4 +20,14 @@ namespace sb
 		Line(const glm::vec2& s, const glm::vec2& e) : start(s), end(e) {}
 		Line(float x1, float y1, float x2, float y2) : start(glm::vec2(x1, y1)), end(glm::vec2(x2, y2)) {}
 	};
+
+	struct Rect
+	{
+		glm::vec2 pos;
+		glm::vec2 dim;
+
+		Rect() : pos(glm::vec2()), dim(glm::vec2()) {}
+		Rect(float x, float y, float w, float h) : pos(glm::vec2(x,y)), dim(glm::vec2(w,h)) {}
+		Rect(glm::vec2 pos, glm::vec2 dim) : pos(pos), dim(dim) {}
+	};
 }

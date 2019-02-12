@@ -14,7 +14,9 @@ namespace sb
 	void ResourceManager::Free()
 	{
 		for (auto& s : s_instance->m_shaders)
-			delete s.second;
+		{
+			SAFE_DELETE(s.second);
+		}
 
 		s_instance->m_shaders.clear();
 		s_instance = nullptr;
