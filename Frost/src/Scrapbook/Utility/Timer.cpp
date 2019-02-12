@@ -27,7 +27,7 @@ namespace sb
 
 	void Timer::Start()
 	{
-		float time = (float)glfwGetTime();
+		float time = GetTime();
 
 		Get()->m_deltaTime = time - Get()->m_lastFrame;
 		Get()->m_lastFrame = time;
@@ -36,7 +36,7 @@ namespace sb
 	void Timer::End()
 	{
 		Get()->m_frames++;
-		if ((float)glfwGetTime() - Get()->m_timer > 1.0f)
+		if (GetTime() - Get()->m_timer > 1.0f)
 		{
 			Get()->updateFPS();
 		}
@@ -50,5 +50,15 @@ namespace sb
 	int Timer::GetFPS()
 	{
 		return Get()->m_fps;
+	}
+
+	float Timer::GetTime()
+	{
+		return (float)glfwGetTime();
+	}
+
+	float Timer::GetTimeMS()
+	{
+		return GetTime() * 1000.0f;
 	}
 }

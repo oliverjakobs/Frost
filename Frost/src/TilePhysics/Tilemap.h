@@ -79,4 +79,6 @@ public:
 	// get bodies
 	std::vector<Body*> getBodies() const;
 	std::vector<Body*> getBodiesT(BodyType type) const;
+
+	std::vector<Body*> getOtherBodies(Body* body) const;
 };

@@ -81,10 +81,17 @@ void TileMap::onChange()
 
 void TileMap::onUpdate()
 {
+	// measure time for simulation
+	float start = Timer::GetTimeMS();
+
 	for (auto& body : m_bodies)
 	{
 		body->onUpdate();
 	}
+
+	float end = Timer::GetTimeMS();
+
+	//DEBUG_MESSAGE("Simulation time: " << end - start);
 }
 
 void TileMap::onRender()
@@ -227,6 +234,19 @@ std::vector<Body*> TileMap::getBodiesT(BodyType type) const
 	for (auto& b : m_bodies)
 	{
 		if (b->getType() == type)
+			typed.push_back(b);
+	}
+
+	return typed;
+}
+
+std::vector<Body*> TileMap::getOtherBodies(Body* body) const
+{
+	std::vector<Body*> typed;
+
+	for (auto& b : m_bodies)
+	{
+		if (b != body)
 			typed.push_back(b);
 	}
 

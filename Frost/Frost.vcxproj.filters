@@ -28,6 +28,9 @@
     <Filter Include="src\Scrapbook\Utility">
       <UniqueIdentifier>{83B0940A-EF1C-5005-B810-E862243C726D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\TilePhysics">
+      <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ECS\AnimationComponent.h">
@@ -118,10 +121,10 @@
       <Filter>src\Scrapbook\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
-      <Filter>src</Filter>
+      <Filter>src\TilePhysics</Filter>
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Tilemap.h">
-      <Filter>src</Filter>
+      <Filter>src\TilePhysics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,15 +179,16 @@
     <ClCompile Include="src\Scrapbook\Utility\Timer.cpp">
       <Filter>src\Scrapbook\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="src\TilePhysics\Body.cpp">
+      <Filter>src\TilePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TilePhysics\Tilemap.cpp">
+      <Filter>src\TilePhysics</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\TilePhysics\Body.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TilePhysics\Tilemap.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <ClCompile Include="src\Scene\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

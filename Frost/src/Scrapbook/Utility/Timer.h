@@ -24,5 +24,8 @@ namespace sb
 
 		static float GetDeltaTime();
 		static int GetFPS();
+
+		static float GetTime();
+		static float GetTimeMS();
 	};
 }

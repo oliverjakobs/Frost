@@ -6,12 +6,12 @@
 #include "ECS/ImageComponent.h"
 #include "ECS/InteractionComponent.h"
 
-#include "Scene/Scene.h"
+#include "Scene/SceneManager.h"
 
 class Frost : public Scrapbook
 {
 private:
-	Scene * scene;
+
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -40,7 +40,7 @@ public:
 		});
 
 		// ------------------------------------------------
-		scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/map.txt"));
+		Scene* scene = new Scene(getWidth(), getHeight(), new TileMap("res/images/tiles.png", "res/maps/map.txt"));
 
 		Entity* entity = new Entity("player", 400, 300, 20, 20);
 		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
@@ -64,6 +64,8 @@ public:
 		scene->addEntity(wall);
 		scene->addEntity(door);
 		scene->addEntity(entity);
+
+		SceneManager::AddScene("station", scene);
 	}
 
 	~Frost()
@@ -79,7 +81,7 @@ public:
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
 
-		scene->onInput();
+		SceneManager::OnInput();
 	}
 
 	void onUpdate() override
@@ -88,17 +90,17 @@ public:
 
 		setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
 
-		scene->onUpdate();
+		SceneManager::OnUpdate();
 	}
 
 	void onRender() override
 	{
-		scene->onRender();
+		SceneManager::OnRender();
 	}
 
 	void onRenderDebug() override
 	{
-		scene->onRenderDebug();
+		SceneManager::OnRenderDebug();
 	}
 };
 

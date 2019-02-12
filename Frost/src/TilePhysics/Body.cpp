@@ -60,7 +60,7 @@ void Body::onUpdate()
 	m_drop = false;
 
 	// ------------------ Object Collision ---------------------------------
-	for (auto& b : m_map->getBodiesT(BodyTypeStatic))
+	for (auto& b : m_map->getOtherBodies(this))
 	{
 		resolveBodyCollision(*b, oldPos);
 	}
@@ -77,6 +77,10 @@ void Body::onRender() const
 		Renderer::DrawLine(getSensorTop(m_position, m_offsetVertical), RED);
 		Renderer::DrawLine(getSensorLeft(m_position, m_offsetHorizontal), RED);
 		Renderer::DrawLine(getSensorRight(m_position, m_offsetHorizontal), RED);
+
+		// show slope sensors
+		//Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		//Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
 	}
 
 	// center/position of the body 
