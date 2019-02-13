@@ -13,6 +13,7 @@ class PhysicsComponent : public Component
 {
 private:
 	Body* m_body;
+	BodyDef m_bodyDef;
 
 	bool m_isMoving;
 	bool m_isJumping;
@@ -21,9 +22,12 @@ private:
 
 	Direction m_direction;
 public:
-	PhysicsComponent(Body* body);
-	PhysicsComponent(Body* body, const glm::vec2& bodyPos);
+	PhysicsComponent(BodyDef bodyDef);
+	PhysicsComponent(BodyDef bodyDef, const glm::vec2& bodyPos);
 	~PhysicsComponent();
+
+	void load() override;
+	void unload() override;
 
 	void onInput() override;
 	void onUpdate() override;

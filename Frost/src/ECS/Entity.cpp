@@ -70,6 +70,11 @@ void Entity::onRenderDebug() const
 void Entity::setScene(Scene* scene)
 {
 	m_scene = scene;
+
+	if (scene == nullptr)
+		for (auto& comp : m_components) comp->unload();
+	else
+		for (auto& comp : m_components) comp->load();
 }
 
 Scene* Entity::getScene() const

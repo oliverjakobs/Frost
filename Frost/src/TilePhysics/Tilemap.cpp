@@ -65,6 +65,19 @@ Body* TileMap::createBody(float x, float y, float hWidth, float hHeight, BodyTyp
 	return body;
 }
 
+void TileMap::destroyBody(Body* body)
+{
+	for (auto& b : m_bodies)
+	{
+		if (b == body)
+		{
+			SAFE_DELETE(b);
+		}
+	}
+
+	m_bodies.erase(std::remove(m_bodies.begin(), m_bodies.end(), nullptr), m_bodies.end());
+}
+
 void TileMap::onChange() const
 {
 	m_frameBuffer->bind();

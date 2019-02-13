@@ -47,6 +47,7 @@ public:
 
 	// only way to create bodies
 	Body* createBody(float x, float y, float hWidth, float hHeight, BodyType type);
+	void destroyBody(Body* body);
 
 	// if a tile is changed re-render to the framebuffer
 	void onChange() const;

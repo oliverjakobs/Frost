@@ -27,10 +27,8 @@ public:
 		enableVsync(false);
 		
 		// ------------------------------------------------
-		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
-
 		Entity* entity = new Entity("player", 400, 300, 20, 20);
-		entity->addComponent(new PhysicsComponent(scene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
+		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
 		entity->addComponent(new AnimationComponent(new Image("res/images/player.png", 40, 60, 4, 6),
 			{
 				AnimationDef("idle", new Animation(0, 4, 0.2f)),
@@ -45,30 +43,17 @@ public:
 		door->addComponent(new InteractionComponent(40.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("train"); }));
 
 		Entity* wall = new Entity("wall", 200, 64, 20, 200);
-		wall->addComponent(new PhysicsComponent(scene->getMap()->createBody(200, 164, 10, 100, BodyTypeStatic)));
+		wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
 		wall->addComponent(new ImageComponent(new Image("res/images/door.png", 20, 200)));
+
+		// ------------------------------------------------
+		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
 
 		scene->addEntity(wall);
 		scene->addEntity(door);
 		scene->addEntity(entity);
 
-		// ------------------------------------------------
 		Scene* trainScene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/train.txt"));
-
-		entity = new Entity("player", 400, 300, 20, 20);
-		entity->addComponent(new PhysicsComponent(trainScene->getMap()->createBody(400, 300, 20, 30, BodyTypeDynamic)));
-		entity->addComponent(new AnimationComponent(new Image("res/images/player.png", 40, 60, 4, 6),
-			{
-				AnimationDef("idle", new Animation(0, 4, 0.2f)),
-				AnimationDef("walk", new Animation(6, 6, 0.125f)),
-				AnimationDef("jump", new Animation(12, 3, 0.3f)),
-				AnimationDef("fall", new Animation(18, 2, 0.4f))
-			}));
-		entity->addComponent(new PlayerComponent(400, 800));
-
-		door = new Entity("door", 512, 64, 20, 20);
-		door->addComponent(new ImageComponent(new Image("res/images/door.png", 46, 64)));
-		door->addComponent(new InteractionComponent(40.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station"); }));
 		
 		trainScene->addEntity(door);
 		trainScene->addEntity(entity);
@@ -92,6 +77,9 @@ public:
 
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
+
+		if (Input::KeyPressed(GLFW_KEY_X))
+			SceneManager::GetActiveScene()->deleteEntity("wall");
 
 		SceneManager::OnInput();
 	}

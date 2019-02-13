@@ -14,6 +14,7 @@ public:
 	~Scene();
 
 	void addEntity(Entity* entity);
+	void deleteEntity(const std::string& name);
 
 	void onInput();
 	void onUpdate();

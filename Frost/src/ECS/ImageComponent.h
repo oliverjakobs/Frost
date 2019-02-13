@@ -10,7 +10,7 @@ private:
 public:
 	ImageComponent(sb::Image* sprite);
 	~ImageComponent();
-	
+
 	void onInput() override;
 	void onUpdate() override;
 	void onRender() const override;

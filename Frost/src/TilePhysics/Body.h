@@ -12,6 +12,13 @@ enum BodyType
 	BodyTypeDynamic		// can be moved, affected by forces
 };
 
+struct BodyDef
+{
+	float hW;
+	float hH;
+	BodyType type;
+};
+
 class Body
 {
 private:

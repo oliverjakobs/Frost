@@ -1,24 +1,52 @@
 #include "PhysicsComponent.h"
 
-PhysicsComponent::PhysicsComponent(Body* body)
-	: m_body(body), m_direction(RIGHT)
+#include "Scene/Scene.h"
+
+PhysicsComponent::PhysicsComponent(BodyDef bodyDef)
+	: m_bodyDef(bodyDef), m_direction(RIGHT)
 {
-	m_bodyPos = glm::vec2(0.0f, body->getHeight() / 2.0f);
+	m_bodyPos = glm::vec2(0.0f, bodyDef.hW);
 
 	m_isMoving = false;
 	m_isJumping = false;
+
+	m_body = nullptr;
 }
 
-PhysicsComponent::PhysicsComponent(Body* body, const glm::vec2& bodyPos)
-	: m_body(body), m_bodyPos(bodyPos), m_direction(RIGHT)
+PhysicsComponent::PhysicsComponent(BodyDef bodyDef, const glm::vec2& bodyPos)
+	: m_bodyDef(bodyDef), m_bodyPos(bodyPos), m_direction(RIGHT)
 {
 	m_isMoving = false;
 	m_isJumping = false;
+
+	m_body = nullptr;
 }
 
 PhysicsComponent::~PhysicsComponent()
 {
-	// TODO: body destruction
+	if (m_body != nullptr)
+	{
+		m_body->getMap()->destroyBody(m_body);
+		m_body = nullptr;
+	}
+}
+
+void PhysicsComponent::load()
+{
+	if (m_entity->getScene() != nullptr)
+	{
+		glm::vec2 pos = m_entity->getPosition() + m_bodyPos;
+		m_body = m_entity->getScene()->getMap()->createBody(pos.x, pos.y, m_bodyDef.hW, m_bodyDef.hH, m_bodyDef.type);
+	}
+}
+
+void PhysicsComponent::unload()
+{
+	if (m_body != nullptr)
+	{
+		m_body->getMap()->destroyBody(m_body);
+		m_body = nullptr;
+	}
 }
 
 void PhysicsComponent::onInput()

@@ -22,6 +22,19 @@ void Scene::addEntity(Entity* entity)
 	m_entities.push_back(entity);
 }
 
+void Scene::deleteEntity(const std::string & name)
+{
+	for (auto& entity : m_entities)
+	{
+		if (stringCompare(entity->getName(), name))
+		{
+			SAFE_DELETE(entity);
+		}
+	}
+
+	m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), nullptr), m_entities.end());
+}
+
 void Scene::onInput()
 {
 	for (auto& e : m_entities)
