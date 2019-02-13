@@ -65,7 +65,7 @@ Body* TileMap::createBody(float x, float y, float hWidth, float hHeight, BodyTyp
 	return body;
 }
 
-void TileMap::onChange()
+void TileMap::onChange() const
 {
 	m_frameBuffer->bind();
 
@@ -77,8 +77,6 @@ void TileMap::onChange()
 	}
 
 	m_frameBuffer->unbind();
-
-	m_changed = false;
 }
 
 void TileMap::onUpdate()
@@ -94,12 +92,22 @@ void TileMap::onUpdate()
 	float end = Timer::GetTimeMS();
 
 	m_simTime = end - start;
+
+	if (m_changed)
+	{
+		m_renderToFB = true;
+		m_changed = false;
+	}
+	else
+	{
+		m_renderToFB = false;
+	}
 }
 
-void TileMap::onRender()
+void TileMap::onRender() const
 {
 	// if the map changed render to the framebuffer first
-	if (m_changed)
+	if (m_renderToFB)
 		onChange();
 	
 	m_frameBuffer->render("shader");

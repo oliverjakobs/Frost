@@ -40,7 +40,7 @@ void Scene::onUpdate()
 	}
 }
 
-void Scene::onRender()
+void Scene::onRender() const
 {
 	m_map->onRender();
 
@@ -50,7 +50,7 @@ void Scene::onRender()
 	}
 }
 
-void Scene::onRenderDebug()
+void Scene::onRenderDebug() const
 {
 	m_map->onRenderDebug();
 

@@ -4,6 +4,7 @@
 
 #include "Entity.h"
 
+// TODO: load and unload
 class Component
 {
 protected:

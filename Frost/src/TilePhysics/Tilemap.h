@@ -40,6 +40,7 @@ private:
 	std::vector<Body*> m_bodies;
 
 	bool m_changed;					// has the map changed; need to update the framebuffer
+	bool m_renderToFB;
 public:
 	TileMap(const std::string& image, const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
 	~TileMap();
@@ -48,10 +49,10 @@ public:
 	Body* createBody(float x, float y, float hWidth, float hHeight, BodyType type);
 
 	// if a tile is changed re-render to the framebuffer
-	void onChange();
+	void onChange() const;
 	// loop functions
 	void onUpdate();
-	void onRender();
+	void onRender() const;
 	void onRenderDebug() const;
 
 	float getTileSize() const;

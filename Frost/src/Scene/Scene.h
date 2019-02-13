@@ -17,8 +17,8 @@ public:
 
 	void onInput();
 	void onUpdate();
-	void onRender();
-	void onRenderDebug();
+	void onRender() const;
+	void onRenderDebug() const;
 
 	TileMap* getMap() const;
 
