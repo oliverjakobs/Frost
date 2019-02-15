@@ -112,6 +112,8 @@ namespace sb
 	Shader::~Shader()
 	{
 		glDeleteProgram(m_program);
+
+		DEBUG_MESSAGE("SHADER");
 	}
 
 	void Shader::use()

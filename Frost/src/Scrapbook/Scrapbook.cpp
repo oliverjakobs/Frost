@@ -60,13 +60,11 @@ namespace sb
 		}
 
 		Renderer::Init(0.0f, 0.0f, (float)m_data.width, (float)m_data.height);
-		ResourceManager::Load();
 	}
 
 	Scrapbook::~Scrapbook()
 	{
 		Renderer::Destroy();
-		ResourceManager::Free();
 
 		glfwDestroyWindow(m_window);
 		glfwTerminate();

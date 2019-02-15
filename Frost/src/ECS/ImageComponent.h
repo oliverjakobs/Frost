@@ -6,9 +6,9 @@
 class ImageComponent : public Component
 {
 private:
-	sb::Image* m_sprite;
+	shared_ptr<sb::Image> m_sprite;
 public:
-	ImageComponent(sb::Image* sprite);
+	ImageComponent(shared_ptr<sb::Image> sprite);
 	~ImageComponent();
 
 	ImageComponent* clone();

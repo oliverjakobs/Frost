@@ -2,6 +2,11 @@
 
 #include "Scrapbook/Utility.h"
 
+Animation::Animation()
+	: m_start(0), m_length(0), m_delay(0.0f), m_frameCounter(0.0f)
+{
+}
+
 Animation::Animation(int start, int length, float delay)
 	: m_start(start), m_length(length), m_delay(delay), m_frameCounter(0.0f)
 {
@@ -52,13 +57,10 @@ AnimationComponent::AnimationComponent(const AnimationComponent& copy)
 
 	m_currentAnimation = nullptr;
 
-	for (auto& a : copy.m_animations)
-	{
-		m_animations[a.first] = new Animation(*a.second);
-	}
+	m_animations = copy.m_animations;
 }
 
-AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Animation*> animations)
+AnimationComponent::AnimationComponent(shared_ptr<Image> sprite, std::map<std::string, Animation> animations)
 {
 	m_sprite = sprite;
 
@@ -68,11 +70,6 @@ AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Anim
 
 AnimationComponent::~AnimationComponent()
 {
-	for (auto& a : m_animations)
-	{
-		SAFE_DELETE(a.second);
-	}
-
 	m_animations.clear();
 	m_currentAnimation = nullptr;
 }
@@ -92,7 +89,7 @@ void AnimationComponent::play(const std::string anim)
 	if (stringCompare(m_currentName, anim))
 		return;
 
-	m_currentAnimation = m_animations[anim];
+	m_currentAnimation = std::make_unique<Animation>(m_animations[anim]);
 
 	if (m_currentAnimation != nullptr)
 	{

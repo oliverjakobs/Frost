@@ -14,7 +14,7 @@
 class Frost : public Scrapbook
 {
 private:
-	Font* font;
+	unique_ptr<Font> font;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -35,10 +35,10 @@ public:
 		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
 		entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
 			{
-				AnimationDef("idle", new Animation(0, 4, 0.2f)),
-				AnimationDef("walk", new Animation(6, 6, 0.125f)),
-				AnimationDef("jump", new Animation(12, 3, 0.3f)),
-				AnimationDef("fall", new Animation(18, 2, 0.4f))
+				AnimationDef("idle", Animation(0, 4, 0.2f)),
+				AnimationDef("walk", Animation(6, 6, 0.125f)),
+				AnimationDef("jump", Animation(12, 3, 0.3f)),
+				AnimationDef("fall", Animation(18, 2, 0.4f))
 			}));
 		entity->addComponent(new PlayerComponent(400, 800));
 
@@ -65,7 +65,7 @@ public:
 		SceneManager::AddScene("train", trainScene);
 
 		// Font
-		font = new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f);
+		font = unique_ptr<BitmapFont>(new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 	}
 
 	~Frost()
