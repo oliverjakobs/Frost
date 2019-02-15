@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS/Entity.h"
+#include "EntityManager.h"
 #include "TilePhysics/Tilemap.h"
 
 class Scene
@@ -14,6 +14,8 @@ public:
 	~Scene();
 
 	void addEntity(Entity* entity);
+	void addEntity(Entity* entity, float x, float y);
+	void addEntity(Entity* entity, const glm::vec2& pos);
 	void deleteEntity(const std::string& name);
 
 	void onInput();

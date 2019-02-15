@@ -7,6 +7,7 @@
 #include "ECS/InteractionComponent.h"
 
 #include "Scene/SceneManager.h"
+#include "Scene/EntityManager.h"
 
 #include "Font/BitmapFont.h"
 
@@ -22,14 +23,17 @@ public:
 
 		// load resources
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
+		ResourceManager::AddImage("player", new Image("res/images/player.png", 40, 60, 4, 6));
+		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
+		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
 
 		setDebugMode(true);
 		enableVsync(false);
 		
 		// ------------------------------------------------
-		Entity* entity = new Entity("player", 400, 300, 20, 20);
+		Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
 		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
-		entity->addComponent(new AnimationComponent(new Image("res/images/player.png", 40, 60, 4, 6),
+		entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
 			{
 				AnimationDef("idle", new Animation(0, 4, 0.2f)),
 				AnimationDef("walk", new Animation(6, 6, 0.125f)),
@@ -38,25 +42,24 @@ public:
 			}));
 		entity->addComponent(new PlayerComponent(400, 800));
 
-		Entity* door = new Entity("door", 512, 64, 20, 20);
-		door->addComponent(new ImageComponent(new Image("res/images/door.png", 46, 64)));
-		door->addComponent(new InteractionComponent(40.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("train"); }));
+		Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
+		door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
 
-		Entity* wall = new Entity("wall", 200, 64, 20, 200);
+		Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
 		wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
-		wall->addComponent(new ImageComponent(new Image("res/images/door.png", 20, 200)));
-
+		wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
+		
 		// ------------------------------------------------
 		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
 
-		scene->addEntity(wall);
-		scene->addEntity(door);
-		scene->addEntity(entity);
+		scene->addEntity(EntityManager::GetEntity("wall"));
+		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("train"); })));
+		scene->addEntity(EntityManager::GetEntity("player"), 400, 300);
 
 		Scene* trainScene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/train.txt"));
 		
-		trainScene->addEntity(door);
-		trainScene->addEntity(entity);
+		trainScene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station"); })));
+		trainScene->addEntity(EntityManager::GetEntity("player"), 512, 64);
 
 		SceneManager::AddScene("station", scene);
 		SceneManager::AddScene("train", trainScene);
@@ -68,6 +71,7 @@ public:
 	~Frost()
 	{
 		SceneManager::Free();
+		EntityManager::Free();
 	}
 
 	void onInput() override
@@ -86,8 +90,6 @@ public:
 
 	void onUpdate() override
 	{
-		//setTitle(m_data.title + "  |  " + std::to_string(Timer::GetFPS()));
-
 		SceneManager::OnUpdate();
 	}
 

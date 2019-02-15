@@ -17,8 +17,13 @@ namespace sb
 		{
 			SAFE_DELETE(s.second);
 		}
+		for (auto& i : s_instance->m_images)
+		{
+			SAFE_DELETE(i.second);
+		}
 
 		s_instance->m_shaders.clear();
+		s_instance->m_images.clear();
 		s_instance = nullptr;
 	}
 
@@ -36,6 +41,24 @@ namespace sb
 		catch (std::out_of_range)
 		{
 			DEBUG_MESSAGE("No such shader: " << name);
+			return nullptr;
+		}
+	}
+
+	void ResourceManager::AddImage(const std::string& name, Image* image)
+	{
+		s_instance->m_images[name] = image;
+	}
+
+	Image* ResourceManager::GetImage(const std::string& name)
+	{
+		try
+		{
+			return s_instance->m_images.at(name);
+		}
+		catch (std::out_of_range)
+		{
+			DEBUG_MESSAGE("No such image: " << name);
 			return nullptr;
 		}
 	}

@@ -4,7 +4,6 @@
 
 #include "Entity.h"
 
-// TODO: load and unload
 class Component
 {
 protected:
@@ -21,6 +20,8 @@ public:
 	virtual void setActive(bool a) { m_active = a; }
 	virtual bool isActive() { return m_active; }
 
+	virtual Component* clone() = 0;
+
 	virtual void load() {};
 	virtual void unload() {};
 
@@ -29,24 +30,3 @@ public:
 	virtual void onRender() const = 0;
 	virtual void onRenderDebug() const {};
 };
-
-template<class T> T* getComponent(const Entity* e)
-{
-	T* comp = nullptr;
-	if (e == nullptr)
-		return comp;
-
-	std::vector<Component*> components = e->getComponents();
-	std::vector<Component*>::const_iterator it = components.begin();
-	while (it != components.end())
-	{
-		comp = dynamic_cast<T*>(*it);
-		if (comp != nullptr)
-		{
-			break;
-		}
-		it++;
-	}
-
-	return comp;
-}

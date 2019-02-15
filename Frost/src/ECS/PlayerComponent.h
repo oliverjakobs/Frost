@@ -15,6 +15,8 @@ public:
 	PlayerComponent(float ms, float jp);
 	~PlayerComponent();
 
+	PlayerComponent* clone();
+
 	bool setEntity(Entity* e) override;
 
 	void onInput() override;

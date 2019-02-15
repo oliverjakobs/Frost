@@ -7,7 +7,12 @@ ImageComponent::ImageComponent(sb::Image* sprite)
 
 ImageComponent::~ImageComponent()
 {
-	SAFE_DELETE(m_sprite);
+
+}
+
+ImageComponent* ImageComponent::clone()
+{
+	return new ImageComponent(*this);
 }
 
 void ImageComponent::onInput()

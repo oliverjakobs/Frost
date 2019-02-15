@@ -5,7 +5,7 @@
 PhysicsComponent::PhysicsComponent(BodyDef bodyDef)
 	: m_bodyDef(bodyDef), m_direction(RIGHT)
 {
-	m_bodyPos = glm::vec2(0.0f, bodyDef.hW);
+	m_bodyPos = glm::vec2(0.0f, bodyDef.hH);
 
 	m_isMoving = false;
 	m_isJumping = false;
@@ -24,11 +24,12 @@ PhysicsComponent::PhysicsComponent(BodyDef bodyDef, const glm::vec2& bodyPos)
 
 PhysicsComponent::~PhysicsComponent()
 {
-	if (m_body != nullptr)
-	{
-		m_body->getMap()->destroyBody(m_body);
-		m_body = nullptr;
-	}
+	unload();
+}
+
+PhysicsComponent* PhysicsComponent::clone()
+{
+	return new PhysicsComponent(m_bodyDef);
 }
 
 void PhysicsComponent::load()

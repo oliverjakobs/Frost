@@ -13,12 +13,17 @@ PlayerComponent::~PlayerComponent()
 	m_animComp = nullptr;
 }
 
+PlayerComponent* PlayerComponent::clone()
+{
+	return new PlayerComponent(*this);
+}
+
 bool PlayerComponent::setEntity(Entity* entity)
 {
 	if (entity)
 		entity->setFlag(FlagPlayer);
 
-	m_physComp = getComponent<PhysicsComponent>(entity);
+	m_physComp = entity->getComponent<PhysicsComponent>();
 
 	if (m_physComp == nullptr)
 	{
@@ -26,7 +31,7 @@ bool PlayerComponent::setEntity(Entity* entity)
 		return false;
 	}
 
-	m_animComp = getComponent<AnimationComponent>(entity);
+	m_animComp = entity->getComponent<AnimationComponent>();
 
 	if (m_animComp == nullptr)
 	{

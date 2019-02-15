@@ -11,6 +11,8 @@ public:
 	ImageComponent(sb::Image* sprite);
 	~ImageComponent();
 
+	ImageComponent* clone();
+
 	void onInput() override;
 	void onUpdate() override;
 	void onRender() const override;

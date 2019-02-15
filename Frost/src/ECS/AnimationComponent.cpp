@@ -46,6 +46,18 @@ int Animation::getFrame()
 	return m_frame;
 }
 
+AnimationComponent::AnimationComponent(const AnimationComponent& copy)
+{
+	m_sprite = copy.m_sprite;
+
+	m_currentAnimation = nullptr;
+
+	for (auto& a : copy.m_animations)
+	{
+		m_animations[a.first] = new Animation(*a.second);
+	}
+}
+
 AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Animation*> animations)
 {
 	m_sprite = sprite;
@@ -56,8 +68,6 @@ AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Anim
 
 AnimationComponent::~AnimationComponent()
 {
-	SAFE_DELETE(m_sprite);
-
 	for (auto& a : m_animations)
 	{
 		SAFE_DELETE(a.second);
@@ -65,6 +75,11 @@ AnimationComponent::~AnimationComponent()
 
 	m_animations.clear();
 	m_currentAnimation = nullptr;
+}
+
+AnimationComponent* AnimationComponent::clone()
+{
+	return new AnimationComponent(*this);
 }
 
 void AnimationComponent::flip(RenderFlip flip)
@@ -88,7 +103,7 @@ void AnimationComponent::play(const std::string anim)
 
 bool AnimationComponent::setEntity(Entity* e)
 {
-	m_physComp = getComponent<PhysicsComponent>(e);
+	m_physComp = e->getComponent<PhysicsComponent>();
 
 	if (m_physComp == nullptr)
 	{

@@ -92,6 +92,7 @@
     <ClInclude Include="src\ECS\PlayerComponent.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Scene\EntityManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scrapbook\Graphics.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
     <ClCompile Include="src\ECS\PlayerComponent.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Scene\EntityManager.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp" />

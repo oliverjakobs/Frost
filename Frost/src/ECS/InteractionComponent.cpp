@@ -10,13 +10,18 @@ InteractionComponent::~InteractionComponent()
 {
 }
 
+InteractionComponent* InteractionComponent::clone()
+{
+	return new InteractionComponent(*this);
+}
+
 void InteractionComponent::onInput()
 {
 	if (Input::KeyPressed(m_interactionKey))
 	{
 		Entity* entity = m_entity->getNearestEntity();
 
-		if (m_entity->getDistance(entity) < m_range)
+		if ((m_range <= 0.0f && m_entity->overlap(entity)) || (m_entity->getDistance(entity) < m_range))
 		{
 			m_interacting = true;
 		}
@@ -38,5 +43,6 @@ void InteractionComponent::onRender() const
 
 void InteractionComponent::onRenderDebug() const
 {
-	Renderer::DrawCircle(m_entity->getPosition(), m_range, GREEN);
+	if (m_range > 0.0f)
+		Renderer::DrawCircle(m_entity->getPosition(), m_range, GREEN);
 }

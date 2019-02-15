@@ -18,6 +18,8 @@ public:
 	InteractionComponent(float range, unsigned int interactionKey, Interaction interaction);
 	~InteractionComponent();
 
+	InteractionComponent* clone();
+
 	void onInput() override;
 	void onUpdate() override;
 	void onRender() const override;

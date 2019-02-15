@@ -19,7 +19,7 @@ namespace sb
 		static void AddShader(const std::string& name, Shader* shader);
 		static Shader* GetShader(const std::string& name);
 
-		static void AddImage(const std::string& name, Image* shader);
+		static void AddImage(const std::string& name, Image* image);
 		static Image* GetImage(const std::string& name);
 	};
 }

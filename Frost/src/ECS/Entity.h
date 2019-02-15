@@ -28,6 +28,7 @@ protected:
 
 	std::vector<Component*> m_components;
 public:
+	Entity(const Entity& copy);
 	Entity(const std::string& name, float x, float y, float w, float h);
 	virtual ~Entity();
 
@@ -52,9 +53,27 @@ public:
 
 	std::string getName() const;
 
+	bool overlap(const Entity* entity) const;
 	float getDistance(Entity* entity);
 	Entity* Entity::getNearestEntity();
 
-	void addComponent(Component* c);
+	Entity* addComponent(Component* c);
 	std::vector<Component*> getComponents() const;
+
+	template<class T> 
+	T* getComponent() const
+	{
+		T* comp = nullptr;
+
+		for (auto& c : m_components)
+		{
+			comp = dynamic_cast<T*>(c);
+			if (comp != nullptr)
+			{
+				break;
+			}
+		}
+
+		return comp;
+	}
 };

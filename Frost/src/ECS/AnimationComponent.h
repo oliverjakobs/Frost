@@ -36,8 +36,11 @@ private:
 	Image* m_sprite;
 	PhysicsComponent* m_physComp;
 public:
+	AnimationComponent(const AnimationComponent& copy);
 	AnimationComponent(Image* sprite, std::map<std::string, Animation*> animations);
 	~AnimationComponent();
+
+	AnimationComponent* clone();
 
 	void flip(RenderFlip flip);
 	void play(const std::string anim);

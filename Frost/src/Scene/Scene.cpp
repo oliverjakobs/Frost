@@ -18,11 +18,34 @@ Scene::~Scene()
 
 void Scene::addEntity(Entity* entity)
 {
-	entity->setScene(this);
-	m_entities.push_back(entity);
+	if (entity != nullptr)
+	{
+		entity->setScene(this);
+		m_entities.push_back(entity);
+	}
 }
 
-void Scene::deleteEntity(const std::string & name)
+void Scene::addEntity(Entity* entity, float x, float y)
+{
+	if (entity != nullptr)
+	{
+		entity->setPosition(glm::vec2(x, y));
+		entity->setScene(this);
+		m_entities.push_back(entity);
+	}
+}
+
+void Scene::addEntity(Entity* entity, const glm::vec2 & pos)
+{
+	if (entity != nullptr)
+	{
+		entity->setPosition(pos);
+		entity->setScene(this);
+		m_entities.push_back(entity);
+	}
+}
+
+void Scene::deleteEntity(const std::string& name)
 {
 	for (auto& entity : m_entities)
 	{

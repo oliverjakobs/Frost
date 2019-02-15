@@ -26,6 +26,8 @@ public:
 	PhysicsComponent(BodyDef bodyDef, const glm::vec2& bodyPos);
 	~PhysicsComponent();
 
+	PhysicsComponent* clone();
+
 	void load() override;
 	void unload() override;
 

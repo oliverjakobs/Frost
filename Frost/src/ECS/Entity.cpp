@@ -4,6 +4,22 @@
 #include "Scene/Scene.h"
 #include "Scrapbook/Graphics.h"
 
+Entity::Entity(const Entity& copy)
+{
+	m_name = copy.m_name;
+	m_position = copy.m_position;
+	m_dimension = copy.m_dimension;
+
+	m_flags = copy.m_flags;
+	
+	for (auto& c : copy.m_components)
+	{
+		addComponent(c->clone());
+	}
+
+	setScene(nullptr);
+}
+
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
 	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h))
 {
@@ -121,6 +137,15 @@ std::string Entity::getName() const
 	return m_name;
 }
 
+bool Entity::overlap(const Entity* entity) const
+{
+	if (m_position.x >= (entity->m_position.x + entity->m_dimension.x) || entity->m_position.x >= (m_position.x + m_dimension.x) 
+		|| m_position.y >= (entity->m_position.y + entity->m_dimension.y) || entity->m_position.y >= (m_position.y + m_dimension.y))
+		return false;
+
+	return true;
+}
+
 float Entity::getDistance(Entity* entity)
 {
 	return sb::distance(getPosition(), entity->getPosition());
@@ -131,10 +156,12 @@ Entity* Entity::getNearestEntity()
 	return m_scene->getNearestEntity(this);
 }
 
-void Entity::addComponent(Component* c)
+Entity* Entity::addComponent(Component* c)
 {
 	if (c->setEntity(this))
 		m_components.push_back(c);
+
+	return this;
 }
 
 std::vector<Component*> Entity::getComponents() const

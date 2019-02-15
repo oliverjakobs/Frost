@@ -128,6 +128,7 @@
     </ClInclude>
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Scene\EntityManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ECS\AnimationComponent.cpp">
@@ -194,6 +195,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Scene\EntityManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
