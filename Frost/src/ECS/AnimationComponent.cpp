@@ -60,7 +60,7 @@ AnimationComponent::AnimationComponent(const AnimationComponent& copy)
 	m_animations = copy.m_animations;
 }
 
-AnimationComponent::AnimationComponent(shared_ptr<Image> sprite, std::map<std::string, Animation> animations)
+AnimationComponent::AnimationComponent(Image* sprite, std::map<std::string, Animation> animations)
 {
 	m_sprite = sprite;
 

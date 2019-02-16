@@ -24,8 +24,8 @@ struct Tile
 class TileMap
 {
 private:
-	Image* m_image;					// tileset texture
-	FrameBuffer* m_frameBuffer;		// render map to fb and only update it when something changed to increase framerate
+	Image* m_image;								// tileset texture
+	unique_ptr<FrameBuffer> m_frameBuffer;		// render map to fb and only update it when something changed to increase framerate
 
 	int m_width;
 	int m_height;
@@ -37,12 +37,12 @@ private:
 	glm::vec2 m_gravity;
 
 	std::vector<Tile> m_tiles;
-	std::vector<Body*> m_bodies;
+	std::vector<unique_ptr<Body>> m_bodies;
 
-	bool m_changed;					// has the map changed; need to update the framebuffer
+	bool m_changed;								// has the map changed; need to update the framebuffer
 	bool m_renderToFB;
 public:
-	TileMap(const std::string& image, const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
+	TileMap(Image* image, const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
 	~TileMap();
 
 	// only way to create bodies
@@ -82,7 +82,7 @@ public:
 	float getSimulationTime() const;
 
 	// get bodies
-	std::vector<Body*> getBodies() const;
+	std::vector<std::unique_ptr<Body>> const& getBodies() const;
 	std::vector<Body*> getBodiesT(BodyType type) const;
 
 	std::vector<Body*> getOtherBodies(Body* body) const;

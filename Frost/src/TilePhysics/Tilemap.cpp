@@ -1,7 +1,7 @@
 #include "Tilemap.h"
 
-TileMap::TileMap(const std::string& image, const std::string& map, const glm::vec2& gravity)
-	: m_gravity(gravity)
+TileMap::TileMap(Image* image, const std::string& map, const glm::vec2& gravity)
+	: m_image(image), m_gravity(gravity)
 {
 	// read in the data and separate the config from the map
 	auto data = cutStringBefore("[Map]", readFile(map.c_str()));
@@ -13,11 +13,10 @@ TileMap::TileMap(const std::string& image, const std::string& map, const glm::ve
 	m_width = std::stoi(config[0]);
 	m_height = std::stoi(config[1]);
 
+	// TODO: tilesize from image?
 	m_tileSize = std::stof(config[2]);
 
-	m_image = new Image(image, m_tileSize, m_tileSize, 1, 5);
-
-	m_frameBuffer = new FrameBuffer((int)std::ceilf(m_width * m_tileSize), (int)std::ceilf(m_height * m_tileSize));
+	m_frameBuffer = unique_ptr<FrameBuffer>(new FrameBuffer((int)std::ceilf(m_width * m_tileSize), (int)std::ceilf(m_height * m_tileSize)));
 
 	// nested loop iterating over the width and height of the map
 	for (int i = 0; i < m_height; i++)
@@ -50,32 +49,26 @@ TileMap::TileMap(const std::string& image, const std::string& map, const glm::ve
 
 TileMap::~TileMap()
 {
-	SAFE_DELETE(m_image);
-	SAFE_DELETE(m_frameBuffer);
 
-	m_tiles.clear();
 }
 
 Body* TileMap::createBody(float x, float y, float hWidth, float hHeight, BodyType type)
 {
 	Body* body = new Body(this, x, y, hWidth, hHeight, type);
 
-	m_bodies.push_back(body);
+	m_bodies.push_back(unique_ptr<Body>(body));
 
 	return body;
 }
 
 void TileMap::destroyBody(Body* body)
 {
-	for (auto& b : m_bodies)
-	{
-		if (b == body)
-		{
-			SAFE_DELETE(b);
-		}
-	}
+	auto it = std::find_if(m_bodies.begin(), m_bodies.end(), [&](auto& e) { return e.get() == body; });
 
-	m_bodies.erase(std::remove(m_bodies.begin(), m_bodies.end(), nullptr), m_bodies.end());
+	if (it != m_bodies.end())
+	{
+		m_bodies.erase(it);
+	}
 }
 
 void TileMap::onChange() const
@@ -242,7 +235,7 @@ float TileMap::getSimulationTime() const
 	return m_simTime;
 }
 
-std::vector<Body*> TileMap::getBodies() const
+std::vector<std::unique_ptr<Body>> const& TileMap::getBodies() const
 {
 	return m_bodies;
 }
@@ -254,7 +247,7 @@ std::vector<Body*> TileMap::getBodiesT(BodyType type) const
 	for (auto& b : m_bodies)
 	{
 		if (b->getType() == type)
-			typed.push_back(b);
+			typed.push_back(b.get());
 	}
 
 	return typed;
@@ -266,8 +259,8 @@ std::vector<Body*> TileMap::getOtherBodies(Body* body) const
 
 	for (auto& b : m_bodies)
 	{
-		if (b != body)
-			typed.push_back(b);
+		if (b.get() != body)
+			typed.push_back(b.get());
 	}
 
 	return typed;

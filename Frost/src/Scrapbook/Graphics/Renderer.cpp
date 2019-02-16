@@ -48,7 +48,7 @@ namespace sb
 	{
 		if (tex != nullptr)
 		{
-			shared_ptr<Shader> shader = ResourceManager::GetShader(sName);
+			Shader* shader = ResourceManager::GetShader(sName);
 
 			if (shader != nullptr)
 			{
@@ -71,7 +71,7 @@ namespace sb
 	{
 		if (tex != nullptr)
 		{
-			shared_ptr<Shader> shader = ResourceManager::GetShader(sName);
+			Shader* shader = ResourceManager::GetShader(sName);
 
 			if (shader != nullptr)
 			{

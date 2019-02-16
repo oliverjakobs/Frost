@@ -34,11 +34,11 @@ private:
 	unique_ptr<Animation> m_currentAnimation;
 	std::string m_currentName;
 
-	shared_ptr<Image> m_sprite;
+	Image* m_sprite;
 	PhysicsComponent* m_physComp;
 public:
 	AnimationComponent(const AnimationComponent& copy);
-	AnimationComponent(shared_ptr<Image> sprite, std::map<std::string, Animation> animations);
+	AnimationComponent(Image* sprite, std::map<std::string, Animation> animations);
 	~AnimationComponent();
 
 	AnimationComponent* clone();

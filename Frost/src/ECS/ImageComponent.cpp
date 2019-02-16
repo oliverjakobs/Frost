@@ -1,6 +1,6 @@
 #include "ImageComponent.h"
 
-ImageComponent::ImageComponent(shared_ptr<sb::Image> sprite)
+ImageComponent::ImageComponent(sb::Image* sprite)
 {
 	m_sprite = sprite;
 }

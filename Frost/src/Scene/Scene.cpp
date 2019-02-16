@@ -7,7 +7,7 @@ Scene::Scene(float w, float h, TileMap* map)
 
 Scene::~Scene()
 {
-	DEBUG_MESSAGE("DEST SCENE")
+
 }
 
 void Scene::addEntity(Entity* entity)
@@ -36,13 +36,12 @@ void Scene::addEntity(Entity* entity, const glm::vec2 & pos)
 
 void Scene::deleteEntity(const std::string& name)
 {
-	for (auto& entity : m_entities)
-	{
-		if (stringCompare(entity->getName(), name))
-			entity->kill();
-	}
+	auto it = std::find_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return e->getName() == name; });
 
-	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](auto& e) { return e->shouldDelete(); }), m_entities.end());
+	if (it != m_entities.end())
+	{
+		m_entities.erase(it);
+	}
 }
 
 void Scene::onInput()

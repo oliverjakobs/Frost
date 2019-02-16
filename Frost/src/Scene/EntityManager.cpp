@@ -1,15 +1,12 @@
 #include "EntityManager.h"
 
-void EntityManager::CreateEntity(const std::string& name, float x, float y, float w, float h, std::vector<Component*> components)
+Entity* EntityManager::CreateEntity(const std::string& name, float x, float y, float w, float h)
 {
-	Entity entity = Entity(name, x, y, w, h);
+	Entity* entity = new Entity(name, x, y, w, h);
 
-	for (auto& c : components)
-	{
-		entity.addComponent(c);
-	}
+	Get().m_entities[name] = unique_ptr<Entity>(entity);
 
-	Get().m_entities[name] = std::make_unique<Entity>(entity);
+	return entity;
 }
 
 void EntityManager::AddEntity(Entity* entity)

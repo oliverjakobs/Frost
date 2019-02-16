@@ -28,40 +28,35 @@ public:
 		ResourceManager::AddImage("player", new Image("res/images/player.png", 40, 60, 4, 6));
 		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
+		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
 		
 		// ---------------| Create entities|---------------------------------
-		EntityManager::CreateEntity("player", 0, 0, 20, 20, 
+		Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
+		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
+		entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
 			{
-				new PhysicsComponent({ 20, 30, BodyTypeDynamic }),
-				new AnimationComponent(ResourceManager::GetImage("player"),
-					{
-						AnimationDef("idle", Animation(0, 4, 0.2f)),
-						AnimationDef("walk", Animation(6, 6, 0.125f)),
-						AnimationDef("jump", Animation(12, 3, 0.3f)),
-						AnimationDef("fall", Animation(18, 2, 0.4f))
-					}),
-				new PlayerComponent(400, 800)
-			});
+				AnimationDef("idle", Animation(0, 4, 0.2f)),
+				AnimationDef("walk", Animation(6, 6, 0.125f)),
+				AnimationDef("jump", Animation(12, 3, 0.3f)),
+				AnimationDef("fall", Animation(18, 2, 0.4f))
+			}));
+		entity->addComponent(new PlayerComponent(400, 800));
 
-		EntityManager::CreateEntity("door", 512, 64, 20, 20, 
-			{
-				new ImageComponent(ResourceManager::GetImage("door"))
-			});
+		Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
+		door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
 
-		EntityManager::CreateEntity("wall", 200, 64, 20, 200, 
-			{
-				new PhysicsComponent({ 10, 100, BodyTypeStatic }),
-				new ImageComponent(ResourceManager::GetImage("wall"))
-			});
+		Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
+		wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
+		wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
 		
-		// ------------------------------------------------
-		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
+		// ---------------| Create Scenes|-----------------------------------
+		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station.txt"));
 
 		scene->addEntity(EntityManager::GetEntity("wall"));
 		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("train"); })));
 		scene->addEntity(EntityManager::GetEntity("player"), 400, 300);
 
-		Scene* trainScene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/train.txt"));
+		Scene* trainScene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/train.txt"));
 		
 		trainScene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station"); })));
 		trainScene->addEntity(EntityManager::GetEntity("player"), 512, 64);

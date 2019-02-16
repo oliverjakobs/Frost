@@ -77,7 +77,7 @@ namespace sb
 
 	void FrameBuffer::render(const std::string& sName) const
 	{
-		shared_ptr<Shader> shader = ResourceManager::GetShader(sName);
+		Shader* shader = ResourceManager::GetShader(sName);
 
 		if (shader != nullptr)
 		{
