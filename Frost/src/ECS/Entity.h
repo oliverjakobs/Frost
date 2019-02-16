@@ -26,6 +26,8 @@ protected:
 
 	Scene* m_scene;
 
+	bool m_delete;
+
 	std::vector<Component*> m_components;
 public:
 	Entity(const Entity& copy);
@@ -52,6 +54,9 @@ public:
 	glm::vec2 getSize() const;
 
 	std::string getName() const;
+
+	void kill();
+	bool shouldDelete() const;
 
 	bool overlap(const Entity* entity) const;
 	float getDistance(Entity* entity);

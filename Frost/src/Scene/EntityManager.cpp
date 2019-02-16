@@ -1,34 +1,27 @@
 #include "EntityManager.h"
 
-void EntityManager::Free()
+void EntityManager::CreateEntity(const std::string& name, float x, float y, float w, float h, std::vector<Component*> components)
 {
-	for (auto& e : Get()->m_entities)
+	Entity entity = Entity(name, x, y, w, h);
+
+	for (auto& c : components)
 	{
-		SAFE_DELETE(e.second);
+		entity.addComponent(c);
 	}
 
-	Get()->m_entities.clear();
-}
-
-Entity* EntityManager::CreateEntity(const std::string& name, float x, float y, float w, float h)
-{
-	Entity* entity = new Entity(name, x, y, w, h);
-
-	Get()->m_entities[name] = entity;
-
-	return entity;
+	Get().m_entities[name] = std::make_unique<Entity>(entity);
 }
 
 void EntityManager::AddEntity(Entity* entity)
 {
-	Get()->m_entities[entity->getName()] = entity;
+	Get().m_entities[entity->getName()] = unique_ptr<Entity>(entity);
 }
 
 Entity* EntityManager::GetEntity(const std::string& name)
 {
 	try
 	{
-		return new Entity(*Get()->m_entities.at(name));
+		return new Entity(*Get().m_entities.at(name));
 	}
 	catch (std::out_of_range)
 	{
@@ -39,10 +32,9 @@ Entity* EntityManager::GetEntity(const std::string& name)
 
 void EntityManager::RemoveEntity(const std::string& name)
 {
-	std::map<std::string, Entity*>::iterator it = Get()->m_entities.find(name);
-	if (it != Get()->m_entities.end())
+	std::map<std::string, unique_ptr<Entity>>::iterator it = Get().m_entities.find(name);
+	if (it != Get().m_entities.end())
 	{
-		SAFE_DELETE(it->second);
-		Get()->m_entities.erase(it);
+		Get().m_entities.erase(it);
 	}
 }

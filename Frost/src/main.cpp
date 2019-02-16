@@ -1,4 +1,3 @@
-
 #include "TilePhysics/Body.h"
 
 #include "ECS/Entity.h"
@@ -21,33 +20,39 @@ public:
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		// load resources
+		setDebugMode(true);
+		enableVsync(false);
+
+		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
 		ResourceManager::AddImage("player", new Image("res/images/player.png", 40, 60, 4, 6));
 		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
-
-		setDebugMode(true);
-		enableVsync(false);
 		
-		// ------------------------------------------------
-		Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
-		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
-		entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
+		// ---------------| Create entities|---------------------------------
+		EntityManager::CreateEntity("player", 0, 0, 20, 20, 
 			{
-				AnimationDef("idle", Animation(0, 4, 0.2f)),
-				AnimationDef("walk", Animation(6, 6, 0.125f)),
-				AnimationDef("jump", Animation(12, 3, 0.3f)),
-				AnimationDef("fall", Animation(18, 2, 0.4f))
-			}));
-		entity->addComponent(new PlayerComponent(400, 800));
+				new PhysicsComponent({ 20, 30, BodyTypeDynamic }),
+				new AnimationComponent(ResourceManager::GetImage("player"),
+					{
+						AnimationDef("idle", Animation(0, 4, 0.2f)),
+						AnimationDef("walk", Animation(6, 6, 0.125f)),
+						AnimationDef("jump", Animation(12, 3, 0.3f)),
+						AnimationDef("fall", Animation(18, 2, 0.4f))
+					}),
+				new PlayerComponent(400, 800)
+			});
 
-		Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
-		door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
+		EntityManager::CreateEntity("door", 512, 64, 20, 20, 
+			{
+				new ImageComponent(ResourceManager::GetImage("door"))
+			});
 
-		Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
-		wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
-		wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
+		EntityManager::CreateEntity("wall", 200, 64, 20, 200, 
+			{
+				new PhysicsComponent({ 10, 100, BodyTypeStatic }),
+				new ImageComponent(ResourceManager::GetImage("wall"))
+			});
 		
 		// ------------------------------------------------
 		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap("res/images/tiles.png", "res/maps/station.txt"));
@@ -70,8 +75,6 @@ public:
 
 	~Frost()
 	{
-		SceneManager::Free();
-		EntityManager::Free();
 	}
 
 	void onInput() override

@@ -11,6 +11,7 @@ Entity::Entity(const Entity& copy)
 	m_dimension = copy.m_dimension;
 
 	m_flags = copy.m_flags;
+	m_delete = false;
 	
 	for (auto& c : copy.m_components)
 	{
@@ -21,7 +22,7 @@ Entity::Entity(const Entity& copy)
 }
 
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
-	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h))
+	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h)), m_delete(false)
 {
 
 }
@@ -35,6 +36,8 @@ Entity::~Entity()
 	m_components.clear();
 
 	m_scene = nullptr;
+
+	DEBUG_MESSAGE("DELETE ENTITY: " << m_name);
 }
 
 void Entity::onInput()
@@ -135,6 +138,18 @@ glm::vec2 Entity::getSize() const
 std::string Entity::getName() const
 {
 	return m_name;
+}
+
+
+
+void Entity::kill()
+{
+	m_delete = true;
+}
+
+bool Entity::shouldDelete() const
+{
+	return m_delete;
 }
 
 bool Entity::overlap(const Entity* entity) const

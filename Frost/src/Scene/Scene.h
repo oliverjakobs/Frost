@@ -6,9 +6,9 @@
 class Scene
 {
 private:
-	std::vector<Entity*> m_entities;
+	std::vector<unique_ptr<Entity>> m_entities;
 
-	TileMap* m_map;
+	unique_ptr<TileMap> m_map;
 public:
 	Scene(float w, float h, TileMap* map);
 	~Scene();

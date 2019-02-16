@@ -1,32 +1,36 @@
 #pragma once
 
+#include <memory>
+#include <mutex>
+
+using std::unique_ptr;
+using std::make_unique;
+
+using std::shared_ptr;
+using std::make_shared;
+using std::weak_ptr;
+
 template<class T> class Singleton
 {
 private:
-	static T* s_instance;
+	/*Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;*/
 
-protected:
-	Singleton()
-	{
-		if (s_instance)
-			throw;
-	};
-
-	~Singleton()
-	{
-		if(s_instance != nullptr)
-			delete s_instance;
-	}
-
+	static std::unique_ptr<T> instance;
+	static std::once_flag onceFlag;
 public:
-	static T* Get()
+	Singleton() = default;
+
+	static T& Singleton::Get()
 	{
-		if (!s_instance)
+		std::call_once(Singleton::onceFlag, []()
 		{
-			s_instance = new T();
-		}
-		return s_instance;
+			instance.reset(new T());
+		});
+
+		return *(instance.get());
 	}
 };
 
-template<class T> T* Singleton<T>::s_instance = (0);
+template<class T> std::unique_ptr<T> Singleton<T>::instance;
+template<class T> std::once_flag Singleton<T>::onceFlag;

@@ -86,8 +86,9 @@ void PlayerComponent::onUpdate()
 			m_animComp->play("idle");
 	}
 
-	Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, new Rect(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize()));
-	//Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, nullptr);
+	Rect constraint(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize());
+
+	Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, &constraint);
 }
 
 void PlayerComponent::onRender() const

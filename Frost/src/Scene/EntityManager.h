@@ -5,11 +5,9 @@
 class EntityManager : private Singleton<EntityManager>
 {
 private:
-	std::map<std::string, Entity*> m_entities;
+	std::map<std::string, unique_ptr<Entity>> m_entities;
 public:
-	static void Free();
-
-	static Entity* CreateEntity(const std::string& name, float x, float y, float w, float h);
+	static void CreateEntity(const std::string& name, float x, float y, float w, float h, std::vector<Component*> components);
 	static void AddEntity(Entity* entity);
 
 	static Entity* GetEntity(const std::string& name);

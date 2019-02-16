@@ -29,27 +29,27 @@ namespace sb
 	{
 		float time = GetTime();
 
-		Get()->m_deltaTime = time - Get()->m_lastFrame;
-		Get()->m_lastFrame = time;
+		Get().m_deltaTime = time - Get().m_lastFrame;
+		Get().m_lastFrame = time;
 	}
 
 	void Timer::End()
 	{
-		Get()->m_frames++;
-		if (GetTime() - Get()->m_timer > 1.0f)
+		Get().m_frames++;
+		if (GetTime() - Get().m_timer > 1.0f)
 		{
-			Get()->updateFPS();
+			Get().updateFPS();
 		}
 	}
 
 	float Timer::GetDeltaTime()
 	{
-		return Get()->m_deltaTime;
+		return Get().m_deltaTime;
 	}
 
 	int Timer::GetFPS()
 	{
-		return Get()->m_fps;
+		return Get().m_fps;
 	}
 
 	float Timer::GetTime()

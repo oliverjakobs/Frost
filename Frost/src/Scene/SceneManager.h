@@ -5,13 +5,11 @@
 class SceneManager : private Singleton<SceneManager>
 {
 private:
-	std::map<std::string, Scene*> m_scenes;
+	std::map<std::string, unique_ptr<Scene>> m_scenes;
 
 	Scene* m_activeScene;
 	std::string m_activeName;
 public:
-	static void Free();
-
 	static void AddScene(const std::string& name, Scene* scene);
 	static void ChangeScene(const std::string& name);
 
