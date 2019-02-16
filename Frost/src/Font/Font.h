@@ -2,6 +2,8 @@
 
 #include "Scrapbook/Scrapbook.h"
 
+using namespace sb;
+
 class Font
 {
 public:

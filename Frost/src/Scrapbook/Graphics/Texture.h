@@ -5,10 +5,10 @@ namespace sb
 	class Texture
 	{
 	private:
-		unsigned int id;
-		int width;
-		int height;
-		int bpp;
+		unsigned int m_id;
+		int m_width;
+		int m_height;
+		int m_bpp;
 
 		unsigned int m_slot;
 	public:

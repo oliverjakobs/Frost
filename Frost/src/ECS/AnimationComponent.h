@@ -14,6 +14,7 @@ private:
 
 	int m_frame;
 public:
+	Animation();
 	Animation(int start, int length, float delay);
 	~Animation();
 
@@ -24,20 +25,20 @@ public:
 	int getFrame();
 };
 
-typedef std::pair<std::string, Animation*> AnimationDef;
+typedef std::pair<std::string, Animation> AnimationDef;
 
 class AnimationComponent : public Component
 {
 private:
-	std::map<std::string, Animation*> m_animations;
-	Animation* m_currentAnimation;
+	std::map<std::string, Animation> m_animations;
+	unique_ptr<Animation> m_currentAnimation;
 	std::string m_currentName;
 
 	Image* m_sprite;
 	PhysicsComponent* m_physComp;
 public:
 	AnimationComponent(const AnimationComponent& copy);
-	AnimationComponent(Image* sprite, std::map<std::string, Animation*> animations);
+	AnimationComponent(Image* sprite, std::map<std::string, Animation> animations);
 	~AnimationComponent();
 
 	AnimationComponent* clone();

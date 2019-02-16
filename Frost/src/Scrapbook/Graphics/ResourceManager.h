@@ -4,18 +4,14 @@
 
 namespace sb
 {
-	class ResourceManager
+	class ResourceManager : private Singleton<ResourceManager>
 	{
 	private:
-		static ResourceManager* s_instance;
+		std::map<std::string, unique_ptr<Shader>> m_shaders;
+		std::map<std::string, unique_ptr<Image>> m_images;
 
-		std::map<std::string, Shader*> m_shaders;
-		std::map<std::string, Image*> m_images;
-		//std::map<std::string, Shader*> m_spriteSheets;
 	public:
-		static void Load();
-		static void Free();
-
+		// TODO: Rescource creation only through here
 		static void AddShader(const std::string& name, Shader* shader);
 		static Shader* GetShader(const std::string& name);
 

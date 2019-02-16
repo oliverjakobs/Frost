@@ -34,7 +34,7 @@ namespace sb
 		m_vao.setVertexAttribPointer(0, 3, 5, 0);
 		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
-		m_texture = new Texture(src.c_str(), 0);
+		m_texture = unique_ptr<Texture>(new Texture(src.c_str(), 0));
 	}
 
 	Image::Image(const std::string & src, float width, float height, int rows, int columns)
@@ -55,13 +55,12 @@ namespace sb
 		m_vao.setVertexAttribPointer(0, 3, 5, 0);
 		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
-		m_texture = new Texture(src.c_str(), 0);
+		m_texture = unique_ptr<Texture>(new Texture(src.c_str(), 0));
 	}
 
 	Image::~Image()
 	{
-		if (m_texture != nullptr)
-			delete m_texture;
+
 	}
 
 	void Image::setRenderFlip(RenderFlip flip)
@@ -80,7 +79,7 @@ namespace sb
 
 		std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
 
-		Renderer::RenderTexture(m_texture, shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices);
+		Renderer::RenderTexture(m_texture.get(), shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices);
 	}
 
 	void Image::renderF(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const
@@ -97,6 +96,6 @@ namespace sb
 
 		std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
 
-		Renderer::RenderTexture(m_texture, shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices, glm::vec2(fX, fY));
+		Renderer::RenderTexture(m_texture.get(), shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices, glm::vec2(fX, fY));
 	}
 }

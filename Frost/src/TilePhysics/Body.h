@@ -49,11 +49,11 @@ private:
 	BodyType m_type;
 
 	Body(TileMap* map, float x, float y, float hW, float hH, BodyType type);
-	virtual ~Body();
 
 	// can only be updated by the map
 	void onUpdate();
 public:
+	virtual ~Body();
 	// renders different debugging info
 	void onRender() const;
 

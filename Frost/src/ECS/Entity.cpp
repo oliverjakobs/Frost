@@ -11,6 +11,7 @@ Entity::Entity(const Entity& copy)
 	m_dimension = copy.m_dimension;
 
 	m_flags = copy.m_flags;
+	m_delete = false;
 	
 	for (auto& c : copy.m_components)
 	{
@@ -21,25 +22,19 @@ Entity::Entity(const Entity& copy)
 }
 
 Entity::Entity(const std::string& name, float x, float y, float w, float h)
-	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h))
+	: m_name(name), m_position(glm::vec2(x, y)), m_dimension(glm::vec2(w, h)), m_delete(false)
 {
 
 }
 
 Entity::~Entity()
 {
-	for (auto& c : m_components)
-	{
-		SAFE_DELETE(c);
-	}
-	m_components.clear();
 
-	m_scene = nullptr;
 }
 
 void Entity::onInput()
 {
-	for (auto comp : m_components)
+	for (auto& comp : m_components)
 	{
 		if (comp->isActive())
 		{
@@ -50,7 +45,7 @@ void Entity::onInput()
 
 void Entity::onUpdate()
 {
-	for (auto comp : m_components)
+	for (auto& comp : m_components)
 	{
 		if (comp->isActive())
 		{
@@ -61,7 +56,7 @@ void Entity::onUpdate()
 
 void Entity::onRender() const
 {
-	for (auto comp : m_components)
+	for (auto& comp : m_components)
 	{
 		if (comp->isActive())
 		{
@@ -74,7 +69,7 @@ void Entity::onRenderDebug() const
 {
 	sb::Renderer::DrawRect(m_position - glm::vec2(m_dimension.x / 2.0f, 0.0f), m_dimension, sb::CYAN);
 
-	for (auto comp : m_components)
+	for (auto& comp : m_components)
 	{
 		if (comp->isActive())
 		{
@@ -137,6 +132,16 @@ std::string Entity::getName() const
 	return m_name;
 }
 
+void Entity::kill()
+{
+	m_delete = true;
+}
+
+bool Entity::shouldDelete() const
+{
+	return m_delete;
+}
+
 bool Entity::overlap(const Entity* entity) const
 {
 	if (m_position.x >= (entity->m_position.x + entity->m_dimension.x) || entity->m_position.x >= (m_position.x + m_dimension.x) 
@@ -159,12 +164,12 @@ Entity* Entity::getNearestEntity()
 Entity* Entity::addComponent(Component* c)
 {
 	if (c->setEntity(this))
-		m_components.push_back(c);
+		m_components.push_back(unique_ptr<Component>(c));
 
 	return this;
 }
 
-std::vector<Component*> Entity::getComponents() const
+std::vector<std::unique_ptr<Component>> const& Entity::getComponents() const
 {
 	return m_components;
 }

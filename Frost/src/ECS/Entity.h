@@ -26,7 +26,9 @@ protected:
 
 	Scene* m_scene;
 
-	std::vector<Component*> m_components;
+	bool m_delete;
+
+	std::vector<unique_ptr<Component>> m_components;
 public:
 	Entity(const Entity& copy);
 	Entity(const std::string& name, float x, float y, float w, float h);
@@ -53,12 +55,15 @@ public:
 
 	std::string getName() const;
 
+	void kill();
+	bool shouldDelete() const;
+
 	bool overlap(const Entity* entity) const;
 	float getDistance(Entity* entity);
 	Entity* Entity::getNearestEntity();
 
 	Entity* addComponent(Component* c);
-	std::vector<Component*> getComponents() const;
+	std::vector<std::unique_ptr<Component>> const& getComponents() const;
 
 	template<class T> 
 	T* getComponent() const
@@ -67,7 +72,7 @@ public:
 
 		for (auto& c : m_components)
 		{
-			comp = dynamic_cast<T*>(c);
+			comp = dynamic_cast<T*>(c.get());
 			if (comp != nullptr)
 			{
 				break;

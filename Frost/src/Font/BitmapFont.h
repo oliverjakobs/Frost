@@ -5,7 +5,7 @@
 class BitmapFont : public Font
 {
 private:
-	sb::Image* m_image;
+	shared_ptr<Image> m_image;
 
 	float m_charSpacing;
 public:
@@ -19,7 +19,7 @@ public:
 class BitmapNumFont : public Font
 {
 private:
-	sb::Image* m_image;
+	shared_ptr<Image> m_image;
 
 	float m_charSpacing;
 public:

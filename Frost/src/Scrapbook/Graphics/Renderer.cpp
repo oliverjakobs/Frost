@@ -6,16 +6,16 @@ namespace sb
 {
 	void Renderer::Init(float x, float y, float w, float h)
 	{
-		Get()->m_primitives.create();
+		Get().m_primitives.create();
 
-		Get()->m_screenView = glm::ortho(0.0f, w, 0.0f, h);
+		Get().m_screenView = glm::ortho(0.0f, w, 0.0f, h);
 
 		SetView(x, y, w, h);
 	}
 
 	void Renderer::Destroy()
 	{
-
+		Get().m_primitives.destroy();
 	}
 
 	void Renderer::Start()
@@ -25,7 +25,7 @@ namespace sb
 
 	void Renderer::Flush()
 	{
-		Get()->m_primitives.flush(GetView().mat);
+		Get().m_primitives.flush(GetView().mat);
 	}
 
 	void Renderer::EnableBlend(GLenum sfactor, GLenum dfactor)
@@ -92,12 +92,12 @@ namespace sb
 
 	void Renderer::DrawLine(const Line& line, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.drawLine(line.start, line.end, color, view);
+		Get().m_primitives.drawLine(line.start, line.end, color, view);
 	}
 
 	void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.drawLine(start, end, color, view);
+		Get().m_primitives.drawLine(start, end, color, view);
 	}
 
 	void Renderer::DrawRect(float x, float y, float w, float h, const glm::vec4& color, const glm::mat4& view)
@@ -110,7 +110,7 @@ namespace sb
 			glm::vec2(x, y + h)
 		};
 
-		Get()->m_primitives.drawPolygon(vertices, color, view);
+		Get().m_primitives.drawPolygon(vertices, color, view);
 	}
 
 	void Renderer::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const glm::vec4& color, const glm::mat4& view)
@@ -120,12 +120,12 @@ namespace sb
 
 	void Renderer::DrawCircle(const glm::vec2& center, float radius, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.drawCircle(center, radius, color, view);
+		Get().m_primitives.drawCircle(center, radius, color, view);
 	}
 
 	void Renderer::DrawPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.drawPolygon(vertices, color, view);
+		Get().m_primitives.drawPolygon(vertices, color, view);
 	}
 
 	void Renderer::FillRect(float x, float y, float w, float h, const glm::vec4& color, const glm::mat4& view)
@@ -138,31 +138,31 @@ namespace sb
 			glm::vec2(x, y + h)
 		};
 
-		Get()->m_primitives.fillPolygon(vertices, color, view);
+		Get().m_primitives.fillPolygon(vertices, color, view);
 	}
 	
 	void Renderer::FillCircle(const glm::vec2& center, float radius, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.fillCircle(center, radius, color, view);
+		Get().m_primitives.fillCircle(center, radius, color, view);
 	}
 
 	void Renderer::FillPolygon(const std::vector<glm::vec2>& vertices, const glm::vec4& color, const glm::mat4& view)
 	{
-		Get()->m_primitives.fillPolygon(vertices, color, view);
+		Get().m_primitives.fillPolygon(vertices, color, view);
 	}
 
 	void Renderer::SetView(float x, float y)
 	{
-		SetView(x, y, Get()->m_view.w, Get()->m_view.h);
+		SetView(x, y, Get().m_view.w, Get().m_view.h);
 	}
 
 	void Renderer::SetView(float x, float y, float w, float h)
 	{
-		Get()->m_view.x = x;
-		Get()->m_view.y = y;
-		Get()->m_view.w = w;
-		Get()->m_view.h = h;
-		Get()->m_view.mat = glm::ortho(x, x + w, y, y + h);
+		Get().m_view.x = x;
+		Get().m_view.y = y;
+		Get().m_view.w = w;
+		Get().m_view.h = h;
+		Get().m_view.mat = glm::ortho(x, x + w, y, y + h);
 	}
 
 	void Renderer::SetViewCenter(float x, float y, Rect* con)
@@ -194,7 +194,7 @@ namespace sb
 
 	View Renderer::GetView()
 	{
-		return Get()->m_view;
+		return Get().m_view;
 	}
 
 	glm::mat4 Renderer::GetViewMat()
@@ -204,6 +204,6 @@ namespace sb
 
 	glm::mat4 Renderer::GetScreenView()
 	{
-		return Get()->m_screenView;
+		return Get().m_screenView;
 	}
 }

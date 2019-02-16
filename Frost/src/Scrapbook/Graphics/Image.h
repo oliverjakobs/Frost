@@ -16,7 +16,7 @@ namespace sb
 	class Image
 	{
 	private:
-		Texture* m_texture;
+		unique_ptr<Texture> m_texture;
 		VAO m_vao;
 
 		RenderFlip m_flip;

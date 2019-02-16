@@ -4,13 +4,13 @@ using namespace sb;
 
 BitmapFont::BitmapFont(const std::string& path, float width, float height, float charSpacing)
 {
-	m_image = new Image(path, width, height, 8, 16);
+	m_image = shared_ptr<Image>(new Image(path, width, height, 8, 16));
 	m_charSpacing = charSpacing;
 }
 
 BitmapFont::~BitmapFont()
 {
-	SAFE_DELETE(m_image);
+
 }
 
 void BitmapFont::onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const
@@ -29,13 +29,13 @@ void BitmapFont::onRender(const std::string& text, const glm::vec2& position, co
 
 BitmapNumFont::BitmapNumFont(const std::string& path, float width, float height, float charSpacing)
 {
-	m_image = new Image(path, width, height, 1, 11);
+	m_image = shared_ptr<Image>(new Image(path, width, height, 1, 11));
 	m_charSpacing = charSpacing;
 }
 
 BitmapNumFont::~BitmapNumFont()
 {
-	SAFE_DELETE(m_image);
+
 }
 
 void BitmapNumFont::onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const

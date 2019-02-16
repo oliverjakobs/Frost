@@ -25,17 +25,17 @@ namespace sb
 
 	void sb::Input::SetKeyState(unsigned int key, bool pressed, bool prev)
 	{
-		Get()->m_keys[key] = { pressed, prev };
+		Get().m_keys[key] = { pressed, prev };
 	}
 
 	void Input::OnUpdate()
 	{
-		for (auto& key : Get()->m_keys)
+		for (auto& key : Get().m_keys)
 		{
 			key.second.prev = key.second.pressed;
 		}
 
-		for (auto& button : Get()->m_mouseButtons)
+		for (auto& button : Get().m_mouseButtons)
 		{
 			button.second.prev = button.second.pressed;
 		}
@@ -46,7 +46,7 @@ namespace sb
 		if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
 			return false;
 
-		return Get()->m_keys[key].pressed;
+		return Get().m_keys[key].pressed;
 	}
 
 	bool Input::KeyPressed(unsigned int key)
@@ -54,7 +54,7 @@ namespace sb
 		if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
 			return false;
 						
-		return Get()->m_keys[key].pressed && !Get()->m_keys[key].prev;
+		return Get().m_keys[key].pressed && !Get().m_keys[key].prev;
 	}
 
 	bool Input::KeyReleased(unsigned int key)
@@ -62,7 +62,7 @@ namespace sb
 		if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
 			return false;
 
-		return (Get()->m_keys[key].prev && !Get()->m_keys[key].pressed);
+		return (Get().m_keys[key].prev && !Get().m_keys[key].pressed);
 	}
 
 	bool Input::MouseButtonDown(unsigned int button)
@@ -70,7 +70,7 @@ namespace sb
 		if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
 			return false;
 
-		return Get()->m_mouseButtons[button].pressed;
+		return Get().m_mouseButtons[button].pressed;
 	}
 
 	bool Input::MouseButtonPressed(unsigned int button)
@@ -78,7 +78,7 @@ namespace sb
 		if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
 			return false;
 
-		return Get()->m_mouseButtons[button].pressed && !Get()->m_mouseButtons[button].prev;
+		return Get().m_mouseButtons[button].pressed && !Get().m_mouseButtons[button].prev;
 	}
 
 	bool Input::MouseButtonReleased(unsigned int button)
@@ -86,21 +86,21 @@ namespace sb
 		if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
 			return false;
 
-		return Get()->m_mouseButtons[button].pressed;
+		return Get().m_mouseButtons[button].pressed;
 	}
 
 	glm::vec2 Input::MousePosition()
 	{
-		return Get()->m_mousePos;
+		return Get().m_mousePos;
 	}
 
 	KeyState Input::GetKeyState(unsigned int key)
 	{
-		return Get()->m_keys[key];
+		return Get().m_keys[key];
 	}
 
 	KeyState Input::GetMouseButtonState(unsigned int key)
 	{
-		return Get()->m_mouseButtons[key];
+		return Get().m_mouseButtons[key];
 	}
 }

@@ -7,13 +7,7 @@ Scene::Scene(float w, float h, TileMap* map)
 
 Scene::~Scene()
 {
-	for (auto& e : m_entities)
-	{
-		SAFE_DELETE(e);
-	}
-	m_entities.clear();
 
-	SAFE_DELETE(m_map);
 }
 
 void Scene::addEntity(Entity* entity)
@@ -21,18 +15,13 @@ void Scene::addEntity(Entity* entity)
 	if (entity != nullptr)
 	{
 		entity->setScene(this);
-		m_entities.push_back(entity);
+		m_entities.push_back(unique_ptr<Entity>(entity));
 	}
 }
 
 void Scene::addEntity(Entity* entity, float x, float y)
 {
-	if (entity != nullptr)
-	{
-		entity->setPosition(glm::vec2(x, y));
-		entity->setScene(this);
-		m_entities.push_back(entity);
-	}
+	addEntity(entity, glm::vec2(x, y));
 }
 
 void Scene::addEntity(Entity* entity, const glm::vec2 & pos)
@@ -41,21 +30,18 @@ void Scene::addEntity(Entity* entity, const glm::vec2 & pos)
 	{
 		entity->setPosition(pos);
 		entity->setScene(this);
-		m_entities.push_back(entity);
+		m_entities.push_back(unique_ptr<Entity>(entity));
 	}
 }
 
 void Scene::deleteEntity(const std::string& name)
 {
-	for (auto& entity : m_entities)
-	{
-		if (stringCompare(entity->getName(), name))
-		{
-			SAFE_DELETE(entity);
-		}
-	}
+	auto it = std::find_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return e->getName() == name; });
 
-	m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), nullptr), m_entities.end());
+	if (it != m_entities.end())
+	{
+		m_entities.erase(it);
+	}
 }
 
 void Scene::onInput()
@@ -98,17 +84,17 @@ void Scene::onRenderDebug() const
 
 TileMap* Scene::getMap() const
 {
-	return m_map;
+	return m_map.get();
 }
 
 std::vector<Entity*> Scene::getEntities(unsigned int flag) const
 {
 	std::vector<Entity*> entities;
 
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
 		if (e->hasFlag(flag))
-			entities.push_back(e);
+			entities.push_back(e.get());
 	}
 
 	return entities;
@@ -116,10 +102,10 @@ std::vector<Entity*> Scene::getEntities(unsigned int flag) const
 
 Entity* Scene::getEntity(unsigned int flag) const
 {
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
 		if (e->hasFlag(flag))
-			return e;
+			return e.get();
 	}
 
 	return nullptr;
@@ -129,10 +115,10 @@ Entity* Scene::getLastEntity(unsigned int flag) const
 {
 	Entity* entity = nullptr;
 
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
 		if (e->hasFlag(flag))
-			entity = e;
+			entity = e.get();
 	}
 
 	return entity;
@@ -140,15 +126,15 @@ Entity* Scene::getLastEntity(unsigned int flag) const
 
 std::vector<Entity*> Scene::getEntities(const std::string& name) const
 {
-	if (name.empty())
-		return m_entities;
+	/*if (name.empty())
+		return m_entities;*/
 
 	std::vector<Entity*> entities;
 
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
-		if (name.compare(e->getName()) == 0)
-			entities.push_back(e);
+		if (stringCompare(e->getName(), name))
+			entities.push_back(e.get());
 	}
 
 	return entities;
@@ -158,10 +144,10 @@ std::vector<Entity*> Scene::getOtherEntities(const std::string& name) const
 {
 	std::vector<Entity*> entities;
 
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
-		if (name.compare(e->getName()) != 0)
-			entities.push_back(e);
+		if (!stringCompare(e->getName(), name))
+			entities.push_back(e.get());
 	}
 
 	return entities;
@@ -169,10 +155,10 @@ std::vector<Entity*> Scene::getOtherEntities(const std::string& name) const
 
 Entity* Scene::getEntity(const std::string& name) const
 {
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
 		if (name.compare(e->getName()) == 0)
-			return e;
+			return e.get();
 	}
 
 	return nullptr;
@@ -182,10 +168,10 @@ Entity* Scene::getLastEntity(const std::string& name) const
 {
 	Entity* entity = nullptr;
 
-	for (auto e : m_entities)
+	for (auto& e : m_entities)
 	{
 		if (name.compare(e->getName()) == 0)
-			entity = e;
+			entity = e.get();
 	}
 
 	return entity;
