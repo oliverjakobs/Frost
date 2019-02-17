@@ -34,13 +34,9 @@ namespace sb
 		glGenFramebuffers(1, &m_fbo);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 		
-		// TODO: Empty texture
-		glGenTextures(1, &m_texture);
-		glBindTexture(GL_TEXTURE_2D, m_texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture, 0);
+		// Create texture for the framebuffer to render to
+		m_texture = unique_ptr<Texture>(new Texture(m_width, m_height));
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->getID(), 0);
 		
 		// check if framebuffer is completed and unbind it
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
@@ -57,8 +53,6 @@ namespace sb
 	FrameBuffer::~FrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_fbo);
-
-		glDeleteTextures(1, &m_texture);
 	}
 
 	void FrameBuffer::bind()
@@ -90,7 +84,7 @@ namespace sb
 
 		m_vao.bind();
 
-		glBindTexture(GL_TEXTURE_2D, m_texture);
+		m_texture->bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

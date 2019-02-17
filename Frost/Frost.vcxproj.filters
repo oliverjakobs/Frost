@@ -129,6 +129,7 @@
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Scene\EntityManager.h" />
+    <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ECS\AnimationComponent.cpp">

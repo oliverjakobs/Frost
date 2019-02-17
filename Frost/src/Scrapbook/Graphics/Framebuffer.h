@@ -2,6 +2,7 @@
 
 #include "Shader.h"
 #include "Buffer.h"
+#include "Texture.h"
 
 namespace sb
 {
@@ -17,7 +18,7 @@ namespace sb
 		glm::mat4 m_view;
 		glm::mat4 m_model;
 
-		unsigned int m_texture;
+		unique_ptr<Texture> m_texture;
 	public:
 		FrameBuffer(int w, int h);
 		~FrameBuffer();

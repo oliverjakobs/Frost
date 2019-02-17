@@ -110,6 +110,7 @@
     <ClInclude Include="src\Scrapbook\Utility.h" />
     <ClInclude Include="src\Scrapbook\Utility\Flags.h" />
     <ClInclude Include="src\Scrapbook\Utility\Input.h" />
+    <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
     <ClInclude Include="src\Scrapbook\Utility\Singelton.h" />
     <ClInclude Include="src\Scrapbook\Utility\Timer.h" />
     <ClInclude Include="src\Scrapbook\Utility\fileutils.h" />

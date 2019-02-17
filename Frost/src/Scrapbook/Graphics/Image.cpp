@@ -34,7 +34,7 @@ namespace sb
 		m_vao.setVertexAttribPointer(0, 3, 5, 0);
 		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
-		m_texture = unique_ptr<Texture>(new Texture(src.c_str(), 0));
+		m_texture = unique_ptr<Texture>(new Texture(src.c_str()));
 	}
 
 	Image::Image(const std::string & src, float width, float height, int rows, int columns)
@@ -55,7 +55,7 @@ namespace sb
 		m_vao.setVertexAttribPointer(0, 3, 5, 0);
 		m_vao.setVertexAttribPointer(1, 2, 5, 3);
 
-		m_texture = unique_ptr<Texture>(new Texture(src.c_str(), 0));
+		m_texture = unique_ptr<Texture>(new Texture(src.c_str()));
 	}
 
 	Image::~Image()
