@@ -71,7 +71,8 @@ namespace sb
 		// ----------------------------view------------------------------------------------------------------------------
 		static void SetView(float x, float y);
 		static void SetView(float x, float y, float width, float height);
-		static void SetViewCenter(float x, float y, Rect* constraint);
+		static void SetViewCenter(float x, float y);
+		static void SetViewCenter(float x, float y, Rect constraint);
 
 		static View GetView();
 		static glm::mat4 GetViewMat();

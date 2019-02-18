@@ -8,7 +8,7 @@
 #include "Scene/SceneManager.h"
 #include "Scene/EntityManager.h"
 
-#include "Font/BitmapFont.h"
+#include "Font/FontRenderer.h"
 
 class Frost : public Scrapbook
 {
@@ -17,6 +17,7 @@ private:
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
+		// ---------------| Config|------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
@@ -29,6 +30,8 @@ public:
 		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
 		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
+
+		FontRenderer::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 		
 		// ---------------| Create entities|---------------------------------
 		Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
@@ -53,19 +56,17 @@ public:
 		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station.txt"));
 
 		scene->addEntity(EntityManager::GetEntity("wall"));
-		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("train"); })));
+		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station2"); })));
 		scene->addEntity(EntityManager::GetEntity("player"), 400, 300);
 
-		Scene* trainScene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/train.txt"));
+		SceneManager::AddScene("station1", scene);
+
+		scene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/train.txt"));
 		
-		trainScene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station"); })));
-		trainScene->addEntity(EntityManager::GetEntity("player"), 512, 64);
+		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station1"); })));
+		scene->addEntity(EntityManager::GetEntity("player"), 512, 64);
 
-		SceneManager::AddScene("station", scene);
-		SceneManager::AddScene("train", trainScene);
-
-		// Font
-		font = unique_ptr<BitmapFont>(new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
+		SceneManager::AddScene("station2", scene);
 	}
 
 	~Frost()
@@ -101,8 +102,8 @@ public:
 		SceneManager::OnRenderDebug();
 
 		// Debug Info
-		font->onRender(stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
-		font->onRender(stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, Renderer::GetScreenView(), "shader");
+		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
+		FontRenderer::RenderText("blocky", stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, Renderer::GetScreenView(), "shader");
 	}
 };
 

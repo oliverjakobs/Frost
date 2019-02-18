@@ -87,6 +87,11 @@ TileMap* Scene::getMap() const
 	return m_map.get();
 }
 
+Rect Scene::getConstraint() const
+{
+	return Rect(glm::vec2(), m_map->getDimension() * m_map->getTileSize());
+}
+
 std::vector<Entity*> Scene::getEntities(unsigned int flag) const
 {
 	std::vector<Entity*> entities;

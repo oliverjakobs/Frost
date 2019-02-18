@@ -2,6 +2,8 @@
 
 #include "Scrapbook/Utility.h"
 
+#include "Scene/Scene.h"
+
 PlayerComponent::PlayerComponent(float ms, float jp)
 	: m_movementSpeed(ms), m_jumpPower(jp)
 {
@@ -71,24 +73,16 @@ void PlayerComponent::onUpdate()
 		m_animComp->flip(FLIP_NONE);
 
 	if (m_physComp->isJumping())
-	{
 		m_animComp->play("jump");
-	}
 	else if (m_physComp->isFalling())
-	{
 		m_animComp->play("fall");
-	}
+	else if (m_physComp->isMoving())
+		m_animComp->play("walk");
 	else
-	{
-		if (m_physComp->isMoving())
-			m_animComp->play("walk");
-		else
-			m_animComp->play("idle");
-	}
-
-	Rect constraint(glm::vec2(), m_physComp->getBody()->getMap()->getDimension() * m_physComp->getBody()->getMap()->getTileSize());
-
-	Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, &constraint);
+		m_animComp->play("idle");
+	
+	if (m_entity->getScene() != nullptr)
+		Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, m_entity->getScene()->getConstraint());
 }
 
 void PlayerComponent::onRender() const

@@ -165,31 +165,29 @@ namespace sb
 		Get().m_view.mat = glm::ortho(x, x + w, y, y + h);
 	}
 
-	void Renderer::SetViewCenter(float x, float y, Rect* con)
+	void Renderer::SetViewCenter(float x, float y)
 	{
-		if (con != nullptr)
-		{
-			x -= GetView().w / 2.0f;
-			y -= GetView().h / 2.0f;
+		SetView(x - GetView().w / 2.0f, y - GetView().h / 2.0f);
+	}
 
-			if (x < con->pos.x)
-				x = con->pos.x;
+	void Renderer::SetViewCenter(float x, float y, Rect con)
+	{
+		x -= GetView().w / 2.0f;
+		y -= GetView().h / 2.0f;
 
-			if (x + GetView().w > con->pos.x + con->dim.x)
-				x = con->pos.x + con->dim.x - GetView().w;
+		if (x < con.pos.x)
+			x = con.pos.x;
 
-			if (y < con->pos.y)
-				y = con->pos.y;
+		if (x + GetView().w > con.pos.x + con.dim.x)
+			x = con.pos.x + con.dim.x - GetView().w;
 
-			if (y + GetView().h > con->pos.y + con->dim.y)
-				y = con->pos.y + con->dim.y - GetView().h;
+		if (y < con.pos.y)
+			y = con.pos.y;
 
-			SetView(x, y);
-		}
-		else
-		{
-			SetView(x - GetView().w / 2.0f, y - GetView().h / 2.0f);
-		}
+		if (y + GetView().h > con.pos.y + con.dim.y)
+			y = con.pos.y + con.dim.y - GetView().h;
+
+		SetView(x, y);
 	}
 
 	View Renderer::GetView()

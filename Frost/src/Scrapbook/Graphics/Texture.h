@@ -4,6 +4,20 @@
 
 namespace sb
 {
+	struct TextureConfig
+	{
+		int INTERAL_FORMAT;
+		unsigned int FORMAT;
+
+		unsigned int TYPE;
+
+		int WRAP_S;
+		int WRAP_T;
+
+		int MIN_FILTER;
+		int MAG_FILTER;
+	};
+
 	class Texture
 	{
 	private:
@@ -14,11 +28,13 @@ namespace sb
 
 		unsigned int m_slot;
 	public:
-		Texture(const char* path, unsigned int slot = 0, int minFilter = GL_NEAREST, int magFilter = GL_NEAREST);
-		Texture(float width, float height, unsigned int slot = 0, int minFilter = GL_NEAREST, int magFilter = GL_NEAREST);
+		Texture(const char* path, unsigned int slot = 0);
+		Texture(int width, int height, unsigned int slot = 0);
+		Texture(const char* path, TextureConfig config, unsigned int slot = 0);
+		Texture(int width, int height, TextureConfig config, unsigned int slot = 0);
 		~Texture();
 
-		static unsigned int CreateTexture(GLubyte* pixels, float width, float height, int minFilter, int magFilter);
+		static unsigned int CreateTexture(unsigned char* pixels, int width, int height, TextureConfig config);
 
 		void bind();
 

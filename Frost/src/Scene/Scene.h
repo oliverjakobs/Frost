@@ -24,6 +24,7 @@ public:
 	void onRenderDebug() const;
 
 	TileMap* getMap() const;
+	Rect getConstraint() const;
 
 	std::vector<Entity*> getEntities(unsigned int flag) const;
 	Entity* getEntity(unsigned int flag) const;

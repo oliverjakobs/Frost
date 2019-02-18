@@ -130,6 +130,7 @@
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Scene\EntityManager.h" />
     <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
+    <ClInclude Include="src\Font\FontRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ECS\AnimationComponent.cpp">
@@ -197,6 +198,7 @@
     </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Scene\EntityManager.cpp" />
+    <ClCompile Include="src\Font\FontRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
