@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <algorithm>
 
 #define DEBUG_MESSAGE(s) {std::clog << s << "\n";}
 

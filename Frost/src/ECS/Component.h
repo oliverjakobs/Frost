@@ -4,6 +4,7 @@
 
 #include "Entity.h"
 
+// TODO: Rework ECS
 class Component
 {
 protected:
@@ -29,4 +30,23 @@ public:
 	virtual void onUpdate() = 0;
 	virtual void onRender() const = 0;
 	virtual void onRenderDebug() const {};
+};
+
+class SharedComponent : public Component
+{
+private:
+	std::vector<Entity*> m_entities;
+public:
+	virtual bool setEntity(Entity* e) override { m_entities.push_back(e); return e != nullptr; }
+	virtual std::vector<Entity*> getEntities() { return m_entities; }
+
+	// set the entity that is currently using the component
+	virtual void setActiveEntity(Entity* entity)
+	{
+		if (std::find(m_entities.begin(), m_entities.end(), entity) != m_entities.end())
+		{
+			m_entity = entity;
+		}
+	}
+
 };
