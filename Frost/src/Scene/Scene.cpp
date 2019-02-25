@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-Scene::Scene(float w, float h, TileMap* map)
+Scene::Scene(TileMap* map)
 	: m_map(map)
 {
 }

@@ -37,7 +37,7 @@ namespace sb
 
 		virtual void onInput() = 0;
 		virtual void onUpdate() = 0;
-		virtual void onRender() const = 0;
+		virtual void onRender() = 0;
 		virtual void onRenderDebug() const {}
 		
 		void setTitle(const std::string& title);

@@ -1,6 +1,9 @@
 #pragma once
 
-#include "ECS/Entity.h"
+#include "Entity/Entity.h"
+#include "Entity/PlayerComponent.h"
+#include "Entity/ImageComponent.h"
+#include "Entity/InteractionComponent.h"
 
 class EntityManager : private Singleton<EntityManager>
 {

@@ -1,19 +1,48 @@
 #include "TilePhysics/Body.h"
 
-#include "ECS/Entity.h"
-#include "ECS/PlayerComponent.h"
-#include "ECS/ImageComponent.h"
-#include "ECS/InteractionComponent.h"
-
-#include "Scene/SceneManager.h"
-#include "Scene/EntityManager.h"
-
 #include "Font/FontRenderer.h"
+
+#include "ecs/ecs.h"
+
+struct PositionComponent : public ECSComponent<PositionComponent>
+{
+	glm::vec2 position;
+};
+
+struct ImageComponent : public ECSComponent<ImageComponent>
+{
+	Image* image;
+};
+
+class ImageRenderSystem : public BaseECSSystem
+{
+public:
+	ImageRenderSystem() : BaseECSSystem()
+	{
+		addComponentType(PositionComponent::ID);
+		addComponentType(ImageComponent::ID);
+	}
+
+	virtual void update(float deltaTime, BaseECSComponent** components) override
+	{
+		glm::vec2 position = ((PositionComponent*)components[0])->position;
+		Image* image = ((ImageComponent*)components[1])->image;
+
+		position.x -= image->getWidth() / 2.0f;
+		
+		image->renderF(position, 0, Renderer::GetViewMat(), "shader");
+	}
+};
 
 class Frost : public Scrapbook
 {
 private:
 	unique_ptr<Font> font;
+
+	ECS ecs;
+
+	ECSSystemList logicSystems;
+	ECSSystemList renderSystems;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -33,40 +62,44 @@ public:
 
 		FontRenderer::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 		
-		// ---------------| Create entities|---------------------------------
-		Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
-		entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
-		entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
-			{
-				AnimationDef("idle", Animation(0, 4, 0.2f)),
-				AnimationDef("walk", Animation(6, 6, 0.125f)),
-				AnimationDef("jump", Animation(12, 3, 0.3f)),
-				AnimationDef("fall", Animation(18, 2, 0.4f))
-			}));
-		entity->addComponent(new PlayerComponent(400, 800));
+		//// ---------------| Create entities|---------------------------------
+		//Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
+		//entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
+		//entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
+		//	{
+		//		AnimationDef("idle", Animation(0, 4, 0.2f)),
+		//		AnimationDef("walk", Animation(6, 6, 0.125f)),
+		//		AnimationDef("jump", Animation(12, 3, 0.3f)),
+		//		AnimationDef("fall", Animation(18, 2, 0.4f))
+		//	}));
+		//entity->addComponent(new PlayerComponent(400, 800));
 
-		Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
-		door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
+		//Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
+		//door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
 
-		Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
-		wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
-		wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
-		
-		// ---------------| Create Scenes|-----------------------------------
-		Scene* scene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station.txt"));
+		//Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
+		//wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
+		//wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
+		//
+		//// ---------------| Create Scenes|-----------------------------------
+		//SceneManager::AddScene("station1", new SceneStation1());
 
-		scene->addEntity(EntityManager::GetEntity("wall"));
-		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station2"); })));
-		scene->addEntity(EntityManager::GetEntity("player"), 400, 300);
+		//Scene* scene = new Scene(new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station2.txt"));
+		//
+		//scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station1"); })));
+		//scene->addEntity(EntityManager::GetEntity("player"), 512, 64);
 
-		SceneManager::AddScene("station1", scene);
+		//SceneManager::AddScene("station2", scene);
 
-		scene = new Scene(getWidthF(), getHeightF(), new TileMap(ResourceManager::GetImage("tileset"), "res/maps/train.txt"));
-		
-		scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station1"); })));
-		scene->addEntity(EntityManager::GetEntity("player"), 512, 64);
+		PositionComponent posComp;
+		posComp.position = glm::vec2(400, 300);
 
-		SceneManager::AddScene("station2", scene);
+		ImageComponent imageComp;
+		imageComp.image = ResourceManager::GetImage("player");
+
+		ecs.createEntity(posComp, imageComp);
+
+		renderSystems.addSystem(*(new ImageRenderSystem()));
 	}
 
 	~Frost()
@@ -81,29 +114,30 @@ public:
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
 
-		if (Input::KeyPressed(GLFW_KEY_X))
-			SceneManager::GetActiveScene()->deleteEntity("wall");
+		//if (Input::KeyPressed(GLFW_KEY_X))
+		//	SceneManager::GetActiveScene()->deleteEntity("wall");
 
-		SceneManager::OnInput();
+		//SceneManager::OnInput();
 	}
 
 	void onUpdate() override
 	{
-		SceneManager::OnUpdate();
+		//SceneManager::OnUpdate();
 	}
 
-	void onRender() const override
+	void onRender() override
 	{
-		SceneManager::OnRender();
+		//SceneManager::OnRender();
+		ecs.updateSystems(renderSystems, 0.0f);
 	}
 
 	void onRenderDebug() const override
 	{
-		SceneManager::OnRenderDebug();
+		//SceneManager::OnRenderDebug();
 
 		// Debug Info
 		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
-		FontRenderer::RenderText("blocky", stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, Renderer::GetScreenView(), "shader");
+		//FontRenderer::RenderText("blocky", stringf("Simulation Time: %4.2f ms", SceneManager::GetActiveScene()->getMap()->getSimulationTime()), 2.0f, 2.0f, Renderer::GetScreenView(), "shader");
 	}
 };
 
