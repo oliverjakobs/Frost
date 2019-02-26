@@ -132,6 +132,11 @@ void TileMap::onRenderDebug() const
 		else if (tile.type == SlopeRight)
 			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA);
 	}
+
+	for (auto& body : m_bodies)
+	{
+		body->onRender();
+	}
 }
 
 float TileMap::getTileSize() const

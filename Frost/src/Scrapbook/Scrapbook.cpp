@@ -100,9 +100,8 @@ namespace sb
 
 			onInput();
 
-			Input::OnUpdate();
-
 			onUpdate();
+			Input::OnUpdate();
 
 			Renderer::Start();
 

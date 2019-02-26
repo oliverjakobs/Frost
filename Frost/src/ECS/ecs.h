@@ -4,15 +4,18 @@
 
 #include <map>
 
+typedef std::vector<std::pair<uint32, uint32>> Entity;
+
 class ECS
 {
 private:
+	// 
 	std::map<uint32, std::vector<uint8>> m_components;
-	std::vector<std::pair<uint32, std::vector<std::pair<uint32, uint32>>>*> m_entities;
+	std::vector<std::pair<uint32, Entity>*> m_entities;
 
-	inline std::pair<uint32, std::vector<std::pair<uint32, uint32>>>* handleToRawType(EntityHandle handle)
+	inline std::pair<uint32, Entity>* handleToRawType(EntityHandle handle)
 	{
-		return (std::pair<uint32, std::vector<std::pair<uint32, uint32>>>*)handle;
+		return (std::pair<uint32, Entity>*)handle;
 	}
 
 	inline uint32 handleToEntityIndex(EntityHandle handle)
@@ -20,15 +23,15 @@ private:
 		return handleToRawType(handle)->first;
 	}
 
-	inline std::vector<std::pair<uint32, uint32>>& handleToEntity(EntityHandle handle)
+	inline Entity& handleToEntity(EntityHandle handle)
 	{
 		return handleToRawType(handle)->second;
 	}
 
-	void addComponent(EntityHandle handle, std::vector<std::pair<uint32, uint32>>& entity, uint32 componentID, BaseECSComponent* component);
+	void addComponent(EntityHandle handle, Entity& entity, uint32 componentID, BaseECSComponent* component);
 	bool removeComponent(EntityHandle handle, uint32 componentID);
 
-	BaseECSComponent* getComponent(std::vector<std::pair<uint32, uint32>>& entity, std::vector<uint8>& components, uint32 componentID);
+	BaseECSComponent* getComponent(Entity& entity, std::vector<uint8>& components, uint32 componentID);
 	uint32 findLeastCommonComponent(const std::vector<uint32>& compTypes, const std::vector<uint32>& compFlags);
 
 	void deleteComponent(uint32 componentID, uint32 index);

@@ -13,7 +13,7 @@ void ECS::addComponent(EntityHandle handle, std::vector<std::pair<uint32, uint32
 
 bool ECS::removeComponent(EntityHandle handle, uint32 componentID)
 {
-	std::vector<std::pair<uint32, uint32>>& entity = handleToEntity(handle);
+	Entity& entity = handleToEntity(handle);
 
 	for (uint32 i = 0; i < entity.size(); i++)
 	{
@@ -88,7 +88,7 @@ void ECS::deleteComponent(uint32 componentID, uint32 index)
 
 	memcpy(destComponent, srcComponent, typeSize);
 
-	std::vector<std::pair<uint32, uint32>>& entity = handleToEntity(srcComponent->entity);
+	Entity& entity = handleToEntity(srcComponent->entity);
 
 	for (auto& c : entity)
 	{
@@ -167,7 +167,7 @@ ECS::~ECS()
 
 EntityHandle ECS::createEntity(BaseECSComponent** components, const uint32* componentIDs, size_t componentCount)
 {
-	std::pair<uint32, std::vector<std::pair<uint32, uint32>>>* entity = new std::pair<uint32, std::vector<std::pair<uint32, uint32>>>();
+	std::pair<uint32, Entity>* entity = new std::pair<uint32, Entity>();
 
 	EntityHandle handle = (EntityHandle)entity;
 

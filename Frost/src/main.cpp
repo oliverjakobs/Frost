@@ -1,45 +1,21 @@
-#include "TilePhysics/Body.h"
+#include "TilePhysics/Tilemap.h"
 
 #include "Font/FontRenderer.h"
 
-#include "ecs/ecs.h"
-
-struct PositionComponent : public ECSComponent<PositionComponent>
-{
-	glm::vec2 position;
-};
-
-struct ImageComponent : public ECSComponent<ImageComponent>
-{
-	Image* image;
-};
-
-class ImageRenderSystem : public BaseECSSystem
-{
-public:
-	ImageRenderSystem() : BaseECSSystem()
-	{
-		addComponentType(PositionComponent::ID);
-		addComponentType(ImageComponent::ID);
-	}
-
-	virtual void update(float deltaTime, BaseECSComponent** components) override
-	{
-		glm::vec2 position = ((PositionComponent*)components[0])->position;
-		Image* image = ((ImageComponent*)components[1])->image;
-
-		position.x -= image->getWidth() / 2.0f;
-		
-		image->renderF(position, 0, Renderer::GetViewMat(), "shader");
-	}
-};
+#include "Systems.h"
 
 class Frost : public Scrapbook
 {
 private:
 	unique_ptr<Font> font;
 
+	TileMap* map;
+
 	ECS ecs;
+
+	PlayerControlSystem* playerSystem;
+	TilePhysicsSystem* physicsSystem;
+	ImageRenderSystem* renderSystem;
 
 	ECSSystemList logicSystems;
 	ECSSystemList renderSystems;
@@ -91,19 +67,41 @@ public:
 
 		//SceneManager::AddScene("station2", scene);
 
+		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt");
+
+		playerSystem = new PlayerControlSystem();
+		physicsSystem = new TilePhysicsSystem(map);
+		renderSystem = new ImageRenderSystem();
+
 		PositionComponent posComp;
 		posComp.position = glm::vec2(400, 300);
+
+		MovementComponent moveComp;
+		moveComp.velocity = glm::vec2();
+		moveComp.movementSpeed = 400.0f;
+		moveComp.jumpPower = 800.0f;
+
+		PhysicsComponent physComp;
+		physComp.body = map->createBody(400, 300, 20, 30, BodyTypeDynamic);
+		physComp.bodyPos = glm::vec2(0.0f, 30.0f);
 
 		ImageComponent imageComp;
 		imageComp.image = ResourceManager::GetImage("player");
 
-		ecs.createEntity(posComp, imageComp);
+		ecs.createEntity(posComp, moveComp, physComp, imageComp);
 
-		renderSystems.addSystem(*(new ImageRenderSystem()));
+		logicSystems.addSystem(*playerSystem);
+		logicSystems.addSystem(*physicsSystem);
+		renderSystems.addSystem(*renderSystem);
 	}
 
 	~Frost()
 	{
+		delete map;
+
+		delete playerSystem;
+		delete physicsSystem;
+		delete renderSystem;
 	}
 
 	void onInput() override
@@ -123,17 +121,24 @@ public:
 	void onUpdate() override
 	{
 		//SceneManager::OnUpdate();
+
+		map->onUpdate();
+
+		ecs.updateSystems(logicSystems, Timer::GetDeltaTime());
 	}
 
 	void onRender() override
 	{
 		//SceneManager::OnRender();
+		map->onRender();
+
 		ecs.updateSystems(renderSystems, 0.0f);
 	}
 
 	void onRenderDebug() const override
 	{
 		//SceneManager::OnRenderDebug();
+		map->onRenderDebug();
 
 		// Debug Info
 		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");

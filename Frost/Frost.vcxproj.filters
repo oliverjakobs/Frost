@@ -162,6 +162,8 @@
     <ClInclude Include="src\ecs\ecsSystemList.h">
       <Filter>src\ecs</Filter>
     </ClInclude>
+    <ClInclude Include="src\Systems.h" />
+    <ClInclude Include="src\Components.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Entity\AnimationComponent.cpp">
@@ -242,11 +244,11 @@
     <ClCompile Include="src\ecs\ecsComponent.cpp">
       <Filter>src\ecs</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ecsSystem.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ecs\ecsSystemList.cpp">
+      <Filter>src\ecs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
