@@ -2,6 +2,8 @@
 
 #include "ecs/ecs.h"
 
+#include "Animation.h"
+
 #include "TilePhysics/Tilemap.h"
 
 struct PositionComponent : public ECSComponent<PositionComponent>
@@ -11,15 +13,21 @@ struct PositionComponent : public ECSComponent<PositionComponent>
 
 struct MovementComponent : public ECSComponent<MovementComponent>
 {
-	enum Direction
-	{
-		LEFT,
-		RIGHT
-	} direction;
+	enum Direction { LEFT, RIGHT } direction;
 
 	glm::vec2 velocity;
 	float movementSpeed;
 	float jumpPower;
+
+	bool onFloor;
+	bool isMoving;
+	bool isJumping;
+};
+
+struct PhysicsComponent : public ECSComponent<PhysicsComponent>
+{
+	Body* body;
+	glm::vec2 bodyPos;
 };
 
 struct ImageComponent : public ECSComponent<ImageComponent>
@@ -27,11 +35,10 @@ struct ImageComponent : public ECSComponent<ImageComponent>
 	Image* image;
 };
 
-struct PhysicsComponent : public ECSComponent<PhysicsComponent>
+struct AnimationComponent : public ECSComponent<AnimationComponent>
 {
-	Body* body;
-	glm::vec2 bodyPos;
+	std::map<std::string, Animation> animations;
+	std::string currentAnimation;
 
-	bool onFloor;
-	bool jumping;
+	Image* image;
 };

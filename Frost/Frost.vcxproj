@@ -83,21 +83,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Components.h" />
-    <ClInclude Include="src\Entity\AnimationComponent.h" />
-    <ClInclude Include="src\Entity\Component.h" />
-    <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Entity\ImageComponent.h" />
-    <ClInclude Include="src\Entity\InteractionComponent.h" />
-    <ClInclude Include="src\Entity\PhysicsComponent.h" />
-    <ClInclude Include="src\Entity\PlayerComponent.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Font\FontRenderer.h" />
-    <ClInclude Include="src\Scene\EntityManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Scene\SceneStation1.h" />
     <ClInclude Include="src\Scrapbook\Graphics.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Buffer.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Framebuffer.h" />
@@ -128,18 +120,11 @@
     <ClInclude Include="src\ecs\ecsSystemList.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Entity\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Entity\ImageComponent.cpp" />
-    <ClCompile Include="src\Entity\InteractionComponent.cpp" />
-    <ClCompile Include="src\Entity\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\PlayerComponent.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Font\FontRenderer.cpp" />
-    <ClCompile Include="src\Scene\EntityManager.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Scene\SceneStation1.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Image.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Primitives.cpp" />

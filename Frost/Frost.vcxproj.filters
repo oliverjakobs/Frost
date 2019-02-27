@@ -39,27 +39,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Entity\AnimationComponent.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Component.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Entity.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\ImageComponent.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\InteractionComponent.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\PhysicsComponent.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\PlayerComponent.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="src\Font\BitmapFont.h">
       <Filter>src\Font</Filter>
     </ClInclude>
@@ -69,16 +48,10 @@
     <ClInclude Include="src\Font\FontRenderer.h">
       <Filter>src\Font</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\EntityManager.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\SceneStation1.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scrapbook\Graphics.h">
@@ -164,42 +137,19 @@
     </ClInclude>
     <ClInclude Include="src\Systems.h" />
     <ClInclude Include="src\Components.h" />
+    <ClInclude Include="src\Animation.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Entity\AnimationComponent.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\ImageComponent.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\InteractionComponent.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\PhysicsComponent.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\PlayerComponent.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\FontRenderer.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\EntityManager.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\SceneManager.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneStation1.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp">
@@ -250,6 +200,7 @@
     <ClCompile Include="src\ecs\ecsSystemList.cpp">
       <Filter>src\ecs</Filter>
     </ClCompile>
+    <ClCompile Include="src\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

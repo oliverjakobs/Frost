@@ -15,6 +15,8 @@ private:
 
 	PlayerControlSystem* playerSystem;
 	TilePhysicsSystem* physicsSystem;
+
+	AnimationSystem* animSystem;
 	ImageRenderSystem* renderSystem;
 
 	ECSSystemList logicSystems;
@@ -72,6 +74,7 @@ public:
 		playerSystem = new PlayerControlSystem();
 		physicsSystem = new TilePhysicsSystem(map);
 		renderSystem = new ImageRenderSystem();
+		animSystem = new AnimationSystem();
 
 		PositionComponent posComp;
 		posComp.position = glm::vec2(400, 300);
@@ -85,14 +88,22 @@ public:
 		physComp.body = map->createBody(400, 300, 20, 30, BodyTypeDynamic);
 		physComp.bodyPos = glm::vec2(0.0f, 30.0f);
 
-		ImageComponent imageComp;
-		imageComp.image = ResourceManager::GetImage("player");
+		AnimationComponent animComp;
+		animComp.image = ResourceManager::GetImage("player");
+		animComp.animations =
+		{
+			AnimationDef("idle", Animation(0, 4, 0.2f)),
+			AnimationDef("walk", Animation(6, 6, 0.125f)),
+			AnimationDef("jump", Animation(12, 3, 0.3f)),
+			AnimationDef("fall", Animation(18, 2, 0.4f))
+		};
 
-		ecs.createEntity(posComp, moveComp, physComp, imageComp);
+		ecs.createEntity(posComp, moveComp, physComp, animComp);
 
 		logicSystems.addSystem(*playerSystem);
 		logicSystems.addSystem(*physicsSystem);
 		renderSystems.addSystem(*renderSystem);
+		renderSystems.addSystem(*animSystem);
 	}
 
 	~Frost()
@@ -132,7 +143,7 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
-		ecs.updateSystems(renderSystems, 0.0f);
+		ecs.updateSystems(renderSystems, Timer::GetDeltaTime());
 	}
 
 	void onRenderDebug() const override

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-void ECS::addComponent(EntityHandle handle, std::vector<std::pair<uint32, uint32>>& entity, uint32 componentID, BaseECSComponent* component)
+void ECS::addComponent(EntityHandle handle, Entity& entity, uint32 componentID, BaseECSComponent* component)
 {
 	ECSComponentCreateFunction createFn = BaseECSComponent::GetTypeCreateFunction(componentID);
 	std::pair<uint32, uint32> compPair;
@@ -34,7 +34,7 @@ bool ECS::removeComponent(EntityHandle handle, uint32 componentID)
 	return false;
 }
 
-BaseECSComponent* ECS::getComponent(std::vector<std::pair<uint32, uint32>>& entity, std::vector<uint8>& components, uint32 componentID)
+BaseECSComponent* ECS::getComponent(Entity& entity, std::vector<uint8>& components, uint32 componentID)
 {
 	for (auto& c : entity)
 	{
@@ -47,14 +47,17 @@ BaseECSComponent* ECS::getComponent(std::vector<std::pair<uint32, uint32>>& enti
 
 uint32 ECS::findLeastCommonComponent(const std::vector<uint32>& compTypes, const std::vector<uint32>& compFlags)
 {
+	// initialize minSize and minIndex to the max value
 	uint32 minSize = (uint32) - 1;
 	uint32 minIndex = (uint32) - 1;
 
 	for (uint32 i = 0; i < compTypes.size(); i++)
 	{
+		// if the component is optional ignore it 
 		if ((compFlags[i] & BaseECSSystem::FLAG_OPTIONAL) != 0)
 			continue;
 
+		// take to component size in account
 		size_t typeSize = BaseECSComponent::GetTypeSize(compTypes[i]);
 		uint32 size = m_components[compTypes[i]].size() / typeSize;
 

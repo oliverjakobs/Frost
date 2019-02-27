@@ -10,13 +10,15 @@ public:
 		addComponentType(PositionComponent::ID);
 		addComponentType(MovementComponent::ID);
 		addComponentType(PhysicsComponent::ID);
+		addComponentType(AnimationComponent::ID, FLAG_OPTIONAL);
 	}
 
 	virtual void update(float deltaTime, BaseECSComponent** components) override
 	{
-		PositionComponent* posComp = ((PositionComponent*)components[0]);
-		MovementComponent* moveComp = ((MovementComponent*)components[1]);
-		PhysicsComponent* physComp = ((PhysicsComponent*)components[2]);
+		PositionComponent* posComp = (PositionComponent*)components[0];
+		MovementComponent* moveComp = (MovementComponent*)components[1];
+		PhysicsComponent* physComp = (PhysicsComponent*)components[2];
+		AnimationComponent* animComp = (AnimationComponent*)components[3];
 
 		glm::vec2 velocity = glm::vec2(0.0f, physComp->body->getVelocity().y);
 
@@ -25,32 +27,33 @@ public:
 		if (Input::KeyDown(GLFW_KEY_D))
 			velocity.x += moveComp->movementSpeed;
 
-		if (Input::KeyDown(GLFW_KEY_SPACE) && physComp->onFloor)
+		if (Input::KeyDown(GLFW_KEY_SPACE) && physComp->body->collidesBottom())
 			velocity.y = moveComp->jumpPower;
 		else if (Input::KeyReleased(GLFW_KEY_SPACE))
 			if (physComp->body->getVelocity().y > 0)
 				velocity.y = (physComp->body->getVelocity().y * 0.5f);
 
-		//moveComp->velocity = velocity;
+		if (velocity.x < 0.0f)
+			moveComp->direction = MovementComponent::LEFT;
+		else if (velocity.x > 0.0f)
+			moveComp->direction = MovementComponent::RIGHT;
+
+		if (velocity.x == 0.0f)
+			moveComp->isMoving = false;
+		else
+			moveComp->isMoving = true;
+
+		if (velocity.y > 0.0f)
+			moveComp->isJumping = true;
+		else
+			moveComp->isJumping = false;
+		
+		moveComp->onFloor = physComp->body->collidesBottom();
 		physComp->body->setVelocity(velocity);
 
 		if (Input::KeyDown(GLFW_KEY_S))
 			physComp->body->drop();
-
-		/*if (m_physComp->getDirection() == LEFT)
-		m_animComp->flip(FLIP_HORIZONTAL);
-		else
-		m_animComp->flip(FLIP_NONE);
-
-		if (m_physComp->isJumping())
-		m_animComp->play("jump");
-		else if (m_physComp->isFalling())
-		m_animComp->play("fall");
-		else if (m_physComp->isMoving())
-		m_animComp->play("walk");
-		else
-		m_animComp->play("idle");*/
-
+		
 		//if (m_entity->getScene() != nullptr)
 		//	Renderer::SetViewCenter(m_entity->getCenter().x, m_entity->getCenter().y, m_entity->getScene()->getConstraint());
 	}
@@ -70,8 +73,8 @@ public:
 
 	virtual void update(float deltaTime, BaseECSComponent** components) override
 	{
-		PositionComponent* posComp = ((PositionComponent*)components[0]);
-		PhysicsComponent* physComp = ((PhysicsComponent*)components[1]);
+		PositionComponent* posComp = (PositionComponent*)components[0];
+		PhysicsComponent* physComp = (PhysicsComponent*)components[1];
 
 		posComp->position = physComp->body->getPosition() - physComp->bodyPos;
 	}
@@ -95,5 +98,60 @@ public:
 		float y = posComp->position.y;
 
 		imgComp->image->renderF(x, y, 0, Renderer::GetViewMat(), "shader");
+	}
+};
+
+class AnimationSystem : public BaseECSSystem
+{
+public:
+	AnimationSystem() : BaseECSSystem()
+	{
+		addComponentType(PositionComponent::ID);
+		addComponentType(MovementComponent::ID);
+		addComponentType(AnimationComponent::ID);
+	}
+
+	void playAnimation(const std::string& anim, AnimationComponent* animComp)
+	{
+		if (stringCompare(animComp->currentAnimation, anim))
+			return;
+
+		auto pos = animComp->animations.find(anim);
+
+		if (pos != animComp->animations.end())
+		{
+			animComp->animations[anim].start();
+			animComp->currentAnimation = anim;
+		}
+	}
+
+	virtual void update(float deltaTime, BaseECSComponent** components) override
+	{
+		PositionComponent* posComp = (PositionComponent*)components[0];
+		MovementComponent* moveComp = (MovementComponent*)components[1];
+		AnimationComponent* animComp = (AnimationComponent*)components[2];
+
+		if (moveComp->direction == MovementComponent::LEFT)
+			animComp->image->setRenderFlip(FLIP_HORIZONTAL);
+		else
+			animComp->image->setRenderFlip(FLIP_NONE);
+
+		if (moveComp->isJumping)
+			playAnimation("jump", animComp);
+		else if (!(moveComp->onFloor || moveComp->isJumping))
+			playAnimation("fall", animComp);
+		else if (moveComp->isMoving)
+			playAnimation("walk", animComp);
+		else
+			playAnimation("idle", animComp);
+
+		float x = posComp->position.x - (animComp->image->getWidth() / 2.0f);
+		float y = posComp->position.y;
+		
+		if (!animComp->currentAnimation.empty())
+		{
+			animComp->animations[animComp->currentAnimation].step(deltaTime);
+			animComp->image->renderF(x, y, animComp->animations[animComp->currentAnimation].getFrame(), Renderer::GetViewMat(), "shader");
+		}
 	}
 };
