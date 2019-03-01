@@ -17,10 +17,7 @@ private:
 	TilePhysicsSystem* physicsSystem;
 
 	AnimationSystem* animSystem;
-	ImageRenderSystem* renderSystem;
-
-	ECSSystemList logicSystems;
-	ECSSystemList renderSystems;
+	//ImageRenderSystem* renderSystem;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -73,7 +70,6 @@ public:
 
 		playerSystem = new PlayerControlSystem();
 		physicsSystem = new TilePhysicsSystem(map);
-		renderSystem = new ImageRenderSystem();
 		animSystem = new AnimationSystem();
 
 		PositionComponent posComp;
@@ -99,11 +95,6 @@ public:
 		};
 
 		ecs.createEntity(posComp, moveComp, physComp, animComp);
-
-		logicSystems.addSystem(*playerSystem);
-		logicSystems.addSystem(*physicsSystem);
-		renderSystems.addSystem(*renderSystem);
-		renderSystems.addSystem(*animSystem);
 	}
 
 	~Frost()
@@ -112,7 +103,7 @@ public:
 
 		delete playerSystem;
 		delete physicsSystem;
-		delete renderSystem;
+		delete animSystem;
 	}
 
 	void onInput() override
@@ -135,7 +126,8 @@ public:
 
 		map->onUpdate();
 
-		ecs.updateSystems(logicSystems, Timer::GetDeltaTime());
+		ecs.updateSystem(playerSystem, Timer::GetDeltaTime());
+		ecs.updateSystem(physicsSystem, Timer::GetDeltaTime());
 	}
 
 	void onRender() override
@@ -143,7 +135,7 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
-		ecs.updateSystems(renderSystems, Timer::GetDeltaTime());
+		ecs.updateSystem(animSystem, Timer::GetDeltaTime());
 	}
 
 	void onRenderDebug() const override

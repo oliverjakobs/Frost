@@ -7,8 +7,8 @@ uint32 BaseECSComponent::RegisterComponentType(ECSComponentCreateFunction create
 	if (s_componentTypes == nullptr)
 		s_componentTypes = new std::vector<std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>>();
 
-	uint32 componentID = s_componentTypes->size();
+	uint32 typeID = s_componentTypes->size();
 	s_componentTypes->push_back(std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>(createFn, freeFn, size));
 
-	return componentID;
+	return typeID;
 }

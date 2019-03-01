@@ -2,22 +2,22 @@
 
 #include <algorithm>
 
-void ECS::addComponent(EntityHandle handle, Entity& entity, uint32 componentID, BaseECSComponent* component)
+void ECS::addComponent(EntityHandle handle, Entity& entity, uint32 typeID, BaseECSComponent* component)
 {
-	ECSComponentCreateFunction createFn = BaseECSComponent::GetTypeCreateFunction(componentID);
+	ECSComponentCreateFunction createFn = BaseECSComponent::GetTypeCreateFunction(typeID);
 	std::pair<uint32, uint32> compPair;
-	compPair.first = componentID;
-	compPair.second = createFn(m_components[componentID], handle, component);
+	compPair.first = typeID;
+	compPair.second = createFn(m_components[typeID], handle, component);
 	entity.push_back(compPair);
 }
 
-bool ECS::removeComponent(EntityHandle handle, uint32 componentID)
+bool ECS::removeComponent(EntityHandle handle, uint32 typeID)
 {
 	Entity& entity = handleToEntity(handle);
 
 	for (uint32 i = 0; i < entity.size(); i++)
 	{
-		if (componentID == entity[i].first)
+		if (typeID == entity[i].first)
 		{
 			deleteComponent(entity[i].first, entity[i].second);
 
@@ -34,32 +34,32 @@ bool ECS::removeComponent(EntityHandle handle, uint32 componentID)
 	return false;
 }
 
-BaseECSComponent* ECS::getComponent(Entity& entity, std::vector<uint8>& components, uint32 componentID)
+BaseECSComponent* ECS::getComponent(Entity& entity, uint32 typeID)
 {
 	for (auto& c : entity)
 	{
-		if (componentID == c.first)
-			return (BaseECSComponent*)&components[c.second];
+		if (typeID == c.first)
+			return (BaseECSComponent*)&m_components[typeID][c.second];
 	}
 
 	return nullptr;
 }
 
-uint32 ECS::findLeastCommonComponent(const std::vector<uint32>& compTypes, const std::vector<uint32>& compFlags)
+uint32 ECS::findLeastCommonComponent(const std::vector<uint32>& types, const std::vector<uint32>& flags)
 {
 	// initialize minSize and minIndex to the max value
 	uint32 minSize = (uint32) - 1;
 	uint32 minIndex = (uint32) - 1;
 
-	for (uint32 i = 0; i < compTypes.size(); i++)
+	for (uint32 i = 0; i < types.size(); i++)
 	{
 		// if the component is optional ignore it 
-		if ((compFlags[i] & BaseECSSystem::FLAG_OPTIONAL) != 0)
+		if ((flags[i] & BaseECSSystem::FLAG_OPTIONAL) != 0)
 			continue;
 
-		// take to component size in account
-		size_t typeSize = BaseECSComponent::GetTypeSize(compTypes[i]);
-		uint32 size = m_components[compTypes[i]].size() / typeSize;
+		// take component size into account
+		size_t typeSize = BaseECSComponent::GetTypeSize(types[i]);
+		uint32 size = m_components[types[i]].size() / typeSize;
 
 		if (size <= minSize)
 		{
@@ -71,34 +71,36 @@ uint32 ECS::findLeastCommonComponent(const std::vector<uint32>& compTypes, const
 	return minIndex;
 }
 
-void ECS::deleteComponent(uint32 componentID, uint32 index)
+void ECS::deleteComponent(uint32 typeID, uint32 index)
 {
-	ECSComponentFreeFunction freeFn = BaseECSComponent::GetTypeFreeFunction(componentID);
-	size_t typeSize = BaseECSComponent::GetTypeSize(componentID);
+	// get the free function and the type size for the specific component type
+	ECSComponentFreeFunction freeFn = BaseECSComponent::GetTypeFreeFunction(typeID);
+	size_t typeSize = BaseECSComponent::GetTypeSize(typeID);
 
-	std::vector<uint8>& compArray = m_components[componentID];
+	// get all components of the right type
+	std::vector<uint8>& compArray = m_components[typeID];
+	// prepare to replace the component being deleted with the last one
 	uint32 srcIndex = compArray.size() - typeSize;
-
 	BaseECSComponent* destComponent = (BaseECSComponent*)&compArray[index];
 	BaseECSComponent* srcComponent = (BaseECSComponent*)&compArray[srcIndex];
+
+	// free the component
 	freeFn(destComponent);
 
-	if (index == srcIndex)
+	// if the last component is being deleted ignore the next few lines
+	if (index != srcIndex)
 	{
-		compArray.resize(srcIndex);
-		return;
-	}
+		// move the last component into the delted components memory
+		memcpy(destComponent, srcComponent, typeSize);
 
-	memcpy(destComponent, srcComponent, typeSize);
-
-	Entity& entity = handleToEntity(srcComponent->entity);
-
-	for (auto& c : entity)
-	{
-		if (componentID == c.first && srcIndex == c.second)
+		// update the moved component index in its entity
+		for (auto& c : handleToEntity(srcComponent->entity))
 		{
-			c.second = index;
-			break;
+			if (typeID == c.first && srcIndex == c.second)
+			{
+				c.second = index;
+				break;
+			}
 		}
 	}
 
@@ -107,7 +109,7 @@ void ECS::deleteComponent(uint32 componentID, uint32 index)
 
 void ECS::updateSystemWithMultipleComponents(BaseECSSystem* system, float deltaTime, std::vector<std::vector<uint8>*>& components, const std::vector<uint32>& compTypes, std::vector<BaseECSComponent*>& compParam)
 {
-	const std::vector<uint32>& compFlags = system->getComponentFlags();
+	const std::vector<uint32>& flags = system->getComponentFlags();
 
 	compParam.resize(std::max(compParam.size(), compTypes.size()));
 	components.resize(std::max(components.size(), compTypes.size()));
@@ -117,7 +119,7 @@ void ECS::updateSystemWithMultipleComponents(BaseECSSystem* system, float deltaT
 		components[i] = &m_components[compTypes[i]];
 	}
 
-	uint32 minSizeIndex = findLeastCommonComponent(compTypes, compFlags);
+	uint32 minSizeIndex = findLeastCommonComponent(compTypes, flags);
 
 	size_t typeSize = BaseECSComponent::GetTypeSize(compTypes[minSizeIndex]);
 	std::vector<uint8>& compArray = *components[minSizeIndex];
@@ -125,23 +127,25 @@ void ECS::updateSystemWithMultipleComponents(BaseECSSystem* system, float deltaT
 	for (uint32 i = 0; i < compArray.size(); i += typeSize)
 	{
 		compParam[minSizeIndex] = (BaseECSComponent*)&compArray[i];
-		std::vector<std::pair<uint32, uint32>>& entity = handleToEntity(compParam[minSizeIndex]->entity);
+		Entity& entity = handleToEntity(compParam[minSizeIndex]->entity);
 
 		bool isValid = true;
-		for (uint32 j = 0; j < compTypes.size(); j++)
+		for (uint32 typeIndex = 0; typeIndex < compTypes.size(); typeIndex++)
 		{
-			if (j == minSizeIndex)
+			if (typeIndex == minSizeIndex)
 				continue;
 
-			compParam[j] = getComponent(entity, *components[j], compTypes[j]);
+			compParam[typeIndex] = getComponent(entity, compTypes[typeIndex]);
 
-			if ((compParam[j] == nullptr) && ((compFlags[j] & BaseECSSystem::FLAG_OPTIONAL) == 0))
+			// if the entity misses a non-optional component it is not valid
+			if ((compParam[typeIndex] == nullptr) && ((flags[typeIndex] & BaseECSSystem::FLAG_OPTIONAL) == 0))
 			{
 				isValid = false;
 				break;
 			}
 		}
 
+		// if the entity is valid update it 
 		if (isValid)
 			system->update(deltaTime, &compParam[0]);
 	}
@@ -168,21 +172,21 @@ ECS::~ECS()
 	}
 }
 
-EntityHandle ECS::createEntity(BaseECSComponent** components, const uint32* componentIDs, size_t componentCount)
+EntityHandle ECS::createEntity(BaseECSComponent** components, const uint32* typeIDs, size_t componentCount)
 {
-	std::pair<uint32, Entity>* entity = new std::pair<uint32, Entity>();
+	IndexedEntity* entity = new IndexedEntity();
 
 	EntityHandle handle = (EntityHandle)entity;
 
 	for (uint32 i = 0; i < componentCount; i++)
 	{
-		if (!BaseECSComponent::IsTypeValid(componentIDs[i]))
+		if (!BaseECSComponent::IsTypeValid(typeIDs[i]))
 		{
 			delete entity;
 			return NULL_ENTITY_HANDLE;
 		}
 
-		addComponent(handle, entity->second, componentIDs[i], components[i]);
+		addComponent(handle, entity->second, typeIDs[i], components[i]);
 	}
 
 	entity->first = m_entities.size();
@@ -206,31 +210,26 @@ void ECS::removeEntity(EntityHandle handle)
 	m_entities.pop_back();
 }
 
-
-
-void ECS::updateSystems(ECSSystemList& systems, float deltaTime)
+void ECS::updateSystem(BaseECSSystem* system, float deltaTime)
 {
-	std::vector<BaseECSComponent*> componentParam;
+	std::vector<BaseECSComponent*> params;
 	std::vector<std::vector<uint8>*> components;
 
-	for (uint32 i = 0; i < systems.size(); i++)
+	const std::vector<uint32>& types = system->getComponentTypes();
+
+	if (types.size() == 1)
 	{
-		const std::vector<uint32>& componentTypes = systems[i]->getComponentTypes();
+		size_t typeSize = BaseECSComponent::GetTypeSize(types[0]);
+		std::vector<uint8>& compArray = m_components[types[0]];
 
-		if (componentTypes.size() == 1)
+		for (uint32 j = 0; j < compArray.size(); j += typeSize)
 		{
-			size_t typeSize = BaseECSComponent::GetTypeSize(componentTypes[0]);
-			std::vector<uint8>& compArray = m_components[componentTypes[0]];
-
-			for (uint32 j = 0; j < compArray.size(); j += typeSize)
-			{
-				BaseECSComponent* component = (BaseECSComponent*)&compArray[j];
-				systems[i]->update(deltaTime, &component);
-			}
+			BaseECSComponent* component = (BaseECSComponent*)&compArray[j];
+			system->update(deltaTime, &component);
 		}
-		else
-		{
-			updateSystemWithMultipleComponents(systems[i], deltaTime, components, componentTypes, componentParam);
-		}
+	}
+	else
+	{
+		updateSystemWithMultipleComponents(system, deltaTime, components, types, params);
 	}
 }
