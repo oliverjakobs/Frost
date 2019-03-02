@@ -47,23 +47,23 @@ BaseECSComponent* ECS::getComponent(Entity& entity, uint32 typeID)
 
 uint32 ECS::findLeastCommonComponent(const std::vector<uint32>& types, const std::vector<uint32>& flags)
 {
-	// initialize minSize and minIndex to the max value
-	uint32 minSize = (uint32) - 1;
+	// initialize minCount and minIndex to the max value
+	uint32 minCount = (uint32) - 1;
 	uint32 minIndex = (uint32) - 1;
 
 	for (uint32 i = 0; i < types.size(); i++)
 	{
 		// if the component is optional ignore it 
-		if ((flags[i] & BaseECSSystem::FLAG_OPTIONAL) != 0)
+		if ((flags[i] & ECSFlag::ECS_FLAG_OPTIONAL) != 0)
 			continue;
 
 		// take component size into account
 		size_t typeSize = BaseECSComponent::GetTypeSize(types[i]);
-		uint32 size = m_components[types[i]].size() / typeSize;
+		uint32 count = m_components[types[i]].size() / typeSize;
 
-		if (size <= minSize)
+		if (count <= minCount)
 		{
-			minSize = size;
+			minCount = count;
 			minIndex = i;
 		}
 	}
@@ -105,50 +105,6 @@ void ECS::deleteComponent(uint32 typeID, uint32 index)
 	}
 
 	compArray.resize(srcIndex);
-}
-
-void ECS::updateSystemWithMultipleComponents(BaseECSSystem* system, float deltaTime, std::vector<std::vector<uint8>*>& components, const std::vector<uint32>& compTypes, std::vector<BaseECSComponent*>& compParam)
-{
-	const std::vector<uint32>& flags = system->getComponentFlags();
-
-	compParam.resize(std::max(compParam.size(), compTypes.size()));
-	components.resize(std::max(components.size(), compTypes.size()));
-
-	for (uint32 i = 0; i < compTypes.size(); i++)
-	{
-		components[i] = &m_components[compTypes[i]];
-	}
-
-	uint32 minSizeIndex = findLeastCommonComponent(compTypes, flags);
-
-	size_t typeSize = BaseECSComponent::GetTypeSize(compTypes[minSizeIndex]);
-	std::vector<uint8>& compArray = *components[minSizeIndex];
-
-	for (uint32 i = 0; i < compArray.size(); i += typeSize)
-	{
-		compParam[minSizeIndex] = (BaseECSComponent*)&compArray[i];
-		Entity& entity = handleToEntity(compParam[minSizeIndex]->entity);
-
-		bool isValid = true;
-		for (uint32 typeIndex = 0; typeIndex < compTypes.size(); typeIndex++)
-		{
-			if (typeIndex == minSizeIndex)
-				continue;
-
-			compParam[typeIndex] = getComponent(entity, compTypes[typeIndex]);
-
-			// if the entity misses a non-optional component it is not valid
-			if ((compParam[typeIndex] == nullptr) && ((flags[typeIndex] & BaseECSSystem::FLAG_OPTIONAL) == 0))
-			{
-				isValid = false;
-				break;
-			}
-		}
-
-		// if the entity is valid update it 
-		if (isValid)
-			system->update(deltaTime, &compParam[0]);
-	}
 }
 
 ECS::ECS()
@@ -210,26 +166,60 @@ void ECS::removeEntity(EntityHandle handle)
 	m_entities.pop_back();
 }
 
+void ECS::tick(BaseECSSystem* system, float deltaTime, TickFunction tickFn)
+{
+	// get all the flags of the systems component
+	const std::vector<uint32>& flags = system->getComponentFlags();
+	// get a list of all required types for the system
+	const std::vector<uint32>& types = system->getComponentTypes();
+	uint32 leastCommonIndex = findLeastCommonComponent(types, flags);
+
+	// get all components and the size of the least common type 
+	std::vector<uint8>& leastCommon = m_components[types[leastCommonIndex]];
+	size_t typeSize = BaseECSComponent::GetTypeSize(types[leastCommonIndex]);
+
+	// initialize the vector for the components to update the system with
+	std::vector<BaseECSComponent*> components(types.size());
+
+	// loop over these components
+	for (uint32 i = 0; i < leastCommon.size(); i += typeSize)
+	{
+		// get the least common component and put it at the right position 
+		components[leastCommonIndex] = (BaseECSComponent*)&leastCommon[i];
+
+		// get a reference to the entity to get the components of the other types
+		Entity& entity = handleToEntity(components[leastCommonIndex]->entity);
+
+		bool isValid = true;
+		for (uint32 typeIndex = 0; typeIndex < types.size(); typeIndex++)
+		{
+			// if the component is of the least common type ignore it 
+			if (typeIndex == leastCommonIndex)
+				continue;
+
+			// get the component of the specific type
+			components[typeIndex] = getComponent(entity, types[typeIndex]);
+
+			// if the entity misses a non-optional component it is not valid
+			if ((components[typeIndex] == nullptr) && ((flags[typeIndex] & ECSFlag::ECS_FLAG_OPTIONAL) == 0))
+			{
+				isValid = false;
+				break;
+			}
+		}
+
+		// if the entity is valid update it 
+		if (isValid)
+			tickFn(system, components, deltaTime);
+	}
+}
+
 void ECS::updateSystem(BaseECSSystem* system, float deltaTime)
 {
-	std::vector<BaseECSComponent*> params;
-	std::vector<std::vector<uint8>*> components;
+	tick(system, deltaTime, [](auto* s, auto& c, float d) { s->update(d, c.data()); });
+}
 
-	const std::vector<uint32>& types = system->getComponentTypes();
-
-	if (types.size() == 1)
-	{
-		size_t typeSize = BaseECSComponent::GetTypeSize(types[0]);
-		std::vector<uint8>& compArray = m_components[types[0]];
-
-		for (uint32 j = 0; j < compArray.size(); j += typeSize)
-		{
-			BaseECSComponent* component = (BaseECSComponent*)&compArray[j];
-			system->update(deltaTime, &component);
-		}
-	}
-	else
-	{
-		updateSystemWithMultipleComponents(system, deltaTime, components, types, params);
-	}
+void ECS::renderSystem(BaseECSSystem* system)
+{
+	tick(system, 0.0f, [](auto* s, auto& c, float d) { s->render(c.data()); });
 }

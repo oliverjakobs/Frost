@@ -1,15 +1,10 @@
 #pragma once
 
-#include <vector>
+#include "ecsTypedef.h"
+
 #include <tuple>
 
-typedef unsigned char uint8;
-typedef unsigned int uint32;
-
 struct BaseECSComponent;
-
-typedef void* EntityHandle;
-#define NULL_ENTITY_HANDLE nullptr
 
 typedef uint32	(*ECSComponentCreateFunction)(std::vector<uint8>& memory, EntityHandle entity, BaseECSComponent* comp);
 typedef void	(*ECSComponentFreeFunction)(BaseECSComponent* comp);

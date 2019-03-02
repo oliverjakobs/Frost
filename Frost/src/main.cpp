@@ -18,6 +18,8 @@ private:
 
 	AnimationSystem* animSystem;
 	//ImageRenderSystem* renderSystem;
+
+	TestSystem* testSystem;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -72,6 +74,8 @@ public:
 		physicsSystem = new TilePhysicsSystem(map);
 		animSystem = new AnimationSystem();
 
+		testSystem = new TestSystem();
+
 		PositionComponent posComp;
 		posComp.position = glm::vec2(400, 300);
 
@@ -104,6 +108,8 @@ public:
 		delete playerSystem;
 		delete physicsSystem;
 		delete animSystem;
+
+		delete testSystem;
 	}
 
 	void onInput() override
@@ -127,7 +133,9 @@ public:
 		map->onUpdate();
 
 		ecs.updateSystem(playerSystem, Timer::GetDeltaTime());
+		ecs.updateSystem(animSystem, Timer::GetDeltaTime());
 		ecs.updateSystem(physicsSystem, Timer::GetDeltaTime());
+		ecs.updateSystem(testSystem, 0.0f);
 	}
 
 	void onRender() override
@@ -135,7 +143,7 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
-		ecs.updateSystem(animSystem, Timer::GetDeltaTime());
+		ecs.renderSystem(animSystem);
 	}
 
 	void onRenderDebug() const override

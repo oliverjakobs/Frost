@@ -8,24 +8,20 @@ private:
 	std::vector<uint32> m_componentTypes;
 	std::vector<uint32> m_componentFlags;
 protected:
-	void addComponentType(uint32 componentType, uint32 componentFlag = 0)
+	void addComponentType(uint32 componentType, uint32 componentFlag = ECS_FLAG_NONE)
 	{
 		m_componentTypes.push_back(componentType);
 		m_componentFlags.push_back(componentFlag);
 	}
-public:
-	enum
-	{
-		FLAG_OPTIONAL = 1
-	};
-	
+public:	
 	virtual void update(float deltaTime, BaseECSComponent** componets) {};
+	virtual void render(BaseECSComponent** componets) {};
 
 	bool isValid()
 	{
 		for (auto f : m_componentFlags)
 		{
-			if ((f & FLAG_OPTIONAL) == 0)
+			if ((f & ECS_FLAG_OPTIONAL) == 0)
 				return true;
 		}
 		return false;

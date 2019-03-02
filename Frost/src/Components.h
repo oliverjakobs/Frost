@@ -13,7 +13,7 @@ struct PositionComponent : public ECSComponent<PositionComponent>
 
 struct MovementComponent : public ECSComponent<MovementComponent>
 {
-	enum Direction { LEFT, RIGHT } direction;
+	enum Direction { RIGHT, LEFT } direction;
 
 	glm::vec2 velocity;
 	float movementSpeed;

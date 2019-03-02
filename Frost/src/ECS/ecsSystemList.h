@@ -8,7 +8,7 @@ private:
 	std::vector<BaseECSSystem*> m_systems;
 public:
 	bool addSystem(BaseECSSystem& system);
-	bool removeSystem(BaseECSSystem& system);
+	bool removeSystem(uint32 index);
 
 	inline size_t size()
 	{

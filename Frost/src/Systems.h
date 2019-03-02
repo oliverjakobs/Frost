@@ -2,6 +2,22 @@
 
 #include "Components.h"
 
+class TestSystem : public BaseECSSystem
+{
+public:
+	TestSystem() : BaseECSSystem()
+	{
+		addComponentType(PositionComponent::ID);
+	}
+
+	virtual void update(float deltaTime, BaseECSComponent** components) override
+	{
+		PositionComponent* posComp = (PositionComponent*)components[0];
+
+		//DEBUG_MESSAGE("Position: " << posComp->position.x << ", " << posComp->position.y);
+	}
+};
+
 class PlayerControlSystem : public BaseECSSystem
 {
 public:
@@ -10,7 +26,7 @@ public:
 		addComponentType(PositionComponent::ID);
 		addComponentType(MovementComponent::ID);
 		addComponentType(PhysicsComponent::ID);
-		addComponentType(AnimationComponent::ID, FLAG_OPTIONAL);
+		addComponentType(AnimationComponent::ID, ECS_FLAG_OPTIONAL);
 	}
 
 	virtual void update(float deltaTime, BaseECSComponent** components) override
@@ -127,7 +143,6 @@ public:
 
 	virtual void update(float deltaTime, BaseECSComponent** components) override
 	{
-		PositionComponent* posComp = (PositionComponent*)components[0];
 		MovementComponent* moveComp = (MovementComponent*)components[1];
 		AnimationComponent* animComp = (AnimationComponent*)components[2];
 
@@ -145,13 +160,19 @@ public:
 		else
 			playAnimation("idle", animComp);
 
+		if (!animComp->currentAnimation.empty())
+			animComp->animations[animComp->currentAnimation].step(deltaTime);
+	}
+
+	virtual void render(BaseECSComponent** components) override
+	{
+		PositionComponent* posComp = (PositionComponent*)components[0];
+		AnimationComponent* animComp = (AnimationComponent*)components[2];
+
 		float x = posComp->position.x - (animComp->image->getWidth() / 2.0f);
 		float y = posComp->position.y;
-		
+
 		if (!animComp->currentAnimation.empty())
-		{
-			animComp->animations[animComp->currentAnimation].step(deltaTime);
 			animComp->image->renderF(x, y, animComp->animations[animComp->currentAnimation].getFrame(), Renderer::GetViewMat(), "shader");
-		}
 	}
 };

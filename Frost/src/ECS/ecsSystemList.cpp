@@ -9,16 +9,11 @@ bool ECSSystemList::addSystem(BaseECSSystem& system)
 	return true;
 }
 
-bool ECSSystemList::removeSystem(BaseECSSystem& system)
+bool ECSSystemList::removeSystem(uint32 index)
 {
-	for (uint32 i = 0; i < m_systems.size(); i++)
-	{
-		if (&system == m_systems[i])
-		{
-			m_systems.erase(m_systems.begin() + i);
-			return true;
-		}
-	}
+	if (index >= m_systems.size())
+		return false;
 
-	return false;
+	m_systems.erase(m_systems.begin() + index);
+	return true;
 }

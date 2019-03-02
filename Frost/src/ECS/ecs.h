@@ -3,10 +3,9 @@
 #include "ecsSystemList.h"
 
 #include <map>
-#include <array>
+#include <functional>
 
-typedef std::vector<std::pair<uint32, uint32>> Entity;
-typedef std::pair<uint32, Entity> IndexedEntity;
+typedef std::function<void(BaseECSSystem*, std::vector<BaseECSComponent*>, float)> TickFunction;
 
 class ECS
 {
@@ -25,9 +24,6 @@ private:
 	uint32 findLeastCommonComponent(const std::vector<uint32>& types, const std::vector<uint32>& flags);
 
 	void deleteComponent(uint32 typeID, uint32 index);
-
-	void updateSystemWithMultipleComponents(BaseECSSystem* system, float deltaTime, std::vector<std::vector<uint8>*>& components, const std::vector<uint32>& compTypes, std::vector<BaseECSComponent*>& compParam);
-
 public:
 	ECS();
 	~ECS();
@@ -136,5 +132,9 @@ public:
 	}
 
 	// ---------------| System |--------------------------------------
+	void tick(BaseECSSystem* system, float deltaTime, TickFunction tickFn);
+
+	// wrapper for tick
 	void updateSystem(BaseECSSystem* system, float deltaTime);
+	void renderSystem(BaseECSSystem* system);
 };
