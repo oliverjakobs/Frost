@@ -105,7 +105,7 @@ public:
 		addComponentType(ImageComponent::ID);
 	}
 
-	virtual void update(float deltaTime, BaseECSComponent** components) override
+	virtual void render(BaseECSComponent** components) override
 	{
 		PositionComponent* posComp = (PositionComponent*)components[0];
 		ImageComponent* imgComp = (ImageComponent*)components[1];

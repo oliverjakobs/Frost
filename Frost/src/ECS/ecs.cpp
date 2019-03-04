@@ -5,10 +5,7 @@
 void ECS::addComponent(EntityHandle handle, Entity& entity, uint32 typeID, BaseECSComponent* component)
 {
 	ECSComponentCreateFunction createFn = BaseECSComponent::GetTypeCreateFunction(typeID);
-	std::pair<uint32, uint32> compPair;
-	compPair.first = typeID;
-	compPair.second = createFn(m_components[typeID], handle, component);
-	entity.push_back(compPair);
+	entity.push_back(std::pair<uint32, uint32>(typeID, createFn(m_components[typeID], handle, component)));
 }
 
 bool ECS::removeComponent(EntityHandle handle, uint32 typeID)

@@ -16,8 +16,8 @@ private:
 	PlayerControlSystem* playerSystem;
 	TilePhysicsSystem* physicsSystem;
 
+	ImageRenderSystem* imageSystem;
 	AnimationSystem* animSystem;
-	//ImageRenderSystem* renderSystem;
 
 	TestSystem* testSystem;
 public:
@@ -72,33 +72,31 @@ public:
 
 		playerSystem = new PlayerControlSystem();
 		physicsSystem = new TilePhysicsSystem(map);
+		imageSystem = new ImageRenderSystem();
 		animSystem = new AnimationSystem();
 
 		testSystem = new TestSystem();
 
-		PositionComponent posComp;
-		posComp.position = glm::vec2(400, 300);
-
-		MovementComponent moveComp;
-		moveComp.velocity = glm::vec2();
-		moveComp.movementSpeed = 400.0f;
-		moveComp.jumpPower = 800.0f;
-
-		PhysicsComponent physComp;
-		physComp.body = map->createBody(400, 300, 20, 30, BodyTypeDynamic);
-		physComp.bodyPos = glm::vec2(0.0f, 30.0f);
-
-		AnimationComponent animComp;
-		animComp.image = ResourceManager::GetImage("player");
-		animComp.animations =
-		{
-			AnimationDef("idle", Animation(0, 4, 0.2f)),
-			AnimationDef("walk", Animation(6, 6, 0.125f)),
-			AnimationDef("jump", Animation(12, 3, 0.3f)),
-			AnimationDef("fall", Animation(18, 2, 0.4f))
-		};
+		// player 
+		PositionComponent posComp(glm::vec2(400, 300));
+		MovementComponent moveComp(400.0f, 800.0f);
+		PhysicsComponent physComp(map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f));
+		AnimationComponent animComp(ResourceManager::GetImage("player"),
+			{
+				AnimationDef("idle", Animation(0, 4, 0.2f)),
+				AnimationDef("walk", Animation(6, 6, 0.125f)),
+				AnimationDef("jump", Animation(12, 3, 0.3f)),
+				AnimationDef("fall", Animation(18, 2, 0.4f))
+			});
 
 		ecs.createEntity(posComp, moveComp, physComp, animComp);
+
+		// wall
+		PositionComponent posCompWall(glm::vec2(200, 64));
+		PhysicsComponent physCompWall(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f));
+		ImageComponent imgCompWall(ResourceManager::GetImage("wall"));
+
+		ecs.createEntity(posCompWall, physCompWall, imgCompWall);
 	}
 
 	~Frost()
@@ -107,6 +105,7 @@ public:
 
 		delete playerSystem;
 		delete physicsSystem;
+		delete imageSystem;
 		delete animSystem;
 
 		delete testSystem;
@@ -143,6 +142,7 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
+		ecs.renderSystem(imageSystem);
 		ecs.renderSystem(animSystem);
 	}
 
