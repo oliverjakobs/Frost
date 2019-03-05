@@ -3,9 +3,6 @@
 #include "ecsSystemList.h"
 
 #include <map>
-#include <functional>
-
-typedef std::function<void(BaseECSSystem*, std::vector<BaseECSComponent*>, float)> TickFunction;
 
 class ECS
 {
@@ -132,9 +129,6 @@ public:
 	}
 
 	// ---------------| System |--------------------------------------
-	void tick(BaseECSSystem* system, float deltaTime, TickFunction tickFn);
-
-	// wrapper for tick
-	void updateSystem(BaseECSSystem* system, float deltaTime);
-	void renderSystem(BaseECSSystem* system);
+	void tickSystem(BaseECSSystem* system, float deltaTime);
+	void tickSystems(ECSSystemList& systems, float deltaTime);
 };

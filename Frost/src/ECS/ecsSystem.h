@@ -14,8 +14,7 @@ protected:
 		m_componentFlags.push_back(componentFlag);
 	}
 public:	
-	virtual void update(float deltaTime, BaseECSComponent** componets) {};
-	virtual void render(BaseECSComponent** componets) {};
+	virtual void tick(BaseECSComponent** components, float deltaTime) = 0;
 
 	bool isValid()
 	{

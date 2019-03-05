@@ -139,6 +139,16 @@ void TileMap::onRenderDebug() const
 	}
 }
 
+float TileMap::getWidth() const
+{
+	return m_width;
+}
+
+float TileMap::getHeight() const
+{
+	return m_height;
+}
+
 float TileMap::getTileSize() const
 {
 	return m_tileSize;

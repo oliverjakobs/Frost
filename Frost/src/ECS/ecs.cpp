@@ -163,7 +163,7 @@ void ECS::removeEntity(EntityHandle handle)
 	m_entities.pop_back();
 }
 
-void ECS::tick(BaseECSSystem* system, float deltaTime, TickFunction tickFn)
+void ECS::tickSystem(BaseECSSystem* system, float deltaTime)
 {
 	// get all the flags of the systems component
 	const std::vector<uint32>& flags = system->getComponentFlags();
@@ -207,16 +207,14 @@ void ECS::tick(BaseECSSystem* system, float deltaTime, TickFunction tickFn)
 
 		// if the entity is valid update it 
 		if (isValid)
-			tickFn(system, components, deltaTime);
+			system->tick(components.data(), deltaTime);
 	}
 }
 
-void ECS::updateSystem(BaseECSSystem* system, float deltaTime)
+void ECS::tickSystems(ECSSystemList& systems, float deltaTime)
 {
-	tick(system, deltaTime, [](auto* s, auto& c, float d) { s->update(d, c.data()); });
-}
-
-void ECS::renderSystem(BaseECSSystem* system)
-{
-	tick(system, 0.0f, [](auto* s, auto& c, float d) { s->render(c.data()); });
+	for (uint32 i = 0; i < systems.size(); i++)
+	{
+		tickSystem(systems[i], deltaTime);
+	}
 }

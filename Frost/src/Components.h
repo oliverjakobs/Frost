@@ -3,7 +3,6 @@
 #include "ecs/ecs.h"
 
 #include "Animation.h"
-
 #include "TilePhysics/Tilemap.h"
 
 struct PositionComponent : public ECSComponent<PositionComponent>
@@ -48,17 +47,24 @@ struct PhysicsComponent : public ECSComponent<PhysicsComponent>
 struct ImageComponent : public ECSComponent<ImageComponent>
 {
 	Image* image;
+	int frame;
 
-	ImageComponent(Image* img) : image(img) {}
+	ImageComponent(Image* img) : image(img), frame(0) {}
 };
 
 struct AnimationComponent : public ECSComponent<AnimationComponent>
 {
 	std::map<std::string, Animation> animations;
 	std::string currentAnimation;
+	
+	AnimationComponent(std::map<std::string, Animation> anims)
+		: animations(anims), currentAnimation(std::string()) {}
+};
 
-	Image* image;
+struct CameraComponent : public ECSComponent<CameraComponent>
+{
+	Rect constraint;
+	glm::vec2 cameraOffset;
 
-	AnimationComponent(Image* img, std::map<std::string, Animation> anims)
-		: image(img), animations(anims), currentAnimation(std::string()) {}
+	CameraComponent(const Rect& con, const glm::vec2& camOff) : constraint(con), cameraOffset(camOff) {}
 };

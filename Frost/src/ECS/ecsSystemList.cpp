@@ -1,11 +1,11 @@
 #include "ecsSystemList.h"
 
-bool ECSSystemList::addSystem(BaseECSSystem& system)
+bool ECSSystemList::addSystem(BaseECSSystem* system)
 {
-	if (!system.isValid())
+	if (!system->isValid())
 		return false;
 
-	m_systems.push_back(&system);
+	m_systems.push_back(std::unique_ptr<BaseECSSystem>(system));
 	return true;
 }
 

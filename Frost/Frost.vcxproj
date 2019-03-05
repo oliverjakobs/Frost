@@ -89,6 +89,7 @@
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Font\FontRenderer.h" />
+    <ClInclude Include="src\RenderSystems.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scrapbook\Graphics.h" />
@@ -112,7 +113,7 @@
     <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
     <ClInclude Include="src\Scrapbook\Utility\stringutils.h" />
     <ClInclude Include="src\Scrapbook\Utility\utils.h" />
-    <ClInclude Include="src\Systems.h" />
+    <ClInclude Include="src\LogicSystems.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
     <ClInclude Include="src\ecs\ecs.h" />

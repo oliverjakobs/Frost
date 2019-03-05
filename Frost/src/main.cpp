@@ -2,7 +2,8 @@
 
 #include "Font/FontRenderer.h"
 
-#include "Systems.h"
+#include "LogicSystems.h"
+#include "RenderSystems.h"
 
 class Frost : public Scrapbook
 {
@@ -13,13 +14,10 @@ private:
 
 	ECS ecs;
 
-	PlayerControlSystem* playerSystem;
-	TilePhysicsSystem* physicsSystem;
+	EntityHandle wall;
 
-	ImageRenderSystem* imageSystem;
-	AnimationSystem* animSystem;
-
-	TestSystem* testSystem;
+	ECSSystemList logicSystems;
+	ECSSystemList renderSystems;
 public:
 	Frost() : Scrapbook("TileMap", 1024, 800)
 	{
@@ -68,47 +66,41 @@ public:
 
 		//SceneManager::AddScene("station2", scene);
 
-		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt");
+		//map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt");
+		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station2.txt");
 
-		playerSystem = new PlayerControlSystem();
-		physicsSystem = new TilePhysicsSystem(map);
-		imageSystem = new ImageRenderSystem();
-		animSystem = new AnimationSystem();
+		logicSystems.addSystem(new PlayerSystem());
+		logicSystems.addSystem(new PlayerSystem());
+		logicSystems.addSystem(new TilePhysicsSystem(map));
+		logicSystems.addSystem(new AnimationSystem());
 
-		testSystem = new TestSystem();
+		renderSystems.addSystem(new ImageRenderSystem());
 
-		// player 
-		PositionComponent posComp(glm::vec2(400, 300));
-		MovementComponent moveComp(400.0f, 800.0f);
-		PhysicsComponent physComp(map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f));
-		AnimationComponent animComp(ResourceManager::GetImage("player"),
-			{
-				AnimationDef("idle", Animation(0, 4, 0.2f)),
-				AnimationDef("walk", Animation(6, 6, 0.125f)),
-				AnimationDef("jump", Animation(12, 3, 0.3f)),
-				AnimationDef("fall", Animation(18, 2, 0.4f))
-			});
-
-		ecs.createEntity(posComp, moveComp, physComp, animComp);
+		// player
+		ecs.createEntity(
+			PositionComponent(glm::vec2(400, 300)), 
+			MovementComponent(400.0f, 800.0f), 
+			PhysicsComponent(map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f)), 
+			CameraComponent(Rect(glm::vec2(), map->getDimension() * map->getTileSize()), glm::vec2(0.0f, 30.0f)),
+			ImageComponent(ResourceManager::GetImage("player")),
+			AnimationComponent(
+				{
+					AnimationDef("idle", Animation(0, 4, 0.2f)),
+					AnimationDef("walk", Animation(6, 6, 0.125f)),
+					AnimationDef("jump", Animation(12, 3, 0.3f)),
+					AnimationDef("fall", Animation(18, 2, 0.4f))
+				}));
 
 		// wall
-		PositionComponent posCompWall(glm::vec2(200, 64));
-		PhysicsComponent physCompWall(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f));
-		ImageComponent imgCompWall(ResourceManager::GetImage("wall"));
-
-		ecs.createEntity(posCompWall, physCompWall, imgCompWall);
+		wall = ecs.createEntity(
+			PositionComponent(glm::vec2(200, 64)), 
+			PhysicsComponent(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f)),
+			ImageComponent(ResourceManager::GetImage("wall")));
 	}
 
 	~Frost()
 	{
 		delete map;
-
-		delete playerSystem;
-		delete physicsSystem;
-		delete imageSystem;
-		delete animSystem;
-
-		delete testSystem;
 	}
 
 	void onInput() override
@@ -119,8 +111,11 @@ public:
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
 
-		//if (Input::KeyPressed(GLFW_KEY_X))
-		//	SceneManager::GetActiveScene()->deleteEntity("wall");
+		if (Input::KeyPressed(GLFW_KEY_X))
+		{
+			map->destroyBody(ecs.getComponent<PhysicsComponent>(wall)->body);
+			ecs.removeEntity(wall);
+		}
 
 		//SceneManager::OnInput();
 	}
@@ -128,13 +123,9 @@ public:
 	void onUpdate() override
 	{
 		//SceneManager::OnUpdate();
-
 		map->onUpdate();
 
-		ecs.updateSystem(playerSystem, Timer::GetDeltaTime());
-		ecs.updateSystem(animSystem, Timer::GetDeltaTime());
-		ecs.updateSystem(physicsSystem, Timer::GetDeltaTime());
-		ecs.updateSystem(testSystem, 0.0f);
+		ecs.tickSystems(logicSystems, Timer::GetDeltaTime());
 	}
 
 	void onRender() override
@@ -142,8 +133,7 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
-		ecs.renderSystem(imageSystem);
-		ecs.renderSystem(animSystem);
+		ecs.tickSystems(renderSystems, 0.0f);
 	}
 
 	void onRenderDebug() const override
