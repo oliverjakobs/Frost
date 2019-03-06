@@ -5,7 +5,6 @@
 class Scene
 {
 protected:
-
 	unique_ptr<TileMap> m_map;
 public:
 	Scene(TileMap* map);

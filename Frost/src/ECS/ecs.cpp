@@ -127,12 +127,13 @@ ECS::~ECS()
 
 EntityHandle ECS::createEntity(BaseECSComponent** components, const uint32* typeIDs, size_t componentCount)
 {
+	// create the entity and a handle for it
 	IndexedEntity* entity = new IndexedEntity();
-
 	EntityHandle handle = (EntityHandle)entity;
 
 	for (uint32 i = 0; i < componentCount; i++)
 	{
+		// check if the component type is valid
 		if (!BaseECSComponent::IsTypeValid(typeIDs[i]))
 		{
 			delete entity;

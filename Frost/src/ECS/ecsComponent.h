@@ -9,34 +9,22 @@ struct BaseECSComponent;
 typedef uint32	(*ECSComponentCreateFunction)(std::vector<uint8>& memory, EntityHandle entity, BaseECSComponent* comp);
 typedef void	(*ECSComponentFreeFunction)(BaseECSComponent* comp);
 
+typedef std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t> ComponentTypeDef;
+
 struct BaseECSComponent
 {
 private:
-	static std::vector<std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>>* s_componentTypes;
+	static std::vector<ComponentTypeDef> s_componentTypes;
 public:
 	EntityHandle entity = NULL_ENTITY_HANDLE;
 	
 	static uint32 RegisterComponentType(ECSComponentCreateFunction createFn, ECSComponentFreeFunction freeFn, size_t size);
 	
-	inline static ECSComponentCreateFunction GetTypeCreateFunction(uint32 id)
-	{
-		return std::get<0>((*s_componentTypes)[id]);
-	}
+	static ECSComponentCreateFunction GetTypeCreateFunction(uint32 id);
+	static ECSComponentFreeFunction GetTypeFreeFunction(uint32 id);
+	static size_t GetTypeSize(uint32 id);
 
-	inline static ECSComponentFreeFunction GetTypeFreeFunction(uint32 id)
-	{
-		return std::get<1>((*s_componentTypes)[id]);
-	}
-
-	inline static size_t GetTypeSize(uint32 id)
-	{
-		return std::get<2>((*s_componentTypes)[id]);
-	}
-
-	inline static bool IsTypeValid(uint32 id)
-	{
-		return id < s_componentTypes->size();
-	}
+	static bool IsTypeValid(uint32 id);
 };
 
 template<typename T>
@@ -50,11 +38,15 @@ struct ECSComponent : public BaseECSComponent
 };
 
 template<typename CompType>
-unsigned int ECSComponentCreate(std::vector<uint8>& memory, EntityHandle entity, BaseECSComponent* comp)
+uint32 ECSComponentCreate(std::vector<uint8>& memory, EntityHandle entity, BaseECSComponent* comp)
 {
+	// get the index where the component will be created
 	uint32 index = memory.size();
+	// resize the memory so the new component will fit
 	memory.resize(index + CompType::SIZE);
+	// create the component inside the memory
 	CompType* component = new(&memory[index])CompType(*(CompType*)comp);
+	// set the handle to the entity to which the component belongs
 	component->entity = entity;
 
 	return index;
@@ -63,12 +55,14 @@ unsigned int ECSComponentCreate(std::vector<uint8>& memory, EntityHandle entity,
 template<typename CompType>
 void ECSComponentFree(BaseECSComponent* comp)
 {
+	// cast to the actual component type
 	CompType* component = (CompType*)comp;
+	// and call the destructor
 	component->~CompType();
 }
 
 template<typename T>
-const unsigned int ECSComponent<T>::ID(BaseECSComponent::RegisterComponentType(ECSComponentCreate<T>, ECSComponentFree<T>, sizeof(T)));
+const uint32 ECSComponent<T>::ID(BaseECSComponent::RegisterComponentType(ECSComponentCreate<T>, ECSComponentFree<T>, sizeof(T)));
 
 template<typename T>
 const size_t ECSComponent<T>::SIZE(sizeof(T));
