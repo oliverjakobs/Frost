@@ -56,6 +56,8 @@ public:
 	void onRender() const;
 	void onRenderDebug() const;
 
+	float getWidth() const;
+	float getHeight() const;
 	float getTileSize() const;
 	glm::vec2 getDimension() const;
 

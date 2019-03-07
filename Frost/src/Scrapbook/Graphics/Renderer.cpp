@@ -170,6 +170,11 @@ namespace sb
 		SetView(x - GetView().w / 2.0f, y - GetView().h / 2.0f);
 	}
 
+	void Renderer::SetViewCenter(const glm::vec2& cen)
+	{
+		SetViewCenter(cen.x, cen.y);
+	}
+
 	void Renderer::SetViewCenter(float x, float y, Rect con)
 	{
 		x -= GetView().w / 2.0f;
@@ -188,6 +193,11 @@ namespace sb
 			y = con.pos.y + con.dim.y - GetView().h;
 
 		SetView(x, y);
+	}
+
+	void Renderer::SetViewCenter(const glm::vec2& cen, Rect constraint)
+	{
+		SetViewCenter(cen.x, cen.y, constraint);
 	}
 
 	View Renderer::GetView()

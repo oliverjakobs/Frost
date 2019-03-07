@@ -83,17 +83,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\ECS\AnimationComponent.h" />
-    <ClInclude Include="src\ECS\Component.h" />
-    <ClInclude Include="src\ECS\Entity.h" />
-    <ClInclude Include="src\ECS\ImageComponent.h" />
-    <ClInclude Include="src\ECS\InteractionComponent.h" />
-    <ClInclude Include="src\ECS\PhysicsComponent.h" />
-    <ClInclude Include="src\ECS\PlayerComponent.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Components.h" />
+    <ClInclude Include="src\ecs\ecsTypedef.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Font\FontRenderer.h" />
-    <ClInclude Include="src\Scene\EntityManager.h" />
+    <ClInclude Include="src\RenderSystems.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Scrapbook\Graphics.h" />
@@ -111,25 +107,24 @@
     <ClInclude Include="src\Scrapbook\Utility.h" />
     <ClInclude Include="src\Scrapbook\Utility\Flags.h" />
     <ClInclude Include="src\Scrapbook\Utility\Input.h" />
-    <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
     <ClInclude Include="src\Scrapbook\Utility\Singelton.h" />
     <ClInclude Include="src\Scrapbook\Utility\Timer.h" />
     <ClInclude Include="src\Scrapbook\Utility\fileutils.h" />
+    <ClInclude Include="src\Scrapbook\Utility\memutil.h" />
     <ClInclude Include="src\Scrapbook\Utility\stringutils.h" />
     <ClInclude Include="src\Scrapbook\Utility\utils.h" />
+    <ClInclude Include="src\LogicSystems.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
+    <ClInclude Include="src\ecs\ecs.h" />
+    <ClInclude Include="src\ecs\ecsComponent.h" />
+    <ClInclude Include="src\ecs\ecsSystem.h" />
+    <ClInclude Include="src\ecs\ecsSystemList.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ECS\AnimationComponent.cpp" />
-    <ClCompile Include="src\ECS\Entity.cpp" />
-    <ClCompile Include="src\ECS\ImageComponent.cpp" />
-    <ClCompile Include="src\ECS\InteractionComponent.cpp" />
-    <ClCompile Include="src\ECS\PhysicsComponent.cpp" />
-    <ClCompile Include="src\ECS\PlayerComponent.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Font\FontRenderer.cpp" />
-    <ClCompile Include="src\Scene\EntityManager.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp" />
@@ -144,6 +139,9 @@
     <ClCompile Include="src\Scrapbook\Utility\Timer.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
+    <ClCompile Include="src\ecs\ecs.cpp" />
+    <ClCompile Include="src\ecs\ecsComponent.cpp" />
+    <ClCompile Include="src\ecs\ecsSystemList.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

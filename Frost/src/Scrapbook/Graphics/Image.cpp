@@ -21,7 +21,7 @@ namespace sb
 	}
 
 	Image::Image(const std::string& src, float width, float height)
-		: m_width(width), m_height(height)
+		: m_width(width), m_height(height), m_rows(1), m_columns(1)
 	{
 		auto vertices = GetVertices(width, height, 1.0f, 1.0f);
 

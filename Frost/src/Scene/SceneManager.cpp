@@ -16,8 +16,15 @@ void SceneManager::ChangeScene(const std::string& name)
 
 		if (s != nullptr)
 		{
+			// Exit old Scene
+			if (Get().m_activeScene != nullptr)
+				Get().m_activeScene->onExtit();
+
 			Get().m_activeScene = s;
 			Get().m_activeName = name;
+
+			// Enter new scene
+			Get().m_activeScene->onEntry();
 		}
 	}
 }
