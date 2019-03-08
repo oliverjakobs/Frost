@@ -28,17 +28,25 @@ namespace sb
 		Get().m_keys[key] = { pressed, prev };
 	}
 
-	void Input::OnUpdate()
+	void Input::OnUpdate(GLFWwindow* context)
 	{
 		for (auto& key : Get().m_keys)
 		{
 			key.second.prev = key.second.pressed;
+			key.second.pressed = (glfwGetKey(context, key.first) == GLFW_PRESS);
 		}
 
 		for (auto& button : Get().m_mouseButtons)
 		{
 			button.second.prev = button.second.pressed;
+			button.second.pressed = (glfwGetKey(context, button.first) == GLFW_PRESS);
 		}
+
+		double x, y;
+		glfwGetCursorPos(context, &x, &y);
+		
+		Get().m_mousePos.x = static_cast<float>(x);
+		Get().m_mousePos.y = static_cast<float>(y);
 	}
 
 	bool Input::KeyDown(unsigned int key)

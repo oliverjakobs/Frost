@@ -29,7 +29,8 @@ project "Frost"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		"%{prj.name}/res/shader/*.vert",
-		"%{prj.name}/res/shader/*.frag"
+		"%{prj.name}/res/shader/*.frag",
+		"%{prj.name}/res/**.tm"
 	}
 
 	links

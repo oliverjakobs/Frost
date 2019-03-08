@@ -7,6 +7,8 @@
 
 #include "Scrapbook/Maths.h"
 
+struct GLFWwindow;
+
 namespace sb
 {
 	struct KeyState
@@ -34,7 +36,7 @@ namespace sb
 		~Input();
 
 		static void SetKeyState(unsigned int key, bool pressed, bool prev);
-		static void OnUpdate();
+		static void OnUpdate(GLFWwindow* context);
 
 		static bool KeyDown(unsigned int key);
 		static bool KeyPressed(unsigned int key);

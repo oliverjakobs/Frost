@@ -4,14 +4,17 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\maps">
+      <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="res\shader">
       <UniqueIdentifier>{35FAD04E-21B2-129C-8AB9-EBF77690AD8C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity">
-      <UniqueIdentifier>{D9C2390E-C57A-7B5B-2E82-54B71A59164C}</UniqueIdentifier>
+    <Filter Include="src\ECS">
+      <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Font">
       <UniqueIdentifier>{53781ECF-3F45-79DA-685E-6782548AAE68}</UniqueIdentifier>
@@ -34,11 +37,29 @@
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ecs">
-      <UniqueIdentifier>{57FA2FA9-C3D9-AE44-CCF1-391B385015A6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecs.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsComponent.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsSystemList.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsTypedef.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Font\BitmapFont.h">
       <Filter>src\Font</Filter>
     </ClInclude>
@@ -47,6 +68,12 @@
     </ClInclude>
     <ClInclude Include="src\Font\FontRenderer.h">
       <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LogicSystems.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderSystems.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
@@ -123,25 +150,20 @@
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecs.h">
-      <Filter>src\ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ecs\ecsComponent.h">
-      <Filter>src\ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ecs\ecsSystem.h">
-      <Filter>src\ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ecs\ecsSystemList.h">
-      <Filter>src\ecs</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\ecs\ecsTypedef.h" />
-    <ClInclude Include="src\LogicSystems.h" />
-    <ClInclude Include="src\RenderSystems.h" />
-    <ClInclude Include="src\Components.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecs.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecsComponent.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecsSystemList.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
@@ -190,19 +212,9 @@
     <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ecs.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\ecsComponent.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ecsSystemList.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
@@ -210,6 +222,15 @@
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\maps\raycast.txt">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\maps\station1.txt">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\maps\station2.txt">
+      <Filter>res\maps</Filter>
     </None>
   </ItemGroup>
 </Project>
