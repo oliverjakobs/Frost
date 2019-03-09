@@ -15,13 +15,10 @@ namespace sb
 
 		bool m_debug;
 	protected:
-		struct WindowData
-		{
-			std::string title;
+		std::string m_title;
 
-			int width;
-			int height;
-		} m_data;
+		int m_width;
+		int m_height;
 	public:
 		Scrapbook(const std::string& title, int width, int height);
 		virtual ~Scrapbook();

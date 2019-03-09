@@ -5,6 +5,8 @@
 #include "LogicSystems.h"
 #include "RenderSystems.h"
 
+#include "TilePhysics/RayCast.h"
+
 glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
 {
 	return glm::vec2(pos.x, v.h - pos.y);
@@ -17,7 +19,7 @@ private:
 
 	TileMap* map;
 
-	Line ray;
+	glm::vec2 rayCaster;
 
 	//ECS ecs;
 
@@ -76,7 +78,7 @@ public:
 		//	PhysicsComponent(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f)),
 		//	ImageComponent(ResourceManager::GetImage("wall")));
 
-		ray.start = glm::vec2(512.0f, 400.0f);
+
 	}
 
 	~Frost()
@@ -91,6 +93,8 @@ public:
 
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
+
+		rayCaster = screenToWorld(Input::MousePosition(), Renderer::GetView());
 
 		/*if (Input::KeyPressed(GLFW_KEY_X))
 		{
@@ -107,10 +111,6 @@ public:
 		map->onUpdate();
 
 		//ecs.tickSystems(logicSystems, Timer::GetDeltaTime());
-
-		glm::vec2 rayDir = glm::normalize(screenToWorld(Input::MousePosition(), Renderer::GetView()) - ray.start);
-
-		ray.end = ray.start + rayDir * 1000.0f;
 	}
 
 	void onRender() override
@@ -120,13 +120,13 @@ public:
 
 		//ecs.tickSystems(renderSystems, 0.0f);
 
-		Renderer::DrawLine(ray, RED);
+		RayCast(rayCaster, map->getEdges(), 360);
 	}
 
 	void onRenderDebug() const override
 	{
 		//SceneManager::OnRenderDebug();
-		map->onRenderDebug();
+		//map->onRenderDebug();
 
 		// Debug Info
 		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");

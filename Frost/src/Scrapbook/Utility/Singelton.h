@@ -7,8 +7,8 @@
 template<class T> class Singleton
 {
 private:
-	/*Singleton(const Singleton&) = delete;
-	Singleton& operator=(const Singleton&) = delete;*/
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
 
 	static std::unique_ptr<T> instance;
 	static std::once_flag onceFlag;

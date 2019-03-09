@@ -3,8 +3,6 @@
 #include "Shader.h"
 #include "Buffer.h"
 
-#define M_PI	3.14159265359f
-
 namespace sb
 {
 	struct GLRenderLines

@@ -250,6 +250,24 @@ float TileMap::getSimulationTime() const
 	return m_simTime;
 }
 
+std::vector<Line> TileMap::getEdges() const
+{
+	std::vector<Line> edges;
+
+	for (auto& t : m_tiles)
+	{
+		if (t.type == Solid)
+		{
+			edges.push_back(Line(t.position, t.position + glm::vec2(m_tileSize, 0.0f)));
+			edges.push_back(Line(t.position + glm::vec2(m_tileSize, 0.0f), t.position + glm::vec2(m_tileSize)));
+			edges.push_back(Line(t.position + glm::vec2(m_tileSize), t.position + glm::vec2(0.0f, m_tileSize)));
+			edges.push_back(Line(t.position + glm::vec2(0.0f, m_tileSize), t.position));
+		}
+	}
+
+	return edges;
+}
+
 std::vector<std::unique_ptr<Body>> const& TileMap::getBodies() const
 {
 	return m_bodies;

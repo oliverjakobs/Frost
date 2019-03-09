@@ -119,6 +119,7 @@
     <ClInclude Include="src\Scrapbook\Utility\stringutils.h" />
     <ClInclude Include="src\Scrapbook\Utility\utils.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
+    <ClInclude Include="src\TilePhysics\RayCast.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
   </ItemGroup>
   <ItemGroup>

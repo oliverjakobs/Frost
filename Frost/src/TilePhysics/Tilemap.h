@@ -83,6 +83,8 @@ public:
 	glm::vec2 getGravity() const;
 	float getSimulationTime() const;
 
+	std::vector<Line> getEdges() const;
+
 	// get bodies
 	std::vector<std::unique_ptr<Body>> const& getBodies() const;
 	std::vector<Body*> getBodiesT(BodyType type) const;
