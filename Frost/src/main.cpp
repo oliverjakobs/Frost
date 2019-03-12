@@ -119,8 +119,18 @@ public:
 		map->onRender();
 
 		//ecs.tickSystems(renderSystems, 0.0f);
+		
+		/*for (auto& r : CircularRayCast(rayCaster, map->getEdges(), 36))
+		{
+			Renderer::FillCircle(r.pos, 4, BLACK);
+			Renderer::DrawLine(r.edge, BLUE);
+			Renderer::DrawLine(rayCaster, r.pos, RED);
+		}*/
 
-		RayCast(rayCaster, map->getEdges(), 360);
+		for (auto& l : map->getEdges())
+		{
+			Renderer::DrawLine(l, BLUE);
+		}
 	}
 
 	void onRenderDebug() const override

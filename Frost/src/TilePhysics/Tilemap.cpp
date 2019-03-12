@@ -71,7 +71,7 @@ void TileMap::destroyBody(Body* body)
 	}
 }
 
-void TileMap::onChange() const
+void TileMap::updateFramebuffer() const
 {
 	m_frameBuffer->bind();
 
@@ -83,6 +83,131 @@ void TileMap::onChange() const
 	}
 
 	m_frameBuffer->unbind();
+}
+
+void TileMap::updateEdges()
+{
+	struct EdgeData
+	{
+		int edgeID[4];
+		bool edgeExist[4];
+	};
+
+	unsigned int northIndex = 0;
+	unsigned int southIndex = 1;
+	unsigned int eastIndex = 2;
+	unsigned int westIndex = 3;
+
+	m_edges.clear();
+	std::vector<EdgeData> edgeData(m_tiles.size());
+
+	// iterate through all tiles from top left to bottom right
+	for (int x = 1; x < m_width - 1; x++)
+		for (int y = 1; y < m_height - 1; y++)
+		{
+			// some convenient indices
+			int i = y * m_width + x;		// this
+			int n = (y - 1) * m_width + x;	// northern neighbour
+			int s = (y + 1) * m_width + x;	// southern neighbour
+			int w = y * m_width + (x - 1);	// western neighbour
+			int e = y * m_width + (x + 1);	// eastern neighbour
+
+			// if this tile is solid, check if it needs edges
+			if (m_tiles[i].type == Solid)
+			{
+				// if there is no western neighbour, it needs a western edge
+				if (m_tiles[w].type != Solid)
+				{
+					// either extend it from its northern neighbour (if they have one) or start a new one
+					if (edgeData[n].edgeExist[westIndex])
+					{
+						// northern neighbour has a western edge, so extend it downwards
+						m_edges[edgeData[n].edgeID[westIndex]].end.y += m_tileSize;
+						edgeData[i].edgeID[westIndex] = edgeData[n].edgeID[westIndex];
+						edgeData[i].edgeExist[westIndex] = true;
+					}
+					else
+					{
+						// northern neighbour does not have a western edge, so create one and add it to the polygon pool
+						int edgeID = m_edges.size();
+						m_edges.push_back(Line(x * m_tileSize, y * m_tileSize, x * m_tileSize, y * m_tileSize + m_tileSize));
+
+						// update tile information with edge information
+						edgeData[i].edgeID[westIndex] = edgeID;
+						edgeData[i].edgeExist[westIndex] = true;
+					}
+				}
+
+				// if there is no eastern neighbour, it needs a eastern edge
+				if (m_tiles[e].type != Solid)
+				{
+					// either extend it from its northern neighbour (if they have one) or start a new one
+					if (edgeData[n].edgeExist[eastIndex])
+					{
+						// northern neighbour has a eastern edge, so extend it downwards
+						m_edges[edgeData[n].edgeID[eastIndex]].end.y += m_tileSize;
+						edgeData[i].edgeID[eastIndex] = edgeData[n].edgeID[eastIndex];
+						edgeData[i].edgeExist[eastIndex] = true;
+					}
+					else
+					{
+						// northern neighbour does not have a eastern edge, so create one and add it to the polygon pool
+						int edgeID = m_edges.size();
+						m_edges.push_back(Line((x + 1) * m_tileSize, y * m_tileSize, (x + 1) * m_tileSize, y * m_tileSize + m_tileSize));
+
+						// update tile information with edge information
+						edgeData[i].edgeID[eastIndex] = edgeID;
+						edgeData[i].edgeExist[eastIndex] = true;
+					}
+				}
+
+				// if there is no northern neighbour, it needs a northern edge
+				if (m_tiles[n].type != Solid)
+				{
+					// either extend it from its western neighbour (if they have one) or start a new one
+					if (edgeData[w].edgeExist[northIndex])
+					{
+						// western neighbour has a northern edge, so extend it eastwards
+						m_edges[edgeData[w].edgeID[northIndex]].end.x += m_tileSize;
+						edgeData[i].edgeID[northIndex] = edgeData[w].edgeID[northIndex];
+						edgeData[i].edgeExist[northIndex] = true;
+					}
+					else
+					{
+						// western neighbour does not have a northern edge, so create one and add it to the polygon pool
+						int edgeID = m_edges.size();
+						m_edges.push_back(Line(x * m_tileSize, y * m_tileSize, x * m_tileSize + m_tileSize, y * m_tileSize));
+
+						// update tile information with edge information
+						edgeData[i].edgeID[northIndex] = edgeID;
+						edgeData[i].edgeExist[northIndex] = true;
+					}
+				}
+
+				// if there is no southern neighbour, it needs a southern edge
+				if (m_tiles[s].type != Solid)
+				{
+					// either extend it from its western neighbour (if they have one) or start a new one
+					if (edgeData[w].edgeExist[southIndex])
+					{
+						// western neighbour has a southern edge, so extend it eastwards
+						m_edges[edgeData[w].edgeID[southIndex]].end.x += m_tileSize;
+						edgeData[i].edgeID[southIndex] = edgeData[w].edgeID[southIndex];
+						edgeData[i].edgeExist[southIndex] = true;
+					}
+					else
+					{
+						// western neighbour does not have a southern edge, so create one and add it to the polygon pool
+						int edgeID = m_edges.size();
+						m_edges.push_back(Line(x * m_tileSize, (y + 1) * m_tileSize, x * m_tileSize + m_tileSize, (y + 1) * m_tileSize));
+
+						// update tile information with edge information
+						edgeData[i].edgeID[southIndex] = edgeID;
+						edgeData[i].edgeExist[southIndex] = true;
+					}
+				}
+			}
+		}
 }
 
 void TileMap::onUpdate()
@@ -101,6 +226,7 @@ void TileMap::onUpdate()
 
 	if (m_changed)
 	{
+		updateEdges();
 		m_renderToFB = true;
 		m_changed = false;
 	}
@@ -114,7 +240,7 @@ void TileMap::onRender() const
 {
 	// if the map changed render to the framebuffer first
 	if (m_renderToFB)
-		onChange();
+		updateFramebuffer();
 	
 	m_frameBuffer->render("shader");
 }
@@ -139,12 +265,12 @@ void TileMap::onRenderDebug() const
 	}
 }
 
-float TileMap::getWidth() const
+int TileMap::getWidth() const
 {
 	return m_width;
 }
 
-float TileMap::getHeight() const
+int TileMap::getHeight() const
 {
 	return m_height;
 }
@@ -159,12 +285,52 @@ glm::vec2 TileMap::getDimension() const
 	return glm::vec2(m_width, m_height);
 }
 
+unsigned int TileMap::getIndexF(float x, float y) const
+{
+	return getIndex(getTilePos(glm::vec2(x, y)));
+}
+
+unsigned int TileMap::getIndexF(const glm::vec2& pos) const
+{
+	return getIndex(getTilePos(pos));
+}
+
+unsigned int TileMap::getIndex(unsigned int x, unsigned int y) const
+{
+	return (m_height - y - 1) * m_width + x;
+}
+
+unsigned int TileMap::getIndex(const glm::ivec2& pos) const
+{
+	return getIndex(pos.x, pos.y);
+}
+
+Tile* TileMap::at(unsigned int index)
+{
+	return &m_tiles.at(index);
+}
+
+const Tile* TileMap::at(unsigned int index) const
+{
+	return &m_tiles.at(index);
+}
+
+Tile* TileMap::operator[](unsigned int index)
+{
+	return &m_tiles[index];
+}
+
+const Tile* TileMap::operator[](unsigned int index) const
+{
+	return &m_tiles[index];
+}
+
 glm::ivec2 TileMap::getTilePos(float x, float y) const
 {
 	return glm::ivec2(static_cast<int>(std::floor(x / m_tileSize)), static_cast<int>(std::floor(y / m_tileSize)));
 }
 
-glm::ivec2 TileMap::getTilePos(const glm::vec2 & pos) const
+glm::ivec2 TileMap::getTilePos(const glm::vec2& pos) const
 {
 	return getTilePos(pos.x, pos.y);
 }
@@ -180,10 +346,7 @@ std::vector<const Tile*> TileMap::getAdjacentTiles(float x, float y, float w, fl
 	{
 		for (int j = start.y; j <= end.y; j++)
 		{
-			const Tile* t = getTileM(i, j);
-
-			if (t != nullptr)
-				tiles.push_back(t);
+			tiles.push_back(at(getIndex(i, j)));
 		}
 	}
 
@@ -193,51 +356,6 @@ std::vector<const Tile*> TileMap::getAdjacentTiles(float x, float y, float w, fl
 std::vector<const Tile*> TileMap::getAdjacentTiles(const glm::vec2& pos, const glm::vec2& size)
 {
 	return getAdjacentTiles(pos.x, pos.y, size.x, size.y);
-}
-
-void TileMap::changeTile(const glm::vec2& pos, unsigned int id, TileType type)
-{
-	changeTile(pos.x, pos.y, id, type);
-}
-
-void TileMap::changeTile(float x, float y, unsigned int id, TileType type)
-{
-	glm::ivec2 pos = getTilePos(x, y);
-
-	if (pos.x < 0 || pos.x >= m_width || pos.y < 0 || pos.y >= m_height)
-		return;
-
-	Tile* tile = &m_tiles.at((m_height - pos.y - 1) * m_width + pos.x);
-
-	if (!(tile->id == id || tile->type == type))
-	{
-		tile->id = id;
-		tile->type = type;
-		m_changed = true;
-	}
-}
-
-const Tile* TileMap::getTile(float x, float y) const
-{
-	return getTileM(getTilePos(x, y));
-}
-
-const Tile* TileMap::getTile(const glm::vec2& pos) const
-{
-	return getTile(pos.x, pos.y);
-}
-
-const Tile* TileMap::getTileM(int x, int y) const
-{
-	if (x < 0 || x >= m_width || y < 0 || y >= m_height)
-		return nullptr;
-
-	return &m_tiles.at((m_height - y - 1) * m_width + x);
-}
-
-const Tile* TileMap::getTileM(const glm::ivec2& pos) const
-{
-	return getTileM(pos.x, pos.y);
 }
 
 glm::vec2 TileMap::getGravity() const
@@ -252,20 +370,7 @@ float TileMap::getSimulationTime() const
 
 std::vector<Line> TileMap::getEdges() const
 {
-	std::vector<Line> edges;
-
-	for (auto& t : m_tiles)
-	{
-		if (t.type == Solid)
-		{
-			edges.push_back(Line(t.position, t.position + glm::vec2(m_tileSize, 0.0f)));
-			edges.push_back(Line(t.position + glm::vec2(m_tileSize, 0.0f), t.position + glm::vec2(m_tileSize)));
-			edges.push_back(Line(t.position + glm::vec2(m_tileSize), t.position + glm::vec2(0.0f, m_tileSize)));
-			edges.push_back(Line(t.position + glm::vec2(0.0f, m_tileSize), t.position));
-		}
-	}
-
-	return edges;
+	return m_edges;
 }
 
 std::vector<std::unique_ptr<Body>> const& TileMap::getBodies() const
