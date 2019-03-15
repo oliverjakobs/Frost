@@ -4,9 +4,6 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\maps">
-      <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\shader">
       <UniqueIdentifier>{35FAD04E-21B2-129C-8AB9-EBF77690AD8C}</UniqueIdentifier>
     </Filter>
@@ -147,10 +144,13 @@
     <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
+    <ClInclude Include="src\TilePhysics\RayCast.h">
+      <Filter>src\TilePhysics</Filter>
+    </ClInclude>
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="src\TilePhysics\RayCast.h" />
+    <ClInclude Include="src\range.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -223,15 +223,6 @@
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\maps\raycast.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station1.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station2.txt">
-      <Filter>res\maps</Filter>
     </None>
   </ItemGroup>
 </Project>

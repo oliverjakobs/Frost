@@ -99,6 +99,11 @@ void TileMap::updateEdges()
 	unsigned int westIndex = 3;
 
 	m_edges.clear();
+	m_edges.push_back(Line(0.0f, 0.0f, m_width * m_tileSize, 0.0f));
+	m_edges.push_back(Line(m_width * m_tileSize, 0.0f, m_width * m_tileSize, m_height * m_tileSize));
+	m_edges.push_back(Line(m_width * m_tileSize, m_height * m_tileSize, 0.0f, m_height * m_tileSize));
+	m_edges.push_back(Line(0.0f, m_height * m_tileSize, 0.0f, 0.0f));
+
 	std::vector<EdgeData> edgeData(m_tiles.size());
 
 	// iterate through all tiles from top left to bottom right

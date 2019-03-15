@@ -235,7 +235,7 @@ namespace sb
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbos[1]);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, m_count * sizeof(glm::vec4), m_colors);
 
-			glDrawArrays(GL_LINES, 0, m_count);
+			glDrawArrays(GL_TRIANGLES, 0, m_count);
 
 			m_count = 0;
 		}
