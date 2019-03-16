@@ -105,12 +105,6 @@
     <ClInclude Include="src\Scrapbook\Graphics\Texture.h">
       <Filter>src\Scrapbook\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scrapbook\Maths.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Maths\Geometry.h">
-      <Filter>src\Scrapbook\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scrapbook\Scrapbook.h">
       <Filter>src\Scrapbook</Filter>
     </ClInclude>
@@ -151,6 +145,13 @@
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
     <ClInclude Include="src\range.h" />
+    <ClInclude Include="src\Maths\Geometry.h">
+      <Filter>src\Scrapbook\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Maths.h">
+      <Filter>src\Scrapbook</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Visibility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">

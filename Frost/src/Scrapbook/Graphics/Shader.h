@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scrapbook/Maths.h"
+#include "Maths/Maths.h"
 #include "Scrapbook/Utility.h"
 
 namespace sb

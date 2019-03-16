@@ -7,26 +7,12 @@
 
 #include "TilePhysics/RayCast.h"
 
-#include <unordered_set>
+#include "Maths/Visibility.h"
 
-#include "glm/gtx/hash.hpp"
 
 glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
 {
 	return glm::vec2(pos.x, v.h - pos.y);
-}
-
-std::unordered_set<glm::vec2, std::hash<glm::vec2>> edgesToVertices(const std::vector<Line>& edges)
-{
-	std::unordered_set<glm::vec2, std::hash<glm::vec2>> vertices;
-
-	for (auto& e : edges)
-	{
-		vertices.emplace(e.start);
-		vertices.emplace(e.end);
-	}
-
-	return vertices;
 }
 
 class Frost : public Scrapbook
@@ -144,53 +130,17 @@ public:
 			Renderer::DrawLine(rayCaster, r.pos, RED);
 		}*/
 
-		auto edges = map->getEdges();
-
-		/*for (auto& l : edges)
-		{
-			Renderer::DrawLine(l, BLUE);
-		}
-*/
-		auto vertices = getVisibilityPolygonPoints(rayCaster, edges, 1000.0f);
-
-		auto it = std::unique(vertices.begin(), vertices.end(), [&](const auto& t1, const auto& t2)
-		{
-			return std::fabs(std::get<1>(t1) - std::get<1>(t2)) < 0.1f && std::fabs(std::get<2>(t1) - std::get<2>(t2)) < 0.1f;
-		});
-
-		vertices.resize(distance(vertices.begin(), it));
-		
-		//for (auto& v : vertices)
-		//{
-		//	glm::vec2 pos = glm::vec2(std::get<1>(v), std::get<2>(v));
-
-		//	Renderer::DrawLine(Line(rayCaster, pos), RED);
-		//	Renderer::FillCircle(pos, 4, BLACK);
-		//}
+		auto vertices = GetVisibilityPolygonPoints(rayCaster, map->getEdges(), 100.0f);
 
 		// Draw each triangle in fan
 		if (!vertices.empty())
 		{
 			for (int i = 0; i < vertices.size() - 1; i++)
 			{
-				Renderer::FillPolygon(
-					{
-						rayCaster,
-						glm::vec2(std::get<1>(vertices[i]), std::get<2>(vertices[i])),
-						glm::vec2(std::get<1>(vertices[i + 1]), std::get<2>(vertices[i + 1]))
-					},
-					WHITE);
+				Renderer::FillPolygon({ rayCaster, vertices[i].pos, vertices[i + 1].pos }, WHITE);
 
 			}
-
-			// Fan will have one open edge, so draw last point of fan to first
-			Renderer::FillPolygon(
-				{
-					rayCaster,
-					glm::vec2(std::get<1>(vertices.back()), std::get<2>(vertices.back())),
-					glm::vec2(std::get<1>(vertices[0]), std::get<2>(vertices[0]))
-				},
-				WHITE);
+			Renderer::FillPolygon({ rayCaster, vertices.back().pos, vertices.front().pos }, WHITE);
 		}
 		
 	}

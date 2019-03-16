@@ -2,7 +2,7 @@
 
 #include "Graphics.h"
 #include "Utility.h"
-#include "Maths.h"
+#include "Maths/Maths.h"
 
 #include <GLFW/glfw3.h>
 

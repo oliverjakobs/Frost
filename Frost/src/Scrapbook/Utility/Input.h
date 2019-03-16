@@ -5,7 +5,7 @@
 #include <sstream>
 #include <map>
 
-#include "Scrapbook/Maths.h"
+#include "Maths/Maths.h"
 
 struct GLFWwindow;
 

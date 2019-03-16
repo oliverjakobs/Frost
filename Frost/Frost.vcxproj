@@ -94,6 +94,7 @@
     <ClInclude Include="src\Font\Font.h" />
     <ClInclude Include="src\Font\FontRenderer.h" />
     <ClInclude Include="src\LogicSystems.h" />
+    <ClInclude Include="src\Maths\Visibility.h" />
     <ClInclude Include="src\range.h" />
     <ClInclude Include="src\RenderSystems.h" />
     <ClInclude Include="src\Scene\Scene.h" />
@@ -107,8 +108,8 @@
     <ClInclude Include="src\Scrapbook\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Shader.h" />
     <ClInclude Include="src\Scrapbook\Graphics\Texture.h" />
-    <ClInclude Include="src\Scrapbook\Maths.h" />
-    <ClInclude Include="src\Scrapbook\Maths\Geometry.h" />
+    <ClInclude Include="src\Maths\Maths.h" />
+    <ClInclude Include="src\Maths\Geometry.h" />
     <ClInclude Include="src\Scrapbook\Scrapbook.h" />
     <ClInclude Include="src\Scrapbook\Utility.h" />
     <ClInclude Include="src\Scrapbook\Utility\Flags.h" />
