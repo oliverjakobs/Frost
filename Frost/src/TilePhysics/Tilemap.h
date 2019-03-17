@@ -2,6 +2,9 @@
 
 #include "Body.h"
 
+#include "Core/Graphics.h"
+#include "Utility/Timer.h"
+
 enum TileType
 {
 	Empty = 0,

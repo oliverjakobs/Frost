@@ -1,3 +1,5 @@
+#include "Core/Application.h"
+
 #include "TilePhysics/Tilemap.h"
 
 #include "Font/FontRenderer.h"
@@ -5,9 +7,9 @@
 #include "LogicSystems.h"
 #include "RenderSystems.h"
 
-#include "TilePhysics/RayCast.h"
-
 #include "Maths/Visibility.h"
+
+#include "Utility/range.h"
 
 
 glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
@@ -15,7 +17,7 @@ glm::vec2 screenToWorld(const glm::vec2& pos, const View& v)
 	return glm::vec2(pos.x, v.h - pos.y);
 }
 
-class Frost : public Scrapbook
+class Frost : public Application
 {
 private:
 	unique_ptr<Font> font;
@@ -31,7 +33,7 @@ private:
 	//ECSSystemList logicSystems;
 	//ECSSystemList renderSystems;
 public:
-	Frost() : Scrapbook("TileMap", 1024, 800)
+	Frost() : Application("TileMap", 1024, 800)
 	{
 		// ---------------| Config|------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -42,6 +44,7 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
+
 		ResourceManager::AddImage("player", new Image("res/images/player.png", 40, 60, 4, 6));
 		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
@@ -80,8 +83,6 @@ public:
 		//	PositionComponent(glm::vec2(200, 64)), 
 		//	PhysicsComponent(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f)),
 		//	ImageComponent(ResourceManager::GetImage("wall")));
-
-
 	}
 
 	~Frost()
@@ -135,14 +136,14 @@ public:
 		// Draw each triangle in fan
 		if (!vertices.empty())
 		{
-			for (int i = 0; i < vertices.size() - 1; i++)
+			auto it = vertices.begin();
+			for (auto& v : range(vertices.begin(), vertices.end() - 1))
 			{
-				Renderer::FillPolygon({ rayCaster, vertices[i].pos, vertices[i + 1].pos }, WHITE);
-
+				std::advance(it, 1);
+				Renderer::FillPolygon({ rayCaster, v.pos, it->pos }, WHITE);
 			}
 			Renderer::FillPolygon({ rayCaster, vertices.back().pos, vertices.front().pos }, WHITE);
-		}
-		
+		}		
 	}
 
 	void onRenderDebug() const override

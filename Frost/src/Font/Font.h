@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Scrapbook/Scrapbook.h"
-
-using namespace sb;
+#include "Core/Graphics.h"
 
 class Font
 {

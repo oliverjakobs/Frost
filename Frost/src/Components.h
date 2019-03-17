@@ -3,6 +3,8 @@
 #include "ecs/ecs.h"
 
 #include "Animation.h"
+
+#include "Core/Application.h"
 #include "TilePhysics/Tilemap.h"
 
 struct PositionComponent : public ECSComponent<PositionComponent>
