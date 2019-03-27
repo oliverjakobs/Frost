@@ -146,6 +146,8 @@
     <ClInclude Include="src\Core\Application.h">
       <Filter>src\Scrapbook</Filter>
     </ClInclude>
+    <ClInclude Include="src\Patterns\Command.h" />
+    <ClInclude Include="src\Patterns\Observer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">

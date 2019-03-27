@@ -124,13 +124,6 @@ public:
 
 		//ecs.tickSystems(renderSystems, 0.0f);
 		
-		/*for (auto& r : CircularRayCast(rayCaster, map->getEdges(), 36))
-		{
-			Renderer::FillCircle(r.pos, 4, BLACK);
-			Renderer::DrawLine(r.edge, BLUE);
-			Renderer::DrawLine(rayCaster, r.pos, RED);
-		}*/
-
 		auto vertices = GetVisibilityPolygonPoints(rayCaster, map->getEdges(), 100.0f);
 
 		// Draw each triangle in fan

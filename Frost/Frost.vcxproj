@@ -95,6 +95,8 @@
     <ClInclude Include="src\Font\FontRenderer.h" />
     <ClInclude Include="src\LogicSystems.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
+    <ClInclude Include="src\Patterns\Command.h" />
+    <ClInclude Include="src\Patterns\Observer.h" />
     <ClInclude Include="src\Utility\range.h" />
     <ClInclude Include="src\RenderSystems.h" />
     <ClInclude Include="src\Scene\Scene.h" />
