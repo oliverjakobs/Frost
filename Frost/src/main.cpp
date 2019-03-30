@@ -11,6 +11,8 @@
 
 #include "Utility/range.h"
 
+#include "Utility/String/StringHash.h"
+
 
 glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
 {
@@ -152,11 +154,17 @@ public:
 
 int main()
 {
-	Frost* game = new Frost();
+	/*Frost* game = new Frost();
 
 	game->run();
 
-	delete game;
+	delete game;*/
+
+	DEBUG_MESSAGE("Hash 1: " << StringHash("TestString").GetHash());
+
+	int x;
+
+	std::cin >> x;
 
 	return 0;
 }
