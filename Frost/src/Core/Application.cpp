@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include "Log/Logger.h"
+
 Application::Application(const std::string& title, int width, int height)
 	: m_title(title), m_width(width), m_height(height)
 {
@@ -9,13 +11,15 @@ Application::Application(const std::string& title, int width, int height)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	DEBUG_INFO("Initialized glfw");
+
 	m_debug = false;
 
 	// creating the window
 	m_window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 	if (m_window == NULL)
 	{
-		DEBUG_MESSAGE("Failed to create GLFW window");
+		DEBUG_ERROR("Failed to create GLFW window");
 		glfwTerminate();
 		return;
 	}
@@ -33,13 +37,17 @@ Application::Application(const std::string& title, int width, int height)
 		glViewport(0, 0, width, height);
 	});
 
+	DEBUG_INFO("Window created");
+
 	// loading glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		DEBUG_MESSAGE("Failed to initialize GLAD");
+		DEBUG_ERROR("Failed to initialize GLAD");
 		glfwTerminate();
 		return;
 	}
+
+	DEBUG_INFO("Initialized GLAD");
 
 	Renderer::Init(0.0f, 0.0f, (float)m_width, (float)m_height);
 }

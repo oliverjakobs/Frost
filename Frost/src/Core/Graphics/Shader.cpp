@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Utility/utils.h"
+#include "Log/Logger.h"
 
 unsigned int Shader::CreateShader(const std::string& vertSrc, const std::string& fragSrc)
 {
@@ -14,7 +14,7 @@ unsigned int Shader::CreateShader(const std::string& vertSrc, const std::string&
 
 	if (vert == 0 || frag == 0)
 	{
-		DEBUG_MESSAGE("Shader Missing");
+		DEBUG_ERROR("Shader Missing");
 		return 0;
 	}
 
@@ -30,7 +30,7 @@ unsigned int Shader::CreateShader(const std::string& vertSrc, const std::string&
 		PrintLog(program);
 		glDeleteProgram(program);
 
-		DEBUG_MESSAGE("Linking Error");
+		DEBUG_ERROR("Linking Error");
 		return 0;
 	}
 
@@ -43,7 +43,7 @@ unsigned int Shader::CreateShader(const std::string& vertSrc, const std::string&
 		PrintLog(program);
 		glDeleteProgram(program);
 
-		DEBUG_MESSAGE("Validating Error");
+		DEBUG_ERROR("Validating Error");
 		return 0;
 	}
 
@@ -70,7 +70,7 @@ unsigned int Shader::CompileShader(unsigned int type, const char* source)
 		PrintLog(shader);
 		glDeleteShader(shader);
 
-		DEBUG_MESSAGE("Compiling Error: " << std::to_string(type));
+		DEBUG_ERROR("Compiling Error: {0}", std::to_string(type));
 
 		return 0;
 	}
@@ -87,7 +87,7 @@ void Shader::PrintLog(unsigned int object)
 		glGetProgramiv(object, GL_INFO_LOG_LENGTH, &log_length);
 	else
 	{
-		fprintf(stderr, "printlog: Not a shader or a program\n");
+		DEBUG_ERROR("Shader Log: Not a shader or a program");
 		return;
 	}
 
@@ -98,7 +98,7 @@ void Shader::PrintLog(unsigned int object)
 	else if (glIsProgram(object))
 		glGetProgramInfoLog(object, log_length, NULL, log);
 
-	fprintf(stderr, "%s", log);
+	DEBUG_INFO("{0}", log);
 	free(log);
 }
 

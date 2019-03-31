@@ -1,5 +1,7 @@
 #include "FontRenderer.h"
 
+#include "Log/Logger.h"
+
 void FontRenderer::AddFont(const std::string& name, Font* font)
 {
 	Get().m_fonts[name] = unique_ptr<Font>(font);
@@ -13,7 +15,7 @@ Font* FontRenderer::GetFont(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_MESSAGE("No such font: " << name);
+		DEBUG_WARN("No such font: {0}", name);
 		return nullptr;
 	}
 }
@@ -26,6 +28,6 @@ void FontRenderer::RenderText(const std::string& font, const std::string& text, 
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_MESSAGE("No such font: " << font);
+		DEBUG_WARN("No such font: {0}", font);
 	}
 }

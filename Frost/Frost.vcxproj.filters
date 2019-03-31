@@ -25,6 +25,9 @@
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Log">
+      <UniqueIdentifier>{7E912FA9-EA70-AE44-F388-391B5FE714A6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Maths">
       <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
     </Filter>
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log\Logger.h">
+      <Filter>src\Log</Filter>
     </ClInclude>
     <ClInclude Include="src\LogicSystems.h">
       <Filter>src</Filter>

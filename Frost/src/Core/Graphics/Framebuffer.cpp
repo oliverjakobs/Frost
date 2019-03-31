@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 
+#include "Log/Logger.h"
+
 #include "Renderer.h"
 #include "ResourceManager.h"
 
@@ -35,9 +37,10 @@ FrameBuffer::FrameBuffer(int w, int h)
 	m_texture = unique_ptr<Texture>(new Texture(m_width, m_height));
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->getID(), 0);
 
+	// TODO: assert
 	// check if framebuffer is completed and unbind it
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		DEBUG_MESSAGE("Framebuffer is not complete!");
+		DEBUG_WARN("Framebuffer is not complete!");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

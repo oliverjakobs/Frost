@@ -1,5 +1,7 @@
 #include "SceneManager.h"
 
+#include "Log/Logger.h"
+
 void SceneManager::AddScene(const std::string& name, Scene* scene)
 {
 	Get().m_scenes[name] = unique_ptr<Scene>(scene);
@@ -57,7 +59,7 @@ Scene* SceneManager::GetScene(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_MESSAGE("No such scene: " << name);
+		DEBUG_WARN("No such scene: {0}", name);
 		return nullptr;
 	}
 }

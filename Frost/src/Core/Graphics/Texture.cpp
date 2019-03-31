@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "Utility/utils.h"
+#include "Log/Logger.h"
 
 Texture::Texture(const char* path, unsigned int slot)
 	: m_slot(slot)
@@ -33,7 +33,7 @@ Texture::Texture(const char* path, unsigned int slot)
 	}
 	else
 	{
-		DEBUG_MESSAGE("Failed to load Texture: " << path);
+		DEBUG_ERROR("Failed to load texture: {0}", path);
 		m_id = 0;
 	}
 }
@@ -72,7 +72,7 @@ Texture::Texture(const char* path, TextureConfig config, unsigned int slot)
 	}
 	else
 	{
-		DEBUG_MESSAGE("Failed to load Texture: " << path);
+		DEBUG_ERROR("Failed to load texture: {0}", path);
 		m_id = 0;
 	}
 }

@@ -13,6 +13,8 @@
 
 #include "Utility/String/StringHash.h"
 
+#include "Log/Logger.h"
+
 
 glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
 {
@@ -154,17 +156,14 @@ public:
 
 int main()
 {
-	/*Frost* game = new Frost();
+	Logger::SetFormat("[%T] [%^%l%$]: %v");
+	Logger::SetLevel(LogLevel::Trace);
+
+	Frost* game = new Frost();
 
 	game->run();
 
-	delete game;*/
-
-	DEBUG_MESSAGE("Hash 1: " << StringHash("TestString").GetHash());
-
-	int x;
-
-	std::cin >> x;
+	delete game;
 
 	return 0;
 }

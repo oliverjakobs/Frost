@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-#include "Utility/utils.h"
+#include "Log/Logger.h"
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
@@ -15,7 +15,7 @@ Shader* ResourceManager::GetShader(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_MESSAGE("No such shader: " << name);
+		DEBUG_WARN("No such shader: {0}", name);
 		return nullptr;
 	}
 }
@@ -33,7 +33,7 @@ Image* ResourceManager::GetImage(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_MESSAGE("No such image: " << name);
+		DEBUG_WARN("No such image: {0}", name);
 		return nullptr;
 	}
 }
