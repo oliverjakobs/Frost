@@ -104,7 +104,7 @@ void Shader::PrintLog(unsigned int object)
 
 Shader::Shader(const std::string& vs, const std::string& fs)
 {
-	m_program = CreateShader(readFile(vs.c_str()).c_str(), readFile(fs.c_str()).c_str());
+	m_program = CreateShader(ReadFile(vs.c_str()).c_str(), ReadFile(fs.c_str()).c_str());
 }
 
 Shader::~Shader()

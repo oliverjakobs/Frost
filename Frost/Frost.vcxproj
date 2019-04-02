@@ -132,7 +132,7 @@
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
-    <ClInclude Include="src\Utility\fileutils.h" />
+    <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\range.h" />
     <ClInclude Include="src\Utility\utils.h" />
   </ItemGroup>

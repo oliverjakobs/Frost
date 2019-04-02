@@ -165,13 +165,13 @@
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\fileutils.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\range.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\utils.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\File\FileReader.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
   </ItemGroup>

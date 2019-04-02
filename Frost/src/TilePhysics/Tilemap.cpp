@@ -4,7 +4,7 @@ TileMap::TileMap(Image* image, const std::string& map, const glm::vec2& gravity)
 	: m_image(image), m_gravity(gravity)
 {
 	// read in the data and separate the config from the map
-	auto data = cutStringBefore("[Map]", readFile(map.c_str()));
+	auto data = cutStringBefore("[Map]", ReadFile(map.c_str()));
 
 	// split config and tiles into single values
 	auto config = cutString(",", getValue("[Config]", data[0]));
