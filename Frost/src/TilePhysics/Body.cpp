@@ -296,7 +296,7 @@ bool Body::checkRight(const glm::vec2& position, const glm::vec2& oldPosition, f
 
 bool Body::checkSlope(const glm::vec2& position, int slope) const
 {
-	const Tile* tile = m_map->getTile(position);
+	Tile* tile = m_map->at(m_map->getIndex(position));
 
 	if (tile == nullptr)
 		return false;

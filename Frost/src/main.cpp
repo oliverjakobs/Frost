@@ -1,3 +1,5 @@
+#include "Core/Application.h"
+
 #include "TilePhysics/Tilemap.h"
 
 #include "Font/FontRenderer.h"
@@ -5,21 +7,37 @@
 #include "LogicSystems.h"
 #include "RenderSystems.h"
 
-class Frost : public Scrapbook
+#include "Maths/Visibility.h"
+
+#include "Utility/range.h"
+
+#include "Utility/String/StringHash.h"
+
+#include "Log/Logger.h"
+
+
+glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
+{
+	return glm::vec2(pos.x, v.h - pos.y);
+}
+
+class Frost : public Application
 {
 private:
 	unique_ptr<Font> font;
 
 	TileMap* map;
 
-	ECS ecs;
+	glm::vec2 rayCaster;
 
-	EntityHandle wall;
+	//ECS ecs;
 
-	ECSSystemList logicSystems;
-	ECSSystemList renderSystems;
+	//EntityHandle wall;
+
+	//ECSSystemList logicSystems;
+	//ECSSystemList renderSystems;
 public:
-	Frost() : Scrapbook("TileMap", 1024, 800)
+	Frost() : Application("TileMap", 1024, 800)
 	{
 		// ---------------| Config|------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -30,72 +48,45 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
+
 		ResourceManager::AddImage("player", new Image("res/images/player.png", 40, 60, 4, 6));
 		ResourceManager::AddImage("door", new Image("res/images/door.png", 46, 64));
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
 		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
 
 		FontRenderer::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
-		
-		//// ---------------| Create entities|---------------------------------
-		//Entity* entity = EntityManager::CreateEntity("player", 0, 0, 20, 20);
-		//entity->addComponent(new PhysicsComponent({ 20, 30, BodyTypeDynamic }));
-		//entity->addComponent(new AnimationComponent(ResourceManager::GetImage("player"),
-		//	{
-		//		AnimationDef("idle", Animation(0, 4, 0.2f)),
-		//		AnimationDef("walk", Animation(6, 6, 0.125f)),
-		//		AnimationDef("jump", Animation(12, 3, 0.3f)),
-		//		AnimationDef("fall", Animation(18, 2, 0.4f))
-		//	}));
-		//entity->addComponent(new PlayerComponent(400, 800));
-
-		//Entity* door = EntityManager::CreateEntity("door", 512, 64, 20, 20);
-		//door->addComponent(new ImageComponent(ResourceManager::GetImage("door")));
-
-		//Entity* wall = EntityManager::CreateEntity("wall", 200, 64, 20, 200);
-		//wall->addComponent(new PhysicsComponent({ 10, 100, BodyTypeStatic }));
-		//wall->addComponent(new ImageComponent(ResourceManager::GetImage("wall")));
-		//
-		//// ---------------| Create Scenes|-----------------------------------
-		//SceneManager::AddScene("station1", new SceneStation1());
-
-		//Scene* scene = new Scene(new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station2.txt"));
-		//
-		//scene->addEntity(EntityManager::GetEntity("door")->addComponent(new InteractionComponent(0.0f, GLFW_KEY_W, []() { SceneManager::ChangeScene("station1"); })));
-		//scene->addEntity(EntityManager::GetEntity("player"), 512, 64);
-
-		//SceneManager::AddScene("station2", scene);
 
 		//map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt");
-		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station2.txt");
+		//map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station2.txt");
+		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/raycast.txt");
 
-		logicSystems.addSystem(new PlayerSystem());
-		logicSystems.addSystem(new PlayerSystem());
-		logicSystems.addSystem(new TilePhysicsSystem(map));
-		logicSystems.addSystem(new AnimationSystem());
+		//logicSystems.addSystem(new PlayerSystem());
+		//logicSystems.addSystem(new PlayerSystem());
+		//logicSystems.addSystem(new TilePhysicsSystem(map));
+		//logicSystems.addSystem(new AnimationSystem());
 
-		renderSystems.addSystem(new ImageRenderSystem());
+		//renderSystems.addSystem(new ImageRenderSystem());
 
-		// player
-		ecs.createEntity(
-			PositionComponent(glm::vec2(400, 300)), 
-			MovementComponent(400.0f, 800.0f), 
-			PhysicsComponent(map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f)), 
-			CameraComponent(Rect(glm::vec2(), map->getDimension() * map->getTileSize()), glm::vec2(0.0f, 30.0f)),
-			ImageComponent(ResourceManager::GetImage("player")),
-			AnimationComponent(
-				{
-					AnimationDef("idle", Animation(0, 4, 0.2f)),
-					AnimationDef("walk", Animation(6, 6, 0.125f)),
-					AnimationDef("jump", Animation(12, 3, 0.3f)),
-					AnimationDef("fall", Animation(18, 2, 0.4f))
-				}));
+		//// player
+		//ecs.createEntity(
+		//	PositionComponent(glm::vec2(400, 300)), 
+		//	MovementComponent(400.0f, 800.0f), 
+		//	PhysicsComponent(map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f)), 
+		//	CameraComponent(Rect(glm::vec2(), map->getDimension() * map->getTileSize()), glm::vec2(0.0f, 30.0f)),
+		//	ImageComponent(ResourceManager::GetImage("player")),
+		//	AnimationComponent(
+		//		{
+		//			AnimationDef("idle", Animation(0, 4, 0.2f)),
+		//			AnimationDef("walk", Animation(6, 6, 0.125f)),
+		//			AnimationDef("jump", Animation(12, 3, 0.3f)),
+		//			AnimationDef("fall", Animation(18, 2, 0.4f))
+		//		}));
 
-		// wall
-		wall = ecs.createEntity(
-			PositionComponent(glm::vec2(200, 64)), 
-			PhysicsComponent(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f)),
-			ImageComponent(ResourceManager::GetImage("wall")));
+		//// wall
+		//wall = ecs.createEntity(
+		//	PositionComponent(glm::vec2(200, 64)), 
+		//	PhysicsComponent(map->createBody(200, 164, 10, 100, BodyTypeStatic), glm::vec2(0.0f, 100.0f)),
+		//	ImageComponent(ResourceManager::GetImage("wall")));
 	}
 
 	~Frost()
@@ -111,11 +102,13 @@ public:
 		if (Input::KeyPressed(GLFW_KEY_F7))
 			toggleDebugMode();
 
-		if (Input::KeyPressed(GLFW_KEY_X))
+		rayCaster = screenToWorld(Input::MousePosition(), Renderer::GetView());
+
+		/*if (Input::KeyPressed(GLFW_KEY_X))
 		{
 			map->destroyBody(ecs.getComponent<PhysicsComponent>(wall)->body);
 			ecs.removeEntity(wall);
-		}
+		}*/
 
 		//SceneManager::OnInput();
 	}
@@ -125,7 +118,7 @@ public:
 		//SceneManager::OnUpdate();
 		map->onUpdate();
 
-		ecs.tickSystems(logicSystems, Timer::GetDeltaTime());
+		//ecs.tickSystems(logicSystems, Timer::GetDeltaTime());
 	}
 
 	void onRender() override
@@ -133,13 +126,27 @@ public:
 		//SceneManager::OnRender();
 		map->onRender();
 
-		ecs.tickSystems(renderSystems, 0.0f);
+		//ecs.tickSystems(renderSystems, 0.0f);
+		
+		auto vertices = GetVisibilityPolygonPoints(rayCaster, map->getEdges(), 100.0f);
+
+		// Draw each triangle in fan
+		if (!vertices.empty())
+		{
+			auto it = vertices.begin();
+			for (auto& v : range(vertices.begin(), vertices.end() - 1))
+			{
+				std::advance(it, 1);
+				Renderer::FillPolygon({ rayCaster, v.pos, it->pos }, WHITE);
+			}
+			Renderer::FillPolygon({ rayCaster, vertices.back().pos, vertices.front().pos }, WHITE);
+		}		
 	}
 
 	void onRenderDebug() const override
 	{
 		//SceneManager::OnRenderDebug();
-		map->onRenderDebug();
+		//map->onRenderDebug();
 
 		// Debug Info
 		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
@@ -149,6 +156,9 @@ public:
 
 int main()
 {
+	Logger::SetFormat("[%T] [%^%l%$]: %v");
+	Logger::SetLevel(LogLevel::Trace);
+
 	Frost* game = new Frost();
 
 	game->run();

@@ -10,35 +10,95 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity">
-      <UniqueIdentifier>{D9C2390E-C57A-7B5B-2E82-54B71A59164C}</UniqueIdentifier>
+    <Filter Include="src\Core">
+      <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Core\Graphics">
+      <UniqueIdentifier>{8585FDF9-F19B-FB8F-3A13-87B1A668CC17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ECS">
+      <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Font">
       <UniqueIdentifier>{53781ECF-3F45-79DA-685E-6782548AAE68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Input">
+      <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Log">
+      <UniqueIdentifier>{7E912FA9-EA70-AE44-F388-391B5FE714A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Maths">
+      <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Patterns">
+      <UniqueIdentifier>{ADB193C2-9914-2367-429A-5B1D2EDCEEE9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scrapbook">
-      <UniqueIdentifier>{40B27A85-AC72-F6BB-75AD-3F39E12C3B98}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scrapbook\Graphics">
-      <UniqueIdentifier>{80023BC5-6CFC-6317-5569-FA274102CA83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scrapbook\Maths">
-      <UniqueIdentifier>{AC6212E9-18C4-EFF6-A131-36A90D9226B6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scrapbook\Utility">
-      <UniqueIdentifier>{83B0940A-EF1C-5005-B810-E862243C726D}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ecs">
-      <UniqueIdentifier>{57FA2FA9-C3D9-AE44-CCF1-391B385015A6}</UniqueIdentifier>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility\String">
+      <UniqueIdentifier>{F666726C-E24A-33C2-4BAB-2D1537AE1D44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Components.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Application.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Buffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Framebuffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Image.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Primitives.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Renderer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\ResourceManager.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Shader.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\Graphics\Texture.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecs.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsComponent.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsSystemList.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsTypedef.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Font\BitmapFont.h">
       <Filter>src\Font</Filter>
     </ClInclude>
@@ -48,74 +108,44 @@
     <ClInclude Include="src\Font\FontRenderer.h">
       <Filter>src\Font</Filter>
     </ClInclude>
+    <ClInclude Include="src\Input\Input.h">
+      <Filter>src\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log\Logger.h">
+      <Filter>src\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LogicSystems.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Geometry.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Maths.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\RayCast.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Maths\Visibility.h">
+      <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Patterns\Command.h">
+      <Filter>src\Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Patterns\Observer.h">
+      <Filter>src\Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Patterns\Singelton.h">
+      <Filter>src\Patterns</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderSystems.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Buffer.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Framebuffer.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Image.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Primitives.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Renderer.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\ResourceManager.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Shader.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Graphics\Texture.h">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Maths.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Maths\Geometry.h">
-      <Filter>src\Scrapbook\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Scrapbook.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility.h">
-      <Filter>src\Scrapbook</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\Flags.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\Input.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\Singelton.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\Timer.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\fileutils.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\memutil.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\stringutils.h">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scrapbook\Utility\utils.h">
-      <Filter>src\Scrapbook\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src\TilePhysics</Filter>
@@ -123,30 +153,73 @@
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecs.h">
-      <Filter>src\ecs</Filter>
+    <ClInclude Include="src\Utility\Flags.h">
+      <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecsComponent.h">
-      <Filter>src\ecs</Filter>
+    <ClInclude Include="src\Utility\String\StringHash.h">
+      <Filter>src\Utility\String</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecsSystem.h">
-      <Filter>src\ecs</Filter>
+    <ClInclude Include="src\Utility\String\StringUtils.h">
+      <Filter>src\Utility\String</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecs\ecsSystemList.h">
-      <Filter>src\ecs</Filter>
+    <ClInclude Include="src\Utility\Timer.h">
+      <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\ecs\ecsTypedef.h" />
-    <ClInclude Include="src\LogicSystems.h" />
-    <ClInclude Include="src\RenderSystems.h" />
-    <ClInclude Include="src\Components.h" />
+    <ClInclude Include="src\Utility\range.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\utils.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\File\FileReader.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Application.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Framebuffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Image.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Primitives.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Renderer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\ResourceManager.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Shader.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Texture.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecs.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecsComponent.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\ecsSystemList.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\FontRenderer.cpp">
       <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Input\Input.cpp">
+      <Filter>src\Input</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
@@ -154,55 +227,18 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Framebuffer.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Image.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Primitives.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Renderer.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\ResourceManager.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Shader.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Graphics\Texture.cpp">
-      <Filter>src\Scrapbook\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Scrapbook.cpp">
-      <Filter>src\Scrapbook</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Utility\Input.cpp">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scrapbook\Utility\Timer.cpp">
-      <Filter>src\Scrapbook\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
     <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ecs.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ecs\ecsComponent.cpp">
-      <Filter>src\ecs</Filter>
+    <ClCompile Include="src\Utility\Timer.cpp">
+      <Filter>src\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecs\ecsSystemList.cpp">
-      <Filter>src\ecs</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

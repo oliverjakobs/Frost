@@ -1,7 +1,5 @@
 #include "BitmapFont.h"
 
-using namespace sb;
-
 BitmapFont::BitmapFont(const std::string& path, float width, float height, float charSpacing)
 {
 	m_image = shared_ptr<Image>(new Image(path, width, height, 8, 16));
