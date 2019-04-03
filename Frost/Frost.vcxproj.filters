@@ -43,15 +43,15 @@
     <Filter Include="src\Utility">
       <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Utility\File">
+      <UniqueIdentifier>{9F7B87CD-8B74-A61F-B4A6-8BA4A0FE852B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Utility\String">
       <UniqueIdentifier>{F666726C-E24A-33C2-4BAB-2D1537AE1D44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Components.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Application.h">
@@ -90,13 +90,13 @@
     <ClInclude Include="src\ECS\ecsComponent.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\ecsEntity.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\ECS\ecsSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\ecsSystemList.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\ecsTypedef.h">
+    <ClInclude Include="src\ECS\ecsTypes.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\BitmapFont.h">
@@ -113,9 +113,6 @@
     </ClInclude>
     <ClInclude Include="src\Log\Logger.h">
       <Filter>src\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="src\LogicSystems.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Geometry.h">
       <Filter>src\Maths</Filter>
@@ -138,9 +135,6 @@
     <ClInclude Include="src\Patterns\Singelton.h">
       <Filter>src\Patterns</Filter>
     </ClInclude>
-    <ClInclude Include="src\RenderSystems.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -152,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\File\FileReader.h">
+      <Filter>src\Utility\File</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
@@ -171,9 +168,9 @@
     <ClInclude Include="src\Utility\utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\File\FileReader.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
+    <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
+    <ClInclude Include="src\ecsComponents\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -209,7 +206,7 @@
     <ClCompile Include="src\ECS\ecsComponent.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\ecsSystemList.cpp">
+    <ClCompile Include="src\ECS\ecsEntity.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">
@@ -239,6 +236,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
+    <ClCompile Include="src\ecsComponents\TransformComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
