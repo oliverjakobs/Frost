@@ -104,6 +104,7 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
+    <ClInclude Include="src\ecsComponents\TextureComponent.h" />
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
     <ClInclude Include="src\ECS\ecs.h" />
     <ClInclude Include="src\ECS\ecsComponent.h" />
@@ -148,8 +149,6 @@
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
     <ClCompile Include="src\ecsComponents\TransformComponent.cpp" />
     <ClCompile Include="src\ECS\ecs.cpp" />
-    <ClCompile Include="src\ECS\ecsComponent.cpp" />
-    <ClCompile Include="src\ECS\ecsEntity.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Font\FontRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />

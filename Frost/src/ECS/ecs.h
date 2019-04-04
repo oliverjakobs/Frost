@@ -1,10 +1,9 @@
 #pragma once
 
-#include "ecsTypes.h"
 #include "ecsEntity.h"
+#include "ecsComponent.h"
 
 #include <vector>
-#include <unordered_map>
 
 class ecsSystem;
 

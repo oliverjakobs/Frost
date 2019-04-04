@@ -171,6 +171,7 @@
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
+    <ClInclude Include="src\ecsComponents\TextureComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -201,12 +202,6 @@
       <Filter>src\Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\ecs.cpp">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ecsComponent.cpp">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ecsEntity.cpp">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">

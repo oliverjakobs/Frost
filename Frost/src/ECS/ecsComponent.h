@@ -2,15 +2,17 @@
 
 #include "ecsTypes.h"
 
-#include <limits>
+#include "Utility/Memory/MemoryMacros.h"
+#include "Utility/String/StringHash.h"
+
+#define GENERATE_COMPONENT_TYPE_ID(_class_) static constexpr ecsComponentID ID = GenerateHash(#_class_);
 
 class ecsComponent
 {
 private:
-	static constexpr size_t INVALID_POOL_INDEX = std::numeric_limits<size_t>::max();
-
 	ecsEntityID m_entityID;
 	size_t m_poolIndex;
+
 public:
 	ecsComponent() : m_entityID(INVALID_ENTITY_ID), m_poolIndex(INVALID_POOL_INDEX) {}
 	virtual ~ecsComponent() = default;

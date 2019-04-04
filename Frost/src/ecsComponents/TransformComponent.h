@@ -1,13 +1,16 @@
 #pragma once
 
-#include "ECS/ecsComponent.h"
-
-#include "Utility/Memory/MemoryMacros.h"
+#include "ECS/ecs.h"
+#include "Maths/Maths.h"
 
 class TransformComponent : public ecsComponent
 {
 public:
-	static constexpr ecsComponentID ID = 0;
+	GENERATE_COMPONENT_TYPE_ID(TransformComponent)
+
+	glm::vec2 m_position;
+
+	TransformComponent() : m_position(glm::vec2()) {}
 
 	virtual bool init(void* desc) override final;
 
