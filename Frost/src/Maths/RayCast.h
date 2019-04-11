@@ -2,6 +2,8 @@
 
 #include "Maths/Maths.h"
 
+#include <vector>
+
 struct Intersection
 {
 	glm::vec2 pos;

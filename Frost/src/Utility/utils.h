@@ -20,7 +20,7 @@ using std::weak_ptr;
 #define SAFE_DELETE(ptr) if( (ptr) != nullptr ) delete (ptr); (ptr) = nullptr;
 
 #ifdef _DEBUG
-#	define DEBUG_NEW new(_NORMAL_BLOCK,__FILE__, __LINE__)
+	#define DEBUG_NEW new(_NORMAL_BLOCK,__FILE__, __LINE__)
 #else
-#	define DEBUG_NEW new
+	#define DEBUG_NEW new
 #endif

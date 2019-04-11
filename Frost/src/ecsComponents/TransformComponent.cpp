@@ -1,7 +1,7 @@
 #include "TransformComponent.h"
 
 #include "Log/Logger.h"
-#include "Utility/utils.h"
+#include "Utility/Utils.h"
 
 GCC_MEMORYPOOL_DEFINITION(TransformComponent);
 bool TransformComponent::init(void * desc)

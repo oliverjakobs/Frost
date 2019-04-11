@@ -6,19 +6,14 @@
 
 #include "Maths/Visibility.h"
 
-#include "Utility/range.h"
+#include "Utility/Range.h"
 
 #include "Utility/String/StringHash.h"
 
 #include "Log/Logger.h"
 
 #include "ecsComponents/TransformComponent.h"
-
-
-glm::vec2 screenToWorld(const glm::vec2& pos, const View& v) 
-{
-	return glm::vec2(pos.x, v.h - pos.y);
-}
+#include "ecsComponents/TextureComponent.h"
 
 class Frost : public Application
 {
@@ -46,6 +41,7 @@ public:
 		FontRenderer::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
+		DEBUG_TRACE("TextureComponent:	 {0}", TextureComponent::ID);
 	}
 
 	~Frost()

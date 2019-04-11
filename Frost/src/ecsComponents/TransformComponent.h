@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ECS/ecs.h"
+#include "ecs/ecs.h"
 #include "Maths/Maths.h"
 
 class TransformComponent : public ecsComponent

@@ -32,6 +32,8 @@ struct View
 	float h;
 
 	glm::mat4 mat;
+
+	 inline glm::vec2 toWorldCoord(const glm::vec2& pos) const { return glm::vec2(pos.x, h - pos.y); }
 };
 
 class Renderer : private Singleton<Renderer>
