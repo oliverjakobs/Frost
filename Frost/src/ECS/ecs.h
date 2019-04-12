@@ -5,22 +5,21 @@
 
 #include <vector>
 
-class ecsSystem;
+class ecsBaseSystem;
 
 class ECS
 {
 private:
 	using Entities = std::unordered_map<ecsEntityID, ecsEntity>;
 	using Components = std::vector<std::vector<ecsComponent*>>;
-	using Systems = std::vector<ecsSystem>;
-
+	using Systems = std::vector<ecsBaseSystem*>;
 
 	Entities m_entities;
 	Components m_components;
 	Systems m_systems;
 
 public:
-	// ECS is not copyable or moveable
+	// ECS is not copyable or movable
 	ECS(const ECS&) = delete;
 	ECS& operator=(const ECS&) = delete;
 	ECS(ECS&&) = delete;
