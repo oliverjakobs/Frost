@@ -39,7 +39,7 @@
 
 #include <stdlib.h>
 
-#include "Log/Logger.h"
+#include "Utility/Debugger.h"
 
 const static size_t CHUNK_HEADER_SIZE = (sizeof(unsigned char*));
 

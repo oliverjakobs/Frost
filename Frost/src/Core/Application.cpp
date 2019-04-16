@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Log/Logger.h"
+#include <GLFW/glfw3.h>
 
 Application::Application(const std::string& title, int width, int height)
 	: m_title(title), m_width(width), m_height(height)
@@ -60,12 +60,7 @@ Application::~Application()
 	glfwTerminate();
 }
 
-void Application::close()
-{
-	glfwSetWindowShouldClose(m_window, true);
-}
-
-void Application::setDebugMode(bool b)
+void Application::enableDebugMode(bool b)
 {
 	m_debug = b;
 }
@@ -82,6 +77,7 @@ void Application::enableVsync(bool b)
 
 void Application::run()
 {
+	// Game loop
 	while (!glfwWindowShouldClose(m_window))
 	{
 		Timer::Start();
@@ -90,7 +86,7 @@ void Application::run()
 
 		onInput();
 		onUpdate();
-		Input::OnUpdate(m_window);
+		Input::Update(m_window);
 
 		Renderer::Start();
 
@@ -105,6 +101,11 @@ void Application::run()
 
 		Timer::End();
 	}
+}
+
+void Application::close()
+{
+	glfwSetWindowShouldClose(m_window, true);
 }
 
 void Application::setTitle(const std::string& title)

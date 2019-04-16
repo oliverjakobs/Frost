@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 
-#include "Log/Logger.h"
+#include "Utility/Debugger.h"
 
 void SceneManager::AddScene(const std::string& name, Scene* scene)
 {

@@ -1,6 +1,6 @@
 #include "ResourceManager.h"
 
-#include "Log/Logger.h"
+#include "Utility/Debugger.h"
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
@@ -34,6 +34,24 @@ Image* ResourceManager::GetImage(const std::string& name)
 	catch (std::out_of_range)
 	{
 		DEBUG_WARN("No such image: {0}", name);
+		return nullptr;
+	}
+}
+
+void ResourceManager::AddFont(const std::string& name, Font* font)
+{
+	Get().m_fonts[name] = unique_ptr<Font>(font);
+}
+
+Font* ResourceManager::GetFont(const std::string& name)
+{
+	try
+	{
+		return Get().m_fonts.at(name).get();
+	}
+	catch (std::out_of_range)
+	{
+		DEBUG_WARN("No such font: {0}", name);
 		return nullptr;
 	}
 }

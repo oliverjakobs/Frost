@@ -1,9 +1,9 @@
 #pragma once
 
-#include "ecs/ecs.h"
+#include "ecs/ecsRegistry.h"
 #include "Maths/Maths.h"
 
-class TransformComponent : public ecsComponent
+class TransformComponent : public ecs::Component
 {
 public:
 	GENERATE_COMPONENT_TYPE_ID(TransformComponent)

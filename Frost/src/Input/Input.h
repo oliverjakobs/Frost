@@ -7,6 +7,8 @@
 
 #include "Maths/Maths.h"
 
+#include "KeyCodes.h"
+
 struct GLFWwindow;
 
 struct KeyState
@@ -33,8 +35,7 @@ public:
 	Input();
 	~Input();
 
-	static void SetKeyState(unsigned int key, bool pressed, bool prev);
-	static void OnUpdate(GLFWwindow* context);
+	static void Update(GLFWwindow* context);
 
 	static bool KeyDown(unsigned int key);
 	static bool KeyPressed(unsigned int key);

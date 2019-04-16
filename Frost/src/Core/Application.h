@@ -2,18 +2,20 @@
 
 #include "Graphics.h"
 
-#include "Utility/utils.h"
+#include "Utility/Utils.h"
 #include "Utility/Timer.h"
+#include "Utility/Debugger.h"
+
 #include "Input/Input.h"
 
 #include "Maths/Maths.h"
 
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 class Application
 {
 private:
-	GLFWwindow * m_window;
+	GLFWwindow* m_window;
 
 	bool m_debug;
 protected:
@@ -25,20 +27,22 @@ public:
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
-	void close();
-
-	void setDebugMode(bool b);
+	void enableDebugMode(bool b);
 	void toggleDebugMode();
 
 	void enableVsync(bool b);
 
+	// --------------------------| loop control |----------------------------
 	void run();
+	void close();
 
+	// --------------------------| loop funtions |---------------------------
 	virtual void onInput() = 0;
 	virtual void onUpdate() = 0;
 	virtual void onRender() = 0;
 	virtual void onRenderDebug() const {}
 
+	// ----------------------------------------------------------------------
 	void setTitle(const std::string& title);
 
 	int getWidth() const;

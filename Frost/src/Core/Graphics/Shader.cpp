@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Log/Logger.h"
+#include "Utility/Debugger.h"
 
 unsigned int Shader::CreateShader(const std::string& vertSrc, const std::string& fragSrc)
 {

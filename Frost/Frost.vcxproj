@@ -97,6 +97,8 @@
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Graphics.h" />
     <ClInclude Include="src\Core\Graphics\Buffer.h" />
+    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h" />
+    <ClInclude Include="src\Core\Graphics\Font\Font.h" />
     <ClInclude Include="src\Core\Graphics\Framebuffer.h" />
     <ClInclude Include="src\Core\Graphics\Image.h" />
     <ClInclude Include="src\Core\Graphics\Primitives.h" />
@@ -104,19 +106,12 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
-    <ClInclude Include="src\ECS\ecs.h" />
-    <ClInclude Include="src\ECS\ecsComponent.h" />
-    <ClInclude Include="src\ECS\ecsEntity.h" />
-    <ClInclude Include="src\ECS\ecsSystem.h" />
-    <ClInclude Include="src\ECS\ecsTypes.h" />
-    <ClInclude Include="src\Font\BitmapFont.h" />
-    <ClInclude Include="src\Font\Font.h" />
-    <ClInclude Include="src\Font\FontRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Input\KeyCodes.h" />
     <ClInclude Include="src\Log\Logger.h" />
     <ClInclude Include="src\Maths\Geometry.h" />
     <ClInclude Include="src\Maths\Maths.h" />
-    <ClInclude Include="src\Maths\RayCast.h" />
+    <ClInclude Include="src\Maths\Raycast.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
     <ClInclude Include="src\Patterns\Command.h" />
     <ClInclude Include="src\Patterns\Observer.h" />
@@ -125,21 +120,28 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
+    <ClInclude Include="src\Utility\Debugger.h" />
     <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
+    <ClInclude Include="src\Utility\Range.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
-    <ClInclude Include="src\Utility\range.h" />
-    <ClInclude Include="src\Utility\utils.h" />
-    <ClInclude Include="src\ecsComponents\TextureComponent.h" />
+    <ClInclude Include="src\Utility\Utils.h" />
+    <ClInclude Include="src\ecs\ecsComponent.h" />
+    <ClInclude Include="src\ecs\ecsEntity.h" />
+    <ClInclude Include="src\ecs\ecsRegistry.h" />
+    <ClInclude Include="src\ecs\ecsSystem.h" />
+    <ClInclude Include="src\ecs\ecsTypes.h" />
+    <ClInclude Include="src\ecsComponents\ImageComponent.h" />
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Core\Graphics\Image.cpp" />
     <ClCompile Include="src\Core\Graphics\Primitives.cpp" />
@@ -147,9 +149,6 @@
     <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
-    <ClCompile Include="src\ECS\ecs.cpp" />
-    <ClCompile Include="src\Font\BitmapFont.cpp" />
-    <ClCompile Include="src\Font\FontRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
@@ -157,11 +156,13 @@
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
-    <ClCompile Include="src\ecsComponents\TextureComponent.cpp" />
+    <ClCompile Include="src\ecs\ecsRegistry.cpp" />
+    <ClCompile Include="src\ecsComponents\ImageComponent.cpp" />
     <ClCompile Include="src\ecsComponents\TransformComponent.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\scripts\resources.lua" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

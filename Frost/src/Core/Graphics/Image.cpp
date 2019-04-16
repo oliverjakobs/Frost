@@ -18,29 +18,11 @@ std::vector<GLfloat> GetVertices(float w, float h, float fW, float fH)
 	};
 }
 
-Image::Image(const std::string& src, float width, float height)
-	: m_width(width), m_height(height), m_rows(1), m_columns(1)
-{
-	auto vertices = GetVertices(width, height, 1.0f, 1.0f);
-
-	m_flip = FLIP_NONE;
-
-	m_vao.bind();
-
-	m_vao.bindVertexBuffer();
-	m_vao.setVertexBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-	m_vao.setVertexAttribPointer(0, 3, 5, 0);
-	m_vao.setVertexAttribPointer(1, 2, 5, 3);
-
-	m_texture = unique_ptr<Texture>(new Texture(src.c_str()));
-}
-
-Image::Image(const std::string & src, float width, float height, int rows, int columns)
+Image::Image(const std::string& src, float width, float height, size_t rows, size_t columns)
 	: m_width(width), m_height(height), m_rows(rows), m_columns(columns)
 {
-	float fWidth = 1.0f / m_columns;
-	float fHeight = 1.0f / m_rows;
-
+	float fWidth = (m_columns > 0) ? 1.0f / m_columns : 1.0f;
+	float fHeight = (m_rows > 0) ? 1.0f / m_rows : 1.0f;
 
 	auto vertices = GetVertices(width, height, fWidth, fHeight);
 

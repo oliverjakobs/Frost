@@ -21,12 +21,7 @@ Input::~Input()
 {
 }
 
-void Input::SetKeyState(unsigned int key, bool pressed, bool prev)
-{
-	Get().m_keys[key] = { pressed, prev };
-}
-
-void Input::OnUpdate(GLFWwindow* context)
+void Input::Update(GLFWwindow* context)
 {
 	for (auto& key : Get().m_keys)
 	{

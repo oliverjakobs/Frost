@@ -1,24 +1,11 @@
 #include "Core/Application.h"
 
-#include "TilePhysics/Tilemap.h"
-
-#include "Font/FontRenderer.h"
-
-#include "Maths/Visibility.h"
-
-#include "Utility/Range.h"
-
-#include "Utility/String/StringHash.h"
-
-#include "Log/Logger.h"
-
 #include "ecsComponents/TransformComponent.h"
-#include "ecsComponents/TextureComponent.h"
+#include "ecsComponents/ImageComponent.h"
 
 class Frost : public Application
 {
 private:
-
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -27,7 +14,7 @@ public:
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		setDebugMode(true);
+		enableDebugMode(true);
 		enableVsync(false);
 
 		// ---------------| Load resources|----------------------------------
@@ -38,10 +25,10 @@ public:
 		ResourceManager::AddImage("wall", new Image("res/images/door.png", 20, 200));
 		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
 
-		FontRenderer::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
+		ResourceManager::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
-		DEBUG_TRACE("TextureComponent:	 {0}", TextureComponent::ID);
+		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
 	}
 
 	~Frost()
@@ -51,10 +38,10 @@ public:
 
 	void onInput() override
 	{
-		if (Input::KeyPressed(GLFW_KEY_ESCAPE))
+		if (Input::KeyPressed(KEY_ESCAPE))
 			close();
 
-		if (Input::KeyPressed(GLFW_KEY_F7))
+		if (Input::KeyPressed(KEY_F7))
 			toggleDebugMode();
 	}
 
@@ -71,7 +58,7 @@ public:
 	void onRenderDebug() const override
 	{
 		// Debug Info
-		FontRenderer::RenderText("blocky", stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
+		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
 	}
 };
 
