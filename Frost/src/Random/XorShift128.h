@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+// xorshift128+
 // https://en.wikipedia.org/wiki/Xorshift
 class XorShift128
 {

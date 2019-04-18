@@ -188,6 +188,7 @@
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
     <ClInclude Include="src\Random\XorShift128.h" />
+    <ClInclude Include="src\Random\MersenneTwister.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -254,6 +255,7 @@
       <Filter>src\ecsComponents</Filter>
     </ClCompile>
     <ClCompile Include="src\Random\XorShift128.cpp" />
+    <ClCompile Include="src\Random\MersenneTwister.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

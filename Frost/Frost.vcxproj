@@ -116,6 +116,7 @@
     <ClInclude Include="src\Patterns\Command.h" />
     <ClInclude Include="src\Patterns\Observer.h" />
     <ClInclude Include="src\Patterns\Singelton.h" />
+    <ClInclude Include="src\Random\MersenneTwister.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Random\MersenneTwister.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
