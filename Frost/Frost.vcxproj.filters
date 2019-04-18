@@ -187,6 +187,7 @@
     <ClInclude Include="src\ecsComponents\ImageComponent.h">
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
+    <ClInclude Include="src\Random\XorShift128.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -252,6 +253,7 @@
     <ClCompile Include="src\ecsComponents\ImageComponent.cpp">
       <Filter>src\ecsComponents</Filter>
     </ClCompile>
+    <ClCompile Include="src\Random\XorShift128.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

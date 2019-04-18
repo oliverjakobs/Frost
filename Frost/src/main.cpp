@@ -3,6 +3,8 @@
 #include "ecsComponents/TransformComponent.h"
 #include "ecsComponents/ImageComponent.h"
 
+#include "Random/XorShift128.h"
+
 class Frost : public Application
 {
 private:
@@ -29,6 +31,14 @@ public:
 
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
 		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
+
+		XorShift128 rng;
+
+		rng.seed(XorShift128::Seed128(123563423,7457345346));
+
+		DEBUG_TRACE("1: {0}", rng.rand());
+		DEBUG_TRACE("2: {0}", rng.rand());
+		DEBUG_TRACE("3: {0}", rng.rand());
 	}
 
 	~Frost()

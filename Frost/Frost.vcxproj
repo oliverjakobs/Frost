@@ -125,6 +125,7 @@
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
+    <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Utility\Range.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
@@ -155,6 +156,7 @@
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
+    <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\ecs\ecsRegistry.cpp" />
     <ClCompile Include="src\ecsComponents\ImageComponent.cpp" />
