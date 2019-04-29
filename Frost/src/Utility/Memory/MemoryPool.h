@@ -65,11 +65,11 @@
 
 class MemoryPool
 {
-	unsigned char** m_ppRawMemoryArray;  // an array of memory blocks, each split up into chunks and connected
-	unsigned char* m_pHead;  // the front of the memory chunk linked list
+	unsigned char** m_rawArray;  // an array of memory blocks, each split up into chunks and connected
+	unsigned char* m_head;  // the front of the memory chunk linked list
 	unsigned int m_chunkSize, m_numChunks;  // the size of each chunk and number of chunks per array, respectively
-	unsigned int m_memArraySize;  // the number elements in the memory array
-	bool m_toAllowResize;  // true if we resize the memory pool when it fills up
+	unsigned int m_arraySize;  // the number elements in the memory array
+	bool m_allowResize;  // true if we resize the memory pool when it fills up
 
 	// tracking variables we only care about for debug
 #ifdef _DEBUG
@@ -79,41 +79,41 @@ class MemoryPool
 
 public:
 	// construction
-	MemoryPool(void);
-	~MemoryPool(void);
+	MemoryPool();
+	~MemoryPool();
+
+	// don't allow copy constructor
+	MemoryPool(const MemoryPool& memPool) = delete;
+
 	bool Init(unsigned int chunkSize, unsigned int numChunks);
-	void Destroy(void);
+	void Destroy();
 
 	// allocation functions
-	void* Alloc(void);
+	void* Alloc();
 	void Free(void* pMem);
 	unsigned int GetChunkSize(void) const { return m_chunkSize; }
 
 	// settings
-	void SetAllowResize(bool toAllowResize) { m_toAllowResize = toAllowResize; }
+	void AllowResize(bool b) { m_allowResize = b; }
 
 	// debug functions
 #ifdef _DEBUG
 	void SetDebugName(const char* debugName) { m_debugName = debugName; }
-	std::string GetDebugName(void) const { return m_debugName; }
+	std::string GetDebugName() const { return m_debugName; }
 #else
 	void SetDebugName(const char* debugName) { }
-	//std::string GetDebugName(void) const { return (std::string("<No Name>")); }
-	const char* GetDebugName(void) const { return "<No Name>"; }
+	std::string GetDebugName() const { return "<No Name>"; }
 #endif
 
 private:
 	// resets internal vars
-	void Reset(void);
+	void Reset();
 
 	// internal memory allocation helpers
-	bool GrowMemoryArray(void);
-	unsigned char* AllocateNewMemoryBlock(void);
+	bool GrowMemoryArray();
+	unsigned char* AllocateNewMemoryBlock();
 
 	// internal linked list management
 	unsigned char* GetNext(unsigned char* pBlock);
 	void SetNext(unsigned char* pBlockToChange, unsigned char* pNewNext);
-
-	// don't allow copy constructor
-	MemoryPool(const MemoryPool& memPool) {}
 };

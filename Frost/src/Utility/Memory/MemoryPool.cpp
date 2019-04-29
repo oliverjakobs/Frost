@@ -43,12 +43,12 @@
 
 const static size_t CHUNK_HEADER_SIZE = (sizeof(unsigned char*));
 
-MemoryPool::MemoryPool(void)
+MemoryPool::MemoryPool()
 {
 	Reset();
 }
 
-MemoryPool::~MemoryPool(void)
+MemoryPool::~MemoryPool()
 {
 	Destroy();
 }
@@ -56,7 +56,7 @@ MemoryPool::~MemoryPool(void)
 bool MemoryPool::Init(unsigned int chunkSize, unsigned int numChunks)
 {
 	// it's safe to call Init() without calling Destroy()
-	if (m_ppRawMemoryArray)
+	if (m_rawArray)
 		Destroy();
 
 	// fill out our size & number members
@@ -66,44 +66,41 @@ bool MemoryPool::Init(unsigned int chunkSize, unsigned int numChunks)
 	// attempt to grow the memory array
 	if (GrowMemoryArray())
 		return true;
+
 	return false;
 }
 
-void MemoryPool::Destroy(void)
+void MemoryPool::Destroy()
 {
 	// dump the state of the memory pool
 #ifdef _DEBUG
 	std::string str;
 	if (m_numAllocs != 0)
 		str = "***(" + std::to_string(m_numAllocs) + ") ";
-	unsigned long totalNumChunks = m_numChunks * m_memArraySize;
+	unsigned long totalNumChunks = m_numChunks * m_arraySize;
 	unsigned long wastedMem = (totalNumChunks - m_allocPeak) * m_chunkSize;
-	str += "Destroying memory pool: [" 
-		+ GetDebugName() + ":" 
-		+ std::to_string((unsigned long)m_chunkSize) + "] = "
-		+ std::to_string(m_allocPeak) + "/" + std::to_string((unsigned long)totalNumChunks) + " (" + std::to_string(wastedMem) + " bytes wasted)\n";
 
-	OutputDebugStringA(str.c_str());  // the logger is not initialized during many of the initial memory pool growths, so let's just use the OS version
+	DEBUG_TRACE("Destroying memory pool: [{0}:{1}] = {2}/{3} ({4} bytes wasted)", GetDebugName(), (unsigned long)m_chunkSize, m_allocPeak, (unsigned long)totalNumChunks, wastedMem);
 #endif
 
 	// free all memory
-	for (unsigned int i = 0; i < m_memArraySize; ++i)
+	for (unsigned int i = 0; i < m_arraySize; ++i)
 	{
-		free(m_ppRawMemoryArray[i]);
+		free(m_rawArray[i]);
 	}
-	free(m_ppRawMemoryArray);
+	free(m_rawArray);
 
 	// update member variables
 	Reset();
 }
 
-void* MemoryPool::Alloc(void)
+void* MemoryPool::Alloc()
 {
 	// If we're out of memory chunks, grow the pool.  This is very expensive.
-	if (!m_pHead)
+	if (!m_head)
 	{
 		// if we don't allow resizes, return NULL
-		if (!m_toAllowResize)
+		if (!m_allowResize)
 			return NULL;
 
 		// attempt to grow the pool
@@ -114,13 +111,14 @@ void* MemoryPool::Alloc(void)
 #ifdef _DEBUG
 	// update allocation reports
 	++m_numAllocs;
+
 	if (m_numAllocs > m_allocPeak)
 		m_allocPeak = m_numAllocs;
 #endif
 
 	// grab the first chunk from the list and move to the next chunks
-	unsigned char* pRet = m_pHead;
-	m_pHead = GetNext(m_pHead);
+	unsigned char* pRet = m_head;
+	m_head = GetNext(m_head);
 	return (pRet + CHUNK_HEADER_SIZE);  // make sure we return a pointer to the data section only
 }
 
@@ -132,8 +130,8 @@ void MemoryPool::Free(void* pMem)
 		unsigned char* pBlock = ((unsigned char*)pMem) - CHUNK_HEADER_SIZE;
 
 		// push the chunk to the front of the list
-		SetNext(pBlock, m_pHead);
-		m_pHead = pBlock;
+		SetNext(pBlock, m_head);
+		m_head = pBlock;
 
 #ifdef _DEBUG
 		// update allocation reports
@@ -143,68 +141,68 @@ void MemoryPool::Free(void* pMem)
 	}
 }
 
-void MemoryPool::Reset(void)
+void MemoryPool::Reset()
 {
-	m_ppRawMemoryArray = NULL;
-	m_pHead = NULL;
+	m_rawArray = NULL;
+	m_head = NULL;
 	m_chunkSize = 0;
 	m_numChunks = 0;
-	m_memArraySize = 0;
-	m_toAllowResize = true;
+	m_arraySize = 0;
+	m_allowResize = true;
+
 #ifdef _DEBUG
 	m_allocPeak = 0;
 	m_numAllocs = 0;
 #endif
 }
 
-bool MemoryPool::GrowMemoryArray(void)
+bool MemoryPool::GrowMemoryArray()
 {
 #ifdef _DEBUG
-	std::string str("Growing memory pool: [" + GetDebugName() + ":" + std::to_string((unsigned long)m_chunkSize) + "] = " + std::to_string((unsigned long)m_memArraySize + 1) + "\n");
-	OutputDebugStringA(str.c_str());  // the logger is not initialized during many of the initial memory pool growths, so let's just use the OS version
+	DEBUG_TRACE("Growing memory pool: [{0}:{1}] = {2}", GetDebugName(), (unsigned long)m_chunkSize, (unsigned long)m_arraySize + 1);
 #endif
 
 	// allocate a new array
-	size_t allocationSize = sizeof(unsigned char*) * (m_memArraySize + 1);
-	unsigned char** ppNewMemArray = (unsigned char**)malloc(allocationSize);
+	size_t allocationSize = sizeof(unsigned char*) * (m_arraySize + 1);
+	unsigned char** newArray = (unsigned char**)malloc(allocationSize);
 
 	// make sure the allocation succeeded
-	if (!ppNewMemArray)
+	if (!newArray)
 		return false;
 
 	// copy any existing memory pointers over
-	for (unsigned int i = 0; i < m_memArraySize; ++i)
+	for (unsigned int i = 0; i < m_arraySize; ++i)
 	{
-		ppNewMemArray[i] = m_ppRawMemoryArray[i];
+		newArray[i] = m_rawArray[i];
 	}
 
 	// allocate a new block of memory
-	ppNewMemArray[m_memArraySize] = AllocateNewMemoryBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size	
+	newArray[m_arraySize] = AllocateNewMemoryBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size	
 
 	// attach the block to the end of the current memory list
-	if (m_pHead)
+	if (m_head)
 	{
-		unsigned char* pCurr = m_pHead;
-		unsigned char* pNext = GetNext(m_pHead);
+		unsigned char* pCurr = m_head;
+		unsigned char* pNext = GetNext(m_head);
 		while (pNext)
 		{
 			pCurr = pNext;
 			pNext = GetNext(pNext);
 		}
-		SetNext(pCurr, ppNewMemArray[m_memArraySize]);
+		SetNext(pCurr, newArray[m_arraySize]);
 	}
 	else
 	{
-		m_pHead = ppNewMemArray[m_memArraySize];
+		m_head = newArray[m_arraySize];
 	}
 
 	// destroy the old memory array
-	if (m_ppRawMemoryArray)
-		free(m_ppRawMemoryArray);
+	if (m_rawArray)
+		free(m_rawArray);
 
 	// assign the new memory array and increment the size count
-	m_ppRawMemoryArray = ppNewMemArray;
-	++m_memArraySize;
+	m_rawArray = newArray;
+	++m_arraySize;
 
 	return true;
 }
