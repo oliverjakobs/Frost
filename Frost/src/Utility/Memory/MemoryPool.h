@@ -110,8 +110,8 @@ private:
 	void Reset();
 
 	// internal memory allocation helpers
-	bool GrowMemoryArray();
-	unsigned char* AllocateNewMemoryBlock();
+	bool GrowArray();
+	unsigned char* AllocateNewBlock();
 
 	// internal linked list management
 	unsigned char* GetNext(unsigned char* pBlock);

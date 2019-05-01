@@ -64,7 +64,7 @@ bool MemoryPool::Init(unsigned int chunkSize, unsigned int numChunks)
 	m_numChunks = numChunks;
 
 	// attempt to grow the memory array
-	if (GrowMemoryArray())
+	if (GrowArray())
 		return true;
 
 	return false;
@@ -104,7 +104,7 @@ void* MemoryPool::Alloc()
 			return NULL;
 
 		// attempt to grow the pool
-		if (!GrowMemoryArray())
+		if (!GrowArray())
 			return NULL;  // couldn't allocate anymore memory
 	}
 
@@ -156,7 +156,7 @@ void MemoryPool::Reset()
 #endif
 }
 
-bool MemoryPool::GrowMemoryArray()
+bool MemoryPool::GrowArray()
 {
 #ifdef _DEBUG
 	DEBUG_TRACE("Growing memory pool: [{0}:{1}] = {2}", GetDebugName(), (unsigned long)m_chunkSize, (unsigned long)m_arraySize + 1);
@@ -177,7 +177,7 @@ bool MemoryPool::GrowMemoryArray()
 	}
 
 	// allocate a new block of memory
-	newArray[m_arraySize] = AllocateNewMemoryBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size	
+	newArray[m_arraySize] = AllocateNewBlock();  // indexing m_memArraySize here is safe because we haven't incremented it yet to reflect the new size	
 
 	// attach the block to the end of the current memory list
 	if (m_head)
@@ -207,7 +207,7 @@ bool MemoryPool::GrowMemoryArray()
 	return true;
 }
 
-unsigned char* MemoryPool::AllocateNewMemoryBlock(void)
+unsigned char* MemoryPool::AllocateNewBlock(void)
 {
 	// calculate the size of each block and the size of the actual memory allocation
 	size_t blockSize = m_chunkSize + CHUNK_HEADER_SIZE;  // chunk + linked list overhead

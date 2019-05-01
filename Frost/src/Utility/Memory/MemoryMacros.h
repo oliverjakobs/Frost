@@ -37,6 +37,8 @@
 //
 //========================================================================
 
+#include "MemoryPool.h"
+
 //---------------------------------------------------------------------------------------------------------------------
 // These macros are designed to allow classes to easily take advantage of memory pools.  To use, follow this steps:
 // 1) Call GCC_MEMORYPOOL_DECLARATION() in the class declaration
@@ -47,8 +49,6 @@
 // usage in Pathing.h and Pathing.cpp.  Check out the PathingNode class.
 //---------------------------------------------------------------------------------------------------------------------
 
-#include "MemoryPool.h"
-
 //---------------------------------------------------------------------------------------------------------------------
 // This macro is placed inside the body of the class that you want to use a memory pool with.  It declares the 
 // overloaded new and delete operators as well as the static MemoryPool object.
@@ -57,15 +57,15 @@
 // macro below.
 //---------------------------------------------------------------------------------------------------------------------
 #define GCC_MEMORYPOOL_DECLARATION(__defaultNumChunks__) \
-    public: \
-		static MemoryPool* s_pMemoryPool; \
+	public: \
+		static MemoryPool* s_memoryPool; \
 		static void InitMemoryPool(unsigned int numChunks = __defaultNumChunks__, const char* debugName = 0); \
 		static void DestroyMemoryPool(void); \
-        static void* operator new(size_t size); \
-        static void operator delete(void* pPtr); \
-        static void* operator new[](size_t size); \
-        static void operator delete[](void* pPtr); \
-    private: \
+		static void* operator new(size_t size); \
+		static void operator delete(void* pPtr); \
+		static void* operator new[](size_t size); \
+		static void operator delete[](void* pPtr); \
+	private: \
 
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -75,48 +75,48 @@
 //	- _className_:		The name of this class.
 //---------------------------------------------------------------------------------------------------------------------
 #define GCC_MEMORYPOOL_DEFINITION(_className_) \
-	MemoryPool* _className_::s_pMemoryPool = NULL;\
+	MemoryPool* _className_::s_memoryPool = NULL;\
 	void _className_::InitMemoryPool(unsigned int numChunks, const char* debugName) \
 	{ \
-		if (s_pMemoryPool != NULL) \
+		if (s_memoryPool != NULL) \
 		{ \
-			DEBUG_WARN("s_pMemoryPool is not NULL.  All data will be destroyed. (Ignorable)"); \
-			SAFE_DELETE(s_pMemoryPool); \
+			DEBUG_WARN("s_memoryPool is not NULL.  All data will be destroyed. (Ignorable)"); \
+			SAFE_DELETE(s_memoryPool); \
 		} \
-		s_pMemoryPool = DEBUG_NEW MemoryPool; \
+		s_memoryPool = DEBUG_NEW MemoryPool; \
 		if (debugName) \
-			s_pMemoryPool->SetDebugName(debugName); \
+			s_memoryPool->SetDebugName(debugName); \
 		else \
-			s_pMemoryPool->SetDebugName(#_className_); \
-		s_pMemoryPool->Init(sizeof(_className_), numChunks); \
+			s_memoryPool->SetDebugName(#_className_); \
+		s_memoryPool->Init(sizeof(_className_), numChunks); \
 	} \
 	void _className_::DestroyMemoryPool(void) \
 	{ \
-		DEBUG_ASSERT(s_pMemoryPool != NULL); \
-		SAFE_DELETE(s_pMemoryPool); \
+		DEBUG_ASSERT(s_memoryPool != NULL); \
+		SAFE_DELETE(s_memoryPool); \
 	} \
-    void* _className_::operator new(size_t size) \
-    { \
-        DEBUG_ASSERT(s_pMemoryPool); \
-        void* pMem = s_pMemoryPool->Alloc(); \
-        return pMem; \
-    } \
-    void _className_::operator delete(void* pPtr) \
-    { \
-        DEBUG_ASSERT(s_pMemoryPool); \
-        s_pMemoryPool->Free(pPtr); \
-    } \
-    void* _className_::operator new[](size_t size) \
-    { \
-        DEBUG_ASSERT(s_pMemoryPool); \
-        void* pMem = s_pMemoryPool->Alloc(); \
-        return pMem; \
-    } \
-    void _className_::operator delete[](void* pPtr) \
-    { \
-        DEBUG_ASSERT(s_pMemoryPool); \
-        s_pMemoryPool->Free(pPtr); \
-    } \
+	void* _className_::operator new(size_t size) \
+	{ \
+		DEBUG_ASSERT(s_memoryPool); \
+		void* pMem = s_memoryPool->Alloc(); \
+		return pMem; \
+	} \
+	void _className_::operator delete(void* pPtr) \
+	{ \
+		DEBUG_ASSERT(s_memoryPool); \
+		s_memoryPool->Free(pPtr); \
+	} \
+	void* _className_::operator new[](size_t size) \
+	{ \
+		DEBUG_ASSERT(s_memoryPool); \
+		void* pMem = s_memoryPool->Alloc(); \
+		return pMem; \
+	} \
+	void _className_::operator delete[](void* pPtr) \
+	{ \
+		DEBUG_ASSERT(s_memoryPool); \
+		s_memoryPool->Free(pPtr); \
+	} \
 
 
 //---------------------------------------------------------------------------------------------------------------------
