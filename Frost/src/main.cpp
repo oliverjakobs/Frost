@@ -6,10 +6,12 @@
 #include "Random/XorShift128.h"
 #include "Random/MersenneTwister.h"
 
+#include "Console/Console.h"
+
 class Frost : public Application
 {
 private:
-
+	Console console;
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{
@@ -32,6 +34,8 @@ public:
 
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
 		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
+
+		Console::Init(getContext());
 	}
 
 	~Frost()
@@ -46,11 +50,14 @@ public:
 
 		if (Input::KeyPressed(KEY_F7))
 			toggleDebugMode();
+
+		if (Input::KeyPressed(KEY_F5))
+			Console::Toggle(&console);
 	}
 
 	void onUpdate() override
 	{
-
+		Console::Update();
 	}
 
 	void onRender() override
@@ -62,6 +69,8 @@ public:
 	{
 		// Debug Info
 		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
+
+		Console::Render(2.0f, 2.0f);
 	}
 };
 
