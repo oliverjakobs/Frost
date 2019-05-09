@@ -6,6 +6,8 @@
 struct GLFWwindow;
 
 // TODO: write simple interpreter
+// TODO: show log
+// TODO: cursor position
 struct ConsoleInterpreter
 {
 	virtual void execute(const std::string cmd)
@@ -20,20 +22,18 @@ private:
 	std::vector<std::string> m_log;
 	std::string m_prompt;
 
+	bool m_open;
+
 	ConsoleInterpreter m_interpreter;
-	
-	static Console* s_active;
 
 	void execute();
-
-	friend void charCallback(GLFWwindow* window, unsigned int codepoint);
 public:
-	static bool Init(GLFWwindow* context);
+	Console(/* Interpreter */);
 
-	static void Open(Console* console);
-	static void Close(Console* console = nullptr);
-	static void Toggle(Console* console);
+	void open();
+	void close();
+	void toggle();
 
-	static void Update();
-	static void Render(float x, float y);
+	void update();
+	void render(float x, float y) const;
 };

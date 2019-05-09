@@ -2,22 +2,7 @@
 
 #include "Core/Graphics.h"
 #include "Input/Input.h"
-
-#include <GLFW/glfw3.h>
-
-// TODO: CharLogger
-// TODO: show log
-// TODO: remove any static
-
-void charCallback(GLFWwindow* window, unsigned int codepoint)
-{
-	if (Console::s_active != nullptr)
-	{
-		Console::s_active->m_prompt += static_cast<char>(codepoint);
-	}
-}
-
-Console* Console::s_active = nullptr;
+#include "CharLogger.h"
 
 void Console::execute()
 {
@@ -26,54 +11,44 @@ void Console::execute()
 	m_prompt = "";
 }
 
-bool Console::Init(GLFWwindow* context)
+Console::Console()
 {
-	if (context == nullptr)
+}
+
+void Console::open()
+{
+	m_open = true;
+}
+
+void Console::close()
+{
+	m_open = false;
+	m_prompt.clear();
+}
+
+void Console::toggle()
+{
+	m_open ? close() : open();
+}
+
+void Console::update()
+{
+	if (m_open)
 	{
-		DEBUG_WARN("Console needs a context");
-		return false;
-	}
+		m_prompt += CharLogger::GetLog();
 
-	glfwSetCharCallback(context, charCallback);
-	
-	return true;
-}
-
-void Console::Open(Console* console)
-{
-	s_active = console;
-}
-
-void Console::Close(Console* console)
-{
-	if (console == s_active || console == nullptr)
-		s_active = nullptr;
-}
-
-void Console::Toggle(Console* console)
-{
-	if (console == s_active)
-		s_active = nullptr;
-	else
-		s_active = console;
-}
-
-void Console::Update()
-{
-	if (s_active != nullptr)
-	{
 		if (Input::KeyPressed(KEY_ENTER))
-			s_active->execute();
+			execute();
 
-		if (Input::KeyPressed(KEY_BACKSPACE))
-			s_active->m_prompt.pop_back();
+		if (Input::KeyPressed(KEY_BACKSPACE) && !m_prompt.empty())
+			m_prompt.pop_back();
 	}
 }
 
-void Console::Render(float x, float y)
+void Console::render(float x, float y) const
 {
-	if (s_active != nullptr)
+	if (m_open)
 	{
-		Renderer::RenderString(ResourceManager::GetFont("blocky"), s_active->m_prompt, x, y, Renderer::GetScreenView(), "shader");
+		Renderer::RenderString(ResourceManager::GetFont("blocky"), m_prompt, x, y, Renderer::GetScreenView(), "shader");
 	}
 }

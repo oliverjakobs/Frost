@@ -190,6 +190,7 @@
     <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Random\MersenneTwister.h" />
     <ClInclude Include="src\Console\Console.h" />
+    <ClInclude Include="src\Console\CharLogger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -258,6 +259,7 @@
     <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Random\MersenneTwister.cpp" />
     <ClCompile Include="src\Console\Console.cpp" />
+    <ClCompile Include="src\Console\CharLogger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

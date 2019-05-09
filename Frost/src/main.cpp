@@ -7,6 +7,7 @@
 #include "Random/MersenneTwister.h"
 
 #include "Console/Console.h"
+#include "Console/CharLogger.h"
 
 class Frost : public Application
 {
@@ -22,6 +23,8 @@ public:
 		enableDebugMode(true);
 		enableVsync(false);
 
+		CharLogger::Init(getContext());
+
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
 
@@ -35,7 +38,6 @@ public:
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
 		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
 
-		Console::Init(getContext());
 	}
 
 	~Frost()
@@ -52,12 +54,12 @@ public:
 			toggleDebugMode();
 
 		if (Input::KeyPressed(KEY_F5))
-			Console::Toggle(&console);
+			console.toggle();
 	}
 
 	void onUpdate() override
 	{
-		Console::Update();
+		console.update();
 	}
 
 	void onRender() override
@@ -70,7 +72,7 @@ public:
 		// Debug Info
 		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
 
-		Console::Render(2.0f, 2.0f);
+		console.render(2.0f, 4.0f);
 	}
 };
 

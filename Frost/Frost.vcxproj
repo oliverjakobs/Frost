@@ -94,6 +94,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Console\CharLogger.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Graphics.h" />
@@ -143,6 +144,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Console\CharLogger.cpp" />
     <ClCompile Include="src\Console\Console.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
