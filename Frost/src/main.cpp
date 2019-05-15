@@ -9,6 +9,8 @@
 #include "Console/Console.h"
 #include "Console/CharLogger.h"
 
+#include "Utility/Hardware.h"
+
 class Frost : public Application
 {
 private:
@@ -71,6 +73,7 @@ public:
 	{
 		// Debug Info
 		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
+		//Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("CPU Speed: %d", ReadCPUSpeed()), getWidth() - 360.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
 
 		console.render(2.0f, 4.0f);
 	}

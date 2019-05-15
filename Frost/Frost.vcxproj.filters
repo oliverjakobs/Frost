@@ -191,6 +191,10 @@
     <ClInclude Include="src\Random\MersenneTwister.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\Console\CharLogger.h" />
+    <ClInclude Include="src\Utility\Hardware.h" />
+    <ClInclude Include="src\Script\XML\TinyXML\tinyxml2.h" />
+    <ClInclude Include="src\Process\Process.h" />
+    <ClInclude Include="src\Process\ProcessManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -260,6 +264,10 @@
     <ClCompile Include="src\Random\MersenneTwister.cpp" />
     <ClCompile Include="src\Console\Console.cpp" />
     <ClCompile Include="src\Console\CharLogger.cpp" />
+    <ClCompile Include="src\Utility\Hardware.cpp" />
+    <ClCompile Include="src\Script\XML\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="src\Process\Process.cpp" />
+    <ClCompile Include="src\Process\ProcessManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
