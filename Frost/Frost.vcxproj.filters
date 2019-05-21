@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Console">
+      <UniqueIdentifier>{4F9F6B3D-BB54-E432-4449-DE09B0FDDA36}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
@@ -31,8 +34,20 @@
     <Filter Include="src\Patterns">
       <UniqueIdentifier>{ADB193C2-9914-2367-429A-5B1D2EDCEEE9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Process">
+      <UniqueIdentifier>{DB57292D-470D-A222-D001-9CF93CB69826}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Random">
+      <UniqueIdentifier>{3D349E2B-29EC-DF78-92F3-B8D47ECA7A69}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Script">
+      <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Script\XML">
+      <UniqueIdentifier>{B11BC59D-9DE9-B8A3-867D-29CA72EA9408}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
@@ -59,6 +74,12 @@
   <ItemGroup>
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Console\CharLogger.h">
+      <Filter>src\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Console\Console.h">
+      <Filter>src\Console</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Application.h">
       <Filter>src\Core</Filter>
@@ -99,6 +120,9 @@
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
+    <ClInclude Include="src\Input\KeyCodes.h">
+      <Filter>src\Input</Filter>
+    </ClInclude>
     <ClInclude Include="src\Log\Logger.h">
       <Filter>src\Log</Filter>
     </ClInclude>
@@ -123,11 +147,26 @@
     <ClInclude Include="src\Patterns\Singelton.h">
       <Filter>src\Patterns</Filter>
     </ClInclude>
+    <ClInclude Include="src\Process\Process.h">
+      <Filter>src\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Process\ProcessManager.h">
+      <Filter>src\Process</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\MersenneTwister.h">
+      <Filter>src\Random</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random\XorShift128.h">
+      <Filter>src\Random</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\XML\XMLParser.h">
+      <Filter>src\Script\XML</Filter>
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src\TilePhysics</Filter>
@@ -142,6 +181,9 @@
       <Filter>src\Utility\File</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Hardware.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h">
@@ -180,25 +222,24 @@
     <ClInclude Include="src\ecs\ecsTypes.h">
       <Filter>src\ecs</Filter>
     </ClInclude>
-    <ClInclude Include="src\ecsComponents\TransformComponent.h">
-      <Filter>src\ecsComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Input\KeyCodes.h" />
     <ClInclude Include="src\ecsComponents\ImageComponent.h">
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
-    <ClInclude Include="src\Random\XorShift128.h" />
-    <ClInclude Include="src\Random\MersenneTwister.h" />
-    <ClInclude Include="src\Console\Console.h" />
-    <ClInclude Include="src\Console\CharLogger.h" />
-    <ClInclude Include="src\Utility\Hardware.h" />
-    <ClInclude Include="src\Script\XML\TinyXML\tinyxml2.h" />
-    <ClInclude Include="src\Process\Process.h" />
-    <ClInclude Include="src\Process\ProcessManager.h" />
+    <ClInclude Include="src\ecsComponents\TransformComponent.h">
+      <Filter>src\ecsComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
+    <ClInclude Include="src\Script\JSON\nlohmann\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Console\CharLogger.cpp">
+      <Filter>src\Console</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Console\Console.cpp">
+      <Filter>src\Console</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>src\Core</Filter>
@@ -230,17 +271,35 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Process\Process.cpp">
+      <Filter>src\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Process\ProcessManager.cpp">
+      <Filter>src\Process</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\MersenneTwister.cpp">
+      <Filter>src\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Random\XorShift128.cpp">
+      <Filter>src\Random</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\XML\XMLParser.cpp">
+      <Filter>src\Script\XML</Filter>
+    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
     <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src\TilePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\Hardware.cpp">
+      <Filter>src\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp">
       <Filter>src\Utility\Memory</Filter>
@@ -251,23 +310,16 @@
     <ClCompile Include="src\ecs\ecsRegistry.cpp">
       <Filter>src\ecs</Filter>
     </ClCompile>
+    <ClCompile Include="src\ecsComponents\ImageComponent.cpp">
+      <Filter>src\ecsComponents</Filter>
+    </ClCompile>
     <ClCompile Include="src\ecsComponents\TransformComponent.cpp">
       <Filter>src\ecsComponents</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ecsComponents\ImageComponent.cpp">
-      <Filter>src\ecsComponents</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Random\XorShift128.cpp" />
-    <ClCompile Include="src\Random\MersenneTwister.cpp" />
-    <ClCompile Include="src\Console\Console.cpp" />
-    <ClCompile Include="src\Console\CharLogger.cpp" />
-    <ClCompile Include="src\Utility\Hardware.cpp" />
-    <ClCompile Include="src\Script\XML\TinyXML\tinyxml2.cpp" />
-    <ClCompile Include="src\Process\Process.cpp" />
-    <ClCompile Include="src\Process\ProcessManager.cpp" />
+    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">
@@ -276,6 +328,5 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
-    <None Include="res\scripts\resources.lua" />
   </ItemGroup>
 </Project>

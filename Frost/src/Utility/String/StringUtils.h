@@ -5,6 +5,15 @@
 
 #include <sstream>
 
+// wrapper for string::c_str(), that returns null if str is empty
+inline const char* c_str_null(const std::string& str)
+{
+	if (str.empty())
+		return nullptr;
+
+	return str.c_str();
+}
+
 inline bool stringCompare(const std::string& s1, const std::string& s2)
 {
 	return s1.compare(s2) == 0;

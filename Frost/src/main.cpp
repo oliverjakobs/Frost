@@ -11,6 +11,8 @@
 
 #include "Utility/Hardware.h"
 
+#include "Script/XML/XMLParser.h"
+
 class Frost : public Application
 {
 private:
@@ -79,16 +81,39 @@ public:
 	}
 };
 
+
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-	Frost* game = new Frost();
+	/*Frost* game = new Frost();
 
 	game->run();
 
-	delete game;
+	delete game;*/
+
+	XMLParser parser;
+	parser.Load("res/scripts/file.xml");
+
+	parser.Print();
+
+	XMLElement e = parser.Root().Get("Title");
+
+	if (e)
+	{
+		auto a1 = e.Attribute<float>("id");
+
+		if (a1.has_value())
+			DEBUG_INFO("{0}", a1.value());
+
+		auto a2 = e.Attribute("src");
+
+		if (a2.has_value())
+			DEBUG_INFO("{0}", a2.value());
+	}
+
+	system("Pause");
 
 	return 0;
 }

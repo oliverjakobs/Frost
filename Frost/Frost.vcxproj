@@ -121,9 +121,12 @@
     <ClInclude Include="src\Process\Process.h" />
     <ClInclude Include="src\Process\ProcessManager.h" />
     <ClInclude Include="src\Random\MersenneTwister.h" />
+    <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Script\XML\TinyXML\tinyxml2.h" />
+    <ClInclude Include="src\Script\JSON\nlohmann\json.hpp" />
+    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
+    <ClInclude Include="src\Script\XML\XMLParser.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
     <ClInclude Include="src\Utility\Debugger.h" />
@@ -132,7 +135,6 @@
     <ClInclude Include="src\Utility\Hardware.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
-    <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Utility\Range.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
@@ -163,14 +165,15 @@
     <ClCompile Include="src\Process\Process.cpp" />
     <ClCompile Include="src\Process\ProcessManager.cpp" />
     <ClCompile Include="src\Random\MersenneTwister.cpp" />
+    <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Script\XML\TinyXML\tinyxml2.cpp" />
+    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
+    <ClCompile Include="src\Script\XML\XMLParser.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Hardware.cpp" />
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
-    <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\ecs\ecsRegistry.cpp" />
     <ClCompile Include="src\ecsComponents\ImageComponent.cpp" />
@@ -178,7 +181,6 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\scripts\resources.lua" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

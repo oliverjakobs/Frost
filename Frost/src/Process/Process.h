@@ -69,7 +69,7 @@ public:
 
 	// pause
 	inline void Pause();
-	inline void UnPause();
+	inline void Unpause();
 
 	// accessors
 	State GetState() const { return m_state; }
@@ -115,7 +115,7 @@ inline void Process::Pause()
 		DEBUG_WARN("Attempting to pause a process that isn't running");
 }
 
-inline void Process::UnPause()
+inline void Process::Unpause()
 {
 	if (m_state == PAUSED)
 		m_state = RUNNING;
