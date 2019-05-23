@@ -93,6 +93,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Algorithm\Algorithm.h" />
+    <ClInclude Include="src\Algorithm\BinaryTree.h" />
+    <ClInclude Include="src\Algorithm\CustomSort.h" />
+    <ClInclude Include="src\Algorithm\List.h" />
+    <ClInclude Include="src\Algorithm\Queue.h" />
+    <ClInclude Include="src\Algorithm\Sorting.h" />
+    <ClInclude Include="src\Algorithm\Stack.h" />
+    <ClInclude Include="src\Algorithm\test.h" />
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Console\CharLogger.h" />
     <ClInclude Include="src\Console\Console.h" />
@@ -124,9 +132,8 @@
     <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Script\JSON\nlohmann\json.hpp" />
-    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
     <ClInclude Include="src\Script\XML\XMLParser.h" />
+    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
     <ClInclude Include="src\Utility\Debugger.h" />
@@ -135,7 +142,6 @@
     <ClInclude Include="src\Utility\Hardware.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
-    <ClInclude Include="src\Utility\Range.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
@@ -149,6 +155,7 @@
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Algorithm\Algorithm.cpp" />
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Console\CharLogger.cpp" />
     <ClCompile Include="src\Console\Console.cpp" />
@@ -168,8 +175,8 @@
     <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
     <ClCompile Include="src\Script\XML\XMLParser.cpp" />
+    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Hardware.cpp" />

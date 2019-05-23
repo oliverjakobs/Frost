@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Algorithm">
+      <UniqueIdentifier>{A3F41A75-0FB5-96AB-D8EF-DF28446FDB87}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Console">
       <UniqueIdentifier>{4F9F6B3D-BB54-E432-4449-DE09B0FDDA36}</UniqueIdentifier>
     </Filter>
@@ -49,6 +52,9 @@
     <Filter Include="src\Script\XML">
       <UniqueIdentifier>{B11BC59D-9DE9-B8A3-867D-29CA72EA9408}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\XML\tinyxml">
+      <UniqueIdentifier>{B5712C7B-A16B-55CD-8AD8-EBDD7671BB39}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
     </Filter>
@@ -72,6 +78,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Algorithm\Algorithm.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\BinaryTree.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\CustomSort.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\List.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\Queue.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\Sorting.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\Stack.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Algorithm\test.h">
+      <Filter>src\Algorithm</Filter>
+    </ClInclude>
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -168,6 +198,9 @@
     <ClInclude Include="src\Script\XML\XMLParser.h">
       <Filter>src\Script\XML</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h">
+      <Filter>src\Script\XML\tinyxml</Filter>
+    </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
@@ -191,9 +224,6 @@
     </ClInclude>
     <ClInclude Include="src\Utility\Memory\MemoryPool.h">
       <Filter>src\Utility\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Range.h">
-      <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\String\StringHash.h">
       <Filter>src\Utility\String</Filter>
@@ -228,8 +258,6 @@
     <ClInclude Include="src\ecsComponents\TransformComponent.h">
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
-    <ClInclude Include="src\Script\JSON\nlohmann\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -292,6 +320,9 @@
     <ClCompile Include="src\Script\XML\XMLParser.cpp">
       <Filter>src\Script\XML</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp">
+      <Filter>src\Script\XML\tinyxml</Filter>
+    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
@@ -319,7 +350,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
+    <ClCompile Include="src\Algorithm\Algorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

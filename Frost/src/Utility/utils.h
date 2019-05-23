@@ -9,6 +9,7 @@
 #include <map>
 
 #include <memory>
+#include <utility>
 
 using std::unique_ptr;
 using std::make_unique;

@@ -12,6 +12,8 @@
 #include "Utility/Hardware.h"
 
 #include "Script/XML/XMLParser.h"
+#include "Algorithm/test.h"
+#include "Algorithm/Algorithm.h"
 
 class Frost : public Application
 {
@@ -92,26 +94,6 @@ int main()
 	game->run();
 
 	delete game;*/
-
-	XMLParser parser;
-	parser.Load("res/scripts/file.xml");
-
-	parser.Print();
-
-	XMLElement e = parser.Root().Get("Title");
-
-	if (e)
-	{
-		auto a1 = e.Attribute<float>("id");
-
-		if (a1.has_value())
-			DEBUG_INFO("{0}", a1.value());
-
-		auto a2 = e.Attribute("src");
-
-		if (a2.has_value())
-			DEBUG_INFO("{0}", a2.value());
-	}
 
 	system("Pause");
 
