@@ -95,6 +95,30 @@ int main()
 
 	delete game;*/
 
+	SimpleList<int> list;
+
+	DEBUG_INFO("list empty1 {0}", list.empty());
+
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	list.push_back(4);
+
+	DEBUG_INFO("list empty2 {0}", list.empty());
+
+	DEBUG_INFO("list.at(0): {0}", list.at(0));
+	DEBUG_INFO("list.at(1): {0}", list.at(1));
+	DEBUG_INFO("list.at(2): {0}", list.at(2));
+	DEBUG_INFO("list.at(3): {0}", list.at(3));
+	try
+	{
+		DEBUG_INFO("list.at(4): {0}", list.at(4));
+	}
+	catch (out_of_range e)
+	{
+		DEBUG_INFO("Out of range exception: {0}", e.what());
+	}
+
 	system("Pause");
 
 	return 0;

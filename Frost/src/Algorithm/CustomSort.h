@@ -95,16 +95,14 @@ void CustomSort<Type>::sink_reverse(Type field[], int root, int n)
 template <typename Type>
 void CustomSort<Type>::sort(Type field[], int n)
 {
-	//build heap (rearrange array)
+	// build heap (rearrange array)
 	for (int i = n / 2 - 1; i >= 0; i--)
 		sink(field, i, n);
 
-	//move i-smallest element to field[n-1]
-	//let new root sink in
+	// move i-smallest element to field[n-1] let new root sink in
 	for (int i = n - 1; i >= 0; i--)
 	{
 		swap(field[0], field[i]);
-
 		sink(field, 0, i);
 	}
 }

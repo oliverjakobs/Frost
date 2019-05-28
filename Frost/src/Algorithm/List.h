@@ -3,83 +3,77 @@
 #include <iostream>
 #include <functional>
 
-enum SORT_BEHAVIOUR
-{
-	SELECTION_SORT,
-	INSERTION_SORT,
-	BUBBLE_SORT,
-	MERGE_SORT,
-	QUICK_SORT,
-	HEAP_SORT
-};
-
-template <typename Type>
-struct ListElement
-{
-	Type data;
-	ListElement<Type>* next;
-	ListElement<Type>* prev;
-};
-
 template <typename Type>
 class SimpleList
 {
 private:
+	template <typename Type>
+	struct ListElement
+	{
+		Type data;
+		ListElement<Type>* next;
+		ListElement<Type>* prev;
+	};
+
 	ListElement<Type>* first = nullptr;
 	ListElement<Type>* last = nullptr;
 
-	ListElement<Type>* get_element(int index);
-
-	SORT_BEHAVIOUR sort_behaviour = HEAP_SORT;
+	size_t m_size = 0;
 	
-	size_t element_count = 0;
+	inline ListElement<Type>* get(size_t index)
+	{
+		if (first == nullptr)
+			return nullptr;
+
+		if (index == 0)
+			return first;
+
+		if (index == m_size - 1)
+			return last;
+
+		if (index >= m_size)
+			return nullptr;
+
+		ListElement<Type>* temp = first;
+
+		int i = 0;
+
+		while (temp != nullptr)
+		{
+			if (i == index)
+			{
+				return temp;
+			}
+
+			temp = temp->next;
+			i++;
+		}
+
+		return nullptr;
+	}
 public:
-	SimpleList();
-	SimpleList(Type* arr);
-	SimpleList(SimpleList<Type> &copy);
+	SimpleList() = default;
+	//SimpleList(Type* arr);
+	//SimpleList(SimpleList<Type> &copy);
 
 	void clear();
 
-	void insert(int index, Type data);
-	void erase(int index);
-
 	void push_back(Type data);
-	void replace(int index, Type data);
 
-	Type at(int index);
+	void insert(size_t index, Type data);
+	void replace(size_t index, Type data);
+	void erase(size_t index);
+
+	Type at(size_t index);
 
 	Type front();
 	Type back();
 
-	void set_sort_behaviour(SORT_BEHAVIOUR behaviour);
-	void sort();
+	size_t size();
+	bool empty();
 
-	int size();
-	bool is_empty();
-
-	Type* to_array();
+	Type* data();
 };
-
-template<typename Type>
-SimpleList<Type>::SimpleList() : element_count(0)
-{
-
-}
-
-template<typename Type>
-SimpleList<Type>::SimpleList(Type* arr)
-{
-
-}
-
-template<typename Type>
-SimpleList<Type>::SimpleList(SimpleList<Type> &copy)
-{
-	for (int i = 0; i < copy.size(); i++)
-	{
-		push_back(copy.at(i));
-	}
-}
 
 template<typename Type>
 void SimpleList<Type>::clear()
@@ -99,22 +93,22 @@ void SimpleList<Type>::clear()
 }
 
 template<typename Type>
-void SimpleList<Type>::insert(int index, Type data)
+inline void SimpleList<Type>::insert(size_t index, Type data)
 {
-	if (index < 0 || index > element_count)
+	if (index > m_size)
 	{
-		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(element_count - 1) + " allowed.";
+		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(m_size - 1) + " allowed.";
 
 		throw std::out_of_range(what_string);
 	}
-	else if (index == element_count)
+	else if (index == m_size)
 	{
 		push_back(data);
 	}
 	else
 	{
-		ListElement<Type>* before = get_element(index - 1);
-		ListElement<Type>* after = get_element(index);
+		ListElement<Type>* before = get(index - 1);
+		ListElement<Type>* after = get(index);
 		ListElement<Type>* elem = new ListElement<Type>();
 		elem->data = data;
 		elem->next = after;
@@ -123,64 +117,31 @@ void SimpleList<Type>::insert(int index, Type data)
 		before->next = elem;
 		after->prev = elem;
 
-		element_count++;
+		m_size++;
 	}
 }
 
 template<typename Type>
-void SimpleList<Type>::erase(int index)
+void SimpleList<Type>::erase(size_t index)
 {
-	if (index < 0 || index >= element_count)
+	if (index >= m_size)
 	{
-		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(element_count - 1) + " allowed.";
+		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(m_size - 1) + " allowed.";
 
 		throw std::out_of_range(what_string);
 		return;
 	}
 
-	ListElement<Type>* before = get_element(index - 1);
-	ListElement<Type>* elem = get_element(index);
-	ListElement<Type>* after = get_element(index + 1);
+	ListElement<Type>* before = get(index - 1);
+	ListElement<Type>* elem = get(index);
+	ListElement<Type>* after = get(index + 1);
 
 	before->next = after;
 	after->prev = before;
 
-	element_count--;
+	m_size--;
 
-	delete[] elem;
-}
-
-template<typename Type>
-ListElement<Type>* SimpleList<Type>::get_element(int index)
-{
-	if (first == nullptr)
-		return nullptr;
-
-	if (index == 0)
-		return first;
-
-	if (index == element_count - 1)
-		return last;
-
-	if (index < 0 || index >= element_count)
-		return nullptr;
-
-	ListElement<Type>* temp = first;
-
-	int i = 0;
-
-	while (temp != nullptr)
-	{
-		if (i == index)
-		{
-			return temp;
-		}
-
-		temp = temp->next;
-		i++;
-	}
-
-	return nullptr;
+	delete elem;
 }
 
 template <typename Type>
@@ -209,13 +170,13 @@ void SimpleList<Type>::push_back(Type data)
 		last = temp;
 	}
 
-	element_count++;
+	m_size++;
 }
 
 template<typename Type>
-inline void SimpleList<Type>::replace(int index, Type data)
+inline void SimpleList<Type>::replace(size_t index, Type data)
 {
-	if (index < 0 || index >= element_count)
+	if (index >= element_count)
 	{
 		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(element_count - 1) + " allowed.";
 
@@ -223,15 +184,15 @@ inline void SimpleList<Type>::replace(int index, Type data)
 		return;
 	}
 
-	get_element(index)->data = data;
+	get(index)->data = data;
 }
 
 template <typename Type>
-Type SimpleList<Type>::at(int index)
+Type SimpleList<Type>::at(size_t index)
 {
-	if (index < 0 || index >= element_count)
+	if (index >= m_size)
 	{
-		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(element_count - 1) + " allowed.";
+		std::string what_string = "Index " + std::to_string(index) + " out of range. Only indices from 0 to " + std::to_string(m_size - 1) + " allowed.";
 		throw std::out_of_range(what_string);
 		return Type();
 	}
@@ -242,7 +203,7 @@ Type SimpleList<Type>::at(int index)
 	if (index == 0)
 		return front();
 
-	if (index == element_count - 1)
+	if (index == m_size - 1)
 		return back();
 
 	ListElement<Type>* temp = first;
@@ -281,66 +242,25 @@ Type SimpleList<Type>::back()
 	return Type();
 }
 
-template<typename Type>
-inline void SimpleList<Type>::set_sort_behaviour(SORT_BEHAVIOUR behaviour)
-{
-	sort_behaviour = behaviour;
-}
-
-template<typename Type>
-inline void SimpleList<Type>::sort()
-{
-	Type* arr = to_array();
-
-	switch (sort_behaviour)
-	{
-	case SELECTION_SORT:
-		selection_sort(arr, element_count);
-		break;
-	case INSERTION_SORT:
-		insertion_sort(arr, element_count);
-		break;
-	case BUBBLE_SORT:
-		bubble_sort(arr, element_count);
-		break;
-	case MERGE_SORT:
-		merge_sort(arr, 0, element_count - 1);
-		break;
-	case QUICK_SORT:
-		quick_sort(arr, 0, element_count - 1);
-		break;
-	case HEAP_SORT:
-		heap_sort(arr, element_count);
-		break;
-	default:
-		break;
-	}
-
-	for (int i = 0; i < element_count; i++)
-	{
-		cout << "arr[" << i << "]: " << arr[i] << endl;
-		replace(i, arr[i]);
-	}
-}
 
 template <typename Type>
-int SimpleList<Type>::size()
+size_t SimpleList<Type>::size()
 {
 	return element_count;
 }
 
 template <typename Type>
-bool SimpleList<Type>::is_empty()
+bool SimpleList<Type>::empty()
 {
 	return (first == nullptr);
 }
 
 template <typename Type>
-Type* SimpleList<Type>::to_array()
+Type* SimpleList<Type>::data()
 {
-	Type* arr = new Type[element_count];
+	Type* arr = new Type[m_size];
 
-	for (int i = 0; i < element_count; i++)
+	for (int i = 0; i < m_size; i++)
 	{
 		arr[i] = at(i);
 	}

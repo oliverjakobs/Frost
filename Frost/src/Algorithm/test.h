@@ -32,14 +32,14 @@ inline int algorithm_main()
 	{
 		SimpleList<int> list;
 
-		cout << "list empty1 " << list.is_empty() << endl;
+		cout << "list empty1 " << list.empty() << endl;
 
 		list.push_back(1);
 		list.push_back(2);
 		list.push_back(3);
 		list.push_back(4);
 
-		cout << "list empty2 " << list.is_empty() << endl;
+		cout << "list empty2 " << list.empty() << endl;
 
 		cout << "list.at(0): " << list.at(0) << endl;
 		cout << "list.at(1): " << list.at(1) << endl;
@@ -56,163 +56,9 @@ inline int algorithm_main()
 		cout << endl;
 	}
 
-	//quicksort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "quicksort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-		
-		quick_sort(list, 0, n-1);
-
-		clock_t end = clock();
-
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	//heapsort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "heapsort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-
-		heap_sort(list, n);
-
-		clock_t end = clock();
-
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	//selectionsort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "selection sort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-
-		selection_sort(list, n);
-
-		clock_t end = clock();
-
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	//insertionsort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "insertion sort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-
-		insertion_sort(list, n);
-
-		clock_t end = clock();
-
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	//bubblesort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "bubble sort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-
-		bubble_sort(list, n);
-
-		clock_t end = clock();
-
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	//mergesort
-	{
-		int list[] = { 96, 12, 3, 48, 8, 27, 2, 6, 27, 15, 34, 62, 19, 25 };
-		int n = sizeof(list) / sizeof(list[0]);
-
-		cout << "merge sort: " << endl;
-
-		print_array("unsorted: ", list, n);
-
-		clock_t begin = clock();
-
-		merge_sort(list, 0, n - 1);
-
-		clock_t end = clock();
-		
-		print_array("sorted:   ", list, n);
-		cout << "Duration: " << double(end - begin) / CLOCKS_PER_SEC << endl;
-
-		cout << endl;
-	}
-
-	
-
 	//Custom List
 	{
-		SimpleList<int> list;
-
-		cout << "list empty1 " << list.is_empty() << endl;
-
-		list.push_back(1);
-		list.push_back(45);
-		list.push_back(24);
-		list.push_back(37);
-		list.push_back(6);
-
-		cout << "list empty2 " << list.is_empty() << endl;
-
-		cout << "list.at(0): " << list.at(0) << endl;
-		cout << "list.at(1): " << list.at(1) << endl;
-		cout << "list.at(2): " << list.at(2) << endl;
-		cout << "list.at(3): " << list.at(3) << endl;
-		cout << "list.at(4): " << list.at(4) << endl;
-
-		list.sort();
-
-		cout << "sorted list " << endl;
-
-		cout << "list.at(0): " << list.at(0) << endl;
-		cout << "list.at(1): " << list.at(1) << endl;
-		cout << "list.at(2): " << list.at(2) << endl;
-		cout << "list.at(3): " << list.at(3) << endl;
-		cout << "list.at(4): " << list.at(4) << endl;
+		
 	}
 
 	//Constructor
