@@ -43,11 +43,11 @@ public:
 		{
 			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
 
-			if (keyPressed.Is(KEY_TAB))
-				DEBUG_TRACE("Tab key is pressed (event)!");
-
 			if (keyPressed.Is(KEY_ESCAPE))
 				close();
+
+			if (keyPressed.Is(KEY_F7))
+				toggleDebugMode();
 
 			DEBUG_TRACE("{0}", (char)keyPressed.GetKeyCode());
 		}
@@ -55,8 +55,7 @@ public:
 
 	void onUpdate() override
 	{
-		if (Input::IsKeyPressed(KEY_TAB))
-			DEBUG_TRACE("Tab key is pressed (poll)!");
+
 	}
 
 	void onRender() override
