@@ -78,38 +78,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Algorithm\Algorithm.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\BinaryTree.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\CustomSort.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\List.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\Queue.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\Sorting.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\Stack.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Algorithm\test.h">
-      <Filter>src\Algorithm</Filter>
-    </ClInclude>
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Console\CharLogger.h">
-      <Filter>src\Console</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Console\Console.h">
-      <Filter>src\Console</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\Application.h">
       <Filter>src\Core</Filter>
@@ -177,18 +147,6 @@
     <ClInclude Include="src\Patterns\Singelton.h">
       <Filter>src\Patterns</Filter>
     </ClInclude>
-    <ClInclude Include="src\Process\Process.h">
-      <Filter>src\Process</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Process\ProcessManager.h">
-      <Filter>src\Process</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Random\MersenneTwister.h">
-      <Filter>src\Random</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Random\XorShift128.h">
-      <Filter>src\Random</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -214,9 +172,6 @@
       <Filter>src\Utility\File</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Hardware.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h">
@@ -258,16 +213,14 @@
     <ClInclude Include="src\ecsComponents\TransformComponent.h">
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
+    <ClInclude Include="src\Event\ApplicationEvent.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
+    <ClInclude Include="src\Event\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Console\CharLogger.cpp">
-      <Filter>src\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Console\Console.cpp">
-      <Filter>src\Console</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>src\Core</Filter>
@@ -299,18 +252,6 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\Process\Process.cpp">
-      <Filter>src\Process</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Process\ProcessManager.cpp">
-      <Filter>src\Process</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Random\MersenneTwister.cpp">
-      <Filter>src\Random</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Random\XorShift128.cpp">
-      <Filter>src\Random</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -328,9 +269,6 @@
     </ClCompile>
     <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src\TilePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utility\Hardware.cpp">
-      <Filter>src\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp">
       <Filter>src\Utility\Memory</Filter>
@@ -350,7 +288,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Algorithm\Algorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shader\shader.frag">

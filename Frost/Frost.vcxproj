@@ -93,17 +93,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Algorithm\Algorithm.h" />
-    <ClInclude Include="src\Algorithm\BinaryTree.h" />
-    <ClInclude Include="src\Algorithm\CustomSort.h" />
-    <ClInclude Include="src\Algorithm\List.h" />
-    <ClInclude Include="src\Algorithm\Queue.h" />
-    <ClInclude Include="src\Algorithm\Sorting.h" />
-    <ClInclude Include="src\Algorithm\Stack.h" />
-    <ClInclude Include="src\Algorithm\test.h" />
     <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\Console\CharLogger.h" />
-    <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Graphics.h" />
     <ClInclude Include="src\Core\Graphics\Buffer.h" />
@@ -116,6 +106,10 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
+    <ClInclude Include="src\Event\ApplicationEvent.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
+    <ClInclude Include="src\Event\MouseEvent.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Input\KeyCodes.h" />
     <ClInclude Include="src\Log\Logger.h" />
@@ -126,10 +120,6 @@
     <ClInclude Include="src\Patterns\Command.h" />
     <ClInclude Include="src\Patterns\Observer.h" />
     <ClInclude Include="src\Patterns\Singelton.h" />
-    <ClInclude Include="src\Process\Process.h" />
-    <ClInclude Include="src\Process\ProcessManager.h" />
-    <ClInclude Include="src\Random\MersenneTwister.h" />
-    <ClInclude Include="src\Random\XorShift128.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Script\XML\XMLParser.h" />
@@ -139,7 +129,6 @@
     <ClInclude Include="src\Utility\Debugger.h" />
     <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\Flags.h" />
-    <ClInclude Include="src\Utility\Hardware.h" />
     <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
     <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
@@ -155,10 +144,7 @@
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Algorithm\Algorithm.cpp" />
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Console\CharLogger.cpp" />
-    <ClCompile Include="src\Console\Console.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
     <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
@@ -169,17 +155,12 @@
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
-    <ClCompile Include="src\Process\Process.cpp" />
-    <ClCompile Include="src\Process\ProcessManager.cpp" />
-    <ClCompile Include="src\Random\MersenneTwister.cpp" />
-    <ClCompile Include="src\Random\XorShift128.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\XML\XMLParser.cpp" />
     <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
-    <ClCompile Include="src\Utility\Hardware.cpp" />
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\ecs\ecsRegistry.cpp" />

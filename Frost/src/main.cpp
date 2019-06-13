@@ -3,22 +3,11 @@
 #include "ecsComponents/TransformComponent.h"
 #include "ecsComponents/ImageComponent.h"
 
-#include "Random/XorShift128.h"
-#include "Random/MersenneTwister.h"
-
-#include "Console/Console.h"
-#include "Console/CharLogger.h"
-
-#include "Utility/Hardware.h"
-
-#include "Script/XML/XMLParser.h"
-#include "Algorithm/test.h"
-#include "Algorithm/Algorithm.h"
 
 class Frost : public Application
 {
 private:
-	Console console;
+
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{
@@ -28,8 +17,6 @@ public:
 
 		enableDebugMode(true);
 		enableVsync(false);
-
-		CharLogger::Init(getContext());
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
@@ -43,29 +30,33 @@ public:
 
 		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
 		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
-
 	}
 
 	~Frost()
 	{
 
 	}
-
-	void onInput() override
+	
+	void onEvent(Event& e)
 	{
-		if (Input::KeyPressed(KEY_ESCAPE))
-			close();
+		if (e.GetEventType() == EventType::KeyPressed)
+		{
+			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
 
-		if (Input::KeyPressed(KEY_F7))
-			toggleDebugMode();
+			if (keyPressed.Is(KEY_TAB))
+				DEBUG_TRACE("Tab key is pressed (event)!");
 
-		if (Input::KeyPressed(KEY_F5))
-			console.toggle();
+			if (keyPressed.Is(KEY_ESCAPE))
+				close();
+
+			DEBUG_TRACE("{0}", (char)keyPressed.GetKeyCode());
+		}
 	}
 
 	void onUpdate() override
 	{
-		console.update();
+		if (Input::IsKeyPressed(KEY_TAB))
+			DEBUG_TRACE("Tab key is pressed (poll)!");
 	}
 
 	void onRender() override
@@ -77,9 +68,6 @@ public:
 	{
 		// Debug Info
 		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
-		//Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("CPU Speed: %d", ReadCPUSpeed()), getWidth() - 360.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
-
-		console.render(2.0f, 4.0f);
 	}
 };
 
@@ -89,37 +77,11 @@ int main()
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-	/*Frost* game = new Frost();
+	Frost* game = new Frost();
 
 	game->run();
 
-	delete game;*/
-
-	SimpleList<int> list;
-
-	DEBUG_INFO("list empty1 {0}", list.empty());
-
-	list.push_back(1);
-	list.push_back(2);
-	list.push_back(3);
-	list.push_back(4);
-
-	DEBUG_INFO("list empty2 {0}", list.empty());
-
-	DEBUG_INFO("list.at(0): {0}", list.at(0));
-	DEBUG_INFO("list.at(1): {0}", list.at(1));
-	DEBUG_INFO("list.at(2): {0}", list.at(2));
-	DEBUG_INFO("list.at(3): {0}", list.at(3));
-	try
-	{
-		DEBUG_INFO("list.at(4): {0}", list.at(4));
-	}
-	catch (out_of_range e)
-	{
-		DEBUG_INFO("Out of range exception: {0}", e.what());
-	}
-
-	system("Pause");
+	delete game;
 
 	return 0;
 }

@@ -2,105 +2,34 @@
 
 #include <GLFW\glfw3.h>
 
-Input::Input()
+bool Input::IsKeyPressed(int keycode)
 {
-	for (int i = 0; i < GLFW_KEY_LAST; i++)
-	{
-		m_keys[i] = { false, false };
-	}
-
-	for (int i = 0; i < GLFW_MOUSE_BUTTON_LAST; i++)
-	{
-		m_mouseButtons[i] = { false, false };
-	}
-
-	m_mousePos = glm::vec2();
+	auto state = glfwGetKey(glfwGetCurrentContext(), keycode);
+	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-Input::~Input()
+bool Input::IsMouseButtonPressed(int button)
 {
+	auto state = glfwGetMouseButton(glfwGetCurrentContext(), button);
+	return state == GLFW_PRESS;
 }
 
-void Input::Update(GLFWwindow* context)
+std::pair<float, float> Input::GetMousePosition()
 {
-	for (auto& key : Get().m_keys)
-	{
-		key.second.prev = key.second.pressed;
-		key.second.pressed = (glfwGetKey(context, key.first) == GLFW_PRESS);
-	}
+	double xpos, ypos;
+	glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
 
-	for (auto& button : Get().m_mouseButtons)
-	{
-		button.second.prev = button.second.pressed;
-		button.second.pressed = (glfwGetKey(context, button.first) == GLFW_PRESS);
-	}
-
-	double x, y;
-	glfwGetCursorPos(context, &x, &y);
-
-	Get().m_mousePos.x = static_cast<float>(x);
-	Get().m_mousePos.y = static_cast<float>(y);
+	return { (float)xpos, (float)ypos };
 }
 
-bool Input::KeyDown(unsigned int key)
+float Input::GetMouseX()
 {
-	if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return Get().m_keys[key].pressed;
+	auto[x, y] = GetMousePosition();
+	return x;
 }
 
-bool Input::KeyPressed(unsigned int key)
+float Input::GetMouseY()
 {
-	if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return Get().m_keys[key].pressed && !Get().m_keys[key].prev;
-}
-
-bool Input::KeyReleased(unsigned int key)
-{
-	if (key >= GLFW_KEY_LAST || key == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return (Get().m_keys[key].prev && !Get().m_keys[key].pressed);
-}
-
-bool Input::MouseButtonDown(unsigned int button)
-{
-	if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return Get().m_mouseButtons[button].pressed;
-}
-
-bool Input::MouseButtonPressed(unsigned int button)
-{
-	if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return Get().m_mouseButtons[button].pressed && !Get().m_mouseButtons[button].prev;
-}
-
-bool Input::MouseButtonReleased(unsigned int button)
-{
-	if (button >= GLFW_MOUSE_BUTTON_LAST || button == GLFW_KEY_UNKNOWN)
-		return false;
-
-	return Get().m_mouseButtons[button].pressed;
-}
-
-glm::vec2 Input::MousePosition()
-{
-	return Get().m_mousePos;
-}
-
-KeyState Input::GetKeyState(unsigned int key)
-{
-	return Get().m_keys[key];
-}
-
-KeyState Input::GetMouseButtonState(unsigned int key)
-{
-	return Get().m_mouseButtons[key];
+	auto[x, y] = GetMousePosition();
+	return y;
 }

@@ -10,6 +10,10 @@
 
 #include "Maths/Maths.h"
 
+#include "Event/ApplicationEvent.h"
+#include "Event/MouseEvent.h"
+#include "Event/KeyEvent.h"
+
 struct GLFWwindow;
 
 class Application
@@ -17,7 +21,10 @@ class Application
 private:
 	GLFWwindow* m_window;
 
+	bool m_running;
 	bool m_debug;
+
+	bool OnWindowClose(WindowCloseEvent& e);
 protected:
 	std::string m_title;
 
@@ -32,12 +39,13 @@ public:
 
 	void enableVsync(bool b);
 
+	void EventCallback(Event& e);
+
 	// --------------------------| loop control |----------------------------
 	void run();
 	void close();
 
-	// --------------------------| loop funtions |---------------------------
-	virtual void onInput() = 0;
+	virtual void onEvent(Event& e) = 0;
 	virtual void onUpdate() = 0;
 	virtual void onRender() = 0;
 	virtual void onRenderDebug() const {}
