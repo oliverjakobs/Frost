@@ -95,7 +95,7 @@ endif()
 add_library(glfw ${glfw_SOURCES} ${glfw_HEADERS})
 set_target_properties(glfw PROPERTIES
                       OUTPUT_NAME ${GLFW_LIB_NAME}
-                      VERSION ${GLFW_VERSION}
+                      VERSION ${GLFW_VERSION_MAJOR}.${GLFW_VERSION_MINOR}
                       SOVERSION ${GLFW_VERSION_MAJOR}
                       POSITION_INDEPENDENT_CODE ON
                       FOLDER "GLFW3")
@@ -103,7 +103,7 @@ set_target_properties(glfw PROPERTIES
 target_compile_definitions(glfw PRIVATE _GLFW_USE_CONFIG_H)
 target_include_directories(glfw PUBLIC
                            "$<BUILD_INTERFACE:${GLFW_SOURCE_DIR}/include>"
-                           "$<INSTALL_INTERFACE:${CMAKE_INSTALL_FULL_INCLUDEDIR}>")
+                           "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 target_include_directories(glfw PRIVATE
                            "${GLFW_SOURCE_DIR}/src"
                            "${GLFW_BINARY_DIR}/src"

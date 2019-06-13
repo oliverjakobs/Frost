@@ -1,0 +1,9 @@
+[submodule "Frost/external/GLFW"]
+	path = Frost/external/GLFW
+	url = https://github.com/oliverjakobs/glfw
+[submodule "Frost/external/spdlog"]
+	path = Frost/external/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Frost/external/imgui"]
+	path = Frost/external/imgui
+	url = https://github.com/oliverjakobs/imgui

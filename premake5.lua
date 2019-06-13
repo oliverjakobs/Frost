@@ -1,4 +1,5 @@
 workspace "Frost"
+	startproject "Frost"
 
 	configurations
 	{
@@ -8,18 +9,20 @@ workspace "Frost"
 
 outputDir = "%{cfg.buildcfg}"   
 
-IncludeDir = {}
-IncludeDir["INCLUDE"] = "Frost/external/include" 
-IncludeDir["GLFW"] = "Frost/external/glfw/include" 
-IncludeDir["GLAD"] = "Frost/external/glad/include"
+group "Dependencies"
 
 include "Frost/external/glfw"
 include "Frost/external/glad"
+include "Frost/external/imgui"
+
+group ""
 
 project "Frost"
 	location "Frost"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "On"
 	
 	targetdir ("bin/" .. outputDir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
@@ -36,29 +39,27 @@ project "Frost"
 	links
 	{
 		"GLFW",
-		"GLAD",
+		"Glad",
+		"ImGui",
 		"opengl32"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"Frost/external/include",
-		"Frost/external/glfw/include",
-		"Frost/external/glad/include"
+		"%{prj.name}/external/include",
+		"%{prj.name}/external/spdlog/include",
+		"%{prj.name}/external/glfw/include",
+		"%{prj.name}/external/glad/include"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 	filter "configurations:Debug"
-		defines "DEBUG"
 		runtime "Debug"
 		symbols "On"
 
 	filter "configurations:Release"
-		defines "RELEASE"
 		runtime "Release"
 		optimize "On"

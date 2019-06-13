@@ -10,12 +10,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Algorithm">
-      <UniqueIdentifier>{A3F41A75-0FB5-96AB-D8EF-DF28446FDB87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Console">
-      <UniqueIdentifier>{4F9F6B3D-BB54-E432-4449-DE09B0FDDA36}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Core">
       <UniqueIdentifier>{A5D31CCF-91A0-77DA-BAB9-6582A6E5AC68}</UniqueIdentifier>
     </Filter>
@@ -24,6 +18,9 @@
     </Filter>
     <Filter Include="src\Core\Graphics\Font">
       <UniqueIdentifier>{AB89F137-9783-1A8A-80F0-B09A6C8980F6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Event">
+      <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
@@ -36,12 +33,6 @@
     </Filter>
     <Filter Include="src\Patterns">
       <UniqueIdentifier>{ADB193C2-9914-2367-429A-5B1D2EDCEEE9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Process">
-      <UniqueIdentifier>{DB57292D-470D-A222-D001-9CF93CB69826}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Random">
-      <UniqueIdentifier>{3D349E2B-29EC-DF78-92F3-B8D47ECA7A69}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
@@ -117,6 +108,18 @@
     <ClInclude Include="src\Core\Graphics\Texture.h">
       <Filter>src\Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Event\ApplicationEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\KeyEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\MouseEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
@@ -132,7 +135,7 @@
     <ClInclude Include="src\Maths\Maths.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths\Raycast.h">
+    <ClInclude Include="src\Maths\RayCast.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Visibility.h">
@@ -189,7 +192,7 @@
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Utils.h">
+    <ClInclude Include="src\Utility\utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\ecs\ecsComponent.h">
@@ -213,10 +216,6 @@
     <ClInclude Include="src\ecsComponents\TransformComponent.h">
       <Filter>src\ecsComponents</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\ApplicationEvent.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\KeyEvent.h" />
-    <ClInclude Include="src\Event\MouseEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
