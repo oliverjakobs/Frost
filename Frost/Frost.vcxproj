@@ -104,6 +104,11 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
+    <ClInclude Include="src\ECS\ecsComponent.h" />
+    <ClInclude Include="src\ECS\ecsEntity.h" />
+    <ClInclude Include="src\ECS\ecsRegistry.h" />
+    <ClInclude Include="src\ECS\ecsSystem.h" />
+    <ClInclude Include="src\ECS\ecsTypes.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
@@ -134,11 +139,6 @@
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
     <ClInclude Include="src\Utility\utils.h" />
-    <ClInclude Include="src\ecs\ecsComponent.h" />
-    <ClInclude Include="src\ecs\ecsEntity.h" />
-    <ClInclude Include="src\ecs\ecsRegistry.h" />
-    <ClInclude Include="src\ecs\ecsSystem.h" />
-    <ClInclude Include="src\ecs\ecsTypes.h" />
     <ClInclude Include="src\ecsComponents\ImageComponent.h" />
     <ClInclude Include="src\ecsComponents\TransformComponent.h" />
   </ItemGroup>
@@ -153,6 +153,7 @@
     <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
+    <ClCompile Include="src\ECS\ecsRegistry.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -164,7 +165,6 @@
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
-    <ClCompile Include="src\ecs\ecsRegistry.cpp" />
     <ClCompile Include="src\ecsComponents\ImageComponent.cpp" />
     <ClCompile Include="src\ecsComponents\TransformComponent.cpp" />
     <ClCompile Include="src\main.cpp" />
