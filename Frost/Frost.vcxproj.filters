@@ -19,9 +19,6 @@
     <Filter Include="src\Core\Graphics\Font">
       <UniqueIdentifier>{AB89F137-9783-1A8A-80F0-B09A6C8980F6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ECS">
-      <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Event">
       <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
     </Filter>
@@ -43,15 +40,6 @@
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Script">
-      <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\XML">
-      <UniqueIdentifier>{B11BC59D-9DE9-B8A3-867D-29CA72EA9408}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\XML\tinyxml">
-      <UniqueIdentifier>{B5712C7B-A16B-55CD-8AD8-EBDD7671BB39}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
     </Filter>
@@ -61,14 +49,8 @@
     <Filter Include="src\Utility\File">
       <UniqueIdentifier>{9F7B87CD-8B74-A61F-B4A6-8BA4A0FE852B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Utility\Memory">
-      <UniqueIdentifier>{D85F615D-C443-22B3-2DA4-1C0619A70C35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Utility\String">
       <UniqueIdentifier>{F666726C-E24A-33C2-4BAB-2D1537AE1D44}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ecsComponents">
-      <UniqueIdentifier>{3DB199EC-A9C7-9782-F23E-23A45E94680A}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -129,9 +111,6 @@
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Input\KeyCodes.h">
-      <Filter>src\Input</Filter>
-    </ClInclude>
     <ClInclude Include="src\Log\Logger.h">
       <Filter>src\Log</Filter>
     </ClInclude>
@@ -162,12 +141,6 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\XML\XMLParser.h">
-      <Filter>src\Script\XML</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h">
-      <Filter>src\Script\XML\tinyxml</Filter>
-    </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
@@ -182,12 +155,6 @@
     </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Memory\MemoryMacros.h">
-      <Filter>src\Utility\Memory</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Memory\MemoryPool.h">
-      <Filter>src\Utility\Memory</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\String\StringHash.h">
       <Filter>src\Utility\String</Filter>
@@ -248,20 +215,11 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\XML\XMLParser.cpp">
-      <Filter>src\Script\XML</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp">
-      <Filter>src\Script\XML\tinyxml</Filter>
-    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
     <ClCompile Include="src\TilePhysics\Tilemap.cpp">
       <Filter>src\TilePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utility\Memory\MemoryPool.cpp">
-      <Filter>src\Utility\Memory</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\Timer.cpp">
       <Filter>src\Utility</Filter>

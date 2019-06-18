@@ -1,5 +1,7 @@
 #include "Core/Application.h"
 
+#include <entt/entt.hpp>
+
 class Frost : public Application
 {
 private:
@@ -23,6 +25,14 @@ public:
 		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
 
 		ResourceManager::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
+
+		entt::registry reg;
+
+		auto entity1 = reg.create();
+		auto entity2 = reg.create();
+
+		DEBUG_TRACE("Entity1: {0}", entity1);
+		DEBUG_TRACE("Entity2: {0}", entity2);
 	}
 
 	~Frost()

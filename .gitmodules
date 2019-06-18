@@ -4,3 +4,6 @@
 [submodule "Frost/packages/imgui"]
 	path = Frost/packages/imgui
 	url = https://github.com/oliverjakobs/imgui
+[submodule "Frost/packages/entt"]
+	path = Frost/packages/entt
+	url = https://github.com/skypjack/entt

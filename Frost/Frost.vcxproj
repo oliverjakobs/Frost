@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -110,7 +110,6 @@
     <ClInclude Include="src\Event\MouseEvent.h" />
     <ClInclude Include="src\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
-    <ClInclude Include="src\Input\KeyCodes.h" />
     <ClInclude Include="src\Log\Logger.h" />
     <ClInclude Include="src\Maths\Geometry.h" />
     <ClInclude Include="src\Maths\Maths.h" />
@@ -121,15 +120,11 @@
     <ClInclude Include="src\Patterns\Singelton.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Script\XML\XMLParser.h" />
-    <ClInclude Include="src\Script\XML\tinyxml\tinyxml2.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
     <ClInclude Include="src\Utility\Debugger.h" />
     <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\Flags.h" />
-    <ClInclude Include="src\Utility\Memory\MemoryMacros.h" />
-    <ClInclude Include="src\Utility\Memory\MemoryPool.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
@@ -151,11 +146,8 @@
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Script\XML\XMLParser.cpp" />
-    <ClCompile Include="src\Script\XML\tinyxml\tinyxml2.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
-    <ClCompile Include="src\Utility\Memory\MemoryPool.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
