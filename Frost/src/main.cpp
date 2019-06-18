@@ -3,8 +3,6 @@
 #include "ecsComponents/TransformComponent.h"
 #include "ecsComponents/ImageComponent.h"
 
-
-
 class Frost : public Application
 {
 private:
@@ -44,13 +42,15 @@ public:
 		{
 			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
 
-			if (keyPressed.Is(KEY_ESCAPE))
+			switch (keyPressed.GetKeyCode())
+			{
+			case KEY_ESCAPE:
 				close();
-
-			if (keyPressed.Is(KEY_F7))
+				break;
+			case KEY_F7:
 				toggleDebugMode();
-
-			DEBUG_TRACE("{0}", (char)keyPressed.GetKeyCode());
+				break;
+			}
 		}
 	}
 
@@ -61,14 +61,15 @@ public:
 
 	void onRender() const override
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+
 	}
 
 	void onRenderDebug() const override
 	{
 		// Debug Info
-		Renderer::RenderString(ResourceManager::GetFont("blocky"), stringf("FPS: %d", Timer::GetFPS()), 2.0f, getHeight() - 30.0f, Renderer::GetScreenView(), "shader");
+		ImGui::Begin("Info");
+		ImGui::Text("FPS: %d", Timer::GetFPS());
+		ImGui::End();
 	}
 };
 

@@ -9,7 +9,7 @@ class ImGuiRenderer
 private:
 	float m_Time = 0.0f;
 public:
-	void Init(GLFWwindow* context);
+	void Init(GLFWwindow* context, unsigned int configFlags);
 	void Quit();
 
 	void Start();

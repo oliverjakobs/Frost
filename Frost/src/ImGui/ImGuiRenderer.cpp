@@ -5,18 +5,20 @@
 
 #include "GLFW/glfw3.h"
 
-void ImGuiRenderer::Init(GLFWwindow* context)
+void ImGuiRenderer::Init(GLFWwindow* context, unsigned int configFlags)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+	io.ConfigFlags |= configFlags;
+		
+	//ImGuiConfigFlags_NavEnableKeyboard:		Enable Keyboard Controls
+	//ImGuiConfigFlags_NavEnableGamepad:		Enable Gamepad Controls
+	//ImGuiConfigFlags_DockingEnable:			Enable Docking
+	//ImGuiConfigFlags_ViewportsEnable:			Enable Multi-Viewport / Platform Windows
+	//ImGuiConfigFlags_ViewportsNoTaskBarIcons;
+	//ImGuiConfigFlags_ViewportsNoMerge;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();

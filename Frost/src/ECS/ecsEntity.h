@@ -32,7 +32,6 @@ namespace ecs
 			m_components.emplace(compID, comp);
 		}
 
-
 		EntityID getID() const { return m_id; }
 		const ComponentMap getComponents() const { return m_components; }
 

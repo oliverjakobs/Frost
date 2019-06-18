@@ -9,11 +9,11 @@ workspace "Frost"
 
 outputDir = "%{cfg.buildcfg}"   
 
-group "Dependencies"
+group "Packages"
 
-include "Frost/external/glfw"
-include "Frost/external/glad"
-include "Frost/external/imgui"
+include "Frost/packages/glfw"
+include "Frost/packages/glad"
+include "Frost/packages/imgui"
 
 group ""
 
@@ -47,11 +47,11 @@ project "Frost"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/external/include",
-		"%{prj.name}/external/imgui",
-		"%{prj.name}/external/spdlog/include",
-		"%{prj.name}/external/glfw/include",
-		"%{prj.name}/external/glad/include"
+		"%{prj.name}/packages/include",
+		"%{prj.name}/packages/imgui",
+		"%{prj.name}/packages/spdlog/include",
+		"%{prj.name}/packages/glfw/include",
+		"%{prj.name}/packages/glad/include"
 	}
 
 	filter "system:windows"
