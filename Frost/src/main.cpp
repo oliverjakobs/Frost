@@ -1,8 +1,5 @@
 #include "Core/Application.h"
 
-#include "ecsComponents/TransformComponent.h"
-#include "ecsComponents/ImageComponent.h"
-
 class Frost : public Application
 {
 private:
@@ -26,9 +23,6 @@ public:
 		ResourceManager::AddImage("tileset", new Image("res/images/tiles.png", 32.0f, 32.0f, 1, 5));
 
 		ResourceManager::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
-
-		DEBUG_TRACE("TransformComponent: {0}", TransformComponent::ID);
-		DEBUG_TRACE("ImageComponent:     {0}", ImageComponent::ID);
 	}
 
 	~Frost()
