@@ -14,12 +14,16 @@
 #include "Event/MouseEvent.h"
 #include "Event/KeyEvent.h"
 
+#include "ImGui/ImGuiRenderer.h"
+
 struct GLFWwindow;
 
 class Application
 {
 private:
 	GLFWwindow* m_window;
+
+	ImGuiRenderer m_imguiRenderer;
 
 	bool m_running;
 	bool m_debug;
@@ -47,7 +51,7 @@ public:
 
 	virtual void onEvent(Event& e) = 0;
 	virtual void onUpdate() = 0;
-	virtual void onRender() = 0;
+	virtual void onRender() const = 0;
 	virtual void onRenderDebug() const {}
 
 	// ----------------------------------------------------------------------

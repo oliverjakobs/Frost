@@ -4,6 +4,7 @@
 #include "ecsComponents/ImageComponent.h"
 
 
+
 class Frost : public Application
 {
 private:
@@ -58,9 +59,10 @@ public:
 
 	}
 
-	void onRender() override
+	void onRender() const override
 	{
-
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
 	}
 
 	void onRenderDebug() const override

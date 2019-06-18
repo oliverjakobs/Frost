@@ -48,6 +48,7 @@ project "Frost"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/external/include",
+		"%{prj.name}/external/imgui",
 		"%{prj.name}/external/spdlog/include",
 		"%{prj.name}/external/glfw/include",
 		"%{prj.name}/external/glad/include"

@@ -151,6 +151,9 @@ Application::Application(const std::string& title, int width, int height)
 
 	Renderer::Init(0.0f, 0.0f, (float)m_width, (float)m_height);
 
+	// initialize imgui
+	m_imguiRenderer.Init(m_window);
+
 	m_running = true;
 }
 
@@ -195,6 +198,7 @@ void Application::run()
 		onUpdate();
 
 		Renderer::Start();
+		m_imguiRenderer.Start();
 
 		onRender();
 
@@ -202,6 +206,7 @@ void Application::run()
 			onRenderDebug();
 
 		Renderer::Flush();
+		m_imguiRenderer.Flush(m_window);
 
 		glfwPollEvents();
 		glfwSwapBuffers(m_window);
