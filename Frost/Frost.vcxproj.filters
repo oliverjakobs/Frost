@@ -168,6 +168,7 @@
     <ClInclude Include="src\Utility\utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Components.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">

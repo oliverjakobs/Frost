@@ -1,10 +1,13 @@
+#include <entt/entt.hpp>
+
 #include "Core/Application.h"
 
-#include <entt/entt.hpp>
+#include "ECS/Components.h"
 
 class Frost : public Application
 {
 private:
+	entt::registry reg;
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -14,7 +17,7 @@ public:
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		enableDebugMode(true);
-		enableVsync(false);
+		enableVsync(true);
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
@@ -26,13 +29,10 @@ public:
 
 		ResourceManager::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 
-		entt::registry reg;
-
-		auto entity1 = reg.create();
-		auto entity2 = reg.create();
-
-		DEBUG_TRACE("Entity1: {0}", entity1);
-		DEBUG_TRACE("Entity2: {0}", entity2);
+		auto entity = reg.create();
+		reg.assign<ImageComponent>(entity, ResourceManager::GetImage("player"));
+		reg.assign<TransformComponent>(entity, glm::vec2(50, 50), glm::vec2(0, 0));
+		reg.assign<VelocityComponent>(entity, glm::vec2());
 	}
 
 	~Frost()
@@ -54,18 +54,39 @@ public:
 			case KEY_F7:
 				toggleDebugMode();
 				break;
+
+			//movement
+			case KEY_W:
+				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.y = 100; });
+				break;
+			case KEY_S:
+				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.y = -100; });
+				break;
+			case KEY_D:
+				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.x = 100; });
+				break;
+			case KEY_A:
+				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.x = -100; });
+				break;
 			}
 		}
 	}
 
 	void onUpdate() override
 	{
-
+		reg.view<TransformComponent, VelocityComponent>().each([](auto entity, auto& trans, auto &vel)
+		{ 
+			trans.position += vel.velocity * Timer::GetDeltaTime();
+			vel.velocity = glm::vec2();
+		});
 	}
 
-	void onRender() const override
+	void onRender() override
 	{
-
+		reg.view<ImageComponent, TransformComponent>().each([](auto entity, auto& img, auto& trans)
+		{
+			img.image->renderF(trans.position, 0, Renderer::GetView().mat, "shader");
+		});
 	}
 
 	void onRenderDebug() const override
