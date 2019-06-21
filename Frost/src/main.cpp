@@ -1,14 +1,13 @@
-#include <entt/entt.hpp>
-
 #include "Core/Application.h"
 
-#include "ECS/Components.h"
+#include "ECS/Systems.h"
 
 class Frost : public Application
 {
 private:
 	entt::registry reg;
 
+	TileMap* map;
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{
@@ -17,7 +16,7 @@ public:
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		enableDebugMode(true);
-		enableVsync(true);
+		enableVsync(false);
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
@@ -29,15 +28,26 @@ public:
 
 		ResourceManager::AddFont("blocky", new BitmapFont("res/images/blocky_font.png", 20.0f, 28.0f, 2.0f));
 
+		map = new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt");
+
 		auto entity = reg.create();
+		reg.assign<TransformComponent>(entity, glm::vec2(400, 300), glm::vec2(0, 0));
+		reg.assign<MovementComponent>(entity, 400.0f, 800.0f);
+		reg.assign<PhysicsComponent>(entity, map->createBody(400, 300, 20, 30, BodyTypeDynamic), glm::vec2(0.0f, 30.0f));
+		reg.assign<CameraComponent>(entity, Rect(glm::vec2(), map->getDimension() * map->getTileSize()), glm::vec2(0.0f, 30.0f));
 		reg.assign<ImageComponent>(entity, ResourceManager::GetImage("player"));
-		reg.assign<TransformComponent>(entity, glm::vec2(50, 50), glm::vec2(0, 0));
-		reg.assign<VelocityComponent>(entity, glm::vec2());
+		reg.assign<AnimationComponent>(entity, std::map<std::string, Animation>
+			{
+				AnimationDef("idle", Animation(0, 4, 0.2f)),
+				AnimationDef("walk", Animation(6, 6, 0.125f)),
+				AnimationDef("jump", Animation(12, 3, 0.3f)),
+				AnimationDef("fall", Animation(18, 2, 0.4f))
+			});
 	}
 
 	~Frost()
 	{
-
+		delete map;
 	}
 	
 	void onEvent(Event& e)
@@ -54,43 +64,30 @@ public:
 			case KEY_F7:
 				toggleDebugMode();
 				break;
-
-			//movement
-			case KEY_W:
-				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.y = 100; });
-				break;
-			case KEY_S:
-				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.y = -100; });
-				break;
-			case KEY_D:
-				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.x = 100; });
-				break;
-			case KEY_A:
-				reg.view<VelocityComponent>().each([](auto entity, auto &vel) { vel.velocity.x = -100; });
-				break;
 			}
 		}
 	}
 
 	void onUpdate() override
 	{
-		reg.view<TransformComponent, VelocityComponent>().each([](auto entity, auto& trans, auto &vel)
-		{ 
-			trans.position += vel.velocity * Timer::GetDeltaTime();
-			vel.velocity = glm::vec2();
-		});
+		map->onUpdate();
+
+		PlayerSystem::Tick(reg);
+		TilePhysicsSystem::Tick(reg);
+		AnimationSystem::Tick(reg);
 	}
 
 	void onRender() override
 	{
-		reg.view<ImageComponent, TransformComponent>().each([](auto entity, auto& img, auto& trans)
-		{
-			img.image->renderF(trans.position, 0, Renderer::GetView().mat, "shader");
-		});
+		map->onRender();
+
+		ImageRenderSystem::Tick(reg);
 	}
 
 	void onRenderDebug() const override
 	{
+		map->onRenderDebug();
+
 		// Debug Info
 		ImGui::Begin("Info");
 		ImGui::Text("FPS: %d", Timer::GetFPS());

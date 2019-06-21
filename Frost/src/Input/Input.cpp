@@ -2,10 +2,16 @@
 
 #include <GLFW\glfw3.h>
 
-bool Input::IsKeyPressed(int keycode)
+bool Input::KeyPressed(int keycode)
 {
 	auto state = glfwGetKey(glfwGetCurrentContext(), keycode);
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
+}
+
+bool Input::KeyReleased(int keycode)
+{
+	auto state = glfwGetKey(glfwGetCurrentContext(), keycode);
+	return state == GLFW_RELEASE;
 }
 
 bool Input::IsMouseButtonPressed(int button)
