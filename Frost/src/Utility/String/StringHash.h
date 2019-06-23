@@ -27,21 +27,21 @@
 
 namespace compileTime
 {
-	template <size_t I>
+	template <size_t index>
 	struct Hash
 	{
-		template <size_t N>
-		constexpr static inline uint32_t Generate(const char(&str)[N])
+		template <size_t len>
+		constexpr static inline uint32_t Generate(const char(&str)[len])
 		{
-			return static_cast<uint32_t>(static_cast<uint64_t>(Hash<I - 1u>::Generate(str) ^ uint32_t(str[I - 1u])) * 16777619ull);
+			return static_cast<uint32_t>(static_cast<uint64_t>(Hash<index - 1u>::Generate(str) ^ uint32_t(str[index - 1u])) * 16777619ull);
 		}
 	};
 
 	template <>
 	struct Hash<0u>
 	{
-		template <size_t N>
-		constexpr static inline uint32_t Generate(const char(&str)[N])
+		template <size_t len>
+		constexpr static inline uint32_t Generate(const char(&str)[len])
 		{
 			return 2166136261u;
 		}

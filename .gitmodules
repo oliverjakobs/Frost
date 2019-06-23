@@ -1,0 +1,11 @@
+[submodule "Frost/packages/spdlog"]
+	path = Frost/packages/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Frost/packages/imgui"]
+	path = Frost/packages/imgui
+	url = https://github.com/oliverjakobs/imgui
+[submodule "Frost/packages/entt"]
+	path = Frost/packages/entt
+	url = https://github.com/skypjack/entt
+[submodule "Frost/packages/GLFW"]
+	url = https://github.com/oliverjakobs/glfw

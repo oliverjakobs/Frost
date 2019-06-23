@@ -312,6 +312,9 @@ unsigned int TileMap::getIndex(const glm::ivec2& pos) const
 
 Tile* TileMap::at(unsigned int index)
 {
+	if (index > m_tiles.size())
+		return nullptr;
+
 	return &m_tiles.at(index);
 }
 
@@ -351,7 +354,8 @@ std::vector<const Tile*> TileMap::getAdjacentTiles(float x, float y, float w, fl
 	{
 		for (int j = start.y; j <= end.y; j++)
 		{
-			tiles.push_back(at(getIndex(i, j)));
+			if (at(getIndex(i, j)) != nullptr)
+				tiles.push_back(at(getIndex(i, j)));
 		}
 	}
 

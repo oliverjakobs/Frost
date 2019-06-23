@@ -58,8 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;external\include;external\glfw\include;external\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -75,8 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;external\include;external\glfw\include;external\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -94,10 +92,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\Components.h" />
     <ClInclude Include="src\Core\Application.h" />
     <ClInclude Include="src\Core\Graphics.h" />
     <ClInclude Include="src\Core\Graphics\Buffer.h" />
+    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h" />
+    <ClInclude Include="src\Core\Graphics\Font\Font.h" />
     <ClInclude Include="src\Core\Graphics\Framebuffer.h" />
     <ClInclude Include="src\Core\Graphics\Image.h" />
     <ClInclude Include="src\Core\Graphics\Primitives.h" />
@@ -105,17 +104,15 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
-    <ClInclude Include="src\ECS\ecs.h" />
-    <ClInclude Include="src\ECS\ecsComponent.h" />
-    <ClInclude Include="src\ECS\ecsSystem.h" />
-    <ClInclude Include="src\ECS\ecsSystemList.h" />
-    <ClInclude Include="src\ECS\ecsTypedef.h" />
-    <ClInclude Include="src\Font\BitmapFont.h" />
-    <ClInclude Include="src\Font\Font.h" />
-    <ClInclude Include="src\Font\FontRenderer.h" />
+    <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\Systems.h" />
+    <ClInclude Include="src\Event\ApplicationEvent.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
+    <ClInclude Include="src\Event\MouseEvent.h" />
+    <ClInclude Include="src\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Log\Logger.h" />
-    <ClInclude Include="src\LogicSystems.h" />
     <ClInclude Include="src\Maths\Geometry.h" />
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\RayCast.h" />
@@ -123,22 +120,22 @@
     <ClInclude Include="src\Patterns\Command.h" />
     <ClInclude Include="src\Patterns\Observer.h" />
     <ClInclude Include="src\Patterns\Singelton.h" />
-    <ClInclude Include="src\RenderSystems.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
+    <ClInclude Include="src\Utility\Debugger.h" />
+    <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\String\StringHash.h" />
     <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
-    <ClInclude Include="src\Utility\File\FileReader.h" />
-    <ClInclude Include="src\Utility\range.h" />
     <ClInclude Include="src\Utility\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Core\Graphics\Image.cpp" />
     <ClCompile Include="src\Core\Graphics\Primitives.cpp" />
@@ -146,11 +143,8 @@
     <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
-    <ClCompile Include="src\ECS\ecs.cpp" />
-    <ClCompile Include="src\ECS\ecsComponent.cpp" />
-    <ClCompile Include="src\ECS\ecsSystemList.cpp" />
-    <ClCompile Include="src\Font\BitmapFont.cpp" />
-    <ClCompile Include="src\Font\FontRenderer.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
+    <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
@@ -164,11 +158,14 @@
     <None Include="res\shader\shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="external\glfw\GLFW.vcxproj">
+    <ProjectReference Include="packages\glfw\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
-    <ProjectReference Include="external\glad\GLAD.vcxproj">
-      <Project>{5D4A857C-4981-860D-F26D-6C10DE83020F}</Project>
+    <ProjectReference Include="packages\glad\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
+    <ProjectReference Include="packages\imgui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -2,12 +2,9 @@
 
 #include <glad/glad.h>
 
-#include "Texture.h"
-#include "Shader.h"
+#include "ResourceManager.h"
 
 #include "Primitives.h"
-
-#include "Patterns/Singelton.h"
 
 const glm::vec4 BLACK = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 const glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -32,6 +29,8 @@ struct View
 	float h;
 
 	glm::mat4 mat;
+
+	 inline glm::vec2 toWorldCoord(const glm::vec2& pos) const { return glm::vec2(pos.x, h - pos.y); }
 };
 
 class Renderer : private Singleton<Renderer>
@@ -55,6 +54,9 @@ public:
 	// ----------------------------texture---------------------------------------------------------------------------
 	static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const glm::vec2& framePos = glm::vec2());
 	static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const std::vector<GLuint>& indices, const glm::vec2& framePos = glm::vec2());
+
+	// ----------------------------font------------------------------------------------------------------------------
+	static void RenderString(Font* font, const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader);
 
 	// ----------------------------primitives------------------------------------------------------------------------
 	static void DrawLine(const Line& line, const glm::vec4& color, const glm::mat4& view = Renderer::GetViewMat());

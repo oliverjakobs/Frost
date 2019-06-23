@@ -88,6 +88,11 @@ void Renderer::RenderTexture(Texture* tex, const std::string& sName, const glm::
 	}
 }
 
+void Renderer::RenderString(Font* font, const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader)
+{
+	font->onRender(text, x, y, view, shader);
+}
+
 void Renderer::DrawLine(const Line& line, const glm::vec4& color, const glm::mat4& view)
 {
 	Get().m_primitives.drawLine(line.start, line.end, color, view);

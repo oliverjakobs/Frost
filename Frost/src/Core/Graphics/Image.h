@@ -19,14 +19,14 @@ private:
 
 	RenderFlip m_flip;
 
-	int m_columns;
-	int m_rows;
+	size_t m_columns;
+	size_t m_rows;
 
 	float m_width;
 	float m_height;
+
 public:
-	Image(const std::string& src, float width, float height);
-	Image(const std::string& src, float width, float height, int rows, int columns);
+	Image(const std::string& src, float width, float height, size_t rows = 1, size_t columns = 1);
 	~Image();
 
 	void setRenderFlip(RenderFlip flip);

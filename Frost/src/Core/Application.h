@@ -2,20 +2,33 @@
 
 #include "Graphics.h"
 
-#include "Utility/utils.h"
+#include "Utility/Utils.h"
 #include "Utility/Timer.h"
+#include "Utility/Debugger.h"
+
 #include "Input/Input.h"
 
 #include "Maths/Maths.h"
 
-#include <GLFW/glfw3.h>
+#include "Event/ApplicationEvent.h"
+#include "Event/MouseEvent.h"
+#include "Event/KeyEvent.h"
+
+#include "ImGui/ImGuiRenderer.h"
+
+struct GLFWwindow;
 
 class Application
 {
 private:
-	GLFWwindow * m_window;
+	GLFWwindow* m_window;
 
+	ImGuiRenderer m_imguiRenderer;
+
+	bool m_running;
 	bool m_debug;
+
+	bool OnWindowClose(WindowCloseEvent& e);
 protected:
 	std::string m_title;
 
@@ -25,20 +38,23 @@ public:
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
-	void close();
-
-	void setDebugMode(bool b);
+	void enableDebugMode(bool b);
 	void toggleDebugMode();
 
 	void enableVsync(bool b);
 
-	void run();
+	void EventCallback(Event& e);
 
-	virtual void onInput() = 0;
+	// --------------------------| loop control |----------------------------
+	void run();
+	void close();
+
+	virtual void onEvent(Event& e) = 0;
 	virtual void onUpdate() = 0;
 	virtual void onRender() = 0;
 	virtual void onRenderDebug() const {}
 
+	// ----------------------------------------------------------------------
 	void setTitle(const std::string& title);
 
 	int getWidth() const;
