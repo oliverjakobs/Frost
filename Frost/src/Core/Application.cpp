@@ -4,7 +4,7 @@
 
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
-	close();
+	Close();
 	return true;
 }
 
@@ -166,17 +166,17 @@ Application::~Application()
 	glfwTerminate();
 }
 
-void Application::enableDebugMode(bool b)
+void Application::EnableDebugMode(bool b)
 {
 	m_debug = b;
 }
 
-void Application::toggleDebugMode()
+void Application::ToggleDebugMode()
 {
 	m_debug = !m_debug;
 }
 
-void Application::enableVsync(bool b)
+void Application::EnableVsync(bool b)
 {
 	glfwSwapInterval(b);
 }
@@ -186,25 +186,25 @@ void Application::EventCallback(Event& e)
 	EventDispatcher dispatcher(e);
 	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
 
-	onEvent(e);
+	OnEvent(e);
 }
 
-void Application::run()
+void Application::Run()
 {
 	// Game loop
 	while (m_running)
 	{
 		Timer::Start();
 
-		onUpdate();
+		OnUpdate();
 
 		Renderer::Start();
 		m_imguiRenderer.Start();
 
-		onRender();
+		OnRender();
 
 		if (m_debug)
-			onRenderDebug();
+			OnRenderDebug();
 
 		Renderer::Flush();
 		m_imguiRenderer.Flush(m_window);
@@ -216,37 +216,37 @@ void Application::run()
 	}
 }
 
-void Application::close()
+void Application::Close()
 {
 	m_running = false;
 }
 
-void Application::setTitle(const std::string& title)
+void Application::SetTitle(const std::string& title)
 {
 	glfwSetWindowTitle(m_window, title.c_str());
 }
 
-int Application::getWidth() const
+int Application::GetWidth() const
 {
 	return m_width;
 }
 
-int Application::getHeight() const
+int Application::GetHeight() const
 {
 	return m_height;
 }
 
-float Application::getWidthF() const
+float Application::GetWidthF() const
 {
 	return static_cast<float>(m_width);
 }
 
-float Application::getHeightF() const
+float Application::GetHeightF() const
 {
 	return static_cast<float>(m_height);
 }
 
-GLFWwindow* Application::getContext() const
+GLFWwindow* Application::GetContext() const
 {
 	return m_window;
 }

@@ -15,8 +15,8 @@ public:
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		enableDebugMode(true);
-		enableVsync(false);
+		EnableDebugMode(true);
+		EnableVsync(false);
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::AddShader("shader", new Shader("res/shader/shader.vert", "res/shader/shader.frag"));
@@ -37,12 +37,12 @@ public:
 		reg.assign<CameraComponent>(entity, Rect(glm::vec2(), map->getDimension() * map->getTileSize()), glm::vec2(0.0f, 30.0f));
 		reg.assign<ImageComponent>(entity, ResourceManager::GetImage("player"));
 		reg.assign<AnimationComponent>(entity, std::map<std::string, Animation>
-			{
-				AnimationDef("idle", Animation(0, 4, 0.2f)),
-				AnimationDef("walk", Animation(6, 6, 0.125f)),
-				AnimationDef("jump", Animation(12, 3, 0.3f)),
-				AnimationDef("fall", Animation(18, 2, 0.4f))
-			});
+		{
+			AnimationDef("idle", Animation(0, 4, 0.2f)),
+			AnimationDef("walk", Animation(6, 6, 0.125f)),
+			AnimationDef("jump", Animation(12, 3, 0.3f)),
+			AnimationDef("fall", Animation(18, 2, 0.4f))
+		});
 	}
 
 	~Frost()
@@ -50,7 +50,7 @@ public:
 		delete map;
 	}
 	
-	void onEvent(Event& e)
+	void OnEvent(Event& e) override
 	{
 		if (e.GetEventType() == EventType::KeyPressed)
 		{
@@ -59,16 +59,16 @@ public:
 			switch (keyPressed.GetKeyCode())
 			{
 			case KEY_ESCAPE:
-				close();
+				Close();
 				break;
 			case KEY_F7:
-				toggleDebugMode();
+				ToggleDebugMode();
 				break;
 			}
 		}
 	}
 
-	void onUpdate() override
+	void OnUpdate() override
 	{
 		map->onUpdate();
 
@@ -77,14 +77,14 @@ public:
 		AnimationSystem::Tick(reg);
 	}
 
-	void onRender() override
+	void OnRender() override
 	{
 		map->onRender();
 
 		ImageRenderSystem::Tick(reg);
 	}
 
-	void onRenderDebug() const override
+	void OnRenderDebug() const override
 	{
 		map->onRenderDebug();
 
@@ -103,7 +103,7 @@ int main()
 
 	Frost* game = new Frost();
 
-	game->run();
+	game->Run();
 
 	delete game;
 

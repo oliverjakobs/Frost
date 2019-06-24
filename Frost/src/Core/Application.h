@@ -38,28 +38,28 @@ public:
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
-	void enableDebugMode(bool b);
-	void toggleDebugMode();
+	void EnableDebugMode(bool b);
+	void ToggleDebugMode();
 
-	void enableVsync(bool b);
+	void EnableVsync(bool b);
 
 	void EventCallback(Event& e);
 
 	// --------------------------| loop control |----------------------------
-	void run();
-	void close();
+	void Run();
+	void Close();
 
-	virtual void onEvent(Event& e) = 0;
-	virtual void onUpdate() = 0;
-	virtual void onRender() = 0;
-	virtual void onRenderDebug() const {}
+	virtual void OnEvent(Event& e) = 0;
+	virtual void OnUpdate() = 0;
+	virtual void OnRender() = 0;
+	virtual void OnRenderDebug() const {}
 
 	// ----------------------------------------------------------------------
-	void setTitle(const std::string& title);
+	void SetTitle(const std::string& title);
 
-	int getWidth() const;
-	int getHeight() const;
-	float getWidthF() const;
-	float getHeightF() const;
-	GLFWwindow* getContext() const;
+	int GetWidth() const;
+	int GetHeight() const;
+	float GetWidthF() const;
+	float GetHeightF() const;
+	GLFWwindow* GetContext() const;
 };

@@ -44,9 +44,19 @@ void Body::onUpdate()
 
 	// check for slopes
 	if (m_velocity.x < 0.0f)
+	{
+		// far sensors
 		m_slopeDetected = checkSlope(m_position + glm::vec2(-(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), SlopeLeft);
+		// near sensors
+		m_slopeDetected |= checkSlope(m_position + glm::vec2(-(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), SlopeLeft);
+	}
 	else if (m_velocity.x > 0.0f)
+	{
+		// far sensors
 		m_slopeDetected = checkSlope(m_position + glm::vec2(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), SlopeRight);
+		// near sensors
+		m_slopeDetected |= checkSlope(m_position + glm::vec2(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), SlopeRight);
+	}
 	else
 		m_slopeDetected = false;
 
@@ -78,8 +88,12 @@ void Body::onRender() const
 		Renderer::DrawLine(getSensorRight(m_position, m_offsetHorizontal), RED);
 
 		// show slope sensors
-		//Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
-		//Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		// far sensors
+		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		// near sensors
+		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
 	}
 
 	// center/position of the body 
@@ -296,7 +310,7 @@ bool Body::checkRight(const glm::vec2& position, const glm::vec2& oldPosition, f
 
 bool Body::checkSlope(const glm::vec2& position, int slope) const
 {
-	Tile* tile = m_map->at(m_map->getIndex(position));
+	Tile* tile = m_map->at(m_map->getIndexF(position));
 
 	if (tile == nullptr)
 		return false;
