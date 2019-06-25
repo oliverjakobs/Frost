@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Maths/Maths.h"
+#include "TileConfig.h"
 
 class TileMap;
 

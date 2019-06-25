@@ -1,9 +1,15 @@
 #include "ResourceManager.h"
 
-#include "Utility/Debugger.h"
+#include "Log/Logger.h"
+
+#include <tinyxml2.h>
+
+using namespace tinyxml2;
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
+	DEBUG_ASSERT(!name.empty(), "Shader name missing");
+
 	Get().m_shaders[name] = unique_ptr<Shader>(shader);
 }
 
@@ -22,6 +28,8 @@ Shader* ResourceManager::GetShader(const std::string& name)
 
 void ResourceManager::AddImage(const std::string& name, Image* image)
 {
+	DEBUG_ASSERT(!name.empty(), "Image name missing");
+
 	Get().m_images[name] = unique_ptr<Image>(image);
 }
 
@@ -40,6 +48,8 @@ Image* ResourceManager::GetImage(const std::string& name)
 
 void ResourceManager::AddFont(const std::string& name, Font* font)
 {
+	DEBUG_ASSERT(!name.empty(), "Font name missing");
+
 	Get().m_fonts[name] = unique_ptr<Font>(font);
 }
 
@@ -53,5 +63,61 @@ Font* ResourceManager::GetFont(const std::string& name)
 	{
 		DEBUG_WARN("No such font: {0}", name);
 		return nullptr;
+	}
+}
+
+void ResourceManager::Load(const char* xmlPath)
+{
+	XMLDocument doc;
+	XMLError result = doc.LoadFile(xmlPath);
+
+	if (result != XML_SUCCESS)
+	{
+		DEBUG_WARN("Failed to load file ({0}): {1}", xmlPath, result);
+		return;
+	}
+
+	XMLElement* root = doc.FirstChildElement("Resources");
+
+	if (root == nullptr)
+	{
+		DEBUG_WARN("Root not found ({0})", xmlPath);
+		return;
+	}
+
+	// shaders 
+	for (XMLElement* elem = root->FirstChildElement("Shader"); elem != nullptr; elem = elem->NextSiblingElement("Shader"))
+	{
+		// TODO: error checking
+		std::string name = elem->Attribute("name");
+		std::string vert = elem->Attribute("vert");
+		std::string frag = elem->Attribute("frag");
+
+		AddShader(name, new Shader(vert, frag));
+	}
+
+	// images 
+	for (XMLElement* elem = root->FirstChildElement("Image"); elem != nullptr; elem = elem->NextSiblingElement("Image"))
+	{
+		std::string name = elem->Attribute("name");
+		std::string src = elem->Attribute("src");
+		float width = elem->FloatAttribute("w");
+		float height = elem->FloatAttribute("h");
+		unsigned int rows = elem->IntAttribute("row", 1);
+		unsigned int columns = elem->IntAttribute("col", 1);
+
+		AddImage(name, new Image(src, width, height, rows, columns));
+	}
+
+	// Fonts 
+	for (XMLElement* elem = root->FirstChildElement("Font"); elem != nullptr; elem = elem->NextSiblingElement("Font"))
+	{
+		std::string name = elem->Attribute("name");
+		std::string src = elem->Attribute("src");
+		float width = elem->FloatAttribute("w");
+		float height = elem->FloatAttribute("h");
+		float spacing = elem->FloatAttribute("spacing");
+
+		AddFont(name, new BitmapFont(src, width, height, spacing));
 	}
 }

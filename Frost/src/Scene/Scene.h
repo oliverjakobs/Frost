@@ -2,27 +2,38 @@
 
 #include "TilePhysics/Tilemap.h"
 
+#include "Event/Event.h"
+#include "ECS/Systems.h"
+
 class Scene
 {
 protected:
+	std::string m_name;
+
 	unique_ptr<TileMap> m_map;
+
+	entt::registry m_registry;
 public:
-	Scene(TileMap* map);
+	Scene(const std::string& name, TileMap* map);
 	~Scene();
+
+	void SetName(const std::string& name);
 	
-	virtual void onEntry() {};
-	virtual void onExtit() {};
+	virtual void OnEntry() {};
+	virtual void OnExtit() {};
 
-	void onInput();
-	void onUpdate();
-	void onRender() const;
-	void onRenderDebug() const;
+	void OnEvent(Event& e);
+	void OnUpdate();
+	void OnRender();
+	void OnRenderDebug();
 
-	virtual void onUserInput() {};
-	virtual void onUserUpdate() {};
-	virtual void onUserRender() const {};
-	virtual void onUserRenderDebug() const {};
+	virtual void OnUserEvent(Event& e) {};
+	virtual void OnUserUpdate() {};
+	virtual void OnUserRender() const {};
+	virtual void OnUserRenderDebug() const {};
 
-	TileMap* getMap() const;
-	Rect getConstraint() const;
+	TileMap* GetMap() const;
+	Rect GetConstraint() const;
+	entt::registry& GetRegistry();
+	std::string GetName() const;
 };

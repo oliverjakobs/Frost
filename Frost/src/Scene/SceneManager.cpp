@@ -1,13 +1,15 @@
 #include "SceneManager.h"
 
-#include "Utility/Debugger.h"
+#include "Log/Logger.h"
+#include "String/StringUtils.h"
+#include "String/StringHash.h"
 
-void SceneManager::AddScene(const std::string& name, Scene* scene)
+void SceneManager::AddScene(Scene* scene)
 {
-	Get().m_scenes[name] = unique_ptr<Scene>(scene);
+	Get().m_scenes[GenerateHash(scene->GetName().c_str())] = unique_ptr<Scene>(scene);
 
 	if (Get().m_activeScene == nullptr)
-		ChangeScene(name);
+		ChangeScene(scene->GetName());
 }
 
 void SceneManager::ChangeScene(const std::string& name)
@@ -20,42 +22,42 @@ void SceneManager::ChangeScene(const std::string& name)
 		{
 			// Exit old Scene
 			if (Get().m_activeScene != nullptr)
-				Get().m_activeScene->onExtit();
+				Get().m_activeScene->OnExtit();
 
 			Get().m_activeScene = s;
 			Get().m_activeName = name;
 
 			// Enter new scene
-			Get().m_activeScene->onEntry();
+			Get().m_activeScene->OnEntry();
 		}
 	}
 }
 
-void SceneManager::OnInput()
+void SceneManager::OnEvent(Event& e)
 {
-	Get().m_activeScene->onInput();
+	GetActiveScene()->OnEvent(e);
 }
 
 void SceneManager::OnUpdate()
 {
-	Get().m_activeScene->onUpdate();
+	GetActiveScene()->OnUpdate();
 }
 
 void SceneManager::OnRender()
 {
-	Get().m_activeScene->onRender();
+	GetActiveScene()->OnRender();
 }
 
 void SceneManager::OnRenderDebug()
 {
-	Get().m_activeScene->onRenderDebug();
+	GetActiveScene()->OnRenderDebug();
 }
 
 Scene* SceneManager::GetScene(const std::string& name)
 {
 	try
 	{
-		return Get().m_scenes.at(name).get();
+		return Get().m_scenes.at(GenerateHash(name.c_str())).get();
 	}
 	catch (std::out_of_range)
 	{

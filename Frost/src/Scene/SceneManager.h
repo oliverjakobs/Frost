@@ -2,18 +2,20 @@
 
 #include "Scene.h"
 
+#include <unordered_map>
+
 class SceneManager : private Singleton<SceneManager>
 {
 private:
-	std::map<std::string, unique_ptr<Scene>> m_scenes;
+	std::unordered_map<uint32_t, unique_ptr<Scene>> m_scenes;
 
 	Scene* m_activeScene;
 	std::string m_activeName;
 public:
-	static void AddScene(const std::string& name, Scene* scene);
+	static void AddScene(Scene* scene);
 	static void ChangeScene(const std::string& name);
 
-	static void OnInput();
+	static void OnEvent(Event& e);
 	static void OnUpdate();
 	static void OnRender();
 	static void OnRenderDebug();

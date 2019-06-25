@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Utility/Debugger.h"
+#include "Log/Logger.h"
 
 #include "Renderer.h"
 #include "ResourceManager.h"

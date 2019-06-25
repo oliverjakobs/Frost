@@ -1,10 +1,12 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 #include "Components.h"
+
 #include "Input/Input.h"
 #include "Utility/Timer.h"
-
-#include <entt/entt.hpp>
+#include "String/StringUtils.h"
 
 struct ImageRenderSystem
 {

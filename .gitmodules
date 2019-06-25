@@ -9,3 +9,6 @@
 	url = https://github.com/skypjack/entt
 [submodule "Frost/packages/GLFW"]
 	url = https://github.com/oliverjakobs/glfw
+[submodule "Frost/packages/tinyxml2"]
+	path = Frost/packages/tinyxml2
+	url = https://github.com/oliverjakobs/tinyxml2

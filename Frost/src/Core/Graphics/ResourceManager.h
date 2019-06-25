@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Font/Font.h"
+#include "Font/BitmapFont.h"
 
 #include "Utility/Utils.h"
 #include "Patterns/Singelton.h"
@@ -23,4 +23,6 @@ public:
 
 	static void AddFont(const std::string& name, Font* font);
 	static Font* GetFont(const std::string& name);
+
+	static void Load(const char* xmlPath);
 };

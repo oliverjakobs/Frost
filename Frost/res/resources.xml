@@ -1,0 +1,11 @@
+<Resources>
+  <!-- Shaders -->
+  <Shader name="shader" vert="res/shader/shader.vert" frag="res/shader/shader.frag"/>
+  <!-- Images -->
+  <Image name="player" src="res/images/player.png" w="40" h="60" row="4" col="6"/>
+  <Image name="door" src="res/images/door.png" w="46" h="64"/>
+  <Image name="wall" src="res/images/door.png" w="20" h="200"/>
+  <Image name="tileset" src="res/images/tiles.png" w="32" h="32" row="1" col="5"/>
+  <!-- Fonts -->
+  <Font name="blocky" type="Bitmap" src="res/images/blocky_font.png" w="20" h="28" spacing="2"/>
+</Resources>

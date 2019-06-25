@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -110,6 +110,7 @@
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\MouseEvent.h" />
+    <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Log\Logger.h" />
@@ -120,17 +121,17 @@
     <ClInclude Include="src\Patterns\Command.h" />
     <ClInclude Include="src\Patterns\Observer.h" />
     <ClInclude Include="src\Patterns\Singelton.h" />
+    <ClInclude Include="src\Scene\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\String\StringHash.h" />
+    <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
+    <ClInclude Include="src\TilePhysics\TileConfig.h" />
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
-    <ClInclude Include="src\Utility\Debugger.h" />
-    <ClInclude Include="src\Utility\File\FileReader.h" />
     <ClInclude Include="src\Utility\Flags.h" />
-    <ClInclude Include="src\Utility\String\StringHash.h" />
-    <ClInclude Include="src\Utility\String\StringUtils.h" />
     <ClInclude Include="src\Utility\Timer.h" />
-    <ClInclude Include="src\Utility\utils.h" />
+    <ClInclude Include="src\Utility\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Scene\EntityMananger.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
@@ -166,6 +168,9 @@
     </ProjectReference>
     <ProjectReference Include="packages\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="packages\tinyxml2\TinyXml2.vcxproj">
+      <Project>{4C38479D-3805-A2A8-611E-90504D4AD736}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

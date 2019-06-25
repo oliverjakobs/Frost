@@ -8,6 +8,14 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 	return true;
 }
 
+void Application::EventCallback(Event& e)
+{
+	EventDispatcher dispatcher(e);
+	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+
+	OnEvent(e);
+}
+
 Application::Application(const std::string& title, int width, int height)
 	: m_title(title), m_width(width), m_height(height)
 {
@@ -179,14 +187,6 @@ void Application::ToggleDebugMode()
 void Application::EnableVsync(bool b)
 {
 	glfwSwapInterval(b);
-}
-
-void Application::EventCallback(Event& e)
-{
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
-
-	OnEvent(e);
 }
 
 void Application::Run()

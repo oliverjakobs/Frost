@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-#include "Utility/Debugger.h"
+#include "Log/Logger.h"
 
 Texture::Texture(const char* path, unsigned int slot)
 	: m_slot(slot)

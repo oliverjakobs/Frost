@@ -6,7 +6,7 @@ Body::Body(TileMap* map, float x, float y, float hW, float hH, BodyType type)
 	: m_map(map), m_position(glm::vec2(x, y)), m_halfDimension(glm::vec2(hW, hH)), m_type(type)
 {
 	m_velocity = glm::vec2();
-	m_sensorOffset = 2.0f;
+	m_sensorOffset = TILE_SENSOR_OFFSET;
 
 	m_collidesBottom = false;
 	m_collidesTop = false;
@@ -31,13 +31,11 @@ void Body::onUpdate()
 		return;
 
 	// ------------------ World Collision ----------------------------------
-	// vary gravity scale to keep on slope
 	if (m_onSlope && m_velocity.y <= 0.0f)
-		m_gravityScale = 100.0f;
+		m_velocity += m_map->getGravity() * m_gravityScale * TILE_SLOPE_GRIP * Timer::GetDeltaTime();
 	else
-		m_gravityScale = 1.0f;
+		m_velocity += m_map->getGravity() * m_gravityScale * Timer::GetDeltaTime();
 
-	m_velocity += m_map->getGravity() * m_gravityScale * Timer::GetDeltaTime();
 
 	m_offsetHorizontal = glm::vec2(m_sensorOffset, m_onSlope ? 12.0f : 2.0f);
 	m_offsetVertical = glm::vec2(2.0f, m_sensorOffset);
@@ -79,6 +77,7 @@ void Body::onRender() const
 {
 	Renderer::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, m_onSlope ? BLUE : GREEN);
 
+#ifdef TILE_SHOW_SENSOR
 	// showing the sensors (only for dynamic bodies)
 	if (m_type == BodyTypeDynamic)
 	{
@@ -87,6 +86,7 @@ void Body::onRender() const
 		Renderer::DrawLine(getSensorLeft(m_position, m_offsetHorizontal), RED);
 		Renderer::DrawLine(getSensorRight(m_position, m_offsetHorizontal), RED);
 
+#ifdef TILE_SHOW_SLOPE_SENSOR
 		// show slope sensors
 		// far sensors
 		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->getTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
@@ -94,7 +94,9 @@ void Body::onRender() const
 		// near sensors
 		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
 		Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->getTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+#endif
 	}
+#endif
 
 	// center/position of the body 
 	Renderer::FillCircle(m_position, 2.0f, BLACK);

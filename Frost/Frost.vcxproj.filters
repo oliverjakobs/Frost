@@ -19,8 +19,14 @@
     <Filter Include="src\Core\Graphics\Font">
       <UniqueIdentifier>{AB89F137-9783-1A8A-80F0-B09A6C8980F6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ECS">
+      <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Event">
       <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\File">
+      <UniqueIdentifier>{7C5E1ECF-682B-79DA-9144-67827D70AE68}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ImGui">
       <UniqueIdentifier>{170E22B3-8378-D629-CCB6-87CF3860B47E}</UniqueIdentifier>
@@ -40,17 +46,14 @@
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\String">
+      <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\TilePhysics">
       <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Utility">
       <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Utility\File">
-      <UniqueIdentifier>{9F7B87CD-8B74-A61F-B4A6-8BA4A0FE852B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Utility\String">
-      <UniqueIdentifier>{F666726C-E24A-33C2-4BAB-2D1537AE1D44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +96,12 @@
     <ClInclude Include="src\Core\Graphics\Texture.h">
       <Filter>src\Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Event\ApplicationEvent.h">
       <Filter>src\Event</Filter>
     </ClInclude>
@@ -104,6 +113,9 @@
     </ClInclude>
     <ClInclude Include="src\Event\MouseEvent.h">
       <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\File\FileReader.h">
+      <Filter>src\File</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGui\ImGuiRenderer.h">
       <Filter>src\ImGui</Filter>
@@ -135,41 +147,39 @@
     <ClInclude Include="src\Patterns\Singelton.h">
       <Filter>src\Patterns</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scene\EntityMananger.h">
+      <Filter>src\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\String\StringHash.h">
+      <Filter>src\String</Filter>
+    </ClInclude>
+    <ClInclude Include="src\String\StringUtils.h">
+      <Filter>src\String</Filter>
+    </ClInclude>
     <ClInclude Include="src\TilePhysics\Body.h">
+      <Filter>src\TilePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TilePhysics\TileConfig.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
     <ClInclude Include="src\TilePhysics\Tilemap.h">
       <Filter>src\TilePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Debugger.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\File\FileReader.h">
-      <Filter>src\Utility\File</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\String\StringHash.h">
-      <Filter>src\Utility\String</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\String\StringUtils.h">
-      <Filter>src\Utility\String</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\utils.h">
+    <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Components.h" />
-    <ClInclude Include="src\ECS\Systems.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -210,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\EntityMananger.cpp">
+      <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>

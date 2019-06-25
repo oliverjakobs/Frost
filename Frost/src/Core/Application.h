@@ -4,7 +4,6 @@
 
 #include "Utility/Utils.h"
 #include "Utility/Timer.h"
-#include "Utility/Debugger.h"
 
 #include "Input/Input.h"
 
@@ -29,6 +28,7 @@ private:
 	bool m_debug;
 
 	bool OnWindowClose(WindowCloseEvent& e);
+	void EventCallback(Event& e);
 protected:
 	std::string m_title;
 
@@ -43,16 +43,15 @@ public:
 
 	void EnableVsync(bool b);
 
-	void EventCallback(Event& e);
 
-	// --------------------------| loop control |----------------------------
+	// --------------------------| Game Loop |-------------------------------
 	void Run();
 	void Close();
 
 	virtual void OnEvent(Event& e) = 0;
 	virtual void OnUpdate() = 0;
 	virtual void OnRender() = 0;
-	virtual void OnRenderDebug() const {}
+	virtual void OnRenderDebug() {}
 
 	// ----------------------------------------------------------------------
 	void SetTitle(const std::string& title);

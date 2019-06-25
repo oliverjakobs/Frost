@@ -1,5 +1,8 @@
 #include "Tilemap.h"
 
+#include "String/StringUtils.h"
+#include "File/FileReader.h"
+
 TileMap::TileMap(Image* image, const std::string& map, const glm::vec2& gravity)
 	: m_image(image), m_gravity(gravity)
 {

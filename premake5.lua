@@ -14,6 +14,7 @@ group "Packages"
 include "Frost/packages/glfw"
 include "Frost/packages/glad"
 include "Frost/packages/imgui"
+include "Frost/packages/tinyxml2"
 
 group ""
 
@@ -41,6 +42,7 @@ project "Frost"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"TinyXml2",
 		"opengl32"
 	}
 
@@ -49,6 +51,7 @@ project "Frost"
 		"%{prj.name}/src",
 		"%{prj.name}/packages/include",
 		"%{prj.name}/packages/imgui",
+		"%{prj.name}/packages/tinyxml2",
 		"%{prj.name}/packages/entt/single_include",
 		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",
