@@ -12,3 +12,6 @@
 [submodule "Frost/packages/tinyxml2"]
 	path = Frost/packages/tinyxml2
 	url = https://github.com/oliverjakobs/tinyxml2
+[submodule "Frost/packages/json"]
+	path = Frost/packages/json
+	url = https://github.com/nlohmann/json
