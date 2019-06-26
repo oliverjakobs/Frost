@@ -21,7 +21,7 @@
     "bodyPosY": 30.0
   },
   "camera": {
-    "contraint": {
+    "constraint": {
       "get": "map"
     },
     "offsetX": 0.0,

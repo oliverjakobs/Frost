@@ -195,6 +195,7 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\JSONParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -260,6 +261,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\JSONParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt">
