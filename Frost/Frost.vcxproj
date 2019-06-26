@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\include;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -161,12 +161,9 @@
     <None Include="res\maps\raycast.txt" />
     <None Include="res\maps\station1.txt" />
     <None Include="res\maps\station2.txt" />
-    <None Include="res\resources.json" />
     <None Include="res\resources.xml" />
     <None Include="res\scripts\entity.json" />
-    <None Include="res\scripts\entity.xml">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="res\scripts\entity.xml" />
     <None Include="res\scripts\file.xml" />
     <None Include="res\scripts\resources.lua" />
     <None Include="res\shader\shader.frag" />
@@ -197,9 +194,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties res_4scripts_4entity_1json__JSONSchema="http://json.schemastore.org/ansible-stable-2.5" res_4resources_1json__JSONSchema="http://json.schemastore.org/clasp" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

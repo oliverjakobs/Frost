@@ -55,6 +55,9 @@
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script">
+      <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\String">
       <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
     </Filter>
@@ -165,6 +168,9 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\XMLParser.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
     <ClInclude Include="src\String\StringHash.h">
       <Filter>src\String</Filter>
     </ClInclude>
@@ -189,7 +195,6 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\XMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -240,6 +245,9 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\XMLParser.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
@@ -252,7 +260,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt">
@@ -266,6 +273,9 @@
     </None>
     <None Include="res\resources.xml">
       <Filter>res</Filter>
+    </None>
+    <None Include="res\scripts\entity.json">
+      <Filter>res\scripts</Filter>
     </None>
     <None Include="res\scripts\entity.xml">
       <Filter>res\scripts</Filter>
@@ -282,8 +292,6 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
-    <None Include="res\resources.json" />
-    <None Include="res\scripts\entity.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">

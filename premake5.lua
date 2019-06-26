@@ -59,6 +59,7 @@ project "Frost"
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/tinyxml2",
 		"%{prj.name}/packages/entt/single_include",
+		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",
 		"%{prj.name}/packages/glad/include"

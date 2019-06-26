@@ -85,17 +85,37 @@ public:
 	}
 };
 
+#include <nlohmann/json.hpp>
+#include "File/FileReader.h"
+
+using json = nlohmann::json;
 
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
+	/*
 	Frost* game = new Frost();
 
 	game->Run();
 
-	delete game;
+	delete game;*/
+
+	auto j = json::parse(ReadFile("res/scripts/entity.json"));
+
+	//int x = j["transform"]["posZ"];
+
+	float x;
+
+	if (j.at("transform").find("height") != j.at("transform").end())
+		x = j.at("transform").at("height");
+	else
+		x = -1;
+
+	DEBUG_INFO("{0}", x);
+
+	system("Pause");
 
 	return 0;
 }

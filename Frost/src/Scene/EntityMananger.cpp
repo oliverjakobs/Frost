@@ -4,15 +4,14 @@
 
 #include "Log/Logger.h"
 
-
-int EntityManager::CreateEntity(Scene* scene, const char* xmlPath)
+uint32_t EntityManager::CreateEntityXML(Scene* scene, const std::string& path)
 {
-	if (scene == nullptr)
-		return -1;
+	DEBUG_ASSERT(scene, "Scene is null");
+	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
 
-	XMLParser xml(xmlPath);
+	XMLParser xml(path.c_str());
 
-	DEBUG_ASSERT(xml.HasRoot("Entity"), "Root not found ({0})", xmlPath)
+	DEBUG_ASSERT(xml.HasRoot("Entity"), "Root not found ({0})", path)
 
 	// create Entity
 	auto entity = scene->GetRegistry().create();
@@ -46,7 +45,7 @@ int EntityManager::CreateEntity(Scene* scene, const char* xmlPath)
 	{
 		XMLElement* body = phys->FirstChildElement("Body");
 
-		DEBUG_ASSERT(body, "PhysicsComponent is missing a body ({0})", xmlPath);
+		DEBUG_ASSERT(body, "PhysicsComponent is missing a body ({0})", path);
 
 		glm::vec2 position = XMLParser::to_vec2(body->FirstChildElement("Position"));
 		glm::vec2 halfDimension = XMLParser::to_vec2(body->FirstChildElement("HalfDimension"));
@@ -102,6 +101,30 @@ int EntityManager::CreateEntity(Scene* scene, const char* xmlPath)
 
 		scene->GetRegistry().assign<AnimationComponent>(entity, animations);
 	}
+
+	return entity;
+}
+
+uint32_t EntityManager::CreateEntityJSON(Scene* scene, const std::string& path)
+{
+	DEBUG_ASSERT(scene, "Scene is null");
+	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
+
+
+	// create Entity
+	auto entity = scene->GetRegistry().create();
+
+	// TransformComponent
+
+	// MovementComponent
+
+	// PhysicsComponent
+
+	// CameraComponent
+
+	// ImageComponent
+
+	// AnimationComponent
 
 	return entity;
 }
