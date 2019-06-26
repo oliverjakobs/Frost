@@ -6,7 +6,6 @@
 class Frost : public Application
 {
 private:
-	unsigned int entity;
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -19,11 +18,11 @@ public:
 		EnableVsync(false);
 
 		// ---------------| Load resources|----------------------------------
-		ResourceManager::Load("res/resources.xml");
+		ResourceManager::Load("res/resources.json");
 
 		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
 
-		entity = EntityManager::CreateEntityJSON(scene, "res/scripts/entity.json");
+		scene->AddEntity("player", "res/scripts/player.json");
 
 		SceneManager::AddScene(scene);
 	}
@@ -74,14 +73,17 @@ public:
 		EnableVsync(select);
 		ImGui::End();
 
-		////Entity
-		//ImGui::Begin("Entity");
+		//Entity
+		ImGui::Begin("Player");
 
-		//auto trans = SceneManager::GetActiveScene()->GetRegistry().get<TransformComponent>(entity);
+		unsigned int entity = SceneManager::GetActiveScene()->GetEntity("player");
+		auto transform = SceneManager::GetActiveScene()->GetRegistry().get<TransformComponent>(entity);
+		auto animation = SceneManager::GetActiveScene()->GetRegistry().get<AnimationComponent>(entity);
 
-		//ImGui::Text("Position: %f, %f", trans.position.x, trans.position.y);
+		ImGui::Text("Position: %4.2f, %4.2f", transform.position.x, transform.position.y);
+		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
-		//ImGui::End();
+		ImGui::End();
 	}
 };
 

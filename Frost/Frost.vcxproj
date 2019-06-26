@@ -163,11 +163,8 @@
     <None Include="res\maps\raycast.txt" />
     <None Include="res\maps\station1.txt" />
     <None Include="res\maps\station2.txt" />
-    <None Include="res\resources.xml" />
-    <None Include="res\scripts\entity.json" />
-    <None Include="res\scripts\entity.xml" />
-    <None Include="res\scripts\file.xml" />
-    <None Include="res\scripts\resources.lua" />
+    <None Include="res\resources.json" />
+    <None Include="res\scripts\player.json" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

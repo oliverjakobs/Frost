@@ -33,7 +33,7 @@ project "Frost"
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
 		--Resources
-		"%{prj.name}/res/resources.xml",
+		"%{prj.name}/res/resources.json",
 		"%{prj.name}/res/shader/*.vert",
 		"%{prj.name}/res/shader/*.frag",
 		"%{prj.name}/res/images/**.png",
@@ -56,6 +56,7 @@ project "Frost"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/packages/include",
+		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/tinyxml2",
 		"%{prj.name}/packages/entt/single_include",

@@ -273,26 +273,15 @@
     <None Include="res\maps\station2.txt">
       <Filter>res\maps</Filter>
     </None>
-    <None Include="res\resources.xml">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\scripts\entity.json">
-      <Filter>res\scripts</Filter>
-    </None>
-    <None Include="res\scripts\entity.xml">
-      <Filter>res\scripts</Filter>
-    </None>
-    <None Include="res\scripts\file.xml">
-      <Filter>res\scripts</Filter>
-    </None>
-    <None Include="res\scripts\resources.lua">
-      <Filter>res\scripts</Filter>
-    </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\resources.json" />
+    <None Include="res\scripts\player.json">
+      <Filter>res\scripts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

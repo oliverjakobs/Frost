@@ -2,6 +2,8 @@
 
 #include "ImGui/ImGuiRenderer.h"
 
+#include "EntityMananger.h"
+
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {
@@ -15,6 +17,19 @@ Scene::~Scene()
 void Scene::SetName(const std::string& name)
 {
 	m_name = name;
+}
+
+void Scene::AddEntity(const std::string& name, const std::string& path)
+{
+	m_entities.insert({ name, EntityManager::CreateEntity(this, path) });
+}
+
+unsigned int Scene::GetEntity(const std::string& name) const
+{
+	if (m_entities.find(name) != m_entities.end())
+		return m_entities.at(name);
+
+	return 0;
 }
 
 void Scene::OnEvent(Event& e)

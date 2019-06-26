@@ -3,6 +3,9 @@
 #include "Log/Logger.h"
 
 #include "Script/XMLParser.h"
+#include "Font/BitmapFont.h"
+
+#include "Script/JSONParser.h"
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
@@ -64,45 +67,50 @@ Font* ResourceManager::GetFont(const std::string& name)
 	}
 }
 
-void ResourceManager::Load(const char* xmlPath)
+void ResourceManager::Load(const std::string& path)
 {
-	XMLParser xml(xmlPath);
+	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
 
-	DEBUG_ASSERT(xml.HasRoot("Resources"), "Root not found ({0})", xmlPath)
+	json root = jsonParseFile(path);
 
 	// shaders 
-	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Shader"); elem != nullptr; elem = elem->NextSiblingElement("Shader"))
+	if (root.find("shaders") != root.end())
 	{
-		// TODO: error checking
-		std::string name = elem->Attribute("name");
-		std::string vert = elem->Attribute("vert");
-		std::string frag = elem->Attribute("frag");
+		for (auto&[name, shader] : root.at("shaders").items())
+		{
+			std::string vert = jsonToString(shader, "vert");
+			std::string frag = jsonToString(shader, "frag");
 
-		AddShader(name, new Shader(vert, frag));
+			AddShader(name, new Shader(vert, frag));
+		}
 	}
 
 	// images 
-	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Image"); elem != nullptr; elem = elem->NextSiblingElement("Image"))
+	if (root.find("images") != root.end())
 	{
-		std::string name = elem->Attribute("name");
-		std::string src = elem->Attribute("src");
-		float width = elem->FloatAttribute("w");
-		float height = elem->FloatAttribute("h");
-		unsigned int rows = elem->IntAttribute("row", 1);
-		unsigned int columns = elem->IntAttribute("col", 1);
+		for (auto&[name, image] : root.at("images").items())
+		{
+			std::string src = jsonToString(image, "src");
+			float width = jsonToFloat(image, "width");
+			float height = jsonToFloat(image, "height");
+			unsigned int rows = jsonToInt(image, "rows", 1);
+			unsigned int columns = jsonToInt(image, "columns", 1);
 
-		AddImage(name, new Image(src, width, height, rows, columns));
+			AddImage(name, new Image(src, width, height, rows, columns));
+		}
 	}
 
 	// Fonts 
-	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Font"); elem != nullptr; elem = elem->NextSiblingElement("Font"))
+	if (root.find("fonts") != root.end())
 	{
-		std::string name = elem->Attribute("name");
-		std::string src = elem->Attribute("src");
-		float width = elem->FloatAttribute("w");
-		float height = elem->FloatAttribute("h");
-		float spacing = elem->FloatAttribute("spacing");
+		for (auto&[name, image] : root.at("fonts").items())
+		{
+			std::string src = jsonToString(image, "src");
+			float width = jsonToFloat(image, "width");
+			float height = jsonToFloat(image, "height");
+			float spacing = jsonToFloat(image, "spacing");
 
-		AddFont(name, new BitmapFont(src, width, height, spacing));
+			AddFont(name, new BitmapFont(src, width, height, spacing));
+		}
 	}
 }

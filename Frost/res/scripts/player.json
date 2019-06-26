@@ -1,9 +1,13 @@
 ﻿{
   "transform": {
-    "posX": 400.0,
-    "posY": 200.0,
-    "width": 0.0,
-    "height": 0.0
+    "position": [
+      400.0,
+      200.0
+    ],
+    "dimension": [
+      0.0,
+      0.0
+    ]
   },
   "movement": {
     "speed": 400.0,
@@ -12,20 +16,28 @@
   "physics": {
     "body": {
       "type": "BodyTypeDynamic",
-      "posX": 400.0,
-      "posY": 200.0,
-      "halfWidth": 20.0,
-      "halfHeight": 30.0
+      "position": [
+        400.0,
+        200.0
+      ],
+      "halfDimension": [
+        20.0,
+        30.0 
+      ]
     },
-    "bodyPosX": 0.0,
-    "bodyPosY": 30.0
+    "bodyPos": [
+      0.0,
+      30.0
+    ]
   },
   "camera": {
     "constraint": {
       "get": "map"
     },
-    "offsetX": 0.0,
-    "offsetY": 30.0
+    "offset": [
+      0.0,
+      30.0
+    ]
   },
   "image": {
     "resource": "player"

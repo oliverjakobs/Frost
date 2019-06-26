@@ -161,7 +161,7 @@ Application::Application(const std::string& title, int width, int height)
 
 	// initialize imgui
 	//m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
-	m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard);
+	m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
 	m_running = true;
 }

@@ -5,8 +5,12 @@
 
 #include <nlohmann/json.hpp>
 
-glm::vec2 jsonToVec2(nlohmann::json j, const std::string& x, const std::string& y, const glm::vec2& default = glm::vec2());
-float jsonToFloat(nlohmann::json j, const std::string& f, float default = 0.0f);
-int jsonToInt(nlohmann::json j, const std::string& i, int default = 0.0f);
+using json = nlohmann::json;
 
-std::string jsonToString(nlohmann::json j, const std::string& s, const std::string& default = "");
+json jsonParseFile(const std::string& path);
+
+glm::vec2 jsonToVec2(json j, const std::string& name, const glm::vec2& default = glm::vec2());
+float jsonToFloat(json j, const std::string& name, float default = 0.0f);
+int jsonToInt(json j, const std::string& name, int default = 0.0f);
+
+std::string jsonToString(json j, const std::string& s, const std::string& default = "");
