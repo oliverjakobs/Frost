@@ -4,6 +4,15 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\images">
+      <UniqueIdentifier>{34EBD737-20A3-1985-89AA-F2E07581B475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\maps">
+      <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\scripts">
+      <UniqueIdentifier>{A6037D1E-12B9-F513-9BAD-EFEA0762EC17}</UniqueIdentifier>
+    </Filter>
     <Filter Include="res\shader">
       <UniqueIdentifier>{35FAD04E-21B2-129C-8AB9-EBF77690AD8C}</UniqueIdentifier>
     </Filter>
@@ -180,6 +189,7 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\XMLParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -242,13 +252,57 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\XMLParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\maps\raycast.txt">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\maps\station1.txt">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\maps\station2.txt">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\resources.xml">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\scripts\entity.xml">
+      <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\scripts\file.xml">
+      <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\scripts\resources.lua">
+      <Filter>res\scripts</Filter>
+    </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\resources.json" />
+    <None Include="res\scripts\entity.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\images\blocky_font.png">
+      <Filter>res\images</Filter>
+    </Image>
+    <Image Include="res\images\box.png">
+      <Filter>res\images</Filter>
+    </Image>
+    <Image Include="res\images\door.png">
+      <Filter>res\images</Filter>
+    </Image>
+    <Image Include="res\images\num_font.png">
+      <Filter>res\images</Filter>
+    </Image>
+    <Image Include="res\images\player.png">
+      <Filter>res\images</Filter>
+    </Image>
+    <Image Include="res\images\tiles.png">
+      <Filter>res\images</Filter>
+    </Image>
   </ItemGroup>
 </Project>

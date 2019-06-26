@@ -57,7 +57,16 @@ TileMap::~TileMap()
 
 Body* TileMap::createBody(float x, float y, float hWidth, float hHeight, BodyType type)
 {
-	Body* body = new Body(this, x, y, hWidth, hHeight, type);
+	Body* body = new Body(this, glm::vec2(x, y), glm::vec2(hWidth, hHeight), type);
+
+	m_bodies.push_back(unique_ptr<Body>(body));
+
+	return body;
+}
+
+Body* TileMap::createBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
+{
+	Body* body = new Body(this, pos, halfDim, type);
 
 	m_bodies.push_back(unique_ptr<Body>(body));
 
@@ -293,6 +302,11 @@ glm::vec2 TileMap::getDimension() const
 	return glm::vec2(m_width, m_height);
 }
 
+Rect TileMap::getConstraint() const
+{
+	return  Rect(glm::vec2(), getDimension() * m_tileSize);
+}
+
 unsigned int TileMap::getIndexF(float x, float y) const
 {
 	return getIndex(getTilePos(glm::vec2(x, y)));
@@ -315,7 +329,7 @@ unsigned int TileMap::getIndex(const glm::ivec2& pos) const
 
 Tile* TileMap::at(unsigned int index)
 {
-	if (index > m_tiles.size())
+	if (index >= m_tiles.size())
 		return nullptr;
 
 	return &m_tiles.at(index);

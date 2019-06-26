@@ -12,12 +12,10 @@
 		<BodyPosition x="0" y="30"/>
 	</PhysicsComponent>
 	<CameraComponent>
-		<Constrain get="map"/>
+		<Constraint get="map"/>
 		<Offset x="0" y="30"/>
 	</CameraComponent>
-	<ImageComponent>
-		<Resource name="player"/>
-	</ImageComponent>
+	<ImageComponent name="player" />
 	<AnimationComponent>
 		<Animation name="idle" start="0" length="4" delay="0.2"/>
 		<Animation name="walk" start="6" length="6" delay="0.125"/>

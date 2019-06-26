@@ -1,9 +1,10 @@
 #include "Body.h"
 
 #include "Tilemap.h"
+#include "String/StringUtils.h"
 
-Body::Body(TileMap* map, float x, float y, float hW, float hH, BodyType type)
-	: m_map(map), m_position(glm::vec2(x, y)), m_halfDimension(glm::vec2(hW, hH)), m_type(type)
+Body::Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
+	: m_map(map), m_position(pos), m_halfDimension(halfDim), m_type(type)
 {
 	m_velocity = glm::vec2();
 	m_sensorOffset = TILE_SENSOR_OFFSET;
@@ -383,4 +384,15 @@ Line Body::getSensorLeft(const glm::vec2& pos, const glm::vec2& offset) const
 Line Body::getSensorRight(const glm::vec2& pos, const glm::vec2& offset) const
 {
 	return Line(pos.x + m_halfDimension.x + offset.x, pos.y - m_halfDimension.y + offset.y, pos.x + m_halfDimension.x + offset.x, pos.y + m_halfDimension.y - offset.y);
+}
+
+BodyType FromString(const std::string& str)
+{
+	if (stringCompare(str, "BodyTypeStatic"))
+		return BodyTypeStatic;
+
+	if (stringCompare(str, "BodyTypeDynamic"))
+		return BodyTypeDynamic;
+
+	return BodyTypeStatic;
 }

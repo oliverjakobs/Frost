@@ -124,6 +124,7 @@
     <ClInclude Include="src\Scene\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
+    <ClInclude Include="src\Script\XMLParser.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
@@ -150,14 +151,34 @@
     <ClCompile Include="src\Scene\EntityMananger.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
+    <ClCompile Include="src\Script\XMLParser.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\maps\raycast.txt" />
+    <None Include="res\maps\station1.txt" />
+    <None Include="res\maps\station2.txt" />
+    <None Include="res\resources.json" />
+    <None Include="res\resources.xml" />
+    <None Include="res\scripts\entity.json" />
+    <None Include="res\scripts\entity.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="res\scripts\file.xml" />
+    <None Include="res\scripts\resources.lua" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\images\blocky_font.png" />
+    <Image Include="res\images\box.png" />
+    <Image Include="res\images\door.png" />
+    <Image Include="res\images\num_font.png" />
+    <Image Include="res\images\player.png" />
+    <Image Include="res\images\tiles.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">
@@ -176,4 +197,9 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties res_4scripts_4entity_1json__JSONSchema="http://json.schemastore.org/ansible-stable-2.5" res_4resources_1json__JSONSchema="http://json.schemastore.org/clasp" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

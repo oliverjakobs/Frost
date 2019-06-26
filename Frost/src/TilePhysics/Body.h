@@ -3,6 +3,8 @@
 #include "Maths/Maths.h"
 #include "TileConfig.h"
 
+#include <string>
+
 class TileMap;
 
 enum BodyType
@@ -10,6 +12,8 @@ enum BodyType
 	BodyTypeStatic,		// does not move by any means 
 	BodyTypeDynamic		// can be moved, affected by forces
 };
+
+BodyType FromString(const std::string& str);
 
 struct BodyDef
 {
@@ -47,7 +51,7 @@ private:
 	TileMap* m_map;
 	BodyType m_type;
 
-	Body(TileMap* map, float x, float y, float hW, float hH, BodyType type);
+	Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 
 	// can only be updated by the map
 	void onUpdate();

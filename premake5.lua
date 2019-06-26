@@ -32,9 +32,15 @@ project "Frost"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		--Resources
+		"%{prj.name}/res/resources.xml",
 		"%{prj.name}/res/shader/*.vert",
 		"%{prj.name}/res/shader/*.frag",
-		"%{prj.name}/res/**.tm"
+		"%{prj.name}/res/images/**.png",
+		"%{prj.name}/res/maps/**.txt",
+		"%{prj.name}/res/scripts/**.xml",
+		"%{prj.name}/res/scripts/**.json",
+		"%{prj.name}/res/scripts/**.lua"
 	}
 
 	links

@@ -1,59 +1,106 @@
 #include "EntityMananger.h"
 
-#include <tinyxml2.h>
-#include <glm/glm.hpp>
+#include "Script/XMLParser.h"
 
 #include "Log/Logger.h"
 
-using namespace tinyxml2;
-
-glm::vec2 GetVec2(XMLElement* element, const glm::vec2& default = glm::vec2())
-{
-	if (element != nullptr)
-		return glm::vec2(element->FloatAttribute("x"), element->FloatAttribute("y"));
-
-	return default;
-}
 
 int EntityManager::CreateEntity(Scene* scene, const char* xmlPath)
 {
 	if (scene == nullptr)
 		return -1;
 
-	XMLDocument doc;
-	XMLError result = doc.LoadFile(xmlPath);
+	XMLParser xml(xmlPath);
 
-	if (result != XML_SUCCESS)
-	{
-		DEBUG_WARN("Failed to load file ({0}): {1}", xmlPath, result);
-		return -1;
-	}
-
-	XMLElement* root = doc.FirstChildElement("Entity");
-
-	if (root == nullptr)
-	{
-		DEBUG_WARN("Root not found ({0})", xmlPath);
-		return -1;
-	}
+	DEBUG_ASSERT(xml.HasRoot("Entity"), "Root not found ({0})", xmlPath)
 
 	// create Entity
 	auto entity = scene->GetRegistry().create();
 
 	// TransformComponent
-	XMLElement* transform = root->FirstChildElement("TransformComponent");
+	XMLElement* transform = xml.GetRoot()->FirstChildElement("TransformComponent");
 
 	if (transform != nullptr)
 	{
-		scene->GetRegistry().assign<TransformComponent>(entity, GetVec2(transform->FirstChildElement("Position")), GetVec2(transform->FirstChildElement("Dimension")));
+		glm::vec2 position = XMLParser::to_vec2(transform->FirstChildElement("Position"));
+		glm::vec2 dimension = XMLParser::to_vec2(transform->FirstChildElement("Dimension"));
+
+		scene->GetRegistry().assign<TransformComponent>(entity, position, dimension);
 	}
 
 	// MovementComponent
-	XMLElement* move = root->FirstChildElement("MovementComponent");
+	XMLElement* move = xml.GetRoot()->FirstChildElement("MovementComponent");
 
 	if (move != nullptr)
 	{
-		scene->GetRegistry().assign<MovementComponent>(entity, move->FloatAttribute("speed"), move->FloatAttribute("jump"));
+		float speed = move->FloatAttribute("speed");
+		float jump = move->FloatAttribute("jump");
+
+		scene->GetRegistry().assign<MovementComponent>(entity, speed, jump);
+	}
+
+	// PhysicsComponent
+	XMLElement* phys = xml.GetRoot()->FirstChildElement("PhysicsComponent");
+
+	if (phys != nullptr)
+	{
+		XMLElement* body = phys->FirstChildElement("Body");
+
+		DEBUG_ASSERT(body, "PhysicsComponent is missing a body ({0})", xmlPath);
+
+		glm::vec2 position = XMLParser::to_vec2(body->FirstChildElement("Position"));
+		glm::vec2 halfDimension = XMLParser::to_vec2(body->FirstChildElement("HalfDimension"));
+		BodyType type = FromString(body->Attribute("type"));
+
+		glm::vec2 bodyPos = XMLParser::to_vec2(phys->FirstChildElement("BodyPosition"));
+
+		scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->createBody(position, halfDimension, type), bodyPos);
+	}
+
+	// CameraComponent
+	XMLElement* cam = xml.GetRoot()->FirstChildElement("CameraComponent");
+
+	if (cam != nullptr)
+	{
+		Rect constraint;
+
+		// TODO: x, y, w, h as attributes for constraint
+		if (cam->FirstChildElement("Constraint")->Attribute("get", "map"))
+			constraint = scene->GetMap()->getConstraint();
+
+		glm::vec2 cameraOffset = XMLParser::to_vec2(cam->FirstChildElement("Offset"));
+
+		scene->GetRegistry().assign<CameraComponent>(entity, constraint, cameraOffset);
+	}
+
+	// ImageComponent
+	XMLElement* img = xml.GetRoot()->FirstChildElement("ImageComponent");
+
+	if (img != nullptr)
+	{
+		std::string name = img->Attribute("name");
+
+		scene->GetRegistry().assign<ImageComponent>(entity, ResourceManager::GetImage(name));
+	}
+
+	// AnimationComponent
+	XMLElement* anim = xml.GetRoot()->FirstChildElement("AnimationComponent");
+
+	if (anim != nullptr)
+	{
+		std::map<std::string, Animation> animations;
+
+		for (XMLElement* elem = anim->FirstChildElement("Animation"); elem != nullptr; elem = elem->NextSiblingElement("Animation"))
+		{
+			std::string name = elem->Attribute("name");
+			int start = elem->IntAttribute("start");
+			int length = elem->IntAttribute("length");
+			float delay = elem->FloatAttribute("delay");
+
+			animations.insert(AnimationDef(name, Animation(start, length, delay)));
+		}
+
+		scene->GetRegistry().assign<AnimationComponent>(entity, animations);
 	}
 
 	return entity;

@@ -56,6 +56,7 @@ public:
 
 	// only way to create bodies
 	Body* createBody(float x, float y, float hWidth, float hHeight, BodyType type);
+	Body* createBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 	void destroyBody(Body* body);
 
 	// if a tile is changed re-render to the framebuffer
@@ -71,6 +72,7 @@ public:
 	int getHeight() const;
 	float getTileSize() const;
 	glm::vec2 getDimension() const;
+	Rect getConstraint() const;
 
 	unsigned int getIndexF(float x, float y) const;
 	unsigned int getIndexF(const glm::vec2& pos) const;

@@ -1,0 +1,55 @@
+﻿{
+  "transform": {
+    "posX": 400.0,
+    "posY": 200.0,
+    "width": 0.0,
+    "height": 0.0
+  },
+  "movement": {
+    "speed": 400.0,
+    "jump": 800.0
+  },
+  "physics": {
+    "body": {
+      "type": "BodyTypeDynamic",
+      "posX": 400.0,
+      "posY": 200.0,
+      "halfWidth": 20.0,
+      "halfHeight": 30.0
+    },
+    "bodyPosX": 0.0,
+    "bodyPosY": 30.0
+  },
+  "camera": {
+    "contraint": {
+      "get": "map"
+    },
+    "offsetX": 0.0,
+    "offsetY": 30.0
+  },
+  "image": {
+    "resource": "player"
+  },
+  "animation": {
+    "idle": {
+      "start": 0,
+      "length": 4,
+      "delay": 0.2
+    },
+    "walk": {
+      "start": 6,
+      "length": 6,
+      "delay": 0.125
+    },
+    "jump": {
+      "start": 12,
+      "length": 3,
+      "delay": 0.3
+    },
+    "fall": {
+      "start": 18,
+      "length": 2,
+      "delay": 0.4
+    }
+  }
+}

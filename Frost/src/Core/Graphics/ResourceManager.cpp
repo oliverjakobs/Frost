@@ -2,9 +2,7 @@
 
 #include "Log/Logger.h"
 
-#include <tinyxml2.h>
-
-using namespace tinyxml2;
+#include "Script/XMLParser.h"
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
@@ -68,25 +66,12 @@ Font* ResourceManager::GetFont(const std::string& name)
 
 void ResourceManager::Load(const char* xmlPath)
 {
-	XMLDocument doc;
-	XMLError result = doc.LoadFile(xmlPath);
+	XMLParser xml(xmlPath);
 
-	if (result != XML_SUCCESS)
-	{
-		DEBUG_WARN("Failed to load file ({0}): {1}", xmlPath, result);
-		return;
-	}
-
-	XMLElement* root = doc.FirstChildElement("Resources");
-
-	if (root == nullptr)
-	{
-		DEBUG_WARN("Root not found ({0})", xmlPath);
-		return;
-	}
+	DEBUG_ASSERT(xml.HasRoot("Resources"), "Root not found ({0})", xmlPath)
 
 	// shaders 
-	for (XMLElement* elem = root->FirstChildElement("Shader"); elem != nullptr; elem = elem->NextSiblingElement("Shader"))
+	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Shader"); elem != nullptr; elem = elem->NextSiblingElement("Shader"))
 	{
 		// TODO: error checking
 		std::string name = elem->Attribute("name");
@@ -97,7 +82,7 @@ void ResourceManager::Load(const char* xmlPath)
 	}
 
 	// images 
-	for (XMLElement* elem = root->FirstChildElement("Image"); elem != nullptr; elem = elem->NextSiblingElement("Image"))
+	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Image"); elem != nullptr; elem = elem->NextSiblingElement("Image"))
 	{
 		std::string name = elem->Attribute("name");
 		std::string src = elem->Attribute("src");
@@ -110,7 +95,7 @@ void ResourceManager::Load(const char* xmlPath)
 	}
 
 	// Fonts 
-	for (XMLElement* elem = root->FirstChildElement("Font"); elem != nullptr; elem = elem->NextSiblingElement("Font"))
+	for (XMLElement* elem = xml.GetRoot()->FirstChildElement("Font"); elem != nullptr; elem = elem->NextSiblingElement("Font"))
 	{
 		std::string name = elem->Attribute("name");
 		std::string src = elem->Attribute("src");
