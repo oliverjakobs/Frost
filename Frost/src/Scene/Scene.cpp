@@ -41,7 +41,7 @@ void Scene::OnUpdate()
 {
 	m_map->onUpdate();
 
-	PlayerSystem::Tick(m_registry);
+	ScriptSystem::Tick(m_registry);
 	TilePhysicsSystem::Tick(m_registry);
 	AnimationSystem::Tick(m_registry);
 

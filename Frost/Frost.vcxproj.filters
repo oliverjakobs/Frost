@@ -168,6 +168,12 @@
     <ClInclude Include="src\Scene\SceneManager.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\JSONParser.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\LuaScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\XMLParser.h">
       <Filter>src\Script</Filter>
     </ClInclude>
@@ -195,7 +201,9 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\JSONParser.h" />
+    <ClInclude Include="src\Script\Lua\LuaBinding.h" />
+    <ClInclude Include="src\Script\Lua\LuaComponents.h" />
+    <ClInclude Include="src\ECS\ScriptComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -246,6 +254,12 @@
     <ClCompile Include="src\Scene\SceneManager.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\JSONParser.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\LuaScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\XMLParser.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
@@ -261,7 +275,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\JSONParser.cpp" />
+    <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
+    <ClCompile Include="src\Script\Lua\LuaComponents.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt">
@@ -273,15 +288,23 @@
     <None Include="res\maps\station2.txt">
       <Filter>res\maps</Filter>
     </None>
+    <None Include="res\resources.json">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\scripts\player.json">
+      <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\scripts\player.lua">
+      <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\scripts\test.lua">
+      <Filter>res\scripts</Filter>
+    </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\resources.json" />
-    <None Include="res\scripts\player.json">
-      <Filter>res\scripts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

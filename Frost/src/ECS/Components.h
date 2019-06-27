@@ -18,7 +18,7 @@ struct TransformComponent
 	glm::vec2 dimension;
 
 	TransformComponent() = default;
-	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim) {}
+	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim) { }
 };
 
 struct MovementComponent

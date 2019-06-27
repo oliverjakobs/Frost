@@ -4,6 +4,8 @@
 
 #include "Components.h"
 
+#include "ScriptComponent.h"
+
 #include "Input/Input.h"
 #include "Utility/Timer.h"
 #include "String/StringUtils.h"
@@ -59,6 +61,33 @@ struct TilePhysicsSystem
 			trans.position = phys.body->getPosition() - phys.bodyPos;
 		});
 	}
+};
+
+struct ScriptSystem
+{
+	static void Tick(entt::registry& registry, sol::state& lua)
+	{
+		auto view = registry.view<ScriptComponent>();
+
+		for (auto entity : view) 
+		{
+			auto& script = view.get(entity);
+
+			if (registry.has<TransformComponent>(entity))
+				script.lua["Transform"] = LuaTransformComponent(registry.get<TransformComponent>(entity));
+
+			if (registry.has<MovementComponent>(entity))
+				script.lua["Movement"] = LuaMovementComponent(registry.get<MovementComponent>(entity));
+
+			if (registry.has<PhysicsComponent>(entity))
+				script.lua["Physics"] = LuaPhysicsComponent(registry.get<PhysicsComponent>(entity));
+
+			if (registry.has<CameraComponent>(entity))
+				script.lua["Camera"] = LuaCameraComponent(registry.get<CameraComponent>(entity));
+
+			script.script(entity);
+		}
+	};
 };
 
 struct PlayerSystem

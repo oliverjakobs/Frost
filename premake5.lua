@@ -15,6 +15,7 @@ include "Frost/packages/glfw"
 include "Frost/packages/glad"
 include "Frost/packages/imgui"
 include "Frost/packages/tinyxml2"
+include "Frost/packages/lua"
 
 group ""
 
@@ -49,6 +50,7 @@ project "Frost"
 		"Glad",
 		"ImGui",
 		"TinyXml2",
+		"Lua",
 		"opengl32"
 	}
 
@@ -63,7 +65,9 @@ project "Frost"
 		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",
-		"%{prj.name}/packages/glad/include"
+		"%{prj.name}/packages/glad/include",
+		"%{prj.name}/packages/lua/src",
+		"%{prj.name}/packages/sol2/single/include"
 	}
 
 	filter "system:windows"

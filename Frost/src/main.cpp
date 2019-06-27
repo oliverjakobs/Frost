@@ -23,6 +23,7 @@ public:
 		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
 
 		scene->AddEntity("player", "res/scripts/player.json");
+		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), "res/scripts/player.lua", "on_update");
 
 		SceneManager::AddScene(scene);
 	}
@@ -87,16 +88,52 @@ public:
 	}
 };
 
+
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
+#if 1
 	Frost* game = new Frost();
 
 	game->Run();
 
 	delete game;
+#else
+
+	sol::state lua;
+
+	lua.open_libraries(sol::lib::base);
+
+	lua.new_usertype<glm::vec2>("Vec2",
+		sol::constructors<glm::vec2(), glm::vec2(float, float)>(),
+		"x", &glm::vec2::x,
+		"y", &glm::vec2::y
+		);
+
+	// Input
+	lua.new_usertype<LuaInput>("Input",
+		sol::constructors<LuaInput()>(),
+		"KeyPressed", &LuaInput::KeyPressed,
+		"KeyReleased", &LuaInput::KeyReleased
+		);
+
+	// Components
+	lua.new_usertype<LuaTransformComponent>("Transform",
+		sol::constructors<LuaTransformComponent(TransformComponent*)>(),
+		"position", sol::property(&LuaTransformComponent::GetPosition, &LuaTransformComponent::SetPosition),
+		"dimension", sol::property(&LuaTransformComponent::GetDimension, &LuaTransformComponent::SetDimension)
+		);
+
+	lua.script_file("res/scripts/player.lua");
+
+	sol::function update = lua["on_update"];	
+
+	update(0);
+
+	system("Pause");
+#endif
 
 	return 0;
 }
