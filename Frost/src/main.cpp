@@ -110,13 +110,17 @@ int main()
 
 	sol::function test1 = lua["test"];
 
-	lua.script_file("res/scripts/test2.lua");
+	int i = 0;
 
-	sol::function test2 = lua["test"];
+	while (true)
+	{
+		lua.set_function("Get", [&]() { return i; });
 
-	test1();
-	test2();
-	test1();
+		test1();
+		i++;
+
+		Sleep(500);
+	}
 
 	system("Pause");
 #endif

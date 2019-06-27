@@ -1,3 +1,4 @@
 function test()
-	print("test1")
+	i = Get()
+	print(i)
 end
