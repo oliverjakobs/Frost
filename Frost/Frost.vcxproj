@@ -173,7 +173,8 @@
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
-    <None Include="res\scripts\test.lua" />
+    <None Include="res\scripts\test1.lua" />
+    <None Include="res\scripts\test2.lua" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

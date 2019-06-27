@@ -1,31 +1,32 @@
 function on_update (entity)
-	velocity = Vec2.new(0.0, Physics.velocity.y)
+	velocity = Vec2.new(0.0, GetVelocity().y)
+
+	movementSpeed = 400.0
+	jumpPower = 800.0
 
 	if (Input.KeyPressed("A"))
 	then
-		velocity.x = velocity.x - Movement.speed;
+		velocity.x = velocity.x - movementSpeed;
 	end
 	if (Input.KeyPressed("D"))
 	then
-		velocity.x = velocity.x + Movement.speed;
+		velocity.x = velocity.x + movementSpeed;
 	end
 
-	if (Input.KeyPressed("SPACE") and entity:Physics():CollidesBottom())
+	if (Input.KeyPressed("SPACE") and CollidesBottom())
 	then
-		velocity.y = Movement.jump;
+		velocity.y = jumpPower;
 	else
-		if (Input.KeyReleased("SPACE") and (Physics.velocity.y > 0))
+		if (Input.KeyReleased("SPACE") and (velocity.y > 0))
 		then
-			velocity.y = (Physics.velocity.y * 0.5);
+			velocity.y = (velocity.y * 0.5);
 		end
 	end
 
 	if (Input.KeyPressed("S"))
 	then
-		Physics:Drop()
+		Drop()
 	end
 
-	Physics.velocity = velocity
-
-	Camera:SetView(Transform.position)
+	SetVelocity(velocity)
 end

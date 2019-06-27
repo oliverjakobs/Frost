@@ -8,7 +8,7 @@ struct ScriptComponent
 	sol::state lua;
 	sol::function script;
 
-	ScriptComponent(sol::state& state, const std::string& path, const std::string& funtionName) 
+	ScriptComponent(const std::string& path, const std::string& funtionName) 
 	{
 		lua.open_libraries(sol::lib::base);
 

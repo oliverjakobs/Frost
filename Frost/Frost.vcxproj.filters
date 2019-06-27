@@ -297,15 +297,16 @@
     <None Include="res\scripts\player.lua">
       <Filter>res\scripts</Filter>
     </None>
-    <None Include="res\scripts\test.lua">
-      <Filter>res\scripts</Filter>
-    </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\scripts\test1.lua">
+      <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\scripts\test2.lua" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">

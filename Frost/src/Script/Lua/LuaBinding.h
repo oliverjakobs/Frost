@@ -5,6 +5,17 @@
 
 #include "LuaComponents.h"
 
+class LuaBinding
+{
+private:
+	sol::state lua;
+
+public:
+	static void CreateState(sol::state lua);
+
+	static sol::function LoadScriptFunciton(const std::string& path, const std::string& funcName);
+};
+
 class LuaInput
 {
 private:

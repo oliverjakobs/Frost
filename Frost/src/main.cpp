@@ -94,7 +94,7 @@ int main()
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if 1
+#if 0
 	Frost* game = new Frost();
 
 	game->Run();
@@ -106,31 +106,17 @@ int main()
 
 	lua.open_libraries(sol::lib::base);
 
-	lua.new_usertype<glm::vec2>("Vec2",
-		sol::constructors<glm::vec2(), glm::vec2(float, float)>(),
-		"x", &glm::vec2::x,
-		"y", &glm::vec2::y
-		);
+	lua.script_file("res/scripts/test1.lua");
 
-	// Input
-	lua.new_usertype<LuaInput>("Input",
-		sol::constructors<LuaInput()>(),
-		"KeyPressed", &LuaInput::KeyPressed,
-		"KeyReleased", &LuaInput::KeyReleased
-		);
+	sol::function test1 = lua["test"];
 
-	// Components
-	lua.new_usertype<LuaTransformComponent>("Transform",
-		sol::constructors<LuaTransformComponent(TransformComponent*)>(),
-		"position", sol::property(&LuaTransformComponent::GetPosition, &LuaTransformComponent::SetPosition),
-		"dimension", sol::property(&LuaTransformComponent::GetDimension, &LuaTransformComponent::SetDimension)
-		);
+	lua.script_file("res/scripts/test2.lua");
 
-	lua.script_file("res/scripts/player.lua");
+	sol::function test2 = lua["test"];
 
-	sol::function update = lua["on_update"];	
-
-	update(0);
+	test1();
+	test2();
+	test1();
 
 	system("Pause");
 #endif

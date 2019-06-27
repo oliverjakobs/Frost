@@ -65,7 +65,7 @@ struct TilePhysicsSystem
 
 struct ScriptSystem
 {
-	static void Tick(entt::registry& registry, sol::state& lua)
+	static void Tick(entt::registry& registry)
 	{
 		auto view = registry.view<ScriptComponent>();
 
