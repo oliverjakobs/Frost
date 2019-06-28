@@ -9,10 +9,6 @@
       0.0
     ]
   },
-  "movement": {
-    "speed": 400.0,
-    "jump": 800.0
-  },
   "physics": {
     "body": {
       "type": "BodyTypeDynamic",
@@ -63,5 +59,8 @@
       "length": 2,
       "delay": 0.4
     }
+  },
+  "script": {
+    "src": "res/scripts/player.lua"
   }
 }

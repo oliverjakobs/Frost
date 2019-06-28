@@ -105,7 +105,7 @@
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
     <ClInclude Include="src\ECS\Components.h" />
-    <ClInclude Include="src\ECS\ScriptComponent.h" />
+    <ClInclude Include="src\ECS\ScriptSystem.h" />
     <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
@@ -128,7 +128,6 @@
     <ClInclude Include="src\Script\JSONParser.h" />
     <ClInclude Include="src\Script\LuaScript.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\Lua\LuaComponents.h" />
     <ClInclude Include="src\Script\XMLParser.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
@@ -150,6 +149,7 @@
     <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
+    <ClCompile Include="src\ECS\ScriptSystem.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -159,7 +159,6 @@
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\LuaScript.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaComponents.cpp" />
     <ClCompile Include="src\Script\XMLParser.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
@@ -173,8 +172,6 @@
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
-    <None Include="res\scripts\test1.lua" />
-    <None Include="res\scripts\test2.lua" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

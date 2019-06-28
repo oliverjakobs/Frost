@@ -25,17 +25,6 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		scene->GetRegistry().assign<TransformComponent>(entity, position, dimension);
 	}
 
-	// MovementComponent
-	if (root.find("movement") != root.end())
-	{
-		json movement = root.at("movement");
-
-		float speed = jsonToFloat(movement, "speed");
-		float jump = jsonToFloat(movement, "jump");
-
-		scene->GetRegistry().assign<MovementComponent>(entity, speed, jump);
-	}
-
 	// PhysicsComponent
 	if (root.find("physics") != root.end())
 	{
@@ -107,6 +96,16 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 
 		scene->GetRegistry().assign<AnimationComponent>(entity, animations);
+	}
+
+	// ScriptComponent
+	if (root.find("script") != root.end())
+	{
+		json script = root.at("script");
+
+		std::string src = jsonToString(script, "src");
+
+		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), "res/scripts/player.lua");
 	}
 
 	return entity;

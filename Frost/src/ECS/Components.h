@@ -45,6 +45,13 @@ struct MovementComponent
 	}
 };
 
+struct ScriptComponent
+{
+	std::string script;
+
+	ScriptComponent(const std::string& script) : script(script) { }
+};
+
 struct PhysicsComponent
 {
 	Body* body;

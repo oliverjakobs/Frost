@@ -6,6 +6,7 @@
 class Frost : public Application
 {
 private:
+	ScriptSystem* luaSystem;
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -22,15 +23,16 @@ public:
 
 		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
 
+		luaSystem = new ScriptSystem(scene->GetRegistry());
+
 		scene->AddEntity("player", "res/scripts/player.json");
-		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), "res/scripts/player.lua", "on_update");
 
 		SceneManager::AddScene(scene);
 	}
 
 	~Frost()
 	{
-
+		delete luaSystem;
 	}
 	
 	void OnEvent(Event& e) override
@@ -54,6 +56,8 @@ public:
 	void OnUpdate() override
 	{
 		SceneManager::OnUpdate();
+			
+		luaSystem->Tick(SceneManager::GetActiveScene()->GetRegistry());
 	}
 
 	void OnRender() override
@@ -94,33 +98,14 @@ int main()
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if 0
+#if 1
 	Frost* game = new Frost();
 
 	game->Run();
 
 	delete game;
 #else
-
-	sol::state lua;
-
-	lua.open_libraries(sol::lib::base);
-
-	lua.script_file("res/scripts/test1.lua");
-
-	sol::function test1 = lua["test"];
-
-	int i = 0;
-
-	while (true)
-	{
-		lua.set_function("Get", [&]() { return i; });
-
-		test1();
-		i++;
-
-		Sleep(500);
-	}
+	
 
 	system("Pause");
 #endif

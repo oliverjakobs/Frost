@@ -202,8 +202,7 @@
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\Lua\LuaComponents.h" />
-    <ClInclude Include="src\ECS\ScriptComponent.h" />
+    <ClInclude Include="src\ECS\ScriptSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -276,7 +275,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaComponents.cpp" />
+    <ClCompile Include="src\ECS\ScriptSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt">
@@ -303,10 +302,6 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
-    <None Include="res\scripts\test1.lua">
-      <Filter>res\scripts</Filter>
-    </None>
-    <None Include="res\scripts\test2.lua" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">

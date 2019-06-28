@@ -1,10 +1,8 @@
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "Components.h"
 
-#include "ScriptComponent.h"
+#include "ScriptSystem.h"
 
 #include "Input/Input.h"
 #include "Utility/Timer.h"
@@ -41,7 +39,7 @@ struct AnimationSystem
 
 	static void Tick(entt::registry& registry)
 	{
-		registry.view<MovementComponent, ImageComponent, AnimationComponent>().each([](auto entity, auto& move, auto& img, auto& anim)
+		registry.view<ImageComponent, AnimationComponent>().each([](auto entity, auto& img, auto& anim)
 		{
 			if (!anim.currentAnimation.empty())
 			{
@@ -61,33 +59,6 @@ struct TilePhysicsSystem
 			trans.position = phys.body->getPosition() - phys.bodyPos;
 		});
 	}
-};
-
-struct ScriptSystem
-{
-	static void Tick(entt::registry& registry)
-	{
-		auto view = registry.view<ScriptComponent>();
-
-		for (auto entity : view) 
-		{
-			auto& script = view.get(entity);
-
-			if (registry.has<TransformComponent>(entity))
-				script.lua["Transform"] = LuaTransformComponent(registry.get<TransformComponent>(entity));
-
-			if (registry.has<MovementComponent>(entity))
-				script.lua["Movement"] = LuaMovementComponent(registry.get<MovementComponent>(entity));
-
-			if (registry.has<PhysicsComponent>(entity))
-				script.lua["Physics"] = LuaPhysicsComponent(registry.get<PhysicsComponent>(entity));
-
-			if (registry.has<CameraComponent>(entity))
-				script.lua["Camera"] = LuaCameraComponent(registry.get<CameraComponent>(entity));
-
-			script.script(entity);
-		}
-	};
 };
 
 struct PlayerSystem
