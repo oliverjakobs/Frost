@@ -7,11 +7,18 @@
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {
+	m_scriptSystem = new ScriptSystem(m_registry);
+	m_tilePhysicsSystem = new TilePhysicsSystem();
+	m_animationSystem = new AnimationSystem();
+	m_imageRenderSystem = new ImageRenderSystem();
 }
 
 Scene::~Scene()
 {
-
+	SAFE_DELETE(m_scriptSystem);
+	SAFE_DELETE(m_tilePhysicsSystem);
+	SAFE_DELETE(m_animationSystem);
+	SAFE_DELETE(m_imageRenderSystem);
 }
 
 void Scene::SetName(const std::string& name)
@@ -41,9 +48,9 @@ void Scene::OnUpdate()
 {
 	m_map->onUpdate();
 
-	//ScriptSystem::Tick(m_registry);
-	TilePhysicsSystem::Tick(m_registry);
-	AnimationSystem::Tick(m_registry);
+	m_scriptSystem->Tick(m_registry);
+	m_tilePhysicsSystem->Tick(m_registry);
+	m_animationSystem->Tick(m_registry);
 
 	OnUserUpdate();
 }
@@ -52,7 +59,7 @@ void Scene::OnRender()
 {
 	m_map->onRender();
 
-	ImageRenderSystem::Tick(m_registry);
+	m_imageRenderSystem->Tick(m_registry);
 
 	OnUserRender();
 }

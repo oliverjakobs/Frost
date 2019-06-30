@@ -6,7 +6,6 @@
 class Frost : public Application
 {
 private:
-	ScriptSystem* luaSystem;
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -23,8 +22,6 @@ public:
 
 		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
 
-		luaSystem = new ScriptSystem(scene->GetRegistry());
-
 		scene->AddEntity("player", "res/scripts/player.json");
 
 		SceneManager::AddScene(scene);
@@ -32,7 +29,7 @@ public:
 
 	~Frost()
 	{
-		delete luaSystem;
+
 	}
 	
 	void OnEvent(Event& e) override
@@ -56,8 +53,6 @@ public:
 	void OnUpdate() override
 	{
 		SceneManager::OnUpdate();
-			
-		luaSystem->Tick(SceneManager::GetActiveScene()->GetRegistry());
 	}
 
 	void OnRender() override

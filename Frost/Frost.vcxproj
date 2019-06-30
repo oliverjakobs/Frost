@@ -105,6 +105,9 @@
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
     <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\ecsSystem.h" />
+    <ClInclude Include="src\ECS\PhysicsSystem.h" />
+    <ClInclude Include="src\ECS\RenderSystem.h" />
     <ClInclude Include="src\ECS\ScriptSystem.h" />
     <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
@@ -126,8 +129,8 @@
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Script\JSONParser.h" />
-    <ClInclude Include="src\Script\LuaScript.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
+    <ClInclude Include="src\Script\LuaScript.h" />
     <ClInclude Include="src\Script\XMLParser.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
@@ -136,7 +139,7 @@
     <ClInclude Include="src\TilePhysics\Tilemap.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Timer.h" />
-    <ClInclude Include="src\Utility\Utils.h" />
+    <ClInclude Include="src\Utility\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
@@ -149,6 +152,8 @@
     <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Core\Graphics\Shader.cpp" />
     <ClCompile Include="src\Core\Graphics\Texture.cpp" />
+    <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
+    <ClCompile Include="src\ECS\RenderSystem.cpp" />
     <ClCompile Include="src\ECS\ScriptSystem.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
@@ -157,8 +162,8 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\JSONParser.cpp" />
-    <ClCompile Include="src\Script\LuaScript.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
+    <ClCompile Include="src\Script\LuaScript.cpp" />
     <ClCompile Include="src\Script\XMLParser.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />

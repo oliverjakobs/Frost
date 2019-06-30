@@ -58,6 +58,9 @@
     <Filter Include="src\Script">
       <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\Lua">
+      <UniqueIdentifier>{E2EDC49D-CEBB-B8A3-B74F-29CAA3BC9408}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\String">
       <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
     </Filter>
@@ -109,6 +112,9 @@
       <Filter>src\Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ScriptSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Systems.h">
@@ -171,6 +177,9 @@
     <ClInclude Include="src\Script\JSONParser.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\Lua\LuaBinding.h">
+      <Filter>src\Script\Lua</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\LuaScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
@@ -198,11 +207,12 @@
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Utils.h">
+    <ClInclude Include="src\Utility\utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\ECS\ScriptSystem.h" />
+    <ClInclude Include="src\ECS\ecsSystem.h" />
+    <ClInclude Include="src\ECS\RenderSystem.h" />
+    <ClInclude Include="src\ECS\PhysicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -235,6 +245,9 @@
     <ClCompile Include="src\Core\Graphics\Texture.cpp">
       <Filter>src\Core\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\ScriptSystem.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp">
       <Filter>src\ImGui</Filter>
     </ClCompile>
@@ -256,6 +269,9 @@
     <ClCompile Include="src\Script\JSONParser.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
+      <Filter>src\Script\Lua</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\LuaScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
@@ -274,8 +290,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\ECS\ScriptSystem.cpp" />
+    <ClCompile Include="src\ECS\RenderSystem.cpp" />
+    <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt">

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Script/Lua/LuaBinding.h"
-#include <entt/entt.hpp>
+#include "ecsSystem.h"
 
-struct ScriptSystem
+struct ScriptSystem : ecsSystem
 {
 private:
 	sol::state lua;
@@ -11,5 +11,5 @@ private:
 public:
 	ScriptSystem(entt::registry& registry);
 
-	void Tick(entt::registry& registry);
+	void Tick(entt::registry& registry) override;
 };
