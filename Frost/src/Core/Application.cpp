@@ -2,6 +2,46 @@
 
 #include <GLFW/glfw3.h>
 
+void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	// ignore non-significant error/warning codes
+	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
+
+	DEBUG_INFO("OpenGL debug output ({0}): {1}", id, message);
+
+	switch (source)
+	{
+	case GL_DEBUG_SOURCE_API:             DEBUG_INFO("Source: API"); break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   DEBUG_INFO("Source: Window System"); break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER: DEBUG_INFO("Source: Shader Compiler"); break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:     DEBUG_INFO("Source: Third Party"); break;
+	case GL_DEBUG_SOURCE_APPLICATION:     DEBUG_INFO("Source: Application"); break;
+	case GL_DEBUG_SOURCE_OTHER:           DEBUG_INFO("Source: Other"); break;
+	}
+
+	switch (type)
+	{
+	case GL_DEBUG_TYPE_ERROR:               DEBUG_INFO("Type: Error"); break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: DEBUG_INFO("Type: Deprecated Behaviour"); break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  DEBUG_INFO("Type: Undefined Behaviour"); break;
+	case GL_DEBUG_TYPE_PORTABILITY:         DEBUG_INFO("Type: Portability"); break;
+	case GL_DEBUG_TYPE_PERFORMANCE:         DEBUG_INFO("Type: Performance"); break;
+	case GL_DEBUG_TYPE_MARKER:              DEBUG_INFO("Type: Marker"); break;
+	case GL_DEBUG_TYPE_PUSH_GROUP:          DEBUG_INFO("Type: Push Group"); break;
+	case GL_DEBUG_TYPE_POP_GROUP:           DEBUG_INFO("Type: Pop Group"); break;
+	case GL_DEBUG_TYPE_OTHER:               DEBUG_INFO("Type: Other"); break;
+	}
+
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:         DEBUG_INFO("Severity: high"); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:       DEBUG_INFO("Severity: medium"); break;
+	case GL_DEBUG_SEVERITY_LOW:          DEBUG_INFO("Severity: low"); break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION: DEBUG_INFO("Severity: notification"); break;
+	}
+}
+
+
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
 	Close();
@@ -28,8 +68,12 @@ Application::Application(const std::string& title, int width, int height)
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef _DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
 
 	DEBUG_INFO("Initialized GLFW {0}", glfwGetVersionString());
 
@@ -156,6 +200,20 @@ Application::Application(const std::string& title, int width, int height)
 	DEBUG_INFO("OpenGL Vendor: {0}", glGetString(GL_VENDOR));
 	DEBUG_INFO("OpenGL Renderer: {0}", glGetString(GL_RENDERER));
 	DEBUG_INFO("GLSL Version: {0}", glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+#ifdef _DEBUG
+	//Set up opengl debug output
+	GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	{
+		glEnable(GL_DEBUG_OUTPUT);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+		glDebugMessageCallback(glDebugOutput, nullptr);
+		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+
+		DEBUG_INFO("Debug context created");
+	}
+#endif
 
 	Renderer::Init(0.0f, 0.0f, (float)m_width, (float)m_height);
 
