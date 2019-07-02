@@ -14,7 +14,6 @@ group "Packages"
 include "Frost/packages/glfw"
 include "Frost/packages/glad"
 include "Frost/packages/imgui"
-include "Frost/packages/tinyxml2"
 include "Frost/packages/lua"
 
 group ""
@@ -33,13 +32,14 @@ project "Frost"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		--Config
+		"%{prj.name}/config.json",
 		--Resources
 		"%{prj.name}/res/resources.json",
 		"%{prj.name}/res/shader/*.vert",
 		"%{prj.name}/res/shader/*.frag",
 		"%{prj.name}/res/images/**.png",
-		"%{prj.name}/res/maps/**.txt",
-		"%{prj.name}/res/scripts/**.xml",
+		"%{prj.name}/res/maps/**.json",
 		"%{prj.name}/res/scripts/**.json",
 		"%{prj.name}/res/scripts/**.lua"
 	}
@@ -49,7 +49,6 @@ project "Frost"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"TinyXml2",
 		"Lua",
 		"opengl32"
 	}
@@ -60,7 +59,6 @@ project "Frost"
 		"%{prj.name}/packages/include",
 		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
-		"%{prj.name}/packages/tinyxml2",
 		"%{prj.name}/packages/entt/single_include",
 		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/packages/spdlog/include",

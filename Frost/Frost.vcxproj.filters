@@ -64,8 +64,8 @@
     <Filter Include="src\String">
       <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\TilePhysics">
-      <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
+    <Filter Include="src\Tile">
+      <UniqueIdentifier>{CA0B26CF-B6D8-80DA-DFF1-6E82CB1DB668}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Utility">
       <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
@@ -111,13 +111,25 @@
     <ClInclude Include="src\Core\Graphics\Texture.h">
       <Filter>src\Core\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\types.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\PhysicsSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\RenderSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\ScriptSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Systems.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ecsSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\ApplicationEvent.h">
@@ -186,30 +198,30 @@
     <ClInclude Include="src\String\StringUtils.h">
       <Filter>src\String</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tile\Body.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\Tile.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\TileConfig.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\TileRenderer.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\Tilemap.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\utils.h">
+    <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\ecsSystem.h" />
-    <ClInclude Include="src\ECS\RenderSystem.h" />
-    <ClInclude Include="src\ECS\PhysicsSystem.h" />
-    <ClInclude Include="src\Core\types.h" />
-    <ClInclude Include="src\Tile\Body.h">
-      <Filter>src\TilePhysics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tile\TileConfig.h">
-      <Filter>src\TilePhysics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tile\Tilemap.h">
-      <Filter>src\TilePhysics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tile\TileRenderer.h" />
-    <ClInclude Include="src\Tile\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -217,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="src\Core\Application.cpp">
       <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\Graphics\Buffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp">
       <Filter>src\Core\Graphics\Font</Filter>
@@ -241,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="src\Core\Graphics\Texture.cpp">
       <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\PhysicsSystem.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\RenderSystem.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\ScriptSystem.cpp">
       <Filter>src\ECS</Filter>
@@ -269,31 +290,25 @@
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
       <Filter>src\Script\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tile\Body.cpp">
+      <Filter>src\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile\TileRenderer.cpp">
+      <Filter>src\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile\Tilemap.cpp">
+      <Filter>src\Tile</Filter>
+    </ClCompile>
     <ClCompile Include="src\Utility\Timer.cpp">
       <Filter>src\Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\RenderSystem.cpp" />
-    <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
-    <ClCompile Include="src\Core\Graphics\Buffer.cpp" />
-    <ClCompile Include="src\Tile\Body.cpp">
-      <Filter>src\TilePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tile\Tilemap.cpp">
-      <Filter>src\TilePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tile\TileRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\maps\raycast.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station1.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station2.txt">
+    <None Include="config.json" />
+    <None Include="res\maps\station.json">
       <Filter>res\maps</Filter>
     </None>
     <None Include="res\resources.json">
@@ -305,15 +320,18 @@
     <None Include="res\scripts\player.lua">
       <Filter>res\scripts</Filter>
     </None>
+    <None Include="res\shader\instanced.frag">
+      <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\shader\instanced.vert">
+      <Filter>res\shader</Filter>
+    </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
-    <None Include="res\maps\station.json" />
-    <None Include="res\shader\instanced.vert" />
-    <None Include="res\shader\instanced.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">
@@ -334,8 +352,5 @@
     <Image Include="res\images\tiles.png">
       <Filter>res\images</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Xsd Include="config.json" />
   </ItemGroup>
 </Project>

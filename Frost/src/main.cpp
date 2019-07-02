@@ -70,7 +70,7 @@ public:
 	{
 		SceneManager::OnRenderDebug();
 
-		// Debug Info imGui
+		// ImGui
 
 #if 1
 		//Entity
