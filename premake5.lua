@@ -56,7 +56,7 @@ project "Frost"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/packages/include",
+		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/entt/single_include",

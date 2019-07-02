@@ -2,29 +2,19 @@
 
 #include "Renderer.h"
 
-std::vector<GLfloat> GetVertices(float w, float h, float fW, float fH)
+Image::Image(const std::string& src, float width, float height, uint rows, uint columns)
+	: m_width(width), m_height(height)
 {
-	return
+	float fWidth = 1.0f / columns;
+	float fHeight = 1.0f / rows;
+
+	GLfloat vertices[] = 
 	{
-		0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-		   w, 0.0f, 0.0f,   fW, 0.0f,
-		   w,    h, 0.0f,   fW,   fH,
-		0.0f,    h, 0.0f, 0.0f,   fH,
-		// FLIP_HORIZONTAL
-		0.0f, 0.0f, 0.0f,   fW, 0.0f,
-		   w, 0.0f, 0.0f, 0.0f, 0.0f,
-		   w,    h, 0.0f, 0.0f,   fH,
-		0.0f,    h, 0.0f,   fW,   fH
+		 0.0f,   0.0f,   0.0f,    0.0f,
+		width,   0.0f, fWidth,    0.0f,
+		width, height, fWidth, fHeight,
+		 0.0f, height,   0.0f, fHeight
 	};
-}
-
-Image::Image(const std::string& src, float width, float height, size_t rows, size_t columns)
-	: m_width(width), m_height(height), m_rows(rows), m_columns(columns)
-{
-	float fWidth = (m_columns > 0) ? 1.0f / m_columns : 1.0f;
-	float fHeight = (m_rows > 0) ? 1.0f / m_rows : 1.0f;
-
-	auto vertices = GetVertices(width, height, fWidth, fHeight);
 
 	m_flip = FLIP_NONE;
 
@@ -32,14 +22,13 @@ Image::Image(const std::string& src, float width, float height, size_t rows, siz
 
 	m_vao.BindVertexBuffer();
 
-	m_vao.SetVertexBufferData(vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-	m_vao.SetVertexAttribPointer(0, 3, 5, 0);
-	m_vao.SetVertexAttribPointer(1, 2, 5, 3);
+	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
+	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
+	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
 
 	m_vao.UnbindVertexBuffer();
 
-	m_texture = unique_ptr<Texture>(new Texture(src.c_str()));
-
+	m_texture = unique_ptr<TextureAtlas>(new TextureAtlas(src.c_str(), rows, columns));
 }
 
 Image::~Image()
@@ -54,16 +43,12 @@ void Image::setRenderFlip(RenderFlip flip)
 
 void Image::render(float x, float y, const glm::mat4& view, const std::string& shader) const
 {
-	render(glm::vec2(x, y), view, shader);
+	renderF(glm::vec2(x, y), 0, view, shader);
 }
 
 void Image::render(const glm::vec2& pos, const glm::mat4& view, const std::string& shader) const
 {
-	m_vao.Bind();
-
-	std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
-
-	Renderer::RenderTexture(m_texture.get(), shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices);
+	renderF(pos, 0, view, shader);
 }
 
 void Image::renderF(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const
@@ -71,14 +56,28 @@ void Image::renderF(float x, float y, int frame, const glm::mat4& view, const st
 	renderF(glm::vec2(x, y), frame, view, shader);
 }
 
-void Image::renderF(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& shader) const
+void Image::renderF(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& sName) const
 {
-	float fX = (frame % m_columns) * (1.0f / m_columns);
-	float fY = 1 - (1.0f / m_rows) - ((frame / m_columns) * (1.0f / m_rows));
+	Shader* shader = ResourceManager::GetShader(sName);
+
+	if (shader != nullptr)
+	{
+		shader->use();
+
+		shader->setUniform1i("uFrame", frame);
+
+		shader->setUniform1i("uRenderFlip", (int)m_flip);
+		shader->setUniform1i("uRows", m_texture->rows);
+		shader->setUniform1i("uColumns", m_texture->columns);
+
+		shader->setUniformMat4("projection", glm::mat4());
+		shader->setUniformMat4("view", view);
+		shader->setUniformMat4("model", glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)));
+	}
 
 	m_vao.Bind();
 
-	std::vector<GLuint> indices = { 0u + (m_flip * 4), 1u + (m_flip * 4), 2u + (m_flip * 4), 2u + (m_flip * 4), 3u + (m_flip * 4), 0u + (m_flip * 4) };
+	Renderer::RenderTexture(m_texture.get());
 
-	Renderer::RenderTexture(m_texture.get(), shader, glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)), view, glm::mat4(), indices, glm::vec2(fX, fY));
+	m_vao.Unbind();
 }

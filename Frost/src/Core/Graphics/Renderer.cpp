@@ -42,49 +42,25 @@ void Renderer::SetClearColor(const glm::vec4& color)
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Renderer::RenderTexture(Texture* tex, const std::string& sName, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const glm::vec2& framePos)
+void Renderer::RenderTexture(Texture* tex)
 {
 	if (tex != nullptr)
 	{
-		Shader* shader = ResourceManager::GetShader(sName);
-
-		if (shader != nullptr)
-		{
-			shader->use();
-
-			shader->setUniform2f("uFramePos", framePos);
-
-			shader->setUniformMat4("projection", perspective);
-			shader->setUniformMat4("view", view);
-			shader->setUniformMat4("model", model);
-		}
-
 		tex->Bind();
+		std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
 	}
 }
 
-void Renderer::RenderTexture(Texture* tex, const std::string& sName, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const std::vector<GLuint>& indices, const glm::vec2& framePos)
+void Renderer::RenderTextureInstanced(Texture* tex, uint instanceCount)
 {
 	if (tex != nullptr)
 	{
-		Shader* shader = ResourceManager::GetShader(sName);
-
-		if (shader != nullptr)
-		{
-			shader->use();
-
-			shader->setUniform2f("uFramePos", framePos);
-
-			shader->setUniformMat4("projection", perspective);
-			shader->setUniformMat4("view", view);
-			shader->setUniformMat4("model", model);
-		}
-
 		tex->Bind();
+		std::vector<unsigned int> indices = { 0, 1, 2, 2, 3, 0 };
 
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
+		glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data(), instanceCount);
 	}
 }
 

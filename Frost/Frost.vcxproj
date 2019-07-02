@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -166,6 +166,7 @@
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
     <ClCompile Include="src\Tile\Body.cpp" />
+    <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Tile\TileRenderer.cpp" />
     <ClCompile Include="src\Tile\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />

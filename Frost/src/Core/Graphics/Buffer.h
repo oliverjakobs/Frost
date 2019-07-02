@@ -21,4 +21,6 @@ struct VAO
 
 	void SetVertexBufferData(size_t size, const void* data, int usage = GL_STATIC_DRAW);
 	void SetVertexAttribPointer(unsigned int index, int size, size_t stride, int offset);
+	void SetVertexAttribIPointer(unsigned int index, int size, size_t stride, int offset);
+	void SetVertexAttribDivisor(unsigned int index, unsigned int divisor);
 };

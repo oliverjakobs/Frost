@@ -1,6 +1,9 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Maths/Maths.h"
+#include "String/StringUtils.h"
+
+#include "TileConfig.h"
 
 enum TileType
 {
@@ -20,3 +23,19 @@ struct Tile
 	glm::vec2 position;
 	TileType type;
 };
+
+
+enum BodyType
+{
+	BodyTypeStatic,		// does not move by any means 
+	BodyTypeDynamic		// can be moved, affected by forces
+};
+
+struct BodyDef
+{
+	float hW;
+	float hH;
+	BodyType type;
+};
+
+BodyType FromString(const std::string& str);

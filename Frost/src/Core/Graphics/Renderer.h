@@ -54,8 +54,8 @@ public:
 	static void SetClearColor(const glm::vec4& color);
 
 	// ----------------------------texture---------------------------------------------------------------------------
-	static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const glm::vec2& framePos = glm::vec2());
-	static void RenderTexture(Texture* tex, const std::string& shader, const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective, const std::vector<GLuint>& indices, const glm::vec2& framePos = glm::vec2());
+	static void RenderTexture(Texture* tex);
+	static void RenderTextureInstanced(Texture* tex, uint instanceCount);
 
 	// ----------------------------font------------------------------------------------------------------------------
 	static void RenderString(Font* font, const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader);

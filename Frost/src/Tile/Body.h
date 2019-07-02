@@ -1,26 +1,8 @@
 #pragma once
 
-#include "Maths/Maths.h"
-#include "TileConfig.h"
-
-#include <string>
+#include "Tile.h"
 
 class TileMap;
-
-enum BodyType
-{
-	BodyTypeStatic,		// does not move by any means 
-	BodyTypeDynamic		// can be moved, affected by forces
-};
-
-BodyType FromString(const std::string& str);
-
-struct BodyDef
-{
-	float hW;
-	float hH;
-	BodyType type;
-};
 
 class Body
 {
@@ -51,61 +33,58 @@ private:
 	TileMap* m_map;
 	BodyType m_type;
 
+	// accessible through map
 	Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 
-	// can only be updated by the map
-	void onUpdate();
-public:
-	virtual ~Body();
-	// renders different debugging info
-	void onRender() const;
+	void OnUpdate();
+	void OnRender() const;
 
-	void setPosition(const glm::vec2& pos);
-	void setVelocity(const glm::vec2& vel);
-
-	void drop();
-
-	glm::vec2 getPosition() const;
-	glm::vec2 getVelocity() const;
-
-	float getWidth() const;
-	float getHeight() const;
-
-	// get the edges of the body
-	float getX() const;
-	float getX2() const;
-	float getY() const;
-	float getY2() const;
-
-	// get the collision state
-	bool collidesBottom() const;
-	bool collidesTop() const;
-	bool collidesLeft() const;
-	bool collidesRight() const;
-
-	TileMap* getMap() const;
-	BodyType getType() const;
-
-	// body creation and updating is done by the map
-	friend TileMap;
-private:
 	// move in x and y direction seperatly
-	void moveX(float x);
-	void moveY(float y);
+	void MoveX(float x);
+	void MoveY(float y);
 
 	// world collision detection
-	bool checkBottom(const glm::vec2& position, const glm::vec2& oldPosition, float* groundY);
-	bool checkTop(const glm::vec2& position, const glm::vec2& oldPosition, float* groundY);
-	bool checkLeft(const glm::vec2& position, const glm::vec2& oldPosition, float* wallX);
-	bool checkRight(const glm::vec2& position, const glm::vec2& oldPosition, float* wallX);
-	bool checkSlope(const glm::vec2& position, int slope) const;
+	bool CheckBottom(const glm::vec2& position, const glm::vec2& oldPosition, float* groundY);
+	bool CheckTop(const glm::vec2& position, const glm::vec2& oldPosition, float* groundY);
+	bool CheckLeft(const glm::vec2& position, const glm::vec2& oldPosition, float* wallX);
+	bool CheckRight(const glm::vec2& position, const glm::vec2& oldPosition, float* wallX);
+	bool CheckSlope(const glm::vec2& position, int slope) const;
 
 	// body collision
-	void resolveBodyCollision(const Body& b, const glm::vec2& oldPos);
+	void ResolveBodyCollision(const Body& b, const glm::vec2& oldPos);
 
 	// get sensors around the position
-	Line getSensorBottom(const glm::vec2& position, const glm::vec2& offset) const;
-	Line getSensorTop(const glm::vec2& position, const glm::vec2& offset) const;
-	Line getSensorLeft(const glm::vec2& position, const glm::vec2& offset) const;
-	Line getSensorRight(const glm::vec2& position, const glm::vec2& offset) const;
+	Line GetSensorBottom(const glm::vec2& position, const glm::vec2& offset) const;
+	Line GetSensorTop(const glm::vec2& position, const glm::vec2& offset) const;
+	Line GetSensorLeft(const glm::vec2& position, const glm::vec2& offset) const;
+	Line GetSensorRight(const glm::vec2& position, const glm::vec2& offset) const;
+public:
+
+	void SetPosition(const glm::vec2& pos);
+	void SetVelocity(const glm::vec2& vel);
+
+	void Drop();
+
+	glm::vec2 GetPosition() const;
+	glm::vec2 GetVelocity() const;
+
+	float GetWidth() const;
+	float GetHeight() const;
+
+	// get the edges of the body
+	float GetX() const;
+	float GetX2() const;
+	float GetY() const;
+	float GetY2() const;
+
+	// get the collision state
+	bool CollidesBottom() const;
+	bool CollidesTop() const;
+	bool CollidesLeft() const;
+	bool CollidesRight() const;
+
+	TileMap* GetMap() const;
+	BodyType GetType() const;
+
+	friend TileMap;
 };

@@ -24,25 +24,25 @@ ScriptSystem::ScriptSystem(entt::registry& registry)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		return registry.get<PhysicsComponent>(entity).body->getVelocity();
+		return registry.get<PhysicsComponent>(entity).body->GetVelocity();
 	});
 	lua.set_function("CollidesBottom", [&](unsigned int entity)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		return registry.get<PhysicsComponent>(entity).body->collidesBottom();
+		return registry.get<PhysicsComponent>(entity).body->CollidesBottom();
 	});
 	lua.set_function("Drop", [&](unsigned int entity)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		registry.get<PhysicsComponent>(entity).body->drop();
+		registry.get<PhysicsComponent>(entity).body->Drop();
 	});
 	lua.set_function("SetVelocity", [&](unsigned int entity, const glm::vec2& vel)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		registry.get<PhysicsComponent>(entity).body->setVelocity(vel);
+		registry.get<PhysicsComponent>(entity).body->SetVelocity(vel);
 	});
 	lua.set_function("PlayAnimation", [&](unsigned int entity, const std::string& animation, int flip)
 	{

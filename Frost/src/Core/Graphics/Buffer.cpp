@@ -47,6 +47,17 @@ void VAO::SetVertexBufferData(size_t size, const void* data, int usage)
 
 void VAO::SetVertexAttribPointer(unsigned int index, int size, size_t stride, int offset)
 {
-	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
 	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride * sizeof(float), (void*)(offset * sizeof(float)));
+}
+
+void VAO::SetVertexAttribIPointer(unsigned int index, int size, size_t stride, int offset)
+{
+	glEnableVertexAttribArray(index);
+	glVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), (void*)(offset * sizeof(GLuint)));
+}
+
+void VAO::SetVertexAttribDivisor(unsigned int index, unsigned int divisor)
+{
+	glVertexAttribDivisor(index, divisor);
 }

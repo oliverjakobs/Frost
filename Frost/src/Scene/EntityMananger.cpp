@@ -40,7 +40,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 			glm::vec2 bodyPos = jsonToVec2(physics, "bodyPos");
 			
-			scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->createBody(position, halfDimension, type), bodyPos);
+			scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->CreateBody(position, halfDimension, type), bodyPos);
 		}
 		else
 		{
@@ -63,7 +63,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 			if (con.find("get") != con.end())
 				if (con.at("get") == "map")
-					constraint = scene->GetMap()->getConstraint();
+					constraint = scene->GetMap()->GetConstraint();
 		}
 
 		scene->GetRegistry().assign<CameraComponent>(entity, constraint, cameraOffset);

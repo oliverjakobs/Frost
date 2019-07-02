@@ -70,9 +70,9 @@ public:
 	{
 		SceneManager::OnRenderDebug();
 
+#if 1
 		// ImGui
 
-#if 1
 		//Entity
 		ImGui::Begin("Player");
 
@@ -102,7 +102,6 @@ int main()
 	delete game;
 #else
 	
-
 	system("Pause");
 #endif
 

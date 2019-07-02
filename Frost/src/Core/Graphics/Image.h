@@ -14,19 +14,16 @@ enum RenderFlip
 class Image
 {
 private:
-	unique_ptr<Texture> m_texture;
+	unique_ptr<TextureAtlas> m_texture;
 	VAO m_vao;
 
 	RenderFlip m_flip;
-
-	size_t m_columns;
-	size_t m_rows;
 
 	float m_width;
 	float m_height;
 
 public:
-	Image(const std::string& src, float width, float height, size_t rows = 1, size_t columns = 1);
+	Image(const std::string& src, float width, float height, uint rows = 1, uint columns = 1);
 	~Image();
 
 	void setRenderFlip(RenderFlip flip);
