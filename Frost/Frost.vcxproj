@@ -130,8 +130,6 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Script\JSONParser.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\LuaScript.h" />
-    <ClInclude Include="src\Script\XMLParser.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\TilePhysics\Body.h" />
@@ -163,8 +161,6 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\LuaScript.cpp" />
-    <ClCompile Include="src\Script\XMLParser.cpp" />
     <ClCompile Include="src\TilePhysics\Body.cpp" />
     <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
@@ -172,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\maps\raycast.txt" />
+    <None Include="res\maps\station.json" />
     <None Include="res\maps\station1.txt" />
     <None Include="res\maps\station2.txt" />
     <None Include="res\resources.json" />
@@ -204,6 +201,12 @@
     <ProjectReference Include="packages\lua\Lua.vcxproj">
       <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="config.json">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </Xsd>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

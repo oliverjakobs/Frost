@@ -2,6 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Script/JSONParser.h"
+
 void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	// ignore non-significant error/warning codes
@@ -41,7 +43,6 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 	}
 }
 
-
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
 	Close();
@@ -56,28 +57,30 @@ void Application::EventCallback(Event& e)
 	OnEvent(e);
 }
 
-Application::Application(const std::string& title, int width, int height)
-	: m_title(title), m_width(width), m_height(height)
+bool Application::LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor)
 {
+	m_title = title;
+	m_width = width;
+	m_height = height;
+	m_debug = false;
+
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
 	{
 		DEBUG_ERROR("Failed to initialize GLFW");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+	DEBUG_INFO("Initialized GLFW {0}", glfwGetVersionString());
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef _DEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
-
-	DEBUG_INFO("Initialized GLFW {0}", glfwGetVersionString());
-
-	m_debug = false;
 
 	// creating the window
 	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
@@ -85,7 +88,7 @@ Application::Application(const std::string& title, int width, int height)
 	{
 		DEBUG_ERROR("Failed to create GLFW window");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	glfwMakeContextCurrent(m_window);
@@ -94,6 +97,11 @@ Application::Application(const std::string& title, int width, int height)
 	DEBUG_INFO("Window created: {0} ({1}, {2})", title, width, height);
 
 	// Set GLFW callbacks
+	glfwSetErrorCallback([](int error, const char* desc)
+	{
+		DEBUG_ERROR("[GLFW]: ({0}) {1}", error, desc);
+	});
+
 	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
 	{
 		auto game = (Application*)glfwGetWindowUserPointer(window);
@@ -192,7 +200,7 @@ Application::Application(const std::string& title, int width, int height)
 	{
 		DEBUG_ERROR("Failed to initialize GLAD");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	DEBUG_INFO("Initialized GLAD");
@@ -204,7 +212,7 @@ Application::Application(const std::string& title, int width, int height)
 #ifdef _DEBUG
 	//Set up opengl debug output
 	GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-	if (flags & GL_CONTEXT_FLAG_DEBUG_BIT)
+	if ((flags & GL_CONTEXT_FLAG_DEBUG_BIT) && (glMajor >= 4 && glMinor >= 3))
 	{
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -221,7 +229,48 @@ Application::Application(const std::string& title, int width, int height)
 	//m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
 	m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
-	m_running = true;
+	return true;
+}
+
+Application::Application(const std::string& config)
+{
+	DEBUG_ASSERT(!config.empty(), "Path is emtpy");
+
+	json root = jsonParseFile(config);
+
+	std::string title;
+
+	float width;
+	float height;
+
+	int glMajor = 4;
+	int glMinor = 0;
+	
+	// window
+	if (root.find("window") != root.end())
+	{
+		json window = root.at("window");
+
+		title = jsonToString(window, "title");
+		width = jsonToFloat(window, "width");
+		height = jsonToFloat(window, "height");
+	}
+
+	// gl version
+	if (root.find("opengl") != root.end())
+	{
+		json opengl = root.at("opengl");
+
+		glMajor = jsonToInt(opengl, "major");
+		glMinor = jsonToInt(opengl, "minor");
+	}
+
+	m_running = LoadApplication(title, width, height, glMajor, glMinor);
+}
+
+Application::Application(const std::string& title, int width, int height)
+{
+	m_running = LoadApplication(title, width, height, 4, 4);
 }
 
 Application::~Application()

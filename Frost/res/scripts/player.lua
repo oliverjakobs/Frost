@@ -63,4 +63,7 @@ function on_update (entity)
 
 	-- apply velocity
 	SetVelocity(entity, velocity)
+
+	-- update view
+	SetView(entity);
 end

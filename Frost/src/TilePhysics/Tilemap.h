@@ -51,7 +51,7 @@ private:
 	bool m_changed;
 	bool m_renderToFB;
 public:
-	TileMap(Image* image, const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
+	TileMap(const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
 	~TileMap();
 
 	// only way to create bodies

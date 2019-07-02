@@ -29,12 +29,15 @@ private:
 
 	bool OnWindowClose(WindowCloseEvent& e);
 	void EventCallback(Event& e);
+
+	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:
 	std::string m_title;
 
 	int m_width;
 	int m_height;
 public:
+	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
@@ -42,7 +45,6 @@ public:
 	void ToggleDebugMode();
 
 	void EnableVsync(bool b);
-
 
 	// --------------------------| Game Loop |-------------------------------
 	void Run();

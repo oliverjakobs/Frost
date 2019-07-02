@@ -180,12 +180,6 @@
     <ClInclude Include="src\Script\Lua\LuaBinding.h">
       <Filter>src\Script\Lua</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\LuaScript.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\XMLParser.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
     <ClInclude Include="src\String\StringHash.h">
       <Filter>src\String</Filter>
     </ClInclude>
@@ -272,12 +266,6 @@
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
       <Filter>src\Script\Lua</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\LuaScript.cpp">
-      <Filter>src\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\XMLParser.cpp">
-      <Filter>src\Script</Filter>
-    </ClCompile>
     <ClCompile Include="src\TilePhysics\Body.cpp">
       <Filter>src\TilePhysics</Filter>
     </ClCompile>
@@ -318,6 +306,7 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\maps\station.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">
@@ -338,5 +327,8 @@
     <Image Include="res\images\tiles.png">
       <Filter>res\images</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xsd Include="config.json" />
   </ItemGroup>
 </Project>

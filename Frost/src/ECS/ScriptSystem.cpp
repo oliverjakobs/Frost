@@ -54,6 +54,15 @@ ScriptSystem::ScriptSystem(entt::registry& registry)
 		if (flip > 0)
 			registry.get<ImageComponent>(entity).image->setRenderFlip((RenderFlip)(flip - 1));
 	});
+	lua.set_function("SetView", [&](unsigned int entity)
+	{
+		DEBUG_ASSERT(registry.has<CameraComponent>(entity), "[LUA] Entity has no CameraComponent");
+		DEBUG_ASSERT(registry.has<TransformComponent>(entity), "[LUA] Entity has no TransformComponent");
+
+		auto camera = registry.get<CameraComponent>(entity);
+
+		Renderer::SetViewCenter(registry.get<TransformComponent>(entity).position + camera.cameraOffset, camera.constraint);
+	});
 }
 
 void ScriptSystem::Tick(entt::registry& registry)

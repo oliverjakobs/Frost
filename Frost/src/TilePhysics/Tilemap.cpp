@@ -3,21 +3,26 @@
 #include "String/StringUtils.h"
 #include "File/FileReader.h"
 
-TileMap::TileMap(Image* image, const std::string& map, const glm::vec2& gravity)
-	: m_image(image), m_gravity(gravity)
+#include "Script/JSONParser.h"
+
+TileMap::TileMap(const std::string& map, const glm::vec2& gravity)
+	: m_gravity(gravity)
 {
-	// read in the data and separate the config from the map
-	auto data = cutStringBefore("[Map]", ReadFile(map.c_str()));
+	json root = jsonParseFile(map);
 
-	// split config and tiles into single values
-	auto config = cutString(",", getValue("[Config]", data[0]));
-	auto tiles = cutString(",", getValue("[Map]", data[1]));
+	m_width = jsonToInt(root, "width");
+	m_height = jsonToInt(root, "height");
 
-	m_width = std::stoi(config[0]);
-	m_height = std::stoi(config[1]);
+	// tileset
+	DEBUG_ASSERT(root.find("tileset") != root.end(), "{0} missing tileset", map);
 
-	// TODO: tilesize from image?
-	m_tileSize = std::stof(config[2]);
+	json tileset = root.at("tileset");
+
+	m_image = ResourceManager::GetImage(jsonToString(tileset, "name"));
+	m_tileSize = jsonToFloat(tileset, "size");
+
+	// load map
+	json tiles = root.at("layer");
 
 	m_frameBuffer = unique_ptr<FrameBuffer>(new FrameBuffer((int)std::ceilf(m_width * m_tileSize), (int)std::ceilf(m_height * m_tileSize)));
 
@@ -28,7 +33,7 @@ TileMap::TileMap(Image* image, const std::string& map, const glm::vec2& gravity)
 		{
 			Tile tile;
 			tile.position = glm::vec2(j, m_height - (i + 1)) * m_tileSize;
-			tile.id = std::stoi(tiles.at(i * m_width + j));
+			tile.id = tiles.at(i * m_width + j);
 
 			// TODO: parse in type
 			if (tile.id == 1)

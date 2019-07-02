@@ -2,7 +2,6 @@
 
 #include "Log/Logger.h"
 
-#include "Script/XMLParser.h"
 #include "Font/BitmapFont.h"
 
 #include "Script/JSONParser.h"

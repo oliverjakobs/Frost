@@ -8,7 +8,7 @@ class Frost : public Application
 private:
 
 public:
-	Frost() : Application("Frost", 1024, 800)
+	Frost() : Application("config.json")
 	{
 		// ---------------| Config|------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -20,7 +20,7 @@ public:
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
 
-		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
+		Scene* scene = new Scene("station", new TileMap("res/maps/station.json"));
 
 		scene->AddEntity("player", "res/scripts/player.json");
 

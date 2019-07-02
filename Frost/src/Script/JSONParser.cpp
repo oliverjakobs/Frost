@@ -12,9 +12,9 @@ json jsonParseFile(const std::string& path)
 	{
 		try
 		{
-			return nlohmann::json::parse(jsonString);
+			return json::parse(jsonString);
 		}
-		catch (nlohmann::json::parse_error& e)
+		catch (json::parse_error& e)
 		{
 			DEBUG_ERROR("{0}", e.what());
 		}
@@ -29,7 +29,7 @@ glm::vec2 jsonToVec2(json j, const std::string& name, const glm::vec2& default)
 
 	if (j.find(name) != j.end())
 	{
-		nlohmann::json jVec = j.at(name);
+		json jVec = j.at(name);
 
 		if (jVec.is_array() && jVec.size() == 2)
 		{
