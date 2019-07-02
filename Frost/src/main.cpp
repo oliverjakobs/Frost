@@ -19,6 +19,7 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
+		ResourceManager::AddShader("instanced", new Shader("res/shader/instanced.vert", "res/shader/instanced.frag"));
 
 		Scene* scene = new Scene("station", new TileMap("res/maps/station.json"));
 
@@ -58,21 +59,20 @@ public:
 	void OnRender() override
 	{
 		SceneManager::OnRender();
+
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
+		ImGui::Text("Fps: %d", Timer::GetFPS());
+		ImGui::End();
 	}
 
 	void OnRenderDebug() override
 	{
 		SceneManager::OnRenderDebug();
 
-		// Debug Info
-		ImGui::Begin("Info");
-		ImGui::Text("FPS: %d", Timer::GetFPS());
+		// Debug Info imGui
 
-		static bool select = false;
-		ImGui::Checkbox("Vsync", &select);
-		EnableVsync(select);
-		ImGui::End();
-
+#if 1
 		//Entity
 		ImGui::Begin("Player");
 
@@ -84,6 +84,7 @@ public:
 		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
 		ImGui::End();
+#endif
 	}
 };
 

@@ -104,6 +104,7 @@
     <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Core\Graphics\Shader.h" />
     <ClInclude Include="src\Core\Graphics\Texture.h" />
+    <ClInclude Include="src\Core\types.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\ecsSystem.h" />
     <ClInclude Include="src\ECS\PhysicsSystem.h" />
@@ -132,9 +133,11 @@
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
-    <ClInclude Include="src\TilePhysics\Body.h" />
-    <ClInclude Include="src\TilePhysics\TileConfig.h" />
-    <ClInclude Include="src\TilePhysics\Tilemap.h" />
+    <ClInclude Include="src\Tile\Body.h" />
+    <ClInclude Include="src\Tile\Tile.h" />
+    <ClInclude Include="src\Tile\TileConfig.h" />
+    <ClInclude Include="src\Tile\Tilemap.h" />
+    <ClInclude Include="src\Tile\TileRenderer.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Timer.h" />
     <ClInclude Include="src\Utility\utils.h" />
@@ -142,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Core\Application.cpp" />
+    <ClCompile Include="src\Core\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Core\Graphics\Image.cpp" />
@@ -161,8 +165,9 @@
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\TilePhysics\Body.cpp" />
-    <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
+    <ClCompile Include="src\Tile\Body.cpp" />
+    <ClCompile Include="src\Tile\Tilemap.cpp" />
+    <ClCompile Include="src\Tile\TileRenderer.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
@@ -174,6 +179,8 @@
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
+    <None Include="res\shader\instanced.frag" />
+    <None Include="res\shader\instanced.vert" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>

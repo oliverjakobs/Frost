@@ -305,8 +305,8 @@ void Application::Run()
 
 		OnUpdate();
 
-		Renderer::Start();
 		m_imguiRenderer.Start();
+		Renderer::Start();
 
 		OnRender();
 

@@ -59,7 +59,7 @@ void Renderer::RenderTexture(Texture* tex, const std::string& sName, const glm::
 			shader->setUniformMat4("model", model);
 		}
 
-		tex->bind();
+		tex->Bind();
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
@@ -82,7 +82,7 @@ void Renderer::RenderTexture(Texture* tex, const std::string& sName, const glm::
 			shader->setUniformMat4("model", model);
 		}
 
-		tex->bind();
+		tex->Bind();
 
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data());
 	}

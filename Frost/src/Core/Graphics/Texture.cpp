@@ -5,16 +5,16 @@
 
 #include "Log/Logger.h"
 
-Texture::Texture(const char* path, unsigned int slot)
-	: m_slot(slot)
+Texture::Texture(const char* path, uint slot)
+	: slot(slot)
 {
 	stbi_set_flip_vertically_on_load(true);
 
-	m_width = 0;
-	m_height = 0;
-	m_bpp = 0;
+	width = 0;
+	height = 0;
+	bpp = 0;
 
-	unsigned char* pixels = stbi_load(path, &m_width, &m_height, &m_bpp, 4);
+	byte* pixels = stbi_load(path, &width, &height, &bpp, 4);
 
 	if (pixels)
 	{
@@ -28,18 +28,18 @@ Texture::Texture(const char* path, unsigned int slot)
 		config.WRAP_S = GL_REPEAT;
 		config.WRAP_T = GL_REPEAT;
 
-		m_id = CreateTexture(pixels, m_width, m_height, config);
+		id = CreateTexture(pixels, width, height, config);
 		stbi_image_free(pixels);
 	}
 	else
 	{
 		DEBUG_ERROR("Failed to load texture: {0}", path);
-		m_id = 0;
+		id = 0;
 	}
 }
 
-Texture::Texture(int width, int height, unsigned int slot)
-	: m_width(width), m_height(height), m_slot(slot)
+Texture::Texture(int width, int height, uint slot)
+	: width(width), height(height), slot(slot)
 {
 	TextureConfig config;
 
@@ -51,45 +51,45 @@ Texture::Texture(int width, int height, unsigned int slot)
 	config.WRAP_S = GL_REPEAT;
 	config.WRAP_T = GL_REPEAT;
 
-	m_id = CreateTexture(nullptr, m_width, m_height, config);
+	id = CreateTexture(nullptr, width, height, config);
 }
 
-Texture::Texture(const char* path, TextureConfig config, unsigned int slot)
-	: m_slot(slot)
+Texture::Texture(const char* path, TextureConfig config, uint slot)
+	: slot(slot)
 {
 	stbi_set_flip_vertically_on_load(true);
 
-	m_width = 0;
-	m_height = 0;
-	m_bpp = 0;
+	width = 0;
+	height = 0;
+	bpp = 0;
 
-	unsigned char* pixels = stbi_load(path, &m_width, &m_height, &m_bpp, 4);
+	byte* pixels = stbi_load(path, &width, &height, &bpp, 4);
 
 	if (pixels)
 	{
-		m_id = CreateTexture(pixels, m_width, m_height, config);
+		id = CreateTexture(pixels, width, height, config);
 		stbi_image_free(pixels);
 	}
 	else
 	{
 		DEBUG_ERROR("Failed to load texture: {0}", path);
-		m_id = 0;
+		id = 0;
 	}
 }
 
-Texture::Texture(int width, int height, TextureConfig config, unsigned int slot)
-	: m_width(width), m_height(height), m_slot(slot)
+Texture::Texture(int width, int height, TextureConfig config, uint slot)
+	: width(width), height(height), slot(slot)
 {
-	m_id = CreateTexture(nullptr, m_width, m_height, config);
+	id = CreateTexture(nullptr, width, height, config);
 }
 
 Texture::~Texture()
 {
-	glDeleteTextures(1, &m_id);
-	m_id = 0;
+	glDeleteTextures(1, &id);
+	id = 0;
 }
 
-unsigned int Texture::CreateTexture(unsigned char* pixels, int width, int height, TextureConfig config)
+unsigned int Texture::CreateTexture(byte* pixels, int width, int height, TextureConfig config)
 {
 	unsigned int id;
 	glGenTextures(1, &id);
@@ -106,8 +106,21 @@ unsigned int Texture::CreateTexture(unsigned char* pixels, int width, int height
 	return id;
 }
 
-void Texture::bind()
+void Texture::Bind()
 {
-	glActiveTexture(GL_TEXTURE0 + m_slot);
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, id);
 }
+
+void Texture::Unbind()
+{
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+TextureAtlas::TextureAtlas(const char* path, uint rows, uint columns, uint slot) : Texture(path, slot), rows(rows), columns(columns) { }
+
+TextureAtlas::TextureAtlas(int width, int height, uint rows, uint columns, uint slot) : Texture(width, height, slot), rows(rows), columns(columns) { }
+
+TextureAtlas::TextureAtlas(const char * path, uint rows, uint columns, TextureConfig config, uint slot) : Texture(path, config, slot), rows(rows), columns(columns) { }
+
+TextureAtlas::TextureAtlas(int width, int height, uint rows, uint columns, TextureConfig config, uint slot) : Texture(width, height, config, slot), rows(rows), columns(columns) { }

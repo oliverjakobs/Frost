@@ -23,11 +23,11 @@ FrameBuffer::FrameBuffer(int w, int h)
 	};
 
 	// create vao
-	m_vao.bind();
-	m_vao.bindVertexBuffer();
-	m_vao.setVertexBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-	m_vao.setVertexAttribPointer(0, 2, 4, 0);
-	m_vao.setVertexAttribPointer(1, 2, 4, 2);
+	m_vao.Bind();
+	m_vao.BindVertexBuffer();
+	m_vao.SetVertexBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
+	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
+	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
 
 	// Set up framebuffer
 	glGenFramebuffers(1, &m_fbo);
@@ -35,7 +35,7 @@ FrameBuffer::FrameBuffer(int w, int h)
 
 	// Create texture for the framebuffer to render to
 	m_texture = unique_ptr<Texture>(new Texture(m_width, m_height));
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->getID(), 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->id, 0);
 
 	// TODO: assert
 	// check if framebuffer is completed and unbind it
@@ -82,9 +82,9 @@ void FrameBuffer::render(const std::string& sName) const
 		shader->setUniformMat4("model", m_model);
 	}
 
-	m_vao.bind();
+	m_vao.Bind();
 
-	m_texture->bind();
+	m_texture->Bind();
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

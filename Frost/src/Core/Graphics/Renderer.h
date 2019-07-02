@@ -6,6 +6,8 @@
 
 #include "Primitives.h"
 
+#include "Core/types.h"
+
 const glm::vec4 BLACK = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 const glm::vec4 WHITE = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 const glm::vec4 RED = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -30,7 +32,7 @@ struct View
 
 	glm::mat4 mat;
 
-	 inline glm::vec2 toWorldCoord(const glm::vec2& pos) const { return glm::vec2(pos.x, h - pos.y); }
+	inline glm::vec2 toWorldCoord(const glm::vec2& pos) const { return glm::vec2(pos.x, h - pos.y); }
 };
 
 class Renderer : private Singleton<Renderer>

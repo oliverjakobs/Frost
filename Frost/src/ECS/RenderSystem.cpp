@@ -1,6 +1,7 @@
 #include "RenderSystem.h"
 
 #include "String/StringUtils.h"
+#include "Utility/Timer.h"
 
 void ImageRenderSystem::Tick(entt::registry& registry)
 {

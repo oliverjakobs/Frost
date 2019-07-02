@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Graphics.h"
-#include "TilePhysics/Tilemap.h"
+#include "Tile/Tilemap.h"
 #include "Animation.h"
 
 struct ImageComponent

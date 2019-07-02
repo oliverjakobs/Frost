@@ -2,12 +2,14 @@
 
 #include <glad/glad.h>
 
+#include "Core/types.h"
+
 struct TextureConfig
 {
 	int INTERAL_FORMAT;
-	unsigned int FORMAT;
+	uint FORMAT;
 
-	unsigned int TYPE;
+	uint TYPE;
 
 	int WRAP_S;
 	int WRAP_T;
@@ -16,26 +18,35 @@ struct TextureConfig
 	int MAG_FILTER;
 };
 
-class Texture
+struct Texture
 {
-private:
-	unsigned int m_id;
-	int m_width;
-	int m_height;
-	int m_bpp;
+	uint id;
+	uint slot;
 
-	unsigned int m_slot;
-public:
-	Texture(const char* path, unsigned int slot = 0);
-	Texture(int width, int height, unsigned int slot = 0);
-	Texture(const char* path, TextureConfig config, unsigned int slot = 0);
-	Texture(int width, int height, TextureConfig config, unsigned int slot = 0);
+	int width;
+	int height;
+	int bpp;
+
+	// functions
+	Texture(const char* path, uint slot = 0);
+	Texture(int width, int height, uint slot = 0);
+	Texture(const char* path, TextureConfig config, uint slot = 0);
+	Texture(int width, int height, TextureConfig config, uint slot = 0);
 	~Texture();
 
-	static unsigned int CreateTexture(unsigned char* pixels, int width, int height, TextureConfig config);
+	static unsigned int CreateTexture(byte* pixels, int width, int height, TextureConfig config);
 
-	void bind();
+	void Bind();
+	void Unbind();
+};
 
-	inline unsigned int getID() const { return m_id; }
-	inline unsigned int getSlot() const { return m_slot; }
+struct TextureAtlas : Texture
+{
+	uint rows;
+	uint columns;
+
+	TextureAtlas(const char* path, uint rows, uint columns, uint slot = 0);
+	TextureAtlas(int width, int height, uint rows, uint columns, uint slot = 0);
+	TextureAtlas(const char* path, uint rows, uint columns, TextureConfig config, uint slot = 0);
+	TextureAtlas(int width, int height, uint rows, uint columns, TextureConfig config, uint slot = 0);
 };
