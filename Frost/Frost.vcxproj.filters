@@ -75,45 +75,6 @@
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Application.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Buffer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h">
-      <Filter>src\Core\Graphics\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Font\Font.h">
-      <Filter>src\Core\Graphics\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Framebuffer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Image.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Primitives.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Renderer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\ResourceManager.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Shader.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Texture.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\types.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Components.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
@@ -132,18 +93,6 @@
     <ClInclude Include="src\ECS\ecsSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\ApplicationEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\Event.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\KeyEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\MouseEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
     <ClInclude Include="src\File\FileReader.h">
       <Filter>src\File</Filter>
     </ClInclude>
@@ -152,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Log\Logger.h">
-      <Filter>src\Log</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Geometry.h">
       <Filter>src\Maths</Filter>
@@ -167,15 +113,6 @@
     </ClInclude>
     <ClInclude Include="src\Maths\Visibility.h">
       <Filter>src\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Patterns\Command.h">
-      <Filter>src\Patterns</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Patterns\Observer.h">
-      <Filter>src\Patterns</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Patterns\Singelton.h">
-      <Filter>src\Patterns</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\EntityMananger.h">
       <Filter>src\Scene</Filter>
@@ -213,8 +150,50 @@
     <ClInclude Include="src\Tile\Tilemap.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
+    <ClInclude Include="src\Event\ApplicationEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\KeyEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\MouseEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Buffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Framebuffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Image.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Primitives.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Renderer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\ResourceManager.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Texture.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log\Logger.h">
+      <Filter>src\Log</Filter>
+    </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Singelton.h">
+      <Filter>src\Patterns</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
@@ -222,40 +201,27 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="src\Types.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Application.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font\BitmapFont.h">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font\Font.h">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Enum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Application.cpp">
-      <Filter>src\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Buffer.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp">
-      <Filter>src\Core\Graphics\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Framebuffer.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Image.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Primitives.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Renderer.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\ResourceManager.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Shader.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Texture.cpp">
-      <Filter>src\Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\PhysicsSystem.cpp">
       <Filter>src\ECS</Filter>
@@ -299,13 +265,43 @@
     <ClCompile Include="src\Tile\Tilemap.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\Timer.cpp">
-      <Filter>src\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Tile\Tile.cpp" />
+    <ClCompile Include="src\Graphics\Buffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Framebuffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Image.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Primitives.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Renderer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\ResourceManager.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Texture.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\Timer.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font\BitmapFont.cpp">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

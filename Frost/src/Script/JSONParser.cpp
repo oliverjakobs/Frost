@@ -2,7 +2,7 @@
 
 #include "File/FileReader.h"
 
-#include "Log/Logger.h"
+#include "Debugger.h"
 
 json jsonParseFile(const std::string& path)
 {

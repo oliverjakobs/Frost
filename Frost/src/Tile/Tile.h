@@ -1,25 +1,24 @@
 #pragma once
 
-#include "Maths/Maths.h"
-#include "String/StringUtils.h"
+#include "Types.h"
 
 #include "TileConfig.h"
 
 enum TileType
 {
-	Empty = 0,
-	Solid = 1,
-	Platform = 2,
-	SlopeLeft = 3,
-	SlopeRight = 4,
+	TILE_EMPTY = 0,
+	TILE_SOLID = 1,
+	TILE_PLATFORM = 2,
+	TILE_SLOPE_LEFT = 3,
+	TILE_SLOPE_RIGHT = 4,
 	// not implemented yet
-	CeilLeft = 5,
-	CeilRight = 6
+	TILE_CEIL_LEFT = 5,
+	TILE_CEIL_RIGHT = 6
 };
 
 struct Tile
 {
-	unsigned int id;
+	uint id;
 	glm::vec2 position;
 	TileType type;
 };
@@ -27,8 +26,8 @@ struct Tile
 
 enum BodyType
 {
-	BodyTypeStatic,		// does not move by any means 
-	BodyTypeDynamic		// can be moved, affected by forces
+	BODY_STATIC,		// does not move by any means 
+	BODY_DYNAMIC		// can be moved, affected by forces
 };
 
 struct BodyDef

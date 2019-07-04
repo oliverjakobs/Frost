@@ -1,12 +1,14 @@
 #include "Tile.h"
 
+#include "String/StringUtils.h"
+
 BodyType FromString(const std::string& str)
 {
 	if (stringCompare(str, "BodyTypeStatic"))
-		return BodyTypeStatic;
+		return BODY_STATIC;
 
 	if (stringCompare(str, "BodyTypeDynamic"))
-		return BodyTypeDynamic;
+		return BODY_DYNAMIC;
 
-	return BodyTypeStatic;
+	return BODY_STATIC;
 }

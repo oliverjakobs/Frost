@@ -1,4 +1,4 @@
-#include "Core/Application.h"
+#include "Application.h"
 
 #include "Scene/SceneManager.h"
 #include "Scene/EntityMananger.h"
@@ -44,6 +44,9 @@ public:
 			case KEY_ESCAPE:
 				Close();
 				break;
+			case KEY_F5:
+				Pause();
+				break;
 			case KEY_F7:
 				ToggleDebugMode();
 				break;
@@ -81,13 +84,13 @@ public:
 		auto animation = SceneManager::GetActiveScene()->GetRegistry().get<AnimationComponent>(entity);
 
 		ImGui::Text("Position: %4.2f, %4.2f", transform.position.x, transform.position.y);
+		ImGui::Text("Direction: %s", transform.direction.ToString().c_str());
 		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
 		ImGui::End();
 #endif
 	}
 };
-
 
 int main()
 {
@@ -101,7 +104,7 @@ int main()
 
 	delete game;
 #else
-	
+
 	system("Pause");
 #endif
 

@@ -92,19 +92,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Core\Graphics.h" />
-    <ClInclude Include="src\Core\Graphics\Buffer.h" />
-    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h" />
-    <ClInclude Include="src\Core\Graphics\Font\Font.h" />
-    <ClInclude Include="src\Core\Graphics\Framebuffer.h" />
-    <ClInclude Include="src\Core\Graphics\Image.h" />
-    <ClInclude Include="src\Core\Graphics\Primitives.h" />
-    <ClInclude Include="src\Core\Graphics\Renderer.h" />
-    <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
-    <ClInclude Include="src\Core\Graphics\Shader.h" />
-    <ClInclude Include="src\Core\Graphics\Texture.h" />
-    <ClInclude Include="src\Core\types.h" />
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Graphics.h" />
+    <ClInclude Include="src\Graphics\Buffer.h" />
+    <ClInclude Include="src\Font\BitmapFont.h" />
+    <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Graphics\Framebuffer.h" />
+    <ClInclude Include="src\Graphics\Image.h" />
+    <ClInclude Include="src\Graphics\Primitives.h" />
+    <ClInclude Include="src\Graphics\Renderer.h" />
+    <ClInclude Include="src\Graphics\ResourceManager.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Texture.h" />
+    <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\PhysicsSystem.h" />
     <ClInclude Include="src\ECS\RenderSystem.h" />
@@ -123,9 +124,8 @@
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\RayCast.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
-    <ClInclude Include="src\Patterns\Command.h" />
-    <ClInclude Include="src\Patterns\Observer.h" />
-    <ClInclude Include="src\Patterns\Singelton.h" />
+    <ClInclude Include="src\Utility\Enum.h" />
+    <ClInclude Include="src\Utility\Singelton.h" />
     <ClInclude Include="src\Scene\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
@@ -144,16 +144,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Core\Application.cpp" />
-    <ClCompile Include="src\Core\Graphics\Buffer.cpp" />
-    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
-    <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
-    <ClCompile Include="src\Core\Graphics\Image.cpp" />
-    <ClCompile Include="src\Core\Graphics\Primitives.cpp" />
-    <ClCompile Include="src\Core\Graphics\Renderer.cpp" />
-    <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
-    <ClCompile Include="src\Core\Graphics\Shader.cpp" />
-    <ClCompile Include="src\Core\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Graphics\Buffer.cpp" />
+    <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Graphics\Framebuffer.cpp" />
+    <ClCompile Include="src\Graphics\Image.cpp" />
+    <ClCompile Include="src\Graphics\Primitives.cpp" />
+    <ClCompile Include="src\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\ResourceManager.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Graphics\Texture.cpp" />
     <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
     <ClCompile Include="src\ECS\RenderSystem.cpp" />
     <ClCompile Include="src\ECS\ScriptSystem.cpp" />

@@ -1,6 +1,7 @@
 #include "TileRenderer.h"
 
 TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float size)
+	: m_texture(textureAtlas)
 {
 	std::vector<glm::vec2> translations;
 	std::vector<GLuint> frames;
@@ -44,8 +45,6 @@ TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& 
 	m_vao.SetVertexAttribDivisor(3, 1);
 
 	m_vao.UnbindVertexBuffer();
-
-	m_texture = unique_ptr<TextureAtlas>(textureAtlas);
 }
 
 void TileRenderer::RenderMap(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
@@ -66,7 +65,7 @@ void TileRenderer::RenderMap(const glm::mat4& model, const glm::mat4& view, cons
 
 	m_vao.Bind();
 
-	Renderer::RenderTextureInstanced(m_texture.get(), m_instanceCount);
+	Renderer::RenderTextureInstanced(m_texture, m_instanceCount);
 
 	m_vao.Unbind();
 }

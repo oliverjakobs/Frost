@@ -36,7 +36,9 @@
     ]
   },
   "image": {
-    "resource": "player"
+    "resource": "player",
+    "width": 40.0,
+    "height": 60.0
   },
   "animation": {
     "idle": {

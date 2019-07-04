@@ -4,6 +4,35 @@
 
 #include "Utility/Timer.h"
 
+#include "Debugger.h"
+
+std::map<uint, TileType> GetTypeMap(json tiletypes)
+{
+	std::map<uint, TileType> typeMap;
+
+	for (auto& id : tiletypes.at("solid"))
+	{
+		typeMap.insert({ id, TILE_SOLID });
+	}
+
+	for (auto& id : tiletypes.at("slopeLeft"))
+	{
+		typeMap.insert({ id, TILE_SLOPE_LEFT });
+	}
+
+	for (auto& id : tiletypes.at("slopeRight"))
+	{
+		typeMap.insert({ id, TILE_SLOPE_RIGHT });
+	}
+
+	for (auto& id : tiletypes.at("platform"))
+	{
+		typeMap.insert({ id, TILE_PLATFORM });
+	}
+
+	return typeMap;
+}
+
 TileMap::TileMap(const std::string& map, const glm::vec2& gravity)
 	: m_gravity(gravity)
 {
@@ -14,10 +43,12 @@ TileMap::TileMap(const std::string& map, const glm::vec2& gravity)
 
 	// tileset
 	DEBUG_ASSERT(root.find("tileset") != root.end(), "{0} missing tileset", map);
-
 	json tileset = root.at("tileset");
 
-	//m_image = ResourceManager::GetImage(jsonToString(tileset, "name"));
+	// Load type map
+	DEBUG_ASSERT(root.find("tiletypes") != root.end(), "{0} missing tiletypes", map);
+	auto typeMap = GetTypeMap(root.at("tiletypes"));
+
 	m_tileSize = jsonToFloat(tileset, "size");
 
 	// load map
@@ -32,23 +63,17 @@ TileMap::TileMap(const std::string& map, const glm::vec2& gravity)
 			tile.position = glm::vec2(j, m_height - (i + 1)) * m_tileSize;
 			tile.id = tiles.at(i * m_width + j);
 
-			// TODO: parse in type
-			if (tile.id == 1)
-				tile.type = Solid;
-			else if (tile.id == 2)
-				tile.type = SlopeLeft;
-			else if (tile.id == 3)
-				tile.type = SlopeRight;
-			else if (tile.id == 4)
-				tile.type = Platform;
+			// Get the type for the id;
+			if (typeMap.find(tile.id) != typeMap.end())
+				tile.type = typeMap.at(tile.id);
 			else
-				tile.type = Empty;
+				tile.type = TILE_EMPTY;
 
 			m_tiles.push_back(tile);
 		}
 	}
 
-	m_renderer = unique_ptr<TileRenderer>(new TileRenderer(new TextureAtlas("res/images/tiles.png", 1, 5), m_tiles, m_tileSize));
+	m_renderer = unique_ptr<TileRenderer>(new TileRenderer(ResourceManager::GetTextureAtlas(tileset.at("resource")), m_tiles, m_tileSize));
 }
 
 TileMap::~TileMap()
@@ -108,13 +133,13 @@ void TileMap::OnRenderDebug() const
 {
 	for (auto& tile : m_tiles)
 	{
-		if (tile.type == Solid)
+		if (tile.type == TILE_SOLID)
 			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, RED);
-		else if (tile.type == Platform)
+		else if (tile.type == TILE_PLATFORM)
 			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, BLUE);
-		else if (tile.type == SlopeLeft)
+		else if (tile.type == TILE_SLOPE_LEFT)
 			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(0.0f, m_tileSize) }, MAGENTA);
-		else if (tile.type == SlopeRight)
+		else if (tile.type == TILE_SLOPE_RIGHT)
 			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA);
 	}
 
@@ -274,10 +299,10 @@ std::vector<Line> TileMap::ToEdges() const
 			int e = y * m_width + (x + 1);	// eastern neighbour
 
 			// if this tile is solid, check if it needs edges
-			if (m_tiles[i].type == Solid)
+			if (m_tiles[i].type == TILE_SOLID)
 			{
 				// if there is no western neighbour, it needs a western edge
-				if (m_tiles[w].type != Solid)
+				if (m_tiles[w].type != TILE_SOLID)
 				{
 					// either extend it from its northern neighbour (if they have one) or start a new one
 					if (edgeData[n].edgeExist[westIndex])
@@ -300,7 +325,7 @@ std::vector<Line> TileMap::ToEdges() const
 				}
 
 				// if there is no eastern neighbour, it needs a eastern edge
-				if (m_tiles[e].type != Solid)
+				if (m_tiles[e].type != TILE_SOLID)
 				{
 					// either extend it from its northern neighbour (if they have one) or start a new one
 					if (edgeData[n].edgeExist[eastIndex])
@@ -323,7 +348,7 @@ std::vector<Line> TileMap::ToEdges() const
 				}
 
 				// if there is no northern neighbour, it needs a northern edge
-				if (m_tiles[n].type != Solid)
+				if (m_tiles[n].type != TILE_SOLID)
 				{
 					// either extend it from its western neighbour (if they have one) or start a new one
 					if (edgeData[w].edgeExist[northIndex])
@@ -346,7 +371,7 @@ std::vector<Line> TileMap::ToEdges() const
 				}
 
 				// if there is no southern neighbour, it needs a southern edge
-				if (m_tiles[s].type != Solid)
+				if (m_tiles[s].type != TILE_SOLID)
 				{
 					// either extend it from its western neighbour (if they have one) or start a new one
 					if (edgeData[w].edgeExist[southIndex])

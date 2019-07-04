@@ -24,7 +24,7 @@ Body::Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyTyp
 
 void Body::OnUpdate()
 {
-	if (m_type == BodyTypeStatic)
+	if (m_type == BODY_STATIC)
 		return;
 
 	// ------------------ World Collision ----------------------------------
@@ -41,16 +41,16 @@ void Body::OnUpdate()
 	if (m_velocity.x < 0.0f)
 	{
 		// far sensors
-		m_slopeDetected = CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), SlopeLeft);
+		m_slopeDetected = CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
 		// near sensors
-		m_slopeDetected |= CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), SlopeLeft);
+		m_slopeDetected |= CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
 	}
 	else if (m_velocity.x > 0.0f)
 	{
 		// far sensors
-		m_slopeDetected = CheckSlope(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), SlopeRight);
+		m_slopeDetected = CheckSlope(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
 		// near sensors
-		m_slopeDetected |= CheckSlope(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), SlopeRight);
+		m_slopeDetected |= CheckSlope(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
 	}
 	else
 		m_slopeDetected = false;
@@ -76,7 +76,7 @@ void Body::OnRender() const
 
 #ifdef TILE_SHOW_SENSOR
 	// showing the sensors (only for dynamic bodies)
-	if (m_type == BodyTypeDynamic)
+	if (m_type == BODY_DYNAMIC)
 	{
 		Renderer::DrawLine(GetSensorBottom(m_position, m_offsetVertical), RED);
 		Renderer::DrawLine(GetSensorTop(m_position, m_offsetVertical), RED);
@@ -169,12 +169,12 @@ bool Body::CheckBottom(const glm::vec2& position, const glm::vec2& oldPosition, 
 
 	for (auto& t : tiles)
 	{
-		if (t->type == Solid && !m_onSlope)
+		if (t->type == TILE_SOLID && !m_onSlope)
 		{
 			*groundY = t->position.y + m_map->GetTileSize();
 			return true;
 		}
-		else if (t->type == SlopeLeft)
+		else if (t->type == TILE_SLOPE_LEFT)
 		{
 			float x = m_position.x - m_halfDimension.x - t->position.x;
 
@@ -182,7 +182,7 @@ bool Body::CheckBottom(const glm::vec2& position, const glm::vec2& oldPosition, 
 			m_onSlope = true;
 			return true;
 		}
-		else if (t->type == SlopeRight)
+		else if (t->type == TILE_SLOPE_RIGHT)
 		{
 			float x = m_position.x + m_halfDimension.x - t->position.x;
 
@@ -190,7 +190,7 @@ bool Body::CheckBottom(const glm::vec2& position, const glm::vec2& oldPosition, 
 			m_onSlope = true;
 			return true;
 		}
-		else if (t->type == Platform && !m_drop)
+		else if (t->type == TILE_PLATFORM && !m_drop)
 		{
 			*groundY = t->position.y + m_map->GetTileSize();
 			if ((oldPosition.y - m_halfDimension.y) >= *groundY)
@@ -215,7 +215,7 @@ bool Body::CheckTop(const glm::vec2& position, const glm::vec2& oldPosition, flo
 
 	for (auto& t : tiles)
 	{
-		if (t->type == Solid)
+		if (t->type == TILE_SOLID)
 		{
 			*groundY = t->position.y;
 			return true;
@@ -239,7 +239,7 @@ bool Body::CheckLeft(const glm::vec2& position, const glm::vec2& oldPosition, fl
 
 	for (auto& t : tiles)
 	{
-		if (t->type == Solid)
+		if (t->type == TILE_SOLID)
 		{
 			*wallX = t->position.x + m_map->GetTileSize();
 			return true;
@@ -263,7 +263,7 @@ bool Body::CheckRight(const glm::vec2& position, const glm::vec2& oldPosition, f
 
 	for (auto& t : tiles)
 	{
-		if (t->type == Solid)
+		if (t->type == TILE_SOLID)
 		{
 			*wallX = t->position.x;
 			return true;

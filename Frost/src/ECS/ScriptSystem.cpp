@@ -1,6 +1,7 @@
 #include "ScriptSystem.h"
 
 #include "Systems.h"
+#include "Debugger.h"
 
 ScriptSystem::ScriptSystem(entt::registry& registry)
 {

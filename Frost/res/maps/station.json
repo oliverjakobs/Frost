@@ -6,7 +6,7 @@
     "height": 16
   },
   "tileset": {
-    "name": "tileset",
+    "resource": "tileset",
     "size": 32.0
   },
   "tiletypes": {

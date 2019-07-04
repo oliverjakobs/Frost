@@ -4,6 +4,8 @@
 
 #include "EntityMananger.h"
 
+#include "Utility/Utils.h"
+
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {

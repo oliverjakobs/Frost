@@ -5,39 +5,19 @@
       "frag": "res/shader/shader.frag"
     }
   },
-  "images": {
+  "texture": {
+
+  },
+  "textureAtlas": {
     "player": {
       "src": "res/images/player.png",
-      "width": 40.0,
-      "height": 60.0,
       "rows": 4,
       "columns": 6
     },
-    "door": {
-      "src": "res/images/door.png",
-      "width": 46.0,
-      "height": 64.0
-    },
-    "wall": {
-      "src": "res/images/door.png",
-      "width": 20.0,
-      "height": 200.0
-    },
     "tileset": {
       "src": "res/images/tiles.png",
-      "width": 32.0,
-      "height": 32.0,
       "rows": 1,
       "columns": 5
-    }
-  },
-  "fonts": {
-    "blocky": {
-      "type": "bitmap",
-      "src": "res/images/blocky_font.png",
-      "width": 20.0,
-      "height": 28.0,
-      "spacing": 2.0
     }
   }
 }

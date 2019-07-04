@@ -2,7 +2,7 @@
 
 #include "Script/JSONParser.h"
 
-#include "Log/Logger.h"
+#include "Debugger.h"
 
 unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
@@ -75,8 +75,10 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		json image = root.at("image");
 
 		std::string res = jsonToString(image, "resource");
+		float width = jsonToFloat(image, "width");
+		float height = jsonToFloat(image, "height");
 
-		scene->GetRegistry().assign<ImageComponent>(entity, ResourceManager::GetImage(res));
+		scene->GetRegistry().assign<ImageComponent>(entity, new Image(ResourceManager::GetTextureAtlas(res), width, height));
 	}
 
 	// AnimationComponent

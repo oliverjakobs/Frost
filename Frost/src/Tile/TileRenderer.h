@@ -2,7 +2,7 @@
 
 #include "Tile.h"
 
-#include "Core/Graphics.h"
+#include "Graphics.h"
 
 class TileRenderer
 {
@@ -11,7 +11,7 @@ private:
 
 	uint m_instanceCount;
 
-	unique_ptr<TextureAtlas> m_texture;
+	TextureAtlas* m_texture;
 public:
 	TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float tileSize);
 
