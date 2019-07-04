@@ -21,12 +21,33 @@ namespace detail
 
 		for (auto& name : raw) 
 		{
-			size_t length = std::strcspn(name.c_str(), " =\t\n\r");
-
+			size_t length = name.find_first_of(" =\t\n\r");
 			processed.push_back(name.substr(0, length));
 		}
 
 		return processed;
+	}
+
+	template<typename Type>
+	inline std::string to_string(int value)
+	{
+		for (size_t index = 0; index < Type::count; ++index)
+		{
+			if (Type::Values()[index] == value)
+				return Type::Names()[index];
+		}
+		return "";
+	}
+
+	template<typename Type>
+	inline int from_string(const std::string& str)
+	{
+		for (size_t index = 0; index < Type::count; ++index)
+		{
+			if (Type::Names()[index].compare(str) == 0)
+				return Type::Values()[index];
+		}
+		return 0;
 	}
 }
 
@@ -64,7 +85,6 @@ struct EnumName 														\
 	Enumerated value;													\
 																		\
 	EnumName(Enumerated v) : value(v) { }								\
-	EnumName(const std::string& str) : value(FromString(str)) { }		\
 																		\
 	operator Enumerated() const { return value; }						\
 																		\
@@ -72,23 +92,12 @@ struct EnumName 														\
 																		\
 	static Enumerated FromString(const std::string& str)				\
 	{																	\
-		for (size_t index = 0; index < count; ++index)					\
-		{																\
-			if (Names()[index].compare(str) == 0)						\
-				return (Enumerated)Values()[index];						\
-		}																\
-		return (Enumerated)0;											\
+		return (Enumerated)detail::from_string<EnumName>(str);			\
 	}																	\
 																		\
 	std::string ToString() const										\
 	{																	\
-		for (size_t index = 0; index < count; ++index)					\
-		{																\
-			if (Values()[index] == value)								\
-				return Names()[index];									\
-		}																\
-																		\
-		return "";														\
+		return detail::to_string<EnumName>(value);						\
 	}																	\
 																		\
 	static std::vector<int> Values()									\

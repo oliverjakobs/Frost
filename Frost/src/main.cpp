@@ -90,20 +90,29 @@ public:
 		ImGui::End();
 #endif
 	}
-};
+}; 
+
+ENUM(ColorChannel, Red = 1, Green, Blue);
 
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if 1
+#if 0
 	Frost* game = new Frost();
 
 	game->Run();
 
 	delete game;
 #else
+
+
+	ColorChannel channel = ColorChannel::Red;
+	std::cout << channel.ToString() << std::endl;
+
+	channel = ColorChannel::FromString("Blue");
+	std::cout << channel.ToString() << std::endl;
 
 	system("Pause");
 #endif
