@@ -2,7 +2,7 @@
 
 #include "Script/JSONParser.h"
 
-#include "Log/Logger.h"
+#include "Debugger.h"
 
 unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
@@ -40,7 +40,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 			glm::vec2 bodyPos = jsonToVec2(physics, "bodyPos");
 			
-			scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->createBody(position, halfDimension, type), bodyPos);
+			scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->CreateBody(position, halfDimension, type), bodyPos);
 		}
 		else
 		{
@@ -63,7 +63,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 			if (con.find("get") != con.end())
 				if (con.at("get") == "map")
-					constraint = scene->GetMap()->getConstraint();
+					constraint = scene->GetMap()->GetConstraint();
 		}
 
 		scene->GetRegistry().assign<CameraComponent>(entity, constraint, cameraOffset);
@@ -75,8 +75,10 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		json image = root.at("image");
 
 		std::string res = jsonToString(image, "resource");
+		float width = jsonToFloat(image, "width");
+		float height = jsonToFloat(image, "height");
 
-		scene->GetRegistry().assign<ImageComponent>(entity, ResourceManager::GetImage(res));
+		scene->GetRegistry().assign<ImageComponent>(entity, new Image(ResourceManager::GetTextureAtlas(res), width, height));
 	}
 
 	// AnimationComponent

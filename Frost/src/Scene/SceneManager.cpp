@@ -1,6 +1,6 @@
 #include "SceneManager.h"
 
-#include "Log/Logger.h"
+#include "Debugger.h"
 #include "String/StringUtils.h"
 #include "String/StringHash.h"
 

@@ -58,11 +58,14 @@
     <Filter Include="src\Script">
       <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\Lua">
+      <UniqueIdentifier>{E2EDC49D-CEBB-B8A3-B74F-29CAA3BC9408}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\String">
       <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\TilePhysics">
-      <UniqueIdentifier>{AD9217D2-191E-8596-222F-088B8E39E196}</UniqueIdentifier>
+    <Filter Include="src\Tile">
+      <UniqueIdentifier>{CA0B26CF-B6D8-80DA-DFF1-6E82CB1DB668}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Utility">
       <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
@@ -72,59 +75,23 @@
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Application.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics.h">
-      <Filter>src\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Buffer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h">
-      <Filter>src\Core\Graphics\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Font\Font.h">
-      <Filter>src\Core\Graphics\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Framebuffer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Image.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Primitives.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Renderer.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\ResourceManager.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Shader.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Core\Graphics\Texture.h">
-      <Filter>src\Core\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\PhysicsSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\RenderSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\ScriptSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Systems.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\ApplicationEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\Event.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\KeyEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\MouseEvent.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="src\ECS\ecsSystem.h">
+      <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\File\FileReader.h">
       <Filter>src\File</Filter>
@@ -134,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Log\Logger.h">
-      <Filter>src\Log</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Geometry.h">
       <Filter>src\Maths</Filter>
@@ -150,15 +114,6 @@
     <ClInclude Include="src\Maths\Visibility.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
-    <ClInclude Include="src\Patterns\Command.h">
-      <Filter>src\Patterns</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Patterns\Observer.h">
-      <Filter>src\Patterns</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Patterns\Singelton.h">
-      <Filter>src\Patterns</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\EntityMananger.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -171,11 +126,8 @@
     <ClInclude Include="src\Script\JSONParser.h">
       <Filter>src\Script</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\LuaScript.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\XMLParser.h">
-      <Filter>src\Script</Filter>
+    <ClInclude Include="src\Script\Lua\LuaBinding.h">
+      <Filter>src\Script\Lua</Filter>
     </ClInclude>
     <ClInclude Include="src\String\StringHash.h">
       <Filter>src\String</Filter>
@@ -183,17 +135,65 @@
     <ClInclude Include="src\String\StringUtils.h">
       <Filter>src\String</Filter>
     </ClInclude>
-    <ClInclude Include="src\TilePhysics\Body.h">
-      <Filter>src\TilePhysics</Filter>
+    <ClInclude Include="src\Tile\Body.h">
+      <Filter>src\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="src\TilePhysics\TileConfig.h">
-      <Filter>src\TilePhysics</Filter>
+    <ClInclude Include="src\Tile\Tile.h">
+      <Filter>src\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="src\TilePhysics\Tilemap.h">
-      <Filter>src\TilePhysics</Filter>
+    <ClInclude Include="src\Tile\TileConfig.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\TileRenderer.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tile\Tilemap.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\ApplicationEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\KeyEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\MouseEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Buffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Framebuffer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Image.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Primitives.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Renderer.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\ResourceManager.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Shader.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Texture.h">
+      <Filter>src\Core\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log\Logger.h">
+      <Filter>src\Log</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Singelton.h">
+      <Filter>src\Patterns</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
@@ -201,39 +201,36 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\ECS\ScriptSystem.h" />
+    <ClInclude Include="src\Types.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Application.h">
+      <Filter>src\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font\BitmapFont.h">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font\Font.h">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility\Enum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Application.cpp">
-      <Filter>src\Core</Filter>
+    <ClCompile Include="src\ECS\PhysicsSystem.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp">
-      <Filter>src\Core\Graphics\Font</Filter>
+    <ClCompile Include="src\ECS\RenderSystem.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Framebuffer.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Image.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Primitives.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Renderer.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\ResourceManager.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Shader.cpp">
-      <Filter>src\Core\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Core\Graphics\Texture.cpp">
-      <Filter>src\Core\Graphics</Filter>
+    <ClCompile Include="src\ECS\ScriptSystem.cpp">
+      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp">
       <Filter>src\ImGui</Filter>
@@ -256,35 +253,59 @@
     <ClCompile Include="src\Script\JSONParser.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\LuaScript.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
+      <Filter>src\Script\Lua</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\XMLParser.cpp">
-      <Filter>src\Script</Filter>
+    <ClCompile Include="src\Tile\Body.cpp">
+      <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\TilePhysics\Body.cpp">
-      <Filter>src\TilePhysics</Filter>
+    <ClCompile Include="src\Tile\TileRenderer.cpp">
+      <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\TilePhysics\Tilemap.cpp">
-      <Filter>src\TilePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utility\Timer.cpp">
-      <Filter>src\Utility</Filter>
+    <ClCompile Include="src\Tile\Tilemap.cpp">
+      <Filter>src\Tile</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\ECS\ScriptSystem.cpp" />
+    <ClCompile Include="src\Tile\Tile.cpp" />
+    <ClCompile Include="src\Graphics\Buffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Framebuffer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Image.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Primitives.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Renderer.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\ResourceManager.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Shader.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Texture.cpp">
+      <Filter>src\Core\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility\Timer.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>src\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font\BitmapFont.cpp">
+      <Filter>src\Core\Graphics\Font</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\maps\raycast.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station1.txt">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station2.txt">
+    <None Include="config.json" />
+    <None Include="res\maps\station.json">
       <Filter>res\maps</Filter>
     </None>
     <None Include="res\resources.json">
@@ -295,6 +316,12 @@
     </None>
     <None Include="res\scripts\player.lua">
       <Filter>res\scripts</Filter>
+    </None>
+    <None Include="res\shader\instanced.frag">
+      <Filter>res\shader</Filter>
+    </None>
+    <None Include="res\shader\instanced.vert">
+      <Filter>res\shader</Filter>
     </None>
     <None Include="res\shader\shader.frag">
       <Filter>res\shader</Filter>

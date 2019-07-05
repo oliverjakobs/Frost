@@ -1,6 +1,7 @@
 #include "ScriptSystem.h"
 
 #include "Systems.h"
+#include "Debugger.h"
 
 ScriptSystem::ScriptSystem(entt::registry& registry)
 {
@@ -24,25 +25,25 @@ ScriptSystem::ScriptSystem(entt::registry& registry)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		return registry.get<PhysicsComponent>(entity).body->getVelocity();
+		return registry.get<PhysicsComponent>(entity).body->GetVelocity();
 	});
 	lua.set_function("CollidesBottom", [&](unsigned int entity)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		return registry.get<PhysicsComponent>(entity).body->collidesBottom();
+		return registry.get<PhysicsComponent>(entity).body->CollidesBottom();
 	});
 	lua.set_function("Drop", [&](unsigned int entity)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		registry.get<PhysicsComponent>(entity).body->drop();
+		registry.get<PhysicsComponent>(entity).body->Drop();
 	});
 	lua.set_function("SetVelocity", [&](unsigned int entity, const glm::vec2& vel)
 	{
 		DEBUG_ASSERT(registry.has<PhysicsComponent>(entity), "[LUA] Entity has no PhysicsComponent");
 
-		registry.get<PhysicsComponent>(entity).body->setVelocity(vel);
+		registry.get<PhysicsComponent>(entity).body->SetVelocity(vel);
 	});
 	lua.set_function("PlayAnimation", [&](unsigned int entity, const std::string& animation, int flip)
 	{
@@ -53,6 +54,15 @@ ScriptSystem::ScriptSystem(entt::registry& registry)
 
 		if (flip > 0)
 			registry.get<ImageComponent>(entity).image->setRenderFlip((RenderFlip)(flip - 1));
+	});
+	lua.set_function("SetView", [&](unsigned int entity)
+	{
+		DEBUG_ASSERT(registry.has<CameraComponent>(entity), "[LUA] Entity has no CameraComponent");
+		DEBUG_ASSERT(registry.has<TransformComponent>(entity), "[LUA] Entity has no TransformComponent");
+
+		auto camera = registry.get<CameraComponent>(entity);
+
+		Renderer::SetViewCenter(registry.get<TransformComponent>(entity).position + camera.cameraOffset, camera.constraint);
 	});
 }
 

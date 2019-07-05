@@ -138,7 +138,7 @@
 #define MOUSE_BUTTON_RIGHT     MOUSE_BUTTON_2
 #define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
-#include <map>
+#include "Types.h"
 
 class Input
 {

@@ -27,3 +27,8 @@ inline bool greater_float(float a, float b)
 
 	return false;
 }
+
+inline bool even(int i)
+{
+	return (i & 1) == 0;
+}

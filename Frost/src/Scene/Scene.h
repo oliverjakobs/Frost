@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TilePhysics/Tilemap.h"
+#include "Tile/Tilemap.h"
 
 #include "Event/Event.h"
 #include "ECS/Systems.h"
@@ -11,6 +11,11 @@ protected:
 	std::string m_name;
 
 	unique_ptr<TileMap> m_map;
+
+	ScriptSystem* m_scriptSystem;
+	TilePhysicsSystem* m_tilePhysicsSystem;
+	AnimationSystem* m_animationSystem;
+	ImageRenderSystem* m_imageRenderSystem;
 
 	std::unordered_map<std::string, unsigned int> m_entities;
 

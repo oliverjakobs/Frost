@@ -48,13 +48,13 @@ function on_update (entity)
 	then
 		PlayAnimation(entity, "jump", flip)
 	else
-		if (velocity.x ~= 0.0)
-		then 
-			PlayAnimation(entity, "walk", flip)
+		if ((not collidesBottom) and velocity.y <= 0.0)
+		then
+			PlayAnimation(entity, "fall", flip);
 		else
-			if ((not collidesBottom) and velocity.y <= 0.0)
-			then
-				PlayAnimation(entity, "fall", flip);
+			if (velocity.x ~= 0.0)
+			then 
+				PlayAnimation(entity, "walk", flip)
 			else
 				PlayAnimation(entity, "idle", flip);
 			end
@@ -63,4 +63,7 @@ function on_update (entity)
 
 	-- apply velocity
 	SetVelocity(entity, velocity)
+
+	-- update view
+	SetView(entity);
 end

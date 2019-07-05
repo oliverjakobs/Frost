@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\stb;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\include;packages\stb;packages\imgui;packages\tinyxml2;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -92,21 +92,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Core\Graphics.h" />
-    <ClInclude Include="src\Core\Graphics\Buffer.h" />
-    <ClInclude Include="src\Core\Graphics\Font\BitmapFont.h" />
-    <ClInclude Include="src\Core\Graphics\Font\Font.h" />
-    <ClInclude Include="src\Core\Graphics\Framebuffer.h" />
-    <ClInclude Include="src\Core\Graphics\Image.h" />
-    <ClInclude Include="src\Core\Graphics\Primitives.h" />
-    <ClInclude Include="src\Core\Graphics\Renderer.h" />
-    <ClInclude Include="src\Core\Graphics\ResourceManager.h" />
-    <ClInclude Include="src\Core\Graphics\Shader.h" />
-    <ClInclude Include="src\Core\Graphics\Texture.h" />
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Graphics.h" />
+    <ClInclude Include="src\Graphics\Buffer.h" />
+    <ClInclude Include="src\Font\BitmapFont.h" />
+    <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Graphics\Framebuffer.h" />
+    <ClInclude Include="src\Graphics\Image.h" />
+    <ClInclude Include="src\Graphics\Primitives.h" />
+    <ClInclude Include="src\Graphics\Renderer.h" />
+    <ClInclude Include="src\Graphics\ResourceManager.h" />
+    <ClInclude Include="src\Graphics\Shader.h" />
+    <ClInclude Include="src\Graphics\Texture.h" />
+    <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\PhysicsSystem.h" />
+    <ClInclude Include="src\ECS\RenderSystem.h" />
     <ClInclude Include="src\ECS\ScriptSystem.h" />
     <ClInclude Include="src\ECS\Systems.h" />
+    <ClInclude Include="src\ECS\ecsSystem.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
@@ -119,36 +124,38 @@
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\RayCast.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
-    <ClInclude Include="src\Patterns\Command.h" />
-    <ClInclude Include="src\Patterns\Observer.h" />
-    <ClInclude Include="src\Patterns\Singelton.h" />
+    <ClInclude Include="src\Utility\Enum.h" />
+    <ClInclude Include="src\Utility\Singelton.h" />
     <ClInclude Include="src\Scene\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Script\JSONParser.h" />
-    <ClInclude Include="src\Script\LuaScript.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\XMLParser.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
-    <ClInclude Include="src\TilePhysics\Body.h" />
-    <ClInclude Include="src\TilePhysics\TileConfig.h" />
-    <ClInclude Include="src\TilePhysics\Tilemap.h" />
+    <ClInclude Include="src\Tile\Body.h" />
+    <ClInclude Include="src\Tile\Tile.h" />
+    <ClInclude Include="src\Tile\TileConfig.h" />
+    <ClInclude Include="src\Tile\TileRenderer.h" />
+    <ClInclude Include="src\Tile\Tilemap.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Timer.h" />
     <ClInclude Include="src\Utility\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Core\Application.cpp" />
-    <ClCompile Include="src\Core\Graphics\Font\BitmapFont.cpp" />
-    <ClCompile Include="src\Core\Graphics\Framebuffer.cpp" />
-    <ClCompile Include="src\Core\Graphics\Image.cpp" />
-    <ClCompile Include="src\Core\Graphics\Primitives.cpp" />
-    <ClCompile Include="src\Core\Graphics\Renderer.cpp" />
-    <ClCompile Include="src\Core\Graphics\ResourceManager.cpp" />
-    <ClCompile Include="src\Core\Graphics\Shader.cpp" />
-    <ClCompile Include="src\Core\Graphics\Texture.cpp" />
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Graphics\Buffer.cpp" />
+    <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Graphics\Framebuffer.cpp" />
+    <ClCompile Include="src\Graphics\Image.cpp" />
+    <ClCompile Include="src\Graphics\Primitives.cpp" />
+    <ClCompile Include="src\Graphics\Renderer.cpp" />
+    <ClCompile Include="src\Graphics\ResourceManager.cpp" />
+    <ClCompile Include="src\Graphics\Shader.cpp" />
+    <ClCompile Include="src\Graphics\Texture.cpp" />
+    <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
+    <ClCompile Include="src\ECS\RenderSystem.cpp" />
     <ClCompile Include="src\ECS\ScriptSystem.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
@@ -157,21 +164,22 @@
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\JSONParser.cpp" />
-    <ClCompile Include="src\Script\LuaScript.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\XMLParser.cpp" />
-    <ClCompile Include="src\TilePhysics\Body.cpp" />
-    <ClCompile Include="src\TilePhysics\Tilemap.cpp" />
+    <ClCompile Include="src\Tile\Body.cpp" />
+    <ClCompile Include="src\Tile\Tile.cpp" />
+    <ClCompile Include="src\Tile\TileRenderer.cpp" />
+    <ClCompile Include="src\Tile\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\maps\raycast.txt" />
-    <None Include="res\maps\station1.txt" />
-    <None Include="res\maps\station2.txt" />
+    <None Include="config.json" />
+    <None Include="res\maps\station.json" />
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
+    <None Include="res\shader\instanced.frag" />
+    <None Include="res\shader\instanced.vert" />
     <None Include="res\shader\shader.frag" />
     <None Include="res\shader\shader.vert" />
   </ItemGroup>
@@ -192,9 +200,6 @@
     </ProjectReference>
     <ProjectReference Include="packages\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="packages\tinyxml2\TinyXml2.vcxproj">
-      <Project>{4C38479D-3805-A2A8-611E-90504D4AD736}</Project>
     </ProjectReference>
     <ProjectReference Include="packages\lua\Lua.vcxproj">
       <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>

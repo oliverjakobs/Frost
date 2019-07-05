@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Patterns/Singelton.h"
+#include "Singelton.h"
 
 class Timer : private Singleton<Timer>
 {

@@ -59,15 +59,3 @@ struct Logger
 		spdlog::error(fmt, args...);
 	}
 };
-
-#ifdef _DEBUG
-#define DEBUG_INFO(s, ...) Logger::Info(s, __VA_ARGS__)
-#define DEBUG_TRACE(s, ...) Logger::Trace(s, __VA_ARGS__)
-#define DEBUG_WARN(s, ...) Logger::Warn(s, __VA_ARGS__)
-#define DEBUG_ERROR(s, ...) Logger::Error(s, __VA_ARGS__)
-#else
-#define DEBUG_INFO(s, ...)
-#define DEBUG_TRACE(s, ...)
-#define DEBUG_WARN(s, ...)
-#define DEBUG_ERROR(s, ...)
-#endif // DEBUG

@@ -4,14 +4,23 @@
 
 #include "EntityMananger.h"
 
+#include "Utility/Utils.h"
+
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {
+	m_scriptSystem = new ScriptSystem(m_registry);
+	m_tilePhysicsSystem = new TilePhysicsSystem();
+	m_animationSystem = new AnimationSystem();
+	m_imageRenderSystem = new ImageRenderSystem();
 }
 
 Scene::~Scene()
 {
-
+	SAFE_DELETE(m_scriptSystem);
+	SAFE_DELETE(m_tilePhysicsSystem);
+	SAFE_DELETE(m_animationSystem);
+	SAFE_DELETE(m_imageRenderSystem);
 }
 
 void Scene::SetName(const std::string& name)
@@ -39,27 +48,27 @@ void Scene::OnEvent(Event& e)
 
 void Scene::OnUpdate()
 {
-	m_map->onUpdate();
+	m_map->OnUpdate();
 
-	//ScriptSystem::Tick(m_registry);
-	TilePhysicsSystem::Tick(m_registry);
-	AnimationSystem::Tick(m_registry);
+	m_scriptSystem->Tick(m_registry);
+	m_tilePhysicsSystem->Tick(m_registry);
+	m_animationSystem->Tick(m_registry);
 
 	OnUserUpdate();
 }
 
 void Scene::OnRender()
 {
-	m_map->onRender();
+	m_map->OnRender();
 
-	ImageRenderSystem::Tick(m_registry);
+	m_imageRenderSystem->Tick(m_registry);
 
 	OnUserRender();
 }
 
 void Scene::OnRenderDebug()
 {
-	m_map->onRenderDebug();
+	m_map->OnRenderDebug();
 
 	OnUserRenderDebug();
 
@@ -68,10 +77,10 @@ void Scene::OnRenderDebug()
 	ImGui::Text("Name: %s", m_name.c_str());
 	ImGui::Separator();
 	ImGui::Text("Map:");
-	ImGui::Text("Size: %d, %d", m_map->getWidth(), m_map->getHeight());
-	ImGui::Text("TileSize: %f", m_map->getTileSize());
-	ImGui::Text("Gravity: %f, %f", m_map->getGravity().x, m_map->getGravity().y);
-	ImGui::Text("Simulation time: %f", m_map->getSimulationTime());
+	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
+	ImGui::Text("TileSize: %f", m_map->GetTileSize());
+	ImGui::Text("Gravity: %f, %f", m_map->GetGravity().x, m_map->GetGravity().y);
+	ImGui::Text("Simulation time: %f", m_map->GetSimulationTime());
 	ImGui::End();
 }
 
@@ -82,7 +91,7 @@ TileMap* Scene::GetMap() const
 
 Rect Scene::GetConstraint() const
 {
-	return Rect(glm::vec2(), m_map->getDimension() * m_map->getTileSize());
+	return Rect(glm::vec2(), m_map->GetDimension() * m_map->GetTileSize());
 }
 
 entt::registry& Scene::GetRegistry()

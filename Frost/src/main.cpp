@@ -1,15 +1,16 @@
-#include "Core/Application.h"
+#include "Application.h"
 
 #include "Scene/SceneManager.h"
 #include "Scene/EntityMananger.h"
 
+#define SHOW_IMGUI 1
+
 class Frost : public Application
 {
 private:
-	ScriptSystem* luaSystem;
 
 public:
-	Frost() : Application("Frost", 1024, 800)
+	Frost() : Application("config.json")
 	{
 		// ---------------| Config|------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -20,10 +21,9 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
+		ResourceManager::AddShader("instanced", new Shader("res/shader/instanced.vert", "res/shader/instanced.frag"));
 
-		Scene* scene = new Scene("station", new TileMap(ResourceManager::GetImage("tileset"), "res/maps/station1.txt"));
-
-		luaSystem = new ScriptSystem(scene->GetRegistry());
+		Scene* scene = new Scene("station", new TileMap("res/maps/station.json"));
 
 		scene->AddEntity("player", "res/scripts/player.json");
 
@@ -32,7 +32,7 @@ public:
 
 	~Frost()
 	{
-		delete luaSystem;
+
 	}
 	
 	void OnEvent(Event& e) override
@@ -46,6 +46,9 @@ public:
 			case KEY_ESCAPE:
 				Close();
 				break;
+			case KEY_F5:
+				Pause();
+				break;
 			case KEY_F7:
 				ToggleDebugMode();
 				break;
@@ -56,28 +59,25 @@ public:
 	void OnUpdate() override
 	{
 		SceneManager::OnUpdate();
-			
-		luaSystem->Tick(SceneManager::GetActiveScene()->GetRegistry());
 	}
 
 	void OnRender() override
 	{
 		SceneManager::OnRender();
+
+		// FPS
+		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
+		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
+		ImGui::Text("Fps: %d", Timer::GetFPS());
+		ImGui::End();
 	}
 
 	void OnRenderDebug() override
 	{
 		SceneManager::OnRenderDebug();
 
-		// Debug Info
-		ImGui::Begin("Info");
-		ImGui::Text("FPS: %d", Timer::GetFPS());
-
-		static bool select = false;
-		ImGui::Checkbox("Vsync", &select);
-		EnableVsync(select);
-		ImGui::End();
-
+		// -------------------------| ImGui |-------------------------------------------------------------------
+#if SHOW_IMGUI
 		//Entity
 		ImGui::Begin("Player");
 
@@ -86,26 +86,29 @@ public:
 		auto animation = SceneManager::GetActiveScene()->GetRegistry().get<AnimationComponent>(entity);
 
 		ImGui::Text("Position: %4.2f, %4.2f", transform.position.x, transform.position.y);
+		ImGui::Text("Direction: %s", Direction::ToString(transform.direction).c_str());
 		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
 		ImGui::End();
+#endif
+		// -----------------------------------------------------------------------------------------------------
 	}
-};
+}; 
 
+#define RUN_GAME 1
 
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if 1
+#if RUN_GAME
 	Frost* game = new Frost();
 
 	game->Run();
 
 	delete game;
 #else
-	
 
 	system("Pause");
 #endif
