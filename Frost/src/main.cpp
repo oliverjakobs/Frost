@@ -86,7 +86,7 @@ public:
 		auto animation = SceneManager::GetActiveScene()->GetRegistry().get<AnimationComponent>(entity);
 
 		ImGui::Text("Position: %4.2f, %4.2f", transform.position.x, transform.position.y);
-		ImGui::Text("Direction: %s", transform.direction.ToString().c_str());
+		ImGui::Text("Direction: %s", Direction::ToString(transform.direction).c_str());
 		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
 		ImGui::End();
@@ -95,14 +95,14 @@ public:
 	}
 }; 
 
-#define TESTING 1
+#define RUN_GAME 1
 
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if not TESTING
+#if RUN_GAME
 	Frost* game = new Frost();
 
 	game->Run();
