@@ -218,6 +218,8 @@
       <Filter>src\Core\Graphics\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Enum.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
+    <ClInclude Include="src\Entity\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -302,6 +304,7 @@
     <ClCompile Include="src\Font\BitmapFont.cpp">
       <Filter>src\Core\Graphics\Font</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
