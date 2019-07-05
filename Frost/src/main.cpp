@@ -3,6 +3,8 @@
 #include "Scene/SceneManager.h"
 #include "Scene/EntityMananger.h"
 
+#define SHOW_IMGUI 1
+
 class Frost : public Application
 {
 private:
@@ -63,6 +65,7 @@ public:
 	{
 		SceneManager::OnRender();
 
+		// FPS
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
 		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
 		ImGui::Text("Fps: %d", Timer::GetFPS());
@@ -73,9 +76,8 @@ public:
 	{
 		SceneManager::OnRenderDebug();
 
-#if 1
-		// ImGui
-
+		// -------------------------| ImGui |-------------------------------------------------------------------
+#if SHOW_IMGUI
 		//Entity
 		ImGui::Begin("Player");
 
@@ -89,30 +91,24 @@ public:
 
 		ImGui::End();
 #endif
+		// -----------------------------------------------------------------------------------------------------
 	}
 }; 
 
-ENUM(ColorChannel, Red = 1, Green, Blue);
+#define TESTING 1
 
 int main()
 {
 	Logger::SetFormat("[%T] [%^%l%$]: %v");
 	Logger::SetLevel(LogLevel::Trace);
 
-#if 0
+#if not TESTING
 	Frost* game = new Frost();
 
 	game->Run();
 
 	delete game;
 #else
-
-
-	ColorChannel channel = ColorChannel::Red;
-	std::cout << channel.ToString() << std::endl;
-
-	channel = ColorChannel::FromString("Blue");
-	std::cout << channel.ToString() << std::endl;
 
 	system("Pause");
 #endif

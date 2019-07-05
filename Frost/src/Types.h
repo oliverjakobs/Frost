@@ -7,7 +7,6 @@
 
 #include "Utility/Enum.h"
 
-
 typedef glm::vec4 Color;
 
 typedef unsigned char byte;

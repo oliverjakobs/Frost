@@ -242,8 +242,8 @@ Application::Application(const std::string& config)
 
 	std::string title;
 
-	float width;
-	float height;
+	int width;
+	int height;
 
 	int glMajor = 4;
 	int glMinor = 0;
@@ -254,8 +254,8 @@ Application::Application(const std::string& config)
 		json window = root.at("window");
 
 		title = jsonToString(window, "title");
-		width = jsonToFloat(window, "width");
-		height = jsonToFloat(window, "height");
+		width = jsonToInt(window, "width");
+		height = jsonToInt(window, "height");
 	}
 
 	// gl version

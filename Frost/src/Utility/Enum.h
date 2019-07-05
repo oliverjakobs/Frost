@@ -3,8 +3,13 @@
 #include <vector>
 #include <string>
 
+#include <tuple>
+
 namespace detail
 {
+	template<typename ...Args>
+	constexpr int va_count(Args&&...) { return sizeof...(Args); }
+
 	struct ignore_assign
 	{
 		int value;
@@ -12,7 +17,7 @@ namespace detail
 		ignore_assign(int v) : value(v) { }
 		operator int() const { return value; }
 
-		const ignore_assign& operator =(int dummy) { return *this; }
+		const ignore_assign& operator=(int dummy) { return *this; }
 	};
 
 	inline std::vector<std::string> process(std::vector<std::string> raw)
@@ -77,36 +82,18 @@ namespace detail
 #define STRINGIZE_SINGLE(expression) #expression,
 #define STRINGIZE(...) EXPAND(MAP(STRINGIZE_SINGLE, __VA_ARGS__))
 
-#define ENUM(EnumName, ...)												\
-struct EnumName 														\
-{																		\
-    enum Enumerated { __VA_ARGS__ };									\
-																		\
-	Enumerated value;													\
-																		\
-	EnumName(Enumerated v) : value(v) { }								\
-																		\
-	operator Enumerated() const { return value; }						\
-																		\
-	static const size_t count = COUNT(__VA_ARGS__);						\
-																		\
-	static Enumerated FromString(const std::string& str)				\
-	{																	\
-		return (Enumerated)detail::from_string<EnumName>(str);			\
-	}																	\
-																		\
-	std::string ToString() const										\
-	{																	\
-		return detail::to_string<EnumName>(value);						\
-	}																	\
-																		\
-	static std::vector<int> Values()									\
-	{																	\
-		return { EXPAND(IGNORE_ASSIGN(__VA_ARGS__)) };					\
-	}																	\
-																		\
-	static std::vector<std::string> Names()								\
-	{																	\
-		return detail::process({ EXPAND(STRINGIZE(__VA_ARGS__)) });		\
-	}																	\
+#define ENUM(EnumName, ...)							\
+struct EnumName 									\
+{													\
+    enum Enumerated { __VA_ARGS__ };				\
+	Enumerated value;								\
+	static const size_t count = COUNT(__VA_ARGS__);	\
+													\
+	EnumName(Enumerated v) : value(v) { }			\
+	operator Enumerated() const { return value; }	\
+													\
+	static Enumerated FromString(const std::string& str) { return (Enumerated)detail::from_string<EnumName>(str); } \
+	static std::string ToString(Enumerated v) { return detail::to_string<EnumName>(v); }							\
+	static std::vector<int> Values() { return { EXPAND(IGNORE_ASSIGN(__VA_ARGS__)) }; }								\
+	static std::vector<std::string> Names() { return detail::process({ EXPAND(STRINGIZE(__VA_ARGS__)) }); }			\
 };
