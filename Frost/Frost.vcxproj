@@ -174,10 +174,11 @@
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\maps\station.json" />
+    <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
-    <None Include="res\scripts\station.json" />
+    <None Include="res\scripts\scenes.json" />
     <None Include="res\shader\instanced.frag" />
     <None Include="res\shader\instanced.vert" />
     <None Include="res\shader\shader.frag" />

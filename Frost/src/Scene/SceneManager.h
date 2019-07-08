@@ -12,6 +12,8 @@ private:
 	Scene* m_activeScene;
 	std::string m_activeName;
 public:
+	static void Load(const std::string& path);
+
 	static void AddScene(Scene* scene);
 	static void ChangeScene(const std::string& name);
 

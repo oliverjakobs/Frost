@@ -25,19 +25,14 @@ public:
 	void AddEntity(const std::string& name, const std::string& path);
 	unsigned int GetEntity(const std::string& name) const;
 	
-	virtual void OnEntry() {};
-	virtual void OnExtit() {};
+	void OnEntry();
+	void OnExtit();
 
 	void OnEvent(Event& e);
 	void OnUpdate();
 	void OnRender();
 	void OnRenderDebug();
 	void OnImGui();
-
-	virtual void OnUserEvent(Event& e) {};
-	virtual void OnUserUpdate() {};
-	virtual void OnUserRender() const {};
-	virtual void OnUserRenderDebug() const {};
 
 	TileMap* GetMap() const;
 	Rect GetConstraint() const;

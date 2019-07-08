@@ -4,6 +4,36 @@
 #include "String/StringUtils.h"
 #include "String/StringHash.h"
 
+#include "Script/JSONParser.h"
+
+void SceneManager::Load(const std::string& path)
+{
+	DEBUG_INFO("Loading scenes from {0}", path);
+
+	json root = jsonParseFile(path);
+
+	for (auto&[sceneName, sceneJson] : root.items())
+	{
+		std::string map = jsonToString(sceneJson, "map");
+
+		Scene* scene = new Scene(sceneName, new TileMap(map));
+
+		for (auto&[entityName, entityJson] : sceneJson.at("entities").items())
+		{
+			scene->AddEntity(entityName, jsonToString(entityJson, "scr"));
+
+			if (entityJson.find("position") != entityJson.end())
+			{
+				auto entity = scene->GetEntity(entityName);
+				DEBUG_INFO("Has position");
+			}
+		}
+
+		AddScene(scene);
+		DEBUG_INFO("Scene {0} loaded", sceneName);
+	}
+}
+
 void SceneManager::AddScene(Scene* scene)
 {
 	Get().m_scenes[GenerateHash(scene->GetName().c_str())] = unique_ptr<Scene>(scene);

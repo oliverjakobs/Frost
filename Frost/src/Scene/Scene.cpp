@@ -41,9 +41,17 @@ unsigned int Scene::GetEntity(const std::string& name) const
 	return 0;
 }
 
+void Scene::OnEntry()
+{
+}
+
+void Scene::OnExtit()
+{
+}
+
 void Scene::OnEvent(Event& e)
 {
-	OnUserEvent(e);
+
 }
 
 void Scene::OnUpdate()
@@ -55,8 +63,6 @@ void Scene::OnUpdate()
 
 	TilePhysicsSystem::Tick(m_registry);
 	AnimationSystem::Tick(m_registry);
-
-	OnUserUpdate();
 }
 
 void Scene::OnRender()
@@ -64,15 +70,11 @@ void Scene::OnRender()
 	m_map->OnRender();
 
 	ImageRenderSystem::Tick(m_registry);
-
-	OnUserRender();
 }
 
 void Scene::OnRenderDebug()
 {
 	m_map->OnRenderDebug();
-
-	OnUserRenderDebug();
 }
 
 void Scene::OnImGui()

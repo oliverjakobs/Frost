@@ -20,12 +20,7 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
-
-		Scene* scene = new Scene("station", new TileMap("res/maps/station.json"));
-
-		scene->AddEntity("player", "res/scripts/player.json");
-
-		SceneManager::AddScene(scene);
+		SceneManager::Load("res/scripts/scenes.json");
 	}
 
 	~Frost()
@@ -52,6 +47,12 @@ public:
 				break;
 			case KEY_F8:
 				ToggleImGui();
+				break;
+			case KEY_1:
+				SceneManager::ChangeScene("station");
+				break;
+			case KEY_2:
+				SceneManager::ChangeScene("station2");
 				break;
 			}
 		}
@@ -101,7 +102,7 @@ public:
 
 int main()
 {
-	Logger::SetFormat("[%T] [%^%l%$]: %v");
+	Logger::SetFormat("[%T] [%^%l%$] %v");
 	Logger::SetLevel(LogLevel::Trace);
 
 #if RUN_GAME

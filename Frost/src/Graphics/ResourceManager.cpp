@@ -2,8 +2,6 @@
 
 #include "Debugger.h"
 
-#include "Font/BitmapFont.h"
-
 #include "Script/JSONParser.h"
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
@@ -21,7 +19,7 @@ Shader* ResourceManager::GetShader(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("No such shader: {0}", name);
+		DEBUG_WARN("[Res] No such shader: {0}", name);
 		return nullptr;
 	}
 }
@@ -41,7 +39,7 @@ Texture* ResourceManager::GetTexture(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("No such texture: {0}", name);
+		DEBUG_WARN("[Res] No such texture: {0}", name);
 		return nullptr;
 	}
 }
@@ -61,7 +59,7 @@ TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("No such texture atlas: {0}", name);
+		DEBUG_WARN("[Res] No such texture atlas: {0}", name);
 		return nullptr;
 	}
 }
@@ -107,6 +105,8 @@ void ResourceManager::Load(const std::string& path)
 			AddTextureAtlas(name, new TextureAtlas(src.c_str(), rows, columns));
 		}
 	}
+
+	DEBUG_INFO("[Res] Loaded Resources ({0})", path);
 }
 
 void ResourceManager::Clear()
