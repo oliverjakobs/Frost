@@ -24,8 +24,6 @@ class Application
 private:
 	GLFWwindow* m_window;
 
-	ImGuiRenderer m_imguiRenderer;
-
 	bool m_running;
 	bool m_paused;
 	bool m_debug;

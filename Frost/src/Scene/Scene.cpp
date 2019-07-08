@@ -50,10 +50,8 @@ void Scene::OnUpdate()
 {
 	m_map->OnUpdate();
 
-#ifndef DISABLE_SCRIPTS
 	ScriptSystem::Tick(m_registry);
 	m_lua.GetState().collect_garbage();
-#endif
 
 	TilePhysicsSystem::Tick(m_registry);
 	AnimationSystem::Tick(m_registry);
@@ -87,9 +85,9 @@ void Scene::OnImGui()
 	ImGui::Separator();
 	ImGui::Text("Map:");
 	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
-	ImGui::Text("TileSize: %f", m_map->GetTileSize());
-	ImGui::Text("Gravity: %f, %f", m_map->GetGravity().x, m_map->GetGravity().y);
-	ImGui::Text("Simulation time: %f", m_map->GetSimulationTime());
+	ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());
+	ImGui::Text("Gravity: %4.2f, %4.2f", m_map->GetGravity().x, m_map->GetGravity().y);
+	ImGui::Text("Simulation time: %2.4f", m_map->GetSimulationTime());
 	ImGui::End();
 }
 

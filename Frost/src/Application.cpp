@@ -230,7 +230,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 	// initialize imgui
 	//m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
-	m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
+	ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
 	return true;
 }
@@ -325,7 +325,7 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate();
 
-		m_imguiRenderer.Start();
+		ImGuiRenderer::Start();
 		Renderer::Start();
 
 		OnRender();
@@ -338,7 +338,7 @@ void Application::Run()
 
 		Renderer::Flush();
 		Primitives::Flush(Renderer::GetViewMat());
-		m_imguiRenderer.Flush(m_window);
+		ImGuiRenderer::Flush(m_window);
 
 		glfwPollEvents();
 		glfwSwapBuffers(m_window);
