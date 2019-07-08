@@ -11,3 +11,5 @@ public:
 	static bool KeyPressed(const std::string& key);
 	static bool KeyReleased(const std::string& key);
 };
+
+sol::function BindLuaFunction(sol::state& lua, const std::string& src, const std::string& func);

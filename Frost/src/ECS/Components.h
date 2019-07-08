@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Animation.h"
 #include "Tile/Tilemap.h"
+#include "Script/Lua/LuaBinding.h"
 
 struct ImageComponent
 {
@@ -24,9 +25,9 @@ struct TransformComponent
 
 struct ScriptComponent
 {
-	std::string script;
+	sol::function func;
 
-	ScriptComponent(const std::string& script) : script(script) { }
+	ScriptComponent(sol::function& func) : func(func) { }
 };
 
 struct PhysicsComponent

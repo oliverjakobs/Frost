@@ -20,3 +20,10 @@ bool LuaInput::KeyReleased(const std::string & key)
 {
 	return Input::KeyReleased(GetKeyCode(key));
 }
+
+sol::function BindLuaFunction(sol::state& lua, const std::string& src, const std::string& func)
+{
+	lua.script_file(src);
+
+	return lua[func];
+}

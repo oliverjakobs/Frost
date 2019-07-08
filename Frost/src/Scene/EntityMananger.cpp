@@ -107,7 +107,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 		std::string src = jsonToString(script, "src");
 
-		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), "res/scripts/player.lua");
+		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), BindLuaFunction(scene->GetLua(), "res/scripts/player.lua", "on_update"));
 	}
 
 	return entity;

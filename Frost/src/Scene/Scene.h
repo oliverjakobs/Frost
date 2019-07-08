@@ -20,6 +20,9 @@ protected:
 	std::unordered_map<std::string, unsigned int> m_entities;
 
 	entt::registry m_registry;
+	sol::state m_lua;
+
+	void LoadLuaState();
 public:
 	Scene(const std::string& name, TileMap* map);
 	~Scene();
@@ -44,6 +47,9 @@ public:
 
 	TileMap* GetMap() const;
 	Rect GetConstraint() const;
+
 	entt::registry& GetRegistry();
+	sol::state& GetLua();
+
 	std::string GetName() const;
 };
