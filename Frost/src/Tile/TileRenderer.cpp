@@ -28,18 +28,18 @@ TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& 
 
 	m_vao.Bind();
 
-	m_vao.BindVertexBuffer();
+	m_vao.GenVertexBuffer();
 	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
 	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
 	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
 
 	// also set instance data
-	m_vao.BindVertexBuffer();
+	m_vao.GenVertexBuffer();
 	m_vao.SetVertexBufferData(sizeof(glm::vec2) * translations.size(), &translations[0]);
 	m_vao.SetVertexAttribPointer(2, 2, 2, 0);
 	m_vao.SetVertexAttribDivisor(2, 1);
 	
-	m_vao.BindVertexBuffer();
+	m_vao.GenVertexBuffer();
 	m_vao.SetVertexBufferData(sizeof(GLuint) * frames.size(), &frames[0]);
 	m_vao.SetVertexAttribIPointer(3, 1, 1, 0);
 	m_vao.SetVertexAttribDivisor(3, 1);

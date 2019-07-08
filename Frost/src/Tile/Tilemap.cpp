@@ -131,17 +131,17 @@ void TileMap::OnRender() const
 
 void TileMap::OnRenderDebug() const
 {
-	for (auto& tile : m_tiles)
+	/*for (auto& tile : m_tiles)
 	{
 		if (tile.type == TILE_SOLID)
-			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, RED);
+			Primitives::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, RED, Renderer::GetViewMat());
 		else if (tile.type == TILE_PLATFORM)
-			Renderer::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, BLUE);
+			Primitives::DrawRect(tile.position.x, tile.position.y, m_tileSize, m_tileSize, BLUE, Renderer::GetViewMat());
 		else if (tile.type == TILE_SLOPE_LEFT)
-			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(0.0f, m_tileSize) }, MAGENTA);
+			Primitives::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(0.0f, m_tileSize) }, MAGENTA, Renderer::GetViewMat());
 		else if (tile.type == TILE_SLOPE_RIGHT)
-			Renderer::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA);
-	}
+			Primitives::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA, Renderer::GetViewMat());
+	}*/
 
 	for (auto& body : m_bodies)
 	{

@@ -2,8 +2,6 @@
 
 void Renderer::Init(float x, float y, float w, float h)
 {
-	Get().m_primitives.create();
-
 	Get().m_screenView = glm::ortho(0.0f, w, 0.0f, h);
 
 	SetView(x, y, w, h);
@@ -11,7 +9,7 @@ void Renderer::Init(float x, float y, float w, float h)
 
 void Renderer::Destroy()
 {
-	Get().m_primitives.destroy();
+
 }
 
 void Renderer::Start()
@@ -21,7 +19,7 @@ void Renderer::Start()
 
 void Renderer::Flush()
 {
-	Get().m_primitives.flush(GetView().mat);
+
 }
 
 void Renderer::EnableBlend(GLenum sfactor, GLenum dfactor)
@@ -60,67 +58,6 @@ void Renderer::RenderTextureInstanced(Texture* tex, uint instanceCount)
 
 		glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, indices.data(), instanceCount);
 	}
-}
-
-void Renderer::DrawLine(const Line& line, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.drawLine(line.start, line.end, color, view);
-}
-
-void Renderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.drawLine(start, end, color, view);
-}
-
-void Renderer::DrawRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
-{
-	std::vector<glm::vec2> vertices =
-	{
-		glm::vec2(x, y),
-		glm::vec2(x + w, y),
-		glm::vec2(x + w, y + h),
-		glm::vec2(x, y + h)
-	};
-
-	Get().m_primitives.drawPolygon(vertices, color, view);
-}
-
-void Renderer::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view)
-{
-	DrawRect(pos.x, pos.y, dim.x, dim.y, color, view);
-}
-
-void Renderer::DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.drawCircle(center, radius, color, view);
-}
-
-void Renderer::DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.drawPolygon(vertices, color, view);
-}
-
-void Renderer::FillRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
-{
-	std::vector<glm::vec2> vertices =
-	{
-		glm::vec2(x, y),
-		glm::vec2(x + w, y),
-		glm::vec2(x + w, y + h),
-		glm::vec2(x, y + h)
-	};
-
-	Get().m_primitives.fillPolygon(vertices, color, view);
-}
-
-void Renderer::FillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.fillCircle(center, radius, color, view);
-}
-
-void Renderer::FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
-{
-	Get().m_primitives.fillPolygon(vertices, color, view);
 }
 
 void Renderer::SetView(float x, float y)

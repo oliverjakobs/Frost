@@ -4,10 +4,11 @@
 #include "Shader.h"
 
 #include "Maths/Maths.h"
+#include "Utility/Utils.h"
 
 struct GLRenderLines
 {
-	enum { MaxVertices = 2 * 512 };
+	enum { MaxVertices = 2 * 1024 };
 
 	glm::vec2 m_vertices[MaxVertices];
 	glm::vec4 m_colors[MaxVertices];
@@ -125,7 +126,7 @@ struct GLRenderLines
 
 struct GLRenderTriangles
 {
-	enum { MaxVertices = 3 * 512 };
+	enum { MaxVertices = 3 * 1024 };
 
 	glm::vec2 m_vertices[MaxVertices];
 	glm::vec4 m_colors[MaxVertices];
@@ -243,18 +244,6 @@ struct GLRenderTriangles
 
 Primitives::Primitives()
 {
-	m_lines = NULL;
-	m_triangles = NULL;
-}
-
-Primitives::~Primitives()
-{
-	assert(m_lines == NULL);
-	assert(m_triangles == NULL);
-}
-
-void Primitives::create()
-{
 	m_lines = new GLRenderLines();
 	m_lines->create();
 
@@ -262,91 +251,91 @@ void Primitives::create()
 	m_triangles->create();
 }
 
-void Primitives::destroy()
+Primitives::~Primitives()
 {
 	m_lines->destroy();
-	delete m_lines;
-	m_lines = NULL;
+	SAFE_DELETE(m_lines);
 
 	m_triangles->destroy();
-	delete m_triangles;
-	m_triangles = NULL;
+	SAFE_DELETE(m_triangles)
 }
 
-void Primitives::flush(const glm::mat4& view)
+void Primitives::Flush(const glm::mat4& view)
 {
-	m_lines->flush(view);
-	m_triangles->flush(view);
+	Get().m_lines->flush(view);
+	Get().m_triangles->flush(view);
 }
 
-void Primitives::drawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view) const
+void Primitives::DrawLine(const Line& line, const Color& color, const glm::mat4& view)
 {
-	m_lines->vertex(start, color, view);
-	m_lines->vertex(end, color, view);
+	DrawLine(line.start, line.end, color, view);
 }
 
-void Primitives::drawPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view) const
+void Primitives::DrawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view)
+{
+	Get().m_lines->vertex(start, color, view);
+	Get().m_lines->vertex(end, color, view);
+}
+
+void Primitives::DrawRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
+{
+	std::vector<glm::vec2> vertices =
+	{
+		glm::vec2(x, y),
+		glm::vec2(x + w, y),
+		glm::vec2(x + w, y + h),
+		glm::vec2(x, y + h)
+	};
+
+	Primitives::DrawPolygon(vertices, color, view);
+}
+
+void Primitives::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view)
+{
+	DrawRect(pos.x, pos.y, dim.x, dim.y, color, view);
+}
+
+void Primitives::FillRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
+{
+	std::vector<glm::vec2> vertices =
+	{
+		glm::vec2(x, y),
+		glm::vec2(x + w, y),
+		glm::vec2(x + w, y + h),
+		glm::vec2(x, y + h)
+	};
+
+	Primitives::FillPolygon(vertices, color, view);
+}
+
+void Primitives::FillRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view)
+{
+	FillRect(pos.x, pos.y, dim.x, dim.y, color, view);
+}
+
+void Primitives::DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
 {
 	glm::vec2 p1 = vertices.back();
 
 	for (auto& p2 : vertices)
 	{
-		m_lines->vertex(p1, color, view);
-		m_lines->vertex(p2, color, view);
+		Get().m_lines->vertex(p1, color, view);
+		Get().m_lines->vertex(p2, color, view);
 		p1 = p2;
 	}
 }
 
-void Primitives::fillPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view) const
+void Primitives::FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
 {
 	for (unsigned int i = 1; i < vertices.size() - 1; ++i)
 	{
-		m_triangles->vertex(vertices[0], color, view);
-		m_triangles->vertex(vertices[i], color, view);
-		m_triangles->vertex(vertices[i + 1], color, view);
+		Get().m_triangles->vertex(vertices[0], color, view);
+		Get().m_triangles->vertex(vertices[i], color, view);
+		Get().m_triangles->vertex(vertices[i + 1], color, view);
 	}
 }
 
-void Primitives::fillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view) const
-{
-	const float k_segments = 36;
-	const float k_increment = 2.0f * M_PI / k_segments;
-	float sinInc = sinf(k_increment);
-	float cosInc = cosf(k_increment);
-	glm::vec2 v0 = center;
-	glm::vec2 r1(cosInc, sinInc);
-	glm::vec2 v1 = center + radius * r1;
-
-	for (int i = 0; i < k_segments; ++i)
-	{
-		// Perform rotation to avoid additional trigonometry.
-		glm::vec2 r2;
-		r2.x = cosInc * r1.x - sinInc * r1.y;
-		r2.y = sinInc * r1.x + cosInc * r1.y;
-		glm::vec2 v2 = center + radius * r2;
-		m_triangles->vertex(v0, color, view);
-		m_triangles->vertex(v1, color, view);
-		m_triangles->vertex(v2, color, view);
-		r1 = r2;
-		v1 = v2;
-	}
-
-	r1 = glm::vec2(1.0f, 0.0f);
-	v1 = center + radius * r1;
-	for (int i = 0; i < k_segments; ++i)
-	{
-		glm::vec2 r2;
-		r2.x = cosInc * r1.x - sinInc * r1.y;
-		r2.y = sinInc * r1.x + cosInc * r1.y;
-		glm::vec2 v2 = center + radius * r2;
-		m_lines->vertex(v1, color, view);
-		m_lines->vertex(v2, color, view);
-		r1 = r2;
-		v1 = v2;
-	}
-}
-
-void Primitives::drawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view) const
+void Primitives::DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
 {
 	const float k_segments = 36;
 	const float k_increment = 2.0f * M_PI / k_segments;
@@ -364,8 +353,47 @@ void Primitives::drawCircle(const glm::vec2& center, float radius, const Color& 
 		r2.x = cosInc * r1.x - sinInc * r1.y;
 		r2.y = sinInc * r1.x + cosInc * r1.y;
 		glm::vec2 v2 = center + radius * r2;
-		m_lines->vertex(v1, color, view);
-		m_lines->vertex(v2, color, view);
+		Get().m_lines->vertex(v1, color, view);
+		Get().m_lines->vertex(v2, color, view);
+		r1 = r2;
+		v1 = v2;
+	}
+}
+
+void Primitives::FillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
+{
+	const float k_segments = 36;
+	const float k_increment = 2.0f * M_PI / k_segments;
+	float sinInc = sinf(k_increment);
+	float cosInc = cosf(k_increment);
+	glm::vec2 v0 = center;
+	glm::vec2 r1(cosInc, sinInc);
+	glm::vec2 v1 = center + radius * r1;
+
+	for (int i = 0; i < k_segments; ++i)
+	{
+		// Perform rotation to avoid additional trigonometry.
+		glm::vec2 r2;
+		r2.x = cosInc * r1.x - sinInc * r1.y;
+		r2.y = sinInc * r1.x + cosInc * r1.y;
+		glm::vec2 v2 = center + radius * r2;
+		Get().m_triangles->vertex(v0, color, view);
+		Get().m_triangles->vertex(v1, color, view);
+		Get().m_triangles->vertex(v2, color, view);
+		r1 = r2;
+		v1 = v2;
+	}
+
+	r1 = glm::vec2(1.0f, 0.0f);
+	v1 = center + radius * r1;
+	for (int i = 0; i < k_segments; ++i)
+	{
+		glm::vec2 r2;
+		r2.x = cosInc * r1.x - sinInc * r1.y;
+		r2.y = sinInc * r1.x + cosInc * r1.y;
+		glm::vec2 v2 = center + radius * r2;
+		Get().m_lines->vertex(v1, color, view);
+		Get().m_lines->vertex(v2, color, view);
 		r1 = r2;
 		v1 = v2;
 	}

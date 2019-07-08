@@ -1,0 +1,7 @@
+{
+  "name": "station",
+  "map": "res/maps/station.json",
+  "entities": {
+    "player": "res/scripts/player.json"
+  }
+}

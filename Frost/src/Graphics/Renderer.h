@@ -14,7 +14,6 @@ const Color YELLOW =	Color(1.0f, 1.0f, 0.0f, 1.0f);
 const Color MAGENTA =	Color(1.0f, 0.0f, 1.0f, 1.0f);
 const Color CYAN =		Color(0.0f, 1.0f, 1.0f, 1.0f);
 
-
 inline Color blendColor(const Color& color, float alpha)
 {
 	return Color(color.r, color.g, color.b, alpha);
@@ -38,7 +37,6 @@ private:
 	View m_view;
 	glm::mat4 m_screenView;
 
-	Primitives m_primitives;
 public:
 	static void Init(float x, float y, float w, float h);
 	static void Destroy();
@@ -53,18 +51,6 @@ public:
 	// ----------------------------texture---------------------------------------------------------------------------
 	static void RenderTexture(Texture* tex);
 	static void RenderTextureInstanced(Texture* tex, uint instanceCount);
-
-	// ----------------------------primitives------------------------------------------------------------------------
-	static void DrawLine(const Line& line, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void DrawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void DrawRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-
-	static void FillRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void FillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
-	static void FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view = Renderer::GetViewMat());
 
 	// ----------------------------view------------------------------------------------------------------------------
 	static void SetView(float x, float y);

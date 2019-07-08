@@ -75,22 +75,7 @@
     <ClInclude Include="src\Animation.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Components.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\PhysicsSystem.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\RenderSystem.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\ScriptSystem.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Systems.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\ecsSystem.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\File\FileReader.h">
@@ -218,21 +203,22 @@
       <Filter>src\Core\Graphics\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\Enum.h" />
-    <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Entity\Component.h" />
+    <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\PhysicsSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\ScriptSystem.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\PhysicsSystem.cpp">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\RenderSystem.cpp">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ScriptSystem.cpp">
-      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp">
       <Filter>src\ImGui</Filter>
@@ -304,7 +290,15 @@
     <ClCompile Include="src\Font\BitmapFont.cpp">
       <Filter>src\Core\Graphics\Font</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\ECS\Systems\PhysicsSystem.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Systems\RenderSystem.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Systems\ScriptSystem.cpp">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -332,6 +326,7 @@
     <None Include="res\shader\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\scripts\station.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">

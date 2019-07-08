@@ -53,6 +53,11 @@ void SceneManager::OnRenderDebug()
 	GetActiveScene()->OnRenderDebug();
 }
 
+void SceneManager::OnImGui()
+{
+	GetActiveScene()->OnImGui();
+}
+
 Scene* SceneManager::GetScene(const std::string& name)
 {
 	try

@@ -19,6 +19,7 @@ public:
 	static void OnUpdate();
 	static void OnRender();
 	static void OnRenderDebug();
+	static void OnImGui();
 
 	static Scene* GetScene(const std::string& name);
 	static Scene* GetActiveScene();

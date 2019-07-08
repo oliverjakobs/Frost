@@ -65,6 +65,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 	m_debug = false;
 	m_paused = false;
+	m_showImGui = false;
 
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
@@ -304,6 +305,11 @@ void Application::Pause()
 		SetTitle(m_title);
 }
 
+void Application::ToggleImGui()
+{
+	m_showImGui = !m_showImGui;
+}
+
 void Application::EnableVsync(bool b)
 {
 	glfwSwapInterval(b);
@@ -327,7 +333,11 @@ void Application::Run()
 		if (m_debug)
 			OnRenderDebug();
 
+		if (m_showImGui)
+			OnImGui();
+
 		Renderer::Flush();
+		Primitives::Flush(Renderer::GetViewMat());
 		m_imguiRenderer.Flush(m_window);
 
 		glfwPollEvents();

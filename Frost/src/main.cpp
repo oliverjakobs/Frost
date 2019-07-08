@@ -3,8 +3,6 @@
 #include "Scene/SceneManager.h"
 #include "Scene/EntityMananger.h"
 
-#define SHOW_IMGUI 1
-
 class Frost : public Application
 {
 private:
@@ -18,10 +16,10 @@ public:
 
 		EnableDebugMode(true);
 		EnableVsync(false);
+		ToggleImGui();
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
-		ResourceManager::AddShader("instanced", new Shader("res/shader/instanced.vert", "res/shader/instanced.frag"));
 
 		Scene* scene = new Scene("station", new TileMap("res/maps/station.json"));
 
@@ -52,6 +50,9 @@ public:
 			case KEY_F7:
 				ToggleDebugMode();
 				break;
+			case KEY_F8:
+				ToggleImGui();
+				break;
 			}
 		}
 	}
@@ -75,9 +76,12 @@ public:
 	void OnRenderDebug() override
 	{
 		SceneManager::OnRenderDebug();
+	}
 
-		// -------------------------| ImGui |-------------------------------------------------------------------
-#if SHOW_IMGUI
+	void OnImGui() override
+	{
+		SceneManager::OnImGui();
+
 		//Entity
 		ImGui::Begin("Player");
 
@@ -90,8 +94,6 @@ public:
 		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
 
 		ImGui::End();
-#endif
-		// -----------------------------------------------------------------------------------------------------
 	}
 }; 
 

@@ -12,17 +12,10 @@ protected:
 
 	unique_ptr<TileMap> m_map;
 
-	ScriptSystem* m_scriptSystem;
-	TilePhysicsSystem* m_tilePhysicsSystem;
-	AnimationSystem* m_animationSystem;
-	ImageRenderSystem* m_imageRenderSystem;
-
 	std::unordered_map<std::string, unsigned int> m_entities;
 
 	entt::registry m_registry;
-	sol::state m_lua;
-
-	void LoadLuaState();
+	LuaBinding m_lua;
 public:
 	Scene(const std::string& name, TileMap* map);
 	~Scene();
@@ -39,6 +32,7 @@ public:
 	void OnUpdate();
 	void OnRender();
 	void OnRenderDebug();
+	void OnImGui();
 
 	virtual void OnUserEvent(Event& e) {};
 	virtual void OnUserUpdate() {};
@@ -49,7 +43,7 @@ public:
 	Rect GetConstraint() const;
 
 	entt::registry& GetRegistry();
-	sol::state& GetLua();
+	LuaBinding& GetLua();
 
 	std::string GetName() const;
 };

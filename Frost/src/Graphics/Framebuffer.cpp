@@ -21,7 +21,7 @@ FrameBuffer::FrameBuffer(int w, int h)
 
 	// create vao
 	m_vao.Bind();
-	m_vao.BindVertexBuffer();
+	m_vao.GenVertexBuffer();
 	m_vao.SetVertexBufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
 	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
 	m_vao.SetVertexAttribPointer(1, 2, 4, 2);

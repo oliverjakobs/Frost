@@ -29,6 +29,7 @@ private:
 	bool m_running;
 	bool m_paused;
 	bool m_debug;
+	bool m_showImGui;
 
 	bool OnWindowClose(WindowCloseEvent& e);
 	void EventCallback(Event& e);
@@ -49,6 +50,8 @@ public:
 
 	void Pause();
 
+	void ToggleImGui();
+
 	void EnableVsync(bool b);
 
 	// --------------------------| Game Loop |-------------------------------
@@ -59,6 +62,7 @@ public:
 	virtual void OnUpdate() = 0;
 	virtual void OnRender() = 0;
 	virtual void OnRenderDebug() {}
+	virtual void OnImGui() {}
 
 	// ----------------------------------------------------------------------
 	void SetTitle(const std::string& title);

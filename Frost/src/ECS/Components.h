@@ -1,5 +1,7 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 #include "Graphics.h"
 #include "Animation.h"
 #include "Tile/Tilemap.h"
@@ -20,7 +22,7 @@ struct TransformComponent
 
 	Direction direction;
 
-	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim), direction(Direction::LEFT) { }
+	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim), direction(Direction::RIGHT) { }
 };
 
 struct ScriptComponent
@@ -43,7 +45,7 @@ struct AnimationComponent
 	std::map<std::string, Animation> animations;
 	std::string currentAnimation;
 
-	AnimationComponent(std::map<std::string, Animation> anims) : animations(anims), currentAnimation(std::string()) {}
+	AnimationComponent(std::map<std::string, Animation> anims, const std::string& startingAnim) : animations(anims), currentAnimation(startingAnim) {}
 };
 
 struct CameraComponent
