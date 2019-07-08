@@ -13,33 +13,33 @@ void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severi
 
 	switch (source)
 	{
-	case GL_DEBUG_SOURCE_API:             DEBUG_INFO("Source: API"); break;
-	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   DEBUG_INFO("Source: Window System"); break;
-	case GL_DEBUG_SOURCE_SHADER_COMPILER: DEBUG_INFO("Source: Shader Compiler"); break;
-	case GL_DEBUG_SOURCE_THIRD_PARTY:     DEBUG_INFO("Source: Third Party"); break;
-	case GL_DEBUG_SOURCE_APPLICATION:     DEBUG_INFO("Source: Application"); break;
-	case GL_DEBUG_SOURCE_OTHER:           DEBUG_INFO("Source: Other"); break;
+	case GL_DEBUG_SOURCE_API:				DEBUG_INFO("Source: API"); break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:		DEBUG_INFO("Source: Window System"); break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER:	DEBUG_INFO("Source: Shader Compiler"); break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY:		DEBUG_INFO("Source: Third Party"); break;
+	case GL_DEBUG_SOURCE_APPLICATION:		DEBUG_INFO("Source: Application"); break;
+	case GL_DEBUG_SOURCE_OTHER:				DEBUG_INFO("Source: Other"); break;
 	}
 
 	switch (type)
 	{
-	case GL_DEBUG_TYPE_ERROR:               DEBUG_INFO("Type: Error"); break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: DEBUG_INFO("Type: Deprecated Behaviour"); break;
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  DEBUG_INFO("Type: Undefined Behaviour"); break;
-	case GL_DEBUG_TYPE_PORTABILITY:         DEBUG_INFO("Type: Portability"); break;
-	case GL_DEBUG_TYPE_PERFORMANCE:         DEBUG_INFO("Type: Performance"); break;
-	case GL_DEBUG_TYPE_MARKER:              DEBUG_INFO("Type: Marker"); break;
-	case GL_DEBUG_TYPE_PUSH_GROUP:          DEBUG_INFO("Type: Push Group"); break;
-	case GL_DEBUG_TYPE_POP_GROUP:           DEBUG_INFO("Type: Pop Group"); break;
-	case GL_DEBUG_TYPE_OTHER:               DEBUG_INFO("Type: Other"); break;
+	case GL_DEBUG_TYPE_ERROR:				DEBUG_INFO("Type: Error"); break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:	DEBUG_INFO("Type: Deprecated Behaviour"); break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:	DEBUG_INFO("Type: Undefined Behaviour"); break;
+	case GL_DEBUG_TYPE_PORTABILITY:			DEBUG_INFO("Type: Portability"); break;
+	case GL_DEBUG_TYPE_PERFORMANCE:			DEBUG_INFO("Type: Performance"); break;
+	case GL_DEBUG_TYPE_MARKER:				DEBUG_INFO("Type: Marker"); break;
+	case GL_DEBUG_TYPE_PUSH_GROUP:			DEBUG_INFO("Type: Push Group"); break;
+	case GL_DEBUG_TYPE_POP_GROUP:			DEBUG_INFO("Type: Pop Group"); break;
+	case GL_DEBUG_TYPE_OTHER:				DEBUG_INFO("Type: Other"); break;
 	}
 
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:         DEBUG_INFO("Severity: high"); break;
-	case GL_DEBUG_SEVERITY_MEDIUM:       DEBUG_INFO("Severity: medium"); break;
-	case GL_DEBUG_SEVERITY_LOW:          DEBUG_INFO("Severity: low"); break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION: DEBUG_INFO("Severity: notification"); break;
+	case GL_DEBUG_SEVERITY_HIGH:			DEBUG_INFO("Severity: high"); break;
+	case GL_DEBUG_SEVERITY_MEDIUM:			DEBUG_INFO("Severity: medium"); break;
+	case GL_DEBUG_SEVERITY_LOW:				DEBUG_INFO("Severity: low"); break;
+	case GL_DEBUG_SEVERITY_NOTIFICATION:	DEBUG_INFO("Severity: notification"); break;
 	}
 }
 
@@ -65,16 +65,17 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 	m_debug = false;
 	m_paused = false;
+	m_showImGui = false;
 
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
 	{
-		DEBUG_ERROR("Failed to initialize GLFW");
+		DEBUG_ERROR("[GLFW] Failed to initialize GLFW");
 		glfwTerminate();
 		return false;
 	}
 
-	DEBUG_INFO("Initialized GLFW {0}", glfwGetVersionString());
+	DEBUG_INFO("[GLFW] Initialized GLFW {0}", glfwGetVersionString());
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
@@ -88,7 +89,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (m_window == nullptr)
 	{
-		DEBUG_ERROR("Failed to create GLFW window");
+		DEBUG_ERROR("[GLFW] Failed to create GLFW window");
 		glfwTerminate();
 		return false;
 	}
@@ -96,12 +97,12 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	glfwMakeContextCurrent(m_window);
 	glfwSetWindowUserPointer(m_window, this);
 
-	DEBUG_INFO("Window created: {0} ({1}, {2})", title, width, height);
+	DEBUG_INFO("[GLFW] Window created: {0} ({1}, {2})", title, width, height);
 
 	// Set GLFW callbacks
 	glfwSetErrorCallback([](int error, const char* desc)
 	{
-		DEBUG_ERROR("[GLFW]: ({0}) {1}", error, desc);
+		DEBUG_ERROR("[GLFW] ({0}) {1}", error, desc);
 	});
 
 	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
@@ -200,16 +201,16 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	// loading glad
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		DEBUG_ERROR("Failed to initialize GLAD");
+		DEBUG_ERROR("[GLAD] Failed to initialize GLAD");
 		glfwTerminate();
 		return false;
 	}
 
-	DEBUG_INFO("Initialized GLAD");
-	DEBUG_INFO("OpenGL Version: {0}", glGetString(GL_VERSION));
-	DEBUG_INFO("OpenGL Vendor: {0}", glGetString(GL_VENDOR));
-	DEBUG_INFO("OpenGL Renderer: {0}", glGetString(GL_RENDERER));
-	DEBUG_INFO("GLSL Version: {0}", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	DEBUG_INFO("[GLAD] Initialized");
+	DEBUG_INFO("[OpenGL] Version: {0}", glGetString(GL_VERSION));
+	DEBUG_INFO("[OpenGL] Vendor: {0}", glGetString(GL_VENDOR));
+	DEBUG_INFO("[OpenGL] Renderer: {0}", glGetString(GL_RENDERER));
+	DEBUG_INFO("[OpenGL] GLSL Version: {0}", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 #ifdef _DEBUG
 	//Set up opengl debug output
@@ -221,15 +222,15 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		glDebugMessageCallback(glDebugOutput, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
-		DEBUG_INFO("Debug context created");
+		DEBUG_INFO("[OpenGL] Debug context created");
 	}
 #endif
 
 	Renderer::Init(0.0f, 0.0f, (float)m_width, (float)m_height);
 
 	// initialize imgui
-	//m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
-	m_imguiRenderer.Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
+	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
+	ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
 	return true;
 }
@@ -304,6 +305,11 @@ void Application::Pause()
 		SetTitle(m_title);
 }
 
+void Application::ToggleImGui()
+{
+	m_showImGui = !m_showImGui;
+}
+
 void Application::EnableVsync(bool b)
 {
 	glfwSwapInterval(b);
@@ -319,7 +325,7 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate();
 
-		m_imguiRenderer.Start();
+		ImGuiRenderer::Start();
 		Renderer::Start();
 
 		OnRender();
@@ -327,8 +333,12 @@ void Application::Run()
 		if (m_debug)
 			OnRenderDebug();
 
+		if (m_showImGui)
+			OnImGui();
+
 		Renderer::Flush();
-		m_imguiRenderer.Flush(m_window);
+		Primitives::Flush(Renderer::GetViewMat());
+		ImGuiRenderer::Flush(m_window);
 
 		glfwPollEvents();
 		glfwSwapBuffers(m_window);

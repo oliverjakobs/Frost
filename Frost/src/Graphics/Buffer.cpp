@@ -22,7 +22,7 @@ void VAO::Unbind() const
 	glBindVertexArray(0);
 }
 
-unsigned int VAO::BindVertexBuffer()
+unsigned int VAO::GenVertexBuffer()
 {
 	unsigned int vbo;
 
@@ -32,7 +32,13 @@ unsigned int VAO::BindVertexBuffer()
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-	return vbo;
+	return buffers.size() - 1;
+}
+
+void VAO::BindVertexBuffer(unsigned int index)
+{
+	if (index < buffers.size())
+		glBindBuffer(GL_ARRAY_BUFFER, buffers.at(index));
 }
 
 void VAO::UnbindVertexBuffer()
@@ -60,4 +66,15 @@ void VAO::SetVertexAttribIPointer(unsigned int index, int size, size_t stride, i
 void VAO::SetVertexAttribDivisor(unsigned int index, unsigned int divisor)
 {
 	glVertexAttribDivisor(index, divisor);
+}
+
+void VAO::MapBufferData(unsigned int index, const void* data, std::size_t size)
+{
+	BindVertexBuffer(index);
+
+	void* ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+
+	memcpy(ptr, data, size);
+
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 }

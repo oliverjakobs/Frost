@@ -20,7 +20,7 @@ Image::Image(TextureAtlas* texture, float width, float height)
 
 	m_vao.Bind();
 
-	m_vao.BindVertexBuffer();
+	m_vao.GenVertexBuffer();
 
 	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
 	m_vao.SetVertexAttribPointer(0, 2, 4, 0);

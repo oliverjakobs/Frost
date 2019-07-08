@@ -1,5 +1,5 @@
 #pragma once
 
-#include "ScriptSystem.h"
-#include "RenderSystem.h"
-#include "PhysicsSystem.h"
+#include "Systems/ScriptSystem.h"
+#include "Systems/RenderSystem.h"
+#include "Systems/PhysicsSystem.h"

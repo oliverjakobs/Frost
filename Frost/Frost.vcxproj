@@ -94,6 +94,8 @@
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Entity\Component.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\Graphics\Buffer.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
@@ -107,11 +109,10 @@
     <ClInclude Include="src\Graphics\Texture.h" />
     <ClInclude Include="src\Types.h" />
     <ClInclude Include="src\ECS\Components.h" />
-    <ClInclude Include="src\ECS\PhysicsSystem.h" />
-    <ClInclude Include="src\ECS\RenderSystem.h" />
-    <ClInclude Include="src\ECS\ScriptSystem.h" />
+    <ClInclude Include="src\ECS\Systems\PhysicsSystem.h" />
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\ECS\Systems\ScriptSystem.h" />
     <ClInclude Include="src\ECS\Systems.h" />
-    <ClInclude Include="src\ECS\ecsSystem.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
@@ -145,6 +146,7 @@
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Graphics\Framebuffer.cpp" />
@@ -154,9 +156,9 @@
     <ClCompile Include="src\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Texture.cpp" />
-    <ClCompile Include="src\ECS\PhysicsSystem.cpp" />
-    <ClCompile Include="src\ECS\RenderSystem.cpp" />
-    <ClCompile Include="src\ECS\ScriptSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\PhysicsSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\RenderSystem.cpp" />
+    <ClCompile Include="src\ECS\Systems\ScriptSystem.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
@@ -175,9 +177,11 @@
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\maps\station.json" />
+    <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
     <None Include="res\scripts\player.json" />
     <None Include="res\scripts\player.lua" />
+    <None Include="res\scripts\scenes.json" />
     <None Include="res\shader\instanced.frag" />
     <None Include="res\shader\instanced.vert" />
     <None Include="res\shader\shader.frag" />

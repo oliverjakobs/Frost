@@ -6,12 +6,10 @@ struct GLFWwindow;
 
 class ImGuiRenderer
 {
-private:
-	float m_Time = 0.0f;
 public:
-	void Init(GLFWwindow* context, unsigned int configFlags);
-	void Quit();
+	static void Init(GLFWwindow* context, unsigned int configFlags);
+	static void Quit();
 
-	void Start();
-	void Flush(GLFWwindow* context);
+	static void Start();
+	static void Flush(GLFWwindow* context);
 };

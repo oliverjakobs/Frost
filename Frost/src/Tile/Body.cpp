@@ -72,31 +72,31 @@ void Body::OnUpdate()
 
 void Body::OnRender() const
 {
-	Renderer::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, m_onSlope ? BLUE : GREEN);
+	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, Renderer::GetViewMat());
 
-#ifdef TILE_SHOW_SENSOR
+#if TILE_SHOW_SENSOR
 	// showing the sensors (only for dynamic bodies)
 	if (m_type == BODY_DYNAMIC)
 	{
-		Renderer::DrawLine(GetSensorBottom(m_position, m_offsetVertical), RED);
-		Renderer::DrawLine(GetSensorTop(m_position, m_offsetVertical), RED);
-		Renderer::DrawLine(GetSensorLeft(m_position, m_offsetHorizontal), RED);
-		Renderer::DrawLine(GetSensorRight(m_position, m_offsetHorizontal), RED);
+		Primitives::DrawLine(GetSensorBottom(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorTop(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorLeft(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorRight(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
 
-#ifdef TILE_SHOW_SLOPE_SENSOR
+#if TILE_SHOW_SLOPE_SENSOR
 		// show slope sensors
 		// far sensors
-		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
-		Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
 		// near sensors
-		Renderer::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED);
-		Renderer::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED);
+		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
 #endif
 	}
 #endif
 
 	// center/position of the body 
-	Renderer::FillCircle(m_position, 2.0f, BLACK);
+	//Primitives::FillCircle(m_position, 2.0f, BLACK, Renderer::GetViewMat());
 }
 
 void Body::MoveX(float x)

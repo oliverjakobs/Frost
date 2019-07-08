@@ -87,6 +87,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		json animation = root.at("animation");
 
 		std::map<std::string, Animation> animations;
+		std::string startAnim;
 
 		for (auto&[name, anim] : animation.items())
 		{
@@ -94,10 +95,13 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 			int length = jsonToInt(anim, "length");
 			float delay = jsonToFloat(anim, "delay");
 
+			if (start == 0)
+				startAnim = name;
+
 			animations.insert(AnimationDef(name, Animation(start, length, delay)));
 		}
 
-		scene->GetRegistry().assign<AnimationComponent>(entity, animations);
+		scene->GetRegistry().assign<AnimationComponent>(entity, animations, startAnim);
 	}
 
 	// ScriptComponent
@@ -107,7 +111,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 		std::string src = jsonToString(script, "src");
 
-		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), "res/scripts/player.lua");
+		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), scene->GetLua().BindLuaFunction("res/scripts/player.lua", "onUpdate"));
 	}
 
 	return entity;

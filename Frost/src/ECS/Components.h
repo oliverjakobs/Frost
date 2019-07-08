@@ -1,8 +1,11 @@
 #pragma once
 
+#include <entt/entt.hpp>
+
 #include "Graphics.h"
 #include "Animation.h"
 #include "Tile/Tilemap.h"
+#include "Script/Lua/LuaBinding.h"
 
 struct ImageComponent
 {
@@ -19,14 +22,14 @@ struct TransformComponent
 
 	Direction direction;
 
-	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim), direction(Direction::LEFT) { }
+	TransformComponent(const glm::vec2& pos, const glm::vec2& dim) : position(pos), dimension(dim), direction(Direction::RIGHT) { }
 };
 
 struct ScriptComponent
 {
-	std::string script;
+	sol::function func;
 
-	ScriptComponent(const std::string& script) : script(script) { }
+	ScriptComponent(sol::function& func) : func(func) { }
 };
 
 struct PhysicsComponent
@@ -42,7 +45,7 @@ struct AnimationComponent
 	std::map<std::string, Animation> animations;
 	std::string currentAnimation;
 
-	AnimationComponent(std::map<std::string, Animation> anims) : animations(anims), currentAnimation(std::string()) {}
+	AnimationComponent(std::map<std::string, Animation> anims, const std::string& startingAnim) : animations(anims), currentAnimation(startingAnim) {}
 };
 
 struct CameraComponent

@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Types.h"
+#include "Maths/Maths.h"
+#include "Utility/Singelton.h"
 
 struct GLRenderLines;
 struct GLRenderTriangles;
 
-class Primitives
+class Primitives : private Singleton<Primitives>
 {
 private:
 	GLRenderLines* m_lines;
@@ -15,15 +17,23 @@ public:
 	Primitives();
 	~Primitives();
 
-	void create();
-	void destroy();
+	static void Flush(const glm::mat4& view);
 
-	void flush(const glm::mat4& view);
+	// Line
+	static void DrawLine(const Line& line, const Color& color, const glm::mat4& view);
+	static void DrawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view);
 
-	void drawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view) const;
-	void drawPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view) const;
-	void drawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view) const;
+	// Rect
+	static void DrawRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view);
+	static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view);
+	static void FillRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view);
+	static void FillRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view);
 
-	void fillPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view) const;
-	void fillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view) const;
+	// Polygon
+	static void DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view);
+	static void FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view);
+
+	// Circle
+	static void DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view);
+	static void FillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view);
 };
