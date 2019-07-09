@@ -13,6 +13,10 @@ Body* PhysicsComponent::GetBody() const
 
 void PhysicsComponent::OnUpdate()
 {
+	m_body->SetPosition(m_entity->GetPosition() + m_bodyPos);
+
+	m_body->Update();
+
 	m_entity->SetPosition(m_body->GetPosition() - m_bodyPos);
 }
 
@@ -22,5 +26,5 @@ void PhysicsComponent::OnRender()
 
 void PhysicsComponent::OnRenderDebug()
 {
-	//m_body->OnRender();
+	m_body->Render();
 }

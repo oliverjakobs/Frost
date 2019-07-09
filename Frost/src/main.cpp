@@ -1,7 +1,6 @@
 #include "Application.h"
 
 #include "Scene/SceneManager.h"
-#include "Scene/EntityMananger.h"
 
 class Frost : public Application
 {

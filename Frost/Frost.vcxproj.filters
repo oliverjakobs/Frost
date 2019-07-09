@@ -171,9 +171,6 @@
     <ClInclude Include="src\Maths\Visibility.h">
       <Filter>src\Maths</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\EntityMananger.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -224,6 +221,10 @@
     </ClInclude>
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\Lua\LuaEntity.h" />
+    <ClInclude Include="src\Entity\EntityMananger.h">
+      <Filter>src\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -287,9 +288,6 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\EntityMananger.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
@@ -319,6 +317,10 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
+    <ClCompile Include="src\Entity\EntityMananger.cpp">
+      <Filter>src\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

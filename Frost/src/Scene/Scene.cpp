@@ -2,9 +2,8 @@
 
 #include "ImGui/ImGuiRenderer.h"
 
-#include "EntityMananger.h"
-
 #include "Utility/Utils.h"
+#include "Utility/Timer.h"
 #include "Debugger.h"
 
 Scene::Scene(const std::string& name, TileMap* map)
@@ -30,6 +29,11 @@ void Scene::AddEntity(const std::string& name, const std::string& path)
 	m_entities.insert({ entity->GetName(), unique_ptr<Entity>(entity) });
 }
 
+void Scene::AddSpawnPosition(const std::string& entityName, const glm::vec2& position)
+{
+	m_spawnPosition.insert({ entityName, position });
+}
+
 Entity* Scene::GetEntity(const std::string& name) const
 {
 	if (m_entities.find(name) != m_entities.end())
@@ -40,6 +44,11 @@ Entity* Scene::GetEntity(const std::string& name) const
 
 void Scene::OnEntry()
 {
+	for (auto&[name, pos] : m_spawnPosition)
+	{
+		if (m_entities.find(name) != m_entities.end())
+			m_entities.at(name)->SetPosition(pos);
+	}
 }
 
 void Scene::OnExtit()
@@ -53,7 +62,8 @@ void Scene::OnEvent(Event& e)
 
 void Scene::OnUpdate()
 {
-	m_map->OnUpdate();
+	// measure time for simulation
+	float start = Timer::GetTimeMS();
 
 	for (auto&[name, entity] : m_entities)
 	{
@@ -61,6 +71,10 @@ void Scene::OnUpdate()
 	}
 
 	m_lua.GetState().collect_garbage();
+
+	float end = Timer::GetTimeMS();
+
+	m_simTime = end - start;
 }
 
 void Scene::OnRender()
@@ -87,6 +101,7 @@ void Scene::OnImGui()
 {
 	ImGui::Begin("Scene");
 	ImGui::Text("Name: %s", m_name.c_str());
+	ImGui::Text("Simulation time: %2.4f ms", m_simTime);
 	ImGui::Separator();
 	ImGui::Text("Lua:");
 	ImGui::Text("Memory: %d bytes", m_lua.GetState().memory_used());
@@ -95,7 +110,6 @@ void Scene::OnImGui()
 	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
 	ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());
 	ImGui::Text("Gravity: %4.2f, %4.2f", m_map->GetGravity().x, m_map->GetGravity().y);
-	ImGui::Text("Simulation time: %2.4f ms", m_map->GetSimulationTime());
 	ImGui::End();
 }
 

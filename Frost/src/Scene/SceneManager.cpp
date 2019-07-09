@@ -24,8 +24,7 @@ void SceneManager::Load(const std::string& path)
 
 			if (entityJson.find("position") != entityJson.end())
 			{
-				auto entity = scene->GetEntity(entityName);
-				DEBUG_INFO("Has position");
+				scene->AddSpawnPosition(entityName, jsonToVec2(entityJson, "position"));
 			}
 		}
 

@@ -24,11 +24,6 @@ using std::shared_ptr;
 using std::make_shared;
 using std::weak_ptr;
 
-enum RenderFlip
-{
-	FLIP_NONE = 0,
-	FLIP_HORIZONTAL = 1,
-	FLIP_VERTICAL = 2
-};
+ENUM(RenderFlip, NONE = 0, HORIZONTAL = 1, VERTICAL = 2);
 
 ENUM(Direction, LEFT, RIGHT, UP,  DOWN);

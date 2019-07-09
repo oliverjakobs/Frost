@@ -109,21 +109,6 @@ void TileMap::DestroyBody(Body* body)
 	}
 }
 
-void TileMap::OnUpdate()
-{
-	// measure time for simulation
-	float start = Timer::GetTimeMS();
-
-	for (auto& body : m_bodies)
-	{
-		body->OnUpdate();
-	}
-
-	float end = Timer::GetTimeMS();
-
-	m_simTime = end - start;
-}
-
 void TileMap::OnRender() const
 {
 	m_renderer->RenderMap(glm::mat4(), Renderer::GetViewMat(), glm::mat4());
@@ -142,11 +127,6 @@ void TileMap::OnRenderDebug() const
 		else if (tile.type == TILE_SLOPE_RIGHT)
 			Primitives::DrawPolygon({ tile.position, tile.position + glm::vec2(m_tileSize, 0.0f),  tile.position + glm::vec2(m_tileSize) }, MAGENTA, Renderer::GetViewMat());
 	}*/
-
-	for (auto& body : m_bodies)
-	{
-		body->OnRender();
-	}
 }
 
 int TileMap::GetWidth() const
@@ -254,11 +234,6 @@ std::vector<const Tile*> TileMap::GetAdjacentTiles(const glm::vec2& pos, const g
 glm::vec2 TileMap::GetGravity() const
 {
 	return m_gravity;
-}
-
-float TileMap::GetSimulationTime() const
-{
-	return m_simTime;
 }
 
 std::vector<Tile> TileMap::GetTiles() const

@@ -4,10 +4,8 @@
 #include "Input/Input.h"
 
 #include "Debugger.h"
-#include "Entity/Entity.h"
-#include "Entity/Components.h"
 
-unsigned int LuaInput::GetKeyCode(const std::string& key)
+int LuaInput::GetKeyCode(const std::string& key)
 {
 	if (stringCompare(key, "SPACE"))
 		return KEY_SPACE;
@@ -15,77 +13,51 @@ unsigned int LuaInput::GetKeyCode(const std::string& key)
 	return key.front();
 }
 
+int LuaInput::GetButtonCode(const std::string& button)
+{
+	if (stringCompare(button, "LEFT"))
+		return MOUSE_BUTTON_LEFT;
+	if (stringCompare(button, "RIGHT"))
+		return MOUSE_BUTTON_RIGHT;
+	if (stringCompare(button, "MIDDLE"))
+		return MOUSE_BUTTON_MIDDLE;
+
+	return MOUSE_BUTTON_LAST + 1;
+}
+
 bool LuaInput::KeyPressed(const std::string& key)
 {
 	return Input::KeyPressed(GetKeyCode(key));
 }
 
-bool LuaInput::KeyReleased(const std::string & key)
+bool LuaInput::KeyReleased(const std::string& key)
 {
 	return Input::KeyReleased(GetKeyCode(key));
 }
 
-LuaEntity::LuaEntity(Entity* entity) : m_entity(entity)
+bool LuaInput::MousePressed(const std::string& button)
 {
+	return Input::MousePressed(GetButtonCode(button));
 }
 
-glm::vec2 LuaEntity::GetVelocity()
+bool LuaInput::MouseReleased(const std::string& button)
 {
-	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
-
-	return phys->GetBody()->GetVelocity();
+	return Input::MouseReleased(GetButtonCode(button));
 }
 
-bool LuaEntity::CollidesBottom()
+glm::vec2 LuaInput::MousePosition()
 {
-	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
-
-	return phys->GetBody()->CollidesBottom();
+	return Input::MousePosition();
 }
 
-void LuaEntity::Drop()
+float LuaInput::MouseX()
 {
-	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
-
-	phys->GetBody()->Drop();
+	return Input::MouseX();
 }
 
-void LuaEntity::SetVelocity(const glm::vec2& vel)
+float LuaInput::MouseY()
 {
-	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
-
-	phys->GetBody()->SetVelocity(vel);
-}
-
-void LuaEntity::PlayAnimation(const std::string& animation, int flip)
-{
-	AnimationComponent* anim = m_entity->GetComponent<AnimationComponent>();
-	DEBUG_ASSERT(anim, "[LUA] Entity has no AnimationComponent");
-
-	ImageComponent* img = m_entity->GetComponent<ImageComponent>();
-	DEBUG_ASSERT(img, "[LUA] Entity has no ImageComponent");
-
-	anim->PlayAnimation(animation);
-
-	if (flip > 0)
-		img->SetRenderFlip((RenderFlip)(flip - 1));
-}
-
-void LuaEntity::SetView()
-{
-	CameraComponent* cam = m_entity->GetComponent<CameraComponent>();
-	DEBUG_ASSERT(cam, "[LUA] Entity has no CameraComponent");
-
-	Renderer::SetViewCenter(m_entity->GetPosition() + cam->GetOffset(), cam->GetConstraint());
-}
-
-void LuaEntity::SetDirection(const std::string& direction)
-{
-	m_entity->SetDirection(Direction::FromString(direction));
+	return Input::MouseY();
 }
 
 void LuaBinding::LoadState()
@@ -101,20 +73,38 @@ void LuaBinding::LoadState()
 	// Input
 	m_lua.new_usertype<LuaInput>("Input",
 		sol::constructors<LuaInput()>(),
-		"KeyPressed", &LuaInput::KeyPressed,
-		"KeyReleased", &LuaInput::KeyReleased
+		"KeyPressed",		&LuaInput::KeyPressed,
+		"KeyReleased",		&LuaInput::KeyReleased,
+		"MousePressed",		&LuaInput::MousePressed,
+		"MouseReleased",	&LuaInput::MouseReleased,
+		"MousePosition",	&LuaInput::MousePosition,
+		"MouseX",			&LuaInput::MouseX,
+		"MouseY",			&LuaInput::MouseY
 		);
 
 	// Entity
 	m_lua.new_usertype<LuaEntity>("Entity",
 		sol::constructors<LuaEntity(Entity*)>(),
-		"GetVelocity", &LuaEntity::GetVelocity,
-		"CollidesBottom", &LuaEntity::CollidesBottom,
-		"Drop", &LuaEntity::Drop,
-		"SetVelocity", &LuaEntity::SetVelocity,
+		// base
+		"SetPosition",	&LuaEntity::SetPosition,
+		"SetDimension", &LuaEntity::SetDimension,
+		"SetDirection", &LuaEntity::SetDirection,
+		"GetPosition",	&LuaEntity::GetPosition,
+		"GetDimension", &LuaEntity::GetDimension,
+		"GetDirection", &LuaEntity::GetDirection,
+		// physics
+		"SetVelocity",		&LuaEntity::SetVelocity,
+		"GetVelocity",		&LuaEntity::GetVelocity,
+		"CollidesBottom",	&LuaEntity::CollidesBottom,
+		"CollidesTop",		&LuaEntity::CollidesTop,
+		"CollidesLeft",		&LuaEntity::CollidesLeft,
+		"CollidesRight",	&LuaEntity::CollidesRight,
+		"Drop",				&LuaEntity::Drop,
+		// graphics
 		"PlayAnimation", &LuaEntity::PlayAnimation,
-		"SetView", &LuaEntity::SetView,
-		"SetDirection", &LuaEntity::SetDirection
+		"SetRenderFlip", &LuaEntity::SetRenderFlip,
+		// view
+		"SetView", &LuaEntity::SetView
 		);
 }
 

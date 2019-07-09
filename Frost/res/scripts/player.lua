@@ -8,17 +8,17 @@ function onUpdate(entity)
 
 	-- Input
 	if (Input.KeyPressed("A")) then
-		velocity.x = velocity.x - movementSpeed;
+		velocity.x = velocity.x - movementSpeed
 	end
 	if (Input.KeyPressed("D")) then
-		velocity.x = velocity.x + movementSpeed;
+		velocity.x = velocity.x + movementSpeed
 	end
 
 	if (Input.KeyPressed("SPACE") and collidesBottom) then
-		velocity.y = jumpPower;
+		velocity.y = jumpPower
 	else
 		if (Input.KeyReleased("SPACE") and (velocity.y > 0)) then
-			velocity.y = (velocity.y * 0.5);
+			velocity.y = (velocity.y * 0.5)
 		end
 	end
 
@@ -26,43 +26,36 @@ function onUpdate(entity)
 	then
 		entity:Drop()
 	end
-
-	-- Animation
-	if (velocity.x < 0.0) then
-		flip = 2
+	
+	
+	if (velocity.x > 0.0) then
+		entity:SetDirection("RIGHT")
+		entity:SetRenderFlip("NONE")
 	else
-		if (velocity.x > 0.0) then
-			flip = 1
-		else
-			flip = 0
+		if (velocity.x < 0.0) then
+			entity:SetDirection("LEFT")
+			entity:SetRenderFlip("HORIZONTAL")
 		end
 	end
 
+	-- Animation
 	if (velocity.y > 0.0) then
-		entity:PlayAnimation("jump", flip)
+		entity:PlayAnimation("jump")
 	else
-		if ((not collidesBottom) and velocity.y <= 0.0)	then
-			entity:PlayAnimation("fall", flip);
+		if (not collidesBottom)	then
+			entity:PlayAnimation("fall")
 		else
 			if (velocity.x ~= 0.0) then 
-				entity:PlayAnimation("walk", flip)
+				entity:PlayAnimation("walk")
 			else
-				entity:PlayAnimation("idle", flip);
+				entity:PlayAnimation("idle")
 			end
 		end
 	end
 
 	-- apply velocity
 	entity:SetVelocity(velocity)
-	
-	if (velocity.x < 0.0) then
-		entity:SetDirection("LEFT")
-	else
-		if (velocity.x > 0.0) then
-			entity:SetDirection("RIGHT")
-		end
-	end
 
 	-- update view
-	entity:SetView();
+	entity:SetView()
 end

@@ -4,8 +4,7 @@
 
 #include "Event/Event.h"
 
-#include "Entity/Entity.h"
-#include "Entity/Components.h"
+#include "Entity/EntityMananger.h"
 
 class Scene
 {
@@ -14,7 +13,11 @@ protected:
 
 	unique_ptr<TileMap> m_map;
 
-	std::unordered_map<std::string, unique_ptr<Entity>> m_entities;
+	std::map<std::string, unique_ptr<Entity>> m_entities;
+	std::map<std::string, glm::vec2> m_spawnPosition;
+
+	// stores the time the simulation takes for debug purposes
+	float m_simTime;
 
 	LuaBinding m_lua;
 public:
@@ -24,6 +27,7 @@ public:
 	void SetName(const std::string& name);
 
 	void AddEntity(const std::string& name, const std::string& path);
+	void AddSpawnPosition(const std::string& entityName, const glm::vec2& position);
 	Entity* GetEntity(const std::string& name) const;
 	
 	void OnEntry();

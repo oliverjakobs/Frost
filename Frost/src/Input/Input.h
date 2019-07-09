@@ -1,6 +1,8 @@
 #pragma once
 
 // From glfw3.h
+#define KEY_UNKNOWN            -1
+
 #define KEY_SPACE              32
 #define KEY_APOSTROPHE         39  /* ' */
 #define KEY_COMMA              44  /* , */
@@ -124,6 +126,8 @@
 #define KEY_RIGHT_SUPER        347
 #define KEY_MENU               348
 
+#define KEY_LAST               KEY_MENU
+
 // Mouse Buttons
 #define MOUSE_BUTTON_1         0
 #define MOUSE_BUTTON_2         1
@@ -138,6 +142,7 @@
 #define MOUSE_BUTTON_RIGHT     MOUSE_BUTTON_2
 #define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
+
 #include "Types.h"
 
 class Input
@@ -146,8 +151,10 @@ public:
 	static bool KeyPressed(int keycode);
 	static bool KeyReleased(int keycode);
 
-	static bool IsMouseButtonPressed(int button);
-	static std::pair<float, float> GetMousePosition();
-	static float GetMouseX();
-	static float GetMouseY();
+	static bool MousePressed(int button);
+	static bool MouseReleased(int button);
+
+	static glm::vec2 MousePosition();
+	static float MouseX();
+	static float MouseY();
 };

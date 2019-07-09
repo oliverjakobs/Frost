@@ -52,7 +52,7 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 void Application::EventCallback(Event& e)
 {
 	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(Application::OnWindowClose));
+	dispatcher.Dispatch<WindowCloseEvent>(BIND_FUNCTION(Application::OnWindowClose));
 
 	OnEvent(e);
 }

@@ -17,9 +17,6 @@ private:
 
 	glm::vec2 m_gravity;
 
-	// stores the time the simulation takes for debug purposes
-	float m_simTime;
-
 	std::vector<Tile> m_tiles;
 
 	std::vector<unique_ptr<Body>> m_bodies;
@@ -34,7 +31,6 @@ public:
 	void DestroyBody(Body* body);
 
 	// loop functions
-	void OnUpdate();
 	void OnRender() const;
 	void OnRenderDebug() const;
 
@@ -63,7 +59,6 @@ public:
 	std::vector<const Tile*> GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size);
 	
 	glm::vec2 GetGravity() const;
-	float GetSimulationTime() const;
 
 	std::vector<Tile> GetTiles() const;
 	std::vector<Line> ToEdges() const;

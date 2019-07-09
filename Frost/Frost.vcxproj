@@ -125,11 +125,12 @@
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\RayCast.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
-    <ClInclude Include="src\Scene\EntityMananger.h" />
+    <ClInclude Include="src\Entity\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\Script\JSONParser.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
+    <ClInclude Include="src\Script\Lua\LuaEntity.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\Tile\Body.h" />
@@ -165,11 +166,12 @@
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
-    <ClCompile Include="src\Scene\EntityMananger.cpp" />
+    <ClCompile Include="src\Entity\EntityMananger.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
     <ClCompile Include="src\Scene\SceneManager.cpp" />
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
+    <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
     <ClCompile Include="src\Tile\Body.cpp" />
     <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Tile\TileRenderer.cpp" />

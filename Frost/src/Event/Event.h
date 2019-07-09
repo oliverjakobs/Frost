@@ -3,9 +3,7 @@
 #include <string>
 #include <sstream>
 
-#define BIT(x) (1 << x)
-
-#define BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+#include "Utility/Utils.h"
 
 enum class EventType
 {
@@ -56,10 +54,7 @@ private:
 	template<typename T>
 	using EventCallback = std::function<bool(T&)>;
 public:
-	EventDispatcher(Event& event)
-		: m_event(event)
-	{
-	}
+	EventDispatcher(Event& event) : m_event(event) { }
 
 	template<typename Type>
 	bool Dispatch(EventCallback<Type> func)

@@ -1,8 +1,13 @@
 #pragma once
 
 #include <iterator>
+#include <functional>
 
 #define SAFE_DELETE(ptr) if( (ptr) != nullptr ) delete (ptr); (ptr) = nullptr;
+
+#define BIT(x) (1 << x)
+
+#define BIND_FUNCTION(fn) std::bind(&fn, this, std::placeholders::_1)
 
 template <typename Type>
 struct range_t

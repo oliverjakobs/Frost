@@ -3,34 +3,24 @@
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 
-#include "Types.h"
+#include "LuaEntity.h"
 
 class LuaInput
 {
 private:
-	static unsigned int GetKeyCode(const std::string& key);
+	static int GetKeyCode(const std::string& key);
+	static int GetButtonCode(const std::string& button);
+
 public:
 	static bool KeyPressed(const std::string& key);
 	static bool KeyReleased(const std::string& key);
-};
 
-class Entity;
-class LuaEntity
-{
-private:
-	Entity* m_entity;
+	static bool MousePressed(const std::string& button);
+	static bool MouseReleased(const std::string& button);
 
-public:
-	LuaEntity(Entity* entity);
-
-	glm::vec2 GetVelocity();
-	bool CollidesBottom();
-
-	void Drop();
-	void SetVelocity(const glm::vec2& vel);
-	void PlayAnimation(const std::string& animation, int flip);
-	void SetView();
-	void SetDirection(const std::string& direction);
+	static glm::vec2 MousePosition();
+	static float MouseX();
+	static float MouseY();
 };
 
 class LuaBinding

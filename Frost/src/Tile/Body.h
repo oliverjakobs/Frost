@@ -37,9 +37,6 @@ private:
 	// accessible through map
 	Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 
-	void OnUpdate();
-	void OnRender() const;
-
 	// move in x and y direction seperatly
 	void MoveX(float x);
 	void MoveY(float y);
@@ -60,6 +57,8 @@ private:
 	Line GetSensorLeft(const glm::vec2& position, const glm::vec2& offset) const;
 	Line GetSensorRight(const glm::vec2& position, const glm::vec2& offset) const;
 public:
+	void Update();
+	void Render() const;
 
 	void SetPosition(const glm::vec2& pos);
 	void SetVelocity(const glm::vec2& vel);

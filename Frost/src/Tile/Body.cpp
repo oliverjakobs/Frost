@@ -22,83 +22,6 @@ Body::Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyTyp
 	m_drop = false;
 }
 
-void Body::OnUpdate()
-{
-	if (m_type == BODY_STATIC)
-		return;
-
-	// ------------------ World Collision ----------------------------------
-	if (m_onSlope && m_velocity.y <= 0.0f)
-		m_velocity += m_map->GetGravity() * m_gravityScale * TILE_SLOPE_GRIP * Timer::GetDeltaTime();
-	else
-		m_velocity += m_map->GetGravity() * m_gravityScale * Timer::GetDeltaTime();
-
-
-	m_offsetHorizontal = glm::vec2(m_sensorOffset, m_onSlope ? 12.0f : 2.0f);
-	m_offsetVertical = glm::vec2(2.0f, m_sensorOffset);
-
-	// check for slopes
-	if (m_velocity.x < 0.0f)
-	{
-		// far sensors
-		m_slopeDetected = CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
-		// near sensors
-		m_slopeDetected |= CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
-	}
-	else if (m_velocity.x > 0.0f)
-	{
-		// far sensors
-		m_slopeDetected = CheckSlope(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
-		// near sensors
-		m_slopeDetected |= CheckSlope(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
-	}
-	else
-		m_slopeDetected = false;
-
-	glm::vec2 oldPos = m_position;
-
-	// move first in x direction and then in y direction
-	MoveX(m_velocity.x * Timer::GetDeltaTime());
-	MoveY(m_velocity.y * Timer::GetDeltaTime());
-
-	m_drop = false;
-
-	// ------------------ Object Collision ---------------------------------
-	for (auto& b : m_map->GetOtherBodies(this))
-	{
-		ResolveBodyCollision(*b, oldPos);
-	}
-}
-
-void Body::OnRender() const
-{
-	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, Renderer::GetViewMat());
-
-#if TILE_SHOW_SENSOR
-	// showing the sensors (only for dynamic bodies)
-	if (m_type == BODY_DYNAMIC)
-	{
-		Primitives::DrawLine(GetSensorBottom(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
-		Primitives::DrawLine(GetSensorTop(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
-		Primitives::DrawLine(GetSensorLeft(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
-		Primitives::DrawLine(GetSensorRight(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
-
-#if TILE_SHOW_SLOPE_SENSOR
-		// show slope sensors
-		// far sensors
-		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
-		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
-		// near sensors
-		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
-		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
-#endif
-	}
-#endif
-
-	// center/position of the body 
-	//Primitives::FillCircle(m_position, 2.0f, BLACK, Renderer::GetViewMat());
-}
-
 void Body::MoveX(float x)
 {
 	m_collidesLeft = false;
@@ -346,6 +269,83 @@ Line Body::GetSensorLeft(const glm::vec2& pos, const glm::vec2& offset) const
 Line Body::GetSensorRight(const glm::vec2& pos, const glm::vec2& offset) const
 {
 	return Line(pos.x + m_halfDimension.x + offset.x, pos.y - m_halfDimension.y + offset.y, pos.x + m_halfDimension.x + offset.x, pos.y + m_halfDimension.y - offset.y);
+}
+
+void Body::Update()
+{
+	if (m_type == BODY_STATIC)
+		return;
+
+	// ------------------ World Collision ----------------------------------
+	if (m_onSlope && m_velocity.y <= 0.0f)
+		m_velocity += m_map->GetGravity() * m_gravityScale * TILE_SLOPE_GRIP * Timer::GetDeltaTime();
+	else
+		m_velocity += m_map->GetGravity() * m_gravityScale * Timer::GetDeltaTime();
+
+
+	m_offsetHorizontal = glm::vec2(m_sensorOffset, m_onSlope ? 12.0f : 2.0f);
+	m_offsetVertical = glm::vec2(2.0f, m_sensorOffset);
+
+	// check for slopes
+	if (m_velocity.x < 0.0f)
+	{
+		// far sensors
+		m_slopeDetected = CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
+		// near sensors
+		m_slopeDetected |= CheckSlope(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), TILE_SLOPE_LEFT);
+	}
+	else if (m_velocity.x > 0.0f)
+	{
+		// far sensors
+		m_slopeDetected = CheckSlope(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
+		// near sensors
+		m_slopeDetected |= CheckSlope(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), TILE_SLOPE_RIGHT);
+	}
+	else
+		m_slopeDetected = false;
+
+	glm::vec2 oldPos = m_position;
+
+	// move first in x direction and then in y direction
+	MoveX(m_velocity.x * Timer::GetDeltaTime());
+	MoveY(m_velocity.y * Timer::GetDeltaTime());
+
+	m_drop = false;
+
+	// ------------------ Object Collision ---------------------------------
+	for (auto& b : m_map->GetOtherBodies(this))
+	{
+		ResolveBodyCollision(*b, oldPos);
+	}
+}
+
+void Body::Render() const
+{
+	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, Renderer::GetViewMat());
+
+#if TILE_SHOW_SENSOR
+	// showing the sensors (only for dynamic bodies)
+	if (m_type == BODY_DYNAMIC)
+	{
+		Primitives::DrawLine(GetSensorBottom(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorTop(m_position, m_offsetVertical), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorLeft(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
+		Primitives::DrawLine(GetSensorRight(m_position, m_offsetHorizontal), RED, Renderer::GetViewMat());
+
+#if TILE_SHOW_SLOPE_SENSOR
+		// show slope sensors
+		// far sensors
+		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + m_map->GetTileSize() - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+		// near sensors
+		Primitives::FillCircle(m_position + glm::vec2(-(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset), m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+		Primitives::FillCircle(m_position + glm::vec2(m_halfDimension.x + (m_map->GetTileSize() / 2.0f) - m_sensorOffset, m_sensorOffset - m_halfDimension.y), 2.0f, RED, Renderer::GetViewMat());
+#endif
+	}
+#endif
+
+	// center/position of the body 
+	//Primitives::FillCircle(m_position, 2.0f, BLACK, Renderer::GetViewMat());
 }
 
 void Body::SetPosition(const glm::vec2& pos) { m_position = pos; }

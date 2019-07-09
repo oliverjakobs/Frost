@@ -3,7 +3,7 @@
 #include "Renderer.h"
 
 Image::Image(TextureAtlas* texture, float width, float height)
-	: m_texture(texture), m_width(width), m_height(height)
+	: m_texture(texture), m_width(width), m_height(height), m_flip(RenderFlip::NONE)
 {
 	float fWidth = 1.0f / m_texture->columns;
 	float fHeight = 1.0f / m_texture->rows;
@@ -15,8 +15,6 @@ Image::Image(TextureAtlas* texture, float width, float height)
 		width, height, fWidth, fHeight,
 		 0.0f, height,   0.0f, fHeight
 	};
-
-	m_flip = FLIP_NONE;
 
 	m_vao.Bind();
 
