@@ -5,7 +5,7 @@
 
 #include "Debugger.h"
 
-Texture::Texture(const char* path, uint slot)
+Texture::Texture(const std::string& path, uint slot)
 	: slot(slot)
 {
 	stbi_set_flip_vertically_on_load(true);
@@ -14,7 +14,7 @@ Texture::Texture(const char* path, uint slot)
 	height = 0;
 	bpp = 0;
 
-	byte* pixels = stbi_load(path, &width, &height, &bpp, 4);
+	byte* pixels = stbi_load(path.c_str(), &width, &height, &bpp, 4);
 
 	if (pixels)
 	{
@@ -54,7 +54,7 @@ Texture::Texture(int width, int height, uint slot)
 	id = CreateTexture(nullptr, width, height, config);
 }
 
-Texture::Texture(const char* path, TextureConfig config, uint slot)
+Texture::Texture(const std::string& path, TextureConfig config, uint slot)
 	: slot(slot)
 {
 	stbi_set_flip_vertically_on_load(true);
@@ -63,7 +63,7 @@ Texture::Texture(const char* path, TextureConfig config, uint slot)
 	height = 0;
 	bpp = 0;
 
-	byte* pixels = stbi_load(path, &width, &height, &bpp, 4);
+	byte* pixels = stbi_load(path.c_str(), &width, &height, &bpp, 4);
 
 	if (pixels)
 	{
@@ -117,10 +117,10 @@ void Texture::Unbind()
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-TextureAtlas::TextureAtlas(const char* path, uint rows, uint columns, uint slot) : Texture(path, slot), rows(rows), columns(columns) { }
+TextureAtlas::TextureAtlas(const std::string& path, uint rows, uint columns, uint slot) : Texture(path, slot), rows(rows), columns(columns) { }
 
 TextureAtlas::TextureAtlas(int width, int height, uint rows, uint columns, uint slot) : Texture(width, height, slot), rows(rows), columns(columns) { }
 
-TextureAtlas::TextureAtlas(const char * path, uint rows, uint columns, TextureConfig config, uint slot) : Texture(path, config, slot), rows(rows), columns(columns) { }
+TextureAtlas::TextureAtlas(const std::string& path, uint rows, uint columns, TextureConfig config, uint slot) : Texture(path, config, slot), rows(rows), columns(columns) { }
 
 TextureAtlas::TextureAtlas(int width, int height, uint rows, uint columns, TextureConfig config, uint slot) : Texture(width, height, config, slot), rows(rows), columns(columns) { }

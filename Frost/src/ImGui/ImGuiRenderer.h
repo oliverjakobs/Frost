@@ -4,9 +4,8 @@
 
 struct GLFWwindow;
 
-class ImGuiRenderer
+struct ImGuiRenderer
 {
-public:
 	static void Init(GLFWwindow* context, unsigned int configFlags);
 	static void Quit();
 

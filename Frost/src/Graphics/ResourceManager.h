@@ -23,5 +23,4 @@ public:
 	static TextureAtlas* GetTextureAtlas(const std::string& name);
 
 	static void Load(const std::string& path);
-	static void Clear();
 };

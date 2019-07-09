@@ -9,7 +9,7 @@ private:
 
 	float m_charSpacing;
 public:
-	BitmapFont(TextureAtlas* texture, float width, float height, float charSpacing); // TextureAtlas with 8 row and 16 columns
+	BitmapFont(TextureAtlas* texture, float width, float height, float charSpacing);
 	~BitmapFont();
 
 	void RenderText(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
@@ -23,7 +23,7 @@ private:
 
 	float m_charSpacing;
 public:
-	BitmapNumFont(TextureAtlas* texture, float width, float height, float charSpacing); // TextureAtlas with 1 row and 11 columns
+	BitmapNumFont(TextureAtlas* texture, float width, float height, float charSpacing);
 	~BitmapNumFont();
 
 	void RenderText(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;

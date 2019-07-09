@@ -7,9 +7,6 @@
 
 Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
-	DEBUG_ASSERT(scene, "Scene is null");
-	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
-
 	json root = jsonParseFile(path);
 
 	// create Entity
@@ -26,7 +23,14 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 		std::string src = jsonToString(script, "src");
 
-		entity->AddComponent(new ScriptComponent(scene->GetLua().BindLuaFunction("res/scripts/player.lua", "onUpdate")));
+		if (!src.empty())
+		{
+			entity->AddComponent(new ScriptComponent(scene->GetLua().BindLuaFunction(src, "onUpdate")));
+		}
+		else
+		{
+			DEBUG_WARN("[JSON] Could not add ScriptComponent: Script src is missing ({0})", path);
+		}
 	}
 
 	// PhysicsComponent
@@ -48,7 +52,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 		else
 		{
-			DEBUG_WARN("Could not assign PhysicsComponent: Body is missing ({0})", path);
+			DEBUG_WARN("[JSON] Could not add PhysicsComponent: Body is missing ({0})", path);
 		}
 	}
 
@@ -82,7 +86,18 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		float width = jsonToFloat(image, "width");
 		float height = jsonToFloat(image, "height");
 
-		entity->AddComponent(new ImageComponent(new Image(ResourceManager::GetTextureAtlas(res), width, height)));
+		if (res.empty())
+		{
+			DEBUG_WARN("[JSON] Could not add ImageComponent: Resource is missing ({0})", path);
+		}
+		else if (width <= 0.0f || height <= 0.0f)
+		{
+			DEBUG_WARN("[JSON] Could not add ImageComponent: Widht or height is less than or equal to 0.0 ({0})", path);
+		}
+		else
+		{
+			entity->AddComponent(new ImageComponent(new Image(ResourceManager::GetTextureAtlas(res), width, height)));
+		}
 	}
 
 	// AnimationComponent
@@ -91,7 +106,6 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		json animation = root.at("animation");
 
 		std::map<std::string, Animation> animations;
-		std::string startAnim;
 
 		for (auto&[name, anim] : animation.items())
 		{
@@ -99,13 +113,17 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 			int length = jsonToInt(anim, "length");
 			float delay = jsonToFloat(anim, "delay");
 
-			if (start == 0)
-				startAnim = name;
-
 			animations.insert(AnimationDef(name, Animation(start, length, delay)));
 		}
 
-		entity->AddComponent(new AnimationComponent(animations, startAnim));
+		if (!animations.empty())
+		{
+			entity->AddComponent(new AnimationComponent(animations));
+		}
+		else
+		{
+			DEBUG_WARN("[JSON] Could not add AnimationComponent: Animations missing ({0})", path);
+		}
 	}
 
 	return entity;

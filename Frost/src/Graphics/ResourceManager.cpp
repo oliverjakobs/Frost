@@ -6,9 +6,10 @@
 
 void ResourceManager::AddShader(const std::string& name, Shader* shader)
 {
-	DEBUG_ASSERT(!name.empty(), "Shader name missing");
-
-	Get().m_shaders[name] = unique_ptr<Shader>(shader);
+	if (!name.empty())
+	{
+		Get().m_shaders[name] = unique_ptr<Shader>(shader);
+	}
 }
 
 Shader* ResourceManager::GetShader(const std::string& name)
@@ -26,9 +27,10 @@ Shader* ResourceManager::GetShader(const std::string& name)
 
 void ResourceManager::AddTexture(const std::string& name, Texture* tex)
 {
-	DEBUG_ASSERT(!name.empty(), "Texture name missing");
-
-	Get().m_textures[name] = unique_ptr<Texture>(tex);
+	if (!name.empty())
+	{
+		Get().m_textures[name] = unique_ptr<Texture>(tex);
+	}
 }
 
 Texture* ResourceManager::GetTexture(const std::string& name)
@@ -46,9 +48,10 @@ Texture* ResourceManager::GetTexture(const std::string& name)
 
 void ResourceManager::AddTextureAtlas(const std::string& name, TextureAtlas* tex)
 {
-	DEBUG_ASSERT(!name.empty(), "Texture atlas name missing");
-
-	Get().m_textureAtlases[name] = unique_ptr<TextureAtlas>(tex);
+	if (!name.empty())
+	{
+		Get().m_textureAtlases[name] = unique_ptr<TextureAtlas>(tex);
+	}
 }
 
 TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
@@ -66,8 +69,6 @@ TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
 
 void ResourceManager::Load(const std::string& path)
 {
-	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
-
 	json root = jsonParseFile(path);
 
 	// shaders 
@@ -78,7 +79,18 @@ void ResourceManager::Load(const std::string& path)
 			std::string vert = jsonToString(shader, "vert");
 			std::string frag = jsonToString(shader, "frag");
 
-			AddShader(name, new Shader(vert, frag));
+			if (vert.empty())
+			{
+				DEBUG_WARN("[JSON] Could not load Shader: Vertex Shader is missing ({0})", name);
+			}
+			else if (frag.empty())
+			{
+				DEBUG_WARN("[JSON] Could not load Shader: Fragment Shader is missing ({0})", name);
+			}
+			else
+			{
+				AddShader(name, new Shader(vert, frag));
+			}
 		}
 	}
 
@@ -89,7 +101,14 @@ void ResourceManager::Load(const std::string& path)
 		{
 			std::string src = jsonToString(texture, "src");
 
-			AddTexture(name, new Texture(src.c_str()));
+			if (src.empty())
+			{
+				DEBUG_WARN("[JSON] Could not load Texture: Src is missing ({0})", name);
+			}
+			else
+			{
+				AddTexture(name, new Texture(src));
+			}
 		}
 	}
 
@@ -102,16 +121,16 @@ void ResourceManager::Load(const std::string& path)
 			uint rows = jsonToInt(textureAtlas, "rows", 1);
 			uint columns = jsonToInt(textureAtlas, "columns", 1);
 
-			AddTextureAtlas(name, new TextureAtlas(src.c_str(), rows, columns));
+			if (src.empty())
+			{
+				DEBUG_WARN("[JSON] Could not load Texture Atlas: Src is missing ({0})", name);
+			}
+			else
+			{
+				AddTextureAtlas(name, new TextureAtlas(src, rows, columns));
+			}
 		}
 	}
 
-	DEBUG_INFO("[Res] Loaded Resources ({0})", path);
-}
-
-void ResourceManager::Clear()
-{
-	Get().m_shaders.clear();
-	Get().m_textures.clear();
-	Get().m_textureAtlases.clear();
+	DEBUG_INFO("[JSON] Loaded Resources ({0})", path);
 }

@@ -16,6 +16,11 @@
       "src": "res/images/tiles.png",
       "rows": 1,
       "columns": 5
+    },
+    "font": {
+      "src": "res/images/font.png",
+      "rows": 16,
+      "columns": 16
     }
   }
 }

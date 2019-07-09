@@ -279,8 +279,6 @@ Application::Application(const std::string& title, int width, int height)
 
 Application::~Application()
 {
-	ResourceManager::Clear();
-
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
 }
@@ -325,8 +323,10 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate();
 
+
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		ImGuiRenderer::Start();
-		Renderer::Start();
 
 		OnRender();
 
@@ -336,7 +336,6 @@ void Application::Run()
 		if (m_showImGui)
 			OnImGui();
 
-		Renderer::Flush();
 		Primitives::Flush(View::GetMat());
 		ImGuiRenderer::Flush(m_window);
 

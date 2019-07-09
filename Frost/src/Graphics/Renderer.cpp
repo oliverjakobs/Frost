@@ -1,15 +1,5 @@
 #include "Renderer.h"
 
-void Renderer::Start()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void Renderer::Flush()
-{
-
-}
-
 void Renderer::EnableBlend(GLenum sfactor, GLenum dfactor)
 {
 	glEnable(GL_BLEND);

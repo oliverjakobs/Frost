@@ -7,7 +7,7 @@
 
 void SceneManager::Load(const std::string& path)
 {
-	DEBUG_INFO("Loading scenes from {0}", path);
+	DEBUG_INFO("[JSON] Loading scenes from {0}", path);
 
 	json root = jsonParseFile(path);
 
@@ -15,11 +15,25 @@ void SceneManager::Load(const std::string& path)
 	{
 		std::string map = jsonToString(sceneJson, "map");
 
+		if (map.empty())
+		{
+			DEBUG_WARN("[JSON] Map is empty for {0} ({1})", sceneName, path);
+			continue;
+		}
+
 		Scene* scene = new Scene(sceneName, new TileMap(map));
 		AddScene(scene);
 
 		for (auto&[entityName, entityJson] : sceneJson.at("entities").items())
 		{
+			std::string entitySrc = jsonToString(entityJson, "scr");
+
+			if (entitySrc.empty())
+			{
+				DEBUG_WARN("[JSON] Entity {0} has no src ({1})", entityName, path);
+				continue;
+			}
+
 			scene->AddEntity(entityName, jsonToString(entityJson, "scr"));
 
 			if (entityJson.find("position") != entityJson.end())
@@ -28,7 +42,7 @@ void SceneManager::Load(const std::string& path)
 			}
 		}
 
-		DEBUG_INFO("Scene {0} loaded", sceneName);
+		DEBUG_INFO("[JSON] Scene {0} loaded", sceneName);
 	}
 }
 
@@ -44,15 +58,15 @@ void SceneManager::ChangeScene(const std::string& name)
 {
 	if (!stringCompare(Get().m_activeName, name))
 	{
-		Scene* s = GetScene(name);
+		Scene* newScene = GetScene(name);
 
-		if (s != nullptr)
+		if (newScene != nullptr)
 		{
 			// Exit old Scene
 			if (Get().m_activeScene != nullptr)
 				Get().m_activeScene->OnExtit();
 
-			Get().m_activeScene = s;
+			Get().m_activeScene = newScene;
 			Get().m_activeName = name;
 
 			// Enter new scene

@@ -30,8 +30,8 @@ public:
 	static void FillRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view);
 
 	// Polygon
-	static void DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view);
-	static void FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view);
+	static void DrawPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view);
+	static void FillPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view);
 
 	// Circle
 	static void DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view);

@@ -227,6 +227,7 @@
       <Filter>src\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\View\View.h" />
+    <ClInclude Include="src\Font\TTFont.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -324,6 +325,7 @@
       <Filter>src\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\View\View.cpp" />
+    <ClCompile Include="src\Font\TTFont.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

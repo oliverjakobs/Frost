@@ -28,9 +28,9 @@ struct Texture
 	int bpp;
 
 	// functions
-	Texture(const char* path, uint slot = 0);
+	Texture(const std::string& path, uint slot = 0);
 	Texture(int width, int height, uint slot = 0);
-	Texture(const char* path, TextureConfig config, uint slot = 0);
+	Texture(const std::string& path, TextureConfig config, uint slot = 0);
 	Texture(int width, int height, TextureConfig config, uint slot = 0);
 	~Texture();
 
@@ -45,8 +45,8 @@ struct TextureAtlas : Texture
 	uint rows;
 	uint columns;
 
-	TextureAtlas(const char* path, uint rows, uint columns, uint slot = 0);
+	TextureAtlas(const std::string& path, uint rows, uint columns, uint slot = 0);
 	TextureAtlas(int width, int height, uint rows, uint columns, uint slot = 0);
-	TextureAtlas(const char* path, uint rows, uint columns, TextureConfig config, uint slot = 0);
+	TextureAtlas(const std::string& path, uint rows, uint columns, TextureConfig config, uint slot = 0);
 	TextureAtlas(int width, int height, uint rows, uint columns, TextureConfig config, uint slot = 0);
 };

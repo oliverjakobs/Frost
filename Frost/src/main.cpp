@@ -76,6 +76,8 @@ public:
 	void OnRenderDebug() override
 	{
 		SceneManager::OnRenderDebug();
+
+
 	}
 
 	void OnImGui() override

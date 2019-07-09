@@ -313,7 +313,7 @@ void Primitives::FillRect(const glm::vec2& pos, const glm::vec2& dim, const Colo
 	FillRect(pos.x, pos.y, dim.x, dim.y, color, view);
 }
 
-void Primitives::DrawPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
+void Primitives::DrawPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view)
 {
 	glm::vec2 p1 = vertices.back();
 
@@ -325,7 +325,7 @@ void Primitives::DrawPolygon(const std::vector<glm::vec2>& vertices, const Color
 	}
 }
 
-void Primitives::FillPolygon(const std::vector<glm::vec2>& vertices, const Color& color, const glm::mat4& view)
+void Primitives::FillPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view)
 {
 	for (unsigned int i = 1; i < vertices.size() - 1; ++i)
 	{

@@ -109,6 +109,7 @@
     <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Font\TTFont.h" />
     <ClInclude Include="src\Graphics.h" />
     <ClInclude Include="src\Graphics\Buffer.h" />
     <ClInclude Include="src\Graphics\Framebuffer.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Font\TTFont.cpp" />
     <ClCompile Include="src\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Graphics\Image.cpp" />
