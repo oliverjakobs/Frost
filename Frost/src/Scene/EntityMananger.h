@@ -4,5 +4,5 @@
 
 struct EntityManager
 {
-	static unsigned int CreateEntity(Scene* scene, const std::string& path);
+	static Entity* CreateEntity(Scene* scene, const std::string& path);
 };

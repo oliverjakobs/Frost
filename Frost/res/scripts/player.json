@@ -1,8 +1,7 @@
 ﻿{
-  "transform": {
-    "position": [ 400.0, 200.0 ],
-    "dimension": [ 0.0, 0.0 ]
-  },
+  "name": "player",
+  "position": [ 400.0, 200.0 ],
+  "dimension": [ 0.0, 0.0 ],
   "physics": {
     "body": {
       "type": "BodyTypeDynamic",

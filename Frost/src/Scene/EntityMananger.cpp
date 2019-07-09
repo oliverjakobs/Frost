@@ -4,7 +4,7 @@
 
 #include "Debugger.h"
 
-unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
+Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
 	DEBUG_ASSERT(scene, "Scene is null");
 	DEBUG_ASSERT(!path.empty(), "Path is emtpy");
@@ -12,17 +12,20 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 	json root = jsonParseFile(path);
 
 	// create Entity
-	auto entity = scene->GetRegistry().create();
+	std::string name = jsonToString(root, "name");
+	glm::vec2 position = jsonToVec2(root, "position");
+	glm::vec2 dimension = jsonToVec2(root, "dimension"); 
 
-	// TransformComponent
-	if (root.find("transform") != root.end())
+	Entity* entity = new Entity(name, position, dimension);
+
+	// ScriptComponent
+	if (root.find("script") != root.end())
 	{
-		json transform = root.at("transform");
+		json script = root.at("script");
 
-		glm::vec2 position = jsonToVec2(transform, "position");
-		glm::vec2 dimension = jsonToVec2(transform, "dimension");
+		std::string src = jsonToString(script, "src");
 
-		scene->GetRegistry().assign<TransformComponent>(entity, position, dimension);
+		entity->AddComponent(new ScriptComponent(scene->GetLua().BindLuaFunction("res/scripts/player.lua", "onUpdate")));
 	}
 
 	// PhysicsComponent
@@ -40,7 +43,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 			glm::vec2 bodyPos = jsonToVec2(physics, "bodyPos");
 			
-			scene->GetRegistry().assign<PhysicsComponent>(entity, scene->GetMap()->CreateBody(position, halfDimension, type), bodyPos);
+			entity->AddComponent(new PhysicsComponent(scene->GetMap()->CreateBody(position, halfDimension, type), bodyPos));
 		}
 		else
 		{
@@ -66,7 +69,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 					constraint = scene->GetMap()->GetConstraint();
 		}
 
-		scene->GetRegistry().assign<CameraComponent>(entity, constraint, cameraOffset);
+		entity->AddComponent(new CameraComponent(constraint, cameraOffset));
 	}
 
 	// ImageComponent
@@ -78,7 +81,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		float width = jsonToFloat(image, "width");
 		float height = jsonToFloat(image, "height");
 
-		scene->GetRegistry().assign<ImageComponent>(entity, new Image(ResourceManager::GetTextureAtlas(res), width, height));
+		entity->AddComponent(new ImageComponent(new Image(ResourceManager::GetTextureAtlas(res), width, height)));
 	}
 
 	// AnimationComponent
@@ -101,17 +104,7 @@ unsigned int EntityManager::CreateEntity(Scene* scene, const std::string& path)
 			animations.insert(AnimationDef(name, Animation(start, length, delay)));
 		}
 
-		scene->GetRegistry().assign<AnimationComponent>(entity, animations, startAnim);
-	}
-
-	// ScriptComponent
-	if (root.find("script") != root.end())
-	{
-		json script = root.at("script");
-
-		std::string src = jsonToString(script, "src");
-
-		scene->GetRegistry().assign<ScriptComponent>(scene->GetEntity("player"), scene->GetLua().BindLuaFunction("res/scripts/player.lua", "onUpdate"));
+		entity->AddComponent(new AnimationComponent(animations, startAnim));
 	}
 
 	return entity;

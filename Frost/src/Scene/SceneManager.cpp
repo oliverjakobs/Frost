@@ -2,7 +2,6 @@
 
 #include "Debugger.h"
 #include "String/StringUtils.h"
-#include "String/StringHash.h"
 
 #include "Script/JSONParser.h"
 
@@ -17,6 +16,7 @@ void SceneManager::Load(const std::string& path)
 		std::string map = jsonToString(sceneJson, "map");
 
 		Scene* scene = new Scene(sceneName, new TileMap(map));
+		AddScene(scene);
 
 		for (auto&[entityName, entityJson] : sceneJson.at("entities").items())
 		{
@@ -29,14 +29,13 @@ void SceneManager::Load(const std::string& path)
 			}
 		}
 
-		AddScene(scene);
 		DEBUG_INFO("Scene {0} loaded", sceneName);
 	}
 }
 
 void SceneManager::AddScene(Scene* scene)
 {
-	Get().m_scenes[GenerateHash(scene->GetName().c_str())] = unique_ptr<Scene>(scene);
+	Get().m_scenes.insert({ scene->GetName(), unique_ptr<Scene>(scene) });
 
 	if (Get().m_activeScene == nullptr)
 		ChangeScene(scene->GetName());
@@ -92,7 +91,7 @@ Scene* SceneManager::GetScene(const std::string& name)
 {
 	try
 	{
-		return Get().m_scenes.at(GenerateHash(name.c_str())).get();
+		return Get().m_scenes.at(name).get();
 	}
 	catch (std::out_of_range)
 	{

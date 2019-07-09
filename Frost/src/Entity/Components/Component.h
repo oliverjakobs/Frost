@@ -1,10 +1,17 @@
 #pragma once
 
-#include "Entity.h"
+#include "Entity/Entity.h"
+
+enum class ComponentType
+{
+	DATA,
+	LOGIC,
+	RENDER
+};
 
 class Component
 {
-private:
+protected:
 	Entity* m_entity;
 	bool m_active;
 
@@ -12,7 +19,7 @@ public:
 	Component() : m_entity(nullptr), m_active(false) {}
 	virtual ~Component() {}
 
-	virtual Component* clone() = 0;
+	//virtual Component* clone() = 0;
 
 	bool SetEntity(Entity* e) { m_entity = e; return m_entity != nullptr; }
 	Entity* GetEntity() const { return m_entity; }

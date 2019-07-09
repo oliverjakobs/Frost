@@ -44,7 +44,7 @@ public:
 
 		for (auto& c : m_components)
 		{
-			component = dynamic_cast<Type*>(c);
+			component = dynamic_cast<Type*>(c.get());
 
 			if (component != nullptr)
 				break;

@@ -1,10 +1,10 @@
 function onUpdate(entity)
-	velocity = Vec2.new(0.0, GetVelocity(entity).y)
+	velocity = Vec2.new(0.0, entity:GetVelocity().y)
 
 	movementSpeed = 400.0
 	jumpPower = 800.0
 
-	collidesBottom = CollidesBottom(entity)
+	collidesBottom = entity:CollidesBottom()
 
 	-- Input
 	if (Input.KeyPressed("A")) then
@@ -24,7 +24,7 @@ function onUpdate(entity)
 
 	if (Input.KeyPressed("S"))
 	then
-		Drop(entity)
+		entity:Drop()
 	end
 
 	-- Animation
@@ -39,31 +39,30 @@ function onUpdate(entity)
 	end
 
 	if (velocity.y > 0.0) then
-		PlayAnimation(entity, "jump", flip)
+		entity:PlayAnimation("jump", flip)
 	else
 		if ((not collidesBottom) and velocity.y <= 0.0)	then
-			PlayAnimation(entity, "fall", flip);
+			entity:PlayAnimation("fall", flip);
 		else
 			if (velocity.x ~= 0.0) then 
-				PlayAnimation(entity, "walk", flip)
+				entity:PlayAnimation("walk", flip)
 			else
-				PlayAnimation(entity, "idle", flip);
+				entity:PlayAnimation("idle", flip);
 			end
 		end
 	end
 
 	-- apply velocity
-	SetVelocity(entity, velocity)
-
+	entity:SetVelocity(velocity)
 	
 	if (velocity.x < 0.0) then
-		SetDirection(entity, "LEFT")
+		entity:SetDirection("LEFT")
 	else
 		if (velocity.x > 0.0) then
-			SetDirection(entity, "RIGHT")
+			entity:SetDirection("RIGHT")
 		end
 	end
 
 	-- update view
-	SetView(entity);
+	entity:SetView();
 end

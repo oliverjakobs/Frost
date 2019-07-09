@@ -3,7 +3,9 @@
 #include "Tile/Tilemap.h"
 
 #include "Event/Event.h"
-#include "ECS/Systems.h"
+
+#include "Entity/Entity.h"
+#include "Entity/Components.h"
 
 class Scene
 {
@@ -12,9 +14,8 @@ protected:
 
 	unique_ptr<TileMap> m_map;
 
-	std::unordered_map<std::string, unsigned int> m_entities;
+	std::unordered_map<std::string, unique_ptr<Entity>> m_entities;
 
-	entt::registry m_registry;
 	LuaBinding m_lua;
 public:
 	Scene(const std::string& name, TileMap* map);
@@ -23,7 +24,7 @@ public:
 	void SetName(const std::string& name);
 
 	void AddEntity(const std::string& name, const std::string& path);
-	unsigned int GetEntity(const std::string& name) const;
+	Entity* GetEntity(const std::string& name) const;
 	
 	void OnEntry();
 	void OnExtit();
@@ -37,7 +38,6 @@ public:
 	TileMap* GetMap() const;
 	Rect GetConstraint() const;
 
-	entt::registry& GetRegistry();
 	LuaBinding& GetLua();
 
 	std::string GetName() const;

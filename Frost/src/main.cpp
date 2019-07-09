@@ -86,13 +86,12 @@ public:
 		//Entity
 		ImGui::Begin("Player");
 
-		unsigned int entity = SceneManager::GetActiveScene()->GetEntity("player");
-		auto transform = SceneManager::GetActiveScene()->GetRegistry().get<TransformComponent>(entity);
-		auto animation = SceneManager::GetActiveScene()->GetRegistry().get<AnimationComponent>(entity);
+		Entity* entity = SceneManager::GetActiveScene()->GetEntity("player");
+		auto animation = entity->GetComponent<AnimationComponent>();
 
-		ImGui::Text("Position: %4.2f, %4.2f", transform.position.x, transform.position.y);
-		ImGui::Text("Direction: %s", Direction::ToString(transform.direction).c_str());
-		ImGui::Text("Current Animation: %s", animation.currentAnimation.c_str());
+		ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);
+		ImGui::Text("Direction: %s", Direction::ToString(entity->GetDirection()).c_str());
+		ImGui::Text("Current Animation: %s", animation->GetCurrent().c_str());
 
 		ImGui::End();
 	}

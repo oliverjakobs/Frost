@@ -10,16 +10,11 @@
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {
-	m_lua.LoadState(m_registry);
+	m_lua.LoadState();
 }
 
 Scene::~Scene()
 {
-	for (auto&[name, entity] : m_entities)
-	{
-		m_registry.destroy(entity);
-	}
-
 	m_entities.clear();
 }
 
@@ -30,15 +25,17 @@ void Scene::SetName(const std::string& name)
 
 void Scene::AddEntity(const std::string& name, const std::string& path)
 {
-	m_entities.insert({ name, EntityManager::CreateEntity(this, path) });
+	Entity* entity = EntityManager::CreateEntity(this, path);
+
+	m_entities.insert({ entity->GetName(), unique_ptr<Entity>(entity) });
 }
 
-unsigned int Scene::GetEntity(const std::string& name) const
+Entity* Scene::GetEntity(const std::string& name) const
 {
 	if (m_entities.find(name) != m_entities.end())
-		return m_entities.at(name);
+		return m_entities.at(name).get();
 
-	return 0;
+	return nullptr;
 }
 
 void Scene::OnEntry()
@@ -58,23 +55,32 @@ void Scene::OnUpdate()
 {
 	m_map->OnUpdate();
 
-	ScriptSystem::Tick(m_registry);
-	m_lua.GetState().collect_garbage();
+	for (auto&[name, entity] : m_entities)
+	{
+		entity->OnUpdate();
+	}
 
-	TilePhysicsSystem::Tick(m_registry);
-	AnimationSystem::Tick(m_registry);
+	m_lua.GetState().collect_garbage();
 }
 
 void Scene::OnRender()
 {
 	m_map->OnRender();
 
-	ImageRenderSystem::Tick(m_registry);
+	for (auto&[name, entity] : m_entities)
+	{
+		entity->OnRender();
+	}
 }
 
 void Scene::OnRenderDebug()
 {
 	m_map->OnRenderDebug();
+
+	for (auto&[name, entity] : m_entities)
+	{
+		entity->OnRenderDebug();
+	}
 }
 
 void Scene::OnImGui()
@@ -89,7 +95,7 @@ void Scene::OnImGui()
 	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
 	ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());
 	ImGui::Text("Gravity: %4.2f, %4.2f", m_map->GetGravity().x, m_map->GetGravity().y);
-	ImGui::Text("Simulation time: %2.4f", m_map->GetSimulationTime());
+	ImGui::Text("Simulation time: %2.4f ms", m_map->GetSimulationTime());
 	ImGui::End();
 }
 
@@ -101,11 +107,6 @@ TileMap* Scene::GetMap() const
 Rect Scene::GetConstraint() const
 {
 	return Rect(glm::vec2(), m_map->GetDimension() * m_map->GetTileSize());
-}
-
-entt::registry& Scene::GetRegistry()
-{
-	return m_registry;
 }
 
 LuaBinding& Scene::GetLua()

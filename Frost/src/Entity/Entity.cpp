@@ -1,13 +1,13 @@
 #include "Entity.h"
 
-#include "Component.h"
+#include "Components/Component.h"
 
 Entity::Entity(const Entity& copy)
 	: m_name(copy.m_name), m_position(copy.m_position), m_dimension(copy.m_dimension), m_direction(copy.m_direction)
 {
 	for (auto& c : copy.m_components)
 	{
-		AddComponent(c->clone());
+		//AddComponent(c->clone());
 	}
 }
 

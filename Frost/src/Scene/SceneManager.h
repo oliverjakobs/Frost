@@ -7,7 +7,7 @@
 class SceneManager : private Singleton<SceneManager>
 {
 private:
-	std::unordered_map<uint32_t, unique_ptr<Scene>> m_scenes;
+	std::unordered_map<std::string, unique_ptr<Scene>> m_scenes;
 
 	Scene* m_activeScene;
 	std::string m_activeName;

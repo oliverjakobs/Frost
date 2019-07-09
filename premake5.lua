@@ -59,7 +59,6 @@ project "Frost"
 		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
-		"%{prj.name}/packages/entt/single_include",
 		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",

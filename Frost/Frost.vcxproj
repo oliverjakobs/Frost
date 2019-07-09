@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\entt\single_include;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\stb;packages\imgui;packages\json\single_include;packages\spdlog\include;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -94,12 +94,23 @@
     <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Debugger.h" />
-    <ClInclude Include="src\Entity\Component.h" />
+    <ClInclude Include="src\Entity\Components.h" />
+    <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
+    <ClInclude Include="src\Entity\Components\CameraComponent.h" />
+    <ClInclude Include="src\Entity\Components\Component.h" />
+    <ClInclude Include="src\Entity\Components\ImageComponent.h" />
+    <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
+    <ClInclude Include="src\Entity\Components\ScriptComponent.h" />
     <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Graphics.h" />
-    <ClInclude Include="src\Graphics\Buffer.h" />
+    <ClInclude Include="src\Event\ApplicationEvent.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
+    <ClInclude Include="src\Event\MouseEvent.h" />
+    <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
+    <ClInclude Include="src\Graphics.h" />
+    <ClInclude Include="src\Graphics\Buffer.h" />
     <ClInclude Include="src\Graphics\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Image.h" />
     <ClInclude Include="src\Graphics\Primitives.h" />
@@ -107,17 +118,6 @@
     <ClInclude Include="src\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Graphics\Shader.h" />
     <ClInclude Include="src\Graphics\Texture.h" />
-    <ClInclude Include="src\Types.h" />
-    <ClInclude Include="src\ECS\Components.h" />
-    <ClInclude Include="src\ECS\Systems\PhysicsSystem.h" />
-    <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
-    <ClInclude Include="src\ECS\Systems\ScriptSystem.h" />
-    <ClInclude Include="src\ECS\Systems.h" />
-    <ClInclude Include="src\Event\ApplicationEvent.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\KeyEvent.h" />
-    <ClInclude Include="src\Event\MouseEvent.h" />
-    <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\ImGui\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Log\Logger.h" />
@@ -125,8 +125,6 @@
     <ClInclude Include="src\Maths\Maths.h" />
     <ClInclude Include="src\Maths\RayCast.h" />
     <ClInclude Include="src\Maths\Visibility.h" />
-    <ClInclude Include="src\Utility\Enum.h" />
-    <ClInclude Include="src\Utility\Singelton.h" />
     <ClInclude Include="src\Scene\EntityMananger.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
@@ -139,16 +137,24 @@
     <ClInclude Include="src\Tile\TileConfig.h" />
     <ClInclude Include="src\Tile\TileRenderer.h" />
     <ClInclude Include="src\Tile\Tilemap.h" />
+    <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\Utility\Enum.h" />
     <ClInclude Include="src\Utility\Flags.h" />
+    <ClInclude Include="src\Utility\Singelton.h" />
     <ClInclude Include="src\Utility\Timer.h" />
     <ClInclude Include="src\Utility\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\CameraComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\ImageComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
+    <ClCompile Include="src\Graphics\Buffer.cpp" />
     <ClCompile Include="src\Graphics\Framebuffer.cpp" />
     <ClCompile Include="src\Graphics\Image.cpp" />
     <ClCompile Include="src\Graphics\Primitives.cpp" />
@@ -156,9 +162,6 @@
     <ClCompile Include="src\Graphics\ResourceManager.cpp" />
     <ClCompile Include="src\Graphics\Shader.cpp" />
     <ClCompile Include="src\Graphics\Texture.cpp" />
-    <ClCompile Include="src\ECS\Systems\PhysicsSystem.cpp" />
-    <ClCompile Include="src\ECS\Systems\RenderSystem.cpp" />
-    <ClCompile Include="src\ECS\Systems\ScriptSystem.cpp" />
     <ClCompile Include="src\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\ImGui\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
