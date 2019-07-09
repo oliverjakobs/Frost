@@ -32,27 +32,27 @@ Image::~Image()
 
 }
 
-void Image::setRenderFlip(RenderFlip flip)
+void Image::SetRenderFlip(RenderFlip flip)
 {
 	m_flip = flip;
 }
 
-void Image::render(float x, float y, const glm::mat4& view, const std::string& shader) const
+void Image::Render(float x, float y, const glm::mat4& view, const std::string& shader) const
 {
-	renderF(glm::vec2(x, y), 0, view, shader);
+	Render(glm::vec2(x, y), 0, view, shader);
 }
 
-void Image::render(const glm::vec2& pos, const glm::mat4& view, const std::string& shader) const
+void Image::Render(const glm::vec2& pos, const glm::mat4& view, const std::string& shader) const
 {
-	renderF(pos, 0, view, shader);
+	Render(pos, 0, view, shader);
 }
 
-void Image::renderF(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const
+void Image::Render(float x, float y, int frame, const glm::mat4& view, const std::string& shader) const
 {
-	renderF(glm::vec2(x, y), frame, view, shader);
+	Render(glm::vec2(x, y), frame, view, shader);
 }
 
-void Image::renderF(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& sName) const
+void Image::Render(const glm::vec2& pos, int frame, const glm::mat4& view, const std::string& sName) const
 {
 	Shader* shader = ResourceManager::GetShader(sName);
 

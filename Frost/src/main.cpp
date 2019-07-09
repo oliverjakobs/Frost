@@ -82,6 +82,14 @@ public:
 	{
 		SceneManager::OnImGui();
 
+		//View
+		ImGui::Begin("View");
+
+		ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
+		ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
+
+		ImGui::End();
+
 		//Entity
 		ImGui::Begin("Player");
 

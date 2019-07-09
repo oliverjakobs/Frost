@@ -226,7 +226,8 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	}
 #endif
 
-	Renderer::Init(0.0f, 0.0f, (float)m_width, (float)m_height);
+	View::SetScreen((float)m_width, (float)m_height);
+	View::Set(0.0f, 0.0f, (float)m_width, (float)m_height);
 
 	// initialize imgui
 	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
@@ -279,7 +280,6 @@ Application::Application(const std::string& title, int width, int height)
 Application::~Application()
 {
 	ResourceManager::Clear();
-	Renderer::Destroy();
 
 	glfwDestroyWindow(m_window);
 	glfwTerminate();
@@ -337,7 +337,7 @@ void Application::Run()
 			OnImGui();
 
 		Renderer::Flush();
-		Primitives::Flush(Renderer::GetViewMat());
+		Primitives::Flush(View::GetMat());
 		ImGuiRenderer::Flush(m_window);
 
 		glfwPollEvents();

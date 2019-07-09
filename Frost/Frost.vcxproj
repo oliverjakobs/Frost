@@ -144,6 +144,7 @@
     <ClInclude Include="src\Utility\Singelton.h" />
     <ClInclude Include="src\Utility\Timer.h" />
     <ClInclude Include="src\Utility\Utils.h" />
+    <ClInclude Include="src\View\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\Tile\Tilemap.cpp" />
     <ClCompile Include="src\Utility\Timer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

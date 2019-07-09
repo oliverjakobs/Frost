@@ -226,6 +226,7 @@
     <ClInclude Include="src\Entity\EntityMananger.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="src\View\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -322,6 +323,7 @@
     <ClCompile Include="src\Entity\EntityMananger.cpp">
       <Filter>src\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="src\View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

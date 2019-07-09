@@ -117,5 +117,5 @@ void LuaEntity::SetView()
 	CameraComponent* cam = m_entity->GetComponent<CameraComponent>();
 	DEBUG_ASSERT(cam, "[LUA] Entity has no CameraComponent");
 
-	Renderer::SetViewCenter(m_entity->GetPosition() + cam->GetOffset(), cam->GetConstraint());
+	View::SetCenter(m_entity->GetPosition() + cam->GetOffset(), cam->GetConstraint());
 }

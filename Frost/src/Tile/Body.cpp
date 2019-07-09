@@ -321,7 +321,7 @@ void Body::Update()
 
 void Body::Render() const
 {
-	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, Renderer::GetViewMat());
+	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, View::GetMat());
 
 #if TILE_SHOW_SENSOR
 	// showing the sensors (only for dynamic bodies)

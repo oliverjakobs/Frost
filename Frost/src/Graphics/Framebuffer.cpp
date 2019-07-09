@@ -63,7 +63,7 @@ void FrameBuffer::unbind()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	glViewport(0, 0, (GLsizei)Renderer::GetView().w, (GLsizei)Renderer::GetView().h);
+	glViewport(0, 0, (GLsizei)View::GetWidth(), (GLsizei)View::GetHeight());
 }
 
 void FrameBuffer::render(const std::string& sName) const
@@ -75,7 +75,7 @@ void FrameBuffer::render(const std::string& sName) const
 		shader->use();
 		shader->setUniform2f("uFramePos", glm::vec2());
 		shader->setUniformMat4("projection", glm::mat4());
-		shader->setUniformMat4("view", Renderer::GetViewMat());
+		shader->setUniformMat4("view", View::GetMat());
 		shader->setUniformMat4("model", m_model);
 	}
 

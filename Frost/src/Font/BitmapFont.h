@@ -9,11 +9,11 @@ private:
 
 	float m_charSpacing;
 public:
-	BitmapFont(const std::string& path, float width, float height, float charSpacing);
+	BitmapFont(TextureAtlas* texture, float width, float height, float charSpacing); // TextureAtlas with 8 row and 16 columns
 	~BitmapFont();
 
-	void onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
-	void onRender(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
+	void RenderText(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
+	void RenderText(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
 };
 
 class BitmapNumFont : public Font
@@ -23,9 +23,9 @@ private:
 
 	float m_charSpacing;
 public:
-	BitmapNumFont(const std::string& path, float width, float height, float charSpacing);
+	BitmapNumFont(TextureAtlas* texture, float width, float height, float charSpacing); // TextureAtlas with 1 row and 11 columns
 	~BitmapNumFont();
 
-	void onRender(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
-	void onRender(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
+	void RenderText(const std::string& text, float x, float y, const glm::mat4& view, const std::string& shader) const override;
+	void RenderText(const std::string& text, const glm::vec2& position, const glm::mat4& view, const std::string& shader) const override;
 };

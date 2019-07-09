@@ -13,7 +13,7 @@ void ImageComponent::SetFrame(uint frame)
 
 void ImageComponent::SetRenderFlip(RenderFlip flip)
 {
-	m_image->setRenderFlip(flip);
+	m_image->SetRenderFlip(flip);
 }
 
 void ImageComponent::OnUpdate()
@@ -22,7 +22,7 @@ void ImageComponent::OnUpdate()
 
 void ImageComponent::OnRender()
 {
-	float x = m_entity->GetPosition().x - (m_image->getWidth() / 2.0f);
+	float x = m_entity->GetPosition().x - (m_image->GetWidth() / 2.0f);
 	float y = m_entity->GetPosition().y;
-	m_image->renderF(x, y, m_frame, Renderer::GetViewMat(), "shader");
+	m_image->Render(x, y, m_frame, View::GetMat(), "shader");
 }

@@ -111,7 +111,7 @@ void TileMap::DestroyBody(Body* body)
 
 void TileMap::OnRender() const
 {
-	m_renderer->RenderMap(glm::mat4(), Renderer::GetViewMat(), glm::mat4());
+	m_renderer->RenderMap(glm::mat4(), View::GetMat(), glm::mat4());
 }
 
 void TileMap::OnRenderDebug() const
