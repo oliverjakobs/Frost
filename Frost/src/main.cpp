@@ -5,6 +5,7 @@
 class Frost : public Application
 {
 private:
+	SceneManager m_sceneManager;
 
 public:
 	Frost() : Application("config.json")
@@ -22,10 +23,10 @@ public:
 
 
 		// ---------------| Scenes |-----------------------------------------
-		SceneManager::RegisterScene("station", "res/scenes/station.json");
-		SceneManager::RegisterScene("station2", "res/scenes/station2.json");
+		m_sceneManager.RegisterScene("station", "res/scenes/station.json");
+		m_sceneManager.RegisterScene("station2", "res/scenes/station2.json");
 
-		SceneManager::ChangeScene("station");
+		m_sceneManager.ChangeScene("station");
 	}
 
 	~Frost()
@@ -62,22 +63,17 @@ public:
 			}
 		}
 
-		if (e.GetEventType() == EventType::ChangeScene)
-		{
-			ChangeSceneEvent& change = (ChangeSceneEvent&)e;
-
-			SceneManager::ChangeScene(change.GetTarget());
-		}
+		m_sceneManager.OnEvent(e);
 	}
 
 	void OnUpdate() override
 	{
-		SceneManager::OnUpdate();
+		m_sceneManager.OnUpdate();
 	}
 
 	void OnRender() override
 	{
-		SceneManager::OnRender();
+		m_sceneManager.OnRender();
 
 		// FPS
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
@@ -88,14 +84,12 @@ public:
 
 	void OnRenderDebug() override
 	{
-		SceneManager::OnRenderDebug();
-
-
+		m_sceneManager.OnRenderDebug();
 	}
 
 	void OnImGui() override
 	{
-		SceneManager::OnImGui();
+		m_sceneManager.OnImGui();
 
 		//View
 		ImGui::Begin("View");
@@ -108,7 +102,7 @@ public:
 		//Entity
 		ImGui::Begin("Player");
 
-		Entity* entity = SceneManager::GetScene()->GetEntity("player");
+		Entity* entity = m_sceneManager.GetScene()->GetEntity("player");
 		auto animation = entity->GetComponent<AnimationComponent>();
 
 		ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);

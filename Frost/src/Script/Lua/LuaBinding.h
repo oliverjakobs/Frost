@@ -31,7 +31,6 @@ private:
 
 public:
 	void LoadState();
-
 	sol::function BindLuaFunction(const std::string& src, const std::string& func);
 
 	sol::state& GetState();

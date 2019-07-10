@@ -28,11 +28,7 @@ public:
 
 	void AddEntity(const std::string& name, Entity* entity);
 	Entity* GetEntity(const std::string& name) const;
-	
-	void OnEntry();
-	void OnExtit();
 
-	void OnEvent(Event& e);
 	void OnUpdate();
 	void OnRender();
 	void OnRenderDebug();

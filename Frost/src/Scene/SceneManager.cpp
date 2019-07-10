@@ -3,27 +3,11 @@
 #include "Debugger.h"
 #include "String/StringUtils.h"
 
+#include "Event/ApplicationEvent.h"
+
 #include "Script/JSONParser.h"
 
-void SceneManager::RegisterScene(const std::string& name, const std::string& path)
-{
-	Get().m_register.insert({ name, path });
-}
-
-Scene* SceneManager::LoadScene(const std::string& name)
-{
-	try
-	{
-		return LoadSceneFromFile(name, Get().m_register.at(name));
-	}
-	catch (std::out_of_range)
-	{
-		DEBUG_WARN("No such scene: {0}", name);
-		return nullptr;
-	}
-}
-
-Scene* SceneManager::LoadSceneFromFile(const std::string& name, const std::string& path)
+Scene* SceneManager::CreateSceneFromFile(const std::string& name, const std::string& path)
 {
 	Scene* scene = nullptr;
 
@@ -67,30 +51,45 @@ Scene* SceneManager::LoadSceneFromFile(const std::string& name, const std::strin
 	return scene;
 }
 
+void SceneManager::RegisterScene(const std::string& name, const std::string& path)
+{
+	m_register.insert({ name, path });
+}
+
+Scene* SceneManager::LoadScene(const std::string& name)
+{
+	try
+	{
+		return CreateSceneFromFile(name, m_register.at(name));
+	}
+	catch (std::out_of_range)
+	{
+		DEBUG_WARN("No such scene: {0}", name);
+		return nullptr;
+	}
+}
+
 void SceneManager::ChangeScene(const std::string& name)
 {
-	if (!stringCompare(Get().m_sceneName, name))
+	if (!stringCompare(m_sceneName, name))
 	{
 		Scene* newScene = LoadScene(name);
 
 		if (newScene != nullptr)
 		{
-			// Exit old Scene
-			if (Get().m_scene)
-				Get().m_scene->OnExtit();
-
-			Get().m_scene = unique_ptr<Scene>(newScene);
-			Get().m_sceneName = newScene->GetName();
-
-			// Enter new scene
-			Get().m_scene->OnEntry();
+			m_scene = unique_ptr<Scene>(newScene);
+			m_sceneName = newScene->GetName();
 		}
 	}
 }
 
 void SceneManager::OnEvent(Event& e)
 {
-	GetScene()->OnEvent(e);
+	if (e.GetEventType() == EventType::ChangeScene)
+	{
+		ChangeSceneEvent& change = (ChangeSceneEvent&)e;
+		ChangeScene(change.GetTarget());
+	}
 }
 
 void SceneManager::OnUpdate()
@@ -113,8 +112,8 @@ void SceneManager::OnImGui()
 	GetScene()->OnImGui();
 }
 
-Scene* SceneManager::GetScene()
+Scene* SceneManager::GetScene() const
 {
-	return Get().m_scene.get();	
+	return m_scene.get();	
 }
 

@@ -13,7 +13,6 @@ class EventHandler : private Singleton<EventHandler>
 {
 private:
 	EventCallbackFunc m_eventCallback;
-
 public:
 	static void SetEventCallback(const EventCallbackFunc& callback);
 	static void ThrowEvent(Event& e);

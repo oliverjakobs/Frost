@@ -40,20 +40,6 @@ Entity* Scene::GetEntity(const std::string& name) const
 	return nullptr;
 }
 
-void Scene::OnEntry()
-{
-	
-}
-
-void Scene::OnExtit()
-{
-}
-
-void Scene::OnEvent(Event& e)
-{
-
-}
-
 void Scene::OnUpdate()
 {
 	// measure time for simulation
