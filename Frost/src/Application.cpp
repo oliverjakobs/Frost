@@ -99,6 +99,8 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 	DEBUG_INFO("[GLFW] Window created: {0} ({1}, {2})", title, width, height);
 
+	EventHandler::SetEventCallback(BIND_FUNCTION(Application::EventCallback));
+
 	// Set GLFW callbacks
 	glfwSetErrorCallback([](int error, const char* desc)
 	{
@@ -112,53 +114,33 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		game->m_width = width;
 		game->m_height = height;
 
-		glViewport(0, 0, width, height);
-
-		WindowResizeEvent event(width, height);
-		game->EventCallback(event);
+		EventHandler::ThrowEvent(WindowResizeEvent(width, height));
 	});
 
 	glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 	{
-		auto game = (Application*)glfwGetWindowUserPointer(window);
-
-		WindowCloseEvent event;
-		game->EventCallback(event);
+		EventHandler::ThrowEvent(WindowCloseEvent());
 	});
 
 	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		auto game = (Application*)glfwGetWindowUserPointer(window);
-
 		switch (action)
 		{
 		case GLFW_PRESS:
-		{
-			KeyPressedEvent event(key, 0);
-			game->EventCallback(event);
+			EventHandler::ThrowEvent(KeyPressedEvent(key, 0));
 			break;
-		}
 		case GLFW_RELEASE:
-		{
-			KeyReleasedEvent event(key);
-			game->EventCallback(event);
+			EventHandler::ThrowEvent(KeyReleasedEvent(key));
 			break;
-		}
 		case GLFW_REPEAT:
-		{
-			KeyPressedEvent event(key, 1);
-			game->EventCallback(event);
+			EventHandler::ThrowEvent(KeyPressedEvent(key, 1));
 			break;
-		}
 		}
 	});
 
 	glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
 	{
-		auto game = (Application*)glfwGetWindowUserPointer(window);
-
-		KeyTypedEvent event(keycode);
-		game->EventCallback(event);
+		EventHandler::ThrowEvent(KeyTypedEvent(keycode));
 	});
 
 	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -168,34 +150,22 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		switch (action)
 		{
 		case GLFW_PRESS:
-		{
-			MouseButtonPressedEvent event(button);
-			game->EventCallback(event);
+			EventHandler::ThrowEvent(MouseButtonPressedEvent(button));
 			break;
-		}
 		case GLFW_RELEASE:
-		{
-			MouseButtonReleasedEvent event(button);
-			game->EventCallback(event);
+			EventHandler::ThrowEvent(MouseButtonReleasedEvent(button));
 			break;
-		}
 		}
 	});
 
 	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 	{
-		auto game = (Application*)glfwGetWindowUserPointer(window);
-
-		MouseScrolledEvent event((float)xOffset, (float)yOffset);
-		game->EventCallback(event);
+		EventHandler::ThrowEvent(MouseScrolledEvent((float)xOffset, (float)yOffset));
 	});
 
 	glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
 	{
-		auto game = (Application*)glfwGetWindowUserPointer(window);
-
-		MouseMovedEvent event((float)xPos, (float)yPos);
-		game->EventCallback(event);
+		EventHandler::ThrowEvent(MouseMovedEvent((float)xPos, (float)yPos));
 	});
 
 	// loading glad

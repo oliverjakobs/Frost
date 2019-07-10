@@ -19,7 +19,13 @@ public:
 
 		// ---------------| Load resources|----------------------------------
 		ResourceManager::Load("res/resources.json");
-		SceneManager::Load("res/scripts/scenes.json");
+
+
+		// ---------------| Scenes |-----------------------------------------
+		SceneManager::RegisterScene("station", "res/scenes/station.json");
+		SceneManager::RegisterScene("station2", "res/scenes/station2.json");
+
+		SceneManager::ChangeScene("station");
 	}
 
 	~Frost()
@@ -48,12 +54,19 @@ public:
 				ToggleImGui();
 				break;
 			case KEY_1:
-				SceneManager::ChangeScene("station");
+				EventHandler::ThrowEvent(ChangeSceneEvent("station"));
 				break;
 			case KEY_2:
-				SceneManager::ChangeScene("station2");
+				EventHandler::ThrowEvent(ChangeSceneEvent("station2"));
 				break;
 			}
+		}
+
+		if (e.GetEventType() == EventType::ChangeScene)
+		{
+			ChangeSceneEvent& change = (ChangeSceneEvent&)e;
+
+			SceneManager::ChangeScene(change.GetTarget());
 		}
 	}
 
@@ -95,7 +108,7 @@ public:
 		//Entity
 		ImGui::Begin("Player");
 
-		Entity* entity = SceneManager::GetActiveScene()->GetEntity("player");
+		Entity* entity = SceneManager::GetScene()->GetEntity("player");
 		auto animation = entity->GetComponent<AnimationComponent>();
 
 		ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);

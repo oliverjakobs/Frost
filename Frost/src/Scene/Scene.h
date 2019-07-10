@@ -15,7 +15,6 @@ protected:
 	unique_ptr<TileMap> m_map;
 
 	std::map<std::string, unique_ptr<Entity>> m_entities;
-	std::map<std::string, glm::vec2> m_spawnPosition;
 
 	// stores the time the simulation takes for debug purposes
 	float m_simTime;
@@ -27,8 +26,7 @@ public:
 
 	void SetName(const std::string& name);
 
-	void AddEntity(const std::string& name, const std::string& path);
-	void AddSpawnPosition(const std::string& entityName, const glm::vec2& position);
+	void AddEntity(const std::string& name, Entity* entity);
 	Entity* GetEntity(const std::string& name) const;
 	
 	void OnEntry();

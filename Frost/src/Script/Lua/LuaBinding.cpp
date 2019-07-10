@@ -106,6 +106,12 @@ void LuaBinding::LoadState()
 		// view
 		"CenterView",		&LuaEntity::CenterView
 		);
+
+	// Scene
+	m_lua.new_usertype<LuaScenes>("Scenes",
+		sol::constructors<LuaScenes()>(),
+		"Change", &LuaScenes::Change
+		);
 }
 
 sol::function LuaBinding::BindLuaFunction(const std::string& src, const std::string& func)

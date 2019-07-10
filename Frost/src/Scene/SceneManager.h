@@ -7,22 +7,23 @@
 class SceneManager : private Singleton<SceneManager>
 {
 private:
-	std::unordered_map<std::string, unique_ptr<Scene>> m_scenes;
+	std::map<std::string, std::string> m_register;
 
-	Scene* m_activeScene;
-	std::string m_activeName;
+	unique_ptr<Scene> m_scene;
+	std::string m_sceneName;
 public:
-	static void Load(const std::string& path);
+	static void RegisterScene(const std::string& name, const std::string& path);
 
-	static void AddScene(Scene* scene);
+	static Scene* LoadScene(const std::string& name);
+	static Scene* LoadSceneFromFile(const std::string& name, const std::string& path);
 	static void ChangeScene(const std::string& name);
 
+	// Functions for scene
 	static void OnEvent(Event& e);
 	static void OnUpdate();
 	static void OnRender();
 	static void OnRenderDebug();
 	static void OnImGui();
 
-	static Scene* GetScene(const std::string& name);
-	static Scene* GetActiveScene();
+	static Scene* GetScene();
 };

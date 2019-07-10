@@ -1,7 +1,7 @@
 {
   "shaders": {
-    "shader": { "vert": "res/shader/shader.vert", "frag": "res/shader/shader.frag" },
-		"instanced": { "vert": "res/shader/instanced.vert", "frag": "res/shader/instanced.frag" }
+    "shader": { "vert": "res/shaders/shader.vert", "frag": "res/shaders/shader.frag" },
+		"instanced": { "vert": "res/shaders/instanced.vert", "frag": "res/shaders/instanced.frag" }
   },
   "texture": {
 
@@ -16,11 +16,6 @@
       "src": "res/images/tiles.png",
       "rows": 1,
       "columns": 5
-    },
-    "font": {
-      "src": "res/images/font.png",
-      "rows": 16,
-      "columns": 16
     }
   }
 }

@@ -7,7 +7,19 @@
 
 Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
+	if (path.empty())
+	{
+		DEBUG_WARN("[JSON] Could create Entity: path is empty");
+		return nullptr;
+	}
+
 	json root = jsonParseFile(path);
+
+	if (root.empty())
+	{
+		DEBUG_WARN("[JSON] Could create Entity: Failed to parse file ({0})", path);
+		return nullptr;
+	}
 
 	// create Entity
 	std::string name = jsonToString(root, "name");

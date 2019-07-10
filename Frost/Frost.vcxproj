@@ -103,8 +103,10 @@
     <ClInclude Include="src\Entity\Entity.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\MouseEvent.h" />
+    <ClInclude Include="src\Event\WindowEvent.h" />
     <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\Font\BitmapFont.h" />
     <ClInclude Include="src\Font\Font.h" />
@@ -131,6 +133,7 @@
     <ClInclude Include="src\Script\JSONParser.h" />
     <ClInclude Include="src\Script\Lua\LuaBinding.h" />
     <ClInclude Include="src\Script\Lua\LuaEntity.h" />
+    <ClInclude Include="src\Script\Lua\LuaScene.h" />
     <ClInclude Include="src\String\StringHash.h" />
     <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\Tile\Body.h" />
@@ -154,6 +157,7 @@
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
     <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Event\EventHandler.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Font\TTFont.cpp" />
     <ClCompile Include="src\Graphics\Buffer.cpp" />
@@ -173,6 +177,7 @@
     <ClCompile Include="src\Script\JSONParser.cpp" />
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
     <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
+    <ClCompile Include="src\Script\Lua\LuaScene.cpp" />
     <ClCompile Include="src\Tile\Body.cpp" />
     <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Tile\TileRenderer.cpp" />
@@ -186,13 +191,14 @@
     <None Include="res\maps\station.json" />
     <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
-    <None Include="res\scripts\player.json" />
+    <None Include="res\scenes\station.json" />
+    <None Include="res\scenes\station2.json" />
+    <None Include="res\entities\player.json" />
     <None Include="res\scripts\player.lua" />
-    <None Include="res\scripts\scenes.json" />
-    <None Include="res\shader\instanced.frag" />
-    <None Include="res\shader\instanced.vert" />
-    <None Include="res\shader\shader.frag" />
-    <None Include="res\shader\shader.vert" />
+    <None Include="res\shaders\instanced.frag" />
+    <None Include="res\shaders\instanced.vert" />
+    <None Include="res\shaders\shader.frag" />
+    <None Include="res\shaders\shader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png" />

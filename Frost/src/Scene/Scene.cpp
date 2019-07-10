@@ -22,17 +22,14 @@ void Scene::SetName(const std::string& name)
 	m_name = name;
 }
 
-void Scene::AddEntity(const std::string& name, const std::string& path)
+void Scene::AddEntity(const std::string& name, Entity* entity)
 {
-	Entity* entity = EntityManager::CreateEntity(this, path);
-	entity->SetScene(this);
+	if (entity != nullptr)
+	{
+		entity->SetScene(this);
 
-	m_entities.insert({ entity->GetName(), unique_ptr<Entity>(entity) });
-}
-
-void Scene::AddSpawnPosition(const std::string& entityName, const glm::vec2& position)
-{
-	m_spawnPosition.insert({ entityName, position });
+		m_entities.insert({ entity->GetName(), unique_ptr<Entity>(entity) });
+	}
 }
 
 Entity* Scene::GetEntity(const std::string& name) const
@@ -45,11 +42,7 @@ Entity* Scene::GetEntity(const std::string& name) const
 
 void Scene::OnEntry()
 {
-	for (auto&[name, pos] : m_spawnPosition)
-	{
-		if (m_entities.find(name) != m_entities.end())
-			m_entities.at(name)->SetPosition(pos);
-	}
+	
 }
 
 void Scene::OnExtit()

@@ -5,23 +5,23 @@
 class KeyEvent : public Event
 {
 protected:
-	KeyEvent(int keycode) : m_keyCode(keycode) {}
-
 	int m_keyCode;
+
+	KeyEvent(int keycode) : m_keyCode(keycode) {}
 public:
 	inline int GetKeyCode() const { return m_keyCode; }
 	inline bool Is(unsigned int keyCode) const { return m_keyCode == keyCode; }
 
-	EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+	EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput);
 };
 
 class KeyPressedEvent : public KeyEvent
 {
 private:
 	int m_repeatCount;
+
 public:
-	KeyPressedEvent(int keycode, int repeatCount)
-		: KeyEvent(keycode), m_repeatCount(repeatCount) {}
+	KeyPressedEvent(int keycode, int repeatCount) : KeyEvent(keycode), m_repeatCount(repeatCount) {}
 
 	inline int GetRepeatCount() const { return m_repeatCount; }
 
@@ -32,14 +32,13 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KeyPressed)
+	EVENT_CLASS_TYPE(KeyPressed);
 };
 
 class KeyReleasedEvent : public KeyEvent
 {
 public:
-	KeyReleasedEvent(int keycode)
-		: KeyEvent(keycode) {}
+	KeyReleasedEvent(int keycode) : KeyEvent(keycode) {}
 
 	std::string ToString() const override
 	{
@@ -48,14 +47,13 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KeyReleased)
+	EVENT_CLASS_TYPE(KeyReleased);
 };
 
 class KeyTypedEvent : public KeyEvent
 {
 public:
-	KeyTypedEvent(int keycode)
-		: KeyEvent(keycode) {}
+	KeyTypedEvent(int keycode) : KeyEvent(keycode) {}
 
 	std::string ToString() const override
 	{
@@ -64,5 +62,5 @@ public:
 		return ss.str();
 	}
 
-	EVENT_CLASS_TYPE(KeyTyped)
+	EVENT_CLASS_TYPE(KeyTyped);
 };

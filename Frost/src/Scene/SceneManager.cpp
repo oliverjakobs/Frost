@@ -5,106 +5,16 @@
 
 #include "Script/JSONParser.h"
 
-void SceneManager::Load(const std::string& path)
+void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
-	DEBUG_INFO("[JSON] Loading scenes from {0}", path);
-
-	json root = jsonParseFile(path);
-
-	for (auto&[sceneName, sceneJson] : root.items())
-	{
-		std::string map = jsonToString(sceneJson, "map");
-
-		if (map.empty())
-		{
-			DEBUG_WARN("[JSON] Map is empty for {0} ({1})", sceneName, path);
-			continue;
-		}
-
-		Scene* scene = new Scene(sceneName, new TileMap(map));
-		AddScene(scene);
-
-		for (auto&[entityName, entityJson] : sceneJson.at("entities").items())
-		{
-			std::string entitySrc = jsonToString(entityJson, "scr");
-
-			if (entitySrc.empty())
-			{
-				DEBUG_WARN("[JSON] Entity {0} has no src ({1})", entityName, path);
-				continue;
-			}
-
-			scene->AddEntity(entityName, jsonToString(entityJson, "scr"));
-
-			if (entityJson.find("position") != entityJson.end())
-			{
-				scene->AddSpawnPosition(entityName, jsonToVec2(entityJson, "position"));
-			}
-		}
-
-		DEBUG_INFO("[JSON] Scene {0} loaded", sceneName);
-	}
+	Get().m_register.insert({ name, path });
 }
 
-void SceneManager::AddScene(Scene* scene)
-{
-	Get().m_scenes.insert({ scene->GetName(), unique_ptr<Scene>(scene) });
-
-	if (Get().m_activeScene == nullptr)
-		ChangeScene(scene->GetName());
-}
-
-void SceneManager::ChangeScene(const std::string& name)
-{
-	if (!stringCompare(Get().m_activeName, name))
-	{
-		Scene* newScene = GetScene(name);
-
-		if (newScene != nullptr)
-		{
-			// Exit old Scene
-			if (Get().m_activeScene != nullptr)
-				Get().m_activeScene->OnExtit();
-
-			Get().m_activeScene = newScene;
-			Get().m_activeName = name;
-
-			// Enter new scene
-			Get().m_activeScene->OnEntry();
-		}
-	}
-}
-
-void SceneManager::OnEvent(Event& e)
-{
-	GetActiveScene()->OnEvent(e);
-}
-
-void SceneManager::OnUpdate()
-{
-	GetActiveScene()->OnUpdate();
-}
-
-void SceneManager::OnRender()
-{
-	GetActiveScene()->OnRender();
-}
-
-void SceneManager::OnRenderDebug()
-{
-	GetActiveScene()->OnRenderDebug();
-}
-
-void SceneManager::OnImGui()
-{
-	GetActiveScene()->OnImGui();
-}
-
-Scene* SceneManager::GetScene(const std::string& name)
+Scene* SceneManager::LoadScene(const std::string& name)
 {
 	try
 	{
-		return Get().m_scenes.at(name).get();
+		return LoadSceneFromFile(name, Get().m_register.at(name));
 	}
 	catch (std::out_of_range)
 	{
@@ -113,7 +23,98 @@ Scene* SceneManager::GetScene(const std::string& name)
 	}
 }
 
-Scene* SceneManager::GetActiveScene()
+Scene* SceneManager::LoadSceneFromFile(const std::string& name, const std::string& path)
 {
-	return Get().m_activeScene;
+	Scene* scene = nullptr;
+
+	json root = jsonParseFile(path);
+
+	std::string map = jsonToString(root, "map");
+
+	if (map.empty())
+	{
+		DEBUG_WARN("[JSON] Could not load scene {0}: Map is empty ({1})", name, path);
+		return scene;
+	}
+
+	scene = new Scene(name, new TileMap(map));
+
+	for (auto&[entityName, entityJson] : root.at("entities").items())
+	{
+		std::string entitySrc = jsonToString(entityJson, "scr");
+
+		if (entitySrc.empty())
+		{
+			DEBUG_WARN("[JSON] Entity {0} has no src ({1})", entityName, path);
+			continue;
+		}
+
+		Entity* entity = EntityManager::CreateEntity(scene, entitySrc);
+
+		if (entity != nullptr)
+		{
+			if (entityJson.find("position") != entityJson.end())
+			{
+				entity->SetPosition(jsonToVec2(entityJson, "position"));
+			}
+
+			scene->AddEntity(entityName, entity);
+		}
+	}
+
+	DEBUG_INFO("[JSON] Loaded scene {0} from {1}", name, path);
+
+	return scene;
 }
+
+void SceneManager::ChangeScene(const std::string& name)
+{
+	if (!stringCompare(Get().m_sceneName, name))
+	{
+		Scene* newScene = LoadScene(name);
+
+		if (newScene != nullptr)
+		{
+			// Exit old Scene
+			if (Get().m_scene)
+				Get().m_scene->OnExtit();
+
+			Get().m_scene = unique_ptr<Scene>(newScene);
+			Get().m_sceneName = newScene->GetName();
+
+			// Enter new scene
+			Get().m_scene->OnEntry();
+		}
+	}
+}
+
+void SceneManager::OnEvent(Event& e)
+{
+	GetScene()->OnEvent(e);
+}
+
+void SceneManager::OnUpdate()
+{
+	GetScene()->OnUpdate();
+}
+
+void SceneManager::OnRender()
+{
+	GetScene()->OnRender();
+}
+
+void SceneManager::OnRenderDebug()
+{
+	GetScene()->OnRenderDebug();
+}
+
+void SceneManager::OnImGui()
+{
+	GetScene()->OnImGui();
+}
+
+Scene* SceneManager::GetScene()
+{
+	return Get().m_scene.get();	
+}
+

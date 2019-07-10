@@ -11,13 +11,9 @@
 
 #include "Maths/Maths.h"
 
-#include "Event/ApplicationEvent.h"
-#include "Event/MouseEvent.h"
-#include "Event/KeyEvent.h"
-
 #include "ImGui/ImGuiRenderer.h"
 
-struct GLFWwindow;
+#include "Event/EventHandler.h"
 
 class Application
 {
