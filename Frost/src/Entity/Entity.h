@@ -2,6 +2,7 @@
 
 #include "Types.h"
 
+class Scene;
 class Component;
 
 class Entity
@@ -16,6 +17,7 @@ private:
 
 	std::vector<unique_ptr<Component>> m_components;
 
+	Scene* m_scene;
 public:
 	Entity(const Entity& copy);
 	Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension);
@@ -34,6 +36,9 @@ public:
 	glm::vec2 GetPosition() const;
 	glm::vec2 GetDimension() const;
 	Direction GetDirection() const;
+
+	void SetScene(Scene* scene);
+	Scene* GetScene() const;
 
 	void AddComponent(Component* component);
 

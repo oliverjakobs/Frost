@@ -25,6 +25,7 @@ void Scene::SetName(const std::string& name)
 void Scene::AddEntity(const std::string& name, const std::string& path)
 {
 	Entity* entity = EntityManager::CreateEntity(this, path);
+	entity->SetScene(this);
 
 	m_entities.insert({ entity->GetName(), unique_ptr<Entity>(entity) });
 }

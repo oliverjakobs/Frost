@@ -86,12 +86,12 @@ void LuaBinding::LoadState()
 	m_lua.new_usertype<LuaEntity>("Entity",
 		sol::constructors<LuaEntity(Entity*)>(),
 		// base
-		"SetPosition",	&LuaEntity::SetPosition,
-		"SetDimension", &LuaEntity::SetDimension,
-		"SetDirection", &LuaEntity::SetDirection,
-		"GetPosition",	&LuaEntity::GetPosition,
-		"GetDimension", &LuaEntity::GetDimension,
-		"GetDirection", &LuaEntity::GetDirection,
+		"SetPosition",		&LuaEntity::SetPosition,
+		"SetDimension",		&LuaEntity::SetDimension,
+		"SetDirection",		&LuaEntity::SetDirection,
+		"GetPosition",		&LuaEntity::GetPosition,
+		"GetDimension",		&LuaEntity::GetDimension,
+		"GetDirection",		&LuaEntity::GetDirection,
 		// physics
 		"SetVelocity",		&LuaEntity::SetVelocity,
 		"GetVelocity",		&LuaEntity::GetVelocity,
@@ -101,10 +101,10 @@ void LuaBinding::LoadState()
 		"CollidesRight",	&LuaEntity::CollidesRight,
 		"Drop",				&LuaEntity::Drop,
 		// graphics
-		"PlayAnimation", &LuaEntity::PlayAnimation,
-		"SetRenderFlip", &LuaEntity::SetRenderFlip,
+		"PlayAnimation",	&LuaEntity::PlayAnimation,
+		"SetRenderFlip",	&LuaEntity::SetRenderFlip,
 		// view
-		"SetView", &LuaEntity::SetView
+		"CenterView",		&LuaEntity::CenterView
 		);
 }
 
@@ -119,3 +119,4 @@ sol::state& LuaBinding::GetState()
 {
 	return m_lua;
 }
+

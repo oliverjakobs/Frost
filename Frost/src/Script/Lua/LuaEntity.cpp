@@ -1,8 +1,7 @@
 #include "LuaEntity.h"
 
 #include "Debugger.h"
-#include "Entity/Entity.h"
-#include "Entity/Components.h"
+#include "Scene/Scene.h"
 
 LuaEntity::LuaEntity(Entity* entity) : m_entity(entity) { }
 
@@ -112,10 +111,10 @@ void LuaEntity::SetRenderFlip(const std::string& flip)
 }
 
 // view
-void LuaEntity::SetView()
+void LuaEntity::CenterView(const glm::vec2& offset, bool lock)
 {
-	CameraComponent* cam = m_entity->GetComponent<CameraComponent>();
-	DEBUG_ASSERT(cam, "[LUA] Entity has no CameraComponent");
-
-	View::SetCenter(m_entity->GetPosition() + cam->GetOffset(), cam->GetConstraint());
+	if (lock && m_entity->GetScene() != nullptr)
+		View::SetCenter(m_entity->GetPosition() + offset, m_entity->GetScene()->GetConstraint());
+	else
+		View::SetCenter(m_entity->GetPosition() + offset);
 }

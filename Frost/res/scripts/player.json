@@ -10,10 +10,6 @@
     },
     "bodyPos": [ 0.0, 30.0 ]
   },
-  "camera": {
-    "constraint": { "get": "map" },
-    "offset": [ 0.0, 30.0 ]
-  },
   "image": {
     "resource": "player",
     "width": 40.0,

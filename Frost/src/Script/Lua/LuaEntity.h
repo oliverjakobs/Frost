@@ -36,6 +36,5 @@ public:
 	void SetRenderFlip(const std::string& flip);
 
 	// view
-	//void SetView(const glm::vec2& pos, bool lock);
-	void SetView();
+	void CenterView(const glm::vec2& offset, bool lock);
 };

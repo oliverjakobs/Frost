@@ -56,27 +56,6 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 	}
 
-	// CameraComponent
-	if (root.find("camera") != root.end())
-	{
-		json camera = root.at("camera");
-
-		Rect constraint;
-		glm::vec2 cameraOffset = jsonToVec2(camera, "offset");
-
-		// TODO: x, y, w, h as attributes for constraint
-		if (camera.find("constraint") != camera.end())
-		{
-			json con = camera.at("constraint");
-
-			if (con.find("get") != con.end())
-				if (con.at("get") == "map")
-					constraint = scene->GetMap()->GetConstraint();
-		}
-
-		entity->AddComponent(new CameraComponent(constraint, cameraOffset));
-	}
-
 	// ImageComponent
 	if (root.find("image") != root.end())
 	{

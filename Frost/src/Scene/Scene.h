@@ -3,6 +3,7 @@
 #include "Tile/Tilemap.h"
 
 #include "Event/Event.h"
+#include "Script/Lua/LuaBinding.h"
 
 #include "Entity/EntityMananger.h"
 

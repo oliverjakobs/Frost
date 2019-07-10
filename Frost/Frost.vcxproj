@@ -96,7 +96,6 @@
     <ClInclude Include="src\Debugger.h" />
     <ClInclude Include="src\Entity\Components.h" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
-    <ClInclude Include="src\Entity\Components\CameraComponent.h" />
     <ClInclude Include="src\Entity\Components\Component.h" />
     <ClInclude Include="src\Entity\Components\ImageComponent.h" />
     <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
@@ -151,7 +150,6 @@
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\CameraComponent.cpp" />
     <ClCompile Include="src\Entity\Components\ImageComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
     <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />

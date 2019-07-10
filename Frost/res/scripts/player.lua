@@ -57,5 +57,7 @@ function onUpdate(entity)
 	entity:SetVelocity(velocity)
 
 	-- update view
-	entity:SetView()
+	cameraOffset = Vec2.new(0.0, 30.0)
+
+	entity:CenterView(cameraOffset, true)
 end

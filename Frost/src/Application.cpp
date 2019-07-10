@@ -323,7 +323,6 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate();
 
-
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		ImGuiRenderer::Start();

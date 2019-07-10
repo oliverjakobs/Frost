@@ -1,5 +1,6 @@
 #include "Entity.h"
 
+#include "Scene/Scene.h"
 #include "Components/Component.h"
 
 Entity::Entity(const Entity& copy)
@@ -78,6 +79,16 @@ glm::vec2 Entity::GetDimension() const
 Direction Entity::GetDirection() const
 {
 	return m_direction;
+}
+
+void Entity::SetScene(Scene* scene)
+{
+	m_scene = scene;
+}
+
+Scene* Entity::GetScene() const
+{
+	return m_scene;
 }
 
 void Entity::AddComponent(Component* component)
