@@ -51,8 +51,8 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 
 void Application::EventCallback(Event& e)
 {
-	EventDispatcher dispatcher(e);
-	dispatcher.Dispatch<WindowCloseEvent>(BIND_FUNCTION(Application::OnWindowClose));
+	if (e.GetEventType() == EventType::WindowClose)
+		OnWindowClose((WindowCloseEvent&)e);
 
 	OnEvent(e);
 }
@@ -114,15 +114,15 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		game->m_width = width;
 		game->m_height = height;
 
-		View::SetScreen(width, height);
+		View::SetScreen((float)width, (float)height);
 		glViewport(0, 0, width, height);
 
-		EventHandler::ThrowEvent(WindowResizeEvent(width, height));
+		EventHandler::Throw<WindowResizeEvent>(width, height);
 	});
 
 	glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 	{
-		EventHandler::ThrowEvent(WindowCloseEvent());
+		EventHandler::Throw<WindowCloseEvent>();
 	});
 
 	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -130,20 +130,20 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventHandler::ThrowEvent(KeyPressedEvent(key, 0));
+			EventHandler::Throw<KeyPressedEvent>(key, 0);
 			break;
 		case GLFW_RELEASE:
-			EventHandler::ThrowEvent(KeyReleasedEvent(key));
+			EventHandler::Throw<KeyReleasedEvent>(key);
 			break;
 		case GLFW_REPEAT:
-			EventHandler::ThrowEvent(KeyPressedEvent(key, 1));
+			EventHandler::Throw<KeyPressedEvent>(key, 1);
 			break;
 		}
 	});
 
 	glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
 	{
-		EventHandler::ThrowEvent(KeyTypedEvent(keycode));
+		EventHandler::Throw<KeyTypedEvent>(keycode);
 	});
 
 	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
@@ -153,22 +153,22 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		switch (action)
 		{
 		case GLFW_PRESS:
-			EventHandler::ThrowEvent(MouseButtonPressedEvent(button));
+			EventHandler::Throw<MouseButtonPressedEvent>(button);
 			break;
 		case GLFW_RELEASE:
-			EventHandler::ThrowEvent(MouseButtonReleasedEvent(button));
+			EventHandler::Throw<MouseButtonReleasedEvent>(button);
 			break;
 		}
 	});
 
 	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 	{
-		EventHandler::ThrowEvent(MouseScrolledEvent((float)xOffset, (float)yOffset));
+		EventHandler::Throw<MouseScrolledEvent>((float)xOffset, (float)yOffset);
 	});
 
 	glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
 	{
-		EventHandler::ThrowEvent(MouseMovedEvent((float)xPos, (float)yPos));
+		EventHandler::Throw<MouseMovedEvent>((float)xPos, (float)yPos);
 	});
 
 	// loading glad
@@ -312,6 +312,7 @@ void Application::Run()
 		ImGuiRenderer::Flush(m_window);
 
 		glfwPollEvents();
+		EventHandler::Poll();
 		glfwSwapBuffers(m_window);
 
 		Timer::End();

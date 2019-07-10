@@ -324,7 +324,6 @@
     <ClCompile Include="src\View\View.cpp" />
     <ClCompile Include="src\Font\TTFont.cpp" />
     <ClCompile Include="src\Script\Lua\LuaScene.cpp" />
-    <ClCompile Include="src\Event\EventHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

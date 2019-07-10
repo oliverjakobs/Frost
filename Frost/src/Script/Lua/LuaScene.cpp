@@ -4,5 +4,5 @@
 
 void LuaScenes::Change(const std::string& name)
 {
-	//EventHandler::ThrowEvent(ChangeSceneEvent(name));
+	EventHandler::Throw<ChangeSceneEvent>(name);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iterator>
+#include <utility>
 #include <functional>
 
 #define SAFE_DELETE(ptr) if( (ptr) != nullptr ) delete (ptr); (ptr) = nullptr;

@@ -157,7 +157,6 @@
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
     <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Event\EventHandler.cpp" />
     <ClCompile Include="src\Font\BitmapFont.cpp" />
     <ClCompile Include="src\Font\TTFont.cpp" />
     <ClCompile Include="src\Graphics\Buffer.cpp" />

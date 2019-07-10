@@ -25,8 +25,10 @@ private:
 	bool m_debug;
 	bool m_showImGui;
 
-	bool OnWindowClose(WindowCloseEvent& e);
+	// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
+	// and passes the rest to OnEvent, which is implemented in the game class
 	void EventCallback(Event& e);
+	bool OnWindowClose(WindowCloseEvent& e);
 
 	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:

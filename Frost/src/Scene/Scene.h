@@ -13,7 +13,6 @@ protected:
 	std::string m_name;
 
 	unique_ptr<TileMap> m_map;
-
 	std::map<std::string, unique_ptr<Entity>> m_entities;
 
 	// stores the time the simulation takes for debug purposes

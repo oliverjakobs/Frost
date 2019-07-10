@@ -6,6 +6,13 @@ function onUpdate(entity)
 
 	collidesBottom = entity:CollidesBottom()
 
+	if (Input.KeyPressed("1")) then
+		Scenes.Change("station")
+	end
+	if (Input.KeyPressed("2")) then
+		Scenes.Change("station2")
+	end
+
 	-- Input
 	if (Input.KeyPressed("A")) then
 		velocity.x = velocity.x - movementSpeed

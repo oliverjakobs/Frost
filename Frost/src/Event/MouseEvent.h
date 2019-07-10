@@ -21,7 +21,6 @@ public:
 	}
 
 	EVENT_CLASS_TYPE(MouseMoved);
-	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
 };
 
 class MouseScrolledEvent : public Event
@@ -32,8 +31,8 @@ private:
 public:
 	MouseScrolledEvent(float xOffset, float yOffset) : m_offsetX(xOffset), m_offsetY(yOffset) {}
 
-	inline float GetXOffset() const { return m_offsetX; }
-	inline float GetYOffset() const { return m_offsetY; }
+	inline float GetOffsetX() const { return m_offsetX; }
+	inline float GetOffsetY() const { return m_offsetY; }
 
 	std::string ToString() const override
 	{
@@ -43,7 +42,6 @@ public:
 	}
 
 	EVENT_CLASS_TYPE(MouseScrolled);
-	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
 };
 
 class MouseButtonEvent : public Event
@@ -54,9 +52,6 @@ protected:
 	MouseButtonEvent(int button) : m_button(button) {}
 public:
 	inline int GetMouseButton() const { return m_button; }
-	inline bool Is(unsigned int button) const { return m_button == button; }
-
-	EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
 };
 
 class MouseButtonPressedEvent : public MouseButtonEvent

@@ -10,9 +10,6 @@ protected:
 	KeyEvent(int keycode) : m_keyCode(keycode) {}
 public:
 	inline int GetKeyCode() const { return m_keyCode; }
-	inline bool Is(unsigned int keyCode) const { return m_keyCode == keyCode; }
-
-	EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput);
 };
 
 class KeyPressedEvent : public KeyEvent

@@ -20,5 +20,4 @@ public:
 	}
 
 	EVENT_CLASS_TYPE(ChangeScene);
-	EVENT_CLASS_CATEGORY(EventCategoryApplication);
 };

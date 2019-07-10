@@ -46,7 +46,7 @@ Scene* SceneManager::CreateSceneFromFile(const std::string& name, const std::str
 		}
 	}
 
-	DEBUG_INFO("[JSON] Loaded scene {0} from {1}", name, path);
+	//DEBUG_INFO("[JSON] Loaded scene {0} from {1}", name, path);
 
 	return scene;
 }

@@ -21,7 +21,6 @@ public:
 	}
 
 	EVENT_CLASS_TYPE(WindowResize);
-	EVENT_CLASS_CATEGORY(EventCategoryWindow);
 };
 
 class WindowCloseEvent : public Event
@@ -30,5 +29,4 @@ public:
 	WindowCloseEvent() {}
 
 	EVENT_CLASS_TYPE(WindowClose);
-	EVENT_CLASS_CATEGORY(EventCategoryWindow);
 };

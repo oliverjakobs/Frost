@@ -54,12 +54,12 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
-			case KEY_1:
-				EventHandler::ThrowEvent(ChangeSceneEvent("station"));
-				break;
-			case KEY_2:
-				EventHandler::ThrowEvent(ChangeSceneEvent("station2"));
-				break;
+			//case KEY_1:
+			//	EventHandler::Throw<ChangeSceneEvent>("station");
+			//	break;
+			//case KEY_2:
+			//	EventHandler::Throw<ChangeSceneEvent>("station2");
+			//	break;
 			}
 		}
 
