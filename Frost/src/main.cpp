@@ -91,9 +91,14 @@ public:
 	{
 		m_sceneManager.OnImGui();
 
-		//View
-		ImGui::Begin("View");
+		//Application
+		ImGui::Begin("Application");
 
+		ImGui::Text("Window size: %d, %d", GetWidth(), GetHeight());
+
+		ImGui::Separator();
+
+		ImGui::Text("View:");
 		ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
 		ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
 

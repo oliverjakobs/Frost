@@ -9,7 +9,7 @@ private:
 	sol::function m_update;
 
 public:
-	ScriptComponent(sol::function& update);
+	ScriptComponent(sol::state& lua, const std::string& script);
 
 	void OnUpdate() override;
 	void OnRender() override;

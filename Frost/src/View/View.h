@@ -23,6 +23,8 @@ public:
 	static void SetCenter(float x, float y, Rect constraint);
 	static void SetCenter(const glm::vec2& center, Rect constraint);
 
+	static void Resize(float w, float h);
+
 	static glm::mat4 GetMat();
 	static glm::mat4 GetScreenMat();
 

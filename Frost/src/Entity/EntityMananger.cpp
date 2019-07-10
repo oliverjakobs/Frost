@@ -37,7 +37,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 		if (!src.empty())
 		{
-			entity->AddComponent(new ScriptComponent(scene->GetLua().BindLuaFunction(src, "onUpdate")));
+			entity->AddComponent(new ScriptComponent(scene->GetLua(), src));
 		}
 		else
 		{

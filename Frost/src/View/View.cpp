@@ -54,6 +54,11 @@ void View::SetCenter(const glm::vec2& center, Rect constraint)
 	SetCenter(center.x, center.y, constraint);
 }
 
+void View::Resize(float w, float h)
+{
+	Set(GetX(), GetY(), w, h);
+}
+
 glm::mat4 View::GetMat()
 {
 	return Get().m_mat;

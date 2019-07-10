@@ -19,7 +19,7 @@ protected:
 	// stores the time the simulation takes for debug purposes
 	float m_simTime;
 
-	LuaBinding m_lua;
+	sol::state m_lua;
 public:
 	Scene(const std::string& name, TileMap* map);
 	~Scene();
@@ -37,7 +37,7 @@ public:
 	TileMap* GetMap() const;
 	Rect GetConstraint() const;
 
-	LuaBinding& GetLua();
+	sol::state& GetLua();
 
 	std::string GetName() const;
 };

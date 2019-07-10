@@ -114,6 +114,9 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		game->m_width = width;
 		game->m_height = height;
 
+		View::SetScreen(width, height);
+		glViewport(0, 0, width, height);
+
 		EventHandler::ThrowEvent(WindowResizeEvent(width, height));
 	});
 

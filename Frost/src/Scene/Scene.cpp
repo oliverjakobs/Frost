@@ -9,7 +9,7 @@
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
 {
-	m_lua.LoadState();
+	LoadLuaState(m_lua);
 }
 
 Scene::~Scene()
@@ -50,7 +50,7 @@ void Scene::OnUpdate()
 		entity->OnUpdate();
 	}
 
-	m_lua.GetState().collect_garbage();
+	m_lua.collect_garbage();
 
 	float end = Timer::GetTimeMS();
 
@@ -84,7 +84,7 @@ void Scene::OnImGui()
 	ImGui::Text("Simulation time: %2.4f ms", m_simTime);
 	ImGui::Separator();
 	ImGui::Text("Lua:");
-	ImGui::Text("Memory: %d bytes", m_lua.GetState().memory_used());
+	ImGui::Text("Memory: %d bytes", m_lua.memory_used());
 	ImGui::Separator();
 	ImGui::Text("Map:");
 	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
@@ -103,7 +103,7 @@ Rect Scene::GetConstraint() const
 	return Rect(glm::vec2(), m_map->GetDimension() * m_map->GetTileSize());
 }
 
-LuaBinding& Scene::GetLua()
+sol::state& Scene::GetLua()
 {
 	return m_lua;
 }

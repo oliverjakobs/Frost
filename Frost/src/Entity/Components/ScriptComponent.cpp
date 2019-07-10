@@ -1,9 +1,10 @@
 #include "ScriptComponent.h"
 
-ScriptComponent::ScriptComponent(sol::function& update)
-	: m_update(update) 
-{ 
+ScriptComponent::ScriptComponent(sol::state& lua, const std::string& script)
+{
+	lua.script_file(script);
 
+	m_update = lua["onUpdate"];
 }
 
 void ScriptComponent::OnUpdate()

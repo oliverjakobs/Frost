@@ -60,18 +60,18 @@ float LuaInput::MouseY()
 	return Input::MouseY();
 }
 
-void LuaBinding::LoadState()
+void LoadLuaState(sol::state& lua)
 {
-	m_lua.open_libraries(sol::lib::base);
+	lua.open_libraries(sol::lib::base);
 
-	m_lua.new_usertype<glm::vec2>("Vec2",
+	lua.new_usertype<glm::vec2>("Vec2",
 		sol::constructors<glm::vec2(), glm::vec2(float, float)>(),
 		"x", &glm::vec2::x,
 		"y", &glm::vec2::y
 		);
 
 	// Input
-	m_lua.new_usertype<LuaInput>("Input",
+	lua.new_usertype<LuaInput>("Input",
 		sol::constructors<LuaInput()>(),
 		"KeyPressed",		&LuaInput::KeyPressed,
 		"KeyReleased",		&LuaInput::KeyReleased,
@@ -83,7 +83,7 @@ void LuaBinding::LoadState()
 		);
 
 	// Entity
-	m_lua.new_usertype<LuaEntity>("Entity",
+	lua.new_usertype<LuaEntity>("Entity",
 		sol::constructors<LuaEntity(Entity*)>(),
 		// base
 		"SetPosition",		&LuaEntity::SetPosition,
@@ -108,21 +108,8 @@ void LuaBinding::LoadState()
 		);
 
 	// Scene
-	m_lua.new_usertype<LuaScenes>("Scenes",
+	lua.new_usertype<LuaScenes>("Scenes",
 		sol::constructors<LuaScenes()>(),
-		"Change", &LuaScenes::Change
+		"Change",			&LuaScenes::Change
 		);
 }
-
-sol::function LuaBinding::BindLuaFunction(const std::string& src, const std::string& func)
-{
-	m_lua.script_file(src);
-
-	return m_lua[func];
-}
-
-sol::state& LuaBinding::GetState()
-{
-	return m_lua;
-}
-

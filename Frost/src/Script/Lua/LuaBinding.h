@@ -24,14 +24,4 @@ public:
 	static float MouseY();
 };
 
-class LuaBinding
-{
-private:
-	sol::state m_lua;
-
-public:
-	void LoadState();
-	sol::function BindLuaFunction(const std::string& src, const std::string& func);
-
-	sol::state& GetState();
-};
+void LoadLuaState(sol::state& lua);
