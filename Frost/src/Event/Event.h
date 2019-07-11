@@ -15,7 +15,7 @@ enum class EventType
 };
 
 #define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::##type; }\
-								virtual EventType GetEventType() const override { return GetStaticType(); }\
+								virtual EventType GetType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 
 class Event
@@ -23,9 +23,9 @@ class Event
 public:
 	bool handled = false;
 
-	virtual EventType GetEventType() const = 0;
-
+	virtual EventType GetType() const = 0;
 	virtual const char* GetName() const = 0;
+
 	virtual std::string ToString() const { return GetName(); }
 };
 

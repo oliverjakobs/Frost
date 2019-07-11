@@ -14,6 +14,7 @@
 #include "ImGui/ImGuiRenderer.h"
 
 #include "Event/EventHandler.h"
+#include "Scene/SceneManager.h"
 
 class Application
 {
@@ -36,6 +37,8 @@ protected:
 
 	int m_width;
 	int m_height;
+
+	SceneManager m_sceneManager;
 public:
 	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);
@@ -44,9 +47,10 @@ public:
 	void EnableDebugMode(bool b);
 	void ToggleDebugMode();
 
-	void Pause();
-
+	void EnableImGui(bool b);
 	void ToggleImGui();
+
+	void Pause();
 
 	void EnableVsync(bool b);
 

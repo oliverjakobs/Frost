@@ -1,28 +1,21 @@
 #include "Application.h"
 
-#include "Scene/SceneManager.h"
-
 class Frost : public Application
 {
 private:
-	SceneManager m_sceneManager;
 
 public:
 	Frost() : Application("config.json")
 	{
-		// ---------------| Config|------------------------------------------
+		// ---------------| Config |------------------------------------------
 		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		EnableDebugMode(true);
+		EnableImGui(true);
 		EnableVsync(false);
-		ToggleImGui();
 
-		// ---------------| Load resources|----------------------------------
-		ResourceManager::Load("res/resources.json");
-
-
-		// ---------------| Scenes |-----------------------------------------
+		// ---------------| Scenes |------------------------------------------
 		m_sceneManager.RegisterScene("station", "res/scenes/station.json");
 		m_sceneManager.RegisterScene("station2", "res/scenes/station2.json");
 
@@ -36,7 +29,7 @@ public:
 	
 	void OnEvent(Event& e) override
 	{
-		if (e.GetEventType() == EventType::KeyPressed)
+		if (e.GetType() == EventType::KeyPressed)
 		{
 			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
 
@@ -54,16 +47,14 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
-			//case KEY_1:
-			//	EventHandler::Throw<ChangeSceneEvent>("station");
-			//	break;
-			//case KEY_2:
-			//	EventHandler::Throw<ChangeSceneEvent>("station2");
-			//	break;
+			case KEY_1:
+				EventHandler::Throw<ChangeSceneEvent>("station");
+				break;
+			case KEY_2:
+				EventHandler::Throw<ChangeSceneEvent>("station2");
+				break;
 			}
 		}
-
-		m_sceneManager.OnEvent(e);
 	}
 
 	void OnUpdate() override

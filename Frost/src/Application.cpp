@@ -51,10 +51,18 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 
 void Application::EventCallback(Event& e)
 {
-	if (e.GetEventType() == EventType::WindowClose)
+	switch (e.GetType())
+	{
+	case EventType::WindowClose:
 		OnWindowClose((WindowCloseEvent&)e);
-
-	OnEvent(e);
+		break;
+	case EventType::ChangeScene:
+		m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
+		break;
+	default:
+		OnEvent(e);
+		break;
+	}
 }
 
 bool Application::LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor)
@@ -215,6 +223,7 @@ Application::Application(const std::string& config)
 
 	json root = jsonParseFile(config);
 
+	// ---------------| window |------------------------------------------
 	std::string title;
 
 	int width;
@@ -223,7 +232,6 @@ Application::Application(const std::string& config)
 	int glMajor = 4;
 	int glMinor = 0;
 	
-	// window
 	if (root.find("window") != root.end())
 	{
 		json window = root.at("window");
@@ -233,7 +241,7 @@ Application::Application(const std::string& config)
 		height = jsonToInt(window, "height");
 	}
 
-	// gl version
+	// ---------------| gl version |--------------------------------------
 	if (root.find("opengl") != root.end())
 	{
 		json opengl = root.at("opengl");
@@ -243,6 +251,12 @@ Application::Application(const std::string& config)
 	}
 
 	m_running = LoadApplication(title, width, height, glMajor, glMinor);
+
+	// ---------------| load resources |----------------------------------
+	std::string resources = jsonToString(root, "resources");
+
+	if (!resources.empty())
+		ResourceManager::Load(resources);
 }
 
 Application::Application(const std::string& title, int width, int height)
@@ -266,6 +280,16 @@ void Application::ToggleDebugMode()
 	m_debug = !m_debug;
 }
 
+void Application::EnableImGui(bool b)
+{
+	m_showImGui = b;
+}
+
+void Application::ToggleImGui()
+{
+	m_showImGui = !m_showImGui;
+}
+
 void Application::Pause()
 {
 	m_paused = !m_paused;
@@ -274,11 +298,6 @@ void Application::Pause()
 		SetTitle(m_title + " | Paused");
 	else
 		SetTitle(m_title);
-}
-
-void Application::ToggleImGui()
-{
-	m_showImGui = !m_showImGui;
 }
 
 void Application::EnableVsync(bool b)

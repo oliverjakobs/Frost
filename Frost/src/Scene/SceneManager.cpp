@@ -83,15 +83,6 @@ void SceneManager::ChangeScene(const std::string& name)
 	}
 }
 
-void SceneManager::OnEvent(Event& e)
-{
-	if (e.GetEventType() == EventType::ChangeScene)
-	{
-		ChangeSceneEvent& change = (ChangeSceneEvent&)e;
-		ChangeScene(change.GetTarget());
-	}
-}
-
 void SceneManager::OnUpdate()
 {
 	GetScene()->OnUpdate();

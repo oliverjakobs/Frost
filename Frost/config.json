@@ -7,5 +7,6 @@
   "opengl": {
     "major": 4,
     "minor": 4
-  }
+  },
+  "resources": "res/resources.json"
 }
