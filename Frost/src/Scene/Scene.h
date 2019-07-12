@@ -7,20 +7,24 @@
 
 #include "Entity/EntityMananger.h"
 
+#include "Utility/Timer.h"
+
+class SceneManager;
+
 class Scene
 {
 protected:
 	std::string m_name;
 
+	sol::state m_lua;
 	unique_ptr<TileMap> m_map;
 	std::map<std::string, unique_ptr<Entity>> m_entities;
 
 	// stores the time the simulation takes for debug purposes
-	float m_simTime;
+	SimulationTime m_simTime;
 
-	sol::state m_lua;
-public:
 	Scene(const std::string& name, TileMap* map);
+public:
 	~Scene();
 
 	void SetName(const std::string& name);
@@ -39,4 +43,6 @@ public:
 	sol::state& GetLua();
 
 	std::string GetName() const;
+
+	friend SceneManager;
 };

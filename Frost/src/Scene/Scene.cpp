@@ -54,7 +54,7 @@ void Scene::OnUpdate()
 
 	float end = Timer::GetTimeMS();
 
-	m_simTime = end - start;
+	m_simTime.SetTime(end - start);
 }
 
 void Scene::OnRender()
@@ -81,11 +81,15 @@ void Scene::OnImGui()
 {
 	ImGui::Begin("Scene");
 	ImGui::Text("Name: %s", m_name.c_str());
-	ImGui::Text("Simulation time: %2.4f ms", m_simTime);
+	ImGui::Text("Simulation avg: %2.4f ms", m_simTime.GetAverage());
+	ImGui::Text("Simulation max: %2.4f ms", m_simTime.GetMax());
+	ImGui::Text("Simulation min: %2.4f ms", m_simTime.GetMin());
 	ImGui::Separator();
+
 	ImGui::Text("Lua:");
 	ImGui::Text("Memory: %d bytes", m_lua.memory_used());
 	ImGui::Separator();
+
 	ImGui::Text("Map:");
 	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
 	ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());

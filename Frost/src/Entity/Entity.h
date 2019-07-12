@@ -4,11 +4,13 @@
 
 class Scene;
 class Component;
+struct EntityManager;
 
 class Entity
 {
 private:
 	std::string m_name;
+	Scene* m_scene;
 
 	glm::vec2 m_position;
 	glm::vec2 m_dimension;
@@ -17,10 +19,8 @@ private:
 
 	std::vector<unique_ptr<Component>> m_components;
 
-	Scene* m_scene;
-public:
-	Entity(const Entity& copy);
 	Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension);
+public:
 	~Entity();
 
 	void OnUpdate();
@@ -57,4 +57,6 @@ public:
 
 		return component;
 	}
+
+	friend EntityManager;
 };

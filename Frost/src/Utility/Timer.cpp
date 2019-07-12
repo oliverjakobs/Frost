@@ -1,6 +1,7 @@
 #include "Timer.h"
 
 #include <GLFW/glfw3.h>
+#include <algorithm>
 
 void Timer::updateFPS()
 {
@@ -58,4 +59,38 @@ float Timer::GetTime()
 float Timer::GetTimeMS()
 {
 	return GetTime() * 1000.0f;
+}
+
+SimulationTime::SimulationTime()
+{
+	m_average = 0.0f;
+	m_max = 0.0f;
+	m_min = 0.0f;
+
+	m_runningAverage = 0.0f;
+	m_count = 0;
+}
+
+void SimulationTime::SetTime(float time)
+{
+	m_max = std::max(m_max, time);
+	m_min = std::min((m_min <= 0.0f) ? time : m_min, time);
+
+	m_runningAverage += time;
+	m_average = m_runningAverage / ++m_count;
+}
+
+float SimulationTime::GetAverage() const
+{
+	return m_average;
+}
+
+float SimulationTime::GetMax() const
+{
+	return m_max;
+}
+
+float SimulationTime::GetMin() const
+{
+	return m_min;
 }

@@ -3,15 +3,6 @@
 #include "Scene/Scene.h"
 #include "Components/Component.h"
 
-Entity::Entity(const Entity& copy)
-	: m_name(copy.m_name), m_position(copy.m_position), m_dimension(copy.m_dimension), m_direction(copy.m_direction)
-{
-	for (auto& c : copy.m_components)
-	{
-		//AddComponent(c->clone());
-	}
-}
-
 Entity::Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension)
 	: m_name(name), m_position(position), m_dimension(dimension), m_direction(Direction::RIGHT)
 {
