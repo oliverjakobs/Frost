@@ -14,6 +14,8 @@ private:
 	unsigned int m_count;
 
 public:
+	Average();
+
 	void Set(Type value);
 
 	Type GetAverage() const;
@@ -22,12 +24,22 @@ public:
 };
 
 template<typename Type>
+inline Average<Type>::Average()
+{
+	m_max = Type();
+	m_min = Type();
+	m_average = Type();
+
+	m_runningAverage = Type();
+	m_count = 0;
+}
+
+template<typename Type>
 inline void Average<Type>::Set(Type value)
 {
 	m_max = std::max(m_max, value);
 	m_min = std::min((m_min <= 0.0f) ? value : m_min, value);
 
-	// TODO: running average
 	m_runningAverage += value;
 	m_average = m_runningAverage / ++m_count;
 }
