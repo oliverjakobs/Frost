@@ -142,6 +142,7 @@
     <ClInclude Include="src\Tile\TileRenderer.h" />
     <ClInclude Include="src\Tile\Tilemap.h" />
     <ClInclude Include="src\Types.h" />
+    <ClInclude Include="src\Utility\Average.h" />
     <ClInclude Include="src\Utility\Enum.h" />
     <ClInclude Include="src\Utility\Flags.h" />
     <ClInclude Include="src\Utility\Singelton.h" />

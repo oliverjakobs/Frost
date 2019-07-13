@@ -7,7 +7,7 @@
 
 #include "Entity/EntityMananger.h"
 
-#include "Utility/Timer.h"
+#include "Utility/Average.h"
 
 class SceneManager;
 
@@ -21,7 +21,7 @@ protected:
 	std::map<std::string, unique_ptr<Entity>> m_entities;
 
 	// stores the time the simulation takes for debug purposes
-	SimulationTime m_simTime;
+	Average<float> m_simTime;
 
 	Scene(const std::string& name, TileMap* map);
 public:

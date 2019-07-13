@@ -228,6 +228,7 @@
     <ClInclude Include="src\Script\Lua\LuaScene.h" />
     <ClInclude Include="src\Event\WindowEvent.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Utility\Average.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">

@@ -54,7 +54,7 @@ void Scene::OnUpdate()
 
 	float end = Timer::GetTimeMS();
 
-	m_simTime.SetTime(end - start);
+	m_simTime.Set(end - start);
 }
 
 void Scene::OnRender()

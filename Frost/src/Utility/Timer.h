@@ -26,23 +26,3 @@ public:
 	static float GetTime();
 	static float GetTimeMS();
 };
-
-class SimulationTime
-{
-private:
-	float m_average;
-	float m_max;
-	float m_min;
-
-	float m_runningAverage;
-	unsigned int m_count;
-
-public:
-	SimulationTime();
-
-	void SetTime(float time);
-
-	float GetAverage() const;
-	float GetMax() const;
-	float GetMin() const;
-};
