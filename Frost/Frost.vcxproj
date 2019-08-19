@@ -191,6 +191,7 @@
     <None Include="res\maps\station.json" />
     <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
+    <None Include="res\scenes\scenes.json" />
     <None Include="res\scenes\station.json" />
     <None Include="res\scenes\station2.json" />
     <None Include="res\entities\player.json" />

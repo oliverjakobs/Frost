@@ -357,6 +357,7 @@
     <None Include="res\shaders\shader.vert">
       <Filter>res\shader</Filter>
     </None>
+    <None Include="res\scenes\scenes.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">
