@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
+# Visual Studio 16
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frost", "Frost\Frost.vcxproj", "{131E320D-7F32-5ABE-48B4-FD1DB48756EF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{6B455E7F-5713-5285-40A7-C2AB2C142EEA}"

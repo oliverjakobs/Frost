@@ -13,9 +13,6 @@
     <Filter Include="res\scripts">
       <UniqueIdentifier>{A6037D1E-12B9-F513-9BAD-EFEA0762EC17}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\shader">
-      <UniqueIdentifier>{35FAD04E-21B2-129C-8AB9-EBF77690AD8C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -67,6 +64,9 @@
     <Filter Include="src\Utility">
       <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\View">
+      <UniqueIdentifier>{B72327CF-A3F0-81DA-CC09-7082B835B768}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Animation.h">
@@ -99,16 +99,25 @@
     <ClInclude Include="src\Entity\Entity.h">
       <Filter>src\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="src\Entity\EntityMananger.h">
+      <Filter>src\Entity</Filter>
+    </ClInclude>
     <ClInclude Include="src\Event\ApplicationEvent.h">
       <Filter>src\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\Event.h">
       <Filter>src\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\Event\EventHandler.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
     <ClInclude Include="src\Event\KeyEvent.h">
       <Filter>src\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\MouseEvent.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\WindowEvent.h">
       <Filter>src\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\File\FileReader.h">
@@ -118,6 +127,9 @@
       <Filter>src\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Font\Font.h">
+      <Filter>src\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Font\TTFont.h">
       <Filter>src\Font</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics.h">
@@ -180,6 +192,12 @@
     <ClInclude Include="src\Script\Lua\LuaBinding.h">
       <Filter>src\Script\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\Lua\LuaEntity.h">
+      <Filter>src\Script\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\Lua\LuaScene.h">
+      <Filter>src\Script\Lua</Filter>
+    </ClInclude>
     <ClInclude Include="src\String\StringHash.h">
       <Filter>src\String</Filter>
     </ClInclude>
@@ -204,6 +222,9 @@
     <ClInclude Include="src\Types.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Utility\Average.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
     <ClInclude Include="src\Utility\Enum.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
@@ -219,16 +240,9 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaEntity.h" />
-    <ClInclude Include="src\Entity\EntityMananger.h">
-      <Filter>src\Scene</Filter>
+    <ClInclude Include="src\View\View.h">
+      <Filter>src\View</Filter>
     </ClInclude>
-    <ClInclude Include="src\View\View.h" />
-    <ClInclude Include="src\Font\TTFont.h" />
-    <ClInclude Include="src\Script\Lua\LuaScene.h" />
-    <ClInclude Include="src\Event\WindowEvent.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Utility\Average.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -252,7 +266,13 @@
     <ClCompile Include="src\Entity\Entity.cpp">
       <Filter>src\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity\EntityMananger.cpp">
+      <Filter>src\Entity</Filter>
+    </ClCompile>
     <ClCompile Include="src\Font\BitmapFont.cpp">
+      <Filter>src\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Font\TTFont.cpp">
       <Filter>src\Font</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Buffer.cpp">
@@ -300,6 +320,12 @@
     <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
       <Filter>src\Script\Lua</Filter>
     </ClCompile>
+    <ClCompile Include="src\Script\Lua\LuaEntity.cpp">
+      <Filter>src\Script\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\Lua\LuaScene.cpp">
+      <Filter>src\Script\Lua</Filter>
+    </ClCompile>
     <ClCompile Include="src\Tile\Body.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
@@ -315,16 +341,12 @@
     <ClCompile Include="src\Utility\Timer.cpp">
       <Filter>src\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="src\View\View.cpp">
+      <Filter>src\View</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
-    <ClCompile Include="src\Entity\EntityMananger.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\View\View.cpp" />
-    <ClCompile Include="src\Font\TTFont.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -340,24 +362,6 @@
     <None Include="res\scripts\player.lua">
       <Filter>res\scripts</Filter>
     </None>
-    <None Include="res\scenes\station.json" />
-    <None Include="res\scenes\station2.json" />
-    <None Include="res\entities\player.json">
-      <Filter>res\scripts</Filter>
-    </None>
-    <None Include="res\shaders\instanced.frag">
-      <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\shaders\instanced.vert">
-      <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\shaders\shader.frag">
-      <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\shaders\shader.vert">
-      <Filter>res\shader</Filter>
-    </None>
-    <None Include="res\scenes\scenes.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\blocky_font.png">
