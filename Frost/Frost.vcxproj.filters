@@ -159,9 +159,6 @@
     <ClInclude Include="src\Graphics\Texture.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGui\ImGuiRenderer.h">
-      <Filter>src\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
@@ -243,6 +240,9 @@
     <ClInclude Include="src\View\View.h">
       <Filter>src\View</Filter>
     </ClInclude>
+    <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -299,12 +299,6 @@
     <ClCompile Include="src\Graphics\Texture.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGui\ImGuiBuild.cpp">
-      <Filter>src\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGui\ImGuiRenderer.cpp">
-      <Filter>src\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
@@ -347,6 +341,9 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

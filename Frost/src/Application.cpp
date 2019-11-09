@@ -75,6 +75,23 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	m_paused = false;
 	m_showImGui = false;
 
+	// ingis initialization
+	if (!ignis::ignisInit(width, height))
+	{
+		OBELISK_ERROR("[Ignis] Failed to initialize Ignis");
+		return nullptr;
+	}
+
+	ignisSetErrorCallback([](ignisErrorLevel level, const std::string& desc)
+	{
+		switch (level)
+		{
+		case ignisErrorLevel::Warn:		OBELISK_WARN(desc.c_str()); break;
+		case ignisErrorLevel::Error:	OBELISK_ERROR(desc.c_str()); break;
+		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc.c_str()); break;
+		}
+	});
+
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
 	{

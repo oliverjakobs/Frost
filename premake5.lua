@@ -1,4 +1,5 @@
 workspace "Frost"
+	architecture "x64"
 	startproject "Frost"
 
 	configurations
@@ -55,14 +56,13 @@ project "Frost"
 
 	includedirs
 	{
+		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/src",
 		"%{prj.name}/packages/glm",
-		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
-		"%{prj.name}/packages/json/single_include",
-		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",
 		"%{prj.name}/packages/glad/include",
+		--lua
 		"%{prj.name}/packages/lua/src",
 		"%{prj.name}/packages/sol2/single/include"
 	}

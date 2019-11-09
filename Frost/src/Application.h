@@ -11,7 +11,10 @@
 
 #include "Maths/Maths.h"
 
-#include "ImGui/ImGuiRenderer.h"
+#include "ImGuiBinding/ImGuiRenderer.h"
+
+#include "Obelisk/Obelisk.h"
+#include "Ignis/Ignis.h"
 
 #include "Event/EventHandler.h"
 #include "Scene/SceneManager.h"
