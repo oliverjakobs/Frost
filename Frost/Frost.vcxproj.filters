@@ -144,20 +144,8 @@
     <ClInclude Include="src\File\FileReader.h">
       <Filter>src\File</Filter>
     </ClInclude>
-    <ClInclude Include="src\Font\BitmapFont.h">
-      <Filter>src\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\Font.h">
-      <Filter>src\Font</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Font\TTFont.h">
-      <Filter>src\Font</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Buffer.h">
-      <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Image.h">
       <Filter>src\Graphics</Filter>
@@ -169,9 +157,6 @@
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\ResourceManager.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Texture.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
@@ -339,15 +324,13 @@
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Timer.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
     <ClInclude Include="src\View\View.h">
       <Filter>src\View</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -374,15 +357,6 @@
     <ClCompile Include="src\Entity\EntityMananger.cpp">
       <Filter>src\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Font\BitmapFont.cpp">
-      <Filter>src\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Font\TTFont.cpp">
-      <Filter>src\Font</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Buffer.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Image.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
@@ -393,9 +367,6 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\ResourceManager.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Texture.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
@@ -485,15 +456,13 @@
     <ClCompile Include="src\Tile\Tilemap.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\Timer.cpp">
-      <Filter>src\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="src\View\View.cpp">
       <Filter>src\View</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

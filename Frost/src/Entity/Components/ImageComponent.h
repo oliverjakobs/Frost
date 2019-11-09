@@ -15,6 +15,6 @@ public:
 	void SetFrame(uint frame);
 	void SetRenderFlip(RenderFlip flip);
 
-	void OnUpdate() override;
+	void OnUpdate(float deltaTime) override;
 	void OnRender() override;
 };

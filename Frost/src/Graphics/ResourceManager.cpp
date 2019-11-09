@@ -1,18 +1,18 @@
 #include "ResourceManager.h"
 
-#include "Debugger.h"
-
 #include "Script/JSONParser.h"
 
-void ResourceManager::AddShader(const std::string& name, Shader* shader)
+#include "Obelisk/Debugger.h"
+
+void ResourceManager::AddShader(const std::string& name, ignis::Shader* shader)
 {
 	if (!name.empty())
 	{
-		Get().m_shaders[name] = unique_ptr<Shader>(shader);
+		Get().m_shaders[name] = unique_ptr<ignis::Shader>(shader);
 	}
 }
 
-Shader* ResourceManager::GetShader(const std::string& name)
+ignis::Shader* ResourceManager::GetShader(const std::string& name)
 {
 	try
 	{
@@ -20,20 +20,20 @@ Shader* ResourceManager::GetShader(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("[Res] No such shader: {0}", name);
+		OBELISK_WARN("[Res] No such shader: {0}", name);
 		return nullptr;
 	}
 }
 
-void ResourceManager::AddTexture(const std::string& name, Texture* tex)
+void ResourceManager::AddTexture(const std::string& name, ignis::Texture* tex)
 {
 	if (!name.empty())
 	{
-		Get().m_textures[name] = unique_ptr<Texture>(tex);
+		Get().m_textures[name] = std::unique_ptr<ignis::Texture>(tex);
 	}
 }
 
-Texture* ResourceManager::GetTexture(const std::string& name)
+ignis::Texture* ResourceManager::GetTexture(const std::string& name)
 {
 	try
 	{
@@ -41,20 +41,20 @@ Texture* ResourceManager::GetTexture(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("[Res] No such texture: {0}", name);
+		OBELISK_WARN("[Res] No such texture: {0}", name);
 		return nullptr;
 	}
 }
 
-void ResourceManager::AddTextureAtlas(const std::string& name, TextureAtlas* tex)
+void ResourceManager::AddTextureAtlas(const std::string& name, ignis::TextureAtlas* tex)
 {
 	if (!name.empty())
 	{
-		Get().m_textureAtlases[name] = unique_ptr<TextureAtlas>(tex);
+		Get().m_textureAtlases[name] = unique_ptr<ignis::TextureAtlas>(tex);
 	}
 }
 
-TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
+ignis::TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
 {
 	try
 	{
@@ -62,7 +62,7 @@ TextureAtlas* ResourceManager::GetTextureAtlas(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("[Res] No such texture atlas: {0}", name);
+		OBELISK_WARN("[Res] No such texture atlas: {0}", name);
 		return nullptr;
 	}
 }
@@ -81,15 +81,15 @@ void ResourceManager::Load(const std::string& path)
 
 			if (vert.empty())
 			{
-				DEBUG_WARN("[JSON] Could not load Shader: Vertex Shader is missing ({0})", name);
+				OBELISK_WARN("[JSON] Could not load Shader: Vertex Shader is missing ({0})", name);
 			}
 			else if (frag.empty())
 			{
-				DEBUG_WARN("[JSON] Could not load Shader: Fragment Shader is missing ({0})", name);
+				OBELISK_WARN("[JSON] Could not load Shader: Fragment Shader is missing ({0})", name);
 			}
 			else
 			{
-				AddShader(name, new Shader(vert, frag));
+				AddShader(name, new ignis::Shader(vert, frag));
 			}
 		}
 	}
@@ -103,11 +103,11 @@ void ResourceManager::Load(const std::string& path)
 
 			if (src.empty())
 			{
-				DEBUG_WARN("[JSON] Could not load Texture: Src is missing ({0})", name);
+				OBELISK_WARN("[JSON] Could not load Texture: Src is missing ({0})", name);
 			}
 			else
 			{
-				AddTexture(name, new Texture(src));
+				AddTexture(name, new ignis::Texture(src));
 			}
 		}
 	}
@@ -123,14 +123,14 @@ void ResourceManager::Load(const std::string& path)
 
 			if (src.empty())
 			{
-				DEBUG_WARN("[JSON] Could not load Texture Atlas: Src is missing ({0})", name);
+				OBELISK_WARN("[JSON] Could not load Texture Atlas: Src is missing ({0})", name);
 			}
 			else
 			{
-				AddTextureAtlas(name, new TextureAtlas(src, rows, columns));
+				AddTextureAtlas(name, new ignis::TextureAtlas(src, rows, columns));
 			}
 		}
 	}
 
-	DEBUG_INFO("[JSON] Loaded Resources ({0})", path);
+	OBELISK_INFO("[JSON] Loaded Resources ({0})", path);
 }

@@ -13,6 +13,6 @@ struct Renderer
 	static void SetClearColor(const ignis::color& color);
 
 	// ----------------------------texture---------------------------------------------------------------------------
-	static void RenderTexture(Texture* tex);
-	static void RenderTextureInstanced(Texture* tex, uint instanceCount);
+	static void RenderTexture(ignis::Texture* tex);
+	static void RenderTextureInstanced(ignis::Texture* tex, uint instanceCount);
 };

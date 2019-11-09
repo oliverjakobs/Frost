@@ -1,10 +1,8 @@
 #include "Scene.h"
 
-#include "ImGui/ImGuiRenderer.h"
+#include "ImGuiBinding/ImGuiRenderer.h"
 
 #include "Utility/Utils.h"
-#include "Utility/Timer.h"
-#include "Debugger.h"
 
 Scene::Scene(const std::string& name, TileMap* map)
 	: m_name(name), m_map(map)
@@ -40,21 +38,21 @@ Entity* Scene::GetEntity(const std::string& name) const
 	return nullptr;
 }
 
-void Scene::OnUpdate()
+void Scene::OnUpdate(float deltaTime)
 {
 	// measure time for simulation
-	float start = Timer::GetTimeMS();
+	//float start = Timer::GetTimeMS();
 
 	for (auto&[name, entity] : m_entities)
 	{
-		entity->OnUpdate();
+		entity->OnUpdate(deltaTime);
 	}
 
 	m_lua.collect_garbage();
 
-	float end = Timer::GetTimeMS();
+	//float end = Timer::GetTimeMS();
 
-	m_simTime.Set(end - start);
+	//m_simTime.Set(end - start);
 }
 
 void Scene::OnRender()

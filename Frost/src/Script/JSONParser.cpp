@@ -2,7 +2,7 @@
 
 #include "File/FileReader.h"
 
-#include "Debugger.h"
+#include "Obelisk/Debugger.h"
 
 json jsonParseFile(const std::string& path)
 {
@@ -16,7 +16,7 @@ json jsonParseFile(const std::string& path)
 		}
 		catch (json::parse_error& e)
 		{
-			DEBUG_ERROR("{0}", e.what());
+			OBELISK_ERROR("%s", e.what());
 		}
 	}
 
@@ -38,7 +38,7 @@ glm::vec2 jsonToVec2(json j, const std::string& name, const glm::vec2& default)
 		}
 		else
 		{
-			DEBUG_WARN("{0} could not be parsed to vec2", name);
+			OBELISK_WARN("%s could not be parsed to vec2", name.c_str());
 		}
 	}
 

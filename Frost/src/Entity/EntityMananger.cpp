@@ -2,14 +2,14 @@
 
 #include "Scene/Scene.h"
 
-#include "Debugger.h"
+#include "Obelisk/Debugger.h"
 #include "Script/JSONParser.h"
 
 Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 {
 	if (path.empty())
 	{
-		DEBUG_WARN("[JSON] Could create Entity: path is empty");
+		OBELISK_WARN("[JSON] Could create Entity: path is empty");
 		return nullptr;
 	}
 
@@ -17,7 +17,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 	if (root.empty())
 	{
-		DEBUG_WARN("[JSON] Could create Entity: Failed to parse file ({0})", path);
+		OBELISK_WARN("[JSON] Could create Entity: Failed to parse file ({0})", path);
 		return nullptr;
 	}
 
@@ -41,7 +41,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 		else
 		{
-			DEBUG_WARN("[JSON] Could not add ScriptComponent: Script src is missing ({0})", path);
+			OBELISK_WARN("[JSON] Could not add ScriptComponent: Script src is missing ({0})", path);
 		}
 	}
 
@@ -64,7 +64,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 		else
 		{
-			DEBUG_WARN("[JSON] Could not add PhysicsComponent: Body is missing ({0})", path);
+			OBELISK_WARN("[JSON] Could not add PhysicsComponent: Body is missing ({0})", path);
 		}
 	}
 
@@ -79,11 +79,11 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 
 		if (res.empty())
 		{
-			DEBUG_WARN("[JSON] Could not add ImageComponent: Resource is missing ({0})", path);
+			OBELISK_WARN("[JSON] Could not add ImageComponent: Resource is missing ({0})", path);
 		}
 		else if (width <= 0.0f || height <= 0.0f)
 		{
-			DEBUG_WARN("[JSON] Could not add ImageComponent: Widht or height is less than or equal to 0.0 ({0})", path);
+			OBELISK_WARN("[JSON] Could not add ImageComponent: Widht or height is less than or equal to 0.0 ({0})", path);
 		}
 		else
 		{
@@ -113,7 +113,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 		else
 		{
-			DEBUG_WARN("[JSON] Could not add AnimationComponent: Animations missing ({0})", path);
+			OBELISK_WARN("[JSON] Could not add AnimationComponent: Animations missing ({0})", path);
 		}
 	}
 

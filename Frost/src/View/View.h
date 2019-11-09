@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Maths/Maths.h"
-#include "Utility/Singelton.h"
+#include "Obelisk/Singelton.h"
 
 class View : private Singleton<View>
 {

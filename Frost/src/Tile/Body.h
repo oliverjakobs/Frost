@@ -57,7 +57,7 @@ private:
 	Line GetSensorLeft(const glm::vec2& position, const glm::vec2& offset) const;
 	Line GetSensorRight(const glm::vec2& position, const glm::vec2& offset) const;
 public:
-	void Update();
+	void Update(float deltaTime);
 	void Render() const;
 
 	void SetPosition(const glm::vec2& pos);

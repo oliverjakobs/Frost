@@ -1,7 +1,6 @@
 #include "SceneManager.h"
 
-#include "Debugger.h"
-#include "String/StringUtils.h"
+#include "Obelisk/Obelisk.h"
 
 #include "Event/ApplicationEvent.h"
 
@@ -17,7 +16,7 @@ Scene* SceneManager::CreateSceneFromFile(const std::string& name, const std::str
 
 	if (map.empty())
 	{
-		DEBUG_WARN("[JSON] Could not load scene {0}: Map is empty ({1})", name, path);
+		OBELISK_WARN("[JSON] Could not load scene {0}: Map is empty ({1})", name, path);
 		return scene;
 	}
 
@@ -29,7 +28,7 @@ Scene* SceneManager::CreateSceneFromFile(const std::string& name, const std::str
 
 		if (entitySrc.empty())
 		{
-			DEBUG_WARN("[JSON] Entity {0} has no src ({1})", entityName, path);
+			OBELISK_WARN("[JSON] Entity {0} has no src ({1})", entityName, path);
 			continue;
 		}
 
@@ -64,14 +63,14 @@ Scene* SceneManager::LoadScene(const std::string& name)
 	}
 	catch (std::out_of_range)
 	{
-		DEBUG_WARN("No such scene: {0}", name);
+		OBELISK_WARN("No such scene: {0}", name);
 		return nullptr;
 	}
 }
 
 void SceneManager::ChangeScene(const std::string& name)
 {
-	if (!stringCompare(m_sceneName, name))
+	if (!obelisk::StringCompare(m_sceneName, name))
 	{
 		Scene* newScene = LoadScene(name);
 
@@ -83,9 +82,9 @@ void SceneManager::ChangeScene(const std::string& name)
 	}
 }
 
-void SceneManager::OnUpdate()
+void SceneManager::OnUpdate(float deltaTime)
 {
-	GetScene()->OnUpdate();
+	GetScene()->OnUpdate(deltaTime);
 }
 
 void SceneManager::OnRender()

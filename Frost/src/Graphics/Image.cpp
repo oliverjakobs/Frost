@@ -2,11 +2,13 @@
 
 #include "Renderer.h"
 
+using namespace ignis;
+
 Image::Image(TextureAtlas* texture, float width, float height)
 	: m_texture(texture), m_width(width), m_height(height), m_flip(RenderFlip::NONE)
 {
-	float fWidth = 1.0f / m_texture->columns;
-	float fHeight = 1.0f / m_texture->rows;
+	float fWidth = 1.0f / m_texture->GetColumns();
+	float fHeight = 1.0f / m_texture->GetRows();
 
 	GLfloat vertices[] = 
 	{
@@ -16,15 +18,10 @@ Image::Image(TextureAtlas* texture, float width, float height)
 		 0.0f, height,   0.0f, fHeight
 	};
 
-	m_vao.Bind();
-
-	m_vao.GenVertexBuffer();
-
-	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
-	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
-	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
-
-	m_vao.UnbindVertexBuffer();
+	m_vertexArray.AddArrayBuffer(make_shared<ArrayBuffer>(sizeof(vertices), vertices, GL_STATIC_DRAW),
+		{
+			{GL_FLOAT, 2}, {GL_FLOAT, 2}
+		});
 }
 
 Image::~Image()
@@ -58,22 +55,20 @@ void Image::Render(const glm::vec2& pos, int frame, const glm::mat4& view, const
 
 	if (shader != nullptr)
 	{
-		shader->use();
+		shader->Use();
 
-		shader->setUniform1i("uFrame", frame);
+		shader->SetUniform1i("uFrame", frame);
 
-		shader->setUniform1i("uRenderFlip", (int)m_flip);
-		shader->setUniform1i("uRows", m_texture->rows);
-		shader->setUniform1i("uColumns", m_texture->columns);
+		shader->SetUniform1i("uRenderFlip", (int)m_flip);
+		shader->SetUniform1i("uRows", m_texture->GetRows());
+		shader->SetUniform1i("uColumns", m_texture->GetColumns());
 
-		shader->setUniformMat4("projection", glm::mat4());
-		shader->setUniformMat4("view", view);
-		shader->setUniformMat4("model", glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)));
+		shader->SetUniformMat4("projection", glm::mat4());
+		shader->SetUniformMat4("view", view);
+		shader->SetUniformMat4("model", glm::translate(glm::mat4(), glm::vec3(pos, 0.0f)));
 	}
 
-	m_vao.Bind();
+	m_vertexArray.Bind();
 
-	Renderer::RenderTexture(m_texture);
-
-	m_vao.Unbind();
+	Renderer::RenderTexture((ignis::Texture*)m_texture);
 }

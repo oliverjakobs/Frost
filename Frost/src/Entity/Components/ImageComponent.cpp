@@ -1,7 +1,6 @@
 #include "ImageComponent.h"
 
-ImageComponent::ImageComponent(Image* image)
-	: m_image(image), m_frame(0) 
+ImageComponent::ImageComponent(Image* image) : m_image(image), m_frame(0) 
 {
 	
 }
@@ -16,7 +15,7 @@ void ImageComponent::SetRenderFlip(RenderFlip flip)
 	m_image->SetRenderFlip(flip);
 }
 
-void ImageComponent::OnUpdate()
+void ImageComponent::OnUpdate(float deltaTime)
 {
 }
 

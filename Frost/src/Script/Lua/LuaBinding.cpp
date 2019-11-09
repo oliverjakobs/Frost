@@ -1,13 +1,12 @@
 #include "LuaBinding.h"
 
-#include "String/StringUtils.h"
 #include "Input/Input.h"
 
-#include "Debugger.h"
+#include "Obelisk/Obelisk.h"
 
 int LuaInput::GetKeyCode(const std::string& key)
 {
-	if (stringCompare(key, "SPACE"))
+	if (obelisk::StringCompare(key, "SPACE"))
 		return KEY_SPACE;
 
 	return key.front();
@@ -15,11 +14,11 @@ int LuaInput::GetKeyCode(const std::string& key)
 
 int LuaInput::GetButtonCode(const std::string& button)
 {
-	if (stringCompare(button, "LEFT"))
+	if (obelisk::StringCompare(button, "LEFT"))
 		return MOUSE_BUTTON_LEFT;
-	if (stringCompare(button, "RIGHT"))
+	if (obelisk::StringCompare(button, "RIGHT"))
 		return MOUSE_BUTTON_RIGHT;
-	if (stringCompare(button, "MIDDLE"))
+	if (obelisk::StringCompare(button, "MIDDLE"))
 		return MOUSE_BUTTON_MIDDLE;
 
 	return MOUSE_BUTTON_LAST + 1;

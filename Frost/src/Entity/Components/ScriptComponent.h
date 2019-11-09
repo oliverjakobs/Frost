@@ -11,6 +11,6 @@ private:
 public:
 	ScriptComponent(sol::state& lua, const std::string& script);
 
-	void OnUpdate() override;
+	void OnUpdate(float deltaTime) override;
 	void OnRender() override;
 };

@@ -32,7 +32,7 @@ public:
 	void AddEntity(const std::string& name, Entity* entity);
 	Entity* GetEntity(const std::string& name) const;
 
-	void OnUpdate();
+	void OnUpdate(float deltaTime);
 	void OnRender();
 	void OnRenderDebug();
 	void OnImGui();

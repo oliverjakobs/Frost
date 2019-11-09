@@ -17,7 +17,7 @@ public:
 	void ChangeScene(const std::string& name);
 
 	// Functions for scene
-	void OnUpdate();
+	void OnUpdate(float deltaTime);
 	void OnRender();
 	void OnRenderDebug();
 	void OnImGui();

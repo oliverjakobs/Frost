@@ -13,11 +13,11 @@ Entity::~Entity()
 {
 }
 
-void Entity::OnUpdate()
+void Entity::OnUpdate(float deltaTime)
 {
 	for (auto& c : m_components)
 	{
-		c->OnUpdate();
+		c->OnUpdate(deltaTime);
 	}
 }
 

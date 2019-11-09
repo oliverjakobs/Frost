@@ -14,7 +14,7 @@ public:
 
 	Body* GetBody() const;
 
-	void OnUpdate() override;
+	void OnUpdate(float deltaTime) override;
 	void OnRender() override;
 	void OnRenderDebug() override;
 };

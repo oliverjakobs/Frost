@@ -2,9 +2,9 @@
 
 #include "Script/JSONParser.h"
 
-#include "Utility/Timer.h"
-
 #include "Obelisk/Debugger.h"
+
+#include "View/View.h"
 
 std::map<uint, TileType> GetTypeMap(json tiletypes)
 {

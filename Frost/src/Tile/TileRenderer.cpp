@@ -1,6 +1,8 @@
 #include "TileRenderer.h"
 
-TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float size)
+#include "Graphics/Renderer.h"
+
+TileRenderer::TileRenderer(ignis::TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float size)
 	: m_texture(textureAtlas)
 {
 	std::vector<glm::vec2> translations;
@@ -14,8 +16,8 @@ TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& 
 
 	m_instanceCount = tiles.size();
 
-	float fWidth = (textureAtlas->columns > 0) ? 1.0f / textureAtlas->columns : 1.0f;
-	float fHeight = (textureAtlas->rows > 0) ? 1.0f / textureAtlas->rows : 1.0f;
+	float fWidth = (textureAtlas->GetColumns() > 0) ? 1.0f / textureAtlas->GetColumns() : 1.0f;
+	float fHeight = (textureAtlas->GetRows() > 0) ? 1.0f / textureAtlas->GetRows() : 1.0f;
 
 	float vertices[] =
 	{
@@ -26,41 +28,40 @@ TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& 
 		0.0f, size,		0.0f, fHeight
 	};
 
-	m_vao.Bind();
-
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
-	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
-	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
+	m_vao.AddArrayBuffer(make_shared<ignis::ArrayBuffer>(sizeof(vertices), vertices),
+	{
+		{GL_FLOAT, 2}, { GL_FLOAT, 2 }
+	});
 
 	// also set instance data
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(glm::vec2) * translations.size(), &translations[0]);
-	m_vao.SetVertexAttribPointer(2, 2, 2, 0);
-	m_vao.SetVertexAttribDivisor(2, 1);
-	
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(GLuint) * frames.size(), &frames[0]);
-	m_vao.SetVertexAttribIPointer(3, 1, 1, 0);
-	m_vao.SetVertexAttribDivisor(3, 1);
+	m_vao.AddArrayBuffer(make_shared<ignis::ArrayBuffer>(sizeof(glm::vec2) * translations.size(), &translations[0]),
+	{
+		{GL_FLOAT, 2}
+	});
+	glVertexAttribDivisor(2, 1);
 
-	m_vao.UnbindVertexBuffer();
+	m_vao.AddArrayBuffer(make_shared<ignis::ArrayBuffer>(sizeof(GLuint) * frames.size(), &frames[0]),
+	{
+		{GL_UNSIGNED_INT, 1}
+	});
+	glVertexAttribDivisor(3, 1);
+
 }
 
 void TileRenderer::RenderMap(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
 {		
-	Shader* shader = ResourceManager::GetShader("instanced");
+	ignis::Shader* shader = ResourceManager::GetShader("instanced");
 
 	if (shader != nullptr)
 	{
-		shader->use();
+		shader->Use();
 
-		shader->setUniform1i("uRows", m_texture->rows);
-		shader->setUniform1i("uColumns", m_texture->columns);
+		shader->SetUniform1i("uRows", m_texture->GetRows());
+		shader->SetUniform1i("uColumns", m_texture->GetColumns());
 		
-		shader->setUniformMat4("projection", projection);
-		shader->setUniformMat4("view", view);
-		shader->setUniformMat4("model", model);
+		shader->SetUniformMat4("projection", projection);
+		shader->SetUniformMat4("view", view);
+		shader->SetUniformMat4("model", model);
 	}
 
 	m_vao.Bind();

@@ -272,10 +272,10 @@ void Application::Run()
 	// Game loop
 	while (m_running)
 	{
-		Timer::Start();
+		m_timer.Start((float)glfwGetTime());
 
 		if (!m_paused)
-			OnUpdate();
+			OnUpdate(m_timer.DeltaTime);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -296,7 +296,7 @@ void Application::Run()
 		EventHandler::Poll();
 		glfwSwapBuffers(m_window);
 
-		Timer::End();
+		m_timer.End((float)glfwGetTime());
 	}
 }
 

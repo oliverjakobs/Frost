@@ -23,7 +23,7 @@ private:
 public:
 	~Entity();
 
-	void OnUpdate();
+	void OnUpdate(float deltaTime);
 	void OnRender();
 	void OnRenderDebug();
 

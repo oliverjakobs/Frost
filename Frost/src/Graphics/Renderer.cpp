@@ -16,7 +16,7 @@ void Renderer::SetClearColor(const ignis::color& color)
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Renderer::RenderTexture(Texture* tex)
+void Renderer::RenderTexture(ignis::Texture* tex)
 {
 	if (tex != nullptr)
 	{
@@ -27,7 +27,7 @@ void Renderer::RenderTexture(Texture* tex)
 	}
 }
 
-void Renderer::RenderTextureInstanced(Texture* tex, uint instanceCount)
+void Renderer::RenderTextureInstanced(ignis::Texture* tex, uint instanceCount)
 {
 	if (tex != nullptr)
 	{

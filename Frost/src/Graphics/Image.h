@@ -1,14 +1,16 @@
 #pragma once
 
-#include "Shader.h"
-#include "Buffer.h"
-#include "Texture.h"
+#include "Types.h"
+
+#include "Ignis/Advanced/TextureAtlas.h"
+#include "Ignis/Core/Buffer.h"
+#include "Ignis/Core/Shader.h"
 
 class Image
 {
 private:
-	TextureAtlas* m_texture;
-	VAO m_vao;
+	ignis::TextureAtlas* m_texture;
+	ignis::VertexArray m_vertexArray;
 
 	RenderFlip m_flip;
 
@@ -16,7 +18,7 @@ private:
 	float m_height;
 
 public:
-	Image(TextureAtlas* texture, float width, float height);
+	Image(ignis::TextureAtlas* texture, float width, float height);
 	~Image();
 
 	void SetRenderFlip(RenderFlip flip);

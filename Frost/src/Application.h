@@ -34,6 +34,8 @@ protected:
 	int m_width;
 	int m_height;
 
+	obelisk::Timer m_timer;
+
 	SceneManager m_sceneManager;
 public:
 	Application(const std::string& config);
@@ -55,7 +57,7 @@ public:
 	void Close();
 
 	virtual void OnEvent(Event& e) = 0;
-	virtual void OnUpdate() = 0;
+	virtual void OnUpdate(float deltaTime) = 0;
 	virtual void OnRender() = 0;
 	virtual void OnRenderDebug() {}
 	virtual void OnImGui() {}

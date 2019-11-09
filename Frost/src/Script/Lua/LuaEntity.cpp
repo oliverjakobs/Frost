@@ -1,7 +1,8 @@
 #include "LuaEntity.h"
 
-#include "Debugger.h"
 #include "Scene/Scene.h"
+
+#include "Obelisk/Debugger.h"
 
 LuaEntity::LuaEntity(Entity* entity) : m_entity(entity) { }
 
@@ -40,7 +41,7 @@ std::string LuaEntity::GetDirection()
 void LuaEntity::SetVelocity(const glm::vec2& vel)
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	phys->GetBody()->SetVelocity(vel);
 }
@@ -48,7 +49,7 @@ void LuaEntity::SetVelocity(const glm::vec2& vel)
 glm::vec2 LuaEntity::GetVelocity()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	return phys->GetBody()->GetVelocity();
 }
@@ -56,7 +57,7 @@ glm::vec2 LuaEntity::GetVelocity()
 bool LuaEntity::CollidesBottom()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	return phys->GetBody()->CollidesBottom();
 }
@@ -64,7 +65,7 @@ bool LuaEntity::CollidesBottom()
 bool LuaEntity::CollidesTop()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	return phys->GetBody()->CollidesTop();
 }
@@ -72,7 +73,7 @@ bool LuaEntity::CollidesTop()
 bool LuaEntity::CollidesLeft()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	return phys->GetBody()->CollidesLeft();
 }
@@ -80,7 +81,7 @@ bool LuaEntity::CollidesLeft()
 bool LuaEntity::CollidesRight()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	return phys->GetBody()->CollidesRight();
 }
@@ -88,7 +89,7 @@ bool LuaEntity::CollidesRight()
 void LuaEntity::Drop()
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
-	DEBUG_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
+	OBELISK_ASSERT(phys, "[LUA] Entity has no PhysicsComponent");
 
 	phys->GetBody()->Drop();
 }
@@ -97,7 +98,7 @@ void LuaEntity::Drop()
 void LuaEntity::PlayAnimation(const std::string& animation)
 {
 	AnimationComponent* anim = m_entity->GetComponent<AnimationComponent>();
-	DEBUG_ASSERT(anim, "[LUA] Entity has no AnimationComponent");
+	OBELISK_ASSERT(anim, "[LUA] Entity has no AnimationComponent");
 
 	anim->PlayAnimation(animation);
 }
@@ -105,7 +106,7 @@ void LuaEntity::PlayAnimation(const std::string& animation)
 void LuaEntity::SetRenderFlip(const std::string& flip)
 {
 	ImageComponent* img = m_entity->GetComponent<ImageComponent>();
-	DEBUG_ASSERT(img, "[LUA] Entity has no ImageComponent");
+	OBELISK_ASSERT(img, "[LUA] Entity has no ImageComponent");
 
 	img->SetRenderFlip(RenderFlip::FromString(flip));
 }

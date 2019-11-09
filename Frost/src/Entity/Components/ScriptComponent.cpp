@@ -7,7 +7,7 @@ ScriptComponent::ScriptComponent(sol::state& lua, const std::string& script)
 	m_update = lua["onUpdate"];
 }
 
-void ScriptComponent::OnUpdate()
+void ScriptComponent::OnUpdate(float deltaTime)
 {
 	m_update(LuaEntity(m_entity));
 }

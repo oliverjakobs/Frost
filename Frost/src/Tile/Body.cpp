@@ -2,7 +2,8 @@
 
 #include "Tilemap.h"
 
-#include "Utility/Timer.h"
+#include "View/View.h"
+#include "Graphics/Primitives.h"
 
 Body::Body(TileMap* map, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
 	: m_map(map), m_position(pos), m_halfDimension(halfDim), m_type(type)
@@ -271,16 +272,16 @@ Line Body::GetSensorRight(const glm::vec2& pos, const glm::vec2& offset) const
 	return Line(pos.x + m_halfDimension.x + offset.x, pos.y - m_halfDimension.y + offset.y, pos.x + m_halfDimension.x + offset.x, pos.y + m_halfDimension.y - offset.y);
 }
 
-void Body::Update()
+void Body::Update(float deltaTime)
 {
 	if (m_type == BODY_STATIC)
 		return;
 
 	// ------------------ World Collision ----------------------------------
 	if (m_onSlope && m_velocity.y <= 0.0f)
-		m_velocity += m_map->GetGravity() * m_gravityScale * TILE_SLOPE_GRIP * Timer::GetDeltaTime();
+		m_velocity += m_map->GetGravity() * m_gravityScale * TILE_SLOPE_GRIP * deltaTime;
 	else
-		m_velocity += m_map->GetGravity() * m_gravityScale * Timer::GetDeltaTime();
+		m_velocity += m_map->GetGravity() * m_gravityScale * deltaTime;
 
 
 	m_offsetHorizontal = glm::vec2(m_sensorOffset, m_onSlope ? 12.0f : 2.0f);
@@ -307,8 +308,8 @@ void Body::Update()
 	glm::vec2 oldPos = m_position;
 
 	// move first in x direction and then in y direction
-	MoveX(m_velocity.x * Timer::GetDeltaTime());
-	MoveY(m_velocity.y * Timer::GetDeltaTime());
+	MoveX(m_velocity.x * deltaTime);
+	MoveY(m_velocity.y * deltaTime);
 
 	m_drop = false;
 
@@ -321,7 +322,7 @@ void Body::Update()
 
 void Body::Render() const
 {
-	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, GREEN, View::GetMat());
+	Primitives::DrawRect(m_position - m_halfDimension, m_halfDimension * 2.0f, ignis::GREEN, View::GetMat());
 
 #if TILE_SHOW_SENSOR
 	// showing the sensors (only for dynamic bodies)

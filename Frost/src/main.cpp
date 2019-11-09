@@ -57,9 +57,9 @@ public:
 		}
 	}
 
-	void OnUpdate() override
+	void OnUpdate(float deltaTime) override
 	{
-		m_sceneManager.OnUpdate();
+		m_sceneManager.OnUpdate(deltaTime);
 	}
 
 	void OnRender() override
@@ -69,7 +69,7 @@ public:
 		// FPS
 		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
 		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
-		ImGui::Text("Fps: %d", Timer::GetFPS());
+		ImGui::Text("Fps: %d", m_timer.FPS);
 		ImGui::End();
 	}
 
@@ -113,9 +113,6 @@ public:
 
 int main()
 {
-	Logger::SetFormat("[%T] [%^%l%$] %v");
-	Logger::SetLevel(LogLevel::Trace);
-
 #if RUN_GAME
 	Frost* game = new Frost();
 

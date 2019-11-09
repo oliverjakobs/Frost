@@ -1,7 +1,6 @@
 #include "Primitives.h"
 
-#include "Buffer.h"
-#include "Shader.h"
+#include "Ignis/Core/Shader.h"
 
 #include "Maths/Maths.h"
 #include "Utility/Utils.h"
@@ -47,7 +46,10 @@ struct GLRenderLines
 			"	color = f_color;\n"
 			"}\n";
 
-		m_shader = Shader::CreateShader(vs, fs);
+		m_shader = ignis::CreateShaderProgram({
+			{ GL_VERTEX_SHADER, vs },
+			{ GL_FRAGMENT_SHADER, fs }
+			});
 		m_viewLocation = glGetUniformLocation(m_shader, "view");
 		m_vertexAttribute = 0;
 		m_colorAttribute = 1;
@@ -165,7 +167,10 @@ struct GLRenderTriangles
 			"	color = f_color;\n"
 			"}\n";
 
-		m_shader = Shader::CreateShader(vs, fs);
+		m_shader = ignis::CreateShaderProgram({
+			{ GL_VERTEX_SHADER, vs },
+			{ GL_FRAGMENT_SHADER, fs }
+			});
 		m_viewLocation = glGetUniformLocation(m_shader, "view");
 		m_vertexAttribute = 0;
 		m_colorAttribute = 1;

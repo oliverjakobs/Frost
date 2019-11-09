@@ -2,18 +2,19 @@
 
 #include "Tile.h"
 
-#include "Graphics.h"
+#include "Graphics/ResourceManager.h"
+#include "Ignis/Core/Buffer.h"
 
 class TileRenderer
 {
 private:
-	VAO m_vao;
+	ignis::VertexArray m_vao;
 
 	uint m_instanceCount;
 
-	TextureAtlas* m_texture;
+	ignis::TextureAtlas* m_texture;
 public:
-	TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float tileSize);
+	TileRenderer(ignis::TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float tileSize);
 
 	void RenderMap(const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective);
 };
