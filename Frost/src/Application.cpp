@@ -4,45 +4,6 @@
 
 #include "Script/JSONParser.h"
 
-void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
-{
-	// ignore non-significant error/warning codes
-	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
-
-	DEBUG_INFO("OpenGL debug output ({0}): {1}", id, message);
-
-	switch (source)
-	{
-	case GL_DEBUG_SOURCE_API:				DEBUG_INFO("Source: API"); break;
-	case GL_DEBUG_SOURCE_WINDOW_SYSTEM:		DEBUG_INFO("Source: Window System"); break;
-	case GL_DEBUG_SOURCE_SHADER_COMPILER:	DEBUG_INFO("Source: Shader Compiler"); break;
-	case GL_DEBUG_SOURCE_THIRD_PARTY:		DEBUG_INFO("Source: Third Party"); break;
-	case GL_DEBUG_SOURCE_APPLICATION:		DEBUG_INFO("Source: Application"); break;
-	case GL_DEBUG_SOURCE_OTHER:				DEBUG_INFO("Source: Other"); break;
-	}
-
-	switch (type)
-	{
-	case GL_DEBUG_TYPE_ERROR:				DEBUG_INFO("Type: Error"); break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:	DEBUG_INFO("Type: Deprecated Behaviour"); break;
-	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:	DEBUG_INFO("Type: Undefined Behaviour"); break;
-	case GL_DEBUG_TYPE_PORTABILITY:			DEBUG_INFO("Type: Portability"); break;
-	case GL_DEBUG_TYPE_PERFORMANCE:			DEBUG_INFO("Type: Performance"); break;
-	case GL_DEBUG_TYPE_MARKER:				DEBUG_INFO("Type: Marker"); break;
-	case GL_DEBUG_TYPE_PUSH_GROUP:			DEBUG_INFO("Type: Push Group"); break;
-	case GL_DEBUG_TYPE_POP_GROUP:			DEBUG_INFO("Type: Pop Group"); break;
-	case GL_DEBUG_TYPE_OTHER:				DEBUG_INFO("Type: Other"); break;
-	}
-
-	switch (severity)
-	{
-	case GL_DEBUG_SEVERITY_HIGH:			DEBUG_INFO("Severity: high"); break;
-	case GL_DEBUG_SEVERITY_MEDIUM:			DEBUG_INFO("Severity: medium"); break;
-	case GL_DEBUG_SEVERITY_LOW:				DEBUG_INFO("Severity: low"); break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION:	DEBUG_INFO("Severity: notification"); break;
-	}
-}
-
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
 	Close();
@@ -95,12 +56,12 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
 	{
-		DEBUG_ERROR("[GLFW] Failed to initialize GLFW");
+		OBELISK_ERROR("[GLFW] Failed to initialize GLFW");
 		glfwTerminate();
 		return false;
 	}
 
-	DEBUG_INFO("[GLFW] Initialized GLFW {0}", glfwGetVersionString());
+	OBELISK_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
@@ -114,7 +75,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 	if (m_window == nullptr)
 	{
-		DEBUG_ERROR("[GLFW] Failed to create GLFW window");
+		OBELISK_ERROR("[GLFW] Failed to create GLFW window");
 		glfwTerminate();
 		return false;
 	}
@@ -122,14 +83,12 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	glfwMakeContextCurrent(m_window);
 	glfwSetWindowUserPointer(m_window, this);
 
-	DEBUG_INFO("[GLFW] Window created: {0} ({1}, {2})", title, width, height);
-
 	EventHandler::SetEventCallback(BIND_FUNCTION(Application::EventCallback));
 
 	// Set GLFW callbacks
 	glfwSetErrorCallback([](int error, const char* desc)
 	{
-		DEBUG_ERROR("[GLFW] ({0}) {1}", error, desc);
+		OBELISK_ERROR("[GLFW] ({0}) {1}", error, desc);
 	});
 
 	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
@@ -196,33 +155,19 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		EventHandler::Throw<MouseMovedEvent>((float)xPos, (float)yPos);
 	});
 
-	// loading glad
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	bool debug = true;
+
+	if (!ignis::ignisLoadGL(debug))
 	{
-		DEBUG_ERROR("[GLAD] Failed to initialize GLAD");
+		OBELISK_ERROR("[IGNIS] Failed to load OpenGL");
 		glfwTerminate();
-		return false;
+		return nullptr;
 	}
 
-	DEBUG_INFO("[GLAD] Initialized");
-	DEBUG_INFO("[OpenGL] Version: {0}", glGetString(GL_VERSION));
-	DEBUG_INFO("[OpenGL] Vendor: {0}", glGetString(GL_VENDOR));
-	DEBUG_INFO("[OpenGL] Renderer: {0}", glGetString(GL_RENDERER));
-	DEBUG_INFO("[OpenGL] GLSL Version: {0}", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-#ifdef _DEBUG
-	//Set up opengl debug output
-	GLint flags; glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
-	if ((flags & GL_CONTEXT_FLAG_DEBUG_BIT) && (glMajor >= 4 && glMinor >= 3))
-	{
-		glEnable(GL_DEBUG_OUTPUT);
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(glDebugOutput, nullptr);
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-
-		DEBUG_INFO("[OpenGL] Debug context created");
-	}
-#endif
+	OBELISK_INFO("[OpenGL] Version: %s", glGetString(GL_VERSION));
+	OBELISK_INFO("[OpenGL] Vendor: %s", glGetString(GL_VENDOR));
+	OBELISK_INFO("[OpenGL] Renderer: %s", glGetString(GL_RENDERER));
+	OBELISK_INFO("[OpenGL] GLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	View::SetScreen((float)m_width, (float)m_height);
 	View::Set(0.0f, 0.0f, (float)m_width, (float)m_height);
@@ -236,7 +181,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 Application::Application(const std::string& config)
 {
-	DEBUG_ASSERT(!config.empty(), "Path is emtpy");
+	OBELISK_ASSERT(!config.empty(), "Path is emtpy");
 
 	json root = jsonParseFile(config);
 
@@ -334,7 +279,7 @@ void Application::Run()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		ImGuiRenderer::Start();
+		ImGuiRenderer::Begin();
 
 		OnRender();
 
@@ -345,7 +290,7 @@ void Application::Run()
 			OnImGui();
 
 		Primitives::Flush(View::GetMat());
-		ImGuiRenderer::Flush(m_window);
+		ImGuiRenderer::End();
 
 		glfwPollEvents();
 		EventHandler::Poll();

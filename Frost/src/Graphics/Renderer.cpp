@@ -11,7 +11,7 @@ void Renderer::SetClearColor(float r, float g, float b, float a)
 	glClearColor(r, g, b, a);
 }
 
-void Renderer::SetClearColor(const Color& color)
+void Renderer::SetClearColor(const ignis::color& color)
 {
 	glClearColor(color.r, color.g, color.b, color.a);
 }

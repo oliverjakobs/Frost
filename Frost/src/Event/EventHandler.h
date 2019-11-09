@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Utility/Utils.h"
-#include "Utility/Singelton.h"
+#include "Obelisk/Singelton.h"
 
 #include "Event/ApplicationEvent.h"
 #include "Event/WindowEvent.h"

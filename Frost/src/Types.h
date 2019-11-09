@@ -1,9 +1,6 @@
 #pragma once
 
-#include <glm.hpp>
-#include <string>
-#include <map>
-#include <vector>
+#include "Ignis/Core/Api.h"
 
 #include "Utility/Enum.h"
 
@@ -15,20 +12,9 @@ typedef unsigned int uint;
 typedef std::vector<glm::vec2> Vertices;
 
 // ------------------| COLOR |----------------------------------------------------------
-typedef glm::vec4 Color;
-
-const Color BLACK = Color(0.0f, 0.0f, 0.0f, 1.0f);
-const Color WHITE = Color(1.0f, 1.0f, 1.0f, 1.0f);
-const Color RED = Color(1.0f, 0.0f, 0.0f, 1.0f);
-const Color GREEN = Color(0.0f, 1.0f, 0.0f, 1.0f);
-const Color BLUE = Color(0.0f, 0.0f, 1.0f, 1.0f);
-const Color YELLOW = Color(1.0f, 1.0f, 0.0f, 1.0f);
-const Color MAGENTA = Color(1.0f, 0.0f, 1.0f, 1.0f);
-const Color CYAN = Color(0.0f, 1.0f, 1.0f, 1.0f);
-
-inline Color BlendColor(const Color& color, float alpha)
+inline ignis::color BlendColor(const ignis::color& color, float alpha)
 {
-	return Color(color.r, color.g, color.b, alpha);
+	return ignis::color(color.r, color.g, color.b, alpha);
 }
 
 // ------------------| SMART-POINTER |--------------------------------------------------

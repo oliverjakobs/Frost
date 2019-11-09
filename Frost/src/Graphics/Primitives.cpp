@@ -266,18 +266,18 @@ void Primitives::Flush(const glm::mat4& view)
 	Get().m_triangles->flush(view);
 }
 
-void Primitives::DrawLine(const Line& line, const Color& color, const glm::mat4& view)
+void Primitives::DrawLine(const Line& line, const ignis::color& color, const glm::mat4& view)
 {
 	DrawLine(line.start, line.end, color, view);
 }
 
-void Primitives::DrawLine(const glm::vec2& start, const glm::vec2& end, const Color& color, const glm::mat4& view)
+void Primitives::DrawLine(const glm::vec2& start, const glm::vec2& end, const ignis::color& color, const glm::mat4& view)
 {
 	Get().m_lines->vertex(start, color, view);
 	Get().m_lines->vertex(end, color, view);
 }
 
-void Primitives::DrawRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
+void Primitives::DrawRect(float x, float y, float w, float h, const ignis::color& color, const glm::mat4& view)
 {
 	std::vector<glm::vec2> vertices =
 	{
@@ -290,12 +290,12 @@ void Primitives::DrawRect(float x, float y, float w, float h, const Color& color
 	Primitives::DrawPolygon(vertices, color, view);
 }
 
-void Primitives::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view)
+void Primitives::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const ignis::color& color, const glm::mat4& view)
 {
 	DrawRect(pos.x, pos.y, dim.x, dim.y, color, view);
 }
 
-void Primitives::FillRect(float x, float y, float w, float h, const Color& color, const glm::mat4& view)
+void Primitives::FillRect(float x, float y, float w, float h, const ignis::color& color, const glm::mat4& view)
 {
 	std::vector<glm::vec2> vertices =
 	{
@@ -308,12 +308,12 @@ void Primitives::FillRect(float x, float y, float w, float h, const Color& color
 	Primitives::FillPolygon(vertices, color, view);
 }
 
-void Primitives::FillRect(const glm::vec2& pos, const glm::vec2& dim, const Color& color, const glm::mat4& view)
+void Primitives::FillRect(const glm::vec2& pos, const glm::vec2& dim, const ignis::color& color, const glm::mat4& view)
 {
 	FillRect(pos.x, pos.y, dim.x, dim.y, color, view);
 }
 
-void Primitives::DrawPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view)
+void Primitives::DrawPolygon(const Vertices& vertices, const ignis::color& color, const glm::mat4& view)
 {
 	glm::vec2 p1 = vertices.back();
 
@@ -325,7 +325,7 @@ void Primitives::DrawPolygon(const Vertices& vertices, const Color& color, const
 	}
 }
 
-void Primitives::FillPolygon(const Vertices& vertices, const Color& color, const glm::mat4& view)
+void Primitives::FillPolygon(const Vertices& vertices, const ignis::color& color, const glm::mat4& view)
 {
 	for (unsigned int i = 1; i < vertices.size() - 1; ++i)
 	{
@@ -335,7 +335,7 @@ void Primitives::FillPolygon(const Vertices& vertices, const Color& color, const
 	}
 }
 
-void Primitives::DrawCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
+void Primitives::DrawCircle(const glm::vec2& center, float radius, const ignis::color& color, const glm::mat4& view)
 {
 	const float k_segments = 36;
 	const float k_increment = 2.0f * M_PI / k_segments;
@@ -360,7 +360,7 @@ void Primitives::DrawCircle(const glm::vec2& center, float radius, const Color& 
 	}
 }
 
-void Primitives::FillCircle(const glm::vec2& center, float radius, const Color& color, const glm::mat4& view)
+void Primitives::FillCircle(const glm::vec2& center, float radius, const ignis::color& color, const glm::mat4& view)
 {
 	const float k_segments = 36;
 	const float k_increment = 2.0f * M_PI / k_segments;

@@ -34,8 +34,29 @@
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ImGui">
-      <UniqueIdentifier>{170E22B3-8378-D629-CCB6-87CF3860B47E}</UniqueIdentifier>
+    <Filter Include="src\Ignis">
+      <UniqueIdentifier>{36681FB3-A2D2-D329-EB10-85CF57BAB17E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Advanced">
+      <UniqueIdentifier>{FB93D856-E777-99AC-50D8-93FF3CDB832E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Camera">
+      <UniqueIdentifier>{EEE3F073-DADC-0FC6-030F-F54AEF66EFD1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Core">
+      <UniqueIdentifier>{4E1E7098-3AEC-639E-2380-D4C40FED3F03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Model">
+      <UniqueIdentifier>{F6A128A7-622D-966B-6B3E-1960D748F26B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Packages">
+      <UniqueIdentifier>{2438211C-101C-E271-797C-DCC4657FCCF3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\Renderer">
+      <UniqueIdentifier>{9C48BA41-882C-7B97-F18C-75EADD8F6519}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ImGuiBinding">
+      <UniqueIdentifier>{92ECE041-7EE5-FF93-A717-E518936FDF9F}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
@@ -45,6 +66,9 @@
     </Filter>
     <Filter Include="src\Maths">
       <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Obelisk">
+      <UniqueIdentifier>{659C2CBA-D151-A5AF-5A46-9F86C6FA9BB3}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scene">
       <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
@@ -73,9 +97,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Application.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Debugger.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Entity\Components.h">
@@ -138,9 +159,6 @@
     <ClInclude Include="src\Graphics\Buffer.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Framebuffer.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Image.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
@@ -153,17 +171,80 @@
     <ClInclude Include="src\Graphics\ResourceManager.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Shader.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Texture.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Camera\Camera.h">
+      <Filter>src\Ignis\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Camera\FpsCamera.h">
+      <Filter>src\Ignis\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h">
+      <Filter>src\Ignis\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Core\Api.h">
+      <Filter>src\Ignis\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Core\Buffer.h">
+      <Filter>src\Ignis\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Core\Shader.h">
+      <Filter>src\Ignis\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Core\Texture.h">
+      <Filter>src\Ignis\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Font.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Framebuffer.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Ignis.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Model\Material.h">
+      <Filter>src\Ignis\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Model\Mesh.h">
+      <Filter>src\Ignis\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Packages\stb_image.h">
+      <Filter>src\Ignis\Packages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Packages\stb_image_write.h">
+      <Filter>src\Ignis\Packages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Packages\stb_truetype.h">
+      <Filter>src\Ignis\Packages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Packages\tiny_obj_loader.h">
+      <Filter>src\Ignis\Packages</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Renderer\FontRenderer.h">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Renderer\RenderState.h">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Renderer\Renderer2D.h">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClInclude>
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Log\Logger.h">
-      <Filter>src\Log</Filter>
     </ClInclude>
     <ClInclude Include="src\Maths\Geometry.h">
       <Filter>src\Maths</Filter>
@@ -176,6 +257,36 @@
     </ClInclude>
     <ClInclude Include="src\Maths\Visibility.h">
       <Filter>src\Maths</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Average.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Debugger.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\FileUtility.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Flags.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Logger.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Memory.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Obelisk.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Range.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Singelton.h">
+      <Filter>src\Obelisk</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Obelisk\Timer.h">
+      <Filter>src\Obelisk</Filter>
     </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
@@ -228,9 +339,6 @@
     <ClInclude Include="src\Utility\Flags.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Singelton.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="src\Utility\Timer.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
@@ -240,9 +348,6 @@
     <ClInclude Include="src\View\View.h">
       <Filter>src\View</Filter>
     </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -278,9 +383,6 @@
     <ClCompile Include="src\Graphics\Buffer.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Framebuffer.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Image.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
@@ -293,11 +395,62 @@
     <ClCompile Include="src\Graphics\ResourceManager.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Shader.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\Texture.cpp">
       <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Camera\FpsCamera.cpp">
+      <Filter>src\Ignis\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp">
+      <Filter>src\Ignis\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Core\Api.cpp">
+      <Filter>src\Ignis\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Core\Buffer.cpp">
+      <Filter>src\Ignis\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Core\Shader.cpp">
+      <Filter>src\Ignis\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Core\Texture.cpp">
+      <Filter>src\Ignis\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Font.cpp">
+      <Filter>src\Ignis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Framebuffer.cpp">
+      <Filter>src\Ignis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Ignis.cpp">
+      <Filter>src\Ignis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Model\Material.cpp">
+      <Filter>src\Ignis\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Model\Mesh.cpp">
+      <Filter>src\Ignis\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Renderer\RenderState.cpp">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp">
+      <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
@@ -341,9 +494,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

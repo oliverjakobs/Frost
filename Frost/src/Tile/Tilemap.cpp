@@ -4,7 +4,7 @@
 
 #include "Utility/Timer.h"
 
-#include "Debugger.h"
+#include "Obelisk/Debugger.h"
 
 std::map<uint, TileType> GetTypeMap(json tiletypes)
 {
@@ -42,11 +42,11 @@ TileMap::TileMap(const std::string& map, const glm::vec2& gravity)
 	m_height = jsonToInt(root, "height");
 
 	// tileset
-	DEBUG_ASSERT(root.find("tileset") != root.end(), "{0} missing tileset", map);
+	OBELISK_ASSERT(root.find("tileset") != root.end(), "{0} missing tileset", map);
 	json tileset = root.at("tileset");
 
 	// Load type map
-	DEBUG_ASSERT(root.find("tiletypes") != root.end(), "{0} missing tiletypes", map);
+	OBELISK_ASSERT(root.find("tiletypes") != root.end(), "{0} missing tiletypes", map);
 	auto typeMap = GetTypeMap(root.at("tiletypes"));
 
 	m_tileSize = jsonToFloat(tileset, "size");

@@ -10,7 +10,7 @@ struct Renderer
 {
 	static void EnableBlend(GLenum sfactor, GLenum dfactor);
 	static void SetClearColor(float r, float g, float b, float a);
-	static void SetClearColor(const Color& color);
+	static void SetClearColor(const ignis::color& color);
 
 	// ----------------------------texture---------------------------------------------------------------------------
 	static void RenderTexture(Texture* tex);
