@@ -1,10 +1,11 @@
-[submodule "Frost/packages/spdlog"]
-	path = Frost/packages/spdlog
-	url = https://github.com/gabime/spdlog
+[submodule "Frost/packages/glm"]
+	path = Frost/packages/glm
+	url = https://github.com/g-truc/glm
 [submodule "Frost/packages/imgui"]
 	path = Frost/packages/imgui
 	url = https://github.com/oliverjakobs/imgui
-[submodule "Frost/packages/GLFW"]
+[submodule "Frost/packages/glfw"]
+	path = Frost/packages/glfw
 	url = https://github.com/oliverjakobs/glfw
 [submodule "Frost/packages/json"]
 	path = Frost/packages/json
