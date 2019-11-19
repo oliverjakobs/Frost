@@ -1,18 +1,20 @@
 #pragma once
 
 #include "Component.h"
-#include "Tile/Tilemap.h"
+#include "Tile/World.h"
+
+using namespace tile;
 
 class PhysicsComponent : public Component
 {
 private:
-	Body* m_body;
+	std::shared_ptr<Body> m_body;
 	glm::vec2 m_bodyPos;
 
 public:
-	PhysicsComponent(Body* body, const glm::vec2& bodyPos);
+	PhysicsComponent(std::shared_ptr<Body> body, const glm::vec2& bodyPos);
 
-	Body* GetBody() const;
+	std::shared_ptr<Body> GetBody() const;
 
 	void OnUpdate(float deltaTime) override;
 	void OnRender() override;

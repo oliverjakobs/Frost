@@ -30,10 +30,10 @@ void AnimationComponent::OnUpdate(float deltaTime)
 	{
 		m_animations[m_currentAnimation].step(deltaTime);
 
-		ImageComponent* img = m_entity->GetComponent<ImageComponent>();
+		TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
 
-		if (img != nullptr)
-			img->SetFrame(m_animations[m_currentAnimation].getFrame());
+		if (tex != nullptr)
+			tex->SetFrame(m_animations[m_currentAnimation].getFrame());
 	}
 }
 

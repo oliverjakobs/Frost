@@ -4,6 +4,11 @@
 
 namespace ignis
 {
+	OrthographicCamera::OrthographicCamera() 
+		: m_rotation(0.0f)
+	{
+	}
+
 	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
 		: m_rotation(0.0f)
 	{

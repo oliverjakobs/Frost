@@ -28,12 +28,6 @@
     <Filter Include="src\File">
       <UniqueIdentifier>{7C5E1ECF-682B-79DA-9144-67827D70AE68}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Font">
-      <UniqueIdentifier>{53781ECF-3F45-79DA-685E-6782548AAE68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Graphics">
-      <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Ignis">
       <UniqueIdentifier>{36681FB3-A2D2-D329-EB10-85CF57BAB17E}</UniqueIdentifier>
     </Filter>
@@ -60,9 +54,6 @@
     </Filter>
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Log">
-      <UniqueIdentifier>{7E912FA9-EA70-AE44-F388-391B5FE714A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Maths">
       <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
@@ -108,9 +99,6 @@
     <ClInclude Include="src\Entity\Components\Component.h">
       <Filter>src\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity\Components\ImageComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entity\Components\PhysicsComponent.h">
       <Filter>src\Entity\Components</Filter>
     </ClInclude>
@@ -144,22 +132,10 @@
     <ClInclude Include="src\File\FileReader.h">
       <Filter>src\File</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Image.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Primitives.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Renderer.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\ResourceManager.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h">
       <Filter>src\Ignis\Advanced</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Camera\Camera.h">
@@ -211,6 +187,9 @@
       <Filter>src\Ignis\Packages</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Renderer\FontRenderer.h">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Renderer\Primitives.h">
       <Filter>src\Ignis\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Renderer\RenderState.h">
@@ -273,6 +252,9 @@
     <ClInclude Include="src\Obelisk\Timer.h">
       <Filter>src\Obelisk</Filter>
     </ClInclude>
+    <ClInclude Include="src\ResourceManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scene\Scene.h">
       <Filter>src\Scene</Filter>
     </ClInclude>
@@ -297,13 +279,13 @@
     <ClInclude Include="src\String\StringUtils.h">
       <Filter>src\String</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tile\Algorithm.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
     <ClInclude Include="src\Tile\Body.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
     <ClInclude Include="src\Tile\Tile.h">
-      <Filter>src\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tile\TileConfig.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
     <ClInclude Include="src\Tile\TileRenderer.h">
@@ -327,10 +309,10 @@
     <ClInclude Include="src\Utility\Utils.h">
       <Filter>src\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\View\View.h">
-      <Filter>src\View</Filter>
+    <ClInclude Include="src\Entity\Components\TextureComponent.h">
+      <Filter>src\Entity\Components</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h" />
+    <ClInclude Include="src\Tile\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp">
@@ -340,9 +322,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\ImageComponent.cpp">
       <Filter>src\Entity\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp">
@@ -357,19 +336,10 @@
     <ClCompile Include="src\Entity\EntityMananger.cpp">
       <Filter>src\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\Image.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Primitives.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Renderer.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\ResourceManager.cpp">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp">
       <Filter>src\Ignis\Advanced</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Camera\FpsCamera.cpp">
@@ -408,6 +378,9 @@
     <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp">
       <Filter>src\Ignis\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ignis\Renderer\Primitives.cpp">
+      <Filter>src\Ignis\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ignis\Renderer\RenderState.cpp">
       <Filter>src\Ignis\Renderer</Filter>
     </ClCompile>
@@ -425,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ResourceManager.cpp">
+      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>src\Scene</Filter>
@@ -444,10 +420,10 @@
     <ClCompile Include="src\Script\Lua\LuaScene.cpp">
       <Filter>src\Script\Lua</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tile\Body.cpp">
+    <ClCompile Include="src\Tile\Algorithm.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\Tile\Tile.cpp">
+    <ClCompile Include="src\Tile\Body.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
     <ClCompile Include="src\Tile\TileRenderer.cpp">
@@ -456,13 +432,13 @@
     <ClCompile Include="src\Tile\Tilemap.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="src\View\View.cpp">
-      <Filter>src\View</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp" />
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tile\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

@@ -1,15 +1,21 @@
 #include "Application.h"
 
+using namespace ignis;
+
 class Frost : public Application
 {
 private:
+	ignis::RenderState m_renderState;
 
 public:
 	Frost() : Application("config.json")
 	{
 		// ---------------| Config |------------------------------------------
-		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		m_renderState.SetBlend(true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
+		Primitives2D::Init(std::make_shared<Shader>("res/shaders/lines.vert", "res/shaders/lines.frag"));
 
 		EnableDebugMode(true);
 		EnableImGui(true);
@@ -83,29 +89,29 @@ public:
 		m_sceneManager.OnImGui();
 
 		//Application
-		ImGui::Begin("Application");
-
-		ImGui::Text("Window size: %d, %d", GetWidth(), GetHeight());
-
-		ImGui::Separator();
-
-		ImGui::Text("View:");
-		ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
-		ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
-
-		ImGui::End();
-
-		//Entity
-		ImGui::Begin("Player");
-
-		Entity* entity = m_sceneManager.GetScene()->GetEntity("player");
-		auto animation = entity->GetComponent<AnimationComponent>();
-
-		ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);
-		ImGui::Text("Direction: %s", Direction::ToString(entity->GetDirection()).c_str());
-		ImGui::Text("Current Animation: %s", animation->GetCurrent().c_str());
-
-		ImGui::End();
+		//ImGui::Begin("Application");
+		//
+		//ImGui::Text("Window size: %d, %d", GetWidth(), GetHeight());
+		//
+		//ImGui::Separator();
+		//
+		//ImGui::Text("View:");
+		//ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
+		//ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
+		//
+		//ImGui::End();
+		//
+		////Entity
+		//ImGui::Begin("Player");
+		//
+		//Entity* entity = m_sceneManager.GetScene()->GetEntity("player");
+		//auto animation = entity->GetComponent<AnimationComponent>();
+		//
+		//ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);
+		//ImGui::Text("Direction: %s", Direction::ToString(entity->GetDirection()).c_str());
+		//ImGui::Text("Current Animation: %s", animation->GetCurrent().c_str());
+		//
+		//ImGui::End();
 	}
 }; 
 

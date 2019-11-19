@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Component.h"
-#include "Graphics.h"
+#include "Ignis/Ignis.h"
 
-class ImageComponent : public Component
+class TextureComponent : public Component
 {
 private:
-	unique_ptr<Image> m_image;
+	unique_ptr<ignis::Texture> m_image;
 	uint m_frame;
 
 public:
-	ImageComponent(Image* image);
+	TextureComponent(ignis::Texture* image);
 
 	void SetFrame(uint frame);
 	void SetRenderFlip(RenderFlip flip);

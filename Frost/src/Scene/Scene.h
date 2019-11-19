@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tile/Tilemap.h"
+#include "Tile/World.h"
 
 #include "Event/Event.h"
 #include "Script/Lua/LuaBinding.h"
@@ -8,6 +8,8 @@
 #include "Entity/EntityMananger.h"
 
 #include "Utility/Average.h"
+
+using namespace tile;
 
 class SceneManager;
 
@@ -17,7 +19,7 @@ protected:
 	std::string m_name;
 
 	sol::state m_lua;
-	unique_ptr<TileMap> m_map;
+	std::shared_ptr<World> m_world;
 	std::map<std::string, unique_ptr<Entity>> m_entities;
 
 	// stores the time the simulation takes for debug purposes
@@ -37,8 +39,8 @@ public:
 	void OnRenderDebug();
 	void OnImGui();
 
-	TileMap* GetMap() const;
-	Rect GetConstraint() const;
+	std::shared_ptr<World> GetWorld() const;
+	Line GetConstraint() const;
 
 	sol::state& GetLua();
 

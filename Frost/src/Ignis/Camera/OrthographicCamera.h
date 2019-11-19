@@ -10,6 +10,7 @@ namespace ignis
 		float m_rotation;
 
 	public:
+		OrthographicCamera();
 		OrthographicCamera(float left, float right, float bottom, float top);
 
 		void SetProjection(float left, float right, float bottom, float top);

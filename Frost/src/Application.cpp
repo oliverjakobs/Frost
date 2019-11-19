@@ -98,8 +98,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		game->m_width = width;
 		game->m_height = height;
 
-		View::SetScreen((float)width, (float)height);
-		glViewport(0, 0, width, height);
+		ignis::ignisViewport(0, 0, width, height);
 
 		EventHandler::Throw<WindowResizeEvent>(width, height);
 	});
@@ -169,8 +168,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	OBELISK_INFO("[OpenGL] Renderer: %s", glGetString(GL_RENDERER));
 	OBELISK_INFO("[OpenGL] GLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	View::SetScreen((float)m_width, (float)m_height);
-	View::Set(0.0f, 0.0f, (float)m_width, (float)m_height);
+	m_camera = ignis::OrthographicCamera(0.0f, (float)width, 0.0f, (float)height);
 
 	// initialize imgui
 	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
@@ -279,18 +277,17 @@ void Application::Run()
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		ImGuiRenderer::Begin();
-
 		OnRender();
 
 		if (m_debug)
 			OnRenderDebug();
 
 		if (m_showImGui)
+		{
+			ImGuiRenderer::Begin();
 			OnImGui();
-
-		Primitives::Flush(View::GetMat());
-		ImGuiRenderer::End();
+			ImGuiRenderer::End();
+		}
 
 		glfwPollEvents();
 		EventHandler::Poll();

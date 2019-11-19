@@ -87,7 +87,7 @@ Entity* EntityManager::CreateEntity(Scene* scene, const std::string& path)
 		}
 		else
 		{
-			entity->AddComponent(new ImageComponent(new Image(ResourceManager::GetTextureAtlas(res), width, height)));
+			entity->AddComponent(new TextureComponent(ResourceManager::GetTextureAtlas(res)));
 		}
 	}
 

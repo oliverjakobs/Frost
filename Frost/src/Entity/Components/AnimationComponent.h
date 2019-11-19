@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImageComponent.h"
+#include "TextureComponent.h"
 #include "Animation.h"
 
 class AnimationComponent : public Component

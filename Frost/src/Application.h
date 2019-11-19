@@ -1,13 +1,15 @@
 #pragma once
 
+#include "ResourceManager.h"
+
 #include "Input/Input.h"
 
 #include "Maths/Maths.h"
 
 #include "ImGuiBinding/ImGuiRenderer.h"
 
-#include "Obelisk/Obelisk.h"
 #include "Ignis/Ignis.h"
+#include "Obelisk/Obelisk.h"
 
 #include "Event/EventHandler.h"
 #include "Scene/SceneManager.h"
@@ -34,6 +36,7 @@ protected:
 	int m_width;
 	int m_height;
 
+	ignis::OrthographicCamera m_camera;
 	obelisk::Timer m_timer;
 
 	SceneManager m_sceneManager;

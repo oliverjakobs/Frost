@@ -57,7 +57,7 @@ void Scene::OnUpdate(float deltaTime)
 
 void Scene::OnRender()
 {
-	m_map->OnRender();
+	m_world->Render();
 
 	for (auto&[name, entity] : m_entities)
 	{
@@ -67,7 +67,7 @@ void Scene::OnRender()
 
 void Scene::OnRenderDebug()
 {
-	m_map->OnRenderDebug();
+	//m_map->OnRenderDebug();
 
 	for (auto&[name, entity] : m_entities)
 	{
@@ -88,21 +88,22 @@ void Scene::OnImGui()
 	ImGui::Text("Memory: %d bytes", m_lua.memory_used());
 	ImGui::Separator();
 
-	ImGui::Text("Map:");
-	ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
-	ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());
-	ImGui::Text("Gravity: %4.2f, %4.2f", m_map->GetGravity().x, m_map->GetGravity().y);
-	ImGui::End();
+	//ImGui::Text("Map:");
+	//ImGui::Text("Size: %d, %d", m_map->GetWidth(), m_map->GetHeight());
+	//ImGui::Text("TileSize: %4.2f", m_map->GetTileSize());
+	//ImGui::Text("Gravity: %4.2f, %4.2f", m_map->GetGravity().x, m_map->GetGravity().y);
+	//ImGui::End();
 }
 
-TileMap* Scene::GetMap() const
+std::shared_ptr<World> Scene::GetWorld() const
 {
-	return m_map.get();
+	return m_world;
 }
 
-Rect Scene::GetConstraint() const
+Line Scene::GetConstraint() const
 {
-	return Rect(glm::vec2(), m_map->GetDimension() * m_map->GetTileSize());
+	return Line();
+	//return Rect(glm::vec2(), m_map->GetDimension() * m_map->GetTileSize());
 }
 
 sol::state& Scene::GetLua()
