@@ -1,14 +1,27 @@
 #include "Application.h"
 
+#include "Tile/World.h"
+
+#include "Entity/Components.h"
+
 using namespace ignis;
+using namespace tile;
 
 class Frost : public Application
 {
 private:
 	ignis::RenderState m_renderState;
 
+	std::shared_ptr<World> m_world;
+	std::shared_ptr<Body> m_body;
+	std::shared_ptr<Entity> m_entity;
+
+	Font font = Font("res/fonts/OpenSans.ttf", 32.0f);
+	Shader fontShader = Shader("res/shaders/font.vert", "res/shaders/font.frag");
 public:
-	Frost() : Application("config.json")
+	Frost() 
+		// : Application("config.json")
+		: Application("Frost", 1024, 800)
 	{
 		// ---------------| Config |------------------------------------------
 		m_renderState.SetBlend(true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -21,11 +34,25 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		// ---------------| Scenes |------------------------------------------
-		m_sceneManager.RegisterScene("station", "res/scenes/station.json");
-		m_sceneManager.RegisterScene("station2", "res/scenes/station2.json");
+		m_world = std::make_shared<World>("");
 
-		m_sceneManager.ChangeScene("station");
+		m_body = m_world->CreateBody(600.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC);
+
+		m_entity = std::make_shared<Entity>("Entity", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
+
+		m_entity->AddComponent(new PhysicsComponent(m_world->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f)));
+		m_entity->AddComponent(new TextureComponent(std::make_shared<Texture>("res/textures/player.png", 4, 6), 40.0f, 60.0f));
+
+		std::map<std::string, Animation> animations
+		{
+			{ "idle", Animation(0, 4, 0.2) },
+			{ "walk", Animation(6, 6, 0.125) },
+			{ "jump", Animation(12, 3, 0.3) },
+			{ "fall", Animation(18, 2, 0.4) }
+		};
+
+		m_entity->AddComponent(new AnimationComponent(animations));
+		m_entity->AddComponent(new PlayerComponent(400.0f, 800.0f));
 	}
 
 	~Frost()
@@ -53,65 +80,49 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
-			case KEY_1:
-				EventHandler::Throw<ChangeSceneEvent>("station");
-				break;
-			case KEY_2:
-				EventHandler::Throw<ChangeSceneEvent>("station2");
-				break;
 			}
 		}
 	}
 
 	void OnUpdate(float deltaTime) override
 	{
-		m_sceneManager.OnUpdate(deltaTime);
+		m_entity->OnUpdate(deltaTime);
+		m_body->Tick(deltaTime);
 	}
 
 	void OnRender() override
 	{
-		m_sceneManager.OnRender();
+		m_world->Render(glm::vec3(), m_camera.GetViewProjection());
 
-		// FPS
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
-		ImGui::Text("Fps: %d", m_timer.FPS);
-		ImGui::End();
+		Renderer2D::Start(m_camera.GetViewProjection());
+
+		m_entity->OnRender();
+
+		Renderer2D::Flush();
+
+		Primitives2D::Start(m_camera.GetViewProjection());
+
+		Primitives2D::DrawCircle(m_entity->GetPosition(), 2.0f);
+
+		Primitives2D::DrawRect(m_body->GetPosition() - m_body->GetHalfDimension(), m_body->GetDimension());
+
+		Primitives2D::Flush();
+
 	}
 
 	void OnRenderDebug() override
 	{
-		m_sceneManager.OnRenderDebug();
+		// debug info
+		fontShader.Use();
+		fontShader.SetUniformMat4("u_Projection", ignisScreenMat());
+		fontShader.SetUniform4f("u_Color", WHITE);
+
+		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f);
 	}
 
 	void OnImGui() override
 	{
-		m_sceneManager.OnImGui();
 
-		//Application
-		//ImGui::Begin("Application");
-		//
-		//ImGui::Text("Window size: %d, %d", GetWidth(), GetHeight());
-		//
-		//ImGui::Separator();
-		//
-		//ImGui::Text("View:");
-		//ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
-		//ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
-		//
-		//ImGui::End();
-		//
-		////Entity
-		//ImGui::Begin("Player");
-		//
-		//Entity* entity = m_sceneManager.GetScene()->GetEntity("player");
-		//auto animation = entity->GetComponent<AnimationComponent>();
-		//
-		//ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);
-		//ImGui::Text("Direction: %s", Direction::ToString(entity->GetDirection()).c_str());
-		//ImGui::Text("Current Animation: %s", animation->GetCurrent().c_str());
-		//
-		//ImGui::End();
 	}
 }; 
 

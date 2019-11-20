@@ -4,9 +4,6 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\images">
-      <UniqueIdentifier>{34EBD737-20A3-1985-89AA-F2E07581B475}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\maps">
       <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
     </Filter>
@@ -16,17 +13,8 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Entity">
-      <UniqueIdentifier>{D9C2390E-C57A-7B5B-2E82-54B71A59164C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Entity\Components">
-      <UniqueIdentifier>{4E8ED360-BAFA-8E5B-83EE-26B9EF19B1C3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Event">
       <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\File">
-      <UniqueIdentifier>{7C5E1ECF-682B-79DA-9144-67827D70AE68}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Ignis">
       <UniqueIdentifier>{36681FB3-A2D2-D329-EB10-85CF57BAB17E}</UniqueIdentifier>
@@ -55,61 +43,16 @@
     <Filter Include="src\Input">
       <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Maths">
-      <UniqueIdentifier>{599964B3-C503-192A-0E42-CACF7AEBF67E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Obelisk">
       <UniqueIdentifier>{659C2CBA-D151-A5AF-5A46-9F86C6FA9BB3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Scene">
-      <UniqueIdentifier>{0A06D2B3-7670-862A-BFAE-37D02B58647F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script">
-      <UniqueIdentifier>{D1D4192E-BD8C-5B7B-2694-34D7126BF66B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\Lua">
-      <UniqueIdentifier>{E2EDC49D-CEBB-B8A3-B74F-29CAA3BC9408}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\String">
-      <UniqueIdentifier>{13754D2F-FF2C-8F7C-6834-68D8540B2A6D}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Tile">
       <UniqueIdentifier>{CA0B26CF-B6D8-80DA-DFF1-6E82CB1DB668}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Utility">
-      <UniqueIdentifier>{70464FB2-DCFB-C7A7-65F0-C17ED1A4BEAB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\View">
-      <UniqueIdentifier>{B72327CF-A3F0-81DA-CC09-7082B835B768}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\Application.h">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\AnimationComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\Component.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\PhysicsComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\ScriptComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Entity.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\EntityMananger.h">
-      <Filter>src\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\ApplicationEvent.h">
       <Filter>src\Event</Filter>
@@ -129,13 +72,7 @@
     <ClInclude Include="src\Event\WindowEvent.h">
       <Filter>src\Event</Filter>
     </ClInclude>
-    <ClInclude Include="src\File\FileReader.h">
-      <Filter>src\File</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h">
       <Filter>src\Ignis\Advanced</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Camera\Camera.h">
@@ -210,18 +147,6 @@
     <ClInclude Include="src\Input\Input.h">
       <Filter>src\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Maths\Geometry.h">
-      <Filter>src\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Maths\Maths.h">
-      <Filter>src\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Maths\RayCast.h">
-      <Filter>src\Maths</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Maths\Visibility.h">
-      <Filter>src\Maths</Filter>
-    </ClInclude>
     <ClInclude Include="src\Obelisk\Average.h">
       <Filter>src\Obelisk</Filter>
     </ClInclude>
@@ -252,33 +177,6 @@
     <ClInclude Include="src\Obelisk\Timer.h">
       <Filter>src\Obelisk</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResourceManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\Scene.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scene\SceneManager.h">
-      <Filter>src\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\JSONParser.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaBinding.h">
-      <Filter>src\Script\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaEntity.h">
-      <Filter>src\Script\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\Lua\LuaScene.h">
-      <Filter>src\Script\Lua</Filter>
-    </ClInclude>
-    <ClInclude Include="src\String\StringHash.h">
-      <Filter>src\String</Filter>
-    </ClInclude>
-    <ClInclude Include="src\String\StringUtils.h">
-      <Filter>src\String</Filter>
-    </ClInclude>
     <ClInclude Include="src\Tile\Algorithm.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
@@ -294,52 +192,26 @@
     <ClInclude Include="src\Tile\Tilemap.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
+    <ClInclude Include="src\Tile\World.h">
+      <Filter>src\Tile</Filter>
+    </ClInclude>
     <ClInclude Include="src\Types.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utility\Average.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Enum.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Flags.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Utility\Utils.h">
-      <Filter>src\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\TextureComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Tile\World.h" />
+    <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
+    <ClInclude Include="src\Entity\Components\Component.h" />
+    <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
+    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
+    <ClInclude Include="src\Entity\Components.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
+    <ClInclude Include="src\Animation.h" />
+    <ClInclude Include="src\Entity\Components\PlayerComponent.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\Application.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\ScriptComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\EntityMananger.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp">
       <Filter>src\Ignis\Advanced</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Camera\FpsCamera.cpp">
@@ -399,27 +271,6 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
-    <ClCompile Include="src\ResourceManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\Scene.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\SceneManager.cpp">
-      <Filter>src\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\JSONParser.cpp">
-      <Filter>src\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaBinding.cpp">
-      <Filter>src\Script\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaEntity.cpp">
-      <Filter>src\Script\Lua</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\Lua\LuaScene.cpp">
-      <Filter>src\Script\Lua</Filter>
-    </ClCompile>
     <ClCompile Include="src\Tile\Algorithm.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
@@ -432,13 +283,18 @@
     <ClCompile Include="src\Tile\Tilemap.cpp">
       <Filter>src\Tile</Filter>
     </ClCompile>
+    <ClCompile Include="src\Tile\World.cpp">
+      <Filter>src\Tile</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Tile\World.cpp" />
+    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Animation.cpp" />
+    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -451,28 +307,5 @@
     <None Include="res\resources.json">
       <Filter>res</Filter>
     </None>
-    <None Include="res\scripts\player.lua">
-      <Filter>res\scripts</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\images\blocky_font.png">
-      <Filter>res\images</Filter>
-    </Image>
-    <Image Include="res\images\box.png">
-      <Filter>res\images</Filter>
-    </Image>
-    <Image Include="res\images\door.png">
-      <Filter>res\images</Filter>
-    </Image>
-    <Image Include="res\images\num_font.png">
-      <Filter>res\images</Filter>
-    </Image>
-    <Image Include="res\images\player.png">
-      <Filter>res\images</Filter>
-    </Image>
-    <Image Include="res\images\tiles.png">
-      <Filter>res\images</Filter>
-    </Image>
   </ItemGroup>
 </Project>

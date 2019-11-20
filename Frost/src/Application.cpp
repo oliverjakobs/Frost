@@ -2,11 +2,15 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Script/JSONParser.h"
-
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
 	Close();
+	return true;
+}
+
+bool Application::OnWindowResize(WindowResizeEvent& e)
+{
+	m_camera.SetProjection(0.0f, (float)e.GetWidth(), 0.0f, (float)e.GetHeight());
 	return true;
 }
 
@@ -17,8 +21,11 @@ void Application::EventCallback(Event& e)
 	case EventType::WindowClose:
 		OnWindowClose((WindowCloseEvent&)e);
 		break;
+	case EventType::WindowResize:
+		OnWindowResize((WindowResizeEvent&)e);
+		break;
 	case EventType::ChangeScene:
-		m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
+		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
 		break;
 	default:
 		OnEvent(e);
@@ -179,49 +186,49 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 Application::Application(const std::string& config)
 {
-	OBELISK_ASSERT(!config.empty(), "Path is emtpy");
-
-	json root = jsonParseFile(config);
-
-	// ---------------| window |------------------------------------------
-	std::string title;
-
-	int width;
-	int height;
-
-	int glMajor = 4;
-	int glMinor = 0;
-	
-	if (root.find("window") != root.end())
-	{
-		json window = root.at("window");
-
-		title = jsonToString(window, "title");
-		width = jsonToInt(window, "width");
-		height = jsonToInt(window, "height");
-	}
-
-	// ---------------| gl version |--------------------------------------
-	if (root.find("opengl") != root.end())
-	{
-		json opengl = root.at("opengl");
-
-		glMajor = jsonToInt(opengl, "major");
-		glMinor = jsonToInt(opengl, "minor");
-	}
-
-	m_running = LoadApplication(title, width, height, glMajor, glMinor);
-
-	// ---------------| load resources |----------------------------------
-	std::string resources = jsonToString(root, "resources");
-
-	if (!resources.empty())
-		ResourceManager::Load(resources);
+	//OBELISK_ASSERT(!config.empty(), "Path is emtpy");
+	//
+	//json root = jsonParseFile(config);
+	//
+	//// ---------------| window |------------------------------------------
+	//std::string title;
+	//
+	//int width;
+	//int height;
+	//
+	//int glMajor = 4;
+	//int glMinor = 0;
+	//
+	//if (root.find("window") != root.end())
+	//{
+	//	json window = root.at("window");
+	//
+	//	title = jsonToString(window, "title");
+	//	width = jsonToInt(window, "width");
+	//	height = jsonToInt(window, "height");
+	//}
+	//
+	//// ---------------| gl version |--------------------------------------
+	//if (root.find("opengl") != root.end())
+	//{
+	//	json opengl = root.at("opengl");
+	//
+	//	glMajor = jsonToInt(opengl, "major");
+	//	glMinor = jsonToInt(opengl, "minor");
+	//}
+	//
+	//m_running = LoadApplication(title, width, height, glMajor, glMinor);
+	//
+	//// ---------------| load resources |----------------------------------
+	//std::string resources = jsonToString(root, "resources");
+	//
+	//if (!resources.empty())
+	//	ResourceManager::Load(resources);
 }
 
 Application::Application(const std::string& title, int width, int height)
 {
-	m_running = LoadApplication(title, width, height, 4, 4);
+	m_running = LoadApplication(title, width, height, 4, 5);
 }
 
 Application::~Application()

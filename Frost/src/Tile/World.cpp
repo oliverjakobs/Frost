@@ -3,8 +3,57 @@
 namespace tile
 {
 	World::World(const std::string& map, const glm::vec2& gravity)
-		: m_gravity(gravity)
+		: m_gravity(gravity), m_simTime(0.0f)
 	{
+		// need to be loaded from file
+		std::vector<TileID> tileIDs =
+		{
+			1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+			0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,
+			0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,
+			1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
+		};
+
+		TypeMap typeMap =
+		{
+			{ 1, TileType::TILE_SOLID },
+			{ 2, TileType::TILE_SLOPE_LEFT },
+			{ 3, TileType::TILE_SLOPE_RIGHT },
+			{ 4, TileType::TILE_PLATFORM }
+		};
+
+		int mapWidth = 32;
+		int mapHeight = 25;
+		float tileSize = 32.0f;
+		size_t chunkSize = 16;
+
+		int texRows = 1;
+		int texColumns = 5;
+
+		// load map
+		m_map = std::make_unique<TileMap>(tileIDs, mapWidth, mapHeight, tileSize, chunkSize, typeMap);
+		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>("res/textures/tiles.png"), texRows, texColumns);
 	}
 
 	World::~World()
@@ -13,7 +62,7 @@ namespace tile
 
 	std::shared_ptr<Body> World::CreateBody(float x, float y, float hWidth, float hHeight, BodyType type)
 	{
-		auto body = std::make_shared<Body>(std::make_shared<World>(this), glm::vec2(x, y), glm::vec2(hWidth, hHeight), type);
+		auto body = std::shared_ptr<Body>(new Body(this, glm::vec2(x, y), glm::vec2(hWidth, hHeight), type));
 
 		m_bodies.push_back(body);
 
@@ -22,7 +71,7 @@ namespace tile
 
 	std::shared_ptr<Body> World::CreateBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
 	{
-		auto body = std::make_shared<Body>(std::make_shared<World>(this), pos, halfDim, type);
+		auto body = std::shared_ptr<Body>(new Body(this, pos, halfDim, type));
 
 		m_bodies.push_back(body);
 
@@ -31,7 +80,7 @@ namespace tile
 
 	void World::DestroyBody(std::shared_ptr<Body> body)
 	{
-		auto it = std::find_if(m_bodies.begin(), m_bodies.end(), [&](auto& e) { return e.get() == body; });
+		auto it = std::find_if(m_bodies.begin(), m_bodies.end(), [&](auto& e) { return e == body; });
 
 		if (it != m_bodies.end())
 		{
@@ -54,33 +103,69 @@ namespace tile
 		m_simTime = end - start;
 	}
 
-	void World::Render() const
+	void World::Render(const glm::vec3& offset, const glm::mat4& viewProjection) const
 	{
+		m_renderer->RenderMap(offset, viewProjection);
 	}
 
-	std::vector<const Tile&> World::GetAdjacentTiles(float x, float y, float w, float h)
+	std::vector<Tile> World::GetAdjacentTiles(float x, float y, float w, float h)
 	{
-		return std::vector<const Tile&>();
+		std::vector<Tile> tiles;
+
+		glm::ivec2 start = glm::ivec2(static_cast<int>(std::floor(x / GetTileSize())), static_cast<int>(std::floor(y / GetTileSize())));
+		glm::ivec2 end = glm::ivec2(static_cast<int>(std::floor((x + w) / GetTileSize())), static_cast<int>(std::floor((y + h) / GetTileSize())));
+
+		for (int i = start.x; i <= end.x; i++)
+		{
+			for (int j = start.y; j <= end.y; j++)
+			{
+				if (i < 0 || i >= m_map->GetWidth())
+					continue;
+
+				int index = (m_map->GetHeight() - j - 1) * m_map->GetWidth() + i;
+
+				if (index >= 0 && index < m_map->GetTiles().size())
+					tiles.push_back(m_map->at(index));
+			}
+		}
+
+		return tiles;
 	}
 
-	std::vector<const Tile&> World::GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size)
+	std::vector<Tile> World::GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size)
 	{
-		return std::vector<const Tile&>();
+		return GetAdjacentTiles(pos.x, pos.y, size.x, size.y);
 	}
 
 	std::vector<std::shared_ptr<Body>> World::GetBodies() const
 	{
-		return std::vector<std::shared_ptr<Body>>();
+		return m_bodies;
 	}
 
 	std::vector<std::shared_ptr<Body>> World::GetBodiesT(BodyType type) const
 	{
-		return std::vector<std::shared_ptr<Body>>();
+		std::vector<std::shared_ptr<Body>> typed;
+
+		for (auto& b : m_bodies)
+		{
+			if (b->GetType() == type)
+				typed.push_back(b);
+		}
+
+		return typed;
 	}
 
-	std::vector<std::shared_ptr<Body>> World::GetOtherBodies(const Body& b) const
+	std::vector<std::shared_ptr<Body>> World::GetOtherBodies(const Body* body) const
 	{
-		return std::vector<std::shared_ptr<Body>>();
+		std::vector<std::shared_ptr<Body>> others;
+
+		for (auto& b : m_bodies)
+		{
+			if (b.get() != body)
+				others.push_back(b);
+		}
+
+		return others;
 	}
 
 	bool World::CheckSlope(const glm::vec2& position, TileType slope) const

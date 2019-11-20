@@ -96,20 +96,17 @@
     <ClInclude Include="src\Entity\Components.h" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
     <ClInclude Include="src\Entity\Components\Component.h" />
-    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
     <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
-    <ClInclude Include="src\Entity\Components\ScriptComponent.h" />
+    <ClInclude Include="src\Entity\Components\PlayerComponent.h" />
+    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
     <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Entity\EntityMananger.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\MouseEvent.h" />
     <ClInclude Include="src\Event\WindowEvent.h" />
-    <ClInclude Include="src\File\FileReader.h" />
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h" />
-    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h" />
     <ClInclude Include="src\Ignis\Camera\Camera.h" />
     <ClInclude Include="src\Ignis\Camera\FpsCamera.h" />
     <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h" />
@@ -134,10 +131,6 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h" />
     <ClInclude Include="src\Input\Input.h" />
-    <ClInclude Include="src\Maths\Geometry.h" />
-    <ClInclude Include="src\Maths\Maths.h" />
-    <ClInclude Include="src\Maths\RayCast.h" />
-    <ClInclude Include="src\Maths\Visibility.h" />
     <ClInclude Include="src\Obelisk\Average.h" />
     <ClInclude Include="src\Obelisk\Debugger.h" />
     <ClInclude Include="src\Obelisk\FileUtility.h" />
@@ -148,38 +141,23 @@
     <ClInclude Include="src\Obelisk\Range.h" />
     <ClInclude Include="src\Obelisk\Singelton.h" />
     <ClInclude Include="src\Obelisk\Timer.h" />
-    <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Script\JSONParser.h" />
-    <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\Lua\LuaEntity.h" />
-    <ClInclude Include="src\Script\Lua\LuaScene.h" />
-    <ClInclude Include="src\String\StringHash.h" />
-    <ClInclude Include="src\String\StringUtils.h" />
     <ClInclude Include="src\Tile\Algorithm.h" />
     <ClInclude Include="src\Tile\Body.h" />
-    <ClInclude Include="src\Tile\World.h" />
     <ClInclude Include="src\Tile\Tile.h" />
     <ClInclude Include="src\Tile\TileRenderer.h" />
     <ClInclude Include="src\Tile\Tilemap.h" />
+    <ClInclude Include="src\Tile\World.h" />
     <ClInclude Include="src\Types.h" />
-    <ClInclude Include="src\Utility\Average.h" />
-    <ClInclude Include="src\Utility\Enum.h" />
-    <ClInclude Include="src\Utility\Flags.h" />
-    <ClInclude Include="src\Utility\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Entity\EntityMananger.cpp" />
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp" />
-    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp" />
     <ClCompile Include="src\Ignis\Camera\FpsCamera.cpp" />
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Core\Api.cpp" />
@@ -199,34 +177,18 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
-    <ClCompile Include="src\ResourceManager.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Script\JSONParser.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaScene.cpp" />
     <ClCompile Include="src\Tile\Algorithm.cpp" />
     <ClCompile Include="src\Tile\Body.cpp" />
     <ClCompile Include="src\Tile\TileRenderer.cpp" />
     <ClCompile Include="src\Tile\Tilemap.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tile\World.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\maps\station.json" />
     <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
-    <None Include="res\scripts\player.lua" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\images\blocky_font.png" />
-    <Image Include="res\images\box.png" />
-    <Image Include="res\images\door.png" />
-    <Image Include="res\images\num_font.png" />
-    <Image Include="res\images\player.png" />
-    <Image Include="res\images\tiles.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">

@@ -27,16 +27,16 @@ namespace tile
 		void DestroyBody(std::shared_ptr<Body> body);
 
 		void Update(float deltaTime);
-		void Render() const;
+		void Render(const glm::vec3& offset, const glm::mat4& viewProjection) const;
 
 		// get all tiles in an area (in world coords)
-		std::vector<const Tile&> GetAdjacentTiles(float x, float y, float w, float h);
-		std::vector<const Tile&> GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size);
+		std::vector<Tile> GetAdjacentTiles(float x, float y, float w, float h);
+		std::vector<Tile> GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size);
 
 		// get bodies
 		std::vector<std::shared_ptr<Body>> GetBodies() const;
 		std::vector<std::shared_ptr<Body>> GetBodiesT(BodyType type) const;
-		std::vector<std::shared_ptr<Body>> GetOtherBodies(const Body& b) const;
+		std::vector<std::shared_ptr<Body>> GetOtherBodies(const Body* b) const;
 
 		bool CheckSlope(const glm::vec2& position, TileType slope) const;
 

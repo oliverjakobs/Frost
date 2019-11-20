@@ -1,10 +1,6 @@
 #pragma once
 
-#include "ResourceManager.h"
-
 #include "Input/Input.h"
-
-#include "Maths/Maths.h"
 
 #include "ImGuiBinding/ImGuiRenderer.h"
 
@@ -12,7 +8,6 @@
 #include "Obelisk/Obelisk.h"
 
 #include "Event/EventHandler.h"
-#include "Scene/SceneManager.h"
 
 class Application
 {
@@ -28,6 +23,7 @@ private:
 	// and passes the rest to OnEvent, which is implemented in the game class
 	void EventCallback(Event& e);
 	bool OnWindowClose(WindowCloseEvent& e);
+	bool OnWindowResize(WindowResizeEvent& e);
 
 	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:
@@ -38,8 +34,6 @@ protected:
 
 	ignis::OrthographicCamera m_camera;
 	obelisk::Timer m_timer;
-
-	SceneManager m_sceneManager;
 public:
 	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);

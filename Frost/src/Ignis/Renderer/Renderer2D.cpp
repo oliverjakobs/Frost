@@ -64,6 +64,7 @@ namespace ignis
 
 		s_renderData->Shader->SetUniform4f("u_Color", color);
 		s_renderData->Shader->SetUniformMat4("u_Model", model);
+		s_renderData->Shader->SetUniformMat4("u_Src", glm::mat4(1.0f));
 
 		s_renderData->Blank->Bind();
 
@@ -77,6 +78,19 @@ namespace ignis
 
 		s_renderData->Shader->SetUniform4f("u_Color", glm::vec4(1.0f));
 		s_renderData->Shader->SetUniformMat4("u_Model", model);
+		s_renderData->Shader->SetUniformMat4("u_Src", glm::mat4(1.0f));
+
+		texture->Bind();
+
+		s_renderData->VertexArray->Bind();
+		glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->GetElementCount(), GL_UNSIGNED_INT, nullptr);
+	}
+
+	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src)
+	{
+		s_renderData->Shader->SetUniform4f("u_Color", glm::vec4(1.0f));
+		s_renderData->Shader->SetUniformMat4("u_Model", model);
+		s_renderData->Shader->SetUniformMat4("u_Src", src);
 
 		texture->Bind();
 

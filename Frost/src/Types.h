@@ -2,8 +2,6 @@
 
 #include "Ignis/Core/Api.h"
 
-#include "Utility/Enum.h"
-
 
 // ------------------| BASICS |---------------------------------------------------------
 typedef unsigned char byte;
@@ -26,8 +24,3 @@ using std::make_unique;
 using std::shared_ptr;
 using std::make_shared;
 using std::weak_ptr;
-
-// ------------------| ENUMS |----------------------------------------------------------
-ENUM(RenderFlip, NONE = 0, HORIZONTAL = 1, VERTICAL = 2);
-
-ENUM(Direction, LEFT, RIGHT, UP,  DOWN);

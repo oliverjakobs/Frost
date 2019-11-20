@@ -32,11 +32,11 @@ namespace tile
 		float m_gravityScale;	// amplifies the magnitude of the gravity
 		bool m_drop;			// should the body drop through a platform
 
-		std::shared_ptr<World> m_world;
+		World* m_world;
 		BodyType m_type;
 
 		// accessible through world
-		Body(const std::shared_ptr<World>& world, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
+		Body(World* world, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 
 		// move in x and y direction seperatly
 		void MoveX(float x);
@@ -67,8 +67,13 @@ namespace tile
 		const glm::vec2 GetPosition() const { return m_position; }
 		const glm::vec2 GetVelocity() const { return m_velocity; }
 
+		const float GetHalfWidth() const { return m_halfDimension.x; }
+		const float GetHalfHeight() const { return m_halfDimension.y; }
+		const glm::vec2 GetHalfDimension() const { return m_halfDimension; }
+
 		const float GetWidth() const { return m_halfDimension.x * 2.0f; }
 		const float GetHeight() const { return m_halfDimension.y * 2.0f; }
+		const glm::vec2 GetDimension() const { return m_halfDimension * 2.0f; }
 
 		// get the edges of the body
 		const float GetX() const { return m_position.x - m_halfDimension.x; }
@@ -82,7 +87,6 @@ namespace tile
 		const bool CollidesLeft() const { return m_collidesLeft; }
 		const bool CollidesRight() const { return m_collidesRight; }
 
-		std::shared_ptr<World> GetWorld() const { return m_world; }
 		const BodyType GetType() const { return m_type; }
 
 		friend World;
