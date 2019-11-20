@@ -73,12 +73,6 @@ Direction Entity::GetDirection() const
 	return m_direction;
 }
 
-void Entity::AddComponent(Component* component)
-{
-	if (component->SetEntity(this))
-		m_components.push_back(unique_ptr<Component>(component));
-}
-
 std::string DirectionToString(Direction dir)
 {
 	switch (dir)

@@ -40,8 +40,8 @@ public:
 
 		m_entity = std::make_shared<Entity>("Entity", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
 
-		m_entity->AddComponent(new PhysicsComponent(m_world->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f)));
-		m_entity->AddComponent(new TextureComponent(std::make_shared<Texture>("res/textures/player.png", 4, 6), 40.0f, 60.0f));
+		m_entity->AddComponent<PhysicsComponent>(m_world->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f));
+		m_entity->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/player.png", 4, 6), 40.0f, 60.0f);
 
 		std::map<std::string, Animation> animations
 		{
@@ -51,8 +51,8 @@ public:
 			{ "fall", Animation(18, 2, 0.4) }
 		};
 
-		m_entity->AddComponent(new AnimationComponent(animations));
-		m_entity->AddComponent(new PlayerComponent(400.0f, 800.0f));
+		m_entity->AddComponent<AnimationComponent>(animations);
+		m_entity->AddComponent<PlayerComponent>(400.0f, 800.0f);
 	}
 
 	~Frost()

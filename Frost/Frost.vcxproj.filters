@@ -195,9 +195,6 @@
     <ClInclude Include="src\Tile\World.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="src\Types.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
     <ClInclude Include="src\Entity\Components\Component.h" />
     <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />

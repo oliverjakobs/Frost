@@ -8,8 +8,8 @@
 
 #include "Input/Input.h"
 
-PlayerComponent::PlayerComponent(float ms, float jp)
-	: m_movementSpeed(ms), m_jumpPower(jp)
+PlayerComponent::PlayerComponent(Entity* entity, float ms, float jp)
+	: Component(entity), m_movementSpeed(ms), m_jumpPower(jp)
 {
 }
 

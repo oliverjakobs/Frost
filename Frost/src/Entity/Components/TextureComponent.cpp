@@ -2,12 +2,12 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-TextureComponent::TextureComponent(std::shared_ptr<ignis::Texture> texture, float width, float height)
-	: m_texture(texture), m_frame(0), m_width(width), m_height(height), m_renderFlip(RenderFlip::NONE)
+TextureComponent::TextureComponent(Entity* entity, std::shared_ptr<ignis::Texture> texture, float width, float height)
+	: Component(entity), m_texture(texture), m_frame(0), m_width(width), m_height(height), m_renderFlip(RenderFlip::NONE)
 {
 }
 
-void TextureComponent::SetFrame(uint frame)
+void TextureComponent::SetFrame(size_t frame)
 {
 	m_frame = frame;
 }

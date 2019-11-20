@@ -2,8 +2,8 @@
 
 #include "Obelisk/Obelisk.h"
 
-AnimationComponent::AnimationComponent(std::map<std::string, Animation> anims)
-	: m_animations(anims), m_currentAnimation("") 
+AnimationComponent::AnimationComponent(Entity* entity, std::map<std::string, Animation> anims)
+	: Component(entity), m_animations(anims), m_currentAnimation("") 
 {
 }
 

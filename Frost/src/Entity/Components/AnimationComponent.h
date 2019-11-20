@@ -10,7 +10,7 @@ private:
 	std::string m_currentAnimation;
 
 public:
-	AnimationComponent(std::map<std::string, Animation> anims);
+	AnimationComponent(Entity* entity, std::map<std::string, Animation> anims);
 
 	void PlayAnimation(const std::string& anim);
 	std::string GetCurrent() const;

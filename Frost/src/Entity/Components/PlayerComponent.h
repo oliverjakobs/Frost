@@ -9,7 +9,7 @@ private:
 	float m_jumpPower;
 
 public:
-	PlayerComponent(float ms, float jp);
+	PlayerComponent(Entity* entity, float ms, float jp);
 
 	void OnUpdate(float deltaTime) override;
 	void OnRender() override;

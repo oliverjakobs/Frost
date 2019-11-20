@@ -15,7 +15,6 @@ group "Packages"
 include "Frost/packages/glfw"
 include "Frost/packages/glad"
 include "Frost/packages/imgui"
-include "Frost/packages/lua"
 
 group ""
 
@@ -41,8 +40,7 @@ project "Frost"
 		"%{prj.name}/res/shader/*.frag",
 		"%{prj.name}/res/images/**.png",
 		"%{prj.name}/res/maps/**.json",
-		"%{prj.name}/res/scripts/**.json",
-		"%{prj.name}/res/scripts/**.lua"
+		"%{prj.name}/res/scripts/**.json"
 	}
 
 	links
@@ -50,21 +48,16 @@ project "Frost"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"Lua",
 		"opengl32"
 	}
 
 	includedirs
 	{
-		"%{prj.name}/packages/json/single_include",
 		"%{prj.name}/src",
 		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/glfw/include",
 		"%{prj.name}/packages/glad/include",
-		--lua
-		"%{prj.name}/packages/lua/src",
-		"%{prj.name}/packages/sol2/single/include"
 	}
 
 	filter "system:windows"

@@ -1,7 +1,7 @@
 #include "PhysicsComponent.h"
 
-PhysicsComponent::PhysicsComponent(std::shared_ptr<Body> body, const glm::vec2& bodyPos)
-	: m_body(body), m_bodyPos(bodyPos) 
+PhysicsComponent::PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos)
+	: Component(entity), m_body(body), m_bodyPos(bodyPos)
 {
 
 }

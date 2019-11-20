@@ -12,7 +12,7 @@ private:
 	glm::vec2 m_bodyPos;
 
 public:
-	PhysicsComponent(std::shared_ptr<Body> body, const glm::vec2& bodyPos);
+	PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos);
 
 	std::shared_ptr<Body> GetBody() const;
 

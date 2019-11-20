@@ -16,7 +16,7 @@ class TextureComponent : public Component
 {
 private:
 	std::shared_ptr<ignis::Texture> m_texture;
-	uint m_frame;
+	size_t m_frame;
 
 	float m_width;
 	float m_height;
@@ -24,9 +24,9 @@ private:
 	RenderFlip m_renderFlip;
 
 public:
-	TextureComponent(std::shared_ptr<ignis::Texture> texture, float width, float height);
+	TextureComponent(Entity* entity, std::shared_ptr<ignis::Texture> texture, float width, float height);
 
-	void SetFrame(uint frame);
+	void SetFrame(size_t frame);
 	void SetRenderFlip(RenderFlip flip);
 
 	void OnUpdate(float deltaTime) override;

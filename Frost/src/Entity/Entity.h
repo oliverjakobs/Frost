@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Types.h"
+#include <glm/glm.hpp>
+#include <string>
+#include <vector>
+#include <memory>
 
 class Scene;
 class Component;
@@ -28,7 +31,7 @@ private:
 
 	Direction m_direction;
 
-	std::vector<unique_ptr<Component>> m_components;
+	std::vector<std::unique_ptr<Component>> m_components;
 
 public:
 	Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension);
@@ -51,10 +54,8 @@ public:
 	template <class Type, class... Args>
 	void AddComponent(Args&&... args)
 	{
-		m_components.push_back(std::make_unique<Type>(...args));
+		m_components.push_back(std::unique_ptr<Type>(new Type(this, std::forward<Args>(args)...)));
 	}
-
-	void AddComponent(Component* component);
 
 	template<typename Type>
 	Type* GetComponent() const
