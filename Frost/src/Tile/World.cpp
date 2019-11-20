@@ -53,7 +53,7 @@ namespace tile
 
 		// load map
 		m_map = std::make_unique<TileMap>(tileIDs, mapWidth, mapHeight, tileSize, chunkSize, typeMap);
-		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>("res/textures/tiles.png"), texRows, texColumns);
+		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>("res/textures/tiles.png", texRows, texColumns));
 	}
 
 	World::~World()

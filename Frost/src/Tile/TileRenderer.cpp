@@ -4,7 +4,7 @@
 
 namespace tile
 {
-	TileRenderer::TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture, size_t rows, size_t columns)
+	TileRenderer::TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture)
 		: m_texture(texture)
 	{
 		m_tileCount = map.GetTiles().size();
@@ -21,8 +21,8 @@ namespace tile
 		m_shader = std::make_shared<ignis::Shader>("res/shaders/tile.vert", "res/shaders/tile.frag");
 		m_shader->Use();
 		m_shader->SetUniform1i("u_Texture", 0);
-		m_shader->SetUniform1i("u_Rows", (int)rows);
-		m_shader->SetUniform1i("u_Columns", (int)columns);
+		m_shader->SetUniform1i("u_Rows", (int)texture->GetRows());
+		m_shader->SetUniform1i("u_Columns", (int)texture->GetColumns());
 		m_shader->SetUniform1f("u_TileSize", map.GetTileSize());
 
 		m_vertexArray.AddArrayBuffer(std::make_shared<ignis::ArrayBuffer>(sizeof(vertices), vertices, GL_STATIC_DRAW),

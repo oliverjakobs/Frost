@@ -7,11 +7,14 @@
     <Filter Include="res\maps">
       <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\scripts">
-      <UniqueIdentifier>{A6037D1E-12B9-F513-9BAD-EFEA0762EC17}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity">
+      <UniqueIdentifier>{D9C2390E-C57A-7B5B-2E82-54B71A59164C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Entity\Components">
+      <UniqueIdentifier>{4E8ED360-BAFA-8E5B-83EE-26B9EF19B1C3}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Event">
       <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
@@ -51,8 +54,32 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation.h">
+      <Filter>src</Filter>
+    </ClInclude>
     <ClInclude Include="src\Application.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components.h">
+      <Filter>src\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\AnimationComponent.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\Component.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\PhysicsComponent.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\PlayerComponent.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\TextureComponent.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Entity.h">
+      <Filter>src\Entity</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\ApplicationEvent.h">
       <Filter>src\Event</Filter>
@@ -195,18 +222,28 @@
     <ClInclude Include="src\Tile\World.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
-    <ClInclude Include="src\Entity\Components\Component.h" />
-    <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
-    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
-    <ClInclude Include="src\Entity\Components.h" />
-    <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Animation.h" />
-    <ClInclude Include="src\Entity\Components\PlayerComponent.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\Application.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Entity.cpp">
+      <Filter>src\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
       <Filter>src\Ignis\Advanced</Filter>
@@ -286,12 +323,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
-    <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Animation.cpp" />
-    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

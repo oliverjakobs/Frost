@@ -21,7 +21,7 @@ namespace tile
 
 		size_t m_tileCount;
 	public:
-		TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture, size_t rows, size_t columns);
+		TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture);
 
 		void RenderMap(const glm::vec3& offset, const glm::mat4& viewProjection);
 	};

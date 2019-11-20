@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>packages\json\single_include;src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>packages\json\single_include;src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -198,9 +198,6 @@
     </ProjectReference>
     <ProjectReference Include="packages\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="packages\lua\Lua.vcxproj">
-      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
