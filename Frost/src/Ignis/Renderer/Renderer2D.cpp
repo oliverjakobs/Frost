@@ -72,23 +72,10 @@ namespace ignis
 		glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->GetElementCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void Renderer2D::RenderQuad(const glm::vec3& position, const glm::vec2& size, const std::shared_ptr<Texture>& texture)
+
+	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color)
 	{
-		glm::mat4 model = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size, 1.0f });
-
-		s_renderData->Shader->SetUniform4f("u_Color", glm::vec4(1.0f));
-		s_renderData->Shader->SetUniformMat4("u_Model", model);
-		s_renderData->Shader->SetUniformMat4("u_Src", glm::mat4(1.0f));
-
-		texture->Bind();
-
-		s_renderData->VertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->GetElementCount(), GL_UNSIGNED_INT, nullptr);
-	}
-
-	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src)
-	{
-		s_renderData->Shader->SetUniform4f("u_Color", glm::vec4(1.0f));
+		s_renderData->Shader->SetUniform4f("u_Color", color);
 		s_renderData->Shader->SetUniformMat4("u_Model", model);
 		s_renderData->Shader->SetUniformMat4("u_Src", src);
 
