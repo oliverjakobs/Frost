@@ -1,0 +1,9 @@
+{
+  "map": "res/maps/station2.json",
+  "entities": {
+    "player": {
+      "scr": "res/entities/player.json",
+      "position": [ 200.0, 64.0 ]
+    }
+  }
+}

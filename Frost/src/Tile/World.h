@@ -26,7 +26,7 @@ namespace tile
 		std::shared_ptr<Body> CreateBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
 		void DestroyBody(std::shared_ptr<Body> body);
 
-		void Update(float deltaTime);
+		void Tick(float deltaTime);
 		void Render(const glm::vec3& offset, const glm::mat4& viewProjection) const;
 
 		// get all tiles in an area (in world coords)

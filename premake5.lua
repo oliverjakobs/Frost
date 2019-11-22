@@ -36,8 +36,8 @@ project "Frost"
 		"%{prj.name}/config.json",
 		--Resources
 		"%{prj.name}/res/resources.json",
-		"%{prj.name}/res/shader/*.vert",
-		"%{prj.name}/res/shader/*.frag",
+		"%{prj.name}/res/shaders/**.vert",
+		"%{prj.name}/res/shaders/**.frag",
 		"%{prj.name}/res/images/**.png",
 		"%{prj.name}/res/maps/**.json",
 		"%{prj.name}/res/scripts/**.json"
@@ -57,7 +57,7 @@ project "Frost"
 		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/glfw/include",
-		"%{prj.name}/packages/glad/include",
+		"%{prj.name}/packages/glad/include"
 	}
 
 	filter "system:windows"

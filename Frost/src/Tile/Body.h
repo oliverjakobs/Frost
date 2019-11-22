@@ -88,6 +88,7 @@ namespace tile
 		const bool CollidesRight() const { return m_collidesRight; }
 
 		const BodyType GetType() const { return m_type; }
+		World* GetWorld() const { return m_world; }
 
 		friend World;
 	};

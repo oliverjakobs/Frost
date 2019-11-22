@@ -88,7 +88,7 @@ namespace tile
 		}
 	}
 
-	void World::Update(float deltaTime)
+	void World::Tick(float deltaTime)
 	{
 		// measure time for simulation
 		float start = 0;

@@ -23,7 +23,6 @@ private:
 	// and passes the rest to OnEvent, which is implemented in the game class
 	void EventCallback(Event& e);
 	bool OnWindowClose(WindowCloseEvent& e);
-	bool OnWindowResize(WindowResizeEvent& e);
 
 	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:
@@ -32,7 +31,6 @@ protected:
 	int m_width;
 	int m_height;
 
-	ignis::OrthographicCamera m_camera;
 	obelisk::Timer m_timer;
 public:
 	Application(const std::string& config);

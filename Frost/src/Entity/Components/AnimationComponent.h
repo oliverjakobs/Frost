@@ -1,7 +1,25 @@
 #pragma once
 
 #include "TextureComponent.h"
-#include "Animation.h"
+
+class Animation
+{
+private:
+	int m_start;
+	int m_length;
+
+	float m_delay;
+	float m_frameCounter;
+
+	int m_frame;
+public:
+	Animation() = default;
+	Animation(int start, int length, float delay);
+
+	void Start();
+	void Step(float deltaTime);
+	int GetFrame();
+};
 
 class AnimationComponent : public Component
 {
@@ -10,7 +28,7 @@ private:
 	std::string m_currentAnimation;
 
 public:
-	AnimationComponent(Entity* entity, std::map<std::string, Animation> anims);
+	AnimationComponent(Entity* entity, const std::map<std::string, Animation>& anims);
 
 	void PlayAnimation(const std::string& anim);
 	std::string GetCurrent() const;

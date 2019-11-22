@@ -13,6 +13,7 @@ private:
 
 public:
 	PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos);
+	virtual ~PhysicsComponent();
 
 	std::shared_ptr<Body> GetBody() const;
 

@@ -8,21 +8,12 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 	return true;
 }
 
-bool Application::OnWindowResize(WindowResizeEvent& e)
-{
-	m_camera.SetProjection(0.0f, (float)e.GetWidth(), 0.0f, (float)e.GetHeight());
-	return true;
-}
-
 void Application::EventCallback(Event& e)
 {
 	switch (e.GetType())
 	{
 	case EventType::WindowClose:
 		OnWindowClose((WindowCloseEvent&)e);
-		break;
-	case EventType::WindowResize:
-		OnWindowResize((WindowResizeEvent&)e);
 		break;
 	case EventType::ChangeScene:
 		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
@@ -174,8 +165,6 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	OBELISK_INFO("[OpenGL] Vendor: %s", glGetString(GL_VENDOR));
 	OBELISK_INFO("[OpenGL] Renderer: %s", glGetString(GL_RENDERER));
 	OBELISK_INFO("[OpenGL] GLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-
-	m_camera = ignis::OrthographicCamera(0.0f, (float)width, 0.0f, (float)height);
 
 	// initialize imgui
 	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
