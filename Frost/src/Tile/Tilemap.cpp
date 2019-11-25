@@ -1,5 +1,7 @@
 #include "Tilemap.h"
 
+#include "Obelisk/Debugger.h"
+
 namespace tile
 {
 	TileMap::TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, size_t chunksize, const TypeMap& typeMap)
@@ -34,6 +36,9 @@ namespace tile
 	{
 		size_t x = static_cast<size_t>(std::floorf(pos.x / m_tileSize));
 		size_t y = static_cast<size_t>(std::floorf(pos.y / m_tileSize));
+
+		if (x < 0 || x >= m_width)
+			return -1;
 
 		return y * static_cast<int>(std::ceilf(static_cast<float>(m_width))) + x;
 	}

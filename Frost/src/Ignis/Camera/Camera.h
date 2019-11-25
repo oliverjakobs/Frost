@@ -19,6 +19,8 @@ namespace ignis
 		void SetPosition(const glm::vec3& position) { m_position = position; UpdateView(); }
 		const glm::vec3& GetPosition() const { return m_position; }
 
+		virtual void SetProjection(float left, float right, float bottom, float top) = 0;
+
 		const glm::mat4& GetViewx() const { return m_view; }
 		const glm::mat4& GetProjection() const { return m_projection; }
 		const glm::mat4& GetViewProjection() const { return m_viewProjection; }

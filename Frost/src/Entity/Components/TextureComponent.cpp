@@ -23,8 +23,8 @@ void TextureComponent::OnUpdate(float deltaTime)
 
 void TextureComponent::OnRender()
 {
-	float x = m_entity->GetPosition().x;
-	float y = m_entity->GetPosition().y + m_height / 2.0f;
+	float x = m_entity->GetPosition().x - m_width / 2.0f;
+	float y = m_entity->GetPosition().y;
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(x, y, 0.0f));

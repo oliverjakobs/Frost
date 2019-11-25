@@ -13,7 +13,7 @@ namespace ignis
 		OrthographicCamera();
 		OrthographicCamera(float left, float right, float bottom, float top);
 
-		void SetProjection(float left, float right, float bottom, float top);
+		void SetProjection(float left, float right, float bottom, float top) override;
 
 		void SetRotation(float rotation) { m_rotation = rotation; UpdateView(); }
 		const float GetRotation() const { return m_rotation; }

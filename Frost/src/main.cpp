@@ -11,7 +11,6 @@ class Frost : public Application
 {
 private:
 	ignis::RenderState m_renderState;
-	ignis::OrthographicCamera m_camera;
 
 	std::shared_ptr<Scene> m_scene;
 
@@ -25,8 +24,6 @@ public:
 		m_renderState.SetBlend(true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		m_camera = ignis::OrthographicCamera(0.0f, (float)m_width, 0.0f, (float)m_height);
-
 		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
 		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
 		Primitives2D::Init(std::make_shared<Shader>("res/shaders/lines.vert", "res/shaders/lines.frag"));
@@ -35,7 +32,7 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		m_scene = std::make_shared<Scene>();
+		m_scene = std::make_shared<Scene>(std::make_shared<ignis::OrthographicCamera>(0.0f, (float)m_width, 0.0f, (float)m_height));
 
 		auto entity = std::make_shared<Entity>("player", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
 
@@ -68,7 +65,7 @@ public:
 		if (e.GetType() == EventType::WindowResize)
 		{
 			WindowResizeEvent& resize = (WindowResizeEvent&)e;
-			m_camera.SetProjection(0.0f, (float)resize.GetWidth(), 0.0f, (float)resize.GetHeight());
+			m_scene->GetCamera()->SetProjection(0.0f, (float)resize.GetWidth(), 0.0f, (float)resize.GetHeight());
 		}
 
 		if (e.GetType() == EventType::KeyPressed)
@@ -103,9 +100,9 @@ public:
 
 	void OnRender() override
 	{
-		m_scene->GetWorld()->Render(glm::vec3(), m_camera.GetViewProjection());
+		m_scene->GetWorld()->Render(glm::vec3(), m_scene->GetCamera()->GetViewProjection());
 
-		Renderer2D::Start(m_camera.GetViewProjection());
+		Renderer2D::Start(m_scene->GetCamera()->GetViewProjection());
 
 		m_scene->OnRender();
 
@@ -117,7 +114,7 @@ public:
 		// debug info
 		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
 
-		Primitives2D::Start(m_camera.GetViewProjection());
+		Primitives2D::Start(m_scene->GetCamera()->GetViewProjection());
 
 		m_scene->OnRenderDebug();
 
@@ -126,6 +123,12 @@ public:
 
 	void OnImGui() override
 	{
+		ImGui::Begin("Info");
+
+		glm::vec2 pos = m_scene->GetEntity("player")->GetPosition();
+		ImGui::Text("Position: %4.2f, %4.2f", pos.x, pos.y);
+
+		ImGui::End();
 
 	}
 }; 

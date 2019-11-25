@@ -14,8 +14,6 @@ namespace ignis
 		static void Start(const glm::mat4& viewProjection);
 		static void Flush();
 
-		static void RenderQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
-
 		// Textures
 		static void RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color = WHITE);
 	};
