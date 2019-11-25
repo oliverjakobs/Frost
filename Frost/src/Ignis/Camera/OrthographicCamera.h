@@ -6,17 +6,11 @@ namespace ignis
 {
 	class OrthographicCamera : public Camera
 	{
-	private:
-		float m_rotation;
-
 	public:
 		OrthographicCamera();
-		OrthographicCamera(float left, float right, float bottom, float top);
+		OrthographicCamera(const glm::vec3& center, const glm::vec2& size);
 
-		void SetProjection(float left, float right, float bottom, float top) override;
-
-		void SetRotation(float rotation) { m_rotation = rotation; UpdateView(); }
-		const float GetRotation() const { return m_rotation; }
+		void SetProjection(const glm::vec2& size);
 
 	private:
 		void UpdateView() override;

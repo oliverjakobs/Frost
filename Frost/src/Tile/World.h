@@ -42,5 +42,8 @@ namespace tile
 
 		float GetTileSize() const { return m_map->GetTileSize(); }
 		const glm::vec2 GetGravity() const { return m_gravity; }
+
+		const float GetWidth() const { return m_map->GetWidth() * m_map->GetTileSize(); }
+		const float GetHeight() const { return m_map->GetHeight() * m_map->GetTileSize(); }
 	};
 }

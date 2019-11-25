@@ -22,9 +22,14 @@ public:
 	void OnRender();
 	void OnRenderDebug();
 
+	void SetCameraPosition(const glm::vec3& position);
+
 	std::shared_ptr<Entity> GetEntity(const std::string& name) const;
 	std::vector<std::shared_ptr<Entity>> GetEntities() const { return m_entities; };
 
 	World* GetWorld() const { return m_world.get(); }
 	ignis::Camera* GetCamera() const { return m_camera.get(); }
+
+	const float GetWidth() const { return m_world->GetWidth(); }
+	const float GetHeight() const { return m_world->GetHeight(); }
 };

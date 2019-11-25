@@ -12,6 +12,7 @@ class Frost : public Application
 private:
 	ignis::RenderState m_renderState;
 
+	std::shared_ptr<OrthographicCamera> m_camera;
 	std::shared_ptr<Scene> m_scene;
 
 	Font font = Font("res/fonts/OpenSans.ttf", 32.0f);
@@ -32,7 +33,9 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		m_scene = std::make_shared<Scene>(std::make_shared<ignis::OrthographicCamera>(0.0f, (float)m_width, 0.0f, (float)m_height));
+		glm::vec2 size = glm::vec2((float)m_width, (float)m_height);
+		m_camera = std::make_shared<OrthographicCamera>(glm::vec3(size/2.0f, 0.0f), size);
+		m_scene = std::make_shared<Scene>(m_camera);
 
 		auto entity = std::make_shared<Entity>("player", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
 
@@ -48,7 +51,7 @@ public:
 		};
 
 		entity->AddComponent<AnimationComponent>(animations);
-		entity->AddComponent<PlayerComponent>(400.0f, 800.0f);
+		entity->AddComponent<PlayerComponent>(400.0f, 600.0f);
 
 		m_scene->AddEntity(entity);
 	}
@@ -65,7 +68,7 @@ public:
 		if (e.GetType() == EventType::WindowResize)
 		{
 			WindowResizeEvent& resize = (WindowResizeEvent&)e;
-			m_scene->GetCamera()->SetProjection(0.0f, (float)resize.GetWidth(), 0.0f, (float)resize.GetHeight());
+			m_camera->SetProjection(glm::vec2((float)resize.GetWidth(), (float)resize.GetHeight()));
 		}
 
 		if (e.GetType() == EventType::KeyPressed)
@@ -96,29 +99,21 @@ public:
 	void OnUpdate(float deltaTime) override
 	{
 		m_scene->OnUpdate(deltaTime);
+
+		m_scene->SetCameraPosition(glm::vec3(m_scene->GetEntity("player")->GetPosition(), 0.0f));
 	}
 
 	void OnRender() override
 	{
-		m_scene->GetWorld()->Render(glm::vec3(), m_scene->GetCamera()->GetViewProjection());
-
-		Renderer2D::Start(m_scene->GetCamera()->GetViewProjection());
-
 		m_scene->OnRender();
-
-		Renderer2D::Flush();
 	}
 
 	void OnRenderDebug() override
 	{
-		// debug info
-		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
-
-		Primitives2D::Start(m_scene->GetCamera()->GetViewProjection());
-
 		m_scene->OnRenderDebug();
 
-		Primitives2D::Flush();
+		// debug info
+		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
 	}
 
 	void OnImGui() override
