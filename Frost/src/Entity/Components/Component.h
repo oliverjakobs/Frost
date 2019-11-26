@@ -24,7 +24,7 @@ public:
 	void SetActive(bool b) { m_active = b; }
 	bool IsActive() const { return m_active; }
 
-	virtual void OnUpdate(float deltaTime) = 0;
-	virtual void OnRender() = 0;
+	virtual void OnUpdate(Scene* scene, float deltaTime) = 0;
+	virtual void OnRender(Scene* scene) = 0;
 	virtual void OnRenderDebug() {};
 };

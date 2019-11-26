@@ -14,19 +14,19 @@ Entity::~Entity()
 {
 }
 
-void Entity::OnUpdate(float deltaTime)
+void Entity::OnUpdate(Scene* scene, float deltaTime)
 {
 	for (auto& c : m_components)
 	{
-		c->OnUpdate(deltaTime);
+		c->OnUpdate(scene, deltaTime);
 	}
 }
 
-void Entity::OnRender()
+void Entity::OnRender(Scene* scene)
 {
 	for (auto& c : m_components)
 	{
-		c->OnRender();
+		c->OnRender(scene);
 	}
 }
 
@@ -38,50 +38,15 @@ void Entity::OnRenderDebug()
 	}
 }
 
-void Entity::SetPosition(const glm::vec2& pos)
-{
-	m_position = pos;
-}
-
-void Entity::SetDimension(const glm::vec2& dim)
-{
-	m_dimension = dim;
-}
-
-void Entity::SetDirection(Direction dir)
-{
-	m_direction = dir;
-}
-
-std::string Entity::GetName() const
-{
-	return m_name;
-}
-
-glm::vec2 Entity::GetPosition() const
-{
-	return m_position;
-}
-
-glm::vec2 Entity::GetDimension() const
-{
-	return m_dimension;
-}
-
-Direction Entity::GetDirection() const
-{
-	return m_direction;
-}
-
 std::string DirectionToString(Direction dir)
 {
 	switch (dir)
 	{
-	case Direction::NONE:	return "NONE";
 	case Direction::LEFT:	return "LEFT";
 	case Direction::RIGHT:	return "RIGHT";
 	case Direction::UP:		return "UP";
 	case Direction::DOWN:	return "DOWN";
+	default: return "NONE";
 	}
 }
 

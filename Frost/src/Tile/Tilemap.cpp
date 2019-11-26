@@ -4,7 +4,7 @@
 
 namespace tile
 {
-	TileMap::TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, size_t chunksize, const TypeMap& typeMap)
+	TileMap::TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, const TypeMap& typeMap)
 		: m_width(width), m_height(height), m_tileSize(tileSize)
 	{
 		// nested loop iterating over the width and height of the map

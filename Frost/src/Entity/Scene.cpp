@@ -9,6 +9,8 @@ Scene::Scene(std::shared_ptr<Camera> camera)
 {
 	m_world = std::make_unique<World>("");
 	m_camera = camera;
+
+	m_smoothMovement = 0.5f;
 }
 
 Scene::~Scene()
@@ -23,10 +25,7 @@ void Scene::AddEntity(std::shared_ptr<Entity> entity)
 
 void Scene::RemoveEntity(const std::string& name)
 {
-	auto it = std::find_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); });
-
-	if (it != m_entities.end())
-		m_entities.erase(it);
+	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); }), m_entities.end());
 }
 
 void Scene::Clear()
@@ -39,7 +38,7 @@ void Scene::OnUpdate(float deltaTime)
 	m_world->Tick(deltaTime);
 
 	for (auto& entity : m_entities)
-		entity->OnUpdate(deltaTime);
+		entity->OnUpdate(this, deltaTime);
 }
 
 void Scene::OnRender()
@@ -49,7 +48,7 @@ void Scene::OnRender()
 	Renderer2D::Start(m_camera->GetViewProjection());
 
 	for (auto& entity : m_entities)
-		entity->OnRender();
+		entity->OnRender(this);
 
 	Renderer2D::Flush();
 }
@@ -67,21 +66,21 @@ void Scene::OnRenderDebug()
 	for (auto& body : m_world->GetBodies())
 		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension());
 
-	Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
-
-	// smooth movement area
-	float smooth_w = m_camera->GetSize().x / 4.0f;
-	float smooth_h = m_camera->GetSize().y / 4.0f;
-
-	Primitives2D::DrawRect(m_camera->GetPosition().x - smooth_w, m_camera->GetPosition().y - smooth_h, smooth_w * 2.0f, smooth_h * 2.0f);
+	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
+	//
+	//// smooth movement area
+	//float smooth_w = (m_camera->GetSize().x / 2.0f) * m_smoothMovement;
+	//float smooth_h = (m_camera->GetSize().y / 2.0f) * m_smoothMovement;
+	//
+	//Primitives2D::DrawRect(m_camera->GetPosition().x - smooth_w, m_camera->GetPosition().y - smooth_h, smooth_w * 2.0f, smooth_h * 2.0f);
 
 	Primitives2D::Flush();
 }
 
 void Scene::SetCameraPosition(const glm::vec3& position)
 {
-	float smooth_w = m_camera->GetSize().x / 4.0f;
-	float smooth_h = m_camera->GetSize().y / 4.0f;
+	float smooth_w = (m_camera->GetSize().x / 2.0f) * m_smoothMovement;
+	float smooth_h = (m_camera->GetSize().y / 2.0f) * m_smoothMovement;
 
 	glm::vec3 center = m_camera->GetPosition();
 

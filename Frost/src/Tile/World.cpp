@@ -46,13 +46,12 @@ namespace tile
 		int mapWidth = 64;
 		int mapHeight = 25;
 		float tileSize = 32.0f;
-		size_t chunkSize = 16;
 
 		int texRows = 1;
 		int texColumns = 3;
 
 		// load map
-		m_map = std::make_unique<TileMap>(tileIDs, mapWidth, mapHeight, tileSize, chunkSize, typeMap);
+		m_map = std::make_unique<TileMap>(tileIDs, mapWidth, mapHeight, tileSize, typeMap);
 		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>("res/textures/tiles.png", texRows, texColumns));
 	}
 

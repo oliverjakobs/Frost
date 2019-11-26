@@ -15,12 +15,12 @@ std::shared_ptr<Body> PhysicsComponent::GetBody() const
 	return m_body;
 }
 
-void PhysicsComponent::OnUpdate(float deltaTime)
+void PhysicsComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	m_entity->SetPosition(m_body->GetPosition() - m_bodyPos);
 }
 
-void PhysicsComponent::OnRender()
+void PhysicsComponent::OnRender(Scene* scene)
 {
 }
 

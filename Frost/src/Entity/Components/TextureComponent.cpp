@@ -17,11 +17,11 @@ void TextureComponent::SetRenderFlip(RenderFlip flip)
 	m_renderFlip = flip;
 }
 
-void TextureComponent::OnUpdate(float deltaTime)
+void TextureComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 }
 
-void TextureComponent::OnRender()
+void TextureComponent::OnRender(Scene* scene)
 {
 	float x = m_entity->GetPosition().x - m_width / 2.0f;
 	float y = m_entity->GetPosition().y;

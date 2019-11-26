@@ -57,7 +57,7 @@ std::string AnimationComponent::GetCurrent() const
 	return m_currentAnimation;
 }
 
-void AnimationComponent::OnUpdate(float deltaTime)
+void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	if (!m_currentAnimation.empty())
 	{
@@ -70,6 +70,6 @@ void AnimationComponent::OnUpdate(float deltaTime)
 	}
 }
 
-void AnimationComponent::OnRender()
+void AnimationComponent::OnRender(Scene* scene)
 {
 }

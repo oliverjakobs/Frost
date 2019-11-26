@@ -33,6 +33,6 @@ public:
 	void PlayAnimation(const std::string& anim);
 	std::string GetCurrent() const;
 
-	void OnUpdate(float deltaTime) override;
-	void OnRender() override;
+	void OnUpdate(Scene* scene, float deltaTime) override;
+	void OnRender(Scene* scene) override;
 };

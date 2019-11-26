@@ -33,10 +33,26 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		glm::vec2 size = glm::vec2((float)m_width, (float)m_height);
-		m_camera = std::make_shared<OrthographicCamera>(glm::vec3(size/2.0f, 0.0f), size);
+		m_camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
 		m_scene = std::make_shared<Scene>(m_camera);
 
+		// trees
+		srand(time(NULL));
+
+		float x = 20.0f;
+		while (x < m_scene->GetWidth())
+		{
+			int texture = rand() % 5 + 1;
+
+			auto tree = std::make_shared<Entity>("tree", glm::vec2(x, 192.0f), glm::vec2(20.0f, 20.0f));
+			tree->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/tree_" + std::to_string(texture) + ".png"), 96.0f, 256.0f);
+
+			m_scene->AddEntity(tree);
+
+			x += rand() % 80 + 140;
+		}
+
+		// player
 		auto entity = std::make_shared<Entity>("player", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
 
 		entity->AddComponent<PhysicsComponent>(m_scene->GetWorld()->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f));
@@ -44,16 +60,17 @@ public:
 
 		std::map<std::string, Animation> animations
 		{
-			{ "idle", Animation(0, 4, 0.2) },
-			{ "walk", Animation(6, 6, 0.125) },
-			{ "jump", Animation(12, 3, 0.3) },
-			{ "fall", Animation(18, 2, 0.4) }
+			{ "idle", Animation(0, 4, 0.2f) },
+			{ "walk", Animation(6, 6, 0.125f) },
+			{ "jump", Animation(12, 3, 0.3f) },
+			{ "fall", Animation(18, 2, 0.4f) }
 		};
 
 		entity->AddComponent<AnimationComponent>(animations);
 		entity->AddComponent<PlayerComponent>(400.0f, 600.0f);
 
 		m_scene->AddEntity(entity);
+
 	}
 
 	~Frost()
@@ -99,8 +116,6 @@ public:
 	void OnUpdate(float deltaTime) override
 	{
 		m_scene->OnUpdate(deltaTime);
-
-		m_scene->SetCameraPosition(glm::vec3(m_scene->GetEntity("player")->GetPosition(), 0.0f));
 	}
 
 	void OnRender() override
@@ -118,12 +133,6 @@ public:
 
 	void OnImGui() override
 	{
-		ImGui::Begin("Info");
-
-		glm::vec2 pos = m_scene->GetEntity("player")->GetPosition();
-		ImGui::Text("Position: %4.2f, %4.2f", pos.x, pos.y);
-
-		ImGui::End();
 
 	}
 }; 

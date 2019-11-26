@@ -16,7 +16,7 @@ namespace tile
 		std::vector<Tile> m_tiles;
 
 	public:
-		TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, size_t chunksize, const TypeMap& typeMap);
+		TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, const TypeMap& typeMap);
 		~TileMap();
 
 		const int GetWidth() const { return m_width; }

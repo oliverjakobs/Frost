@@ -29,6 +29,6 @@ public:
 	void SetFrame(size_t frame);
 	void SetRenderFlip(RenderFlip flip);
 
-	void OnUpdate(float deltaTime) override;
-	void OnRender() override;
+	void OnUpdate(Scene* scene, float deltaTime) override;
+	void OnRender(Scene* scene) override;
 };

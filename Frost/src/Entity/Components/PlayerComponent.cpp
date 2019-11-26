@@ -8,12 +8,14 @@
 
 #include "Input/Input.h"
 
+#include "../Scene.h"
+
 PlayerComponent::PlayerComponent(Entity* entity, float ms, float jp)
 	: Component(entity), m_movementSpeed(ms), m_jumpPower(jp)
 {
 }
 
-void PlayerComponent::OnUpdate(float deltaTime)
+void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
 	OBELISK_ASSERT(phys, "[COMP] Entity has no PhysicsComponent");
@@ -65,9 +67,12 @@ void PlayerComponent::OnUpdate(float deltaTime)
 
 	// apply velocity
 	phys->GetBody()->SetVelocity(velocity);
+
+	// set view
+	scene->SetCameraPosition(glm::vec3(m_entity->GetPosition(), 0.0f));
 }
 
-void PlayerComponent::OnRender()
+void PlayerComponent::OnRender(Scene* scene)
 {
 }
 

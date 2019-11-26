@@ -10,6 +10,7 @@ private:
 
 	std::vector<std::shared_ptr<Entity>> m_entities;
 
+	float m_smoothMovement;
 public:
 	Scene(std::shared_ptr<ignis::Camera> camera);
 	~Scene();

@@ -17,7 +17,7 @@ public:
 
 	std::shared_ptr<Body> GetBody() const;
 
-	void OnUpdate(float deltaTime) override;
-	void OnRender() override;
+	void OnUpdate(Scene* scene, float deltaTime) override;
+	void OnRender(Scene* scene) override;
 	void OnRenderDebug() override;
 };
