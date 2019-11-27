@@ -10,19 +10,17 @@ using namespace tile;
 class Frost : public Application
 {
 private:
-	ignis::RenderState m_renderState;
-
 	std::shared_ptr<OrthographicCamera> m_camera;
 	std::shared_ptr<Scene> m_scene;
 
 	Font font = Font("res/fonts/OpenSans.ttf", 32.0f);
-	Shader fontShader = Shader("res/shaders/font.vert", "res/shaders/font.frag");
 public:
 	Frost() 
 		: Application("Frost", 1024, 800)
 	{
 		// ---------------| Config |------------------------------------------
-		m_renderState.SetBlend(true, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
@@ -107,7 +105,7 @@ public:
 				ToggleImGui();
 				break;
 			case KEY_DELETE:
-				m_scene->Clear();
+				m_scene->RemoveEntity("tree");
 				break;
 			}
 		}

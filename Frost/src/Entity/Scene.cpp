@@ -25,7 +25,10 @@ void Scene::AddEntity(std::shared_ptr<Entity> entity)
 
 void Scene::RemoveEntity(const std::string& name)
 {
-	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); }), m_entities.end());
+	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [&](auto& e) 
+	{ 
+		return obelisk::StringCompare(e->GetName(), name); 
+	}), m_entities.end());
 }
 
 void Scene::Clear()
@@ -60,7 +63,7 @@ void Scene::OnRenderDebug()
 	for (auto& entity : m_entities)
 	{
 		entity->OnRenderDebug();
-		Primitives2D::DrawCircle(entity->GetPosition(), 2.0f);
+		//Primitives2D::DrawCircle(entity->GetPosition(), 2.0f);
 	}
 
 	for (auto& body : m_world->GetBodies())
