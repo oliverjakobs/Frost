@@ -2,23 +2,18 @@
 
 #include "TextureComponent.h"
 
-class Animation
+struct Animation
 {
-private:
-	int m_start;
-	int m_length;
+	int Start;
+	int Length;
 
-	float m_delay;
-	float m_frameCounter;
+	float Delay;
+	float FrameCounter;
 
-	int m_frame;
-public:
+	int Frame;
+
 	Animation() = default;
 	Animation(int start, int length, float delay);
-
-	void Start();
-	void Step(float deltaTime);
-	int GetFrame();
 };
 
 class AnimationComponent : public Component

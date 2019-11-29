@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Entity/Components.h"
+#include "Event/EventHandler.h"
 
 class Scene
 {
@@ -19,6 +20,7 @@ public:
 	void RemoveEntity(const std::string& name);
 	void Clear();
 
+	void OnEvent(Event& e);
 	void OnUpdate(float deltaTime);
 	void OnRender();
 	void OnRenderDebug();

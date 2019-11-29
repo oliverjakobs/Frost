@@ -3,36 +3,31 @@
 #include "Obelisk/Obelisk.h"
 
 Animation::Animation(int start, int length, float delay)
-	: m_start(start), m_length(length), m_delay(delay), m_frameCounter(0.0f), m_frame(0)
+	: Start(start), Length(length), Delay(delay), FrameCounter(0.0f), Frame(0)
 {
 }
 
-void Animation::Start()
+static void StartAnimation(Animation& anim)
 {
-	m_frame = m_start;
-	m_frameCounter = 0.0f;
+	anim.Frame = anim.Start;
+	anim.FrameCounter = 0.0f;
 }
 
-void Animation::Step(float deltaTime)
+static void StepAnimation(Animation& anim, float deltaTime)
 {
-	m_frameCounter += deltaTime;
+	anim.FrameCounter += deltaTime;
 
-	if (m_frameCounter > m_delay)
+	if (anim.FrameCounter > anim.Delay)
 	{
-		m_frameCounter = 0.0f;
-		m_frame++;
+		anim.FrameCounter = 0.0f;
+		anim.Frame++;
 	}
 
-	if (m_frame >= m_start + m_length || m_frame < m_start)
+	if (anim.Frame >= anim.Start + anim.Length || anim.Frame < anim.Start)
 	{
-		m_frame = m_start;
-		m_frameCounter = 0.0f;
+		anim.Frame = anim.Start;
+		anim.FrameCounter = 0.0f;
 	}
-}
-
-int Animation::GetFrame()
-{
-	return m_frame;
 }
 
 AnimationComponent::AnimationComponent(Entity* entity, const std::map<std::string, Animation>& anims)
@@ -47,7 +42,7 @@ void AnimationComponent::PlayAnimation(const std::string& anim)
 
 	if (m_animations.find(anim) != m_animations.end())
 	{
-		m_animations[anim].Start();
+		StartAnimation(m_animations[anim]);
 		m_currentAnimation = anim;
 	}
 }
@@ -61,12 +56,12 @@ void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	if (!m_currentAnimation.empty())
 	{
-		m_animations[m_currentAnimation].Step(deltaTime);
+		StepAnimation(m_animations[m_currentAnimation], deltaTime);
 
 		TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
 
 		if (tex != nullptr)
-			tex->SetFrame(m_animations[m_currentAnimation].GetFrame());
+			tex->SetFrame(m_animations[m_currentAnimation].Frame);
 	}
 }
 

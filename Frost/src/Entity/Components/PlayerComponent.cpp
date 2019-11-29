@@ -75,7 +75,3 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 void PlayerComponent::OnRender(Scene* scene)
 {
 }
-
-void PlayerComponent::OnRenderDebug()
-{
-}

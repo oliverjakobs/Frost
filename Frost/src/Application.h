@@ -51,7 +51,7 @@ public:
 	void Run();
 	void Close();
 
-	virtual void OnEvent(Event& e) = 0;
+	virtual void OnEvent(const Event& e) = 0;
 	virtual void OnUpdate(float deltaTime) = 0;
 	virtual void OnRender() = 0;
 	virtual void OnRenderDebug() {}

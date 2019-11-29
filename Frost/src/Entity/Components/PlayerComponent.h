@@ -13,5 +13,4 @@ public:
 
 	void OnUpdate(Scene* scene, float deltaTime) override;
 	void OnRender(Scene* scene) override;
-	void OnRenderDebug() override;
 };

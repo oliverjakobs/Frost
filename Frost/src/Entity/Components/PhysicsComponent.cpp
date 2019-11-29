@@ -23,8 +23,3 @@ void PhysicsComponent::OnUpdate(Scene* scene, float deltaTime)
 void PhysicsComponent::OnRender(Scene* scene)
 {
 }
-
-void PhysicsComponent::OnRenderDebug()
-{
-
-}

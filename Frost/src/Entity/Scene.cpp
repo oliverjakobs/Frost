@@ -36,6 +36,10 @@ void Scene::Clear()
 	m_entities.clear();
 }
 
+void Scene::OnEvent(Event& e)
+{
+}
+
 void Scene::OnUpdate(float deltaTime)
 {
 	m_world->Tick(deltaTime);

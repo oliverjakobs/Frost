@@ -35,7 +35,7 @@ public:
 		m_scene = std::make_shared<Scene>(m_camera);
 
 		// trees
-		srand(time(NULL));
+		srand((unsigned int)time(nullptr));
 
 		float x = 20.0f;
 		while (x < m_scene->GetWidth())
@@ -68,7 +68,6 @@ public:
 		entity->AddComponent<PlayerComponent>(400.0f, 600.0f);
 
 		m_scene->AddEntity(entity);
-
 	}
 
 	~Frost()
@@ -78,7 +77,7 @@ public:
 		Primitives2D::Destroy();
 	}
 	
-	void OnEvent(Event& e) override
+	void OnEvent(const Event& e) override
 	{
 		if (e.GetType() == EventType::WindowResize)
 		{
