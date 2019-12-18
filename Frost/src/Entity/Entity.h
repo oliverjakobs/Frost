@@ -27,13 +27,12 @@ private:
 	std::string m_name;
 
 	glm::vec2 m_position;
-	glm::vec2 m_dimension;
 
 	Direction m_direction;
 
 	std::vector<std::unique_ptr<Component>> m_components;
 public:
-	Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension);
+	Entity(const std::string& name, const glm::vec2& position);
 	~Entity();
 
 	void OnUpdate(Scene* scene, float deltaTime);
@@ -41,13 +40,11 @@ public:
 	void OnRenderDebug();
 
 	void SetPosition(const glm::vec2& pos) { m_position = pos; }
-	void SetDimension(const glm::vec2& dim) { m_dimension = dim; }
 	void SetDirection(Direction dir) { m_direction = dir; }
 
 	std::string GetName() const { return m_name; }
 
 	glm::vec2 GetPosition() const { return m_position; }
-	glm::vec2 GetDimension() const { return m_dimension; }
 	Direction GetDirection() const { return m_direction; }
 
 	template <class Type, class... Args>

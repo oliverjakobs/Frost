@@ -231,6 +231,9 @@
     <ClInclude Include="src\Tile\World.h">
       <Filter>src\Tile</Filter>
     </ClInclude>
+    <ClInclude Include="src\json\json.hpp" />
+    <ClInclude Include="src\json\json.h" />
+    <ClInclude Include="src\json\EntityLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -329,6 +332,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\json\EntityLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

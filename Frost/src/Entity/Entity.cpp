@@ -4,8 +4,8 @@
 
 #include "Obelisk/Obelisk.h"
 
-Entity::Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension)
-	: m_name(name), m_position(position), m_dimension(dimension), m_direction(Direction::RIGHT)
+Entity::Entity(const std::string& name, const glm::vec2& position)
+	: m_name(name), m_position(position), m_direction(Direction::RIGHT)
 {
 
 }

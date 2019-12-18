@@ -4,6 +4,10 @@
 
 #include "Entity/Scene.h"
 
+#include <string>
+
+#include "json/EntityLoader.h"
+
 using namespace ignis;
 using namespace tile;
 
@@ -42,7 +46,7 @@ public:
 		{
 			int texture = rand() % 5 + 1;
 
-			auto tree = std::make_shared<Entity>("tree", glm::vec2(x, 192.0f), glm::vec2(20.0f, 20.0f));
+			auto tree = std::make_shared<Entity>("tree", glm::vec2(x, 192.0f));
 			tree->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/tree_" + std::to_string(texture) + ".png"), 96.0f, 256.0f);
 
 			m_scene->AddEntity(tree);
@@ -51,20 +55,10 @@ public:
 		}
 
 		// player
-		auto entity = std::make_shared<Entity>("player", glm::vec2(400.0f, 200.0f), glm::vec2(20.0f, 20.0f));
+		auto entity = EntityLoader::LoadTemplate("res/scripts/entities/player.json");
 
 		entity->AddComponent<PhysicsComponent>(m_scene->GetWorld()->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f));
 		entity->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/player.png", 4, 6), 40.0f, 60.0f);
-
-		std::map<std::string, Animation> animations
-		{
-			{ "idle", Animation(0, 4, 0.2f) },
-			{ "walk", Animation(6, 6, 0.125f) },
-			{ "jump", Animation(12, 3, 0.3f) },
-			{ "fall", Animation(18, 2, 0.4f) }
-		};
-
-		entity->AddComponent<AnimationComponent>(animations);
 		entity->AddComponent<PlayerComponent>(400.0f, 600.0f);
 
 		m_scene->AddEntity(entity);
