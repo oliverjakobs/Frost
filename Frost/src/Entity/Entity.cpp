@@ -1,18 +1,11 @@
 #include "Entity.h"
 
-#include "Component.h"
+#include "Components/PositionComponent.h"
 
-Entity::Entity(const Entity& copy)
-	: m_name(copy.m_name), m_position(copy.m_position), m_dimension(copy.m_dimension), m_direction(copy.m_direction)
-{
-	for (auto& c : copy.m_components)
-	{
-		AddComponent(c->clone());
-	}
-}
+#include "Obelisk/Obelisk.h"
 
-Entity::Entity(const std::string& name, const glm::vec2& position, const glm::vec2& dimension)
-	: m_name(name), m_position(position), m_dimension(dimension), m_direction(Direction::RIGHT)
+Entity::Entity(const std::string& name)
+	: m_name(name), m_direction(Direction::RIGHT)
 {
 
 }
@@ -21,19 +14,19 @@ Entity::~Entity()
 {
 }
 
-void Entity::OnUpdate()
+void Entity::OnUpdate(Scene* scene, float deltaTime)
 {
 	for (auto& c : m_components)
 	{
-		c->OnUpdate();
+		c->OnUpdate(scene, deltaTime);
 	}
 }
 
-void Entity::OnRender()
+void Entity::OnRender(Scene* scene)
 {
 	for (auto& c : m_components)
 	{
-		c->OnRender();
+		c->OnRender(scene);
 	}
 }
 
@@ -47,41 +40,52 @@ void Entity::OnRenderDebug()
 
 void Entity::SetPosition(const glm::vec2& pos)
 {
-	m_position = pos;
-}
+	auto comp = GetComponent<PositionComponent>();
 
-void Entity::SetDimension(const glm::vec2& dim)
-{
-	m_dimension = dim;
-}
+	if (comp == nullptr)
+	{
+		OBELISK_WARN("Setting position for an entity without position component");
+		return;
+	}
 
-void Entity::SetDirection(Direction dir)
-{
-	m_direction = dir;
-}
-
-std::string Entity::GetName() const
-{
-	return m_name;
+	comp->SetPosition(pos);
 }
 
 glm::vec2 Entity::GetPosition() const
 {
-	return m_position;
+	auto comp = GetComponent<PositionComponent>();
+
+	if (comp == nullptr)
+	{
+		OBELISK_WARN("Getting position from an entity without position component");
+		return glm::vec2();
+	}
+
+	return comp->GetPosition();
 }
 
-glm::vec2 Entity::GetDimension() const
+std::string DirectionToString(Direction dir)
 {
-	return m_dimension;
+	switch (dir)
+	{
+	case Direction::LEFT:	return "LEFT";
+	case Direction::RIGHT:	return "RIGHT";
+	case Direction::UP:		return "UP";
+	case Direction::DOWN:	return "DOWN";
+	default: return "NONE";
+	}
 }
 
-Direction Entity::GetDirection() const
+Direction StringToDirection(const std::string& str)
 {
-	return m_direction;
-}
+	if (obelisk::StringCompare(str, "LEFT"))
+		return Direction::LEFT;
+	if (obelisk::StringCompare(str, "RIGHT"))
+		return Direction::RIGHT;
+	if (obelisk::StringCompare(str, "UP"))
+		return Direction::UP;
+	if (obelisk::StringCompare(str, "DOWN"))
+		return Direction::DOWN;
 
-void Entity::AddComponent(Component* component)
-{
-	if (component->SetEntity(this))
-		m_components.push_back(unique_ptr<Component>(component));
+	return Direction::NONE;
 }

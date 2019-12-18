@@ -1,23 +1,13 @@
 #pragma once
 
-#include "Graphics.h"
-
-#include "Debugger.h"
-
-#include "Utility/Utils.h"
-#include "Utility/Timer.h"
-
 #include "Input/Input.h"
 
-#include "Maths/Maths.h"
+#include "ImGuiBinding/ImGuiRenderer.h"
 
-#include "Event/ApplicationEvent.h"
-#include "Event/MouseEvent.h"
-#include "Event/KeyEvent.h"
+#include "Ignis/Ignis.h"
+#include "Obelisk/Obelisk.h"
 
-#include "ImGui/ImGuiRenderer.h"
-
-struct GLFWwindow;
+#include "Event/EventHandler.h"
 
 class Application
 {
@@ -29,8 +19,10 @@ private:
 	bool m_debug;
 	bool m_showImGui;
 
-	bool OnWindowClose(WindowCloseEvent& e);
+	// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
+	// and passes the rest to OnEvent, which is implemented in the game class
 	void EventCallback(Event& e);
+	bool OnWindowClose(WindowCloseEvent& e);
 
 	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:
@@ -38,6 +30,8 @@ protected:
 
 	int m_width;
 	int m_height;
+
+	obelisk::Timer m_timer;
 public:
 	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);
@@ -46,9 +40,10 @@ public:
 	void EnableDebugMode(bool b);
 	void ToggleDebugMode();
 
-	void Pause();
-
+	void EnableImGui(bool b);
 	void ToggleImGui();
+
+	void Pause();
 
 	void EnableVsync(bool b);
 
@@ -56,8 +51,8 @@ public:
 	void Run();
 	void Close();
 
-	virtual void OnEvent(Event& e) = 0;
-	virtual void OnUpdate() = 0;
+	virtual void OnEvent(const Event& e) = 0;
+	virtual void OnUpdate(float deltaTime) = 0;
 	virtual void OnRender() = 0;
 	virtual void OnRenderDebug() {}
 	virtual void OnImGui() {}

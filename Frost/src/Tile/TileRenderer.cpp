@@ -1,71 +1,76 @@
 #include "TileRenderer.h"
 
-TileRenderer::TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float size)
-	: m_texture(textureAtlas)
+#include "glm/gtc/matrix_transform.hpp"
+
+namespace tile
 {
-	std::vector<glm::vec2> translations;
-	std::vector<GLuint> frames;
-
-	for (auto& tile : tiles)
+	TileRenderer::TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture)
+		: m_texture(texture)
 	{
-		translations.push_back(tile.position);
-		frames.push_back(tile.id);
+		m_tileCount = map.GetTiles().size();
+
+		float vertices[] =
+		{
+			// positions	// texcoords
+			0.0f, 0.0f,		0.0f, 0.0f,
+			1.0f, 0.0f,		1.0f, 0.0f,
+			1.0f, 1.0f,		1.0f, 1.0f,
+			0.0f, 1.0f,		0.0f, 1.0f
+		};
+
+		m_shader = std::make_shared<ignis::Shader>("res/shaders/tile.vert", "res/shaders/tile.frag");
+		m_shader->Use();
+		m_shader->SetUniform1i("u_Texture", 0);
+		m_shader->SetUniform1i("u_Rows", (int)texture->GetRows());
+		m_shader->SetUniform1i("u_Columns", (int)texture->GetColumns());
+		m_shader->SetUniform1f("u_TileSize", map.GetTileSize());
+
+		m_vertexArray.AddArrayBuffer(std::make_shared<ignis::ArrayBuffer>(sizeof(vertices), vertices, GL_STATIC_DRAW),
+			{
+				{GL_FLOAT, 2},
+				{GL_FLOAT, 2}
+			});
+
+		// also set instance data
+		m_bufferOffsets = std::make_shared<ignis::ArrayBuffer>(sizeof(glm::vec2) * m_tileCount, nullptr, GL_DYNAMIC_DRAW);
+		m_bufferOffsets->VertexAttribPointer(2, 2, GL_FALSE, 2, 0);
+		m_bufferOffsets->VertexAttribDivisor(2, 1);
+		m_vertexArray.AddArrayBuffer(m_bufferOffsets);
+
+		m_bufferFrames = std::make_shared<ignis::ArrayBuffer>(sizeof(GLuint) * m_tileCount, nullptr, GL_DYNAMIC_DRAW);
+		m_bufferFrames->VertexAttribIPointer(3, 1, 1, 0);
+		m_bufferFrames->VertexAttribDivisor(3, 1);
+		m_vertexArray.AddArrayBuffer(m_bufferFrames);
+
+		// element buffer
+		m_vertexArray.LoadElementBuffer({ 0, 1, 2, 2, 3, 0 }, GL_STATIC_DRAW);
+
+		// fill the buffer
+		std::vector<glm::vec2> offsets;
+		std::vector<GLuint> frames;
+
+		for (auto& tile : map.GetTiles())
+		{
+			offsets.push_back(tile.Position);
+			frames.push_back(tile.ID);
+		}
+
+		m_bufferOffsets->BufferSubData(0, sizeof(glm::vec2) * m_tileCount, &offsets[0]);
+		m_bufferFrames->BufferSubData(0, sizeof(GLuint) * m_tileCount, &frames[0]);
 	}
 
-	m_instanceCount = tiles.size();
-
-	float fWidth = (textureAtlas->columns > 0) ? 1.0f / textureAtlas->columns : 1.0f;
-	float fHeight = (textureAtlas->rows > 0) ? 1.0f / textureAtlas->rows : 1.0f;
-
-	float vertices[] =
+	void TileRenderer::RenderMap(const glm::vec3& offset, const glm::mat4& viewProjection)
 	{
-		// positions	// texcoords
-		0.0f, 0.0f,		0.0f, 0.0f,
-		size, 0.0f,		fWidth, 0.0f,
-		size, size,		fWidth, fHeight,
-		0.0f, size,		0.0f, fHeight
-	};
+		glm::mat4 model = glm::translate(glm::mat4(1.0f), offset);
 
-	m_vao.Bind();
+		m_shader->Use();
 
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(vertices), vertices);
-	m_vao.SetVertexAttribPointer(0, 2, 4, 0);
-	m_vao.SetVertexAttribPointer(1, 2, 4, 2);
+		m_shader->SetUniformMat4("u_ViewProjection", viewProjection);
+		m_shader->SetUniformMat4("u_Model", model);
 
-	// also set instance data
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(glm::vec2) * translations.size(), &translations[0]);
-	m_vao.SetVertexAttribPointer(2, 2, 2, 0);
-	m_vao.SetVertexAttribDivisor(2, 1);
-	
-	m_vao.GenVertexBuffer();
-	m_vao.SetVertexBufferData(sizeof(GLuint) * frames.size(), &frames[0]);
-	m_vao.SetVertexAttribIPointer(3, 1, 1, 0);
-	m_vao.SetVertexAttribDivisor(3, 1);
+		m_vertexArray.Bind();
 
-	m_vao.UnbindVertexBuffer();
-}
-
-void TileRenderer::RenderMap(const glm::mat4& model, const glm::mat4& view, const glm::mat4& projection)
-{		
-	Shader* shader = ResourceManager::GetShader("instanced");
-
-	if (shader != nullptr)
-	{
-		shader->use();
-
-		shader->setUniform1i("uRows", m_texture->rows);
-		shader->setUniform1i("uColumns", m_texture->columns);
-		
-		shader->setUniformMat4("projection", projection);
-		shader->setUniformMat4("view", view);
-		shader->setUniformMat4("model", model);
+		m_texture->Bind();
+		glDrawElementsInstanced(GL_TRIANGLES, m_vertexArray.GetElementCount(), GL_UNSIGNED_INT, nullptr, static_cast<GLsizei>(m_tileCount));
 	}
-
-	m_vao.Bind();
-
-	Renderer::RenderTextureInstanced(m_texture, m_instanceCount);
-
-	m_vao.Unbind();
 }

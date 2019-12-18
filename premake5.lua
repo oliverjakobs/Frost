@@ -1,4 +1,5 @@
 workspace "Frost"
+	architecture "x64"
 	startproject "Frost"
 
 	configurations
@@ -14,7 +15,6 @@ group "Packages"
 include "Frost/packages/glfw"
 include "Frost/packages/glad"
 include "Frost/packages/imgui"
-include "Frost/packages/lua"
 
 group ""
 
@@ -36,12 +36,11 @@ project "Frost"
 		"%{prj.name}/config.json",
 		--Resources
 		"%{prj.name}/res/resources.json",
-		"%{prj.name}/res/shader/*.vert",
-		"%{prj.name}/res/shader/*.frag",
+		"%{prj.name}/res/shaders/**.vert",
+		"%{prj.name}/res/shaders/**.frag",
 		"%{prj.name}/res/images/**.png",
 		"%{prj.name}/res/maps/**.json",
-		"%{prj.name}/res/scripts/**.json",
-		"%{prj.name}/res/scripts/**.lua"
+		"%{prj.name}/res/scripts/**.json"
 	}
 
 	links
@@ -49,7 +48,6 @@ project "Frost"
 		"GLFW",
 		"Glad",
 		"ImGui",
-		"Lua",
 		"opengl32"
 	}
 
@@ -57,15 +55,9 @@ project "Frost"
 	{
 		"%{prj.name}/src",
 		"%{prj.name}/packages/glm",
-		"%{prj.name}/packages/stb",
 		"%{prj.name}/packages/imgui",
-		"%{prj.name}/packages/entt/single_include",
-		"%{prj.name}/packages/json/single_include",
-		"%{prj.name}/packages/spdlog/include",
 		"%{prj.name}/packages/glfw/include",
-		"%{prj.name}/packages/glad/include",
-		"%{prj.name}/packages/lua/src",
-		"%{prj.name}/packages/sol2/single/include"
+		"%{prj.name}/packages/glad/include"
 	}
 
 	filter "system:windows"

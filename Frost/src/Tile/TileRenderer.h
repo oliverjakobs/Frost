@@ -1,19 +1,28 @@
 #pragma once
 
-#include "Tile.h"
+#include "Tilemap.h"
+#include "Algorithm.h"
 
-#include "Graphics.h"
+#include "Ignis/Core/Buffer.h"
+#include "Ignis/Core/Shader.h"
+#include "Ignis/Core/Texture.h"
 
-class TileRenderer
+namespace tile
 {
-private:
-	VAO m_vao;
+	class TileRenderer
+	{
+	private:
+		ignis::VertexArray m_vertexArray;
+		std::shared_ptr<ignis::ArrayBuffer> m_bufferOffsets;
+		std::shared_ptr<ignis::ArrayBuffer> m_bufferFrames;
+		std::shared_ptr<ignis::Texture> m_texture;
 
-	uint m_instanceCount;
+		std::shared_ptr<ignis::Shader> m_shader;
 
-	TextureAtlas* m_texture;
-public:
-	TileRenderer(TextureAtlas* textureAtlas, const std::vector<Tile>& tiles, float tileSize);
+		size_t m_tileCount;
+	public:
+		TileRenderer(const TileMap& map, const std::shared_ptr<ignis::Texture>& texture);
 
-	void RenderMap(const glm::mat4& model, const glm::mat4& view, const glm::mat4& perspective);
-};
+		void RenderMap(const glm::vec3& offset, const glm::mat4& viewProjection);
+	};
+}

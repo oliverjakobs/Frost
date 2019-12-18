@@ -1,7 +1,7 @@
 {
   "shaders": {
-    "shader": { "vert": "res/shader/shader.vert", "frag": "res/shader/shader.frag" },
-		"instanced": { "vert": "res/shader/instanced.vert", "frag": "res/shader/instanced.frag" }
+    "shader": { "vert": "res/shaders/shader.vert", "frag": "res/shaders/shader.frag" },
+		"instanced": { "vert": "res/shaders/instanced.vert", "frag": "res/shaders/instanced.frag" }
   },
   "texture": {
 
