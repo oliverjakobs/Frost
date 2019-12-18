@@ -383,5 +383,6 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
+    <None Include="res\maps\map.json" />
   </ItemGroup>
 </Project>

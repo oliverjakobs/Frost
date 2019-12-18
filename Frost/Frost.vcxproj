@@ -189,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
+    <None Include="res\maps\map.json" />
     <None Include="res\maps\station.json" />
     <None Include="res\maps\station2.json" />
     <None Include="res\resources.json" />
