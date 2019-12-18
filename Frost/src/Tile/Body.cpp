@@ -14,8 +14,8 @@
 
 namespace tile
 {
-	Body::Body(World* world, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
-		: m_world(world), m_position(pos), m_halfDimension(halfDim), m_type(type)
+	Body::Body(float x, float y, float hWidth, float hHeight, BodyType type)
+		: m_world(nullptr), m_position(x, y), m_halfDimension(hWidth, hHeight), m_type(type)
 	{
 		m_velocity = glm::vec2();
 		m_sensorOffset = TILE_SENSOR_OFFSET;
@@ -30,6 +30,30 @@ namespace tile
 		m_gravityScale = 1.0f;
 
 		m_drop = false;
+
+		m_offsetHorizontal = glm::vec2();
+		m_offsetVertical = glm::vec2();
+	}
+
+	Body::Body(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
+		: m_world(nullptr), m_position(pos), m_halfDimension(halfDim), m_type(type)
+	{
+		m_velocity = glm::vec2();
+		m_sensorOffset = TILE_SENSOR_OFFSET;
+
+		m_collidesBottom = false;
+		m_collidesTop = false;
+		m_collidesLeft = false;
+		m_collidesRight = false;
+		m_onSlope = false;
+		m_slopeDetected = false;
+
+		m_gravityScale = 1.0f;
+
+		m_drop = false;
+
+		m_offsetHorizontal = glm::vec2();
+		m_offsetVertical = glm::vec2();
 	}
 
 	void Body::MoveX(float x)

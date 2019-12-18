@@ -20,7 +20,20 @@ Scene::~Scene()
 
 void Scene::AddEntity(std::shared_ptr<Entity> entity)
 {
+	auto phys = entity->GetComponent<PhysicsComponent>();
+
+	if (phys != nullptr)
+	{
+		m_world->AddBody(phys->GetBody());
+	}
+
 	m_entities.push_back(entity);
+}
+
+void Scene::AddEntity(std::shared_ptr<Entity> entity, const glm::vec2& position)
+{
+	entity->SetPosition(position);
+	AddEntity(entity);
 }
 
 void Scene::RemoveEntity(const std::string& name)

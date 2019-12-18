@@ -1,11 +1,11 @@
 #include "Entity.h"
 
-#include "Components/Component.h"
+#include "Components/PositionComponent.h"
 
 #include "Obelisk/Obelisk.h"
 
-Entity::Entity(const std::string& name, const glm::vec2& position)
-	: m_name(name), m_position(position), m_direction(Direction::RIGHT)
+Entity::Entity(const std::string& name)
+	: m_name(name), m_direction(Direction::RIGHT)
 {
 
 }
@@ -36,6 +36,32 @@ void Entity::OnRenderDebug()
 	{
 		c->OnRenderDebug();
 	}
+}
+
+void Entity::SetPosition(const glm::vec2& pos)
+{
+	auto comp = GetComponent<PositionComponent>();
+
+	if (comp == nullptr)
+	{
+		OBELISK_WARN("Setting position for an entity without position component");
+		return;
+	}
+
+	comp->SetPosition(pos);
+}
+
+glm::vec2 Entity::GetPosition() const
+{
+	auto comp = GetComponent<PositionComponent>();
+
+	if (comp == nullptr)
+	{
+		OBELISK_WARN("Getting position from an entity without position component");
+		return glm::vec2();
+	}
+
+	return comp->GetPosition();
 }
 
 std::string DirectionToString(Direction dir)

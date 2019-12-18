@@ -12,5 +12,4 @@ public:
 	PlayerComponent(Entity* entity, float ms, float jp);
 
 	void OnUpdate(Scene* scene, float deltaTime) override;
-	void OnRender(Scene* scene) override;
 };

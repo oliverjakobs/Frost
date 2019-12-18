@@ -64,7 +64,3 @@ void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 			tex->SetFrame(m_animations[m_currentAnimation].Frame);
 	}
 }
-
-void AnimationComponent::OnRender(Scene* scene)
-{
-}

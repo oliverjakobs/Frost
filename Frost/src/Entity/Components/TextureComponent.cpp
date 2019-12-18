@@ -5,6 +5,7 @@
 TextureComponent::TextureComponent(Entity* entity, std::shared_ptr<ignis::Texture> texture, float width, float height)
 	: Component(entity), m_texture(texture), m_frame(0), m_width(width), m_height(height), m_renderFlip(RenderFlip::NONE)
 {
+
 }
 
 void TextureComponent::SetFrame(size_t frame)
@@ -15,10 +16,6 @@ void TextureComponent::SetFrame(size_t frame)
 void TextureComponent::SetRenderFlip(RenderFlip flip)
 {
 	m_renderFlip = flip;
-}
-
-void TextureComponent::OnUpdate(Scene* scene, float deltaTime)
-{
 }
 
 void TextureComponent::OnRender(Scene* scene)

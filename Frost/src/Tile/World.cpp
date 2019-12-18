@@ -59,30 +59,19 @@ namespace tile
 	{
 	}
 
-	std::shared_ptr<Body> World::CreateBody(float x, float y, float hWidth, float hHeight, BodyType type)
+	void World::AddBody(std::shared_ptr<Body> body)
 	{
-		auto body = std::shared_ptr<Body>(new Body(this, glm::vec2(x, y), glm::vec2(hWidth, hHeight), type));
-
+		body->SetWorld(this);
 		m_bodies.push_back(body);
-
-		return body;
 	}
 
-	std::shared_ptr<Body> World::CreateBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type)
-	{
-		auto body = std::shared_ptr<Body>(new Body(this, pos, halfDim, type));
-
-		m_bodies.push_back(body);
-
-		return body;
-	}
-
-	void World::DestroyBody(std::shared_ptr<Body> body)
+	void World::RemoveBody(std::shared_ptr<Body> body)
 	{
 		auto it = std::find_if(m_bodies.begin(), m_bodies.end(), [&](auto& e) { return e == body; });
 
 		if (it != m_bodies.end())
 		{
+			(*it)->SetWorld(nullptr);
 			m_bodies.erase(it);
 		}
 	}

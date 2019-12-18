@@ -29,5 +29,4 @@ public:
 	std::string GetCurrent() const;
 
 	void OnUpdate(Scene* scene, float deltaTime) override;
-	void OnRender(Scene* scene) override;
 };

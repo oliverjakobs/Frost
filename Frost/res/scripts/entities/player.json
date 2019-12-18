@@ -1,18 +1,17 @@
 ﻿{
   "name": "player",
-  "position": [ 400.0, 200.0 ],
   "physics": {
     "body": {
-      "type": "BodyTypeDynamic",
+      "type": 1,
       "position": [ 400.0, 200.0 ],
       "halfDimension": [ 20.0, 30.0 ]
     },
-    "bodyPos": [ 0.0, 30.0 ]
+    "offset": [ 0.0, 30.0 ]
   },
   "texture": {
-    "resource": "player",
-    "width": 40.0,
-    "height": 60.0
+    "src": "res/textures/player.png",
+    "atlas": [ 4, 6 ],
+	"dimension": [ 40.0, 60.0 ]
   },
   "animation": {
     "idle": [ 0, 4, 0.2 ],

@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "json/EntityLoader.h"
+#include "json/TemplateLoader.h"
 
 using namespace ignis;
 using namespace tile;
@@ -25,6 +25,7 @@ public:
 		// ---------------| Config |------------------------------------------
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glEnable(GL_DEPTH_TEST);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
@@ -46,22 +47,17 @@ public:
 		{
 			int texture = rand() % 5 + 1;
 
-			auto tree = std::make_shared<Entity>("tree", glm::vec2(x, 192.0f));
+			auto tree = std::make_shared<Entity>("tree");
+			tree->AddComponent<PositionComponent>();
 			tree->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/tree_" + std::to_string(texture) + ".png"), 96.0f, 256.0f);
 
-			m_scene->AddEntity(tree);
+			m_scene->AddEntity(tree, glm::vec2(x, 192.0f));
 
 			x += rand() % 80 + 140;
 		}
 
 		// player
-		auto entity = EntityLoader::LoadTemplate("res/scripts/entities/player.json");
-
-		entity->AddComponent<PhysicsComponent>(m_scene->GetWorld()->CreateBody(400.0f, 200.0f, 20.0f, 30.0f, BodyType::BODY_DYNAMIC), glm::vec2(0.0f, 30.0f));
-		entity->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/player.png", 4, 6), 40.0f, 60.0f);
-		entity->AddComponent<PlayerComponent>(400.0f, 600.0f);
-
-		m_scene->AddEntity(entity);
+		m_scene->AddEntity(TemplateLoader::LoadEntity("res/scripts/entities/player.json"), glm::vec2(400.0f, 200.0f));
 	}
 
 	~Frost()
@@ -124,7 +120,14 @@ public:
 
 	void OnImGui() override
 	{
-
+		//ImGui::Begin("DEBUG");
+		//
+		//auto player = m_scene->GetEntity("player");
+		//
+		//auto position = player->GetPosition();
+		//ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+		//
+		//ImGui::End();
 	}
 }; 
 

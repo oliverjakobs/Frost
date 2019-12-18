@@ -21,10 +21,8 @@ namespace tile
 		World(const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
 		~World();
 
-		// only way to create bodies
-		std::shared_ptr<Body> CreateBody(float x, float y, float hWidth, float hHeight, BodyType type);
-		std::shared_ptr<Body> CreateBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
-		void DestroyBody(std::shared_ptr<Body> body);
+		void AddBody(std::shared_ptr<Body> body);
+		void RemoveBody(std::shared_ptr<Body> body);
 
 		void Tick(float deltaTime);
 		void Render(const glm::vec3& offset, const glm::mat4& viewProjection) const;

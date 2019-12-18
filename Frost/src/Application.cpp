@@ -271,7 +271,7 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate(m_timer.DeltaTime);
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		OnRender();
 

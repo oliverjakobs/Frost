@@ -35,9 +35,6 @@ namespace tile
 		World* m_world;
 		BodyType m_type;
 
-		// accessible through world
-		Body(World* world, const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
-
 		// move in x and y direction seperatly
 		void MoveX(float x);
 		void MoveY(float y);
@@ -57,6 +54,11 @@ namespace tile
 		Line GetSensorLeft(const glm::vec2& position, const glm::vec2& offset) const;
 		Line GetSensorRight(const glm::vec2& position, const glm::vec2& offset) const;
 	public:
+		Body(float x, float y, float hWidth, float hHeight, BodyType type);
+		Body(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
+
+		void SetWorld(World* world) { m_world = world; }
+
 		void Tick(float deltaTime);
 
 		void SetPosition(const glm::vec2& pos) { m_position = pos; }
@@ -89,7 +91,5 @@ namespace tile
 
 		const BodyType GetType() const { return m_type; }
 		World* GetWorld() const { return m_world; }
-
-		friend World;
 	};
 }

@@ -26,25 +26,24 @@ class Entity
 private:
 	std::string m_name;
 
-	glm::vec2 m_position;
-
 	Direction m_direction;
 
 	std::vector<std::unique_ptr<Component>> m_components;
 public:
-	Entity(const std::string& name, const glm::vec2& position);
+	Entity(const std::string& name);
 	~Entity();
 
 	void OnUpdate(Scene* scene, float deltaTime);
 	void OnRender(Scene* scene);
 	void OnRenderDebug();
 
-	void SetPosition(const glm::vec2& pos) { m_position = pos; }
+	void SetPosition(const glm::vec2& pos);
+	glm::vec2 GetPosition() const;
+
 	void SetDirection(Direction dir) { m_direction = dir; }
 
 	std::string GetName() const { return m_name; }
 
-	glm::vec2 GetPosition() const { return m_position; }
 	Direction GetDirection() const { return m_direction; }
 
 	template <class Type, class... Args>

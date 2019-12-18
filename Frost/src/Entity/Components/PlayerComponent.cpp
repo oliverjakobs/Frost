@@ -71,7 +71,3 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	// set view
 	scene->SetCameraPosition(glm::vec3(m_entity->GetPosition(), 0.0f));
 }
-
-void PlayerComponent::OnRender(Scene* scene)
-{
-}

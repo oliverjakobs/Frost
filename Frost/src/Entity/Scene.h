@@ -17,6 +17,7 @@ public:
 	~Scene();
 
 	void AddEntity(std::shared_ptr<Entity> entity);
+	void AddEntity(std::shared_ptr<Entity> entity, const glm::vec2& position);
 	void RemoveEntity(const std::string& name);
 	void Clear();
 

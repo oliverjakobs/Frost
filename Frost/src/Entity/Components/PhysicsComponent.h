@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Component.h"
+#include "PositionComponent.h"
 #include "Tile/World.h"
 
 using namespace tile;
 
-class PhysicsComponent : public Component
+class PhysicsComponent : public PositionComponent
 {
 private:
 	std::shared_ptr<Body> m_body;
@@ -15,8 +15,8 @@ public:
 	PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos);
 	virtual ~PhysicsComponent();
 
-	std::shared_ptr<Body> GetBody() const;
+	void SetPosition(const glm::vec2& position) override;
+	glm::vec2 GetPosition() const override;
 
-	void OnUpdate(Scene* scene, float deltaTime) override;
-	void OnRender(Scene* scene) override;
+	std::shared_ptr<Body> GetBody() const;
 };
