@@ -143,7 +143,7 @@
 #define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
 
-#include "Types.h"
+#include <glm/glm.hpp>
 
 class Input
 {

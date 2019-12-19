@@ -10,21 +10,16 @@ namespace ignis
 	class Font
 	{
 	private:
-		struct FontData
-		{
-			int FirstChar;
-			size_t NumChars;
+		int m_firstChar;
+		size_t m_numChars;
 
-			int BitmapWidth;
-			int BitmapHeight;
+		int m_bitmapWidth;
+		int m_bitmapHeight;
 
-			stbtt_bakedchar* CharData;
-		} m_fontData;
+		stbtt_bakedchar* m_charData;
 		
 		std::unique_ptr<Texture> m_texture;
 
-		// buffer
-		VertexArray m_vertexArray;
 	public:
 		Font(const std::string& path, float size);
 		~Font();
@@ -32,6 +27,6 @@ namespace ignis
 		void Bind();
 		void Unbind();
 
-		bool LoadCharQuad(char c, float* x, float* y);
+		std::vector<float> LoadCharQuad(char c, float* x, float* y);
 	};
 }

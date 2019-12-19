@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>packages\json\single_include;src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>packages\json\single_include;src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;packages\lua\src;packages\sol2\single\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;packages\glad\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -91,32 +91,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Entity\Components.h" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
     <ClInclude Include="src\Entity\Components\Component.h" />
-    <ClInclude Include="src\Entity\Components\ImageComponent.h" />
     <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
-    <ClInclude Include="src\Entity\Components\ScriptComponent.h" />
+    <ClInclude Include="src\Entity\Components\PlayerComponent.h" />
+    <ClInclude Include="src\Entity\Components\PositionComponent.h" />
+    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
     <ClInclude Include="src\Entity\Entity.h" />
-    <ClInclude Include="src\Entity\EntityMananger.h" />
+    <ClInclude Include="src\Entity\Scene.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\MouseEvent.h" />
     <ClInclude Include="src\Event\WindowEvent.h" />
-    <ClInclude Include="src\File\FileReader.h" />
-    <ClInclude Include="src\Graphics.h" />
-    <ClInclude Include="src\Graphics\Image.h" />
-    <ClInclude Include="src\Graphics\Primitives.h" />
-    <ClInclude Include="src\Graphics\Renderer.h" />
-    <ClInclude Include="src\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h" />
-    <ClInclude Include="src\Ignis\Advanced\TextureAtlas.h" />
     <ClInclude Include="src\Ignis\Camera\Camera.h" />
-    <ClInclude Include="src\Ignis\Camera\FpsCamera.h" />
     <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h" />
     <ClInclude Include="src\Ignis\Core\Api.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
@@ -132,16 +124,16 @@
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
     <ClInclude Include="src\Ignis\Packages\tiny_obj_loader.h" />
     <ClInclude Include="src\Ignis\Renderer\FontRenderer.h" />
+    <ClInclude Include="src\Ignis\Renderer\Primitives.h" />
     <ClInclude Include="src\Ignis\Renderer\RenderState.h" />
     <ClInclude Include="src\Ignis\Renderer\Renderer2D.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h" />
     <ClInclude Include="src\Input\Input.h" />
-    <ClInclude Include="src\Maths\Geometry.h" />
-    <ClInclude Include="src\Maths\Maths.h" />
-    <ClInclude Include="src\Maths\RayCast.h" />
-    <ClInclude Include="src\Maths\Visibility.h" />
+    <ClInclude Include="src\json\TemplateLoader.h" />
+    <ClInclude Include="src\json\json.h" />
+    <ClInclude Include="src\json\json.hpp" />
     <ClInclude Include="src\Obelisk\Average.h" />
     <ClInclude Include="src\Obelisk\Debugger.h" />
     <ClInclude Include="src\Obelisk\FileUtility.h" />
@@ -152,94 +144,61 @@
     <ClInclude Include="src\Obelisk\Range.h" />
     <ClInclude Include="src\Obelisk\Singelton.h" />
     <ClInclude Include="src\Obelisk\Timer.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
-    <ClInclude Include="src\Scene\SceneManager.h" />
-    <ClInclude Include="src\Script\JSONParser.h" />
-    <ClInclude Include="src\Script\Lua\LuaBinding.h" />
-    <ClInclude Include="src\Script\Lua\LuaEntity.h" />
-    <ClInclude Include="src\Script\Lua\LuaScene.h" />
-    <ClInclude Include="src\String\StringHash.h" />
-    <ClInclude Include="src\String\StringUtils.h" />
+    <ClInclude Include="src\Tile\Algorithm.h" />
     <ClInclude Include="src\Tile\Body.h" />
     <ClInclude Include="src\Tile\Tile.h" />
-    <ClInclude Include="src\Tile\TileConfig.h" />
     <ClInclude Include="src\Tile\TileRenderer.h" />
     <ClInclude Include="src\Tile\Tilemap.h" />
-    <ClInclude Include="src\Types.h" />
-    <ClInclude Include="src\Utility\Average.h" />
-    <ClInclude Include="src\Utility\Enum.h" />
-    <ClInclude Include="src\Utility\Flags.h" />
-    <ClInclude Include="src\Utility\Utils.h" />
-    <ClInclude Include="src\View\View.h" />
+    <ClInclude Include="src\Tile\World.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\ImageComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\ScriptComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PositionComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Entity\EntityMananger.cpp" />
-    <ClCompile Include="src\Graphics\Image.cpp" />
-    <ClCompile Include="src\Graphics\Primitives.cpp" />
-    <ClCompile Include="src\Graphics\Renderer.cpp" />
-    <ClCompile Include="src\Graphics\ResourceManager.cpp" />
+    <ClCompile Include="src\Entity\Scene.cpp" />
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp" />
-    <ClCompile Include="src\Ignis\Advanced\TextureAtlas.cpp" />
-    <ClCompile Include="src\Ignis\Camera\FpsCamera.cpp" />
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Core\Api.cpp" />
-    <ClCompile Include="src\Ignis\Core\Buffer.cpp">
-      <ObjectFileName>$(IntDir)\Buffer1.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Shader.cpp">
-      <ObjectFileName>$(IntDir)\Shader1.obj</ObjectFileName>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Texture.cpp">
-      <ObjectFileName>$(IntDir)\Texture1.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
+    <ClCompile Include="src\Ignis\Core\Shader.cpp" />
+    <ClCompile Include="src\Ignis\Core\Texture.cpp" />
     <ClCompile Include="src\Ignis\Font.cpp" />
-    <ClCompile Include="src\Ignis\Framebuffer.cpp">
-      <ObjectFileName>$(IntDir)\Framebuffer1.obj</ObjectFileName>
-    </ClCompile>
+    <ClCompile Include="src\Ignis\Framebuffer.cpp" />
     <ClCompile Include="src\Ignis\Ignis.cpp" />
     <ClCompile Include="src\Ignis\Model\Material.cpp" />
     <ClCompile Include="src\Ignis\Model\Mesh.cpp" />
     <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp" />
+    <ClCompile Include="src\Ignis\Renderer\Primitives.cpp" />
     <ClCompile Include="src\Ignis\Renderer\RenderState.cpp" />
     <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
-    <ClCompile Include="src\Scene\Scene.cpp" />
-    <ClCompile Include="src\Scene\SceneManager.cpp" />
-    <ClCompile Include="src\Script\JSONParser.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaBinding.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaEntity.cpp" />
-    <ClCompile Include="src\Script\Lua\LuaScene.cpp" />
+    <ClCompile Include="src\json\TemplateLoader.cpp" />
+    <ClCompile Include="src\Tile\Algorithm.cpp" />
     <ClCompile Include="src\Tile\Body.cpp" />
-    <ClCompile Include="src\Tile\Tile.cpp" />
     <ClCompile Include="src\Tile\TileRenderer.cpp" />
     <ClCompile Include="src\Tile\Tilemap.cpp" />
-    <ClCompile Include="src\View\View.cpp" />
+    <ClCompile Include="src\Tile\World.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\maps\station.json" />
-    <None Include="res\maps\station2.json" />
-    <None Include="res\resources.json" />
-    <None Include="res\scripts\player.lua" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\images\blocky_font.png" />
-    <Image Include="res\images\box.png" />
-    <Image Include="res\images\door.png" />
-    <Image Include="res\images\num_font.png" />
-    <Image Include="res\images\player.png" />
-    <Image Include="res\images\tiles.png" />
+    <None Include="res\maps\map.json" />
+    <None Include="res\templates\entities\player.json" />
+    <None Include="res\shaders\font.frag" />
+    <None Include="res\shaders\font.vert" />
+    <None Include="res\shaders\lines.frag" />
+    <None Include="res\shaders\lines.vert" />
+    <None Include="res\shaders\renderer2D.frag" />
+    <None Include="res\shaders\renderer2D.vert" />
+    <None Include="res\shaders\tile.frag" />
+    <None Include="res\shaders\tile.vert" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">
@@ -250,9 +209,6 @@
     </ProjectReference>
     <ProjectReference Include="packages\imgui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-    <ProjectReference Include="packages\lua\Lua.vcxproj">
-      <Project>{A705880B-130F-887C-9C8A-9E7C0893937C}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

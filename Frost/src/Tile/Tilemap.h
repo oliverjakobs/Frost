@@ -1,71 +1,39 @@
 #pragma once
 
-#include "Body.h"
+#include "Tile.h"
 
-#include "TileRenderer.h"
-
-class TileMap
+namespace tile
 {
-private:
-	unique_ptr<TileRenderer> m_renderer;
+	class TileMap
+	{
+	private:
+		// map settings
+		int m_width;
+		int m_height;
 
-	// map settings
-	int m_width;
-	int m_height;
+		float m_tileSize;
 
-	float m_tileSize;
+		std::vector<Tile> m_tiles;
 
-	glm::vec2 m_gravity;
+	public:
+		TileMap(const std::vector<TileID>& tiles, int width, int height, float tileSize, const TypeMap& typeMap);
+		~TileMap();
 
-	std::vector<Tile> m_tiles;
+		const int GetWidth() const { return m_width; }
+		const int GetHeight() const { return m_height; }
+		const glm::vec2 GetDimension() const { return glm::vec2(m_width, m_height); }
 
-	std::vector<unique_ptr<Body>> m_bodies;
+		const float GetTileSize() const { return m_tileSize; }
 
-public:
-	TileMap(const std::string& map, const glm::vec2& gravity = glm::vec2(0.0f, -980));
-	~TileMap();
+		std::vector<Tile> GetTiles() const { return m_tiles; }
 
-	// only way to create bodies
-	Body* CreateBody(float x, float y, float hWidth, float hHeight, BodyType type);
-	Body* CreateBody(const glm::vec2& pos, const glm::vec2& halfDim, BodyType type);
-	void DestroyBody(Body* body);
+		// get tile index
+		size_t GetIndex(const glm::vec2& pos) const;
 
-	// loop functions
-	void OnRender() const;
-	void OnRenderDebug() const;
-
-	int GetWidth() const;
-	int GetHeight() const;
-	float GetTileSize() const;
-	glm::vec2 GetDimension() const;
-	Rect GetConstraint() const;
-
-	unsigned int GetIndexF(float x, float y) const;
-	unsigned int GetIndexF(const glm::vec2& pos) const;
-	unsigned int GetIndex(unsigned int x, unsigned int y) const;
-	unsigned int GetIndex(const glm::ivec2& pos) const;
-
-	Tile* at(unsigned int index);
-	const Tile* at(unsigned int index) const;
-	Tile* operator[](unsigned int index);
-	const Tile* operator[](unsigned int index) const;
-
-	// calculate map coords from world coords
-	glm::ivec2 GetTilePos(float x, float y) const;
-	glm::ivec2 GetTilePos(const glm::vec2& pos) const;
-
-	// get all tiles in an area (in world coords)
-	std::vector<const Tile*> GetAdjacentTiles(float x, float y, float w, float h);
-	std::vector<const Tile*> GetAdjacentTiles(const glm::vec2& pos, const glm::vec2& size);
-	
-	glm::vec2 GetGravity() const;
-
-	std::vector<Tile> GetTiles() const;
-	std::vector<Line> ToEdges() const;
-
-	// get bodies
-	std::vector<std::unique_ptr<Body>> const& GetBodies() const;
-	std::vector<Body*> GetBodiesT(BodyType type) const;
-
-	std::vector<Body*> GetOtherBodies(Body* body) const;
-};
+		// access chunk from an index
+		Tile& at(size_t index) { return m_tiles.at(index); }
+		const Tile& at(size_t index) const { return m_tiles.at(index); }
+		Tile& operator[](size_t index) { return m_tiles[index]; }
+		const Tile& operator[](size_t index) const { return m_tiles[index]; }
+	};
+}

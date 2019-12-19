@@ -1,30 +1,27 @@
 #include "PhysicsComponent.h"
 
-PhysicsComponent::PhysicsComponent(Body* body, const glm::vec2& bodyPos) 
-	: m_body(body), m_bodyPos(bodyPos) 
+PhysicsComponent::PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos)
+	: PositionComponent(entity, glm::vec2()), m_body(body), m_bodyPos(bodyPos)
 {
-
 }
 
-Body* PhysicsComponent::GetBody() const
+PhysicsComponent::~PhysicsComponent()
+{
+	if (m_body->GetWorld() != nullptr)
+		m_body->GetWorld()->RemoveBody(m_body);
+}
+
+void PhysicsComponent::SetPosition(const glm::vec2& position)
+{
+	m_body->SetPosition(position + m_bodyPos);
+}
+
+glm::vec2 PhysicsComponent::GetPosition() const
+{
+	return m_body->GetPosition() - m_bodyPos;
+}
+
+std::shared_ptr<Body> PhysicsComponent::GetBody() const
 {
 	return m_body;
-}
-
-void PhysicsComponent::OnUpdate(float deltaTime)
-{
-	m_body->SetPosition(m_entity->GetPosition() + m_bodyPos);
-
-	m_body->Update(deltaTime);
-
-	m_entity->SetPosition(m_body->GetPosition() - m_bodyPos);
-}
-
-void PhysicsComponent::OnRender()
-{
-}
-
-void PhysicsComponent::OnRenderDebug()
-{
-	m_body->Render();
 }

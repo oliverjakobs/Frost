@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utility/Utils.h"
+#include "Obelisk/Obelisk.h"
 #include "Obelisk/Singelton.h"
 
 #include "Event/ApplicationEvent.h"

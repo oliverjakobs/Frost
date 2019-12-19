@@ -4,22 +4,27 @@
 
 namespace ignis
 {
-	OrthographicCamera::OrthographicCamera(float left, float right, float bottom, float top)
-		: m_rotation(0.0f)
+	OrthographicCamera::OrthographicCamera()
 	{
-		SetProjection(left, right, bottom, top);
 	}
 
-	void OrthographicCamera::SetProjection(float left, float right, float bottom, float top)
+	OrthographicCamera::OrthographicCamera(const glm::vec3& center, const glm::vec2& size)
+		: Camera(center, size)
 	{
-		m_projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
-		m_viewProjection = m_projection * m_view;
+		SetProjection(size);
+	}
+
+	void OrthographicCamera::SetProjection(const glm::vec2& size)
+	{
+		m_projection = glm::ortho(-size.x / 2.0f, size.x / 2.0f, -size.y / 2.0f, size.y / 2.0f, -1.0f, 1.0f);
+
+		UpdateView();
 	}
 
 	void OrthographicCamera::UpdateView()
 	{
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_position);
-		transform = glm::rotate(transform, glm::radians(m_rotation), glm::vec3(0, 0, 1));
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, m_position);
 
 		m_view = glm::inverse(transform);
 		m_viewProjection = m_projection * m_view;

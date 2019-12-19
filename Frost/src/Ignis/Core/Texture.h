@@ -28,6 +28,9 @@ namespace ignis
 		int m_width;
 		int m_height;
 
+		GLuint m_rows;
+		GLuint m_columns;
+
 		GLuint m_activeSlot;
 
 		TextureConfig m_config;
@@ -35,7 +38,7 @@ namespace ignis
 	public:
 		Texture(int width, int height, TextureConfig config = DEFAULT_CONFIG);
 		Texture(int width, int height, void* pixels, TextureConfig config = DEFAULT_CONFIG);
-		Texture(const std::string& path, bool flipOnLoad = true, TextureConfig config = DEFAULT_CONFIG);
+		Texture(const std::string& path, GLuint rows = 1, GLuint columns = 1, bool flipOnLoad = true, TextureConfig config = DEFAULT_CONFIG);
 		~Texture();
 
 		void Bind(GLuint slot = 0);
@@ -45,6 +48,9 @@ namespace ignis
 
 		const int GetWidth() const { return m_width; }
 		const int GetHeight() const { return m_height; }
+
+		const GLuint GetRows() const { return m_rows; }
+		const GLuint GetColumns() const { return m_columns; }
 	};
 
 	GLuint CreateTexture2D(int width, int height, void* pixels, TextureConfig config);

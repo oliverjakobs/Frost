@@ -1,34 +1,80 @@
 #include "Application.h"
 
+#include "Tile/World.h"
+
+#include "Entity/Scene.h"
+
+#include <string>
+
+#include "json/TemplateLoader.h"
+
+using namespace ignis;
+using namespace tile;
+
 class Frost : public Application
 {
 private:
+	std::shared_ptr<OrthographicCamera> m_camera;
+	std::shared_ptr<Scene> m_scene;
 
+	Font font = Font("res/fonts/OpenSans.ttf", 32.0f);
 public:
-	Frost() : Application("config.json")
+	Frost() 
+		: Application("Frost", 1024, 800)
 	{
 		// ---------------| Config |------------------------------------------
-		Renderer::EnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		Renderer::SetClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		//glEnable(GL_DEPTH_TEST);
+		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
+		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
+		Primitives2D::Init(std::make_shared<Shader>("res/shaders/lines.vert", "res/shaders/lines.frag"));
 
 		EnableDebugMode(true);
 		EnableImGui(true);
 		EnableVsync(false);
 
-		// ---------------| Scenes |------------------------------------------
-		m_sceneManager.RegisterScene("station", "res/scenes/station.json");
-		m_sceneManager.RegisterScene("station2", "res/scenes/station2.json");
+		m_camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
+		m_scene = std::make_shared<Scene>(m_camera);
 
-		m_sceneManager.ChangeScene("station");
+		// trees
+		srand((unsigned int)time(nullptr));
+
+		float x = 20.0f;
+		while (x < m_scene->GetWidth())
+		{
+			int texture = rand() % 5 + 1;
+
+			auto tree = std::make_shared<Entity>("tree");
+			tree->AddComponent<PositionComponent>();
+			tree->AddComponent<TextureComponent>(std::make_shared<Texture>(obelisk::format("res/textures/tree_%d.png", texture)), 96.0f, 256.0f);
+
+			m_scene->AddEntity(tree, glm::vec2(x, 192.0f));
+
+			x += rand() % 80 + 140;
+		}
+
+		// player
+		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(400.0f, 200.0f));
 	}
 
 	~Frost()
 	{
-
+		Renderer2D::Destroy();
+		FontRenderer::Destroy();
+		Primitives2D::Destroy();
 	}
 	
-	void OnEvent(Event& e) override
+	void OnEvent(const Event& e) override
 	{
+		if (e.GetType() == EventType::WindowResize)
+		{
+			WindowResizeEvent& resize = (WindowResizeEvent&)e;
+			m_camera->SetProjection(glm::vec2((float)resize.GetWidth(), (float)resize.GetHeight()));
+		}
+
 		if (e.GetType() == EventType::KeyPressed)
 		{
 			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
@@ -47,11 +93,8 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
-			case KEY_1:
-				EventHandler::Throw<ChangeSceneEvent>("station");
-				break;
-			case KEY_2:
-				EventHandler::Throw<ChangeSceneEvent>("station2");
+			case KEY_DELETE:
+				m_scene->RemoveEntity("tree");
 				break;
 			}
 		}
@@ -59,52 +102,32 @@ public:
 
 	void OnUpdate(float deltaTime) override
 	{
-		m_sceneManager.OnUpdate(deltaTime);
+		m_scene->OnUpdate(deltaTime);
 	}
 
 	void OnRender() override
 	{
-		m_sceneManager.OnRender();
-
-		// FPS
-		ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
-		ImGui::Begin("FPS", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoScrollbar);
-		ImGui::Text("Fps: %d", m_timer.FPS);
-		ImGui::End();
+		m_scene->OnRender();
 	}
 
 	void OnRenderDebug() override
 	{
-		m_sceneManager.OnRenderDebug();
+		m_scene->OnRenderDebug();
+
+		// debug info
+		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
 	}
 
 	void OnImGui() override
 	{
-		m_sceneManager.OnImGui();
-
-		//Application
-		ImGui::Begin("Application");
-
-		ImGui::Text("Window size: %d, %d", GetWidth(), GetHeight());
-
-		ImGui::Separator();
-
-		ImGui::Text("View:");
-		ImGui::Text("Position: %4.2f, %4.2f", View::GetX(), View::GetY());
-		ImGui::Text("Dimension: %4.2f, %4.2f", View::GetWidth(), View::GetHeight());
-
-		ImGui::End();
-
-		//Entity
-		ImGui::Begin("Player");
-
-		Entity* entity = m_sceneManager.GetScene()->GetEntity("player");
-		auto animation = entity->GetComponent<AnimationComponent>();
-
-		ImGui::Text("Position: %4.2f, %4.2f", entity->GetPosition().x, entity->GetPosition().y);
-		ImGui::Text("Direction: %s", Direction::ToString(entity->GetDirection()).c_str());
-		ImGui::Text("Current Animation: %s", animation->GetCurrent().c_str());
-
+		ImGui::Begin("DEBUG");
+		
+		auto player = m_scene->GetEntity("player");
+		
+		auto position = player->GetPosition();
+		ImGui::Text("Name: %s", player->GetName().c_str());
+		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+		
 		ImGui::End();
 	}
 }; 

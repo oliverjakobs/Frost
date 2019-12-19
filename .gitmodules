@@ -7,9 +7,3 @@
 [submodule "Frost/packages/glfw"]
 	path = Frost/packages/glfw
 	url = https://github.com/oliverjakobs/glfw
-[submodule "Frost/packages/json"]
-	path = Frost/packages/json
-	url = https://github.com/nlohmann/json
-[submodule "Frost/packages/sol2"]
-	path = Frost/packages/sol2
-	url = https://github.com/ThePhD/sol2

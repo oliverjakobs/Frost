@@ -6,19 +6,19 @@
 namespace ignis
 {
 	Texture::Texture(int width, int height, TextureConfig config)
-		: m_width(width), m_height(height), m_activeSlot(0), m_config(config)
+		: m_width(width), m_height(height), m_rows(1), m_columns(1), m_activeSlot(0), m_config(config)
 	{
 		m_name = CreateTexture2D(width, height, nullptr, config);
 	}
 
 	Texture::Texture(int width, int height, void* pixels, TextureConfig config)
-		: m_width(width), m_height(height), m_activeSlot(0), m_config(config)
+		: m_width(width), m_height(height), m_rows(1), m_columns(1), m_activeSlot(0), m_config(config)
 	{
 		m_name = CreateTexture2D(width, height, pixels, config);
 	}
 
-	Texture::Texture(const std::string& path, bool flipOnLoad, TextureConfig config)
-		: m_width(0), m_height(0), m_activeSlot(0), m_config(config)
+	Texture::Texture(const std::string& path, GLuint rows, GLuint columns, bool flipOnLoad, TextureConfig config)
+		: m_width(0), m_height(0), m_rows(rows), m_columns(columns), m_activeSlot(0), m_config(config)
 	{
 		stbi_set_flip_vertically_on_load(flipOnLoad);
 

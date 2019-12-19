@@ -11,8 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Frost\packages\glad
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Frost\packages\imgui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "Frost\packages\lua\Lua.vcxproj", "{A705880B-130F-887C-9C8A-9E7C0893937C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -35,10 +33,6 @@ Global
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Debug|x64.Build.0 = Debug|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.ActiveCfg = Release|x64
 		{C0FF640D-2C14-8DBE-F595-301E616989EF}.Release|x64.Build.0 = Release|x64
-		{A705880B-130F-887C-9C8A-9E7C0893937C}.Debug|x64.ActiveCfg = Debug|x64
-		{A705880B-130F-887C-9C8A-9E7C0893937C}.Debug|x64.Build.0 = Debug|x64
-		{A705880B-130F-887C-9C8A-9E7C0893937C}.Release|x64.ActiveCfg = Release|x64
-		{A705880B-130F-887C-9C8A-9E7C0893937C}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +41,5 @@ Global
 		{154B857C-0182-860D-AA6E-6C109684020F} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
 		{BDD6857C-A90D-870D-52FA-6C103E10030F} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
 		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
-		{A705880B-130F-887C-9C8A-9E7C0893937C} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
 	EndGlobalSection
 EndGlobal

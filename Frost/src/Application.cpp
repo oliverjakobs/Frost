@@ -2,8 +2,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Script/JSONParser.h"
-
 bool Application::OnWindowClose(WindowCloseEvent& e)
 {
 	Close();
@@ -18,7 +16,7 @@ void Application::EventCallback(Event& e)
 		OnWindowClose((WindowCloseEvent&)e);
 		break;
 	case EventType::ChangeScene:
-		m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
+		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
 		break;
 	default:
 		OnEvent(e);
@@ -98,8 +96,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		game->m_width = width;
 		game->m_height = height;
 
-		View::SetScreen((float)width, (float)height);
-		glViewport(0, 0, width, height);
+		ignis::ignisViewport(0, 0, width, height);
 
 		EventHandler::Throw<WindowResizeEvent>(width, height);
 	});
@@ -169,9 +166,6 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	OBELISK_INFO("[OpenGL] Renderer: %s", glGetString(GL_RENDERER));
 	OBELISK_INFO("[OpenGL] GLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	View::SetScreen((float)m_width, (float)m_height);
-	View::Set(0.0f, 0.0f, (float)m_width, (float)m_height);
-
 	// initialize imgui
 	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
 	ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
@@ -179,51 +173,9 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	return true;
 }
 
-Application::Application(const std::string& config)
-{
-	OBELISK_ASSERT(!config.empty(), "Path is emtpy");
-
-	json root = jsonParseFile(config);
-
-	// ---------------| window |------------------------------------------
-	std::string title;
-
-	int width;
-	int height;
-
-	int glMajor = 4;
-	int glMinor = 0;
-	
-	if (root.find("window") != root.end())
-	{
-		json window = root.at("window");
-
-		title = jsonToString(window, "title");
-		width = jsonToInt(window, "width");
-		height = jsonToInt(window, "height");
-	}
-
-	// ---------------| gl version |--------------------------------------
-	if (root.find("opengl") != root.end())
-	{
-		json opengl = root.at("opengl");
-
-		glMajor = jsonToInt(opengl, "major");
-		glMinor = jsonToInt(opengl, "minor");
-	}
-
-	m_running = LoadApplication(title, width, height, glMajor, glMinor);
-
-	// ---------------| load resources |----------------------------------
-	std::string resources = jsonToString(root, "resources");
-
-	if (!resources.empty())
-		ResourceManager::Load(resources);
-}
-
 Application::Application(const std::string& title, int width, int height)
 {
-	m_running = LoadApplication(title, width, height, 4, 4);
+	m_running = LoadApplication(title, width, height, 4, 5);
 }
 
 Application::~Application()
@@ -277,9 +229,7 @@ void Application::Run()
 		if (!m_paused)
 			OnUpdate(m_timer.DeltaTime);
 
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		ImGuiRenderer::Begin();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		OnRender();
 
@@ -287,10 +237,11 @@ void Application::Run()
 			OnRenderDebug();
 
 		if (m_showImGui)
+		{
+			ImGuiRenderer::Begin();
 			OnImGui();
-
-		Primitives::Flush(View::GetMat());
-		ImGuiRenderer::End();
+			ImGuiRenderer::End();
+		}
 
 		glfwPollEvents();
 		EventHandler::Poll();

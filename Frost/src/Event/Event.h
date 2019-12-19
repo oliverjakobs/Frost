@@ -3,8 +3,6 @@
 #include <string>
 #include <sstream>
 
-#include "Utility/Utils.h"
-
 enum class EventType
 {
 	None = 0,

@@ -2,15 +2,12 @@
 
 #include "Input/Input.h"
 
-#include "Maths/Maths.h"
-
 #include "ImGuiBinding/ImGuiRenderer.h"
 
-#include "Obelisk/Obelisk.h"
 #include "Ignis/Ignis.h"
+#include "Obelisk/Obelisk.h"
 
 #include "Event/EventHandler.h"
-#include "Scene/SceneManager.h"
 
 class Application
 {
@@ -35,10 +32,7 @@ protected:
 	int m_height;
 
 	obelisk::Timer m_timer;
-
-	SceneManager m_sceneManager;
 public:
-	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
@@ -56,7 +50,7 @@ public:
 	void Run();
 	void Close();
 
-	virtual void OnEvent(Event& e) = 0;
+	virtual void OnEvent(const Event& e) = 0;
 	virtual void OnUpdate(float deltaTime) = 0;
 	virtual void OnRender() = 0;
 	virtual void OnRenderDebug() {}
