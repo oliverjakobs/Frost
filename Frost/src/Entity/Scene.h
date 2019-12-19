@@ -6,7 +6,6 @@
 class Scene
 {
 private:
-	std::unique_ptr<World> m_world;
 	std::shared_ptr<ignis::Camera> m_camera;
 
 	std::vector<std::shared_ptr<Entity>> m_entities;
@@ -31,9 +30,8 @@ public:
 	std::shared_ptr<Entity> GetEntity(const std::string& name) const;
 	std::vector<std::shared_ptr<Entity>> GetEntities() const { return m_entities; };
 
-	World* GetWorld() const { return m_world.get(); }
 	ignis::Camera* GetCamera() const { return m_camera.get(); }
 
-	const float GetWidth() const { return m_world->GetWidth(); }
-	const float GetHeight() const { return m_world->GetHeight(); }
+	const float GetWidth() const { return 0.0f; }
+	const float GetHeight() const { return 0.0f; }
 };

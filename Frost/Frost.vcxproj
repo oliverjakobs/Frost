@@ -144,12 +144,8 @@
     <ClInclude Include="src\Obelisk\Range.h" />
     <ClInclude Include="src\Obelisk\Singelton.h" />
     <ClInclude Include="src\Obelisk\Timer.h" />
-    <ClInclude Include="src\Tile\Algorithm.h" />
-    <ClInclude Include="src\Tile\Body.h" />
-    <ClInclude Include="src\Tile\Tile.h" />
-    <ClInclude Include="src\Tile\TileRenderer.h" />
-    <ClInclude Include="src\Tile\Tilemap.h" />
-    <ClInclude Include="src\Tile\World.h" />
+    <ClInclude Include="src\Physics\Body.h" />
+    <ClInclude Include="src\Physics\Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -180,11 +176,8 @@
     <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\json\TemplateLoader.cpp" />
-    <ClCompile Include="src\Tile\Algorithm.cpp" />
-    <ClCompile Include="src\Tile\Body.cpp" />
-    <ClCompile Include="src\Tile\TileRenderer.cpp" />
-    <ClCompile Include="src\Tile\Tilemap.cpp" />
-    <ClCompile Include="src\Tile\World.cpp" />
+    <ClCompile Include="src\Physics\Body.cpp" />
+    <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
