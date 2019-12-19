@@ -7,7 +7,7 @@ using namespace ignis;
 
 Scene::Scene(std::shared_ptr<Camera> camera)
 {
-	m_world = std::make_unique<World>("");
+	m_world = std::make_unique<World>("res/maps/map.json");
 	m_camera = camera;
 
 	m_smoothMovement = 0.5f;

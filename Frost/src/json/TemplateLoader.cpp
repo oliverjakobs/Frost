@@ -10,15 +10,13 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 {
 	std::string json = obelisk::ReadFile(path);
 
-	char str[32];
-	json_string(json.data(), "{'name'", str, 32, NULL);
+	json_element_t element;
+	json_read(json.data(), "{'name'", &element);
 
-	std::string name = str;
+	std::string name((char*)element.value, element.bytelen);
 	if (name.empty()) return nullptr;
 
 	auto entity = std::make_shared<Entity>(name);
-
-	json_element_t element;
 
 	json_read(json.data(), "{'physics'", &element);
 	if (element.error == JSON_OK)

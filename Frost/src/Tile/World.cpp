@@ -1,10 +1,22 @@
 #include "World.h"
 
+#include "json/json.h"
+#include "Obelisk/Debugger.h"
+#include "Obelisk/FileUtility.h"
+
 namespace tile
 {
 	World::World(const std::string& map, const glm::vec2& gravity)
 		: m_gravity(gravity), m_simTime(0.0f)
 	{
+		std::string json = obelisk::ReadFile(map);
+
+		if (json.empty())
+		{
+			OBELISK_ERROR("Failed to load map (%s)", map.c_str());
+			return;
+		}
+
 		// need to be loaded from file
 		std::vector<TileID> tileIDs =
 		{
@@ -43,16 +55,17 @@ namespace tile
 			{ 4, TileType::TILE_PLATFORM }
 		};
 
-		int mapWidth = 64;
-		int mapHeight = 25;
-		float tileSize = 32.0f;
+		int mapW = json_int(json.data(), "{'dimension'[0", NULL);
+		int mapH = json_int(json.data(), "{'dimension'[1", NULL);
+		float tileSize = json_float(json.data(), "{'tilesize'", NULL);
 
-		int texRows = 1;
-		int texColumns = 3;
+		std::string src = "res/textures/tiles.png";
+		int rows = 1;
+		int columns = 3;
 
 		// load map
-		m_map = std::make_unique<TileMap>(tileIDs, mapWidth, mapHeight, tileSize, typeMap);
-		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>("res/textures/tiles.png", texRows, texColumns));
+		m_map = std::make_unique<TileMap>(tileIDs, mapW, mapH, tileSize, typeMap);
+		m_renderer = std::make_unique<TileRenderer>(*m_map, std::make_shared<ignis::Texture>(src, rows, columns));
 	}
 
 	World::~World()

@@ -49,7 +49,7 @@ public:
 
 			auto tree = std::make_shared<Entity>("tree");
 			tree->AddComponent<PositionComponent>();
-			tree->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/tree_" + std::to_string(texture) + ".png"), 96.0f, 256.0f);
+			tree->AddComponent<TextureComponent>(std::make_shared<Texture>(obelisk::format("res/textures/tree_%d.png", texture)), 96.0f, 256.0f);
 
 			m_scene->AddEntity(tree, glm::vec2(x, 192.0f));
 
@@ -57,7 +57,7 @@ public:
 		}
 
 		// player
-		m_scene->AddEntity(TemplateLoader::LoadEntity("res/scripts/entities/player.json"), glm::vec2(400.0f, 200.0f));
+		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(400.0f, 200.0f));
 	}
 
 	~Frost()
@@ -120,14 +120,15 @@ public:
 
 	void OnImGui() override
 	{
-		//ImGui::Begin("DEBUG");
-		//
-		//auto player = m_scene->GetEntity("player");
-		//
-		//auto position = player->GetPosition();
-		//ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
-		//
-		//ImGui::End();
+		ImGui::Begin("DEBUG");
+		
+		auto player = m_scene->GetEntity("player");
+		
+		auto position = player->GetPosition();
+		ImGui::Text("Name: %s", player->GetName().c_str());
+		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+		
+		ImGui::End();
 	}
 }; 
 

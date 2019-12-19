@@ -33,7 +33,6 @@ protected:
 
 	obelisk::Timer m_timer;
 public:
-	Application(const std::string& config);
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 

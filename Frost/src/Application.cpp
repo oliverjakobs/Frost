@@ -173,48 +173,6 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	return true;
 }
 
-Application::Application(const std::string& config)
-{
-	//OBELISK_ASSERT(!config.empty(), "Path is emtpy");
-	//
-	//json root = jsonParseFile(config);
-	//
-	//// ---------------| window |------------------------------------------
-	//std::string title;
-	//
-	//int width;
-	//int height;
-	//
-	//int glMajor = 4;
-	//int glMinor = 0;
-	//
-	//if (root.find("window") != root.end())
-	//{
-	//	json window = root.at("window");
-	//
-	//	title = jsonToString(window, "title");
-	//	width = jsonToInt(window, "width");
-	//	height = jsonToInt(window, "height");
-	//}
-	//
-	//// ---------------| gl version |--------------------------------------
-	//if (root.find("opengl") != root.end())
-	//{
-	//	json opengl = root.at("opengl");
-	//
-	//	glMajor = jsonToInt(opengl, "major");
-	//	glMinor = jsonToInt(opengl, "minor");
-	//}
-	//
-	//m_running = LoadApplication(title, width, height, glMajor, glMinor);
-	//
-	//// ---------------| load resources |----------------------------------
-	//std::string resources = jsonToString(root, "resources");
-	//
-	//if (!resources.empty())
-	//	ResourceManager::Load(resources);
-}
-
 Application::Application(const std::string& title, int width, int height)
 {
 	m_running = LoadApplication(title, width, height, 4, 5);

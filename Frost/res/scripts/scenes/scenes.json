@@ -1,7 +1,0 @@
-{
-  "start": "station",
-  "scenes": {
-    "station": "res/scenes/station.json",
-    "station2": "res/scenes/station2.json"
-  }
-}

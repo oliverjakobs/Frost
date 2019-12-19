@@ -190,13 +190,7 @@
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\maps\map.json" />
-    <None Include="res\maps\station.json" />
-    <None Include="res\maps\station2.json" />
-    <None Include="res\resources.json" />
-    <None Include="res\scripts\entities\player.json" />
-    <None Include="res\scripts\scenes\scenes.json" />
-    <None Include="res\scripts\scenes\station.json" />
-    <None Include="res\scripts\scenes\station2.json" />
+    <None Include="res\templates\entities\player.json" />
     <None Include="res\shaders\font.frag" />
     <None Include="res\shaders\font.vert" />
     <None Include="res\shaders\lines.frag" />

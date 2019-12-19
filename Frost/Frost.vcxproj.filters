@@ -338,27 +338,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\maps\station.json">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\maps\station2.json">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\resources.json">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\scripts\entities\player.json">
-      <Filter>res\scripts\entities</Filter>
-    </None>
-    <None Include="res\scripts\scenes\scenes.json">
-      <Filter>res\scripts\scenes</Filter>
-    </None>
-    <None Include="res\scripts\scenes\station.json">
-      <Filter>res\scripts\scenes</Filter>
-    </None>
-    <None Include="res\scripts\scenes\station2.json">
-      <Filter>res\scripts\scenes</Filter>
-    </None>
     <None Include="res\shaders\font.frag">
       <Filter>res\shaders</Filter>
     </None>
@@ -384,5 +363,8 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\maps\map.json" />
+    <None Include="res\templates\entities\player.json">
+      <Filter>res\scripts\entities</Filter>
+    </None>
   </ItemGroup>
 </Project>
