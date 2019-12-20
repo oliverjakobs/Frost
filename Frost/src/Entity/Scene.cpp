@@ -5,9 +5,10 @@
 
 using namespace ignis;
 
-Scene::Scene(std::shared_ptr<Camera> camera)
-{
-	m_camera = camera;
+Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
+	: m_camera(camera), m_width(w), m_height(h)
+{	
+	m_world = std::make_unique<World>(glm::vec2(0.0f, -980.0f));
 
 	m_smoothMovement = 0.5f;
 }
@@ -23,7 +24,7 @@ void Scene::AddEntity(std::shared_ptr<Entity> entity)
 
 	if (phys != nullptr)
 	{
-
+		m_world->AddBody(phys->GetBody());
 	}
 
 	m_entities.push_back(entity);
@@ -54,6 +55,8 @@ void Scene::OnEvent(Event& e)
 
 void Scene::OnUpdate(float deltaTime)
 {
+	m_world->Tick(deltaTime);
+
 	for (auto& entity : m_entities)
 		entity->OnUpdate(this, deltaTime);
 }
@@ -78,8 +81,8 @@ void Scene::OnRenderDebug()
 		//Primitives2D::DrawCircle(entity->GetPosition(), 2.0f);
 	}
 
-	//for (auto& body : m_world->GetBodies())
-	//	Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension());
+	for (auto& body : m_world->GetBodies())
+		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension());
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
 	//

@@ -2,14 +2,19 @@
 
 #include <algorithm>
 
-Body::Body(float x, float y, float hWidth, float hHeight)
-	: m_position(x, y), m_halfDimension(hWidth, hHeight), m_velocity(0.0f, 0.0f)
+Body::Body(float x, float y, float hWidth, float hHeight, BodyType type)
+	: m_position(x, y), m_halfDimension(hWidth, hHeight), m_velocity(0.0f, 0.0f), m_type(type), m_world(nullptr)
 {
 }
 
 void Body::Tick(float deltaTime, const glm::vec2& gravity)
 {
 	m_velocity += gravity * deltaTime;
+
+	m_collidesBottom = false;
+	m_collidesTop = false;
+	m_collidesLeft = false;
+	m_collidesRight = false;
 
 	m_position += m_velocity * deltaTime;
 }
@@ -28,11 +33,13 @@ void Body::ResolveCollision(const Body& b, const glm::vec2& oldPos)
 		{
 			m_position.x += std::max(overlap.x, 0.0f);
 			m_velocity.x = 0.0f;
+			m_collidesLeft = true;
 		}
 		else if (m_velocity.x > 0.0f)
 		{
 			m_position.x -= std::max(overlap.x, 0.0f);
 			m_velocity.x = 0.0f;
+			m_collidesRight = true;
 		}
 	}
 
@@ -46,11 +53,13 @@ void Body::ResolveCollision(const Body& b, const glm::vec2& oldPos)
 		{
 			m_position.y += std::max(overlap.y, 0.0f);
 			m_velocity.y = 0.0f;
+			m_collidesBottom = true;
 		}
 		else if (m_velocity.y > 0.0f)
 		{
 			m_position.y -= std::max(overlap.y, 0.0f);
 			m_velocity.y = 0.0f;
+			m_collidesTop = true;
 		}
 	}
 }

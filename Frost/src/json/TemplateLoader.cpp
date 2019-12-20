@@ -26,7 +26,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 
 		if (body.error == JSON_OK)
 		{
-			//BodyType type = (BodyType)json_int((char*)body.value, "{'type'", NULL);
+			BodyType type = (BodyType)json_int((char*)body.value, "{'type'", NULL);
 
 			float x = json_float((char*)body.value, "{'position'[0", NULL);
 			float y = json_float((char*)body.value, "{'position'[1", NULL);
@@ -37,7 +37,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 			float offset_x = json_float((char*)element.value, "{'offset'[0", NULL);
 			float offset_y = json_float((char*)element.value, "{'offset'[1", NULL);
 
-			//entity->AddComponent<PhysicsComponent>(std::make_shared<Body>(x, y, w, h, type), glm::vec2(offset_x, offset_y));
+			entity->AddComponent<PhysicsComponent>(std::make_shared<Body>(x, y, w, h, type), glm::vec2(offset_x, offset_y));
 		}
 	}
 

@@ -145,7 +145,7 @@
     <ClInclude Include="src\Obelisk\Singelton.h" />
     <ClInclude Include="src\Obelisk\Timer.h" />
     <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\Collider.h" />
+    <ClInclude Include="src\Physics\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -177,8 +177,8 @@
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\Physics\Body.cpp" />
-    <ClCompile Include="src\Physics\Collider.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Physics\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
