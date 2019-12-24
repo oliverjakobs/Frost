@@ -175,7 +175,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 
 Application::Application(const std::string& title, int width, int height)
 {
-	m_running = LoadApplication(title, width, height, 4, 5);
+	m_running = LoadApplication(title, width, height, 4, 4);
 }
 
 Application::~Application()

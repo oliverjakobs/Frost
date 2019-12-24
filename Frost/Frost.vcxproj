@@ -131,9 +131,6 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h" />
     <ClInclude Include="src\Input\Input.h" />
-    <ClInclude Include="src\json\TemplateLoader.h" />
-    <ClInclude Include="src\json\json.h" />
-    <ClInclude Include="src\json\json.hpp" />
     <ClInclude Include="src\Obelisk\Average.h" />
     <ClInclude Include="src\Obelisk\Debugger.h" />
     <ClInclude Include="src\Obelisk\FileUtility.h" />
@@ -146,6 +143,8 @@
     <ClInclude Include="src\Obelisk\Timer.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\json\TemplateLoader.h" />
+    <ClInclude Include="src\json\json.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -175,15 +174,15 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
-    <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\Physics\Body.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Physics\World.cpp" />
+    <ClCompile Include="src\json\TemplateLoader.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\maps\map.json" />
-    <None Include="res\templates\entities\player.json" />
+    <None Include="res\resources.json" />
     <None Include="res\shaders\font.frag" />
     <None Include="res\shaders\font.vert" />
     <None Include="res\shaders\lines.frag" />

@@ -7,15 +7,6 @@
     <Filter Include="res\maps">
       <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\scripts">
-      <UniqueIdentifier>{A6037D1E-12B9-F513-9BAD-EFEA0762EC17}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\scripts\entities">
-      <UniqueIdentifier>{3A33463C-26C2-CF05-CFE0-E300BB4EE0AB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\scripts\scenes">
-      <UniqueIdentifier>{36D2767D-22B6-37D3-8B16-322677192255}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\shaders">
       <UniqueIdentifier>{4841F028-B4F6-681E-3DEB-62F5A99F5F22}</UniqueIdentifier>
     </Filter>
@@ -61,8 +52,11 @@
     <Filter Include="src\Obelisk">
       <UniqueIdentifier>{659C2CBA-D151-A5AF-5A46-9F86C6FA9BB3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Tile">
-      <UniqueIdentifier>{CA0B26CF-B6D8-80DA-DFF1-6E82CB1DB668}</UniqueIdentifier>
+    <Filter Include="src\Physics">
+      <UniqueIdentifier>{9F8B9316-0B41-0C0C-9435-06E300EA0210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\json">
+      <UniqueIdentifier>{164732CF-0214-8DDA-2B2D-7B821759C268}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,6 +76,9 @@
       <Filter>src\Entity\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Entity\Components\PlayerComponent.h">
+      <Filter>src\Entity\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Entity\Components\PositionComponent.h">
       <Filter>src\Entity\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Entity\Components\TextureComponent.h">
@@ -213,12 +210,18 @@
     <ClInclude Include="src\Obelisk\Timer.h">
       <Filter>src\Obelisk</Filter>
     </ClInclude>
-    <ClInclude Include="src\json\json.hpp" />
-    <ClInclude Include="src\json\json.h" />
-    <ClInclude Include="src\Entity\Components\PositionComponent.h" />
-    <ClInclude Include="src\json\TemplateLoader.h" />
-    <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\Physics\Body.h">
+      <Filter>src\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Physics\World.h">
+      <Filter>src\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\TemplateLoader.h">
+      <Filter>src\json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\json\json.h">
+      <Filter>src\json</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -231,6 +234,9 @@
       <Filter>src\Entity\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Components\PlayerComponent.cpp">
+      <Filter>src\Entity\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entity\Components\PositionComponent.cpp">
       <Filter>src\Entity\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Entity\Components\TextureComponent.cpp">
@@ -299,16 +305,27 @@
     <ClCompile Include="src\Input\Input.cpp">
       <Filter>src\Input</Filter>
     </ClCompile>
+    <ClCompile Include="src\Physics\Body.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Physics\World.cpp">
+      <Filter>src\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json\TemplateLoader.cpp">
+      <Filter>src\json</Filter>
+    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity\Components\PositionComponent.cpp" />
-    <ClCompile Include="src\json\TemplateLoader.cpp" />
-    <ClCompile Include="src\Physics\Body.cpp" />
-    <ClCompile Include="src\Physics\World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
+    <None Include="res\maps\map.json">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\resources.json">
+      <Filter>res</Filter>
+    </None>
     <None Include="res\shaders\font.frag">
       <Filter>res\shaders</Filter>
     </None>
@@ -332,10 +349,6 @@
     </None>
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\maps\map.json" />
-    <None Include="res\templates\entities\player.json">
-      <Filter>res\scripts\entities</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -58,13 +58,15 @@ namespace ignis
 
 	void Texture::Bind(GLuint slot)
 	{
-		glBindTextureUnit(slot, m_name);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, m_name);
 		m_activeSlot = slot;
 	}
 
 	void Texture::Unbind()
 	{
-		glBindTextureUnit(m_activeSlot, 0);
+		glActiveTexture(GL_TEXTURE0 + m_activeSlot);
+		glBindTexture(GL_TEXTURE_2D, m_name);
 		m_activeSlot = 0;
 	}
 
