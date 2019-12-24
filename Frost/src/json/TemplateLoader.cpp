@@ -48,8 +48,8 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 		json_read((char*)element.value, "{'src'", &texture);
 		std::string src((char*)texture.value, texture.bytelen);
 
-		int rows = json_int((char*)element.value, "{'atlas'[0", NULL);
-		int columns = json_int((char*)element.value, "{'atlas'[1", NULL);
+		int rows = std::max(json_int((char*)element.value, "{'atlas'[0", NULL), 1);
+		int columns = std::max(json_int((char*)element.value, "{'atlas'[1", NULL), 1);
 
 		float width = json_float((char*)element.value, "{'dimension'[0", NULL);
 		float height = json_float((char*)element.value, "{'dimension'[1", NULL);

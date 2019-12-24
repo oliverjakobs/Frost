@@ -1,0 +1,14 @@
+{
+  "name": "floor",
+  "physics": {
+    "body": {
+      "type": 0,
+      "halfDimension": [ 128.0, 192.0 ]
+    },
+    "offset": [ 0.0, 192.0 ]
+  },
+  "texture": {
+    "src": "res/textures/floor.png",
+    "dimension": [ 256.0, 384.0 ]
+  }
+}

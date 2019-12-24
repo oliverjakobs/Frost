@@ -42,15 +42,11 @@ public:
 
 		float floorW = 128.0f;
 		float floorH = 192.0f;
-		float floorY = floorH / 2.0f;
+		float floorY = -floorH / 2.0f;
 		float floorX = floorW;
 		while (floorX < m_scene->GetWidth())
 		{
-			auto floor = std::make_shared<Entity>("floor");
-			floor->AddComponent<PhysicsComponent>(std::make_shared<Body>(floorX, floorY, floorW, floorH, BodyType::BODY_TYPE_STATIC), glm::vec2(0.0f, floorH));
-			floor->AddComponent<TextureComponent>(std::make_shared<Texture>("res/textures/floor.png"), floorW * 2.0f, floorH * 2.0f);
-
-			m_scene->AddEntity(floor);
+			m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/floor.json"), glm::vec2(floorX, floorY));
 			floorX += floorW * 2.0f;
 		}
 
@@ -65,7 +61,7 @@ public:
 			tree->AddComponent<PositionComponent>();
 			tree->AddComponent<TextureComponent>(std::make_shared<Texture>(obelisk::format("res/textures/tree_%d.png", texture)), 96.0f, 256.0f);
 
-			m_scene->AddEntity(tree, glm::vec2(x, floorY + floorH));
+			m_scene->AddEntity(tree, glm::vec2(x, floorY + (floorH * 2.0f)));
 
 			x += rand() % 80 + 140;
 		}

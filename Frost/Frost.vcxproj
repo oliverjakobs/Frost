@@ -191,6 +191,7 @@
     <None Include="res\shaders\renderer2D.vert" />
     <None Include="res\shaders\tile.frag" />
     <None Include="res\shaders\tile.vert" />
+    <None Include="res\templates\entities\floor.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">

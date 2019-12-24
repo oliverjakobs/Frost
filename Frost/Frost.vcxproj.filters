@@ -350,5 +350,6 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
+    <None Include="res\templates\entities\floor.json" />
   </ItemGroup>
 </Project>
