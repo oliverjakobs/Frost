@@ -129,9 +129,6 @@
     <ClInclude Include="src\Ignis\Core\Texture.h">
       <Filter>src\Ignis\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Font.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\Framebuffer.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
     <ClInclude Include="src\json\json.h">
       <Filter>src\json</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\Font.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp">
@@ -265,9 +265,6 @@
     </ClCompile>
     <ClCompile Include="src\Ignis\Core\Texture.cpp">
       <Filter>src\Ignis\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Font.cpp">
-      <Filter>src\Ignis</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Framebuffer.cpp">
       <Filter>src\Ignis</Filter>
@@ -316,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\Font.cpp">
+      <Filter>src\Ignis</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -7,6 +7,8 @@ namespace ignis
 		std::shared_ptr<VertexArray> VertexArray;
 		std::shared_ptr<Shader> Shader;
 
+		std::map<std::string, std::shared_ptr<Font>> Fonts;
+
 		size_t BufferSize;
 	};
 
@@ -30,6 +32,21 @@ namespace ignis
 		delete s_renderData;
 	}
 
+	void FontRenderer::AddFont(const std::string& name, std::shared_ptr<Font> font)
+	{
+		s_renderData->Fonts.insert({ name, font });
+	}
+
+	std::shared_ptr<Font> FontRenderer::GetFont(const std::string& name)
+	{
+		auto font = s_renderData->Fonts.find(name);
+
+		if (font != s_renderData->Fonts.end())
+			return font->second;
+
+		return nullptr;
+	}
+
 	void FontRenderer::RenderText(Font& font, const std::string& text, float x, float y, const glm::mat4& proj, const ignis::color& color)
 	{
 		s_renderData->Shader->Use();
@@ -42,6 +59,38 @@ namespace ignis
 		for (auto& c : text)
 		{
 			auto vertices = font.LoadCharQuad(c, &x, &y);
+
+			if (!vertices.empty())
+			{
+				// Update content of VBO memory
+				s_renderData->VertexArray->GetArrayBuffer(0)->BufferSubData(0, s_renderData->BufferSize, vertices.data());
+
+				// Render quad
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			}
+		}
+	}
+
+	void FontRenderer::RenderText(const std::string& fontname, const std::string& text, float x, float y, const glm::mat4& proj, const ignis::color& color)
+	{
+		auto font = GetFont(fontname);
+
+		if (!font)
+		{
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font " + fontname + " not found");
+			return;
+		}
+
+		s_renderData->Shader->Use();
+		s_renderData->Shader->SetUniformMat4("u_Projection", proj);
+		s_renderData->Shader->SetUniform4f("u_Color", color);
+
+		font->Bind();
+		s_renderData->VertexArray->Bind();
+
+		for (auto& c : text)
+		{
+			auto vertices = font->LoadCharQuad(c, &x, &y);
 
 			if (!vertices.empty())
 			{

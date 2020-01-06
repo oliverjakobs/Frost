@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Buffer.h"
-#include "Core/Texture.h"
+#include "Ignis/Core/Buffer.h"
+#include "Ignis/Core/Texture.h"
 
 #include "Ignis/Packages/stb_truetype.h"
 

@@ -16,7 +16,6 @@ private:
 	std::shared_ptr<OrthographicCamera> m_camera;
 	std::shared_ptr<Scene> m_scene;
 
-	Font font = Font("res/fonts/OpenSans.ttf", 32.0f);
 public:
 	Frost() 
 		: Application("Frost", 1024, 800)
@@ -28,8 +27,10 @@ public:
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
-		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
 		Primitives2D::Init(std::make_shared<Shader>("res/shaders/lines.vert", "res/shaders/lines.frag"));
+
+		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
+		FontRenderer::AddFont("font", std::make_shared<Font>("res/fonts/OpenSans.ttf", 32.0f));
 
 		EnableDebugMode(true);
 		EnableImGui(true);
@@ -128,7 +129,7 @@ public:
 		m_scene->OnRenderDebug();
 
 		// debug info
-		FontRenderer::RenderText(font, obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
+		FontRenderer::RenderText("font", obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
 	}
 
 	void OnImGui() override
