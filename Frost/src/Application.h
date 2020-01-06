@@ -24,6 +24,7 @@ private:
 	void EventCallback(Event& e);
 	bool OnWindowClose(WindowCloseEvent& e);
 
+	void SetGLFWCallback();
 	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
 protected:
 	std::string m_title;

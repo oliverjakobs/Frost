@@ -2,18 +2,13 @@
 
 #include "Entity/Scene.h"
 
-#include <string>
-
 #include "json/TemplateLoader.h"
-
-#include "Physics/World.h"
 
 using namespace ignis;
 
 class Frost : public Application
 {
 private:
-	std::shared_ptr<OrthographicCamera> m_camera;
 	std::shared_ptr<Scene> m_scene;
 
 public:
@@ -36,8 +31,7 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		m_camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
-		m_scene = std::make_shared<Scene>(m_camera, 2048, 800);
+		m_scene = std::make_shared<Scene>(std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height)), 2048, 800);
 
 		// trees and floor
 
@@ -83,7 +77,7 @@ public:
 		if (e.GetType() == EventType::WindowResize)
 		{
 			WindowResizeEvent& resize = (WindowResizeEvent&)e;
-			m_camera->SetProjection(glm::vec2((float)resize.GetWidth(), (float)resize.GetHeight()));
+			((OrthographicCamera*)m_scene->GetCamera())->SetProjection(glm::vec2((float)resize.GetWidth(), (float)resize.GetHeight()));
 		}
 
 		if (e.GetType() == EventType::KeyPressed)

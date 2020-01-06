@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/Texture.h"
-#include "Core/Buffer.h"
+#include "Ignis/Core/Texture.h"
+#include "Ignis/Core/Buffer.h"
 
 namespace ignis
 {

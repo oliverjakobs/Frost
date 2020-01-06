@@ -115,7 +115,7 @@
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
     <ClInclude Include="src\Ignis\Advanced\Font.h" />
-    <ClInclude Include="src\Ignis\Framebuffer.h" />
+    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
     <ClInclude Include="src\Ignis\Model\Material.h" />
     <ClInclude Include="src\Ignis\Model\Mesh.h" />
@@ -162,7 +162,7 @@
     <ClCompile Include="src\Ignis\Core\Shader.cpp" />
     <ClCompile Include="src\Ignis\Core\Texture.cpp" />
     <ClCompile Include="src\Ignis\Advanced\Font.cpp" />
-    <ClCompile Include="src\Ignis\Framebuffer.cpp" />
+    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
     <ClCompile Include="src\Ignis\Ignis.cpp" />
     <ClCompile Include="src\Ignis\Model\Material.cpp" />
     <ClCompile Include="src\Ignis\Model\Mesh.cpp" />

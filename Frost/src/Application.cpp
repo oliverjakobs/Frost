@@ -2,88 +2,8 @@
 
 #include <GLFW/glfw3.h>
 
-bool Application::OnWindowClose(WindowCloseEvent& e)
+void Application::SetGLFWCallback()
 {
-	Close();
-	return true;
-}
-
-void Application::EventCallback(Event& e)
-{
-	switch (e.GetType())
-	{
-	case EventType::WindowClose:
-		OnWindowClose((WindowCloseEvent&)e);
-		break;
-	case EventType::ChangeScene:
-		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
-		break;
-	default:
-		OnEvent(e);
-		break;
-	}
-}
-
-bool Application::LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor)
-{
-	m_title = title;
-	m_width = width;
-	m_height = height;
-
-	m_debug = false;
-	m_paused = false;
-	m_showImGui = false;
-
-	// ingis initialization
-	if (!ignis::ignisInit(width, height))
-	{
-		OBELISK_ERROR("[Ignis] Failed to initialize Ignis");
-		return nullptr;
-	}
-
-	ignisSetErrorCallback([](ignisErrorLevel level, const std::string& desc)
-	{
-		switch (level)
-		{
-		case ignisErrorLevel::Warn:		OBELISK_WARN(desc.c_str()); break;
-		case ignisErrorLevel::Error:	OBELISK_ERROR(desc.c_str()); break;
-		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc.c_str()); break;
-		}
-	});
-
-	// GLFW initialization
-	if (glfwInit() == GLFW_FALSE)
-	{
-		OBELISK_ERROR("[GLFW] Failed to initialize GLFW");
-		glfwTerminate();
-		return false;
-	}
-
-	OBELISK_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef _DEBUG
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
-#endif
-
-	// creating the window
-	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-	if (m_window == nullptr)
-	{
-		OBELISK_ERROR("[GLFW] Failed to create GLFW window");
-		glfwTerminate();
-		return false;
-	}
-
-	glfwMakeContextCurrent(m_window);
-	glfwSetWindowUserPointer(m_window, this);
-
-	EventHandler::SetEventCallback(BIND_FUNCTION(Application::EventCallback));
-
-	// Set GLFW callbacks
 	glfwSetErrorCallback([](int error, const char* desc)
 	{
 		OBELISK_ERROR("[GLFW] ({0}) {1}", error, desc);
@@ -151,8 +71,97 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	{
 		EventHandler::Throw<MouseMovedEvent>((float)xPos, (float)yPos);
 	});
+}
 
-	bool debug = true;
+bool Application::OnWindowClose(WindowCloseEvent& e)
+{
+	Close();
+	return true;
+}
+
+void Application::EventCallback(Event& e)
+{
+	switch (e.GetType())
+	{
+	case EventType::WindowClose:
+		OnWindowClose((WindowCloseEvent&)e);
+		break;
+	case EventType::ChangeScene:
+		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
+		break;
+	default:
+		OnEvent(e);
+		break;
+	}
+}
+
+bool Application::LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor)
+{
+	m_title = title;
+	m_width = width;
+	m_height = height;
+
+	m_debug = false;
+	m_paused = false;
+	m_showImGui = false;
+
+	// GLFW initialization
+	if (glfwInit() == GLFW_FALSE)
+	{
+		OBELISK_ERROR("[GLFW] Failed to initialize GLFW");
+		glfwTerminate();
+		return false;
+	}
+
+	OBELISK_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+#ifdef _DEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+#endif
+
+	// creating the window
+	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+	if (m_window == nullptr)
+	{
+		OBELISK_ERROR("[GLFW] Failed to create GLFW window");
+		glfwTerminate();
+		return false;
+	}
+
+	glfwMakeContextCurrent(m_window);
+	glfwSetWindowUserPointer(m_window, this);
+
+	EventHandler::SetEventCallback(BIND_FUNCTION(Application::EventCallback));
+
+	// Set GLFW callbacks
+	SetGLFWCallback();
+
+	// ingis initialization
+	if (!ignis::ignisInit(width, height))
+	{
+		OBELISK_ERROR("[Ignis] Failed to initialize Ignis");
+		return nullptr;
+	}
+
+	ignisSetErrorCallback([](ignisErrorLevel level, const std::string& desc)
+	{
+		switch (level)
+		{
+		case ignisErrorLevel::Warn:		OBELISK_WARN(desc.c_str()); break;
+		case ignisErrorLevel::Error:	OBELISK_ERROR(desc.c_str()); break;
+		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc.c_str()); break;
+		}
+	});
+
+	bool debug = false;
+	
+#ifdef _DEBUG
+	debug = true;
+#endif // _DEBUG
 
 	if (!ignis::ignisLoadGL(debug))
 	{
