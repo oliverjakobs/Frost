@@ -16,6 +16,7 @@ namespace ignis
 		static void Vertex(const glm::vec2& v);
 
 		// Line
+		static void DrawLine(float x1, float y1, float x2, float y2);
 		static void DrawLine(const glm::vec2& start, const glm::vec2& end);
 
 		// Rect

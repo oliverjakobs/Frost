@@ -55,3 +55,4 @@ float Input::MouseY()
 {
 	return MousePosition().y;
 }
+

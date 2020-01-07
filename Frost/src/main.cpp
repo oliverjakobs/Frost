@@ -6,10 +6,31 @@
 
 using namespace ignis;
 
+glm::vec2 GetMousePos(Scene* scene)
+{
+	glm::vec2 viewSize = scene->GetCamera()->GetSize();
+	glm::vec2 viewPos = scene->GetCamera()->GetPosition();
+
+	glm::vec2 mousePos = Input::MousePosition();
+	mousePos.y = viewSize.y - mousePos.y;
+
+	mousePos += viewPos - (viewSize / 2.0f);
+
+	return mousePos;
+}
+
 class Frost : public Application
 {
 private:
 	std::shared_ptr<Scene> m_scene;
+
+	bool editmode;
+	bool showgrid;
+
+	float gridsize;
+	float padding;
+
+	std::shared_ptr<Entity> m_active;
 
 public:
 	Frost() 
@@ -35,7 +56,15 @@ public:
 		m_scene = TemplateLoader::LoadScene("res/templates/scenes/scene.json", camera);
 
 		// player
-		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(200.0f, 200.0f));
+		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(120.0f, 400.0f));
+
+		editmode = true;
+		showgrid = false;
+
+		gridsize = 32.0f;
+		padding = gridsize * 4;
+
+		m_active = nullptr;
 	}
 
 	~Frost()
@@ -72,6 +101,9 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
+			case KEY_F1:
+				editmode = !editmode;
+				break;
 			case KEY_DELETE:
 				m_scene->RemoveEntity("tree");
 				break;
@@ -84,17 +116,77 @@ public:
 		// discard frames that took to long
 		if (deltaTime > 0.4f) return;
 
-		m_scene->OnUpdate(deltaTime);
+		if (!editmode)
+		{
+			m_scene->OnUpdate(deltaTime);
+		}
+		else
+		{
+			float cameraspeed = 400.0f;
+			glm::vec3 position = m_scene->GetCamera()->GetPosition();
+
+			if (Input::KeyPressed(KEY_A))
+				position.x -= cameraspeed * deltaTime;
+			if (Input::KeyPressed(KEY_D))
+				position.x += cameraspeed * deltaTime;
+
+			if (Input::KeyPressed(KEY_S))
+				position.y -= cameraspeed * deltaTime;
+			if (Input::KeyPressed(KEY_W))
+				position.y += cameraspeed * deltaTime;
+
+			m_scene->GetCamera()->SetPosition(position);
+
+			m_active = m_scene->GetEntityAt(GetMousePos(m_scene.get()));
+		}
 	}
 
 	void OnRender() override
 	{
 		m_scene->OnRender();
+
+		if (editmode)
+		{
+			// render grid
+			Primitives2D::Start(m_scene->GetCamera()->GetViewProjection());
+			
+			if (showgrid)
+			{
+				for (float x = -padding; x <= m_scene->GetWidth() + padding; x += gridsize)
+				{
+					Primitives2D::DrawLine(x, -padding, x, m_scene->GetHeight() + padding);
+				}
+
+				for (float y = -padding; y <= m_scene->GetHeight() + padding; y += gridsize)
+				{
+					Primitives2D::DrawLine(-padding, y, m_scene->GetWidth() + padding, y);
+				}
+			}
+
+			if (m_active)
+			{
+				auto tex = m_active->GetComponent<TextureComponent>();
+
+				if (tex != nullptr)
+				{
+					glm::vec2 position = m_active->GetPosition();
+
+					glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
+					glm::vec2 max = min + tex->GetDimension();
+
+					Primitives2D::DrawRect(min, max - min);
+					Primitives2D::DrawCircle(m_active->GetPosition(), 2.0f);
+				}
+			}
+
+			Primitives2D::Flush();
+		}
 	}
 
 	void OnRenderDebug() override
 	{
-		m_scene->OnRenderDebug();
+		if (!editmode)
+			m_scene->OnRenderDebug();
 
 		// debug info
 		FontRenderer::RenderText("font", obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
@@ -111,6 +203,7 @@ public:
 
 		ImGui::Separator();
 
+		ImGui::Text("F1: Toggle edit mode");
 		ImGui::Text("DEL: Remove Trees");
 
 		ImGui::End();
@@ -123,8 +216,19 @@ public:
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();
 		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
-		
+
 		ImGui::End();
+
+		if (editmode)
+		{
+			ImGui::Begin("Editor");
+
+			ImGui::Text("Selected Entity: %s", m_active == nullptr ? "null" : m_active->GetName().c_str());
+
+			ImGui::Checkbox("Show grid", &showgrid);
+
+			ImGui::End();
+		}
 	}
 }; 
 

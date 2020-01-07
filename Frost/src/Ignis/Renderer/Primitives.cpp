@@ -62,6 +62,11 @@ namespace ignis
 		s_renderData->Vertices.push_back(v);
 	}
 
+	void Primitives2D::DrawLine(float x1, float y1, float x2, float y2)
+	{
+		DrawLine(glm::vec2(x1, y1), glm::vec2(x2, y2));
+	}
+
 	void Primitives2D::DrawLine(const glm::vec2& start, const glm::vec2& end)
 	{
 		Vertex(start);

@@ -144,3 +144,32 @@ std::shared_ptr<Entity> Scene::GetEntity(const std::string& name) const
 
 	return nullptr;
 }
+
+bool inside(const glm::vec2& min, const glm::vec2& max, const glm::vec2& p)
+{
+	if (p.x < min.x || p.y < min.y) return false;
+	if (p.x > max.x || p.y > max.y) return false;
+
+	return true;
+}
+
+std::shared_ptr<Entity> Scene::GetEntityAt(const glm::vec2& pos) const
+{
+	for (auto& entity : m_entities)
+	{
+		auto tex = entity->GetComponent<TextureComponent>();
+
+		if (tex == nullptr)
+			continue;
+
+		glm::vec2 position = entity->GetPosition();
+
+		glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
+		glm::vec2 max = min + tex->GetDimension();
+
+		if (inside(min, max, pos))
+			return entity;
+	}
+
+	return nullptr;
+}

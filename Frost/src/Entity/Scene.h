@@ -32,6 +32,7 @@ public:
 	void SetCameraPosition(const glm::vec3& position);
 
 	std::shared_ptr<Entity> GetEntity(const std::string& name) const;
+	std::shared_ptr<Entity> GetEntityAt(const glm::vec2& pos) const;
 	std::vector<std::shared_ptr<Entity>> GetEntities() const { return m_entities; };
 
 	World* GetWorld() const { return m_world.get(); }
