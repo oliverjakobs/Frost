@@ -1,456 +1,137 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="res">
-      <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\fonts">
-      <UniqueIdentifier>{E81E0011-5489-B487-9DC7-652D097192DC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\shaders">
-      <UniqueIdentifier>{4841F028-B4F6-681E-3DEB-62F5A99F5F22}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\templates">
-      <UniqueIdentifier>{0DD1EA8D-7991-66C4-42CC-AF41AE4BABA0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\templates\entities">
-      <UniqueIdentifier>{8104CB6C-6DFE-F3BE-566B-8ACF42045A2B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\templates\scenes">
-      <UniqueIdentifier>{BDA53876-A934-C23F-5253-D63A3EC1D2E5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\textures">
-      <UniqueIdentifier>{227C1C83-0EDF-AB27-B764-E4DDA3A677AA}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Entity">
-      <UniqueIdentifier>{D9C2390E-C57A-7B5B-2E82-54B71A59164C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Entity\Components">
-      <UniqueIdentifier>{4E8ED360-BAFA-8E5B-83EE-26B9EF19B1C3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Event">
-      <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis">
-      <UniqueIdentifier>{36681FB3-A2D2-D329-EB10-85CF57BAB17E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Advanced">
-      <UniqueIdentifier>{FB93D856-E777-99AC-50D8-93FF3CDB832E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Camera">
-      <UniqueIdentifier>{EEE3F073-DADC-0FC6-030F-F54AEF66EFD1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Core">
-      <UniqueIdentifier>{4E1E7098-3AEC-639E-2380-D4C40FED3F03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Model">
-      <UniqueIdentifier>{F6A128A7-622D-966B-6B3E-1960D748F26B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Packages">
-      <UniqueIdentifier>{2438211C-101C-E271-797C-DCC4657FCCF3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Renderer">
-      <UniqueIdentifier>{9C48BA41-882C-7B97-F18C-75EADD8F6519}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\glad">
-      <UniqueIdentifier>{FDCC8398-E99A-779E-D22E-E8C4BE9B5303}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\glad\KHR">
-      <UniqueIdentifier>{F111879F-DDF5-47F5-4656-424832593277}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ImGuiBinding">
-      <UniqueIdentifier>{92ECE041-7EE5-FF93-A717-E518936FDF9F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Input">
-      <UniqueIdentifier>{EC4823B3-58B3-D729-A1F1-88CF0D9BB57E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Obelisk">
-      <UniqueIdentifier>{659C2CBA-D151-A5AF-5A46-9F86C6FA9BB3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Physics">
-      <UniqueIdentifier>{9F8B9316-0B41-0C0C-9435-06E300EA0210}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\json">
-      <UniqueIdentifier>{164732CF-0214-8DDA-2B2D-7B821759C268}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="src\Application.cpp" />
+    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\PositionComponent.cpp" />
+    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
+    <ClCompile Include="src\Entity\Entity.cpp" />
+    <ClCompile Include="src\Entity\Scene.cpp" />
+    <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp" />
+    <ClCompile Include="src\Ignis\Advanced\Font.cpp" />
+    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
+    <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Ignis\Core\Api.cpp" />
+    <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
+    <ClCompile Include="src\Ignis\Core\Shader.cpp" />
+    <ClCompile Include="src\Ignis\Core\Texture.cpp" />
+    <ClCompile Include="src\Ignis\Ignis.cpp" />
+    <ClCompile Include="src\Ignis\Model\Material.cpp" />
+    <ClCompile Include="src\Ignis\Model\Mesh.cpp" />
+    <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp" />
+    <ClCompile Include="src\Ignis\Renderer\Primitives.cpp" />
+    <ClCompile Include="src\Ignis\Renderer\RenderState.cpp" />
+    <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Physics\Body.cpp" />
+    <ClCompile Include="src\Physics\World.cpp" />
+    <ClCompile Include="src\json\TemplateLoader.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\AnimationComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\Component.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\PhysicsComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\PlayerComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\PositionComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Components\TextureComponent.h">
-      <Filter>src\Entity\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Entity.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Entity\Scene.h">
-      <Filter>src\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\ApplicationEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\Event.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\EventHandler.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\KeyEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\MouseEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\WindowEvent.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\Font.h">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Camera\Camera.h">
-      <Filter>src\Ignis\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h">
-      <Filter>src\Ignis\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Api.h">
-      <Filter>src\Ignis\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Buffer.h">
-      <Filter>src\Ignis\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Shader.h">
-      <Filter>src\Ignis\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Texture.h">
-      <Filter>src\Ignis\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Ignis.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Model\Material.h">
-      <Filter>src\Ignis\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Model\Mesh.h">
-      <Filter>src\Ignis\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_image.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_image_write.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_truetype.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\tiny_obj_loader.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Renderer\FontRenderer.h">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Renderer\Primitives.h">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Renderer\RenderState.h">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Renderer\Renderer2D.h">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h">
-      <Filter>src\Ignis\glad\KHR</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\glad\glad.h">
-      <Filter>src\Ignis\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Input\Input.h">
-      <Filter>src\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Average.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Debugger.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\FileUtility.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Flags.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Logger.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Memory.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Obelisk.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Range.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Singelton.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Obelisk\Timer.h">
-      <Filter>src\Obelisk</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\Body.h">
-      <Filter>src\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\World.h">
-      <Filter>src\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\json\TemplateLoader.h">
-      <Filter>src\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\json\json.h">
-      <Filter>src\json</Filter>
-    </ClInclude>
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\Entity\Components.h" />
+    <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
+    <ClInclude Include="src\Entity\Components\Component.h" />
+    <ClInclude Include="src\Entity\Components\PhysicsComponent.h" />
+    <ClInclude Include="src\Entity\Components\PlayerComponent.h" />
+    <ClInclude Include="src\Entity\Components\PositionComponent.h" />
+    <ClInclude Include="src\Entity\Components\TextureComponent.h" />
+    <ClInclude Include="src\Entity\Entity.h" />
+    <ClInclude Include="src\Entity\Scene.h" />
+    <ClInclude Include="src\Event\ApplicationEvent.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Event\KeyEvent.h" />
+    <ClInclude Include="src\Event\MouseEvent.h" />
+    <ClInclude Include="src\Event\WindowEvent.h" />
+    <ClInclude Include="src\Ignis\Advanced\ComputeShader.h" />
+    <ClInclude Include="src\Ignis\Advanced\Font.h" />
+    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h" />
+    <ClInclude Include="src\Ignis\Camera\Camera.h" />
+    <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h" />
+    <ClInclude Include="src\Ignis\Core\Api.h" />
+    <ClInclude Include="src\Ignis\Core\Buffer.h" />
+    <ClInclude Include="src\Ignis\Core\Shader.h" />
+    <ClInclude Include="src\Ignis\Core\Texture.h" />
+    <ClInclude Include="src\Ignis\Ignis.h" />
+    <ClInclude Include="src\Ignis\Model\Material.h" />
+    <ClInclude Include="src\Ignis\Model\Mesh.h" />
+    <ClInclude Include="src\Ignis\Packages\stb_image.h" />
+    <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
+    <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
+    <ClInclude Include="src\Ignis\Packages\tiny_obj_loader.h" />
+    <ClInclude Include="src\Ignis\Renderer\FontRenderer.h" />
+    <ClInclude Include="src\Ignis\Renderer\Primitives.h" />
+    <ClInclude Include="src\Ignis\Renderer\RenderState.h" />
+    <ClInclude Include="src\Ignis\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
+    <ClInclude Include="src\Ignis\glad\glad.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
+    <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Obelisk\Average.h" />
+    <ClInclude Include="src\Obelisk\Debugger.h" />
+    <ClInclude Include="src\Obelisk\FileUtility.h" />
+    <ClInclude Include="src\Obelisk\Flags.h" />
+    <ClInclude Include="src\Obelisk\Logger.h" />
+    <ClInclude Include="src\Obelisk\Memory.h" />
+    <ClInclude Include="src\Obelisk\Obelisk.h" />
+    <ClInclude Include="src\Obelisk\Range.h" />
+    <ClInclude Include="src\Obelisk\Singelton.h" />
+    <ClInclude Include="src\Obelisk\Timer.h" />
+    <ClInclude Include="src\Physics\Body.h" />
+    <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\json\TemplateLoader.h" />
+    <ClInclude Include="src\json\json.h" />
+    <ClInclude Include="src\SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\PositionComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp">
-      <Filter>src\Entity\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Entity.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Entity\Scene.cpp">
-      <Filter>src\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\Font.cpp">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp">
-      <Filter>src\Ignis\Advanced</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp">
-      <Filter>src\Ignis\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Api.cpp">
-      <Filter>src\Ignis\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Buffer.cpp">
-      <Filter>src\Ignis\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Shader.cpp">
-      <Filter>src\Ignis\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Texture.cpp">
-      <Filter>src\Ignis\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Ignis.cpp">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Model\Material.cpp">
-      <Filter>src\Ignis\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Model\Mesh.cpp">
-      <Filter>src\Ignis\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Renderer\Primitives.cpp">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Renderer\RenderState.cpp">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp">
-      <Filter>src\Ignis\Renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\glad\glad.c">
-      <Filter>src\Ignis\glad</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Input\Input.cpp">
-      <Filter>src\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Physics\Body.cpp">
-      <Filter>src\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Physics\World.cpp">
-      <Filter>src\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\json\TemplateLoader.cpp">
-      <Filter>src\json</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <Image Include="res\textures\Textures&amp;trees.png" />
+    <Image Include="res\textures\Tlayer1.png" />
+    <Image Include="res\textures\Tlayer2.png" />
+    <Image Include="res\textures\Tlayer3.png" />
+    <Image Include="res\textures\bgcolor.png" />
+    <Image Include="res\textures\blocky_font.png" />
+    <Image Include="res\textures\box.png" />
+    <Image Include="res\textures\door.png" />
+    <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\num_font.png" />
+    <Image Include="res\textures\player.png" />
+    <Image Include="res\textures\tiles.png" />
+    <Image Include="res\textures\tree_1.png" />
+    <Image Include="res\textures\tree_2.png" />
+    <Image Include="res\textures\tree_3.png" />
+    <Image Include="res\textures\tree_4.png" />
+    <Image Include="res\textures\tree_5.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
     <None Include="imgui.ini" />
-    <None Include="res\fonts\OpenSans.ttf">
-      <Filter>res\fonts</Filter>
-    </None>
-    <None Include="res\shaders\font.frag">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\font.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\lines.frag">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\lines.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\renderer2D.frag">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\renderer2D.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\tile.frag">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\tile.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\templates\entities\floor.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\player.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_1.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_2.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_3.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_4.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_5.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\scenes\scene.json">
-      <Filter>res\templates\scenes</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\textures\Textures&trees.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\Tlayer1.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\Tlayer2.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\Tlayer3.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\bgcolor.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\blocky_font.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\box.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\door.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\floor.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\num_font.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\player.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tiles.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tree_1.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tree_2.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tree_3.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tree_4.png">
-      <Filter>res\textures</Filter>
-    </Image>
-    <Image Include="res\textures\tree_5.png">
-      <Filter>res\textures</Filter>
-    </Image>
+    <None Include="res\fonts\OpenSans.ttf" />
+    <None Include="res\shaders\font.frag" />
+    <None Include="res\shaders\font.vert" />
+    <None Include="res\shaders\lines.frag" />
+    <None Include="res\shaders\lines.vert" />
+    <None Include="res\shaders\renderer2D.frag" />
+    <None Include="res\shaders\renderer2D.vert" />
+    <None Include="res\shaders\tile.frag" />
+    <None Include="res\shaders\tile.vert" />
+    <None Include="res\templates\entities\floor.json" />
+    <None Include="res\templates\entities\player.json" />
+    <None Include="res\templates\entities\tree_1.json" />
+    <None Include="res\templates\entities\tree_2.json" />
+    <None Include="res\templates\entities\tree_3.json" />
+    <None Include="res\templates\entities\tree_4.json" />
+    <None Include="res\templates\entities\tree_5.json" />
+    <None Include="res\templates\scenes\scene.json" />
   </ItemGroup>
 </Project>

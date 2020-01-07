@@ -101,6 +101,7 @@
     <ClInclude Include="src\Entity\Components\TextureComponent.h" />
     <ClInclude Include="src\Entity\Entity.h" />
     <ClInclude Include="src\Entity\Scene.h" />
+    <ClInclude Include="src\SceneManager.h" />
     <ClInclude Include="src\Event\ApplicationEvent.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\Scene.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp" />
     <ClCompile Include="src\Ignis\Advanced\Font.cpp" />
     <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
