@@ -16,8 +16,10 @@ private:
 
 	bool m_running;
 	bool m_paused;
+
 	bool m_debug;
 	bool m_showImGui;
+	bool m_vsync;
 
 	// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
 	// and passes the rest to OnEvent, which is implemented in the game class
@@ -37,15 +39,16 @@ public:
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();
 
+	// --------------------------| Settings |--------------------------------
 	void EnableDebugMode(bool b);
-	void ToggleDebugMode();
-
 	void EnableImGui(bool b);
+	void EnableVsync(bool b);
+
+	void ToggleDebugMode();
 	void ToggleImGui();
+	void ToggleVsync();
 
 	void Pause();
-
-	void EnableVsync(bool b);
 
 	// --------------------------| Game Loop |-------------------------------
 	void Run();

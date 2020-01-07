@@ -1,6 +1,6 @@
 #include "ImGuiRenderer.h"
 
-#include "imgui_impl_glfw.h"
+#include "ImGuiGLFW.h"
 #include "ImGuiBinding.h"
 
 void ImGuiRenderer::Init(GLFWwindow* context, unsigned int configFlags)
@@ -31,21 +31,21 @@ void ImGuiRenderer::Init(GLFWwindow* context, unsigned int configFlags)
 	}
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(context, true);
+	ImGuiGLFW_Init(context, true);
 	ImGuiBinding_Init("#version 410");
 }
 
 void ImGuiRenderer::Quit()
 {
 	ImGuiBinding_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
+	ImGuiGLFW_Shutdown();
 	ImGui::DestroyContext();
 }
 
 void ImGuiRenderer::Begin()
 {
 	ImGuiBinding_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
+	ImGuiGLFW_NewFrame();
 	ImGui::NewFrame();
 }
 

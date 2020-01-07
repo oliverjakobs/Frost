@@ -31,38 +31,11 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		m_scene = std::make_shared<Scene>(std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height)), 2048, 800);
-
-		// trees and floor
-
-		float floorW = 128.0f;
-		float floorH = 192.0f;
-		float floorY = -floorH / 2.0f;
-		float floorX = floorW;
-		while (floorX < m_scene->GetWidth())
-		{
-			m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/floor.json"), glm::vec2(floorX, floorY));
-			floorX += floorW * 2.0f;
-		}
-
-		srand((unsigned int)time(nullptr));
-
-		float x = 20.0f;
-		while (x < m_scene->GetWidth())
-		{
-			int texture = rand() % 5 + 1;
-
-			auto tree = std::make_shared<Entity>("tree");
-			tree->AddComponent<PositionComponent>();
-			tree->AddComponent<TextureComponent>(std::make_shared<Texture>(obelisk::format("res/textures/tree_%d.png", texture)), 96.0f, 256.0f);
-
-			m_scene->AddEntity(tree, glm::vec2(x, floorY + (floorH * 2.0f)));
-
-			x += rand() % 80 + 140;
-		}
+		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
+		m_scene = TemplateLoader::LoadScene("res/templates/scenes/scene.json", camera);
 
 		// player
-		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(400.0f, 200.0f));
+		m_scene->AddEntity(TemplateLoader::LoadEntity("res/templates/entities/player.json"), glm::vec2(200.0f, 200.0f));
 	}
 
 	~Frost()
@@ -82,15 +55,16 @@ public:
 
 		if (e.GetType() == EventType::KeyPressed)
 		{
-			KeyPressedEvent& keyPressed = (KeyPressedEvent&)e;
-
-			switch (keyPressed.GetKeyCode())
+			switch (((KeyPressedEvent&)e).GetKeyCode())
 			{
 			case KEY_ESCAPE:
 				Close();
 				break;
 			case KEY_F5:
 				Pause();
+				break;
+			case KEY_F6:
+				ToggleVsync();
 				break;
 			case KEY_F7:
 				ToggleDebugMode();
@@ -128,6 +102,20 @@ public:
 
 	void OnImGui() override
 	{
+		ImGui::Begin("Settings");
+
+		ImGui::Text("F5: Pause/Unpause");
+		ImGui::Text("F6: Toggle Vsync");
+		ImGui::Text("F7: Toggle debug mode");
+		ImGui::Text("F8: Toggle ImGui");
+
+		ImGui::Separator();
+
+		ImGui::Text("DEL: Remove Trees");
+
+		ImGui::End();
+
+		// ----
 		ImGui::Begin("DEBUG");
 		
 		auto player = m_scene->GetEntity("player");

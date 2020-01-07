@@ -43,6 +43,12 @@
     <Filter Include="src\Ignis\Renderer">
       <UniqueIdentifier>{9C48BA41-882C-7B97-F18C-75EADD8F6519}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Ignis\glad">
+      <UniqueIdentifier>{FDCC8398-E99A-779E-D22E-E8C4BE9B5303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Ignis\glad\KHR">
+      <UniqueIdentifier>{F111879F-DDF5-47F5-4656-424832593277}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\ImGuiBinding">
       <UniqueIdentifier>{92ECE041-7EE5-FF93-A717-E518936FDF9F}</UniqueIdentifier>
     </Filter>
@@ -111,6 +117,12 @@
     <ClInclude Include="src\Ignis\Advanced\ComputeShader.h">
       <Filter>src\Ignis\Advanced</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\Font.h">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ignis\Camera\Camera.h">
       <Filter>src\Ignis\Camera</Filter>
     </ClInclude>
@@ -162,13 +174,16 @@
     <ClInclude Include="src\Ignis\Renderer\Renderer2D.h">
       <Filter>src\Ignis\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h">
+      <Filter>src\Ignis\glad\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\glad\glad.h">
+      <Filter>src\Ignis\glad</Filter>
+    </ClInclude>
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h">
       <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\imgui_impl_glfw.h">
       <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
     <ClInclude Include="src\Input\Input.h">
@@ -216,11 +231,8 @@
     <ClInclude Include="src\json\json.h">
       <Filter>src\json</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\Font.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h">
-      <Filter>src\Ignis</Filter>
+    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h">
+      <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -249,6 +261,12 @@
       <Filter>src\Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\Font.cpp">
+      <Filter>src\Ignis\Advanced</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp">
       <Filter>src\Ignis\Advanced</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp">
@@ -287,13 +305,13 @@
     <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp">
       <Filter>src\Ignis\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ignis\glad\glad.c">
+      <Filter>src\Ignis\glad</Filter>
+    </ClCompile>
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp">
       <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\imgui_impl_glfw.cpp">
       <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
     <ClCompile Include="src\Input\Input.cpp">
@@ -311,11 +329,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\Font.cpp">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp">
-      <Filter>src\Ignis</Filter>
+    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp">
+      <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,6 +365,7 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
-    <None Include="res\templates\entities\floor.json" />
+    <None Include="res\templates\scenes\scene.json" />
+    <None Include="res\templates\entities\tree_1.json" />
   </ItemGroup>
 </Project>

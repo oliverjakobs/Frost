@@ -193,27 +193,15 @@ Application::~Application()
 	glfwTerminate();
 }
 
-void Application::EnableDebugMode(bool b)
-{
-	m_debug = b;
-}
+void Application::EnableDebugMode(bool b) { m_debug = b; }
+void Application::EnableImGui(bool b) { m_showImGui = b; }
+void Application::EnableVsync(bool b) { glfwSwapInterval(b); m_vsync = b; }
 
-void Application::ToggleDebugMode()
-{
-	m_debug = !m_debug;
-}
+void Application::ToggleDebugMode() { EnableDebugMode(!m_debug); }
+void Application::ToggleImGui() { EnableImGui(!m_showImGui); }
+void Application::ToggleVsync() { EnableVsync(!m_vsync); }
 
-void Application::EnableImGui(bool b)
-{
-	m_showImGui = b;
-}
-
-void Application::ToggleImGui()
-{
-	m_showImGui = !m_showImGui;
-}
-
-void Application::Pause()
+void Application::Pause() 
 {
 	m_paused = !m_paused;
 
@@ -223,10 +211,6 @@ void Application::Pause()
 		SetTitle(m_title);
 }
 
-void Application::EnableVsync(bool b)
-{
-	glfwSwapInterval(b);
-}
 
 void Application::Run()
 {

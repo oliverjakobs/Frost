@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
+#include "Ignis/glad/glad.h"
 
 #include "Api.h"
 

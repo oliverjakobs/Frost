@@ -1,0 +1,8 @@
+{
+  "name": "tree",
+  "position": { },
+  "texture": {
+    "src": "res/textures/tree_3.png",
+	"dimension": [ 96.0, 256.0 ]
+  }
+}

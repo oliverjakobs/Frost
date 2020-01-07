@@ -20,6 +20,9 @@ Scene::~Scene()
 
 void Scene::AddEntity(std::shared_ptr<Entity> entity)
 {
+	if (entity == nullptr)
+		return;
+
 	auto phys = entity->GetComponent<PhysicsComponent>();
 
 	if (phys != nullptr)
@@ -32,6 +35,9 @@ void Scene::AddEntity(std::shared_ptr<Entity> entity)
 
 void Scene::AddEntity(std::shared_ptr<Entity> entity, const glm::vec2& position)
 {
+	if (entity == nullptr)
+		return;
+
 	entity->SetPosition(position);
 	AddEntity(entity);
 }

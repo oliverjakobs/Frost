@@ -13,7 +13,6 @@ outputDir = "%{cfg.buildcfg}"
 group "Packages"
 
 include "Frost/packages/glfw"
-include "Frost/packages/glad"
 include "Frost/packages/imgui"
 
 group ""
@@ -31,6 +30,7 @@ project "Frost"
 	files
 	{
 		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.c",
 		"%{prj.name}/src/**.cpp",
 		--Config
 		"%{prj.name}/config.json",
@@ -46,7 +46,6 @@ project "Frost"
 	links
 	{
 		"GLFW",
-		"Glad",
 		"ImGui",
 		"opengl32"
 	}
@@ -56,8 +55,7 @@ project "Frost"
 		"%{prj.name}/src",
 		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/imgui",
-		"%{prj.name}/packages/glfw/include",
-		"%{prj.name}/packages/glad/include"
+		"%{prj.name}/packages/glfw/include"
 	}
 
 	filter "system:windows"

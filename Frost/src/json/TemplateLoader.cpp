@@ -10,6 +10,12 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 {
 	std::string json = obelisk::ReadFile(path);
 
+	if (json.empty())
+	{
+		OBELISK_WARN("Template not found (%s)", path.c_str());
+		return nullptr;
+	}
+
 	json_element_t element;
 	json_read(json.data(), "{'name'", &element);
 
@@ -17,6 +23,15 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	if (name.empty()) return nullptr;
 
 	auto entity = std::make_shared<Entity>(name);
+
+	json_read(json.data(), "{'position'", &element);
+	if (element.error == JSON_OK)
+	{
+		float x = json_float((char*)element.value, "[0", NULL);
+		float y = json_float((char*)element.value, "[1", NULL);
+
+		entity->AddComponent<PositionComponent>(glm::vec2(x, y));
+	}
 
 	json_read(json.data(), "{'physics'", &element);
 	if (element.error == JSON_OK)
@@ -107,4 +122,55 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	}
 
 	return entity;
+}
+
+std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<ignis::Camera> camera)
+{
+	std::string json = obelisk::ReadFile(path);
+
+	float width = json_float(json.data(), "{'size'[0", NULL);
+	float height = json_float(json.data(), "{'size'[1", NULL);
+
+	auto scene = std::make_shared<Scene>(camera, width, height);
+
+	json_element_t element;
+
+	json_read(json.data(), "{'entities'", &element);
+	if (element.error == JSON_OK)
+	{
+		for (int i = 0; i < element.elements; i++)
+		{
+			json_element_t entity;
+			json_read_param((char*)element.value, "{*", &entity, &i);
+
+			std::string entity_name((char*)entity.value, entity.bytelen);
+
+			json_element_t templ;
+			json_read((char*)element.value, (char*)obelisk::format("{'%s'{'template'", entity_name.c_str()).c_str(), &templ);
+
+			std::string templ_src((char*)templ.value, templ.bytelen);
+
+			json_element_t positions;
+			json_read((char*)element.value, (char*)obelisk::format("{'%s'{'positions'", entity_name.c_str()).c_str(), &positions);
+
+			if (positions.error == JSON_OK)
+			{
+				char* value = (char*)positions.value;
+				json_element_t array_element;
+
+				for (int i = 0; i < positions.elements; i++)
+				{
+					value = json_array_step(value, &array_element);
+
+					float x = json_float((char*)array_element.value, "[0", NULL);
+					float y = json_float((char*)array_element.value, "[1", NULL);
+
+					scene->AddEntity(TemplateLoader::LoadEntity(templ_src), glm::vec2(x, y));
+
+				}
+			}
+		}
+	}
+
+	return scene;
 }
