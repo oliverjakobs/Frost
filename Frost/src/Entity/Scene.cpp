@@ -55,6 +55,14 @@ void Scene::Clear()
 	m_entities.clear();
 }
 
+void Scene::OnEntry()
+{
+}
+
+void Scene::OnExtit()
+{
+}
+
 void Scene::OnEvent(const Event& e)
 {
 }

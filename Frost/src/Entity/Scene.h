@@ -24,6 +24,9 @@ public:
 	void RemoveEntity(const std::string& name);
 	void Clear();
 
+	void OnEntry();
+	void OnExtit();
+
 	void OnEvent(const Event& e);
 	void OnUpdate(float deltaTime);
 	void OnRender();

@@ -32,8 +32,9 @@ public:
 		EnableVsync(false);
 
 		m_sceneManager = std::make_shared<SceneManager>(std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height)));
+		m_sceneManager->RegisterScene("scene", "res/templates/scenes/scene.json");
 
-		m_sceneManager->LoadScene("res/templates/scenes/scene.json");
+		m_sceneManager->ChangeScene("scene");
 	}
 
 	~Frost()
@@ -115,6 +116,10 @@ public:
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();
 		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+
+		ImGui::Separator();
+
+		ImGui::Text("Scene: %s", m_sceneManager->GetSceneName().c_str());
 
 		ImGui::End();
 

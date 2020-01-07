@@ -16,9 +16,47 @@ SceneManager::SceneManager(std::shared_ptr<ignis::Camera> camera)
 	m_active = nullptr;
 }
 
-void SceneManager::LoadScene(const std::string& path)
+void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
-	m_scene = TemplateLoader::LoadScene(path, m_camera);
+	m_register.insert({ name, path });
+}
+
+std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
+{
+	auto path = m_register.find(name);
+
+	if (path == m_register.end())
+	{
+		OBELISK_WARN("Couldn't find scene: ", name.c_str());
+		return nullptr;
+	}
+
+	return TemplateLoader::LoadScene(path->second, m_camera);
+}
+
+void SceneManager::ChangeScene(const std::string& name)
+{
+	if (!obelisk::StringCompare(m_sceneName, name))
+	{
+		auto newScene = LoadScene(name);
+
+		if (newScene)
+		{
+			// Exit old Scene
+			if (m_scene)
+				m_scene->OnExtit();
+
+			m_scene = newScene;
+			m_sceneName = name;
+
+			// Enter new scene
+			m_scene->OnEntry();
+		}
+		else
+		{
+			OBELISK_WARN("Failed to load scene: %s", name.c_str());
+		}
+	}
 }
 
 void SceneManager::OnEvent(const Event& e)
@@ -145,9 +183,4 @@ glm::vec2 SceneManager::GetMousePos() const
 	mousePos += viewPos - (viewSize / 2.0f);
 
 	return mousePos;
-}
-
-Scene* SceneManager::GetScene() const
-{
-	return m_scene.get();
 }

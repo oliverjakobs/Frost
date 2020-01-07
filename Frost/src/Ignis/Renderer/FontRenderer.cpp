@@ -44,6 +44,7 @@ namespace ignis
 		if (font != s_renderData->Fonts.end())
 			return font->second;
 
+		_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font " + name + " not found");
 		return nullptr;
 	}
 
@@ -76,10 +77,7 @@ namespace ignis
 		auto font = GetFont(fontname);
 
 		if (!font)
-		{
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font " + fontname + " not found");
 			return;
-		}
 
 		s_renderData->Shader->Use();
 		s_renderData->Shader->SetUniformMat4("u_Projection", proj);
