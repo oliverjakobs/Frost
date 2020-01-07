@@ -130,8 +130,8 @@
     <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h" />
+    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Obelisk\Average.h" />
     <ClInclude Include="src\Obelisk\Debugger.h" />
@@ -174,8 +174,8 @@
     <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
+    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Physics\Body.cpp" />
     <ClCompile Include="src\Physics\World.cpp" />
@@ -184,8 +184,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\maps\map.json" />
-    <None Include="res\resources.json" />
+    <None Include="imgui.ini" />
+    <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\shaders\font.frag" />
     <None Include="res\shaders\font.vert" />
     <None Include="res\shaders\lines.frag" />
@@ -194,8 +194,33 @@
     <None Include="res\shaders\renderer2D.vert" />
     <None Include="res\shaders\tile.frag" />
     <None Include="res\shaders\tile.vert" />
+    <None Include="res\templates\entities\floor.json" />
+    <None Include="res\templates\entities\player.json" />
     <None Include="res\templates\entities\tree_1.json" />
+    <None Include="res\templates\entities\tree_2.json" />
+    <None Include="res\templates\entities\tree_3.json" />
+    <None Include="res\templates\entities\tree_4.json" />
+    <None Include="res\templates\entities\tree_5.json" />
     <None Include="res\templates\scenes\scene.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\Textures&amp;trees.png" />
+    <Image Include="res\textures\Tlayer1.png" />
+    <Image Include="res\textures\Tlayer2.png" />
+    <Image Include="res\textures\Tlayer3.png" />
+    <Image Include="res\textures\bgcolor.png" />
+    <Image Include="res\textures\blocky_font.png" />
+    <Image Include="res\textures\box.png" />
+    <Image Include="res\textures\door.png" />
+    <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\num_font.png" />
+    <Image Include="res\textures\player.png" />
+    <Image Include="res\textures\tiles.png" />
+    <Image Include="res\textures\tree_1.png" />
+    <Image Include="res\textures\tree_2.png" />
+    <Image Include="res\textures\tree_3.png" />
+    <Image Include="res\textures\tree_4.png" />
+    <Image Include="res\textures\tree_5.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">

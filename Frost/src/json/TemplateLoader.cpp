@@ -143,15 +143,10 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 			json_element_t entity;
 			json_read_param((char*)element.value, "{*", &entity, &i);
 
-			std::string entity_name((char*)entity.value, entity.bytelen);
-
-			json_element_t templ;
-			json_read((char*)element.value, (char*)obelisk::format("{'%s'{'template'", entity_name.c_str()).c_str(), &templ);
-
-			std::string templ_src((char*)templ.value, templ.bytelen);
+			std::string templ((char*)entity.value, entity.bytelen);
 
 			json_element_t positions;
-			json_read((char*)element.value, (char*)obelisk::format("{'%s'{'positions'", entity_name.c_str()).c_str(), &positions);
+			json_read((char*)element.value, (char*)obelisk::format("{'%s'", templ.c_str()).c_str(), &positions);
 
 			if (positions.error == JSON_OK)
 			{
@@ -165,7 +160,7 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 					float x = json_float((char*)array_element.value, "[0", NULL);
 					float y = json_float((char*)array_element.value, "[1", NULL);
 
-					scene->AddEntity(TemplateLoader::LoadEntity(templ_src), glm::vec2(x, y));
+					scene->AddEntity(TemplateLoader::LoadEntity(templ), glm::vec2(x, y));
 
 				}
 			}

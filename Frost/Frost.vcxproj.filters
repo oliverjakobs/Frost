@@ -4,11 +4,23 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\maps">
-      <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
+    <Filter Include="res\fonts">
+      <UniqueIdentifier>{E81E0011-5489-B487-9DC7-652D097192DC}</UniqueIdentifier>
     </Filter>
     <Filter Include="res\shaders">
       <UniqueIdentifier>{4841F028-B4F6-681E-3DEB-62F5A99F5F22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\templates">
+      <UniqueIdentifier>{0DD1EA8D-7991-66C4-42CC-AF41AE4BABA0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\templates\entities">
+      <UniqueIdentifier>{8104CB6C-6DFE-F3BE-566B-8ACF42045A2B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\templates\scenes">
+      <UniqueIdentifier>{BDA53876-A934-C23F-5253-D63A3EC1D2E5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\textures">
+      <UniqueIdentifier>{227C1C83-0EDF-AB27-B764-E4DDA3A677AA}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
@@ -183,6 +195,9 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h">
       <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
+    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClInclude>
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h">
       <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
@@ -230,9 +245,6 @@
     </ClInclude>
     <ClInclude Include="src\json\json.h">
       <Filter>src\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h">
-      <Filter>src\ImGuiBinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,6 +323,9 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp">
       <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
+    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp">
+      <Filter>src\ImGuiBinding</Filter>
+    </ClCompile>
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp">
       <Filter>src\ImGuiBinding</Filter>
     </ClCompile>
@@ -329,17 +344,12 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp">
-      <Filter>src\ImGuiBinding</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\maps\map.json">
-      <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\resources.json">
-      <Filter>res</Filter>
+    <None Include="imgui.ini" />
+    <None Include="res\fonts\OpenSans.ttf">
+      <Filter>res\fonts</Filter>
     </None>
     <None Include="res\shaders\font.frag">
       <Filter>res\shaders</Filter>
@@ -365,7 +375,82 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
-    <None Include="res\templates\scenes\scene.json" />
-    <None Include="res\templates\entities\tree_1.json" />
+    <None Include="res\templates\entities\floor.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\player.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\tree_1.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\tree_2.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\tree_3.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\tree_4.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\entities\tree_5.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\scenes\scene.json">
+      <Filter>res\templates\scenes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\Textures&trees.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\Tlayer1.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\Tlayer2.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\Tlayer3.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\bgcolor.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\blocky_font.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\box.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\door.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\floor.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\num_font.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\player.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tiles.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tree_1.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tree_2.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tree_3.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tree_4.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\tree_5.png">
+      <Filter>res\textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

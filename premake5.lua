@@ -33,14 +33,14 @@ project "Frost"
 		"%{prj.name}/src/**.c",
 		"%{prj.name}/src/**.cpp",
 		--Config
+		"%{prj.name}/imgui.ini",
 		"%{prj.name}/config.json",
 		--Resources
-		"%{prj.name}/res/resources.json",
+		"%{prj.name}/res/fonts/**.ttf",
 		"%{prj.name}/res/shaders/**.vert",
 		"%{prj.name}/res/shaders/**.frag",
-		"%{prj.name}/res/images/**.png",
-		"%{prj.name}/res/maps/**.json",
-		"%{prj.name}/res/scripts/**.json"
+		"%{prj.name}/res/templates/**.json",
+		"%{prj.name}/res/textures/**.png"
 	}
 
 	links
