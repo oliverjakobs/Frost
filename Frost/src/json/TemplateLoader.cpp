@@ -16,7 +16,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 		return nullptr;
 	}
 
-	json_element_t element;
+	json_element element;
 	json_read(json.data(), "{'name'", &element);
 
 	std::string name((char*)element.value, element.bytelen);
@@ -36,7 +36,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	json_read(json.data(), "{'physics'", &element);
 	if (element.error == JSON_OK)
 	{
-		json_element_t body;
+		json_element body;
 		json_read((char*)element.value, "{'body'", &body);
 
 		if (body.error == JSON_OK)
@@ -59,7 +59,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	json_read(json.data(), "{'texture'", &element);
 	if (element.error == JSON_OK)
 	{
-		json_element_t texture;
+		json_element texture;
 		json_read((char*)element.value, "{'src'", &texture);
 		std::string src((char*)texture.value, texture.bytelen);
 
@@ -79,17 +79,17 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 
 		for (int i = 0; i < element.elements; i++)
 		{
-			json_element_t anim;
+			json_element anim;
 			json_read_param((char*)element.value, "{*", &anim, &i);
 
 			std::string anim_name((char*)anim.value, anim.bytelen);
 
-			json_element_t array;
+			json_element array;
 			json_read((char*)element.value, (char*)obelisk::format("{'%s'", anim_name.c_str()).c_str(), &array);
 			if (array.data_type == JSON_ARRAY)
 			{
 				char* value = (char*)array.value;
-				json_element_t array_element;
+				json_element array_element;
 
 				// start
 				unsigned int start;
@@ -133,25 +133,25 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 
 	auto scene = std::make_shared<Scene>(camera, width, height);
 
-	json_element_t element;
+	json_element element;
 
-	json_read(json.data(), "{'entities'", &element);
+	json_read(json.data(), "{'templates'", &element);
 	if (element.error == JSON_OK)
 	{
 		for (int i = 0; i < element.elements; i++)
 		{
-			json_element_t entity;
+			json_element entity;
 			json_read_param((char*)element.value, "{*", &entity, &i);
 
 			std::string templ((char*)entity.value, entity.bytelen);
 
-			json_element_t positions;
+			json_element positions;
 			json_read((char*)element.value, (char*)obelisk::format("{'%s'", templ.c_str()).c_str(), &positions);
 
 			if (positions.error == JSON_OK)
 			{
 				char* value = (char*)positions.value;
-				json_element_t array_element;
+				json_element array_element;
 
 				for (int i = 0; i < positions.elements; i++)
 				{
@@ -161,7 +161,6 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 					float y = json_float((char*)array_element.value, "[1", NULL);
 
 					scene->AddEntity(TemplateLoader::LoadEntity(templ), glm::vec2(x, y));
-
 				}
 			}
 		}

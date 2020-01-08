@@ -1,6 +1,6 @@
 {
 	"size": [ 2048.0, 800.0 ],
-	"entities": {
+	"templates": {
 		"res/templates/entities/player.json": [
 			[ 120.0, 288.0 ]
 		],
