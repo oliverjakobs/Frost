@@ -54,7 +54,7 @@ namespace ignis
 		s_renderData->Vertices.clear();
 	}
 
-	void Primitives2D::Vertex(const glm::vec2& v)
+	void Primitives2D::Vertex(const glm::vec2& v, const color& c)
 	{
 		if (s_renderData->Vertices.size() >= MAX_LINES)
 			Flush();
@@ -69,8 +69,8 @@ namespace ignis
 
 	void Primitives2D::DrawLine(const glm::vec2& start, const glm::vec2& end)
 	{
-		Vertex(start);
-		Vertex(end);
+		Vertex(start, WHITE);
+		Vertex(end, WHITE);
 	}
 
 	void Primitives2D::DrawRect(float x, float y, float w, float h)
@@ -97,8 +97,8 @@ namespace ignis
 
 		for (auto& p2 : vertices)
 		{
-			Vertex(p1);
-			Vertex(p2);
+			Vertex(p1, WHITE);
+			Vertex(p2, WHITE);
 			p1 = p2;
 		}
 	}
@@ -123,8 +123,8 @@ namespace ignis
 			r2.x = cosInc * r1.x - sinInc * r1.y;
 			r2.y = sinInc * r1.x + cosInc * r1.y;
 			glm::vec2 v2 = center + radius * r2;
-			Vertex(v1);
-			Vertex(v2);
+			Vertex(v1, WHITE);
+			Vertex(v2, WHITE);
 			r1 = r2;
 			v1 = v2;
 		}

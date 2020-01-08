@@ -23,12 +23,13 @@ private:
 
 	std::shared_ptr<Entity> m_active;
 public:
-	SceneManager(std::shared_ptr<Camera> camera);
+	SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
 	~SceneManager();
 
 	void RegisterScene(const std::string& name, const std::string& path);
-	std::shared_ptr<Scene> LoadScene(const std::string& name);
 	void ChangeScene(const std::string& name);
+
+	std::shared_ptr<Scene> LoadScene(const std::string& name);
 
 	void OnEvent(const Event& e);
 	void OnUpdate(float deltaTime);

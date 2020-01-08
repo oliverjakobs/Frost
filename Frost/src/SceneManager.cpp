@@ -4,14 +4,14 @@
 
 #include "Application.h"
 
-SceneManager::SceneManager(std::shared_ptr<ignis::Camera> camera)
+SceneManager::SceneManager(std::shared_ptr<ignis::Camera> camera, float gridsize, uint16_t padding)
 	: m_camera(camera)
 {
 	m_editmode = true;
 	m_showgrid = false;
 
-	m_gridsize = 32.0f;
-	m_padding = m_gridsize * 4;
+	m_gridsize = gridsize;
+	m_padding = gridsize * padding;
 
 	m_active = nullptr;
 }
@@ -25,19 +25,6 @@ SceneManager::~SceneManager()
 void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
 	m_register.insert({ name, path });
-}
-
-std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
-{
-	auto path = m_register.find(name);
-
-	if (path == m_register.end())
-	{
-		OBELISK_WARN("Couldn't find scene: ", name.c_str());
-		return nullptr;
-	}
-
-	return TemplateLoader::LoadScene(path->second, m_camera);
 }
 
 void SceneManager::ChangeScene(const std::string& name)
@@ -63,6 +50,19 @@ void SceneManager::ChangeScene(const std::string& name)
 			OBELISK_WARN("Failed to load scene: %s", name.c_str());
 		}
 	}
+}
+
+std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
+{
+	auto path = m_register.find(name);
+
+	if (path == m_register.end())
+	{
+		OBELISK_WARN("Couldn't find scene: ", name.c_str());
+		return nullptr;
+	}
+
+	return TemplateLoader::LoadScene(path->second, m_camera);
 }
 
 void SceneManager::OnEvent(const Event& e)
@@ -104,7 +104,6 @@ void SceneManager::OnUpdate(float deltaTime)
 			position.x -= cameraspeed * deltaTime;
 		if (Input::KeyPressed(KEY_D))
 			position.x += cameraspeed * deltaTime;
-
 		if (Input::KeyPressed(KEY_S))
 			position.y -= cameraspeed * deltaTime;
 		if (Input::KeyPressed(KEY_W))
@@ -150,7 +149,7 @@ void SceneManager::OnRender()
 				glm::vec2 max = min + tex->GetDimension();
 
 				Primitives2D::DrawRect(min, max - min);
-				Primitives2D::DrawCircle(m_active->GetPosition(), 2.0f);
+				Primitives2D::DrawCircle(position, 2.0f);
 			}
 		}
 
@@ -184,9 +183,9 @@ glm::vec2 SceneManager::GetMousePos() const
 	glm::vec2 viewPos = m_camera->GetPosition();
 
 	glm::vec2 mousePos = Input::MousePosition();
-	mousePos.y = viewSize.y - mousePos.y;
+	mousePos.y = m_camera->GetSize().y - mousePos.y;
 
-	mousePos += viewPos - (viewSize / 2.0f);
+	mousePos += viewPos - (m_camera->GetSize() / 2.0f);
 
 	return mousePos;
 }

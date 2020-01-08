@@ -13,7 +13,7 @@ namespace ignis
 		static void Start(const glm::mat4& viewProjection);
 		static void Flush();
 
-		static void Vertex(const glm::vec2& v);
+		static void Vertex(const glm::vec2& v, const color& c);
 
 		// Line
 		static void DrawLine(float x1, float y1, float x2, float y2);
