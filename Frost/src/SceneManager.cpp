@@ -16,6 +16,12 @@ SceneManager::SceneManager(std::shared_ptr<ignis::Camera> camera)
 	m_active = nullptr;
 }
 
+SceneManager::~SceneManager()
+{
+	if (m_scene)
+		m_scene->OnExtit();
+}
+
 void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
 	m_register.insert({ name, path });
