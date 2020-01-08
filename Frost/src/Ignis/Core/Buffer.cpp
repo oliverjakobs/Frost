@@ -172,9 +172,16 @@ namespace ignis
 		m_arrayBuffers.push_back(buffer);
 	}
 
-	void VertexArray::AddArrayBuffer(const std::shared_ptr<ArrayBuffer>& buffer, const BufferLayout& layout)
+	void VertexArray::AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage)
+	{
+		AddArrayBuffer(std::make_shared<ArrayBuffer>(size, data, usage));
+	}
+
+	void VertexArray::AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage, const BufferLayout& layout)
 	{
 		Bind();
+
+		auto buffer = std::make_shared<ArrayBuffer>(size, data, usage);
 		buffer->Bind();
 
 		for (const auto& element : layout)

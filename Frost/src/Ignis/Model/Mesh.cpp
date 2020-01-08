@@ -158,14 +158,13 @@ namespace ignis
 
 		auto vbo = std::make_shared<ArrayBuffer>(sizeof(indexedVert[0]) * indexedVert.size(), &indexedVert[0], GL_STATIC_DRAW);
 
-		m_vertexArray.AddArrayBuffer(vbo);
-
 		vbo->VertexAttribPointerR(0, 3, false, sizeof(Vertex), 0);
 		vbo->VertexAttribPointerR(1, 2, false, sizeof(Vertex), (void*)offsetof(Vertex, TexCoord));
 		vbo->VertexAttribPointerR(2, 3, false, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 		vbo->VertexAttribPointerR(3, 3, false, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 		vbo->VertexAttribPointerR(4, 3, false, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
+		m_vertexArray.AddArrayBuffer(vbo);
 		m_vertexArray.LoadElementBuffer(indices, GL_STATIC_DRAW);
 
 		OBELISK_CHRONO_TRACE("[Mesh] Done in {0}ms");

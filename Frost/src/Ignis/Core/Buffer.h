@@ -181,7 +181,8 @@ namespace ignis
 		void Unbind() const;
 
 		void AddArrayBuffer(const std::shared_ptr<ArrayBuffer>& buffer);
-		void AddArrayBuffer(const std::shared_ptr<ArrayBuffer>& buffer, const BufferLayout& layout);
+		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
+		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage, const BufferLayout& layout);
 		void LoadElementBuffer(std::vector<GLuint> indices, GLenum usage);
 
 		const GLuint GetName() const { return m_name; }

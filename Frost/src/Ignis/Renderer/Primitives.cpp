@@ -20,10 +20,7 @@ namespace ignis
 
 		s_renderData->VertexArray = std::make_shared<VertexArray>();
 
-		s_renderData->VertexArray->AddArrayBuffer(std::make_shared<ArrayBuffer>(sizeof(glm::vec2) * MAX_LINES, nullptr, GL_DYNAMIC_DRAW),
-			{
-				{GL_FLOAT, 2}
-			});
+		s_renderData->VertexArray->AddArrayBuffer(sizeof(glm::vec2) * MAX_LINES, nullptr, GL_DYNAMIC_DRAW, { {GL_FLOAT, 2} });
 
 		s_renderData->Shader = shader;
 	}

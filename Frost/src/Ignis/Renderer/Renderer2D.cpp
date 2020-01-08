@@ -26,7 +26,7 @@ namespace ignis
 			0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 		};
 
-		s_renderData->VertexArray->AddArrayBuffer(std::make_shared<ArrayBuffer>(sizeof(vertices), vertices, GL_STATIC_DRAW),
+		s_renderData->VertexArray->AddArrayBuffer(sizeof(vertices), vertices, GL_STATIC_DRAW,
 			{
 				{GL_FLOAT, 3},
 				{GL_FLOAT, 2}

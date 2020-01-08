@@ -21,7 +21,7 @@ namespace ignis
 		s_renderData->BufferSize = sizeof(float) * 4 * 4;
 
 		s_renderData->VertexArray = std::make_shared<VertexArray>();
-		s_renderData->VertexArray->AddArrayBuffer(std::make_shared<ArrayBuffer>(s_renderData->BufferSize, nullptr, GL_DYNAMIC_DRAW), { {GL_FLOAT, 4} });
+		s_renderData->VertexArray->AddArrayBuffer(s_renderData->BufferSize, nullptr, GL_DYNAMIC_DRAW, { {GL_FLOAT, 4} });
 		s_renderData->VertexArray->LoadElementBuffer({ 0,1,2,2,3,0 }, GL_STATIC_DRAW);
 
 		s_renderData->Shader = shader;
