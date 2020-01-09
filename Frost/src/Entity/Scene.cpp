@@ -92,11 +92,11 @@ void Scene::OnRenderDebug()
 	for (auto& entity : m_entities)
 	{
 		entity->OnRenderDebug();
-		Primitives2D::DrawCircle(entity->GetPosition(), 2.0f);
+		Primitives2D::DrawCircle(entity->GetPosition(), 2.0f, WHITE);
 	}
 
 	for (auto& body : m_world->GetBodies())
-		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension());
+		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension(), WHITE);
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
 	//

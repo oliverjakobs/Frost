@@ -14,11 +14,16 @@ namespace ignis
 		SetProjection(size);
 	}
 
-	void OrthographicCamera::SetProjection(const glm::vec2& size)
+	void OrthographicCamera::SetProjection(float w, float h)
 	{
-		m_projection = glm::ortho(-size.x / 2.0f, size.x / 2.0f, -size.y / 2.0f, size.y / 2.0f, -1.0f, 1.0f);
+		m_projection = glm::ortho(-w / 2.0f, w / 2.0f, -h / 2.0f, h / 2.0f, -1.0f, 1.0f);
 
 		UpdateView();
+	}
+
+	void OrthographicCamera::SetProjection(const glm::vec2& size)
+	{
+		SetProjection(size.x, size.y);
 	}
 
 	void OrthographicCamera::UpdateView()

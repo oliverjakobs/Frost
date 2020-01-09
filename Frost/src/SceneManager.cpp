@@ -75,7 +75,7 @@ void SceneManager::OnEvent(const Event& e)
 	if (e.GetType() == EventType::WindowResize)
 	{
 		WindowResizeEvent& resize = (WindowResizeEvent&)e;
-		((OrthographicCamera*)m_camera.get())->SetProjection(glm::vec2((float)resize.GetWidth(), (float)resize.GetHeight()));
+		((OrthographicCamera*)m_camera.get())->SetProjection((float)resize.GetWidth(), (float)resize.GetHeight());
 	}
 
 	if (e.GetType() == EventType::KeyPressed)
@@ -133,12 +133,12 @@ void SceneManager::OnRender()
 		{
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
 			{
-				Primitives2D::DrawLine(x, -m_padding, x, m_scene->GetHeight() + m_padding);
+				Primitives2D::DrawLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, BlendColor(WHITE, 0.5f));
 			}
 
 			for (float y = -m_padding; y <= m_scene->GetHeight() + m_padding; y += m_gridsize)
 			{
-				Primitives2D::DrawLine(-m_padding, y, m_scene->GetWidth() + m_padding, y);
+				Primitives2D::DrawLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, BlendColor(WHITE, 0.5f));
 			}
 		}
 
@@ -153,8 +153,8 @@ void SceneManager::OnRender()
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
 
-				Primitives2D::DrawRect(min, max - min);
-				Primitives2D::DrawCircle(position, 2.0f);
+				Primitives2D::DrawRect(min, max - min, WHITE);
+				Primitives2D::DrawCircle(position, 2.0f, WHITE);
 			}
 		}
 

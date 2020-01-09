@@ -27,6 +27,8 @@ namespace ignis
 	const color CYAN	= { 0.0f, 1.0f, 1.0f, 1.0f };
 	const color MAGENTA = { 1.0f, 0.0f, 1.0f, 1.0f };
 	const color YELLOW	= { 1.0f, 1.0f, 0.0f, 1.0f };
+
+	glm::vec4 BlendColor(const glm::vec4& color, float alpha);
 }
 
 enum class ignisErrorLevel
