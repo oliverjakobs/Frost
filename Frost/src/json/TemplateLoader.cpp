@@ -128,6 +128,12 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 {
 	std::string json = obelisk::ReadFile(path);
 
+	if (json.empty())
+	{
+		OBELISK_WARN("Template not found (%s)", path.c_str());
+		return nullptr;
+	}
+
 	float width = json_float(json.data(), "{'size'[0", NULL);
 	float height = json_float(json.data(), "{'size'[1", NULL);
 
@@ -167,4 +173,34 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 	}
 
 	return scene;
+}
+
+void TemplateLoader::LoadSceneRegister(SceneManager* manager, const std::string& path)
+{
+	std::string json = obelisk::ReadFile(path);
+
+	if (json.empty())
+	{
+		OBELISK_WARN("Register not found (%s)", path.c_str());
+		return;
+	}
+
+	json_element element;
+	json_read(json.data(), "{'scenes'", &element);
+
+	for (int i = 0; i < element.elements; i++)
+	{
+		json_element scene;
+		json_read_param((char*)element.value, "{*", &scene, &i);
+
+		std::string sceneName((char*)scene.value, scene.bytelen);
+
+		json_element templ;
+		json_read((char*)element.value, (char*)obelisk::format("{'%s'", sceneName.c_str()).c_str(), &templ);
+
+		std::string templPath((char*)templ.value, templ.bytelen);
+
+		if (!(sceneName.empty() || templPath.empty()))
+			manager->RegisterScene(sceneName, templPath);
+	}
 }

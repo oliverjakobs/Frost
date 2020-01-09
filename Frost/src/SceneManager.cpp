@@ -22,6 +22,11 @@ SceneManager::~SceneManager()
 		m_scene->OnExtit();
 }
 
+void SceneManager::RegisterScenes(const std::string& path)
+{
+	TemplateLoader::LoadSceneRegister(this, path);
+}
+
 void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
 	m_register.insert({ name, path });

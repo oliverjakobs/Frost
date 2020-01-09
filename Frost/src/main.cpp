@@ -33,8 +33,7 @@ public:
 
 		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
 		m_sceneManager = std::make_shared<SceneManager>(camera, 32.0f, 4);
-
-		m_sceneManager->RegisterScene("scene", "res/templates/scenes/scene.json");
+		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
 
 		m_sceneManager->ChangeScene("scene");
 	}

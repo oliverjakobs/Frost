@@ -26,6 +26,8 @@ public:
 	SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
 	~SceneManager();
 
+	void RegisterScenes(const std::string& path);
+
 	void RegisterScene(const std::string& name, const std::string& path);
 	void ChangeScene(const std::string& name);
 

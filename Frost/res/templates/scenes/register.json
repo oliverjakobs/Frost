@@ -1,3 +1,6 @@
 {
-	"scene": "res/templates/scenes/scene.json"
+	"scenes": {
+		"scene": "res/templates/scenes/scene.json",
+		"train": "res/templates/scenes/train.json"
+	}
 }
