@@ -6,15 +6,15 @@ class World;
 
 enum class BodyType
 {
-	BODY_TYPE_STATIC,
-	BODY_TYPE_DYNAMIC
+	STATIC,
+	DYNAMIC
 };
 
 class Body
 {
 private:
 	glm::vec2 m_position;
-	glm::vec2 m_halfDimension;
+	glm::vec2 m_halfSize;
 
 	glm::vec2 m_velocity;
 
@@ -43,8 +43,8 @@ public:
 	void SetVelocity(const glm::vec2& velocity) { m_velocity = velocity; }
 	const glm::vec2 GetVelocity() const { return m_velocity; }
 
-	const glm::vec2 GetHalfDimension() const { return m_halfDimension; }
-	const glm::vec2 GetDimension() const { return m_halfDimension * 2.0f; }
+	const glm::vec2 GetHalfSize() const { return m_halfSize; }
+	const glm::vec2 GetSize() const { return m_halfSize * 2.0f; }
 
 	BodyType GetType() const { return m_type; }
 
@@ -55,8 +55,8 @@ public:
 	const bool CollidesRight() const { return m_collidesRight; }
 
 	// get the edges of the body
-	const float GetX() const { return m_position.x - m_halfDimension.x; }
-	const float GetX2() const { return m_position.x + m_halfDimension.x; }
-	const float GetY() const { return m_position.y - m_halfDimension.y; }
-	const float GetY2() const { return m_position.y + m_halfDimension.y; }
+	const float GetX() const { return m_position.x - m_halfSize.x; }
+	const float GetX2() const { return m_position.x + m_halfSize.x; }
+	const float GetY() const { return m_position.y - m_halfSize.y; }
+	const float GetY2() const { return m_position.y + m_halfSize.y; }
 };

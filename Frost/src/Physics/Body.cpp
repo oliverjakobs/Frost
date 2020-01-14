@@ -3,8 +3,12 @@
 #include <algorithm>
 
 Body::Body(float x, float y, float hWidth, float hHeight, BodyType type)
-	: m_position(x, y), m_halfDimension(hWidth, hHeight), m_velocity(0.0f, 0.0f), m_type(type), m_world(nullptr)
+	: m_position(x, y), m_halfSize(hWidth, hHeight), m_velocity(0.0f, 0.0f), m_type(type), m_world(nullptr)
 {
+	m_collidesBottom = false;
+	m_collidesTop = false;
+	m_collidesLeft = false;
+	m_collidesRight = false;
 }
 
 void Body::Tick(float deltaTime, const glm::vec2& gravity)
@@ -24,7 +28,7 @@ void Body::ResolveCollision(const Body& b, const glm::vec2& oldPos)
 	glm::vec2 overlap;
 
 	overlap.x = std::min(GetX2() - b.GetX(), b.GetX2() - GetX());
-	overlap.y = std::min((oldPos.y + m_halfDimension.y) - b.GetY(), b.GetY2() - (oldPos.y - m_halfDimension.y));
+	overlap.y = std::min((oldPos.y + m_halfSize.y) - b.GetY(), b.GetY2() - (oldPos.y - m_halfSize.y));
 
 	// horizontal resolve
 	if (overlap.x > 0.0f && overlap.y > 0.0f)
@@ -43,7 +47,7 @@ void Body::ResolveCollision(const Body& b, const glm::vec2& oldPos)
 		}
 	}
 
-	overlap.x = std::min((oldPos.x + m_halfDimension.x) - b.GetX(), b.GetX2() - (oldPos.x - m_halfDimension.x));
+	overlap.x = std::min((oldPos.x + m_halfSize.x) - b.GetX(), b.GetX2() - (oldPos.x - m_halfSize.x));
 	overlap.y = std::min(GetY2() - b.GetY(), b.GetY2() - GetY());
 
 	// vertical resolve

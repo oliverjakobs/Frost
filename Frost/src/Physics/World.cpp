@@ -27,7 +27,7 @@ void World::Tick(float deltaTime)
 {
 	for (auto& body : m_bodies)
 	{
-		if (body->GetType() == BodyType::BODY_TYPE_STATIC)
+		if (body->GetType() == BodyType::STATIC)
 			continue;
 
 		glm::vec2 oldPosition = body->GetPosition();

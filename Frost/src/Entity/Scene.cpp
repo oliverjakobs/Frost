@@ -96,7 +96,7 @@ void Scene::OnRenderDebug()
 	}
 
 	for (auto& body : m_world->GetBodies())
-		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfDimension(), body->GetDimension(), WHITE);
+		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfSize(), body->GetSize(), body->GetType() == BodyType::DYNAMIC ? GREEN : WHITE);
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
 	//
