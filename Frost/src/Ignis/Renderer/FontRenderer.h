@@ -13,7 +13,6 @@ namespace ignis
 		static void AddFont(const std::string& name, std::shared_ptr<Font> font);
 		static std::shared_ptr<Font> GetFont(const std::string& name);
 
-		static void RenderText(Font& font, const std::string& text, float x, float y, const glm::mat4& proj, const ignis::color& color);
 		static void RenderText(const std::string& font, const std::string& text, float x, float y, const glm::mat4& proj, const ignis::color& color);
 	};
 }

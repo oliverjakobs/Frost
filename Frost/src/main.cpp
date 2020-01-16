@@ -26,6 +26,7 @@ public:
 
 		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
 		FontRenderer::AddFont("font", std::make_shared<Font>("res/fonts/OpenSans.ttf", 32.0f));
+		FontRenderer::AddFont("font", std::make_shared<Font>("res/fonts/OpenSans.ttf", 32.0f));
 
 		EnableDebugMode(true);
 		EnableImGui(true);
@@ -117,6 +118,7 @@ public:
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();
 		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+		ImGui::Text("Precise Y: %f", position.y);
 
 		ImGui::Separator();
 
