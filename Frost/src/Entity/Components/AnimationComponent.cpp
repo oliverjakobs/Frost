@@ -2,18 +2,18 @@
 
 #include "Obelisk/Obelisk.h"
 
-Animation::Animation(int start, int length, float delay)
+Anim::Anim(int start, int length, float delay)
 	: Start(start), Length(length), Delay(delay), FrameCounter(0.0f), Frame(0)
 {
 }
 
-static void StartAnimation(Animation& anim)
+static void StartAnimation(Anim& anim)
 {
 	anim.Frame = anim.Start;
 	anim.FrameCounter = 0.0f;
 }
 
-static void StepAnimation(Animation& anim, float deltaTime)
+static void StepAnimation(Anim& anim, float deltaTime)
 {
 	anim.FrameCounter += deltaTime;
 
@@ -30,7 +30,7 @@ static void StepAnimation(Animation& anim, float deltaTime)
 	}
 }
 
-AnimationComponent::AnimationComponent(Entity* entity, const std::map<std::string, Animation>& anims)
+AnimationComponent::AnimationComponent(Entity* entity, const std::map<std::string, Anim>& anims)
 	: Component(entity), m_animations(anims), m_currentAnimation("") 
 {
 }

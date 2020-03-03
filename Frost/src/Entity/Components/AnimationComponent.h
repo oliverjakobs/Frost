@@ -2,7 +2,7 @@
 
 #include "TextureComponent.h"
 
-struct Animation
+struct Anim
 {
 	int Start;
 	int Length;
@@ -12,18 +12,19 @@ struct Animation
 
 	int Frame;
 
-	Animation() = default;
-	Animation(int start, int length, float delay);
+	Anim() = default;
+	Anim(int start, int length, float delay);
 };
+
 
 class AnimationComponent : public Component
 {
 private:
-	std::map<std::string, Animation> m_animations;
+	std::map<std::string, Anim> m_animations;
 	std::string m_currentAnimation;
 
 public:
-	AnimationComponent(Entity* entity, const std::map<std::string, Animation>& anims);
+	AnimationComponent(Entity* entity, const std::map<std::string, Anim>& anims);
 
 	void PlayAnimation(const std::string& anim);
 	std::string GetCurrent() const;

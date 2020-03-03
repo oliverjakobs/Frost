@@ -75,7 +75,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	json_read(json.data(), "{'animation'", &element);
 	if (element.error == JSON_OK)
 	{
-		std::map<std::string, Animation> animations;
+		std::map<std::string, Anim> animations;
 
 		for (int i = 0; i < element.elements; i++)
 		{
@@ -106,7 +106,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 				value = json_array_step(value, &array_element);
 				json_atof((char*)array_element.value, &duration);
 
-				animations.insert({ anim_name, Animation(start, length, duration) });
+				animations.insert({ anim_name, Anim(start, length, duration) });
 			}
 		}
 		entity->AddComponent<AnimationComponent>(animations);

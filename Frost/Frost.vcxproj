@@ -91,6 +91,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation\Animation.h" />
+    <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Entity\Components.h" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.h" />
@@ -150,6 +152,8 @@
     <ClInclude Include="src\json\json.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation\Animation.cpp" />
+    <ClCompile Include="src\Animation\Animator.cpp" />
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
