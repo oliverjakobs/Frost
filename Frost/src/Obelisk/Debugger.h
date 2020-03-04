@@ -37,7 +37,7 @@
 // -----------------------------------------------------------------------------------
 #ifdef OBELISK_ENABLE_ASSERT
 
-#define OBELISK_ASSERT(x, ...) { if(!(x)) { OBELISK_CRITICAL("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#define OBELISK_ASSERT(x, ...) { if(!(x)) { OBELISK_CRITICAL("Assertion Failed: %s", __VA_ARGS__); __debugbreak(); } }
 
 #else
 

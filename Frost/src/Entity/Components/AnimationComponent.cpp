@@ -1,66 +1,17 @@
 #include "AnimationComponent.h"
 
-#include "Obelisk/Obelisk.h"
-
-Anim::Anim(int start, int length, float delay)
-	: Start(start), Length(length), Delay(delay), FrameCounter(0.0f), Frame(0)
+AnimationComponent::AnimationComponent(Entity* entity, std::shared_ptr<Animator> animator)
+	: Component(entity), m_animator(animator)
 {
 }
 
-static void StartAnimation(Anim& anim)
-{
-	anim.Frame = anim.Start;
-	anim.FrameCounter = 0.0f;
-}
-
-static void StepAnimation(Anim& anim, float deltaTime)
-{
-	anim.FrameCounter += deltaTime;
-
-	if (anim.FrameCounter > anim.Delay)
-	{
-		anim.FrameCounter = 0.0f;
-		anim.Frame++;
-	}
-
-	if (anim.Frame >= anim.Start + anim.Length || anim.Frame < anim.Start)
-	{
-		anim.Frame = anim.Start;
-		anim.FrameCounter = 0.0f;
-	}
-}
-
-AnimationComponent::AnimationComponent(Entity* entity, const std::map<std::string, Anim>& anims)
-	: Component(entity), m_animations(anims), m_currentAnimation("") 
-{
-}
-
-void AnimationComponent::PlayAnimation(const std::string& anim)
-{
-	if (obelisk::StringCompare(m_currentAnimation, anim))
-		return;
-
-	if (m_animations.find(anim) != m_animations.end())
-	{
-		StartAnimation(m_animations[anim]);
-		m_currentAnimation = anim;
-	}
-}
-
-std::string AnimationComponent::GetCurrent() const
-{
-	return m_currentAnimation;
-}
 
 void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 {
-	if (!m_currentAnimation.empty())
-	{
-		StepAnimation(m_animations[m_currentAnimation], deltaTime);
+	m_animator->Tick(m_entity, deltaTime);
 
-		TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
+	TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
 
-		if (tex != nullptr)
-			tex->SetFrame(m_animations[m_currentAnimation].Frame);
-	}
+	if (tex != nullptr)
+		tex->SetFrame(m_animator->GetFrame());
 }

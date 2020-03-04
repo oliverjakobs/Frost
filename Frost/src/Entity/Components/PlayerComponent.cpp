@@ -21,11 +21,7 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	OBELISK_ASSERT(phys, "[COMP] Entity has no PhysicsComponent");
 	
 	TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
-	OBELISK_ASSERT(tex, "[COMP] Entity has no TextureComponent");
-	
-	AnimationComponent* anim = m_entity->GetComponent<AnimationComponent>();
-	OBELISK_ASSERT(anim, "[COMP] Entity has no AnimationComponent");
-	
+	OBELISK_ASSERT(tex, "[COMP] Entity has no TextureComponent");	
 	
 	glm::vec2 velocity = glm::vec2(0.0f, phys->GetBody()->GetVelocity().y);
 	
@@ -53,14 +49,14 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	}
 	
 	// Animation
-	if (velocity.y > 0.0f)
-		anim->PlayAnimation("jump");
-	else if (!collidesBottom)
-		anim->PlayAnimation("fall");
-	else if (velocity.x != 0.0f)
-		anim->PlayAnimation("walk");
-	else
-		anim->PlayAnimation("idle");
+	// if (velocity.y > 0.0f)
+	// 	anim->PlayAnimation("jump");
+	// else if (!collidesBottom)
+	// 	anim->PlayAnimation("fall");
+	// else if (velocity.x != 0.0f)
+	// 	anim->PlayAnimation("walk");
+	// else
+	// 	anim->PlayAnimation("idle");
 	
 	// apply velocity
 	phys->GetBody()->SetVelocity(velocity);

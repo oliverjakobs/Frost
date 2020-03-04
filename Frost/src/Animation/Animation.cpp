@@ -32,7 +32,7 @@ void Animation::Tick(float deltaTime)
 	}
 }
 
-void Animation::AddContition(const std::string& name, const std::string& next)
+void Animation::AddTransition(const std::string& name, const std::string& next)
 {
-	m_transitions.insert({ name, next });
+	m_transitions.push_back({ name, next });
 }

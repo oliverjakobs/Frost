@@ -75,41 +75,41 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	json_read(json.data(), "{'animation'", &element);
 	if (element.error == JSON_OK)
 	{
-		std::map<std::string, Anim> animations;
-
-		for (int i = 0; i < element.elements; i++)
-		{
-			json_element anim;
-			json_read_param((char*)element.value, "{*", &anim, &i);
-
-			std::string anim_name((char*)anim.value, anim.bytelen);
-
-			json_element array;
-			json_read((char*)element.value, (char*)obelisk::format("{'%s'", anim_name.c_str()).c_str(), &array);
-			if (array.data_type == JSON_ARRAY)
-			{
-				char* value = (char*)array.value;
-				json_element array_element;
-
-				// start
-				unsigned int start;
-				value = json_array_step(value, &array_element);
-				json_atoi((char*)array_element.value, &start);
-
-				// length
-				unsigned int length;
-				value = json_array_step(value, &array_element);
-				json_atoi((char*)array_element.value, &length);
-
-				// duration
-				float duration;
-				value = json_array_step(value, &array_element);
-				json_atof((char*)array_element.value, &duration);
-
-				animations.insert({ anim_name, Anim(start, length, duration) });
-			}
-		}
-		entity->AddComponent<AnimationComponent>(animations);
+		// std::map<std::string, Anim> animations;
+		// 
+		// for (int i = 0; i < element.elements; i++)
+		// {
+		// 	json_element anim;
+		// 	json_read_param((char*)element.value, "{*", &anim, &i);
+		// 
+		// 	std::string anim_name((char*)anim.value, anim.bytelen);
+		// 
+		// 	json_element array;
+		// 	json_read((char*)element.value, (char*)obelisk::format("{'%s'", anim_name.c_str()).c_str(), &array);
+		// 	if (array.data_type == JSON_ARRAY)
+		// 	{
+		// 		char* value = (char*)array.value;
+		// 		json_element array_element;
+		// 
+		// 		// start
+		// 		unsigned int start;
+		// 		value = json_array_step(value, &array_element);
+		// 		json_atoi((char*)array_element.value, &start);
+		// 
+		// 		// length
+		// 		unsigned int length;
+		// 		value = json_array_step(value, &array_element);
+		// 		json_atoi((char*)array_element.value, &length);
+		// 
+		// 		// duration
+		// 		float duration;
+		// 		value = json_array_step(value, &array_element);
+		// 		json_atof((char*)array_element.value, &duration);
+		// 
+		// 		animations.insert({ anim_name, Anim(start, length, duration) });
+		// 	}
+		// }
+		// entity->AddComponent<AnimationComponent>(animations);
 	}
 
 	json_read(json.data(), "{'player'", &element);

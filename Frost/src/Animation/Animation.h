@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
-#include <functional>
-#include <map>
+#include <vector>
+
+typedef std::pair<std::string, std::string> Transition;
 
 class Entity;
 
@@ -17,7 +18,7 @@ private:
 
 	int m_frame;
 
-	std::map<std::string, std::string> m_transitions;
+	std::vector<Transition> m_transitions;
 
 public:
 	Animation() = default;
@@ -26,9 +27,8 @@ public:
 	void Start();
 	void Tick(float deltaTime);
 
-	void AddContition(const std::string& name, const std::string& next);
+	void AddTransition(const std::string& name, const std::string& next);
+	const std::vector<Transition> GetTransitions() const { return m_transitions; }
 
 	int GetFrame() const { return m_frame; }
-	const std::map<std::string, std::string> GetTransitions() const { return m_transitions; }
-
 };
