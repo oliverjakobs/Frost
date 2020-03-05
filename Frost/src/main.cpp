@@ -1,3 +1,5 @@
+#include "Memory/Memory.h"
+
 #include "Application.h"
 
 #include "SceneManager.h"
@@ -41,39 +43,11 @@ public:
 
 		// Animator
 		auto animator = std::make_shared<Animator>();
-		animator->RegisterCondition("jump", [](Entity* e, int s)
-			{
-				if (auto comp = e->GetComponent<PhysicsComponent>())
-					return comp->GetBody()->GetVelocity().y > 0.0f;
-
-				return false;
-			});
-		animator->RegisterCondition("fall", [](Entity* e, int s)
-			{
-				if (auto comp = e->GetComponent<PhysicsComponent>())
-					return !comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().y <= 0.0f;
-
-				return false;
-			});
-		animator->RegisterCondition("walk", [](Entity* e, int s)
-			{
-				if (auto comp = e->GetComponent<PhysicsComponent>())
-					return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x != 0.0f;
-
-				return false;
-			});
-		animator->RegisterCondition("idle", [](Entity* e, int s)
-			{
-				if (auto comp = e->GetComponent<PhysicsComponent>())
-					return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x == 0.0f;
-
-				return false;
-			});
-
-		animator->CreateAnimation("idle", 0, 4, 0.2f, { { "jump", "jump" }, { "fall", "fall" }, { "walk", "walk" } });
-		animator->CreateAnimation("walk", 6, 6, 0.125f, { { "jump", "jump" }, { "fall", "fall" }, { "idle", "idle" } });
-		animator->CreateAnimation("jump", 12, 3, 0.3f, { { "fall", "fall" }, { "walk", "walk" }, { "idle", "idle" } });
-		animator->CreateAnimation("fall", 18, 2, 0.4f, { { "jump", "jump" }, { "walk", "walk" } , { "idle", "idle" } });
+		animator->LoadConditions();
+		animator->CreateAnimation("idle", 0, 4, 0.2f, { { "condition_jump", "jump" }, { "condition_fall", "fall" }, { "condition_walk", "walk" } });
+		animator->CreateAnimation("walk", 6, 6, 0.125f, { { "condition_jump", "jump" }, { "condition_fall", "fall" }, { "condition_idle", "idle" } });
+		animator->CreateAnimation("jump", 12, 3, 0.3f, { { "condition_fall", "fall" }, { "condition_walk", "walk" }, { "condition_idle", "idle" } });
+		animator->CreateAnimation("fall", 18, 2, 0.4f, { { "condition_jump", "jump" }, { "condition_walk", "walk" } , { "condition_idle", "idle" } });
 
 		m_sceneManager->GetScene()->GetEntity("player")->AddComponent<AnimationComponent>(animator);
 	}

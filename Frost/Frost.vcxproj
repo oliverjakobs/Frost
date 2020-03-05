@@ -135,6 +135,7 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Memory\Memory.h" />
     <ClInclude Include="src\Obelisk\Average.h" />
     <ClInclude Include="src\Obelisk\Debugger.h" />
     <ClInclude Include="src\Obelisk\FileUtility.h" />

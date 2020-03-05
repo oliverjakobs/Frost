@@ -1,11 +1,46 @@
 #include "Animator.h"
 
+#include "Entity/Entity.h"
+#include "Entity/Components.h"
+
+void Animator::LoadConditions()
+{
+	RegisterCondition("condition_jump", [](Entity* e, int s)
+		{
+			if (auto comp = e->GetComponent<PhysicsComponent>())
+				return comp->GetBody()->GetVelocity().y > 0.0f;
+
+			return false;
+		});
+	RegisterCondition("condition_fall", [](Entity* e, int s)
+		{
+			if (auto comp = e->GetComponent<PhysicsComponent>())
+				return !comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().y <= 0.0f;
+
+			return false;
+		});
+	RegisterCondition("condition_walk", [](Entity* e, int s)
+		{
+			if (auto comp = e->GetComponent<PhysicsComponent>())
+				return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x != 0.0f;
+
+			return false;
+		});
+	RegisterCondition("condition_idle", [](Entity* e, int s)
+		{
+			if (auto comp = e->GetComponent<PhysicsComponent>())
+				return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x == 0.0f;
+
+			return false;
+		});
+}
+
 void Animator::RegisterCondition(const std::string& name, std::function<bool(Entity*, int)> condition)
 {
 	m_conditions.insert({ name, condition });
 }
 
-std::shared_ptr<Animation> Animator::CreateAnimation(const std::string& name, int start, int length, float delay, std::initializer_list<Transition> transitions)
+void Animator::CreateAnimation(const std::string& name, int start, int length, float delay, std::initializer_list<Transition> transitions)
 {
 	auto animation = std::make_shared<Animation>(start, length, delay);
 
@@ -18,8 +53,6 @@ std::shared_ptr<Animation> Animator::CreateAnimation(const std::string& name, in
 
 	if (m_current.empty())
 		m_current = name;
-
-	return animation;
 }
 
 void Animator::Tick(Entity* entity, float deltaTime)

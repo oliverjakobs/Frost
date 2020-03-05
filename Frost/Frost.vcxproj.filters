@@ -97,6 +97,7 @@
     <ClInclude Include="src\json\json.h" />
     <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Animation\Animation.h" />
+    <ClInclude Include="src\Memory\Memory.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\Textures&amp;trees.png" />
