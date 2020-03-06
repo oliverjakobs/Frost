@@ -69,7 +69,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 		float width = json_float((char*)element.value, "{'dimension'[0", NULL);
 		float height = json_float((char*)element.value, "{'dimension'[1", NULL);
 
-		entity->AddComponent<TextureComponent>(std::make_shared<ignis::Texture>(src, rows, columns), width, height);
+		entity->AddComponent<TextureComponent>(std::make_shared<ignis::Texture>(src.c_str(), rows, columns), width, height);
 	}
 
 	json_read(json.data(), "{'animation'", &element);

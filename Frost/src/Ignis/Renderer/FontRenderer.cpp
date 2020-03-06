@@ -36,7 +36,7 @@ namespace ignis
 	{
 		if (s_renderData->Fonts.find(name) != s_renderData->Fonts.end())
 		{
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Name " + name + " already in use");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Name %s already in use", name.c_str());
 			return;
 		}
 
@@ -50,7 +50,7 @@ namespace ignis
 		if (font != s_renderData->Fonts.end())
 			return font->second;
 
-		_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font " + name + " not found");
+		_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font %s not found", name.c_str());
 		return nullptr;
 	}
 

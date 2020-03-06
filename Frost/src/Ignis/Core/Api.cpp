@@ -1,15 +1,24 @@
 #include "Api.h"
 
-static std::function<void(ignisErrorLevel level, const std::string&)> s_errorCallback;
+static void (*s_ignisErrorCallback)(ignisErrorLevel level, const char* fmt);
 
-void ignisSetErrorCallback(std::function<void(ignisErrorLevel level, const std::string&)> callback)
+void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*))
 {
-	s_errorCallback = callback;
+	s_ignisErrorCallback = callback;
 }
 
-void _ignisErrorCallback(ignisErrorLevel level, const std::string& desc)
+void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 {
-	s_errorCallback(level, desc);
+	va_list args;
+	va_start(args, fmt);
+	size_t buffer_size = snprintf(NULL, 0, fmt, args);
+	char* buffer = (char*)malloc(buffer_size + 1);
+	snprintf(buffer, buffer_size + 1, fmt, args);
+	va_end(args);
+
+	s_ignisErrorCallback(level, buffer);
+
+	free(buffer);
 }
 
 glm::vec4 ignis::BlendColor(const glm::vec4& color, float alpha)

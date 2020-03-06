@@ -111,9 +111,9 @@ namespace ignis
 	{
 		switch (type)
 		{
-		case GL_FLOAT:	return sizeof(GLfloat);
-		case GL_INT:	return sizeof(GLint);
-		case GL_UNSIGNED_INT: return sizeof(GLuint);
+		case GL_FLOAT:			return sizeof(GLfloat);
+		case GL_INT:			return sizeof(GLint);
+		case GL_UNSIGNED_INT:	return sizeof(GLuint);
 		default: return 0;
 		}
 	}

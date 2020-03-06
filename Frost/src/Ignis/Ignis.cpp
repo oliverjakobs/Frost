@@ -11,8 +11,8 @@ namespace ignis
 		// ignore non-significant error/warning codes
 		if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
-		_ignisErrorCallback(ignisErrorLevel::Error, "[OpenGL] Debug output (" + std::to_string(id) + "):");
-		_ignisErrorCallback(ignisErrorLevel::Error, "[OpenGL] " + std::string(message));
+		_ignisErrorCallback(ignisErrorLevel::Error, "[OpenGL] Debug output (%d):", id);
+		_ignisErrorCallback(ignisErrorLevel::Error, "[OpenGL] %s", message);
 
 		switch (source)
 		{

@@ -20,16 +20,16 @@ namespace ignis
 
 		void Use();
 
-		void SetUniform1i(const std::string& name, int value) const;
-		void SetUniform1f(const std::string& name, float value) const;
-		void SetUniform2f(const std::string& name, const glm::vec2& vector) const;
-		void SetUniform3f(const std::string& name, const glm::vec3& vector) const;
-		void SetUniform4f(const std::string& name, const glm::vec4& vector) const;
-		void SetUniformMat2(const std::string& name, const glm::mat4& matrix) const;
-		void SetUniformMat3(const std::string& name, const glm::mat4& matrix) const;
-		void SetUniformMat4(const std::string& name, const glm::mat4& matrix) const;
+		void SetUniform1i(const char* name, int value) const;
+		void SetUniform1f(const char* name, float value) const;
+		void SetUniform2f(const char* name, const glm::vec2& vector) const;
+		void SetUniform3f(const char* name, const glm::vec3& vector) const;
+		void SetUniform4f(const char* name, const glm::vec4& vector) const;
+		void SetUniformMat2(const char* name, const glm::mat4& matrix) const;
+		void SetUniformMat3(const char* name, const glm::mat4& matrix) const;
+		void SetUniformMat4(const char* name, const glm::mat4& matrix) const;
 
-		int GetUniformLocation(const std::string& name) const;
+		int GetUniformLocation(const char* name) const;
 
 		void SetUniform1i(int location, int value) const;
 		void SetUniform1f(int location, float value) const;

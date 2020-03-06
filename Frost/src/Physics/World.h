@@ -20,6 +20,6 @@ public:
 
 	void Tick(float deltaTime);
 
-	std::vector<std::shared_ptr<Body>> GetBodies() const;
+	const std::vector<std::shared_ptr<Body>>& GetBodies() const { return m_bodies; }
 	std::vector<std::shared_ptr<Body>> GetOtherBodies(const Body* body) const;
 };

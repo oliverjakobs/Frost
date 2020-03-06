@@ -41,11 +41,6 @@ void World::Tick(float deltaTime)
 	}
 }
 
-std::vector<std::shared_ptr<Body>> World::GetBodies() const
-{
-	return m_bodies;
-}
-
 std::vector<std::shared_ptr<Body>> World::GetOtherBodies(const Body* body) const
 {
 	std::vector<std::shared_ptr<Body>> others;

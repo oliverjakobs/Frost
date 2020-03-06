@@ -24,14 +24,14 @@ namespace ignis
 		bool success = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename.c_str(), mtldir.c_str());
 
 		if (!warn.empty())
-			_ignisErrorCallback(ignisErrorLevel::Warn, warn);
+			_ignisErrorCallback(ignisErrorLevel::Warn, warn.c_str());
 
 		if (!err.empty())
-			_ignisErrorCallback(ignisErrorLevel::Error, err);
+			_ignisErrorCallback(ignisErrorLevel::Error, err.c_str());
 
 		if (!success)
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[Obj] Failed to load obj: " + filename);
+			_ignisErrorCallback(ignisErrorLevel::Error, "[Obj] Failed to load obj: %s", filename.c_str());
 			return Mesh({});
 		}
 
@@ -79,13 +79,13 @@ namespace ignis
 		if (mtl && materials.size() > 0)
 		{
 			if (!materials[0].diffuse_texname.empty())
-				mtl->Diffuse = new Texture(mtldir + materials[0].diffuse_texname);
+				mtl->Diffuse = new Texture((mtldir + materials[0].diffuse_texname).c_str());
 
 			if (!materials[0].bump_texname.empty())
-				mtl->Normal = new Texture(mtldir + materials[0].bump_texname);
+				mtl->Normal = new Texture((mtldir + materials[0].bump_texname).c_str());
 
 			if (!materials[0].specular_texname.empty())
-				mtl->Specular = new Texture(mtldir + materials[0].specular_texname);
+				mtl->Specular = new Texture((mtldir + materials[0].specular_texname).c_str());
 
 			mtl->Shininess = materials[0].shininess;
 		}

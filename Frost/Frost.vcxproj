@@ -183,6 +183,7 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Memory\Memory.cpp" />
     <ClCompile Include="src\Physics\Body.cpp" />
     <ClCompile Include="src\Physics\World.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />

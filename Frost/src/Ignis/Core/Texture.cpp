@@ -17,25 +17,25 @@ namespace ignis
 		m_name = CreateTexture2D(width, height, pixels, config);
 	}
 
-	Texture::Texture(const std::string& path, GLuint rows, GLuint columns, bool flipOnLoad, TextureConfig config)
+	Texture::Texture(const char* path, GLuint rows, GLuint columns, bool flipOnLoad, TextureConfig config)
 		: m_width(0), m_height(0), m_rows(rows), m_columns(columns), m_activeSlot(0), m_config(config)
 	{
 		stbi_set_flip_vertically_on_load(flipOnLoad);
 
 		int bpp = 0;
 
-		unsigned char* pixels = stbi_load(path.c_str(), &m_width, &m_height, &bpp, 4);
+		unsigned char* pixels = stbi_load(path, &m_width, &m_height, &bpp, 4);
 
 		// check if bpp and format matches
 		if (bpp == 4)
 		{
 			if (config.FORMAT != GL_RGBA || config.INTERAL_FORMAT != GL_RGBA8)
-				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for " + path);
+				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for %s", path);
 		}
 		else if (bpp == 3)
 		{
 			if (config.FORMAT != GL_RGB || config.INTERAL_FORMAT != GL_RGB8)
-				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for " + path);
+				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for %s", path);
 		}
 
 		if (pixels)
@@ -45,7 +45,7 @@ namespace ignis
 		}
 		else
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[Tex] Failed to load texture(" + path + "): " + stbi_failure_reason());
+			_ignisErrorCallback(ignisErrorLevel::Error, "[Tex] Failed to load texture(%s): %s", path, stbi_failure_reason());
 			m_name = 0;
 		}
 	}

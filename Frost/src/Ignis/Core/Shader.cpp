@@ -49,89 +49,89 @@ namespace ignis
 		}
 	}
 
-	void Shader::SetUniform1i(const std::string& name, int value) const
+	void Shader::SetUniform1i(const char* name, int value) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniform1i(location, value);
 	}
 
-	void Shader::SetUniform1f(const std::string& name, float value) const
+	void Shader::SetUniform1f(const char* name, float value) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniform1f(location, value);
 	}
 
-	void Shader::SetUniform2f(const std::string& name, const glm::vec2& vector) const
+	void Shader::SetUniform2f(const char* name, const glm::vec2& vector) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniform2fv(location, 1, &vector[0]);
 	}
 
-	void Shader::SetUniform3f(const std::string& name, const glm::vec3& vector) const
+	void Shader::SetUniform3f(const char* name, const glm::vec3& vector) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniform3fv(location, 1, &vector[0]);
 	}
 
-	void Shader::SetUniform4f(const std::string& name, const glm::vec4& vector) const
+	void Shader::SetUniform4f(const char* name, const glm::vec4& vector) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniform4fv(location, 1, &vector[0]);
 	}
 
-	void Shader::SetUniformMat2(const std::string& name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat2(const char* name, const glm::mat4& matrix) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniformMatrix2fv(location, 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	void Shader::SetUniformMat3(const std::string& name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat3(const char* name, const glm::mat4& matrix) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniformMatrix3fv(location, 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	void Shader::SetUniformMat4(const std::string& name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat4(const char* name, const glm::mat4& matrix) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform " + name + " not found");
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
 			glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
 	}
 
-	int Shader::GetUniformLocation(const std::string& name) const
+	int Shader::GetUniformLocation(const char* name) const
 	{
-		return glGetUniformLocation(m_program, name.c_str());
+		return glGetUniformLocation(m_program, name);
 	}
 
 	void Shader::SetUniform1i(int location, int value) const
@@ -207,7 +207,7 @@ namespace ignis
 		if (result == GL_FALSE)
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Linking Error");
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] " + GetProgramLog(program));
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetProgramLog(program).c_str());
 			glDeleteProgram(program);
 			return 0;
 		}
@@ -219,7 +219,7 @@ namespace ignis
 		if (result == GL_FALSE)
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Validating Error");
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] " + GetProgramLog(program));
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetProgramLog(program).c_str());
 			glDeleteProgram(program);
 
 			return 0;
@@ -232,7 +232,7 @@ namespace ignis
 	{
 		if (source.empty())
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Shader source is missing for " + GetShaderType(type));
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Shader source is missing for %s", GetShaderType(type).c_str());
 			return 0;
 		}
 
@@ -246,8 +246,8 @@ namespace ignis
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE)
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Compiling Error (" + GetShaderType(type) + ")");
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] " + GetShaderLog(shader));
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Compiling Error (%s)", GetShaderType(type).c_str());
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetShaderLog(shader).c_str());
 			glDeleteShader(shader);
 
 			return 0;

@@ -147,13 +147,13 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		return nullptr;
 	}
 
-	ignisSetErrorCallback([](ignisErrorLevel level, const std::string& desc)
+	ignisSetErrorCallback([](ignisErrorLevel level, const char* desc)
 	{
 		switch (level)
 		{
-		case ignisErrorLevel::Warn:		OBELISK_WARN(desc.c_str()); break;
-		case ignisErrorLevel::Error:	OBELISK_ERROR(desc.c_str()); break;
-		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc.c_str()); break;
+		case ignisErrorLevel::Warn:		OBELISK_WARN(desc); break;
+		case ignisErrorLevel::Error:	OBELISK_ERROR(desc); break;
+		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc); break;
 		}
 	});
 

@@ -38,7 +38,7 @@ namespace ignis
 	public:
 		Texture(int width, int height, TextureConfig config = DEFAULT_CONFIG);
 		Texture(int width, int height, void* pixels, TextureConfig config = DEFAULT_CONFIG);
-		Texture(const std::string& path, GLuint rows = 1, GLuint columns = 1, bool flipOnLoad = true, TextureConfig config = DEFAULT_CONFIG);
+		Texture(const char* path, GLuint rows = 1, GLuint columns = 1, bool flipOnLoad = true, TextureConfig config = DEFAULT_CONFIG);
 		~Texture();
 
 		void Bind(GLuint slot = 0);

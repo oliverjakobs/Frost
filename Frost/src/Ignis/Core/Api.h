@@ -1,13 +1,11 @@
 #pragma once
 
-#include <string>
 #include <map>
 #include <vector>
 #include <glm/glm.hpp>
 
 #include <memory>
 #include <functional>
-#include <string>
 
 // You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h.
 #ifndef IGNIS_ASSERT
@@ -31,13 +29,18 @@ namespace ignis
 	glm::vec4 BlendColor(const glm::vec4& color, float alpha);
 }
 
-enum class ignisErrorLevel
+extern "C"
 {
-	Warn = 0,
-	Error = 1,
-	Critical = 2
-};
 
-void ignisSetErrorCallback(std::function<void(ignisErrorLevel level, const std::string & desc)> callback);
+#include <stdarg.h>
 
-void _ignisErrorCallback(ignisErrorLevel level, const std::string& desc);
+	enum class ignisErrorLevel
+	{
+		Warn = 0,
+		Error = 1,
+		Critical = 2
+	};
+
+	void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*));
+	void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);
+}
