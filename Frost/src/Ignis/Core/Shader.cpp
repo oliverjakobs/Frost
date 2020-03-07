@@ -232,7 +232,7 @@ namespace ignis
 	{
 		if (source.empty())
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Shader source is missing for %s", GetShaderType(type).c_str());
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Shader source is missing for %s", GetShaderType(type));
 			return 0;
 		}
 
@@ -246,7 +246,7 @@ namespace ignis
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &result);
 		if (result == GL_FALSE)
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Compiling Error (%s)", GetShaderType(type).c_str());
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Compiling Error (%s)", GetShaderType(type));
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetShaderLog(shader).c_str());
 			glDeleteShader(shader);
 
@@ -272,6 +272,26 @@ namespace ignis
 		return std::string(&log[0], logLength - 1);
 	}
 
+	GLint GetShaderLog(GLuint object, GLchar* log)
+	{
+		GLint log_length = 0;
+
+		if (!glIsShader(object))
+		{
+			log = "Failed to log: Object is not a shader";
+			return log_length;
+		}
+
+		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+
+		std::vector<GLchar> log_vec(log_length);
+
+		glGetShaderInfoLog(object, log_length, &log_length, &log_vec[0]);
+		*log = log_vec[0];
+
+		return log_length;
+	}
+
 	std::string GetProgramLog(GLuint object)
 	{
 		GLint logLength = 0;
@@ -288,7 +308,7 @@ namespace ignis
 		return std::string(&log[0], logLength - 1);
 	}
 
-	std::string GetShaderType(GLenum type)
+	const char* GetShaderType(GLenum type)
 	{
 		switch (type)
 		{

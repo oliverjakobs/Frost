@@ -46,6 +46,7 @@ namespace ignis
 	GLuint CompileShader(GLenum type, const std::string& source);
 
 	std::string GetShaderLog(GLuint object);
+	GLint GetShaderLog(GLuint object, GLchar* log);
 	std::string GetProgramLog(GLuint object);
-	std::string GetShaderType(GLenum type);
+	const char* GetShaderType(GLenum type);
 }
