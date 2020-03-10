@@ -38,7 +38,7 @@ namespace ignis
 	void Primitives2D::Start(const glm::mat4& viewProjection)
 	{
 		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_ViewProjection", viewProjection);
+		s_renderData->Shader->SetUniformMat4("u_ViewProjection", &viewProjection[0][0]);
 	}
 
 	void Primitives2D::Flush()

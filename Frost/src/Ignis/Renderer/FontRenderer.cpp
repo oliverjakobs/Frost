@@ -61,8 +61,8 @@ namespace ignis
 		if (!font) return;
 
 		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_Projection", proj);
-		s_renderData->Shader->SetUniform4f("u_Color", color);
+		s_renderData->Shader->SetUniformMat4("u_Projection", &proj[0][0]);
+		s_renderData->Shader->SetUniform4f("u_Color", &color[0]);
 
 		font->Bind();
 		s_renderData->VertexArray->Bind();

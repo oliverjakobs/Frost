@@ -69,64 +69,64 @@ namespace ignis
 			glUniform1f(location, value);
 	}
 
-	void Shader::SetUniform2f(const char* name, const glm::vec2& vector) const
+	void Shader::SetUniform2f(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform2fv(location, 1, &vector[0]);
+			glUniform2fv(location, 1, values);
 	}
 
-	void Shader::SetUniform3f(const char* name, const glm::vec3& vector) const
+	void Shader::SetUniform3f(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform3fv(location, 1, &vector[0]);
+			glUniform3fv(location, 1, values);
 	}
 
-	void Shader::SetUniform4f(const char* name, const glm::vec4& vector) const
+	void Shader::SetUniform4f(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform4fv(location, 1, &vector[0]);
+			glUniform4fv(location, 1, values);
 	}
 
-	void Shader::SetUniformMat2(const char* name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat2(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix2fv(location, 1, GL_FALSE, &matrix[0][0]);
+			glUniformMatrix2fv(location, 1, GL_FALSE, values);
 	}
 
-	void Shader::SetUniformMat3(const char* name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat3(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix3fv(location, 1, GL_FALSE, &matrix[0][0]);
+			glUniformMatrix3fv(location, 1, GL_FALSE, values);
 	}
 
-	void Shader::SetUniformMat4(const char* name, const glm::mat4& matrix) const
+	void Shader::SetUniformMat4(const char* name, const float* values) const
 	{
 		int location = GetUniformLocation(name);
 
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+			glUniformMatrix4fv(location, 1, GL_FALSE, values);
 	}
 
 	int Shader::GetUniformLocation(const char* name) const
@@ -144,34 +144,34 @@ namespace ignis
 		glUniform1f(location, value);
 	}
 
-	void Shader::SetUniform2f(int location, const glm::vec2& vector) const
+	void Shader::SetUniform2f(int location, const float* values) const
 	{
-		glUniform2fv(location, 1, &vector[0]);
+		glUniform2fv(location, 1, values);
 	}
 
-	void Shader::SetUniform3f(int location, const glm::vec3& vector) const
+	void Shader::SetUniform3f(int location, const float* values) const
 	{
-		glUniform3fv(location, 1, &vector[0]);
+		glUniform3fv(location, 1, values);
 	}
 
-	void Shader::SetUniform4f(int location, const glm::vec4& vector) const
+	void Shader::SetUniform4f(int location, const float* values) const
 	{
-		glUniform4fv(location, 1, &vector[0]);
+		glUniform4fv(location, 1, values);
 	}
 
-	void Shader::SetUniformMat2(int location, const glm::mat4& matrix) const
+	void Shader::SetUniformMat2(int location, const float* values) const
 	{
-		glUniformMatrix2fv(location, 1, GL_FALSE, &matrix[0][0]);
+		glUniformMatrix2fv(location, 1, GL_FALSE, values);
 	}
 
-	void Shader::SetUniformMat3(int location, const glm::mat4& matrix) const
+	void Shader::SetUniformMat3(int location, const float* values) const
 	{
-		glUniformMatrix3fv(location, 1, GL_FALSE, &matrix[0][0]);
+		glUniformMatrix3fv(location, 1, GL_FALSE, values);
 	}
 
-	void Shader::SetUniformMat4(int location, const glm::mat4& matrix) const
+	void Shader::SetUniformMat4(int location, const float* values) const
 	{
-		glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+		glUniformMatrix4fv(location, 1, GL_FALSE, values);
 	}
 
 	// Shader utils

@@ -47,7 +47,7 @@ namespace ignis
 	void Renderer2D::Start(const glm::mat4& viewProjection)
 	{
 		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_ViewProjection", viewProjection);
+		s_renderData->Shader->SetUniformMat4("u_ViewProjection", &viewProjection[0][0]);
 	}
 
 	void Renderer2D::Flush()
@@ -56,9 +56,9 @@ namespace ignis
 
 	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color)
 	{
-		s_renderData->Shader->SetUniform4f("u_Color", color);
-		s_renderData->Shader->SetUniformMat4("u_Model", model);
-		s_renderData->Shader->SetUniformMat4("u_Src", src);
+		s_renderData->Shader->SetUniform4f("u_Color", &color[0]);
+		s_renderData->Shader->SetUniformMat4("u_Model", &model[0][0]);
+		s_renderData->Shader->SetUniformMat4("u_Src", &src[0][0]);
 
 		texture->Bind();
 

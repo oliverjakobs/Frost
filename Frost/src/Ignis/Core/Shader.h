@@ -22,23 +22,23 @@ namespace ignis
 
 		void SetUniform1i(const char* name, int value) const;
 		void SetUniform1f(const char* name, float value) const;
-		void SetUniform2f(const char* name, const glm::vec2& vector) const;
-		void SetUniform3f(const char* name, const glm::vec3& vector) const;
-		void SetUniform4f(const char* name, const glm::vec4& vector) const;
-		void SetUniformMat2(const char* name, const glm::mat4& matrix) const;
-		void SetUniformMat3(const char* name, const glm::mat4& matrix) const;
-		void SetUniformMat4(const char* name, const glm::mat4& matrix) const;
+		void SetUniform2f(const char* name, const float* values) const;
+		void SetUniform3f(const char* name, const float* values) const;
+		void SetUniform4f(const char* name, const float* values) const;
+		void SetUniformMat2(const char* name, const float* values) const;
+		void SetUniformMat3(const char* name, const float* values) const;
+		void SetUniformMat4(const char* name, const float* values) const;
 
 		int GetUniformLocation(const char* name) const;
 
 		void SetUniform1i(int location, int value) const;
 		void SetUniform1f(int location, float value) const;
-		void SetUniform2f(int location, const glm::vec2& vector) const;
-		void SetUniform3f(int location, const glm::vec3& vector) const;
-		void SetUniform4f(int location, const glm::vec4& vector) const;
-		void SetUniformMat2(int location, const glm::mat4& matrix) const;
-		void SetUniformMat3(int location, const glm::mat4& matrix) const;
-		void SetUniformMat4(int location, const glm::mat4& matrix) const;
+		void SetUniform2f(int location, const float* values) const;
+		void SetUniform3f(int location, const float* values) const;
+		void SetUniform4f(int location, const float* values) const;
+		void SetUniformMat2(int location, const float* values) const;
+		void SetUniformMat3(int location, const float* values) const;
+		void SetUniformMat4(int location, const float* values) const;
 	};
 
 	// Shader utils
