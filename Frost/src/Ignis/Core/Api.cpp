@@ -11,9 +11,9 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	size_t buffer_size = snprintf(NULL, 0, fmt, args);
+	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
 	char* buffer = (char*)malloc(buffer_size + 1);
-	snprintf(buffer, buffer_size + 1, fmt, args);
+	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 
 	s_ignisErrorCallback(level, buffer);

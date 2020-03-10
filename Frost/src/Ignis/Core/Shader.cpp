@@ -207,7 +207,7 @@ namespace ignis
 		if (result == GL_FALSE)
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Linking Error");
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetProgramLog(program).c_str());
+			PrintProgramLog(program);
 			glDeleteProgram(program);
 			return 0;
 		}
@@ -219,7 +219,7 @@ namespace ignis
 		if (result == GL_FALSE)
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Validating Error");
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetProgramLog(program).c_str());
+			PrintProgramLog(program);
 			glDeleteProgram(program);
 
 			return 0;
@@ -247,7 +247,7 @@ namespace ignis
 		if (result == GL_FALSE)
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Compiling Error (%s)", GetShaderType(type));
-			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %s", GetShaderLog(shader).c_str());
+			PrintShaderLog(shader);
 			glDeleteShader(shader);
 
 			return 0;
@@ -256,56 +256,40 @@ namespace ignis
 		return shader;
 	}
 
-	std::string GetShaderLog(GLuint object)
+	void PrintShaderLog(GLuint shader)
 	{
-		GLint logLength = 0;
-
-		if (!glIsShader(object))
-			return "Failed to log: Object is not a shader";
-
-		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &logLength);
-
-		std::vector<GLchar> log(logLength);
-
-		glGetShaderInfoLog(object, logLength, &logLength, &log[0]);
-
-		return std::string(&log[0], logLength - 1);
-	}
-
-	GLint GetShaderLog(GLuint object, GLchar* log)
-	{
-		GLint log_length = 0;
-
-		if (!glIsShader(object))
+		if (!glIsShader(shader))
 		{
-			log = "Failed to log: Object is not a shader";
-			return log_length;
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Failed to log: Object is not a shader");
+			return;
 		}
 
-		glGetShaderiv(object, GL_INFO_LOG_LENGTH, &log_length);
+		GLint log_length = 0;
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
+		char* log_buffer = (char*)malloc(log_length);
+		glGetShaderInfoLog(shader, log_length, &log_length, log_buffer);
 
-		std::vector<GLchar> log_vec(log_length);
+		_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %.*s", log_length, log_buffer);
 
-		glGetShaderInfoLog(object, log_length, &log_length, &log_vec[0]);
-		*log = log_vec[0];
-
-		return log_length;
+		free(log_buffer);
 	}
 
-	std::string GetProgramLog(GLuint object)
+	void PrintProgramLog(GLuint program)
 	{
-		GLint logLength = 0;
+		if (!glIsProgram(program))
+		{
+			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Failed to log: Object is not a program");
+			return;
+		}
 
-		if (!glIsProgram(object))
-			return "Failed to log: Object is not a program";
+		GLint log_length = 0;
+		glGetShaderiv(program, GL_INFO_LOG_LENGTH, &log_length);
+		char* log_buffer = (char*)malloc(log_length);
+		glGetShaderInfoLog(program, log_length, &log_length, log_buffer);
 
-		glGetProgramiv(object, GL_INFO_LOG_LENGTH, &logLength);
+		_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] %.*s", log_length, log_buffer);
 
-		std::vector<GLchar> log(logLength);
-
-		glGetProgramInfoLog(object, logLength, &logLength, &log[0]);
-
-		return std::string(&log[0], logLength - 1);
+		free(log_buffer);
 	}
 
 	const char* GetShaderType(GLenum type)
