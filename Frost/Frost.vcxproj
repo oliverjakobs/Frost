@@ -114,6 +114,7 @@
     <ClInclude Include="src\Ignis\Advanced\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Camera\Camera.h" />
     <ClInclude Include="src\Ignis\Camera\OrthographicCamera.h" />
+    <ClInclude Include="src\Ignis\Color.h" />
     <ClInclude Include="src\Ignis\Core\Api.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\Ignis\Advanced\Font.cpp" />
     <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Ignis\Color.cpp" />
     <ClCompile Include="src\Ignis\Core\Api.cpp" />
     <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
     <ClCompile Include="src\Ignis\Core\Shader.cpp" />

@@ -2,6 +2,7 @@
 
 #include "Ignis/Core/Buffer.h"
 #include "Ignis/Core/Shader.h"
+#include "Ignis/Color.h"
 
 namespace ignis
 {

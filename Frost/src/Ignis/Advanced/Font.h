@@ -5,6 +5,9 @@
 
 #include "Ignis/Packages/stb_truetype.h"
 
+#include <string>
+#include <memory>
+
 namespace ignis
 {
 	class Font

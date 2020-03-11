@@ -2,6 +2,8 @@
 
 #include "Entity/Scene.h"
 
+#include <map>
+
 using namespace ignis;
 
 class SceneManager

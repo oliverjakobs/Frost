@@ -4,6 +4,8 @@
 #include "Ignis/Core/Shader.h"
 #include "Ignis/Core/Texture.h"
 
+#include "Ignis/Color.h"
+
 namespace ignis
 {
 	struct Renderer2D

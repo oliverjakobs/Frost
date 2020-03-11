@@ -1,5 +1,8 @@
 #include "Api.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 static void (*s_ignisErrorCallback)(ignisErrorLevel level, const char* fmt);
 
 void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*))
@@ -19,9 +22,4 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 	s_ignisErrorCallback(level, buffer);
 
 	free(buffer);
-}
-
-glm::vec4 ignis::BlendColor(const glm::vec4& color, float alpha)
-{
-	return glm::vec4(color.r, color.g, color.b, alpha);
 }

@@ -3,6 +3,9 @@
 #include "Material.h"
 #include "Ignis/Core/Buffer.h"
 
+#include <string>
+#include <glm/glm.hpp>
+
 namespace ignis
 {
 	struct Vertex

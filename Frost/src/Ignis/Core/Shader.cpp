@@ -6,7 +6,7 @@ namespace ignis
 {
 	static GLuint s_activeProgram = 0;
 
-	static std::string read_file(const std::string& path)
+	static std::string readFile(const std::string& path)
 	{
 		std::ifstream ifs(path);
 
@@ -15,21 +15,72 @@ namespace ignis
 		return std::string();
 	}
 
-	Shader::Shader(const std::string& vert, const std::string& frag)
+	static char* read_file(const char* path)
 	{
-		m_program = CreateShaderProgram({ 
-			{ GL_VERTEX_SHADER, read_file(vert) }, 
-			{ GL_FRAGMENT_SHADER, read_file(frag) }
-			});
+		char* data = NULL;
+		size_t size = 0;
+
+		FILE* file;
+
+		if ((file = fopen(path, "rb")) == NULL)
+		{
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Failed to open file : %s", path);
+			return NULL;
+		}
+
+		// find file size
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		rewind(file);
+
+		data = (char*)malloc(size + 1);
+		if (!data)
+		{
+			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Failed to allocate memory");
+			fclose(file);
+			return NULL;
+		}
+
+		memset(data, 0, size + 1); // +1 guarantees trailing \0
+
+		if (fread(data, size, 1, file) != 1)
+		{
+			free(data);
+			fclose(file);
+			return NULL;
+		}
+
+		return data;
 	}
 
-	Shader::Shader(const std::string& vert, const std::string& geom, const std::string& frag)
+	Shader::Shader(const char* vert, const char* frag)
 	{
-		m_program = CreateShaderProgram({
-			{ GL_VERTEX_SHADER, read_file(vert) },
-			{ GL_GEOMETRY_SHADER, read_file(geom) },
-			{ GL_FRAGMENT_SHADER, read_file(frag) }
-			});
+		char* vert_src = read_file(vert);
+		char* frag_src = read_file(frag);
+
+		GLenum types[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+		const char* sources[] = { vert_src, frag_src };
+
+		m_program = CreateShaderProgram(types, sources, 2);
+
+		free(vert_src);
+		free(frag_src);
+	}
+
+	Shader::Shader(const char* vert, const char* geom, const char* frag)
+	{
+		char* vert_src = read_file(vert);
+		char* geom_src = read_file(geom);
+		char* frag_src = read_file(frag);
+
+		GLenum types[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
+		const char* sources[] = { vert_src, geom_src, frag_src };
+
+		m_program = CreateShaderProgram(types, sources, 2);
+
+		free(vert_src);
+		free(geom_src);
+		free(frag_src);
 	}
 
 	Shader::~Shader()
@@ -56,7 +107,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform1i(location, value);
+			SetUniform1i(location, value);
 	}
 
 	void Shader::SetUniform1f(const char* name, float value) const
@@ -66,7 +117,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform1f(location, value);
+			SetUniform1f(location, value);
 	}
 
 	void Shader::SetUniform2f(const char* name, const float* values) const
@@ -76,7 +127,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform2fv(location, 1, values);
+			SetUniform2f(location, values);
 	}
 
 	void Shader::SetUniform3f(const char* name, const float* values) const
@@ -86,7 +137,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform3fv(location, 1, values);
+			SetUniform3f(location, values);
 	}
 
 	void Shader::SetUniform4f(const char* name, const float* values) const
@@ -96,7 +147,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniform4fv(location, 1, values);
+			SetUniform4f(location, values);
 	}
 
 	void Shader::SetUniformMat2(const char* name, const float* values) const
@@ -106,7 +157,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix2fv(location, 1, GL_FALSE, values);
+			SetUniformMat2(location, values);
 	}
 
 	void Shader::SetUniformMat3(const char* name, const float* values) const
@@ -116,7 +167,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix3fv(location, 1, GL_FALSE, values);
+			SetUniformMat3(location, values);
 	}
 
 	void Shader::SetUniformMat4(const char* name, const float* values) const
@@ -126,7 +177,7 @@ namespace ignis
 		if (location < 0)
 			_ignisErrorCallback(ignisErrorLevel::Warn, "[SHADER] Uniform %s not found", name);
 		else
-			glUniformMatrix4fv(location, 1, GL_FALSE, values);
+			SetUniformMat4(location, values);
 	}
 
 	int Shader::GetUniformLocation(const char* name) const
@@ -175,14 +226,16 @@ namespace ignis
 	}
 
 	// Shader utils
-	GLuint CreateShaderProgram(std::map<GLenum, const std::string&> sources)
+	GLuint CreateShaderProgram(GLenum* types, const char** sources, size_t count)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLuint> attachedShader;
 
-		for (auto& [type, src] : sources)
+		GLuint attached_shader[6];
+		GLuint shader_count = 0;
+
+		for (size_t i = 0; i < count; i++)
 		{
-			GLuint shader = CompileShader(type, src);
+			GLuint shader = CompileShader(types[i], sources[i]);
 
 			if (shader == 0)
 			{
@@ -191,15 +244,16 @@ namespace ignis
 			}
 
 			glAttachShader(program, shader);
-			attachedShader.push_back(shader);
+			attached_shader[shader_count] = shader;
+			shader_count++;
 		}
 
 		glLinkProgram(program);
 
-		for (auto& shader : attachedShader)
+		for (size_t i = 0; i < shader_count; i++)
 		{
-			glDeleteShader(shader);
-			glDetachShader(program, shader);
+			glDeleteShader(attached_shader[i]);
+			glDetachShader(program, attached_shader[i]);
 		}
 
 		GLint result = GL_FALSE;
@@ -228,9 +282,9 @@ namespace ignis
 		return program;
 	}
 
-	GLuint CompileShader(GLenum type, const std::string& source)
+	GLuint CompileShader(GLenum type, const char* source)
 	{
-		if (source.empty())
+		if (source[0] == '\0')
 		{
 			_ignisErrorCallback(ignisErrorLevel::Error, "[SHADER] Shader source is missing for %s", GetShaderType(type));
 			return 0;
@@ -238,8 +292,7 @@ namespace ignis
 
 		GLuint shader = glCreateShader(type);
 
-		const char* data = source.c_str();
-		glShaderSource(shader, 1, &data, nullptr);
+		glShaderSource(shader, 1, &source, nullptr);
 		glCompileShader(shader);
 
 		GLint result = GL_FALSE;

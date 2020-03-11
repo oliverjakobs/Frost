@@ -1,11 +1,6 @@
 #pragma once
 
-#include <map>
-#include <vector>
-#include <glm/glm.hpp>
-
-#include <memory>
-#include <functional>
+#include "Ignis/glad/glad.h"
 
 // You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h.
 #ifndef IGNIS_ASSERT
@@ -13,24 +8,10 @@
 #define IGNIS_ASSERT(x) assert(x)
 #endif
 
-namespace ignis
-{
-	typedef glm::vec4 color;
-
-	const color WHITE	= { 1.0f, 1.0f, 1.0f, 1.0f };
-	const color BLACK	= { 0.0f, 0.0f, 0.0f, 1.0f };
-	const color RED		= { 1.0f, 0.0f, 0.0f, 1.0f };
-	const color GREEN	= { 0.0f, 1.0f, 0.0f, 1.0f };
-	const color BLUE	= { 0.0f, 0.0f, 1.0f, 1.0f };
-	const color CYAN	= { 0.0f, 1.0f, 1.0f, 1.0f };
-	const color MAGENTA = { 1.0f, 0.0f, 1.0f, 1.0f };
-	const color YELLOW	= { 1.0f, 1.0f, 0.0f, 1.0f };
-
-	glm::vec4 BlendColor(const glm::vec4& color, float alpha);
-}
-
+#ifdef __cplusplus
 extern "C"
 {
+#endif
 
 #include <stdarg.h>
 
@@ -43,4 +24,7 @@ extern "C"
 
 	void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*));
 	void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);
+
+#ifdef __cplusplus
 }
+#endif

@@ -6,7 +6,7 @@ namespace ignis
 {
 	ComputeShader::ComputeShader(const std::string& path)
 	{
-		m_program = CreateShaderProgram({ { GL_COMPUTE_SHADER, obelisk::ReadFile(path) } });
+		// m_program = CreateShaderProgram({ { GL_COMPUTE_SHADER, obelisk::ReadFile(path) } });
 	}
 
 	void ComputeShader::Dispatch(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z, GLbitfield barriers)

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Ignis/glad/glad.h"
-
 #include "Api.h"
+
+#include <vector>
+#include <memory>
 
 namespace ignis
 {

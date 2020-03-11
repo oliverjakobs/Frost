@@ -1,5 +1,7 @@
 #include "FontRenderer.h"
 
+#include <map>
+
 namespace ignis
 {
 	struct FontRendererStorage

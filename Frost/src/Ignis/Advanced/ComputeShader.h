@@ -2,6 +2,8 @@
 
 #include "Ignis/Core/Shader.h"
 
+#include <string>
+
 namespace ignis
 {
 	class ComputeShader : public Shader

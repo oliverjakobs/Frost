@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Ignis/glad/glad.h"
-
 #include "Api.h"
 
 namespace ignis
@@ -14,8 +12,8 @@ namespace ignis
 		Shader() : m_program(0) {};
 
 	public:
-		Shader(const std::string& vert, const std::string& frag);
-		Shader(const std::string& vert, const std::string& geom, const std::string& frag);
+		Shader(const char* vert, const char* frag);
+		Shader(const char* vert, const char* geom, const char* frag);
 		virtual ~Shader();
 
 		void Use();
@@ -42,8 +40,8 @@ namespace ignis
 	};
 
 	// Shader utils
-	GLuint CreateShaderProgram(std::map<GLenum, const std::string&> sources);
-	GLuint CompileShader(GLenum type, const std::string& source);
+	GLuint CreateShaderProgram(GLenum* types, const char** sources, size_t count);
+	GLuint CompileShader(GLenum type, const char* source);
 
 	void PrintShaderLog(GLuint shader);
 	void PrintProgramLog(GLuint program);
