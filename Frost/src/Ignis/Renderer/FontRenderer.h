@@ -8,7 +8,7 @@ namespace ignis
 {
 	struct FontRenderer
 	{
-		static void Init(const std::shared_ptr<Shader>& shader);
+		static void Init(ignis_shader* shader);
 		static void Destroy();
 
 		static void AddFont(const std::string& name, std::shared_ptr<Font> font);

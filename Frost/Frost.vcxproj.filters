@@ -15,7 +15,6 @@
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Core\Api.cpp" />
     <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
-    <ClCompile Include="src\Ignis\Core\Shader.cpp" />
     <ClCompile Include="src\Ignis\Core\Texture.cpp" />
     <ClCompile Include="src\Ignis\Ignis.cpp" />
     <ClCompile Include="src\Ignis\Model\Material.cpp" />
@@ -38,6 +37,7 @@
     <ClCompile Include="src\Animation\Animator.cpp" />
     <ClCompile Include="src\Memory\Memory.cpp" />
     <ClCompile Include="src\Ignis\Color.cpp" />
+    <ClCompile Include="src\Ignis\Core\Shader.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />

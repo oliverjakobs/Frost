@@ -26,10 +26,10 @@ public:
 		//glEnable(GL_DEPTH_TEST);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		Renderer2D::Init(std::make_shared<Shader>("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
-		Primitives2D::Init(std::make_shared<Shader>("res/shaders/lines.vert", "res/shaders/lines.frag"));
+		Renderer2D::Init(ignisShadervf("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
+		Primitives2D::Init(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
 
-		FontRenderer::Init(std::make_shared<Shader>("res/shaders/font.vert", "res/shaders/font.frag"));
+		FontRenderer::Init(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
 		FontRenderer::AddFont("font", std::make_shared<Font>("res/fonts/OpenSans.ttf", 32.0f));
 
 		EnableDebugMode(true);

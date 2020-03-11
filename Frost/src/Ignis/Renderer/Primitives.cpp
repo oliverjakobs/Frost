@@ -8,14 +8,14 @@ namespace ignis
 	struct Primitives2DStorage
 	{
 		std::shared_ptr<VertexArray> VertexArray;
-		std::shared_ptr<Shader> Shader;
+		ignis_shader* Shader;
 
 		std::vector<float> Vertices;
 	};
 
 	static Primitives2DStorage* s_renderData;
 
-	void Primitives2D::Init(const std::shared_ptr<Shader>& shader)
+	void Primitives2D::Init(ignis_shader* shader)
 	{
 		s_renderData = new Primitives2DStorage();
 
@@ -32,13 +32,14 @@ namespace ignis
 
 	void Primitives2D::Destroy()
 	{
+		ignisDeleteShader(s_renderData->Shader);
 		delete s_renderData;
 	}
 
 	void Primitives2D::Start(const glm::mat4& viewProjection)
 	{
-		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_ViewProjection", &viewProjection[0][0]);
+		ignisUseShader(s_renderData->Shader);
+		ignisSetUniformMat4(s_renderData->Shader, "u_ViewProjection", &viewProjection[0][0]);
 	}
 
 	void Primitives2D::Flush()
@@ -49,7 +50,7 @@ namespace ignis
 		s_renderData->VertexArray->Bind();
 		s_renderData->VertexArray->GetArrayBuffer(0)->BufferSubData(0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
 
-		s_renderData->Shader->Use();
+		ignisUseShader(s_renderData->Shader);
 
 		glDrawArrays(GL_LINES, 0, s_renderData->Vertices.size() / BUFFER_SIZE);
 

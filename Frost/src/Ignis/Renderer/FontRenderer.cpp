@@ -7,7 +7,7 @@ namespace ignis
 	struct FontRendererStorage
 	{
 		std::shared_ptr<VertexArray> VertexArray;
-		std::shared_ptr<Shader> Shader;
+		ignis_shader* Shader;
 
 		std::map<std::string, std::shared_ptr<Font>> Fonts;
 
@@ -16,7 +16,7 @@ namespace ignis
 
 	static FontRendererStorage* s_renderData;
 
-	void FontRenderer::Init(const std::shared_ptr<Shader>& shader)
+	void FontRenderer::Init(ignis_shader* shader)
 	{
 		s_renderData = new FontRendererStorage();
 
@@ -31,6 +31,7 @@ namespace ignis
 
 	void FontRenderer::Destroy()
 	{
+		ignisDeleteShader(s_renderData->Shader);
 		delete s_renderData;
 	}
 
@@ -38,7 +39,7 @@ namespace ignis
 	{
 		if (s_renderData->Fonts.find(name) != s_renderData->Fonts.end())
 		{
-			_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Name %s already in use", name.c_str());
+			_ignisErrorCallback(IGNIS_WARN, "[FONT] Name %s already in use", name.c_str());
 			return;
 		}
 
@@ -52,7 +53,7 @@ namespace ignis
 		if (font != s_renderData->Fonts.end())
 			return font->second;
 
-		_ignisErrorCallback(ignisErrorLevel::Warn, "[FONT] Font %s not found", name.c_str());
+		_ignisErrorCallback(IGNIS_WARN, "[FONT] Font %s not found", name.c_str());
 		return nullptr;
 	}
 
@@ -62,9 +63,9 @@ namespace ignis
 
 		if (!font) return;
 
-		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_Projection", &proj[0][0]);
-		s_renderData->Shader->SetUniform4f("u_Color", &color[0]);
+		ignisUseShader(s_renderData->Shader);
+		ignisSetUniformMat4(s_renderData->Shader, "u_Projection", &proj[0][0]);
+		ignisSetUniform4f(s_renderData->Shader, "u_Color", &color[0]);
 
 		font->Bind();
 		s_renderData->VertexArray->Bind();

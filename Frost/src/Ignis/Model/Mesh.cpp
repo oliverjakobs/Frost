@@ -24,14 +24,14 @@ namespace ignis
 		bool success = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename.c_str(), mtldir.c_str());
 
 		if (!warn.empty())
-			_ignisErrorCallback(ignisErrorLevel::Warn, warn.c_str());
+			_ignisErrorCallback(IGNIS_WARN, warn.c_str());
 
 		if (!err.empty())
-			_ignisErrorCallback(ignisErrorLevel::Error, err.c_str());
+			_ignisErrorCallback(IGNIS_ERROR, err.c_str());
 
 		if (!success)
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[Obj] Failed to load obj: %s", filename.c_str());
+			_ignisErrorCallback(IGNIS_ERROR, "[Obj] Failed to load obj: %s", filename.c_str());
 			return Mesh({});
 		}
 

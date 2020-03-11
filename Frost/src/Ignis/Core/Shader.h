@@ -2,49 +2,52 @@
 
 #include "Api.h"
 
-namespace ignis
+#ifdef __cplusplus
+extern "C"
 {
-	class Shader
+#endif
+
+	typedef struct
 	{
-	protected:
-		GLuint m_program;
+		GLuint program;
+	} ignis_shader;
 
-		Shader() : m_program(0) {};
+	ignis_shader* ignisShadervf(const char* vert, const char* frag);
+	ignis_shader* ignisShadervgf(const char* vert, const char* geom, const char* frag);
+	void ignisDeleteShader(ignis_shader* shader);
 
-	public:
-		Shader(const char* vert, const char* frag);
-		Shader(const char* vert, const char* geom, const char* frag);
-		virtual ~Shader();
+	void ignisUseShader(ignis_shader* shader);
 
-		void Use();
+	GLint ignisGetUniformLocation(const ignis_shader* shader, const char* name);
 
-		void SetUniform1i(const char* name, int value) const;
-		void SetUniform1f(const char* name, float value) const;
-		void SetUniform2f(const char* name, const float* values) const;
-		void SetUniform3f(const char* name, const float* values) const;
-		void SetUniform4f(const char* name, const float* values) const;
-		void SetUniformMat2(const char* name, const float* values) const;
-		void SetUniformMat3(const char* name, const float* values) const;
-		void SetUniformMat4(const char* name, const float* values) const;
+	void ignisSetUniform1i(const ignis_shader* shader, const char* name, int value);
+	void ignisSetUniform1f(const ignis_shader* shader, const char* name, float value);
+	void ignisSetUniform2f(const ignis_shader* shader, const char* name, const float* values);
+	void ignisSetUniform3f(const ignis_shader* shader, const char* name, const float* values);
+	void ignisSetUniform4f(const ignis_shader* shader, const char* name, const float* values);
+	void ignisSetUniformMat2(const ignis_shader* shader, const char* name, const float* values);
+	void ignisSetUniformMat3(const ignis_shader* shader, const char* name, const float* values);
+	void ignisSetUniformMat4(const ignis_shader* shader, const char* name, const float* values);
 
-		int GetUniformLocation(const char* name) const;
-
-		void SetUniform1i(int location, int value) const;
-		void SetUniform1f(int location, float value) const;
-		void SetUniform2f(int location, const float* values) const;
-		void SetUniform3f(int location, const float* values) const;
-		void SetUniform4f(int location, const float* values) const;
-		void SetUniformMat2(int location, const float* values) const;
-		void SetUniformMat3(int location, const float* values) const;
-		void SetUniformMat4(int location, const float* values) const;
-	};
+	// unchecked location
+	void ignisSetUniform1il(GLint location, int value);
+	void ignisSetUniform1fl(GLint location, float value);
+	void ignisSetUniform2fl(GLint location, const float* values);
+	void ignisSetUniform3fl(GLint location, const float* values);
+	void ignisSetUniform4fl(GLint location, const float* values);
+	void ignisSetUniformMat2l(GLint location, const float* values);
+	void ignisSetUniformMat3l(GLint location, const float* values);
+	void ignisSetUniformMat4l(GLint location, const float* values);
 
 	// Shader utils
-	GLuint CreateShaderProgram(GLenum* types, const char** sources, size_t count);
-	GLuint CompileShader(GLenum type, const char* source);
+	GLuint ignisCreateShaderProgram(GLenum* types, const char** sources, size_t count);
+	GLuint ignisCompileShader(GLenum type, const char* source);
 
-	void PrintShaderLog(GLuint shader);
-	void PrintProgramLog(GLuint program);
+	void ignisPrintShaderLog(GLuint shader);
+	void ignisPrintProgramLog(GLuint program);
 
-	const char* GetShaderType(GLenum type);
+	const char* ignisGetShaderType(GLenum type);
+
+#ifdef __cplusplus
 }
+#endif

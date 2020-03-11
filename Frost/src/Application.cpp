@@ -151,9 +151,9 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	{
 		switch (level)
 		{
-		case ignisErrorLevel::Warn:		OBELISK_WARN(desc); break;
-		case ignisErrorLevel::Error:	OBELISK_ERROR(desc); break;
-		case ignisErrorLevel::Critical:	OBELISK_CRITICAL(desc); break;
+		case IGNIS_WARN:		OBELISK_WARN(desc); break;
+		case IGNIS_ERROR:		OBELISK_ERROR(desc); break;
+		case IGNIS_CRITICAL:	OBELISK_CRITICAL(desc); break;
 		}
 	});
 

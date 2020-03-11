@@ -2,25 +2,28 @@
 
 #include "Ignis/glad/glad.h"
 
-// You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h.
-#ifndef IGNIS_ASSERT
-#include <assert.h>
-#define IGNIS_ASSERT(x) assert(x)
-#endif
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+// You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h.
+#ifndef IGNIS_ASSERT
+#include <assert.h>
+#define IGNIS_ASSERT(x) assert(x)
+#endif
+
+#include <stdlib.h>
+#include <stdio.h>
 #include <stdarg.h>
 
-	enum class ignisErrorLevel
+	typedef enum
 	{
-		Warn = 0,
-		Error = 1,
-		Critical = 2
-	};
+		IGNIS_WARN = 0,
+		IGNIS_ERROR = 1,
+		IGNIS_CRITICAL = 2
+	} ignisErrorLevel;
 
 	void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*));
 	void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);

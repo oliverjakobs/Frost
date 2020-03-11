@@ -7,12 +7,12 @@ namespace ignis
 	struct Renderer2DStorage
 	{
 		std::shared_ptr<VertexArray> VertexArray;
-		std::shared_ptr<Shader> Shader;
+		ignis_shader* Shader;
 	};
 
 	static Renderer2DStorage* s_renderData;
 
-	void Renderer2D::Init(const std::shared_ptr<Shader>& shader)
+	void Renderer2D::Init(ignis_shader* shader)
 	{
 		s_renderData = new Renderer2DStorage();
 
@@ -35,19 +35,21 @@ namespace ignis
 		s_renderData->VertexArray->LoadElementBuffer({ 0, 1, 2, 2, 3, 0 }, GL_STATIC_DRAW);
 
 		s_renderData->Shader = shader;
-		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniform1i("u_Texture", 0);
+
+		ignisUseShader(s_renderData->Shader);
+		ignisSetUniform1i(s_renderData->Shader, "u_Texture", 0);
 	}
 
 	void Renderer2D::Destroy()
 	{
+		ignisDeleteShader(s_renderData->Shader);
 		delete s_renderData;
 	}
 
 	void Renderer2D::Start(const glm::mat4& viewProjection)
 	{
-		s_renderData->Shader->Use();
-		s_renderData->Shader->SetUniformMat4("u_ViewProjection", &viewProjection[0][0]);
+		ignisUseShader(s_renderData->Shader);
+		ignisSetUniformMat4(s_renderData->Shader, "u_ViewProjection", &viewProjection[0][0]);
 	}
 
 	void Renderer2D::Flush()
@@ -56,9 +58,9 @@ namespace ignis
 
 	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color)
 	{
-		s_renderData->Shader->SetUniform4f("u_Color", &color[0]);
-		s_renderData->Shader->SetUniformMat4("u_Model", &model[0][0]);
-		s_renderData->Shader->SetUniformMat4("u_Src", &src[0][0]);
+		ignisSetUniform4f(s_renderData->Shader, "u_Color", &color[0]);
+		ignisSetUniformMat4(s_renderData->Shader, "u_Model", &model[0][0]);
+		ignisSetUniformMat4(s_renderData->Shader, "u_Src", &src[0][0]);
 
 		texture->Bind();
 

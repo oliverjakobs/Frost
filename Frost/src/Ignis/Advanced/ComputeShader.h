@@ -6,7 +6,7 @@
 
 namespace ignis
 {
-	class ComputeShader : public Shader
+	class ComputeShader // : public Shader
 	{
 	public:
 		ComputeShader(const std::string& path);

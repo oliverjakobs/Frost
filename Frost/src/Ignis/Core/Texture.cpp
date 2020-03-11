@@ -30,12 +30,12 @@ namespace ignis
 		if (bpp == 4)
 		{
 			if (config.FORMAT != GL_RGBA || config.INTERAL_FORMAT != GL_RGBA8)
-				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for %s", path);
+				_ignisErrorCallback(IGNIS_WARN, "[Tex] Format mismatch for %s", path);
 		}
 		else if (bpp == 3)
 		{
 			if (config.FORMAT != GL_RGB || config.INTERAL_FORMAT != GL_RGB8)
-				_ignisErrorCallback(ignisErrorLevel::Warn, "[Tex] Format mismatch for %s", path);
+				_ignisErrorCallback(IGNIS_WARN, "[Tex] Format mismatch for %s", path);
 		}
 
 		if (pixels)
@@ -45,7 +45,7 @@ namespace ignis
 		}
 		else
 		{
-			_ignisErrorCallback(ignisErrorLevel::Error, "[Tex] Failed to load texture(%s): %s", path, stbi_failure_reason());
+			_ignisErrorCallback(IGNIS_ERROR, "[Tex] Failed to load texture(%s): %s", path, stbi_failure_reason());
 			m_name = 0;
 		}
 	}
