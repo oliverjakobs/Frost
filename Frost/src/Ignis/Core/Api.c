@@ -1,8 +1,5 @@
 #include "Api.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
 static void (*s_ignisErrorCallback)(ignisErrorLevel level, const char* fmt);
 
 void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*))

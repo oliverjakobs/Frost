@@ -1,8 +1,5 @@
 #pragma once
 
-#include "Ignis/glad/glad.h"
-
-
 #ifdef __cplusplus
 extern "C"
 {
@@ -13,6 +10,8 @@ extern "C"
 #include <assert.h>
 #define IGNIS_ASSERT(x) assert(x)
 #endif
+
+#include "glad/glad.h"
 
 #include <stdlib.h>
 #include <stdio.h>

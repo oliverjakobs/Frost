@@ -130,8 +130,8 @@
     <ClInclude Include="src\Ignis\Renderer\Primitives.h" />
     <ClInclude Include="src\Ignis\Renderer\RenderState.h" />
     <ClInclude Include="src\Ignis\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
-    <ClInclude Include="src\Ignis\glad\glad.h" />
+    <ClInclude Include="src\Ignis\Core\glad\KHR\khrplatform.h" />
+    <ClInclude Include="src\Ignis\Core\glad\glad.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.h" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Color.cpp" />
-    <ClCompile Include="src\Ignis\Core\Api.cpp" />
+    <ClCompile Include="src\Ignis\Core\Api.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.cpp" />
@@ -180,7 +180,7 @@
     <ClCompile Include="src\Ignis\Renderer\Primitives.cpp" />
     <ClCompile Include="src\Ignis\Renderer\RenderState.cpp" />
     <ClCompile Include="src\Ignis\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\Ignis\Core\glad\glad.c" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />

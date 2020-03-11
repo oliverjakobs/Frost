@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Ignis/glad/glad.h"
-
 #include "Api.h"
 
 namespace ignis
