@@ -1,55 +1,57 @@
-#pragma once
+#ifndef IGNIS_TEXTURE_H
+#define IGNIS_TEXTURE_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #include "Api.h"
 
-namespace ignis
-{
-	struct TextureConfig
+	typedef struct
 	{
-		GLint INTERAL_FORMAT;
-		GLenum FORMAT;
+		GLint internal_format;
+		GLenum format;
 
-		GLint MIN_FILTER;
-		GLint MAG_FILTER;
+		GLint min_filter;
+		GLint mag_filter;
 
-		GLint WRAP_S;
-		GLint WRAP_T;
-	};
+		GLint wrap_s;
+		GLint wrap_t;
+	} ignis_texture_config;
 
-	constexpr TextureConfig DEFAULT_CONFIG{ GL_RGBA8, GL_RGBA, GL_LINEAR, GL_NEAREST, GL_REPEAT, GL_REPEAT };
+#define IGNIS_DEFAULT_CONFIG { GL_RGBA8, GL_RGBA, GL_LINEAR, GL_NEAREST, GL_REPEAT, GL_REPEAT }
 
-	struct Texture
+	typedef struct
 	{
-	private:
-		GLuint m_name;
+		GLuint name;
 
-		int m_width;
-		int m_height;
+		int width;
+		int height;
 
-		GLuint m_rows;
-		GLuint m_columns;
+		GLuint rows;
+		GLuint columns;
 
-		GLuint m_activeSlot;
+		GLuint slot;
 
-		TextureConfig m_config;
+		ignis_texture_config config;
+	} ignis_texture;
 
-	public:
-		Texture(int width, int height, TextureConfig config = DEFAULT_CONFIG);
-		Texture(int width, int height, void* pixels, TextureConfig config = DEFAULT_CONFIG);
-		Texture(const char* path, GLuint rows = 1, GLuint columns = 1, bool flipOnLoad = true, TextureConfig config = DEFAULT_CONFIG);
-		~Texture();
+	ignis_texture* ignisCreateTextureEmpty(int width, int height);
+	ignis_texture* ignisCreateTextureEmptyc(int width, int height, ignis_texture_config config);
+	ignis_texture* ignisCreateTextureRaw(int width, int height, void* pixels);
+	ignis_texture* ignisCreateTextureRawc(int width, int height, void* pixels, ignis_texture_config config);
+	ignis_texture* ignisCreateTexture(const char* path, GLuint rows, GLuint columns, int flip_on_load);
+	ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns, int flip_on_load, ignis_texture_config config);
+	void ignisDeleteTexture(ignis_texture* texture);
 
-		void Bind(GLuint slot = 0);
-		void Unbind();
+	GLuint ignisGenerateTexture2D(int width, int height, void* pixels, ignis_texture_config config);
 
-		const GLuint GetName() const { return m_name; }
+	void ignisBindTexture(ignis_texture* texture, GLuint slot);
+	void ignisUnbindTexture(ignis_texture* texture);
 
-		const int GetWidth() const { return m_width; }
-		const int GetHeight() const { return m_height; }
-
-		const GLuint GetRows() const { return m_rows; }
-		const GLuint GetColumns() const { return m_columns; }
-	};
-
-	GLuint CreateTexture2D(int width, int height, void* pixels, TextureConfig config);
+#ifdef __cplusplus
 }
+#endif
+
+#endif // IGNIS_TEXTURE_H

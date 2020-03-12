@@ -15,7 +15,7 @@ enum class RenderFlip
 class TextureComponent : public Component
 {
 private:
-	std::shared_ptr<ignis::Texture> m_texture;
+	ignis_texture* m_texture;
 	size_t m_frame;
 
 	float m_width;
@@ -24,7 +24,8 @@ private:
 	RenderFlip m_renderFlip;
 
 public:
-	TextureComponent(Entity* entity, std::shared_ptr<ignis::Texture> texture, float width, float height);
+	TextureComponent(Entity* entity, ignis_texture* texture, float width, float height);
+	~TextureComponent();
 
 	void SetFrame(size_t frame);
 	void SetRenderFlip(RenderFlip flip);

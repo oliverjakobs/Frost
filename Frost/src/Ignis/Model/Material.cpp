@@ -23,19 +23,19 @@ namespace ignis
 	void Material::Bind()
 	{
 		if (Diffuse)
-			Diffuse->Bind(0);
+			ignisBindTexture(Diffuse, 0);
 
 		if (Normal)
-			Normal->Bind(1);
+			ignisBindTexture(Normal, 1);
 	}
 
 	void Material::Unbind()
 	{
 		if (Diffuse)
-			Diffuse->Unbind();
+			ignisUnbindTexture(Diffuse);
 
 		if (Normal)
-			Normal->Unbind();
+			ignisUnbindTexture(Normal);
 	}
 }
 

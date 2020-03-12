@@ -79,13 +79,13 @@ namespace ignis
 		if (mtl && materials.size() > 0)
 		{
 			if (!materials[0].diffuse_texname.empty())
-				mtl->Diffuse = new Texture((mtldir + materials[0].diffuse_texname).c_str());
+				mtl->Diffuse = ignisCreateTexture((mtldir + materials[0].diffuse_texname).c_str(), 1, 1, true);
 
 			if (!materials[0].bump_texname.empty())
-				mtl->Normal = new Texture((mtldir + materials[0].bump_texname).c_str());
+				mtl->Normal = ignisCreateTexture((mtldir + materials[0].bump_texname).c_str(), 1, 1, true);
 
 			if (!materials[0].specular_texname.empty())
-				mtl->Specular = new Texture((mtldir + materials[0].specular_texname).c_str());
+				mtl->Specular = ignisCreateTexture((mtldir + materials[0].specular_texname).c_str(), 1, 1, true);
 
 			mtl->Shininess = materials[0].shininess;
 		}

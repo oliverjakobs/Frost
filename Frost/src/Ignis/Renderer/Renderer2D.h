@@ -17,6 +17,6 @@ namespace ignis
 		static void Flush();
 
 		// Textures
-		static void RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color = WHITE);
+		static void RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const color& color = WHITE);
 	};
 }

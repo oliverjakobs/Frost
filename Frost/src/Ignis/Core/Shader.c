@@ -56,7 +56,7 @@ ignis_shader* ignisShadervf(const char* vert, const char* frag)
 	if (shader != NULL)
 		shader->program = ignisCreateShaderProgram(types, sources, 2);
 	else
-		_ignisErrorCallback(IGNIS_ERROR, "Failed to allocate memory");
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to allocate memory");
 
 	free(vert_src);
 	free(frag_src);
@@ -81,7 +81,7 @@ ignis_shader* ignisShadervgf(const char* vert, const char* geom, const char* fra
 	if (shader != NULL)
 		shader->program = ignisCreateShaderProgram(types, sources, 3);
 	else
-		_ignisErrorCallback(IGNIS_ERROR, "Failed to allocate memory");
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to allocate memory");
 
 	free(vert_src);
 	free(geom_src);

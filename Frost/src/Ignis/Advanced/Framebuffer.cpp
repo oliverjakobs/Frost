@@ -3,8 +3,13 @@
 namespace ignis
 {
 	FrameBuffer::FrameBuffer(int w, int h)
-		: m_texture(w, h), m_width(w), m_height(h)
+		:m_width(w), m_height(h)
 	{
+		m_texture = ignisCreateTextureEmpty(w, h);
+
+		if (!m_texture)
+			return;
+
 		float vertices[] = {
 			// positions   // texCoords
 			-1.0f,  1.0f,  0.0f, 1.0f,
@@ -23,7 +28,7 @@ namespace ignis
 		glBindFramebuffer(GL_FRAMEBUFFER, m_name);
 
 		// create a color attachment texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture.GetName(), 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->name, 0);
 
 		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
 		RenderBuffer rbo;
@@ -63,7 +68,7 @@ namespace ignis
 		return m_vao;
 	}
 
-	Texture& FrameBuffer::Texture()
+	ignis_texture* FrameBuffer::Texture()
 	{
 		return m_texture;
 	}

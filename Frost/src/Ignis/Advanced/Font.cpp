@@ -21,14 +21,14 @@ namespace ignis
 		m_charData = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * m_numChars);
 
 		// load bitmap
-		TextureConfig config = DEFAULT_CONFIG;
-		config.INTERAL_FORMAT = GL_R8;
-		config.FORMAT = GL_RED;
+		ignis_texture_config config = IGNIS_DEFAULT_CONFIG;
+		config.internal_format = GL_R8;
+		config.format = GL_RED;
 
 		GLubyte* bitmap = (GLubyte*)malloc(sizeof(GLubyte) * m_bitmapWidth * m_bitmapHeight);
 		stbtt_BakeFontBitmap(buffer.data(), 0, size, bitmap, m_bitmapWidth, m_bitmapHeight, m_firstChar, m_numChars, m_charData); // no guarantee this fits!
 
-		m_texture = std::make_unique<Texture>(m_bitmapWidth, m_bitmapHeight, bitmap, config);
+		m_texture = ignisCreateTextureRawc(m_bitmapWidth, m_bitmapHeight, bitmap, config);
 
 		free(bitmap);
 	}
@@ -36,16 +36,17 @@ namespace ignis
 	Font::~Font()
 	{
 		free(m_charData);
+		ignisDeleteTexture(m_texture);
 	}
 
 	void Font::Bind()
 	{
-		m_texture->Bind();
+		ignisBindTexture(m_texture, 0);
 	}
 
 	void Font::Unbind()
 	{
-		m_texture->Unbind();
+		ignisUnbindTexture(m_texture);
 	}
 
 	std::vector<float> Font::LoadCharQuad(char c, float* x, float* y)

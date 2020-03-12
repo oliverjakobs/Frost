@@ -9,7 +9,7 @@ namespace ignis
 	{
 	private:
 		GLuint m_name;
-		Texture m_texture;
+		ignis_texture* m_texture;
 
 		VertexArray m_vao;
 		ArrayBuffer m_vbo;
@@ -25,6 +25,6 @@ namespace ignis
 		void BindVAO();
 
 		VertexArray& VAO();
-		Texture& Texture();
+		ignis_texture* Texture();
 	};
 }

@@ -1,11 +1,12 @@
-#pragma once
-
-#include "Api.h"
+#ifndef IGNIS_SHADER_H
+#define IGNIS_SHADER_H
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
+#include "Api.h"
 
 	typedef struct
 	{
@@ -51,3 +52,5 @@ extern "C"
 #ifdef __cplusplus
 }
 #endif
+
+#endif // IGNIS_SHADER_H

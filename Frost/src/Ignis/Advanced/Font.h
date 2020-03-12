@@ -21,7 +21,7 @@ namespace ignis
 
 		stbtt_bakedchar* m_charData;
 		
-		std::unique_ptr<Texture> m_texture;
+		ignis_texture* m_texture;
 
 	public:
 		Font(const std::string& path, float size);

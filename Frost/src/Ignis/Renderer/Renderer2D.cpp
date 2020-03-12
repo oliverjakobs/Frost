@@ -56,13 +56,13 @@ namespace ignis
 	{
 	}
 
-	void Renderer2D::RenderTexture(const std::shared_ptr<Texture>& texture, const glm::mat4& model, const glm::mat4& src, const color& color)
+	void Renderer2D::RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const color& color)
 	{
 		ignisSetUniform4f(s_renderData->Shader, "u_Color", &color[0]);
 		ignisSetUniformMat4(s_renderData->Shader, "u_Model", &model[0][0]);
 		ignisSetUniformMat4(s_renderData->Shader, "u_Src", &src[0][0]);
 
-		texture->Bind();
+		ignisBindTexture(texture, 0);
 
 		s_renderData->VertexArray->Bind();
 		glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->GetElementCount(), GL_UNSIGNED_INT, nullptr);

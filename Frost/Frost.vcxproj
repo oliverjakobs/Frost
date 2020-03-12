@@ -172,7 +172,7 @@
     <ClCompile Include="src\Ignis\Core\Api.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
-    <ClCompile Include="src\Ignis\Core\Texture.cpp" />
+    <ClCompile Include="src\Ignis\Core\Texture.c" />
     <ClCompile Include="src\Ignis\Ignis.cpp" />
     <ClCompile Include="src\Ignis\Model\Material.cpp" />
     <ClCompile Include="src\Ignis\Model\Mesh.cpp" />

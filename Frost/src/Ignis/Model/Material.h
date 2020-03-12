@@ -6,9 +6,9 @@ namespace ignis
 {
 	struct Material
 	{
-		Texture* Diffuse;
-		Texture* Normal;
-		Texture* Specular;
+		ignis_texture* Diffuse;
+		ignis_texture* Normal;
+		ignis_texture* Specular;
 
 		float Shininess;
 
