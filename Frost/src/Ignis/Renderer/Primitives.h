@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ignis/Core/Buffer.h"
+#include "Ignis/Core/VertexArray.hpp"
 #include "Ignis/Core/Shader.h"
 #include "Ignis/Color.h"
 

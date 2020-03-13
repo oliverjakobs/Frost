@@ -1,197 +1,79 @@
-#pragma once
+#ifndef IGNIS_BUFFER_H
+#define IGNIS_BUFFER_H
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #include "Api.h"
 
-#include <vector>
-#include <memory>
+	/* Buffer */
+	void ignisBindBuffer(GLenum target, GLuint name);
+	void ignisUnbindBuffer(GLenum target);
 
-namespace ignis
-{
-	class Buffer
+	/* ArrayBuffer */
+	typedef struct
 	{
-	protected:
-		GLuint m_name;
-		GLenum m_target;
+		GLuint name;
+		GLenum target;
+	} ignis_array_buffer;
 
-	public:
-		Buffer(GLenum target);
-		virtual ~Buffer();
+	ignis_array_buffer* ignisGenerateArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
+	void ignisDeleteArrayBuffer(ignis_array_buffer* buffer);
 
-		void Bind() const;
-		void Unbind() const;
+	void ignisArrayBufferData(ignis_array_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
+	void ignisArrayBufferSubData(ignis_array_buffer* buffer, GLintptr offset, GLsizeiptr size, const void* data);
 
-		const GLuint GetName() const { return m_name; }
-		const GLenum GetTarget() const { return m_target; }
-	};
+	void* ignisMapArrayBuffer(ignis_array_buffer* buffer, GLenum access);
+	void* ignisMapArrayBufferRange(ignis_array_buffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access);
+	void ignisUnmapArrayBuffer(ignis_array_buffer* buffer);
 
-	class ArrayBuffer : public Buffer
+	void ignisVertexAttribPointerR(GLuint index, GLint size, GLboolean normalized, GLsizei stride, const void* offset);
+	void ignisVertexAttribPointer(GLuint index, GLint size, GLboolean normalized, GLsizei stride, GLintptr offset);
+	void ignisVertexAttribIPointer(GLuint index, GLint size, GLsizei stride, GLintptr offset);
+	void ignisVertexAttribDivisor(GLuint index, GLuint divisor);
+
+	/* ElementBuffer */
+	typedef struct
 	{
-	public:
-		ArrayBuffer();
-		ArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
+		GLuint name;
+		GLenum target;
+		GLsizei count;
+	} ignis_element_buffer;
 
-		void BufferData(GLsizeiptr size, const void* data, GLenum usage);
-		void BufferSubData(GLintptr offset, GLsizeiptr size, const void* data);
+	ignis_element_buffer* ignisGenerateElementBuffer(GLsizei count, const GLuint* data, GLenum usage);
+	void ignisDeleteElementBuffer(ignis_element_buffer* buffer);
 
-		void VertexAttribPointerR(GLuint index, GLint size, GLboolean normalized, GLsizei stride, const void* offset);
-		void VertexAttribPointer(GLuint index, GLint size, GLboolean normalized, GLsizei stride, GLintptr offset);
-		void VertexAttribIPointer(GLuint index, GLint size, GLsizei stride, GLintptr offset);
-		void VertexAttribDivisor(GLuint index, GLuint divisor);
+	void ignisElementBufferData(ignis_element_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
 
-		void* MapBuffer(GLenum access);
-		void* MapBufferRange(GLintptr offset, GLsizeiptr length, GLbitfield access);
-
-		template <typename Type> Type* MapBuffer(GLenum access);
-		template <typename Type> Type* MapBufferRange(GLintptr offset, GLsizeiptr count, GLbitfield access);
-
-		void UnmapBuffer();
-	};
-
-	template <typename Type>
-	inline Type* ArrayBuffer::MapBuffer(GLenum access)
+	/* TextureBuffer */
+	typedef struct
 	{
-		return (Type*)MapBuffer(access);
-	}
+		GLuint texture;
+		GLenum target;
+		GLenum format;
+	} ignis_texture_buffer;
 
-	template <typename Type>
-	inline Type* ArrayBuffer::MapBufferRange(GLintptr offset, GLsizeiptr count, GLbitfield access)
+	ignis_texture_buffer* ignisGenerateTextureBuffer(GLenum format, GLuint buffer);
+	void ignisDeleteTextureBuffer(ignis_texture_buffer* buffer);
+
+	void ignisBindImageTexture(ignis_texture_buffer* buffer, GLuint unit, GLenum access);
+
+	/* RenderBuffer */
+	typedef struct
 	{
-		return (Type*)MapBufferRange(offset, count * sizeof(Type), access);
-	}
+		GLuint name;
+		GLenum target;
+	} ignis_render_buffer;
 
-	class ElementBuffer : public Buffer
-	{
-	private:
-		GLsizei m_count;
+	ignis_render_buffer* ignisGenerateRenderBuffer();
+	void ignisDeleteRenderBuffer(ignis_render_buffer* buffer);
 
-	public:
-		ElementBuffer();
-		ElementBuffer(GLsizei count, const GLuint* data, GLenum usage);
+	void ignisRenderBufferStorage(ignis_render_buffer* buffer, GLenum format, GLsizei width, GLsizei height);
 
-		void BufferData(GLsizei count, const GLuint* data, GLenum usage);
-
-		const GLsizei GetCount() const { return m_count; }
-	};
-
-	// Advanced buffers
-	class TextureBuffer
-	{
-	private:
-		GLuint m_texture;
-		GLenum m_format;
-
-	public:
-		TextureBuffer(GLenum format, GLuint buffer);
-		~TextureBuffer();
-
-		void BindImageTexture(GLuint unit, GLenum access);
-
-		const GLuint GetTexture() const { return m_texture; }
-		const GLenum GetFormat() const { return m_format; }
-	};
-
-	class RenderBuffer
-	{
-	private:
-		GLuint m_name;
-
-	public:
-		RenderBuffer();
-		~RenderBuffer();
-
-		void Bind() const;
-		void Unbind() const;
-
-		void RenderbufferStorage(GLenum format, GLsizei width, GLsizei height);
-
-		const GLuint GetName() const { return m_name; }
-	};
-
-	// VertexArray
-	static unsigned int GetOpenGLTypeSize(GLenum type)
-	{
-		switch (type)
-		{
-		case GL_FLOAT:			return sizeof(GLfloat);
-		case GL_INT:			return sizeof(GLint);
-		case GL_UNSIGNED_INT:	return sizeof(GLuint);
-		default: return 0;
-		}
-	}
-
-	struct BufferElement
-	{
-		GLenum Type;
-		GLsizei Count;
-		GLuint Offset;
-		GLboolean Normalized;
-
-		BufferElement() : Type(GL_UNSIGNED_INT), Count(0), Offset(0), Normalized(GL_FALSE) { }
-		BufferElement(GLenum type, GLsizei count, GLboolean normalized = GL_FALSE) : Type(type), Count(count), Offset(0), Normalized(normalized) { }
-	};
-
-	class BufferLayout
-	{
-	private:
-		std::vector<BufferElement> m_elements;
-		GLuint m_stride = 0;
-
-	public:
-		BufferLayout() {}
-
-		BufferLayout(const std::initializer_list<BufferElement>& elements)
-			: m_elements(elements)
-		{
-			// Calculate offsets and stride
-			GLuint offset = 0;
-			m_stride = 0;
-			for (auto& element : m_elements)
-			{
-				element.Offset = offset;
-				GLuint size = GetOpenGLTypeSize(element.Type) * element.Count;
-
-				offset += size;
-				m_stride += size;
-			}
-		}
-
-		inline GLuint GetStride() const { return m_stride; }
-		inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
-
-		std::vector<BufferElement>::iterator begin() { return m_elements.begin(); }
-		std::vector<BufferElement>::iterator end() { return m_elements.end(); }
-		std::vector<BufferElement>::const_iterator begin() const { return m_elements.begin(); }
-		std::vector<BufferElement>::const_iterator end() const { return m_elements.end(); }
-	};
-
-	class VertexArray
-	{
-	private:
-		GLuint m_name;
-
-		GLuint m_vertexAttribIndex;
-
-		std::vector<std::shared_ptr<ArrayBuffer>> m_arrayBuffers;
-		std::shared_ptr<ElementBuffer> m_elementBuffer;
-
-	public:
-		VertexArray();
-		~VertexArray();
-
-		void Bind() const;
-		void Unbind() const;
-
-		void AddArrayBuffer(const std::shared_ptr<ArrayBuffer>& buffer);
-		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
-		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage, const BufferLayout& layout);
-		void LoadElementBuffer(std::vector<GLuint> indices, GLenum usage);
-
-		const GLuint GetName() const { return m_name; }
-		const GLsizei GetElementCount() const { return (m_elementBuffer ? m_elementBuffer->GetCount() : 0); }
-
-		const std::vector<std::shared_ptr<ArrayBuffer>>& GetArrayBuffers() const { return m_arrayBuffers; }
-		const std::shared_ptr<ElementBuffer>& GetElementBuffer() const { return m_elementBuffer; }
-
-		std::shared_ptr<ArrayBuffer> GetArrayBuffer(GLsizei index) const { return m_arrayBuffers.at(index); }
-	};
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* IGNIS_BUFFER_H */

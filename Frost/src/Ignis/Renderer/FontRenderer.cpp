@@ -77,7 +77,7 @@ namespace ignis
 			if (!vertices.empty())
 			{
 				// Update content of VBO memory
-				s_renderData->VertexArray->GetArrayBuffer(0)->BufferSubData(0, s_renderData->BufferSize, vertices.data());
+				ignisArrayBufferSubData(s_renderData->VertexArray->GetArrayBuffer(0), 0, s_renderData->BufferSize, vertices.data());
 
 				// Render quad
 				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

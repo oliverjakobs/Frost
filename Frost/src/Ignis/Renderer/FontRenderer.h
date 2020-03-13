@@ -2,6 +2,7 @@
 
 #include "Ignis/Advanced/Font.h"
 #include "Ignis/Core/Shader.h"
+#include "Ignis/Core/VertexArray.hpp"
 #include "Ignis/Color.h"
 
 namespace ignis

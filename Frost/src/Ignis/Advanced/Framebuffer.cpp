@@ -20,9 +20,9 @@ namespace ignis
 
 		m_vao.Bind();
 
-		m_vbo.BufferData(sizeof(vertices), vertices, GL_STATIC_DRAW);
-		m_vbo.VertexAttribPointer(0, 2, GL_FALSE, 4, 0);
-		m_vbo.VertexAttribPointer(1, 2, GL_FALSE, 4, 2);
+		m_vbo = ignisGenerateArrayBuffer(sizeof(vertices), vertices, GL_STATIC_DRAW);
+		ignisVertexAttribPointer(0, 2, GL_FALSE, 4, 0);
+		ignisVertexAttribPointer(1, 2, GL_FALSE, 4, 2);
 
 		glGenFramebuffers(1, &m_name);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_name);
@@ -31,21 +31,25 @@ namespace ignis
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_texture->name, 0);
 
 		// create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-		RenderBuffer rbo;
-		rbo.RenderbufferStorage(GL_DEPTH24_STENCIL8, w, h); // use a single renderbuffer object for both a depth AND stencil buffer.
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo.GetName()); // now actually attach it
+		ignis_render_buffer* rbo = ignisGenerateRenderBuffer();
+		ignisRenderBufferStorage(rbo, GL_DEPTH24_STENCIL8, w, h); // use a single renderbuffer object for both a depth AND stencil buffer.
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo->name); // now actually attach it
+
+		ignisDeleteRenderBuffer(rbo);
 
 		// now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 			_ignisErrorCallback(IGNIS_WARN, "Framebuffer is not complete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		m_vbo.Unbind();
+		ignisUnbindBuffer(m_vbo->target);
 	}
 
 	FrameBuffer::~FrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_name);
+
+		ignisDeleteArrayBuffer(m_vbo);
 	}
 
 	void FrameBuffer::Bind()

@@ -54,4 +54,4 @@ extern "C"
 }
 #endif
 
-#endif // IGNIS_TEXTURE_H
+#endif /* IGNIS_TEXTURE_H */

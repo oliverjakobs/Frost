@@ -117,11 +117,10 @@
     <ClInclude Include="src\Ignis\Color.h" />
     <ClInclude Include="src\Ignis\Core\Api.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
+    <ClInclude Include="src\Ignis\Core\VertexArray.hpp" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
-    <ClInclude Include="src\Ignis\Model\Material.h" />
-    <ClInclude Include="src\Ignis\Model\Mesh.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
@@ -170,12 +169,11 @@
     <ClCompile Include="src\Ignis\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Color.cpp" />
     <ClCompile Include="src\Ignis\Core\Api.c" />
-    <ClCompile Include="src\Ignis\Core\Buffer.cpp" />
+    <ClCompile Include="src\Ignis\Core\Buffer.c" />
+    <ClCompile Include="src\Ignis\Core\VertexArray.cpp" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.c" />
     <ClCompile Include="src\Ignis\Ignis.cpp" />
-    <ClCompile Include="src\Ignis\Model\Material.cpp" />
-    <ClCompile Include="src\Ignis\Model\Mesh.cpp" />
     <ClCompile Include="src\Ignis\Renderer\FontRenderer.cpp" />
     <ClCompile Include="src\Ignis\Renderer\Primitives.cpp" />
     <ClCompile Include="src\Ignis\Renderer\RenderState.cpp" />

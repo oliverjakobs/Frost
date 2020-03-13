@@ -48,7 +48,7 @@ namespace ignis
 			return;
 
 		s_renderData->VertexArray->Bind();
-		s_renderData->VertexArray->GetArrayBuffer(0)->BufferSubData(0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
+		ignisArrayBufferSubData(s_renderData->VertexArray->GetArrayBuffer(0), 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
 
 		ignisUseShader(s_renderData->Shader);
 

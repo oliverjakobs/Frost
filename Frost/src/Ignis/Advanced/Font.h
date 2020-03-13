@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Ignis/Core/Buffer.h"
 #include "Ignis/Core/Texture.h"
 
 #include "Ignis/Packages/stb_truetype.h"
 
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace ignis
 {

@@ -53,4 +53,4 @@ extern "C"
 }
 #endif
 
-#endif // IGNIS_SHADER_H
+#endif /* IGNIS_SHADER_H */

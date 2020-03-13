@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Ignis/Core/Texture.h"
-#include "Ignis/Core/Buffer.h"
+#include "Ignis/Core/VertexArray.hpp"
 
 namespace ignis
 {
@@ -12,7 +12,7 @@ namespace ignis
 		ignis_texture* m_texture;
 
 		VertexArray m_vao;
-		ArrayBuffer m_vbo;
+		ignis_array_buffer* m_vbo;
 
 		int m_width, m_height;
 	public:

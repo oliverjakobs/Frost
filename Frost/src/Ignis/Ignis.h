@@ -1,11 +1,10 @@
 #pragma once
 
 // Core
-#include "Core/Buffer.h"
+#include "Core/VertexArray.hpp"
 #include "Core/Texture.h"
 #include "Core/Shader.h"
 
-#include "Model/Mesh.h"
 #include "Advanced/Font.h"
 
 #include "Ignis/Camera/OrthographicCamera.h"
