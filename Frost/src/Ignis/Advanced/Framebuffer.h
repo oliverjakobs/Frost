@@ -12,7 +12,7 @@ namespace ignis
 		ignis_texture* m_texture;
 
 		VertexArray m_vao;
-		ignis_array_buffer* m_vbo;
+		ignis_buffer* m_vbo;
 
 		int m_width, m_height;
 	public:

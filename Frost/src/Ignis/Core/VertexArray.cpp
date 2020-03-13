@@ -13,11 +13,11 @@ namespace ignis
 	{
 		for (auto& buffer : m_arrayBuffers)
 		{
-			ignisDeleteArrayBuffer(buffer);
+			ignisDeleteBuffer(buffer);
 		}
 
 		if (m_elementBuffer)
-			ignisDeleteElementBuffer(m_elementBuffer);
+			ignisDeleteBuffer(m_elementBuffer);
 
 		glDeleteVertexArrays(1, &m_name);
 		glBindVertexArray(0);
@@ -33,10 +33,16 @@ namespace ignis
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::AddArrayBuffer(ignis_array_buffer* buffer)
+	void VertexArray::AddArrayBuffer(ignis_buffer* buffer)
 	{
+		if (buffer->target != GL_ARRAY_BUFFER)
+		{
+			_ignisErrorCallback(IGNIS_WARN, "[VertexArray] Buffer target is not GL_ARRAY_BUFFER");
+			return;
+		}
+
 		Bind();
-		ignisBindBuffer(buffer->target, buffer->name);
+		ignisBindBuffer(buffer);
 
 		m_arrayBuffers.push_back(buffer);
 	}
@@ -51,7 +57,7 @@ namespace ignis
 		Bind();
 
 		auto buffer = ignisGenerateArrayBuffer(size, data, usage);
-		ignisBindBuffer(buffer->target, buffer->name);
+		ignisBindBuffer(buffer);
 
 		for (const auto& element : layout)
 		{

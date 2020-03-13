@@ -1,72 +1,176 @@
 #include "Buffer.h"
 
-void ignisBindBuffer(GLenum target, GLuint name)
+ignis_buffer* _ignisGenerateBuffer(GLenum target, GLenum format)
 {
-	if (target == GL_RENDERBUFFER)
-		glBindRenderbuffer(target, name);
-	else
-		glBindBuffer(target, name);
-}
+	ignis_buffer* buffer = (ignis_buffer*)malloc(sizeof(ignis_buffer));
 
-void ignisUnbindBuffer(GLenum target)
-{
-	if (target == GL_RENDERBUFFER)
-		glBindRenderbuffer(target, 0);
-	else
-		glBindBuffer(target, 0);
-}
-
-ignis_array_buffer* ignisGenerateArrayBuffer(GLsizeiptr size, const void* data, GLenum usage)
-{
-	ignis_array_buffer* buffer = (ignis_array_buffer*)malloc(sizeof(ignis_array_buffer));
-
-	if (buffer == NULL)
+	if (!buffer)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Buffer] Failed to allocate memory");
 		return NULL;
 	}
 
-	glGenBuffers(1, &buffer->name);
-	buffer->target = GL_ARRAY_BUFFER;
+	switch (target)
+	{
+	case GL_TEXTURE_BUFFER:
+		glGenTextures(1, &buffer->name);
+		break;
+	case GL_RENDERBUFFER:
+		glGenRenderbuffers(1, &buffer->name);
+		break;
+	default:
+		glGenBuffers(1, &buffer->name);
+	}
 
-	ignisArrayBufferData(buffer, size, data, usage);
+	buffer->target = target;
+	buffer->format = format;
+	buffer->count = 0;
 
 	return buffer;
 }
 
-void ignisDeleteArrayBuffer(ignis_array_buffer* buffer)
+ignis_buffer* ignisGenerateArrayBuffer(GLsizeiptr size, const void* data, GLenum usage)
 {
-	glDeleteBuffers(1, &buffer->name);
-	glBindBuffer(buffer->target, 0);
+	ignis_buffer* buffer = _ignisGenerateBuffer(GL_ARRAY_BUFFER, 0);
+
+	if (buffer)
+		ignisBufferData(buffer, size, data, usage);
+
+	return buffer;
+}
+
+ignis_buffer* ignisGenerateElementBuffer(GLsizei count, const GLuint* data, GLenum usage)
+{
+	ignis_buffer* buffer = _ignisGenerateBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	if (buffer)
+		ignisElementBufferData(buffer, count, data, usage);
+
+	return buffer;
+}
+
+ignis_buffer* ignisGenerateTextureBuffer(GLenum format, GLuint buffer)
+{
+	ignis_buffer* tex_buffer = _ignisGenerateBuffer(GL_TEXTURE_BUFFER, format);
+
+	if (tex_buffer)
+	{
+		glBindTexture(tex_buffer->target, tex_buffer->name);
+		glTexBuffer(tex_buffer->target, tex_buffer->format, buffer);
+	}
+
+	return tex_buffer;
+}
+
+ignis_buffer* ignisGenerateRenderBuffer()
+{
+	return _ignisGenerateBuffer(GL_RENDERBUFFER, 0);
+}
+
+void ignisDeleteBuffer(ignis_buffer* buffer)
+{
+	switch (buffer->target)
+	{
+	case GL_TEXTURE_BUFFER:
+		glDeleteTextures(1, &buffer->name);
+		break;
+	case GL_RENDERBUFFER:
+		glBindRenderbuffer(buffer->target, 0);
+		glDeleteRenderbuffers(1, &buffer->name);
+		break;
+	default:
+		glBindBuffer(buffer->target, 0);
+		glDeleteBuffers(1, &buffer->name);
+	}
 
 	free(buffer);
 }
 
-void ignisArrayBufferData(ignis_array_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
+void ignisBindBuffer(ignis_buffer* buffer)
 {
-	ignisBindBuffer(buffer->target, buffer->name);
+	switch (buffer->target)
+	{
+	case GL_RENDERBUFFER:
+		glBindRenderbuffer(buffer->target, buffer->name);
+		break;
+	default:
+		glBindBuffer(buffer->target, buffer->name);
+	}
+}
+
+void ignisUnbindBuffer(ignis_buffer* buffer)
+{
+	switch (buffer->target)
+	{
+	case GL_RENDERBUFFER:
+		glBindRenderbuffer(buffer->target, 0);
+		break;
+	default:
+		glBindBuffer(buffer->target, 0);
+	}
+}
+
+void ignisBufferData(ignis_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
+{
+	ignisBindBuffer(buffer);
 	glBufferData(buffer->target, size, data, usage);
 }
 
-void ignisArrayBufferSubData(ignis_array_buffer* buffer, GLintptr offset, GLsizeiptr size, const void* data)
+void ignisBufferSubData(ignis_buffer* buffer, GLintptr offset, GLsizeiptr size, const void* data)
 {
-	ignisBindBuffer(buffer->target, buffer->name);
+	ignisBindBuffer(buffer);
 	glBufferSubData(buffer->target, offset, size, data);
 }
 
-void* ignisMapArrayBuffer(ignis_array_buffer* buffer, GLenum access)
+void ignisElementBufferData(ignis_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
 {
-	ignisBindBuffer(buffer->target, buffer->name);
+	if (buffer->target != GL_ELEMENT_ARRAY_BUFFER)
+	{
+		_ignisErrorCallback(IGNIS_WARN, "[Buffer] Buffer target is not GL_ELEMENT_ARRAY_BUFFER");
+		return;
+	}
+
+	ignisBindBuffer(buffer);
+	glBufferData(buffer->target, count * sizeof(GLuint), data, usage);
+	buffer->count = count;
+}
+
+void ignisBindImageTexture(ignis_buffer* buffer, GLuint unit, GLenum access)
+{
+	if (buffer->target != GL_TEXTURE_BUFFER)
+	{
+		_ignisErrorCallback(IGNIS_WARN, "[Buffer] Buffer target is not GL_TEXTURE_BUFFER");
+		return;
+	}
+
+	glBindImageTexture(unit, buffer->name, 0, GL_FALSE, 0, access, buffer->format);
+}
+
+void ignisRenderBufferStorage(ignis_buffer* buffer, GLenum format, GLsizei width, GLsizei height)
+{
+	if (buffer->target != GL_RENDERBUFFER)
+	{
+		_ignisErrorCallback(IGNIS_WARN, "[Buffer] Buffer target is not GL_RENDERBUFFER");
+		return;
+	}
+
+	ignisBindBuffer(buffer);
+	glRenderbufferStorage(buffer->target, format, width, height);
+}
+
+void* ignisMapBuffer(ignis_buffer* buffer, GLenum access)
+{
+	ignisBindBuffer(buffer);
 	return glMapBuffer(buffer->target, access);
 }
 
-void* ignisMapArrayBufferRange(ignis_array_buffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access)
+void* ignisMapBufferRange(ignis_buffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access)
 {
-	ignisBindBuffer(buffer->target, buffer->name);
+	ignisBindBuffer(buffer);
 	return glMapBufferRange(buffer->target, offset, length, access);
 }
 
-void ignisUnmapArrayBuffer(ignis_array_buffer* buffer)
+void ignisUnmapBuffer(ignis_buffer* buffer)
 {
 	glUnmapBuffer(buffer->target);
 }
@@ -94,96 +198,4 @@ void ignisVertexAttribDivisor(GLuint index, GLuint divisor)
 	glVertexAttribDivisor(index, divisor);
 }
 
-ignis_element_buffer* ignisGenerateElementBuffer(GLsizei count, const GLuint* data, GLenum usage)
-{
-	ignis_element_buffer* buffer = (ignis_element_buffer*)malloc(sizeof(ignis_element_buffer));
 
-	if (buffer == NULL)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Buffer] Failed to allocate memory");
-		return NULL;
-	}
-
-	glGenBuffers(1, &buffer->name);
-	buffer->target = GL_ELEMENT_ARRAY_BUFFER;
-
-	ignisElementBufferData(buffer, count, data, usage);
-
-	return buffer;
-}
-
-void ignisDeleteElementBuffer(ignis_element_buffer* buffer)
-{
-	glDeleteBuffers(1, &buffer->name);
-	glBindBuffer(buffer->target, 0);
-
-	free(buffer);
-}
-
-void ignisElementBufferData(ignis_element_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
-{
-	ignisBindBuffer(buffer->target, buffer->name);
-	glBufferData(buffer->target, count * sizeof(GLuint), data, usage);
-	buffer->count = count;
-}
-
-ignis_texture_buffer* ignisGenerateTextureBuffer(GLenum format, GLuint buffer)
-{
-	ignis_texture_buffer* tex_buffer = (ignis_texture_buffer*)malloc(sizeof(ignis_texture_buffer));
-
-	if (tex_buffer == NULL)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Buffer] Failed to allocate memory");
-		return NULL;
-	}
-
-	glGenTextures(1, &tex_buffer->texture);
-	tex_buffer->format = format;
-	tex_buffer->target = GL_TEXTURE_BUFFER;
-
-	glBindTexture(tex_buffer->target, tex_buffer->texture);
-	glTexBuffer(tex_buffer->target, tex_buffer->format, buffer);
-
-	return tex_buffer;
-}
-
-void ignisDeleteTextureBuffer(ignis_texture_buffer* buffer)
-{
-	glDeleteTextures(1, &buffer->texture);
-
-	free(buffer);
-}
-
-void ignisBindImageTexture(ignis_texture_buffer* buffer, GLuint unit, GLenum access)
-{
-	glBindImageTexture(unit, buffer->texture, 0, GL_FALSE, 0, access, buffer->format);
-}
-
-ignis_render_buffer* ignisGenerateRenderBuffer()
-{
-	ignis_render_buffer* buffer = (ignis_render_buffer*)malloc(sizeof(ignis_render_buffer));
-
-	if (buffer == NULL)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Buffer] Failed to allocate memory");
-		return NULL;
-	}
-
-	glGenRenderbuffers(1, &buffer->name);
-	buffer->target = GL_RENDERBUFFER;
-
-	return buffer;
-}
-
-void ignisDeleteRenderBuffer(ignis_render_buffer* buffer)
-{
-	glDeleteRenderbuffers(1, &buffer->name);
-
-	free(buffer);
-}
-
-void ignisRenderBufferStorage(ignis_render_buffer* buffer, GLenum format, GLsizei width, GLsizei height)
-{
-	ignisBindBuffer(buffer->target, buffer->name);
-	glRenderbufferStorage(buffer->target, format, width, height);
-}

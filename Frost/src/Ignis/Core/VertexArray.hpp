@@ -71,8 +71,8 @@ namespace ignis
 
 		GLuint m_vertexAttribIndex;
 
-		std::vector<ignis_array_buffer*> m_arrayBuffers;
-		ignis_element_buffer* m_elementBuffer;
+		std::vector<ignis_buffer*> m_arrayBuffers;
+		ignis_buffer* m_elementBuffer;
 
 	public:
 		VertexArray();
@@ -81,7 +81,7 @@ namespace ignis
 		void Bind() const;
 		void Unbind() const;
 
-		void AddArrayBuffer(ignis_array_buffer* buffer);
+		void AddArrayBuffer(ignis_buffer* buffer);
 		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
 		void AddArrayBuffer(GLsizeiptr size, const void* data, GLenum usage, const BufferLayout& layout);
 		void LoadElementBuffer(std::vector<GLuint> indices, GLenum usage);
@@ -89,9 +89,9 @@ namespace ignis
 		const GLuint GetName() const { return m_name; }
 		const GLsizei GetElementCount() const { return (m_elementBuffer ? m_elementBuffer->count : 0); }
 
-		const std::vector<ignis_array_buffer*>& GetArrayBuffers() const { return m_arrayBuffers; }
-		const ignis_element_buffer* GetElementBuffer() const { return m_elementBuffer; }
+		const std::vector<ignis_buffer*>& GetArrayBuffers() const { return m_arrayBuffers; }
+		const ignis_buffer* GetElementBuffer() const { return m_elementBuffer; }
 
-		ignis_array_buffer* GetArrayBuffer(GLsizei index) const { return m_arrayBuffers.at(index); }
+		ignis_buffer* GetArrayBuffer(GLsizei index) const { return m_arrayBuffers.at(index); }
 	};
 }
