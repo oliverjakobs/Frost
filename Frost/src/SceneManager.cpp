@@ -4,7 +4,7 @@
 
 #include "Application.h"
 
-SceneManager::SceneManager(std::shared_ptr<ignis::Camera> camera, float gridsize, uint16_t padding)
+SceneManager::SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
 	: m_camera(camera)
 {
 	m_editmode = true;

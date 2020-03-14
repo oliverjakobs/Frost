@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Ignis/Core/Texture.h"
-#include "Ignis/Core/VertexArray.hpp"
+#include "Ignis/Texture.h"
+#include "Ignis/VertexArray.hpp"
 
 namespace ignis
 {

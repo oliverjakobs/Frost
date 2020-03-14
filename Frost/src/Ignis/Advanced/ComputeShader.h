@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ignis/Core/Shader.h"
+#include "Ignis/Shader.h"
 
 #include <string>
 

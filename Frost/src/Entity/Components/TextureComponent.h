@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "Ignis/Ignis.h"
+#include "Renderer/Renderer2D.h"
 
 enum class RenderFlip
 {

@@ -124,7 +124,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	return entity;
 }
 
-std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<ignis::Camera> camera)
+std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<Camera> camera)
 {
 	std::string json = obelisk::ReadFile(path);
 

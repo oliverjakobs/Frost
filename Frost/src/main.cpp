@@ -30,7 +30,7 @@ public:
 		Primitives2D::Init(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
 
 		FontRenderer::Init(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
-		FontRenderer::AddFont("font", std::make_shared<Font>("res/fonts/OpenSans.ttf", 32.0f));
+		FontRenderer::AddFont("font", ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f));
 
 		EnableDebugMode(true);
 		EnableImGui(true);
@@ -104,7 +104,7 @@ public:
 		m_sceneManager->OnRenderDebug();
 
 		// debug info
-		FontRenderer::RenderText("font", obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, ignisScreenMat(), WHITE);
+		FontRenderer::RenderText("font", obelisk::format("FPS: %d", m_timer.FPS), 0.0f, 32.0f, GetScreenMat(), WHITE);
 	}
 
 	void OnImGui() override

@@ -1,6 +1,21 @@
 #include "Application.h"
 
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
+
+static glm::mat4 s_screenMat = glm::mat4(1.0f);
+
+void SetViewport(int x, int y, int w, int h)
+{
+	s_screenMat = glm::ortho((float)x, (float)w, (float)h, (float)y);
+
+	glViewport(x, y, w, h);
+}
+
+const glm::mat4& GetScreenMat()
+{
+	return s_screenMat;
+}
 
 void Application::SetGLFWCallback()
 {
@@ -16,7 +31,7 @@ void Application::SetGLFWCallback()
 		game->m_width = width;
 		game->m_height = height;
 
-		ignis::ignisViewport(0, 0, width, height);
+		SetViewport(0, 0, width, height);
 
 		EventHandler::Throw<WindowResizeEvent>(width, height);
 	});
@@ -140,12 +155,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	// Set GLFW callbacks
 	SetGLFWCallback();
 
-	// ingis initialization
-	if (!ignis::ignisInit(width, height))
-	{
-		OBELISK_ERROR("[Ignis] Failed to initialize Ignis");
-		return nullptr;
-	}
+	s_screenMat = glm::ortho(0.0f, (float)width, (float)height, 0.0f);
 
 	ignisSetErrorCallback([](ignisErrorLevel level, const char* desc)
 	{
@@ -163,9 +173,10 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	debug = true;
 #endif // _DEBUG
 
-	if (!ignis::ignisLoadGL(debug))
+	// ingis initialization
+	if (!ignisInit(debug))
 	{
-		OBELISK_ERROR("[IGNIS] Failed to load OpenGL");
+		OBELISK_ERROR("[IGNIS] Failed to initialize Ignis");
 		glfwTerminate();
 		return nullptr;
 	}

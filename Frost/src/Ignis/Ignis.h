@@ -1,26 +1,42 @@
-#pragma once
+#ifndef IGNIS_H
+#define IGNIS_H
 
-// Core
-#include "Core/VertexArray.hpp"
-#include "Core/Texture.h"
-#include "Core/Shader.h"
-
-#include "Advanced/Font.h"
-
-#include "Ignis/Camera/OrthographicCamera.h"
-
-#include "Renderer/RenderState.h"
-
-// Renderer
-#include "Renderer/FontRenderer.h"
-#include "Renderer/Renderer2D.h"
-#include "Renderer/Primitives.h"
-
-namespace ignis
+#ifdef __cplusplus
+extern "C"
 {
-	bool ignisInit(int width, int height);
-	bool ignisLoadGL(bool debug = false);
-	void ignisViewport(int x, int y, int w, int h);
+#endif
 
-	const glm::mat4& ignisScreenMat();
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+/* You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h */
+#ifndef IGNIS_ASSERT
+#include <assert.h>
+#define IGNIS_ASSERT(x) assert(x)
+#endif
+
+#include "Texture.h"
+#include "Shader.h"
+#include "Buffer.h"
+#include "Font.h"
+
+int ignisInit(int debug);
+
+typedef enum
+{
+	IGNIS_WARN = 0,
+	IGNIS_ERROR = 1,
+	IGNIS_CRITICAL = 2
+} ignisErrorLevel;
+
+void ignisSetErrorCallback(void (*callback)(ignisErrorLevel, const char*));
+void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);
+
+GLuint ignisGetOpenGLTypeSize(GLenum type);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* IGNIS_H */

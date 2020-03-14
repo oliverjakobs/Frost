@@ -60,5 +60,5 @@ void TextureComponent::OnRender(Scene* scene)
 		break;
 	}
 
-	ignis::Renderer2D::RenderTexture(m_texture, model, src);
+	Renderer2D::RenderTexture(m_texture, model, src);
 }

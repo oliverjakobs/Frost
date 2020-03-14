@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "Ignis/Ignis.h"
+#include "Renderer/Primitives.h"
 #include "Obelisk/Obelisk.h"
 
 using namespace ignis;

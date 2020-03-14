@@ -3,10 +3,12 @@
 #include "Entity/Components.h"
 #include "Event/EventHandler.h"
 
+#include "Camera/OrthographicCamera.h"
+
 class Scene
 {
 private:
-	std::shared_ptr<ignis::Camera> m_camera;
+	std::shared_ptr<Camera> m_camera;
 
 	float m_width;
 	float m_height;
@@ -16,7 +18,7 @@ private:
 
 	float m_smoothMovement;
 public:
-	Scene(std::shared_ptr<ignis::Camera> camera, float w, float h);
+	Scene(std::shared_ptr<Camera> camera, float w, float h);
 	~Scene();
 
 	void AddEntity(std::shared_ptr<Entity> entity);
@@ -39,7 +41,7 @@ public:
 	std::vector<std::shared_ptr<Entity>> GetEntities() const { return m_entities; };
 
 	World* GetWorld() const { return m_world.get(); }
-	ignis::Camera* GetCamera() const { return m_camera.get(); }
+	Camera* GetCamera() const { return m_camera.get(); }
 
 	const float GetWidth() const { return m_width; }
 	const float GetHeight() const { return m_height; }

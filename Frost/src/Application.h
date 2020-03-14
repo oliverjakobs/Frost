@@ -9,6 +9,17 @@
 
 #include "Event/EventHandler.h"
 
+// Renderer
+#include "Renderer/RenderState.h"
+#include "Renderer/FontRenderer.h"
+#include "Renderer/Renderer2D.h"
+#include "Renderer/Primitives.h"
+
+
+void SetViewport(int x, int y, int w, int h);
+
+const glm::mat4& GetScreenMat();
+
 class Application
 {
 private:
