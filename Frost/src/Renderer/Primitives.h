@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RenderState.h"
+#include <vector>
 
 struct Primitives2D
 {

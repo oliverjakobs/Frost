@@ -4,8 +4,6 @@
 
 #include <map>
 
-using namespace ignis;
-
 class SceneManager
 {
 private:

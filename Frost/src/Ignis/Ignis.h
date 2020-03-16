@@ -16,10 +16,13 @@ extern "C"
 #define IGNIS_ASSERT(x) assert(x)
 #endif
 
-#include "Texture.h"
-#include "Shader.h"
-#include "Buffer.h"
+/* Core */
+#include "Core/Texture.h"
+#include "Core/Shader.h"
+#include "Core/Buffer.h"
+
 #include "Font.h"
+#include "VertexArray.h"
 
 int ignisInit(int debug);
 

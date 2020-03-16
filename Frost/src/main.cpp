@@ -9,8 +9,6 @@
 #include "Animation/Animator.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace ignis;
-
 class Frost : public Application
 {
 private:

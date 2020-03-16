@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ignis/IgnisInclude.h"
+#include "Ignis/Ignis.h"
 
 #include "Color.h"
 

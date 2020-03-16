@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "Texture.h"
+#include "Core/Texture.h"
 
 #include "Packages/stb_truetype.h"
 

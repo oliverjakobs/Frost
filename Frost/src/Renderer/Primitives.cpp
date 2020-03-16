@@ -1,11 +1,12 @@
 #include "Primitives.h"
 
+
 static const int MAX_LINES = 2 * 1024;
 static const uint16_t BUFFER_SIZE = 2 + 4;
 
 struct Primitives2DStorage
 {
-	std::shared_ptr<ignis::VertexArray> VertexArray;
+	ignis_vertex_array* VertexArray;
 	ignis_shader* Shader;
 
 	std::vector<float> Vertices;
@@ -17,13 +18,15 @@ void Primitives2D::Init(ignis_shader* shader)
 {
 	s_renderData = new Primitives2DStorage();
 
-	s_renderData->VertexArray = std::make_shared<ignis::VertexArray>();
+	s_renderData->VertexArray = ignisGenerateVertexArray();
 
-	s_renderData->VertexArray->AddArrayBuffer(sizeof(float) * BUFFER_SIZE * MAX_LINES, nullptr, GL_DYNAMIC_DRAW,
-		{
-			{GL_FLOAT, 2},
-			{GL_FLOAT, 4}
-		});
+	ignis_buffer_element layout[2] =
+	{
+		{GL_FLOAT, 2, 0},
+		{GL_FLOAT, 4, 0}
+	};
+
+	ignisAddArrayBufferLayout(s_renderData->VertexArray, sizeof(float) * BUFFER_SIZE * MAX_LINES, NULL, GL_DYNAMIC_DRAW, layout, 2);
 
 	s_renderData->Shader = shader;
 }
@@ -45,8 +48,8 @@ void Primitives2D::Flush()
 	if (s_renderData->Vertices.empty())
 		return;
 
-	s_renderData->VertexArray->Bind();
-	ignisBufferSubData(s_renderData->VertexArray->GetArrayBuffer(0), 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
+	ignisBindVertexArray(s_renderData->VertexArray);
+	ignisBufferSubData(s_renderData->VertexArray->array_buffers[0], 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
 
 	ignisUseShader(s_renderData->Shader);
 

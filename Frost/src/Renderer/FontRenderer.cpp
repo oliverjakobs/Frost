@@ -4,7 +4,7 @@
 
 struct FontRendererStorage
 {
-	std::shared_ptr<ignis::VertexArray> VertexArray;
+	ignis_vertex_array* VertexArray;
 	ignis_shader* Shader;
 
 	std::map<std::string, ignis_font*> Fonts;
@@ -20,9 +20,17 @@ void FontRenderer::Init(ignis_shader* shader)
 
 	s_renderData->BufferSize = sizeof(float) * 4 * 4;
 
-	s_renderData->VertexArray = std::make_shared<ignis::VertexArray>();
-	s_renderData->VertexArray->AddArrayBuffer(s_renderData->BufferSize, nullptr, GL_DYNAMIC_DRAW, { {GL_FLOAT, 4} });
-	s_renderData->VertexArray->LoadElementBuffer({ 0,1,2,2,3,0 }, GL_STATIC_DRAW);
+	s_renderData->VertexArray = ignisGenerateVertexArray();
+
+	ignis_buffer_element layout[1] =
+	{
+			{GL_FLOAT, 4, 0}
+	};
+	ignisAddArrayBufferLayout(s_renderData->VertexArray, s_renderData->BufferSize, NULL, GL_DYNAMIC_DRAW, layout, 1);
+
+	GLuint indices[6] = { 0,1,2,2,3,0 };
+
+	ignisLoadElementBuffer(s_renderData->VertexArray, indices, 6, GL_STATIC_DRAW);
 
 	s_renderData->Shader = shader;
 }
@@ -70,7 +78,7 @@ void FontRenderer::RenderText(const std::string& fontname, const std::string& te
 	ignisSetUniform4f(s_renderData->Shader, "u_Color", &color[0]);
 
 	ignisBindFont(font);
-	s_renderData->VertexArray->Bind();
+	ignisBindVertexArray(s_renderData->VertexArray);
 
 	for (auto& c : text)
 	{
@@ -78,7 +86,7 @@ void FontRenderer::RenderText(const std::string& fontname, const std::string& te
 		if (ignisLoadFontCharQuad(font, c, &x, &y, vertices))
 		{
 			// Update content of VBO memory
-			ignisBufferSubData(s_renderData->VertexArray->GetArrayBuffer(0), 0, s_renderData->BufferSize, vertices);
+			ignisBufferSubData(s_renderData->VertexArray->array_buffers[0], 0, s_renderData->BufferSize, vertices);
 
 			// Render quad
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

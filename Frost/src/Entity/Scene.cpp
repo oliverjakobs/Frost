@@ -3,8 +3,6 @@
 #include "Renderer/Primitives.h"
 #include "Obelisk/Obelisk.h"
 
-using namespace ignis;
-
 Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
 	: m_camera(camera), m_width(w), m_height(h)
 {	

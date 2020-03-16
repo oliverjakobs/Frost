@@ -9,8 +9,6 @@
     <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\Scene.cpp" />
-    <ClCompile Include="src\Ignis\Advanced\ComputeShader.cpp" />
-    <ClCompile Include="src\Ignis\Advanced\Framebuffer.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
@@ -29,13 +27,13 @@
     <ClCompile Include="src\Renderer\RenderState.cpp" />
     <ClCompile Include="src\Renderer\Color.cpp" />
     <ClCompile Include="src\Camera\OrthographicCamera.cpp" />
-    <ClCompile Include="src\Ignis\VertexArray.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
-    <ClCompile Include="src\Ignis\Buffer.c" />
-    <ClCompile Include="src\Ignis\Shader.c" />
-    <ClCompile Include="src\Ignis\Texture.c" />
     <ClCompile Include="src\Ignis\Font.c" />
+    <ClCompile Include="src\Ignis\VertexArray.c" />
+    <ClCompile Include="src\Ignis\Core\Texture.c" />
+    <ClCompile Include="src\Ignis\Core\Shader.c" />
+    <ClCompile Include="src\Ignis\Core\Buffer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
@@ -54,8 +52,6 @@
     <ClInclude Include="src\Event\KeyEvent.h" />
     <ClInclude Include="src\Event\MouseEvent.h" />
     <ClInclude Include="src\Event\WindowEvent.h" />
-    <ClInclude Include="src\Ignis\Advanced\ComputeShader.h" />
-    <ClInclude Include="src\Ignis\Advanced\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
@@ -89,14 +85,13 @@
     <ClInclude Include="src\Renderer\Color.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Camera\OrthographicCamera.h" />
-    <ClInclude Include="src\Ignis\VertexArray.hpp" />
     <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
-    <ClInclude Include="src\Ignis\IgnisInclude.h" />
-    <ClInclude Include="src\Ignis\Texture.h" />
-    <ClInclude Include="src\Ignis\Buffer.h" />
-    <ClInclude Include="src\Ignis\Shader.h" />
     <ClInclude Include="src\Ignis\Font.h" />
+    <ClInclude Include="src\Ignis\VertexArray.h" />
+    <ClInclude Include="src\Ignis\Core\Texture.h" />
+    <ClInclude Include="src\Ignis\Core\Shader.h" />
+    <ClInclude Include="src\Ignis\Core\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\Textures&amp;trees.png" />

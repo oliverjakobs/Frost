@@ -4,7 +4,7 @@
 
 struct Renderer2DStorage
 {
-	std::shared_ptr<ignis::VertexArray> VertexArray;
+	ignis_vertex_array* VertexArray;
 	ignis_shader* Shader;
 };
 
@@ -14,7 +14,7 @@ void Renderer2D::Init(ignis_shader* shader)
 {
 	s_renderData = new Renderer2DStorage();
 
-	s_renderData->VertexArray = std::make_shared<ignis::VertexArray>();
+	s_renderData->VertexArray = ignisGenerateVertexArray();
 
 	float vertices[5 * 4] =
 	{
@@ -24,13 +24,16 @@ void Renderer2D::Init(ignis_shader* shader)
 		0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	s_renderData->VertexArray->AddArrayBuffer(sizeof(vertices), vertices, GL_STATIC_DRAW,
-		{
-			{GL_FLOAT, 3},
-			{GL_FLOAT, 2}
-		});
+	ignis_buffer_element layout[2] =
+	{
+		{GL_FLOAT, 3, 0},
+		{GL_FLOAT, 2, 0}
+	};
 
-	s_renderData->VertexArray->LoadElementBuffer({ 0, 1, 2, 2, 3, 0 }, GL_STATIC_DRAW);
+	ignisAddArrayBufferLayout(s_renderData->VertexArray, sizeof(vertices), vertices, GL_STATIC_DRAW, layout, 2);
+
+	GLuint indices[6] = { 0, 1, 2, 2, 3, 0 };
+	ignisLoadElementBuffer(s_renderData->VertexArray, indices, 6, GL_STATIC_DRAW);
 
 	s_renderData->Shader = shader;
 
@@ -62,6 +65,6 @@ void Renderer2D::RenderTexture(ignis_texture* texture, const glm::mat4& model, c
 
 	ignisBindTexture(texture, 0);
 
-	s_renderData->VertexArray->Bind();
-	glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->GetElementCount(), GL_UNSIGNED_INT, nullptr);
+	ignisBindVertexArray(s_renderData->VertexArray);
+	glDrawElements(GL_TRIANGLES, s_renderData->VertexArray->element_buffer->count, GL_UNSIGNED_INT, nullptr);
 }
