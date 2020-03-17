@@ -104,3 +104,17 @@ GLuint ignisGetOpenGLTypeSize(GLenum type)
 	default: return 0;
 	}
 }
+
+const ignis_color_rgba IGNIS_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
+const ignis_color_rgba IGNIS_BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
+const ignis_color_rgba IGNIS_RED = { 1.0f, 0.0f, 0.0f, 1.0f };
+const ignis_color_rgba IGNIS_GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
+const ignis_color_rgba IGNIS_BLUE = { 0.0f, 0.0f, 1.0f, 1.0f };
+const ignis_color_rgba IGNIS_CYAN = { 0.0f, 1.0f, 1.0f, 1.0f };
+const ignis_color_rgba IGNIS_MAGENTA = { 1.0f, 0.0f, 1.0f, 1.0f };
+const ignis_color_rgba IGNIS_YELLOW = { 1.0f, 1.0f, 0.0f, 1.0f };
+
+void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha)
+{
+	color->a = alpha;
+}

@@ -58,7 +58,7 @@ void Primitives2D::Flush()
 	s_renderData->Vertices.clear();
 }
 
-void Primitives2D::Vertex(const glm::vec2& v, const color& c)
+void Primitives2D::Vertex(const glm::vec2& v, const ignis_color_rgba& c)
 {
 	if (s_renderData->Vertices.size() / BUFFER_SIZE >= MAX_LINES)
 		Flush();
@@ -71,18 +71,18 @@ void Primitives2D::Vertex(const glm::vec2& v, const color& c)
 	s_renderData->Vertices.push_back(c.a);
 }
 
-void Primitives2D::DrawLine(float x1, float y1, float x2, float y2, const color& c)
+void Primitives2D::DrawLine(float x1, float y1, float x2, float y2, const ignis_color_rgba& c)
 {
 	DrawLine(glm::vec2(x1, y1), glm::vec2(x2, y2), c);
 }
 
-void Primitives2D::DrawLine(const glm::vec2& start, const glm::vec2& end, const color& c)
+void Primitives2D::DrawLine(const glm::vec2& start, const glm::vec2& end, const ignis_color_rgba& c)
 {
 	Vertex(start, c);
 	Vertex(end, c);
 }
 
-void Primitives2D::DrawRect(float x, float y, float w, float h, const color& c)
+void Primitives2D::DrawRect(float x, float y, float w, float h, const ignis_color_rgba& c)
 {
 	std::vector<glm::vec2> vertices =
 	{
@@ -95,12 +95,12 @@ void Primitives2D::DrawRect(float x, float y, float w, float h, const color& c)
 	DrawPolygon(vertices, c);
 }
 
-void Primitives2D::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const color& c)
+void Primitives2D::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const ignis_color_rgba& c)
 {
 	DrawRect(pos.x, pos.y, dim.x, dim.y, c);
 }
 
-void Primitives2D::DrawPolygon(const std::vector<glm::vec2>& vertices, const color& c)
+void Primitives2D::DrawPolygon(const std::vector<glm::vec2>& vertices, const ignis_color_rgba& c)
 {
 	glm::vec2 p1 = vertices.back();
 
@@ -112,7 +112,7 @@ void Primitives2D::DrawPolygon(const std::vector<glm::vec2>& vertices, const col
 	}
 }
 
-void Primitives2D::DrawCircle(const glm::vec2& center, float radius, const color& c)
+void Primitives2D::DrawCircle(const glm::vec2& center, float radius, const ignis_color_rgba& c)
 {
 	const float PI = 3.14159265359f;
 

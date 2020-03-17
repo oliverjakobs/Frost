@@ -24,8 +24,6 @@
     <ClCompile Include="src\Renderer\FontRenderer.cpp" />
     <ClCompile Include="src\Renderer\Primitives.cpp" />
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Renderer\RenderState.cpp" />
-    <ClCompile Include="src\Renderer\Color.cpp" />
     <ClCompile Include="src\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
@@ -77,8 +75,6 @@
     <ClInclude Include="src\Renderer\FontRenderer.hpp" />
     <ClInclude Include="src\Renderer\Primitives.hpp" />
     <ClInclude Include="src\Renderer\Renderer2D.hpp" />
-    <ClInclude Include="src\Renderer\RenderState.hpp" />
-    <ClInclude Include="src\Renderer\Color.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
     <ClInclude Include="src\Obelisk\Timer.hpp" />

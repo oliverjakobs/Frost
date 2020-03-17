@@ -90,11 +90,13 @@ void Scene::OnRenderDebug()
 	for (auto& entity : m_entities)
 	{
 		entity->OnRenderDebug();
-		Primitives2D::DrawCircle(entity->GetPosition(), 2.0f, WHITE);
+		Primitives2D::DrawCircle(entity->GetPosition(), 2.0f, IGNIS_WHITE);
 	}
 
 	for (auto& body : m_world->GetBodies())
-		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfSize(), body->GetSize(), body->GetType() == BodyType::DYNAMIC ? GREEN : WHITE);
+	{
+		Primitives2D::DrawRect(body->GetPosition() - body->GetHalfSize(), body->GetSize(), body->GetType() == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
+	}
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
 	//

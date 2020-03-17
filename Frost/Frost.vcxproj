@@ -115,7 +115,6 @@
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\Obelisk\rang.hpp" />
-    <ClInclude Include="src\Renderer\Color.hpp" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
@@ -125,7 +124,6 @@
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
     <ClInclude Include="src\Renderer\FontRenderer.hpp" />
     <ClInclude Include="src\Renderer\Primitives.hpp" />
-    <ClInclude Include="src\Renderer\RenderState.hpp" />
     <ClInclude Include="src\Renderer\Renderer2D.hpp" />
     <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
@@ -162,7 +160,6 @@
     <ClCompile Include="src\Entity\Scene.cpp" />
     <ClCompile Include="src\Ignis\Font.c" />
     <ClCompile Include="src\Camera\OrthographicCamera.cpp" />
-    <ClCompile Include="src\Renderer\Color.cpp" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
@@ -170,7 +167,6 @@
     <ClCompile Include="src\Ignis\Ignis.c" />
     <ClCompile Include="src\Renderer\FontRenderer.cpp" />
     <ClCompile Include="src\Renderer\Primitives.cpp" />
-    <ClCompile Include="src\Renderer\RenderState.cpp" />
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />

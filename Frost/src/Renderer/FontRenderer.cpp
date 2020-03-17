@@ -72,13 +72,13 @@ static void _flushTextData(float* vertices)
 	glDrawElements(GL_TRIANGLES, FONT_INDEX_COUNT, GL_UNSIGNED_INT, 0);
 }
 
-void FontRenderer::RenderText(ignis_font* font, const char* text, float x, float y, const glm::mat4& proj, const color& color)
+void FontRenderer::RenderText(ignis_font* font, const char* text, float x, float y, const glm::mat4& proj, const ignis_color_rgba& color)
 {
 	if (!font) return;
 
 	ignisUseShader(s_renderData->Shader);
 	ignisSetUniformMat4l(s_renderData->UniformLocationProjection, &proj[0][0]);
-	ignisSetUniform4fl(s_renderData->UniformLocationColor, &color[0]);
+	ignisSetUniform4fl(s_renderData->UniformLocationColor, &color.r);
 
 	ignisBindFont(font);
 	ignisBindVertexArray(s_renderData->VertexArray);

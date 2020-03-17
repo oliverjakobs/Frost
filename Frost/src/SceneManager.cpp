@@ -131,14 +131,17 @@ void SceneManager::OnRender()
 
 		if (m_showgrid)
 		{
+			ignis_color_rgba color = IGNIS_WHITE;
+			ignisBlendColorRGBA(&color, 0.5f);
+
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
 			{
-				Primitives2D::DrawLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, BlendColor(WHITE, 0.5f));
+				Primitives2D::DrawLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
 			}
 
 			for (float y = -m_padding; y <= m_scene->GetHeight() + m_padding; y += m_gridsize)
 			{
-				Primitives2D::DrawLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, BlendColor(WHITE, 0.5f));
+				Primitives2D::DrawLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
 			}
 		}
 
@@ -153,8 +156,8 @@ void SceneManager::OnRender()
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
 
-				Primitives2D::DrawRect(min, max - min, WHITE);
-				Primitives2D::DrawCircle(position, 2.0f, WHITE);
+				Primitives2D::DrawRect(min, max - min, IGNIS_WHITE);
+				Primitives2D::DrawCircle(position, 2.0f, IGNIS_WHITE);
 			}
 		}
 

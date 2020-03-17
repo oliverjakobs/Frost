@@ -51,6 +51,23 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);
 
 GLuint ignisGetOpenGLTypeSize(GLenum type);
 
+/* Color */
+typedef struct
+{
+	float r, g, b, a;
+} ignis_color_rgba;
+
+extern const ignis_color_rgba IGNIS_WHITE;
+extern const ignis_color_rgba IGNIS_BLACK;
+extern const ignis_color_rgba IGNIS_RED;
+extern const ignis_color_rgba IGNIS_GREEN;
+extern const ignis_color_rgba IGNIS_BLUE;
+extern const ignis_color_rgba IGNIS_CYAN;
+extern const ignis_color_rgba IGNIS_MAGENTA;
+extern const ignis_color_rgba IGNIS_YELLOW;
+
+void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha);
+
 #ifdef __cplusplus
 }
 #endif

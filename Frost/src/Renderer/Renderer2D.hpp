@@ -1,6 +1,8 @@
 #pragma once
 
-#include "RenderState.hpp"
+#include "Ignis/Ignis.h"
+
+#include <glm/glm.hpp>
 
 struct Renderer2D
 {
@@ -11,5 +13,5 @@ struct Renderer2D
 	static void Flush();
 
 	// Textures
-	static void RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const color& color = WHITE);
+	static void RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const ignis_color_rgba& color = IGNIS_WHITE);
 };

@@ -66,9 +66,9 @@ void Renderer2D::Flush()
 {
 }
 
-void Renderer2D::RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const color& color)
+void Renderer2D::RenderTexture(ignis_texture* texture, const glm::mat4& model, const glm::mat4& src, const ignis_color_rgba& color)
 {
-	ignisSetUniform4fl(s_renderData->UniformLocationColor, &color[0]);
+	ignisSetUniform4fl(s_renderData->UniformLocationColor, &color.r);
 	ignisSetUniformMat4l(s_renderData->UniformLocationModel, &model[0][0]);
 	ignisSetUniformMat4l(s_renderData->UniformLocationSrc, &src[0][0]);
 
