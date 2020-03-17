@@ -17,6 +17,11 @@ ignis_vertex_array* ignisGenerateVertexArray()
 		vertex_array->buffer_count = IGNIS_BUFFER_ARRAY_INITIAL_SIZE;
 		vertex_array->buffer_used = 0;
 
+		vertex_array->element_buffer.name = 0;
+		vertex_array->element_buffer.target = 0;
+		vertex_array->element_buffer.format = 0;
+		vertex_array->element_buffer.count = 0;
+
 		return vertex_array;
 	}
 
@@ -33,7 +38,7 @@ void ignisDeleteVertexArray(ignis_vertex_array* vertex_array)
 	free(vertex_array->array_buffers);
 	vertex_array->buffer_used = vertex_array->buffer_count = 0;
 
-	if (vertex_array->element_buffer.name > 0)
+	if (vertex_array->element_buffer.target == GL_ELEMENT_ARRAY_BUFFER)
 		ignisDeleteBuffer(&vertex_array->element_buffer);
 
 

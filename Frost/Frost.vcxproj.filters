@@ -21,7 +21,6 @@
     <ClCompile Include="src\Animation\Animation.cpp" />
     <ClCompile Include="src\Animation\Animator.cpp" />
     <ClCompile Include="src\Memory\Memory.cpp" />
-    <ClCompile Include="src\Renderer\Primitives.cpp" />
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
@@ -32,6 +31,7 @@
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Renderer\FontRenderer.c" />
+    <ClCompile Include="src\Renderer\Primitives2D.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -72,7 +72,6 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.hpp" />
     <ClInclude Include="src\Camera\OrthographicCamera.hpp" />
     <ClInclude Include="src\Camera\Camera.hpp" />
-    <ClInclude Include="src\Renderer\Primitives.hpp" />
     <ClInclude Include="src\Renderer\Renderer2D.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
@@ -89,6 +88,7 @@
     <ClInclude Include="src\Obelisk\Average.hpp" />
     <ClInclude Include="src\Memory\Memory.hpp" />
     <ClInclude Include="src\Renderer\FontRenderer.h" />
+    <ClInclude Include="src\Renderer\Primitives2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\Textures&amp;trees.png" />

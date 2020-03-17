@@ -20,8 +20,8 @@ public:
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2D::Init(ignisShadervf("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
-		Primitives2D::Init(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
 
+		Primitives2DInit(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
 		FontRendererInit(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
 
 		m_font = ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f);
@@ -40,9 +40,9 @@ public:
 	{
 		ignisDeleteFont(m_font);
 		FontRendererDestroy();
+		Primitives2DDestroy();
 
 		Renderer2D::Destroy();
-		Primitives2D::Destroy();
 	}
 	
 	void OnEvent(const Event& e) override

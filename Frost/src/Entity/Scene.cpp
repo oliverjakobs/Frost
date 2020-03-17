@@ -1,6 +1,6 @@
 #include "Scene.hpp"
 
-#include "Renderer/Primitives.hpp"
+#include "Renderer/Primitives2D.h"
 #include "Obelisk/Obelisk.hpp"
 
 Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
@@ -85,21 +85,21 @@ void Scene::OnRender()
 
 void Scene::OnRenderDebug()
 {
-	Primitives2D::Start(m_camera->GetViewProjection());
+	Primitives2DStart(m_camera->GetViewProjectionPtr());
 
 	for (auto& entity : m_entities)
 	{
 		entity->OnRenderDebug();
 
 		auto& pos = entity->GetPosition();
-		Primitives2D::DrawCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
+		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
 	for (auto& body : m_world->GetBodies())
 	{
 		auto& pos = body->GetPosition() - body->GetHalfSize();
 		auto& dim = body->GetSize();
-		Primitives2D::DrawRect(pos.x, pos.y, dim.x, dim.y, body->GetType() == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
+		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->GetType() == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
 	}
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
@@ -110,7 +110,7 @@ void Scene::OnRenderDebug()
 	//
 	//Primitives2D::DrawRect(m_camera->GetPosition().x - smooth_w, m_camera->GetPosition().y - smooth_h, smooth_w * 2.0f, smooth_h * 2.0f);
 
-	Primitives2D::Flush();
+	Primitives2DFlush();
 }
 
 void Scene::SetCameraPosition(const glm::vec3& position)

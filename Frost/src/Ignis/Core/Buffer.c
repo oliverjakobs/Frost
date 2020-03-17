@@ -4,12 +4,6 @@
 
 int ignisGenerateBuffer(ignis_buffer* buffer, GLenum target, GLenum format)
 {
-	if (buffer && buffer->name == 0)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Buffer] Buffer already exists");
-		return 0;
-	}
-
 	GLuint name = 0;
 
 	switch (target)

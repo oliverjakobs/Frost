@@ -10,8 +10,8 @@
 
 // Renderer
 #include "Renderer/FontRenderer.h"
+#include "Renderer/Primitives2D.h"
 #include "Renderer/Renderer2D.hpp"
-#include "Renderer/Primitives.hpp"
 
 
 void SetViewport(int x, int y, int w, int h);

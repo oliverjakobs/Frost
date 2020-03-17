@@ -123,7 +123,7 @@
     <ClInclude Include="src\Ignis\Packages\stb_image.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
-    <ClInclude Include="src\Renderer\Primitives.hpp" />
+    <ClInclude Include="src\Renderer\Primitives2D.h" />
     <ClInclude Include="src\Renderer\Renderer2D.hpp" />
     <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
@@ -166,7 +166,7 @@
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
-    <ClCompile Include="src\Renderer\Primitives.cpp" />
+    <ClCompile Include="src\Renderer\Primitives2D.c" />
     <ClCompile Include="src\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />

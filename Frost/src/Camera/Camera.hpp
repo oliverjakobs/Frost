@@ -22,9 +22,13 @@ public:
 	void SetSize(const glm::vec2& size) { m_size = size; UpdateView(); }
 	const glm::vec2& GetSize() const { return m_size; }
 
-	const glm::mat4& GetViewx() const { return m_view; }
+	const glm::mat4& GetView() const { return m_view; }
 	const glm::mat4& GetProjection() const { return m_projection; }
 	const glm::mat4& GetViewProjection() const { return m_viewProjection; }
+
+	const float* GetViewPtr() const { return &m_view[0][0]; }
+	const float* GetProjectionPtr() const { return &m_projection[0][0]; }
+	const float* GetViewProjectionPtr() const { return &m_viewProjection[0][0]; }
 
 protected:
 	virtual void UpdateView() = 0;

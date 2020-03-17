@@ -127,7 +127,7 @@ void SceneManager::OnRender()
 	if (m_editmode)
 	{
 		// render grid
-		Primitives2D::Start(m_camera->GetViewProjection());
+		Primitives2DStart(m_camera->GetViewProjectionPtr());
 
 		if (m_showgrid)
 		{
@@ -136,12 +136,12 @@ void SceneManager::OnRender()
 
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
 			{
-				Primitives2D::DrawLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
+				Primitives2DRenderLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
 			}
 
 			for (float y = -m_padding; y <= m_scene->GetHeight() + m_padding; y += m_gridsize)
 			{
-				Primitives2D::DrawLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
+				Primitives2DRenderLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
 			}
 		}
 
@@ -156,12 +156,12 @@ void SceneManager::OnRender()
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
 
-				Primitives2D::DrawRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
-				Primitives2D::DrawCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
+				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
+				Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
 			}
 		}
 
-		Primitives2D::Flush();
+		Primitives2DFlush();
 	}
 }
 
