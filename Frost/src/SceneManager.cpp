@@ -1,8 +1,8 @@
-#include "SceneManager.h"
+#include "SceneManager.hpp"
 
-#include "json/TemplateLoader.h"
+#include "json/TemplateLoader.hpp"
 
-#include "Application.h"
+#include "Application.hpp"
 
 SceneManager::SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
 	: m_camera(camera)

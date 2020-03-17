@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.hpp"
-#include "Renderer/Renderer2D.h"
+#include "Renderer/Renderer2D.hpp"
 
 enum class RenderFlip
 {

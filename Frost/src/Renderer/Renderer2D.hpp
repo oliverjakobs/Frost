@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderState.h"
+#include "RenderState.hpp"
 
 struct Renderer2D
 {

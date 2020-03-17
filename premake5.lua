@@ -31,6 +31,7 @@ project "Frost"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.c",
+		"%{prj.name}/src/**.hpp",
 		"%{prj.name}/src/**.cpp",
 		--Config
 		"%{prj.name}/imgui.ini",

@@ -1,4 +1,4 @@
-#include "FontRenderer.h"
+#include "FontRenderer.hpp"
 
 #define MAX_QUADS			32
 #define VERTEX_SIZE			4

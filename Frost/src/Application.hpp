@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Input/Input.h"
+#include "Input/Input.hpp"
 
-#include "ImGuiBinding/ImGuiRenderer.h"
+#include "ImGuiBinding/ImGuiRenderer.hpp"
 
-#include "Obelisk/Obelisk.h"
+#include "Obelisk/Obelisk.hpp"
 
-#include "Event/EventHandler.h"
+#include "Event/EventHandler.hpp"
 
 // Renderer
-#include "Renderer/FontRenderer.h"
-#include "Renderer/Renderer2D.h"
-#include "Renderer/Primitives.h"
+#include "Renderer/FontRenderer.hpp"
+#include "Renderer/Renderer2D.hpp"
+#include "Renderer/Primitives.hpp"
 
 
 void SetViewport(int x, int y, int w, int h);

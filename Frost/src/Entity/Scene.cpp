@@ -1,7 +1,7 @@
 #include "Scene.hpp"
 
-#include "Renderer/Primitives.h"
-#include "Obelisk/Obelisk.h"
+#include "Renderer/Primitives.hpp"
+#include "Obelisk/Obelisk.hpp"
 
 Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
 	: m_camera(camera), m_width(w), m_height(h)

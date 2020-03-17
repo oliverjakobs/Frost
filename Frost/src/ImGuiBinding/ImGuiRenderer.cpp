@@ -1,7 +1,7 @@
-#include "ImGuiRenderer.h"
+#include "ImGuiRenderer.hpp"
 
-#include "ImGuiGLFW.h"
-#include "ImGuiBinding.h"
+#include "ImGuiGLFW.hpp"
+#include "ImGuiBinding.hpp"
 
 void ImGuiRenderer::Init(GLFWwindow* context, unsigned int configFlags)
 {

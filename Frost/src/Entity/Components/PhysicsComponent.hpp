@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PositionComponent.hpp"
-#include "Physics/World.h"
+#include "Physics/World.hpp"
 
 class PhysicsComponent : public PositionComponent
 {

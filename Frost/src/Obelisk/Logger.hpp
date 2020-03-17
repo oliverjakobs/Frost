@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Singelton.h"
+#include "Singelton.hpp"
 
 #include <iostream>
 

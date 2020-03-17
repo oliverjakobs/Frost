@@ -2,7 +2,7 @@
 
 #include "Ignis/Ignis.h"
 
-#include "Color.h"
+#include "Color.hpp"
 
 class RenderState
 {

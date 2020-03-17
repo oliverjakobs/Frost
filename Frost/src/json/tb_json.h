@@ -1,7 +1,7 @@
-#ifndef JSON_INCLUDE_H
-#define JSON_INCLUDE_H
+#ifndef TB_JSON_INCLUDE_H
+#define TB_JSON_INCLUDE_H
 
-// json - an in-place JSON element reader
+// tb_json - an in-place JSON element reader
 // =======================================
 //
 // Instead of parsing JSON into some structure, this maintains the input JSON as unaltered text
@@ -18,18 +18,18 @@
 //  }
 //
 // calling:
-//  json_read(json, "{'myarray'[0", &elem);
+//  tb_json_read(json, "{'myarray'[0", &elem);
 //
 // would return:
-//  elem.data_type = JREAD_STRING;
+//  elem.data_type = TB_JSON_STRING;
 //  elem.elements = 1
 //  elem.bytelen = 3
 //  elem.value -> "one"
 //
 // or you could call the helper functions:
-//  json_string(json, "{'astring'", dest_string, NULL);
-//  json_int(json, "{'anumber'", &myint);
-//  json_string(json, "{'myarray'[3", dest_string, NULL);
+//  tb_json_string(json, "{'astring'", dest_string, NULL);
+//  tb_json_int(json, "{'anumber'", &myint);
+//  tb_json_string(json, "{'myarray'[3", dest_string, NULL);
 //  etc.
 //
 // Note that the helper functions do type coersion and always return a value
@@ -40,20 +40,20 @@
 //      object element =    "{'keyname'"
 //      array element =     "[INDEX"
 //
-// The json_read() function fills a json_element structure to describe the located element
+// The tb_json_read() function fills a json_element structure to describe the located element
 // this can be used to locate any element, not just terminal values
 // e.g.
-//  json_read(json, "{'myarray'", &elem);
+//  tb_json_read(json, "{'myarray'", &elem);
 //
 // in this case elem would contain:
-//  elem.dataType = JSON_ARRAY
+//  elem.dataType = TB_JSON_ARRAY
 //  elem.elements = 4
 //  elem.bytelen = 46
 //  elem.value -> [ "one", 2, {"descripton":"element 3"}, null ] ...
 //
-// allowing json_read to be called again on the array:
+// allowing tb_json_read to be called again on the array:
 // e.g.
-//  json_read(elem.value, "[3", &elem);    // get 4th element - the null value
+//  tb_json_read(elem.value, "[3", &elem);    // get 4th element - the null value
 //
 // -------------------------------------------------------
 //
@@ -63,33 +63,33 @@
 // Functions
 // =========
 // Main JSON reader:
-//      int json_read(char* json_source, char* query, json_element* result);
+//      int tb_json_read(char* json_source, char* query, json_element* result);
 //
 // Extended function using query parameters for indexing:
-//      int json_read_param(char* json_source, char* query, json_element* pResult, int* query_params);
+//      int tb_json_read_param(char* json_source, char* query, json_element* pResult, int* query_params);
 //
 // Function to step thru JSON arrays instead of indexing:
-//      char* json_array_step(char* json_array, json_element* result);
+//      char* tb_json_array_step(char* json_array, json_element* result);
 //
 // Helper functions:
-//      long    json_long(char* json, char* query, int* query_params);
-//      int     json_int(char* json, char* query, int* query_params);
-//      double  json_double(char* json, char* query, int* query_params);
-//      int     json_string(char* json, char* query, char* dest, int destlen, int* query_params);
+//      long    tb_json_long(char* json, char* query, int* query_params);
+//      int     tb_json_int(char* json, char* query, int* query_params);
+//      double  tb_json_double(char* json, char* query, int* query_params);
+//      int     tb_json_string(char* json, char* query, char* dest, int destlen, int* query_params);
 //
 // String output Functions
-//      char* json_type_to_string(int dataType);    // string describes dataType
-//      char* json_error_to_string(int error);      // string descibes error code
+//      char* tb_json_type_to_string(int dataType);    // string describes dataType
+//      char* tb_json_error_to_string(int error);      // string descibes error code
 //
-// Note: json_atol() and json_atof() are modified from original routines
+// Note: tb_json_atol() and tb_json_atof() are modified from original routines
 //       fast_atol() and fast_atof() 09-May-2009 Tom Van Baak (tvb) www.LeapSecond.com
 //
-//       You may want to replace the use of json_atol() and json_atof() in helper functions
+//       You may want to replace the use of tb_json_atol() and tb_json_atof() in helper functions
 //       of your own. Especially note that my atof does not handle exponents.
 //
 
 // uncomment this if you really want to use double quotes in query strings instead of '
-//#define JSON_DOUBLE_QUOTE_IN_QUERY
+//#define TB_JSON_DOUBLE_QUOTE_IN_QUERY
 
 #ifdef __cplusplus
 extern "C"
@@ -100,8 +100,8 @@ extern "C"
 // ----| Version |--------------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-#define JSON_VERSION_MAJOR    1
-#define JSON_VERSION_MINOR    1
+#define TB_JSON_VERSION_MAJOR   1
+#define TB_JSON_VERSION_MINOR   1
 
 //--------------------------------------------------------------------
 // enums
@@ -110,59 +110,59 @@ extern "C"
 typedef enum
 {
     // return types:
-    JSON_ERROR,     // general error, eof etc.
-    JSON_OBJECT,    // "{"
-    JSON_ARRAY,     // "["
-    JSON_STRING,    // "string" 
-    JSON_NUMBER,    // number (may be -ve) int or float
-    JSON_BOOL,      // true or false
-    JSON_NULL,      // null
-    JSON_KEY,       // object "key"
+    TB_JSON_ERROR,      // general error, eof etc.
+    TB_JSON_OBJECT,     // "{"
+    TB_JSON_ARRAY,      // "["
+    TB_JSON_STRING,     // "string" 
+    TB_JSON_NUMBER,     // number (may be -ve) int or float
+    TB_JSON_BOOL,       // true or false
+    TB_JSON_NULL,       // null
+    TB_JSON_KEY,        // object "key"
     // internal values:
-    JSON_COLON,     // ":"
-    JSON_EOL,       // end of input string (ptr at '\0')
-    JSON_COMMA,     // ","
-    JSON_EOBJECT,   // "}"
-    JSON_EARRAY,    // "]"
-    JSON_QPARAM     // "*" query string parameter
-} json_type;
+    TB_JSON_COLON,      // ":"
+    TB_JSON_EOL,        // end of input string (ptr at '\0')
+    TB_JSON_COMMA,      // ","
+    TB_JSON_EOBJECT,    // "}"
+    TB_JSON_EARRAY,     // "]"
+    TB_JSON_QPARAM      // "*" query string parameter
+} tb_json_type;
 
 typedef enum
 {
-    JSON_OK,
-    JSON_QUERY_MISMATCH,
-    JSON_READ_ERROR,
-    JSON_EXPECTED_KEY,
-    JSON_EXPECTED_COLON,
-    JSON_KEY_NOT_FOUND,
-    JSON_EXPECTED_COMMA_OBJECT,
-    JSON_TERMINAL_BEFORE_END,
-    JSON_UNEXPECTED_CHARACTER,
-    JSON_EXPECTED_COMMA_ARRAY,
-    JSON_BAD_INDEX_ARRAY,
-    JSON_BAD_INDEX_OBJECT,
-    JSON_BAD_OBJECT_KEY,
-    JSON_END_OF_ARRAY,
-    JSON_END_OF_OBJECT
-} json_error;
+    TB_JSON_OK,
+    TB_JSON_QUERY_MISMATCH,
+    TB_JSON_READ_ERROR,
+    TB_JSON_EXPECTED_KEY,
+    TB_JSON_EXPECTED_COLON,
+    TB_JSON_KEY_NOT_FOUND,
+    TB_JSON_EXPECTED_COMMA_OBJECT,
+    TB_JSON_TERMINAL_BEFORE_END,
+    TB_JSON_UNEXPECTED_CHARACTER,
+    TB_JSON_EXPECTED_COMMA_ARRAY,
+    TB_JSON_BAD_INDEX_ARRAY,
+    TB_JSON_BAD_INDEX_OBJECT,
+    TB_JSON_BAD_OBJECT_KEY,
+    TB_JSON_END_OF_ARRAY,
+    TB_JSON_END_OF_OBJECT
+} tb_json_error;
 
 //--------------------------------------------------------------------
-// json_element
+// tb_json_element
 // - structure to return JSON elements
-// - error = 0 (JSON_OK) for valid returns
+// - error = 0 (TB_JSON_OK) for valid returns
 //
 // *NOTES*
 //    the returned value pointer points into the passed JSON
 //    string returns are not '\0' terminated.
-//    bytelen specifies the length of the returned data pointed to by pValue
+//    bytelen specifies the length of the returned data pointed to by value
 typedef struct
 {
-	json_type data_type;    // type of the element
+	tb_json_type data_type; // type of the element
 	int elements;           // number of elements (e.g. elements in array or object)
 	int bytelen;            // byte length of element (e.g. length of string, array text "[ ... ]" etc.)
 	void* value;            // pointer to value string in JSON text
-	json_error error;       // error value if data_type == JSON_ERROR
-} json_element;
+	tb_json_error error;    // error value if data_type == TB_JSON_ERROR
+} tb_json_element;
 
 //--------------------------------------------------------------------
 // JSON reader function
@@ -177,68 +177,68 @@ typedef struct
 // e.g.
 //    With JSON like: "{ ..., "key":"value", ... }"
 //
-//    json_read(json, "{'key'", &result);
+//    tb_json_read(json, "{'key'", &result);
 // returns with: 
-//    result.data_type = JREAD_STRING, result.value->'value', result.bytelen = 5
-char* json_read(char* json, char* query, json_element* result);
+//    result.data_type = TB_JSON_STRING, result.value->'value', result.bytelen = 5
+char* tb_json_read(char* json, char* query, tb_json_element* result);
 
-// version of json_read which allows one or more queryParam integers to be substituted
+// version of tb_json_read which allows one or more queryParam integers to be substituted
 // for array or object indexes marked by a '*' in the query
 //
-// e.g. json_read_param(json, "[*", &result_element, &array_index);
+// e.g. tb_json_read_param(json, "[*", &result_element, &array_index);
 //
 // *!* CAUTION *!*
 // You can supply an array of integers which are indexed for each '*' in query
 // however, horrid things will happen if you don't supply enough parameters
-char* json_read_param(char* json, char* query, json_element* result, int* query_params);
+char* tb_json_read_param(char* json, char* query, tb_json_element* result, int* query_params);
 
 // Array Stepping function
-// assumes pJsonArray is JSON source of an array "[ ... ]"
-// returns next element of the array in pResult
-// returns pointer to end of element, to be passed to next call of jReadArrayStep()
-// if end of array is encountered, pResult->error = 13 "End of array found"
+// assumes json_array is JSON source of an array "[ ... ]"
+// returns next element of the array in result
+// returns pointer to end of element, to be passed to next call of tb_json_array_step()
+// if end of array is encountered, result->error = 13 "End of array found"
 //
 // e.g.
 //   With JSON like:   "{ ...  "arrayInObject":[ elem1,elem2,... ], ... }"
 //
-//   json = json_read(json, "{'arrayInObject'", &theArray);
-//   if(theArray.data_type == JREAD_ARRAY)
+//   json = tb_json_read(json, "{'arrayInObject'", &theArray);
+//   if(theArray.data_type == TB_JSON_ARRAY)
 //   {
 //       char* array= (char*)theArray.value;
-//       json_element arrayElement;
+//       tb_json_element arrayElement;
 //       int index;
 //       for(index = 0; index < theArray.elements; index++)
 //       {
-//           array = json_array_step(array, &arrayElement);
+//           array = tb_json_array_step(array, &arrayElement);
 //           ...
 //
 // Note: this significantly speeds up traversing arrays.
-char* json_array_step(char* json_array, json_element* result);
+char* tb_json_array_step(char* json_array, tb_json_element* result);
 
 //--------------------------------------------------------------------
 // Helper Functions
 //--------------------------------------------------------------------
 
-long    json_long(char* json, char* query, int* query_params);
-int     json_int(char* json, char* query, int* query_params);
-float   json_float(char* json, char* query, int* query_params);
-int     json_string(char* json, char* query, char *dest, int destlen, int* query_params);
+long    tb_json_long(char* json, char* query, int* query_params);
+int     tb_json_int(char* json, char* query, int* query_params);
+float   tb_json_float(char* json, char* query, int* query_params);
+int     tb_json_string(char* json, char* query, char *dest, int destlen, int* query_params);
 
-char* json_atoi(char* p, unsigned int* result); // string to unsigned int
-char* json_atol(char* p, long* result);         // string to signed long
-char* json_atof(char* p, float* result);        // string to float (does not do exponents)
+char* tb_json_atoi(char* p, unsigned int* result);  // string to unsigned int
+char* tb_json_atol(char* p, long* result);          // string to signed long
+char* tb_json_atof(char* p, float* result);         // string to float (does not do exponents)
 
-int json_strcmp(json_element* j1, json_element* j2); // compare STRING elements
-char* json_strcpy(char* dest_buffer, int dest_length, json_element* element); // copy element to '\0'-terminated buffer
+int tb_json_strcmp(tb_json_element* a, tb_json_element* b); // compare STRING elements
+char* tb_json_strcpy(char* dest_buffer, int dest_length, tb_json_element* element); // copy element to '\0'-terminated buffer
 
-void json_print_element(json_element element);
+void tb_json_print_element(tb_json_element element);
 
 //--------------------------------------------------------------------
 // String output Functions
 //--------------------------------------------------------------------
 
-char* json_type_to_string(json_type data_type); // string describes data_type
-char* json_error_to_string(json_error error);   // string descibes error code
+char* tb_json_type_to_string(tb_json_type data_type);   // string describes data_type
+char* tb_json_error_to_string(tb_json_error error);     // string descibes error code
 
 #ifdef __cplusplus
 }
@@ -247,7 +247,7 @@ char* json_error_to_string(json_error error);   // string descibes error code
 //
 //
 ////   end header file   /////////////////////////////////////////////////////
-#endif // JSON_INCLUDE_H
+#endif // TB_JSON_INCLUDE_H
 
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
@@ -259,73 +259,73 @@ char* json_error_to_string(json_error error);   // string descibes error code
 //--------------------------------------------------------------------
 //--------------------------------------------------------------------
 
-#ifdef JSON_IMPLEMENTATION
+#ifdef TB_JSON_IMPLEMENTATION
 
 #include <stdio.h>
 
 // By default we use single quote in query strings so it's a lot easier
 // to type in code i.e.  "{'key'" instead of "{\"key\""
-#ifdef JSON_DOUBLE_QUOTE_IN_QUERY
-#define JSON_QUERY_QUOTE    '\"'
+#ifdef TB_JSON_DOUBLE_QUOTE_IN_QUERY
+#define TB_JSON_QUERY_QUOTE    '\"'
 #else
-#define JSON_QUERY_QUOTE    '\''
+#define TB_JSON_QUERY_QUOTE    '\''
 #endif
 
 //--------------------------------------------------------------------
 // Internal Functions
 //--------------------------------------------------------------------
 
-static char* _json_skip_whitespace(char* sp)
+static char* _tb_json_skip_whitespace(char* sp)
 {
     while ((*sp != '\0') && (*sp <= ' '))
         sp++;
     return sp;
 };
 
-// json_find_token
+// _tb_json_find_token
 //  find start of a token
 //
 // returns:
 //  pointer to start of next token or element
 //  type via token_type
-static char* _json_find_token(char* sp, json_type* token_type)
+static char* _tb_json_find_token(char* sp, tb_json_type* token_type)
 {
     char c;
-    sp = _json_skip_whitespace(sp);
+    sp = _tb_json_skip_whitespace(sp);
     c = *sp;
-    if ( c == '\0' ) *token_type = JSON_EOL;
-    else if ((c == '"') || (c == JSON_QUERY_QUOTE)) *token_type = JSON_STRING;
-    else if ((c >= '0') && (c <= '9'))              *token_type = JSON_NUMBER;
-    else if ((c == 't') || (c == 'f'))              *token_type = JSON_BOOL;
-    else if (c == '-') *token_type = JSON_NUMBER;
-    else if (c == '{') *token_type = JSON_OBJECT;
-    else if (c == '[') *token_type = JSON_ARRAY;
-    else if (c == '}') *token_type = JSON_EOBJECT; 
-    else if (c == ']') *token_type = JSON_EARRAY;
-    else if (c == 'n') *token_type = JSON_NULL;
-    else if (c == ':') *token_type = JSON_COLON;
-    else if (c == ',') *token_type = JSON_COMMA;
-    else if (c == '*') *token_type = JSON_QPARAM;
-    else *token_type = JSON_ERROR;
+    if ( c == '\0' ) *token_type = TB_JSON_EOL;
+    else if ((c == '"') || (c == TB_JSON_QUERY_QUOTE))  *token_type = TB_JSON_STRING;
+    else if ((c >= '0') && (c <= '9'))                  *token_type = TB_JSON_NUMBER;
+    else if ((c == 't') || (c == 'f'))                  *token_type = TB_JSON_BOOL;
+    else if (c == '-') *token_type = TB_JSON_NUMBER;
+    else if (c == '{') *token_type = TB_JSON_OBJECT;
+    else if (c == '[') *token_type = TB_JSON_ARRAY;
+    else if (c == '}') *token_type = TB_JSON_EOBJECT; 
+    else if (c == ']') *token_type = TB_JSON_EARRAY;
+    else if (c == 'n') *token_type = TB_JSON_NULL;
+    else if (c == ':') *token_type = TB_JSON_COLON;
+    else if (c == ',') *token_type = TB_JSON_COMMA;
+    else if (c == '*') *token_type = TB_JSON_QPARAM;
+    else *token_type = TB_JSON_ERROR;
     return sp;
 };
 
-// json_get_string
+// _tb_json_get_string
 //  assumes next element is "string" which may include "\" sequences
 //  returns pointer to -------------^
-//  element contains result (JSON_STRING, length, pointer to string)
+//  element contains result (TB_JSON_STRING, length, pointer to string)
 //  pass quote = '"' for Json, quote = '\'' for query scanning
 //
 // returns:
 //  pointer into json after the string (char after the " terminator)
 //   element contains pointer and length of string (or data_type = JSON_ERROR)
-static char* _json_get_string(char* json, json_element* element, char quote)
+static char* _tb_json_get_string(char* json, tb_json_element* element, char quote)
 {
     short skip_ch;
-    element->data_type = JSON_ERROR;
+    element->data_type = TB_JSON_ERROR;
     element->elements = 1;
     element->bytelen = 0;
-    json = _json_skip_whitespace(json);
+    json = _tb_json_skip_whitespace(json);
     if (*json == quote)
     {
         json++;
@@ -340,7 +340,7 @@ static char* _json_get_string(char* json, json_element* element, char quote)
                 skip_ch = 1;
             else if (*json == quote)
             {
-                element->data_type = JSON_STRING;
+                element->data_type = TB_JSON_STRING;
                 json++;
                 break;
             }
@@ -351,13 +351,13 @@ static char* _json_get_string(char* json, json_element* element, char quote)
     return json;
 };
 
-// json_text_len
+// _tb_json_text_len
 //  used to identify length of element text
 //  terminators: ' ' , } ]
 //
 // returns:
 //  no. of chars from json upto a terminator
-static int _json_text_len(char* json)
+static int _tb_json_text_len(char* json)
 {
     int len = 0;
     while ((*json > ' ') && (*json != ',') && (*json != '}') && (*json != ']'))
@@ -368,23 +368,23 @@ static int _json_text_len(char* json)
     return len;
 }
 
-// json_count_object
+// _tb_json_count_object
 //  used when query ends at an object, we want to return the object length
 //  on entry json -> "{... "
 //  used to skip unwanted values which are objects
 //  keyIndex normally passed as -1 unless we're looking for the nth "key" value
 //  in which case keyIndex is the index of the key we want
-static char* _json_count_object(char* json, json_element* result, int key_index)
+static char* _tb_json_count_object(char* json, tb_json_element* result, int key_index)
 {
-    json_element element;
-    json_type token;
+    tb_json_element element;
+    tb_json_type token;
     char* sp;
-    result->data_type = JSON_OBJECT;
-    result->error = JSON_OK;
+    result->data_type = TB_JSON_OBJECT;
+    result->error = TB_JSON_OK;
     result->elements = 0;
     result->value = json;
-    sp = _json_find_token(json + 1, &token); // check for empty object
-    if (token == JSON_EOBJECT)
+    sp = _tb_json_find_token(json + 1, &token); // check for empty object
+    if (token == TB_JSON_EOBJECT)
     {
         json = sp + 1;
     }
@@ -392,36 +392,36 @@ static char* _json_count_object(char* json, json_element* result, int key_index)
     {
         while (1)
         {
-            json = _json_get_string(++json, &element, '\"');
-            if (element.data_type != JSON_STRING)
+            json = _tb_json_get_string(++json, &element, '\"');
+            if (element.data_type != TB_JSON_STRING)
             {
-                result->error = JSON_EXPECTED_KEY; // Expected "key"
+                result->error = TB_JSON_EXPECTED_KEY; // Expected "key"
                 break;
             }
             if (result->elements == key_index) // if passed keyIndex
             {
                 *result = element; // we return "key" at this index
-                result->data_type = JSON_KEY;
+                result->data_type = TB_JSON_KEY;
                 return json;
             }
-            json = _json_find_token(json, &token);
-            if (token != JSON_COLON)
+            json = _tb_json_find_token(json, &token);
+            if (token != TB_JSON_COLON)
             {
-                result->error = JSON_EXPECTED_COLON; // Expected ":"
+                result->error = TB_JSON_EXPECTED_COLON; // Expected ":"
                 break;
             }
-            json = json_read(++json, "", &element);
+            json = tb_json_read(++json, "", &element);
             if (result->error) break;
-            json = _json_find_token(json, &token);
+            json = _tb_json_find_token(json, &token);
             result->elements++;
-            if (token == JSON_EOBJECT)
+            if (token == TB_JSON_EOBJECT)
             {
                 json++;
                 break;
             }
-            if (token != JSON_COMMA)
+            if (token != TB_JSON_COMMA)
             {
-                result->error = JSON_EXPECTED_COMMA_OBJECT; // Expected "," in object
+                result->error = TB_JSON_EXPECTED_COMMA_OBJECT; // Expected "," in object
                 break;
             }
         }
@@ -429,8 +429,8 @@ static char* _json_count_object(char* json, json_element* result, int key_index)
     if (key_index >= 0)
     {
         // we wanted a "key" value - that we didn't find
-        result->data_type = JSON_ERROR;
-        result->error = JSON_BAD_INDEX_OBJECT; // Object key not found (bad index)
+        result->data_type = TB_JSON_ERROR;
+        result->error = TB_JSON_BAD_INDEX_OBJECT; // Object key not found (bad index)
     }
     else
     {
@@ -439,40 +439,40 @@ static char* _json_count_object(char* json, json_element* result, int key_index)
     return json;
 }
 
-// json_count_array
+// _tb_json_count_array
 //  used when query ends at an array, we want to return the array length
 //  on entry json -> "[... "
 //  used to skip unwanted values which are arrays
-static char* _json_count_array(char* json, json_element* result)
+static char* _tb_json_count_array(char* json, tb_json_element* result)
 {
-    json_type token;
-    char* sp = _json_find_token(json + 1, &token); // check for empty array
-    result->data_type = JSON_ARRAY;
-    result->error = JSON_OK;
+    tb_json_type token;
+    char* sp = _tb_json_find_token(json + 1, &token); // check for empty array
+    result->data_type = TB_JSON_ARRAY;
+    result->error = TB_JSON_OK;
     result->elements = 0;
     result->value = json;
 
-    if (token == JSON_EARRAY)
+    if (token == TB_JSON_EARRAY)
     {
         json = sp + 1;
     }
     else
     {
-        json_element element;
+        tb_json_element element;
         while (1)
         {
-            json = json_read(++json, "", &element); // array value
+            json = tb_json_read(++json, "", &element); // array value
             if(result->error) break;
-            json = _json_find_token(json, &token); // , or ]
+            json = _tb_json_find_token(json, &token); // , or ]
             result->elements++;
-            if (token == JSON_EARRAY)
+            if (token == TB_JSON_EARRAY)
             {
                 json++;
                 break;
             }
-            if (token != JSON_COMMA)
+            if (token != TB_JSON_COMMA)
             {
-                result->error = JSON_EXPECTED_COMMA_ARRAY;
+                result->error = TB_JSON_EXPECTED_COMMA_ARRAY;
                 break;
             }
         }
@@ -486,7 +486,7 @@ static char* _json_count_array(char* json, json_element* result)
 // JSON reader function
 //--------------------------------------------------------------------
 
-// json_read
+// tb_json_read
 //  reads a complete JSON <value>
 //  matches query against json, results in result
 //
@@ -494,111 +494,111 @@ static char* _json_count_array(char* json, json_element* result)
 //  pointer into json
 //
 // Note: is recursive
-char* json_read(char* json, char* query, json_element* result)
+char* tb_json_read(char* json, char* query, tb_json_element* result)
 {
-    return json_read_param(json, query, result, NULL);
+    return tb_json_read_param(json, query, result, NULL);
 }
 
-char* json_read_param(char* json, char* query, json_element* result, int* query_params)
+char* tb_json_read_param(char* json, char* query, tb_json_element* result, int* query_params)
 {
-    json_type token_q, token_j;
+    tb_json_type token_q, token_j;
     int bytelen;
     unsigned int index, count;
-    json_element element_q, element_j;
+    tb_json_element element_q, element_j;
 
-    json = _json_find_token(json, &token_j);
-    query = _json_find_token(query, &token_q);
+    json = _tb_json_find_token(json, &token_j);
+    query = _tb_json_find_token(query, &token_q);
 
     result->data_type = token_j;
     result->bytelen = result->elements = 0;
-    result->error = JSON_OK;
+    result->error = TB_JSON_OK;
     result->value = json;
 
-    if ((token_q != JSON_EOL) && (token_q != token_j))
+    if ((token_q != TB_JSON_EOL) && (token_q != token_j))
     {
-        result->error= JSON_QUERY_MISMATCH; // JSON does not match Query
+        result->error= TB_JSON_QUERY_MISMATCH; // JSON does not match Query
         return json;
     }
 
     switch (token_j)
     {
-    case JSON_ERROR: // general error, eof etc.
-        result->error= JSON_READ_ERROR;
+    case TB_JSON_ERROR: // general error, eof etc.
+        result->error= TB_JSON_READ_ERROR;
         break;
 
-    case JSON_OBJECT: // "{"
-        if (token_q == JSON_EOL)
-            return _json_count_object(json, result, -1); // return length of object 
+    case TB_JSON_OBJECT: // "{"
+        if (token_q == TB_JSON_EOL)
+            return _tb_json_count_object(json, result, -1); // return length of object 
 
-        query = _json_find_token(++query, &token_q); // "('key'...", "{NUMBER", "{*" or EOL
-        if (token_q != JSON_STRING)
+        query = _tb_json_find_token(++query, &token_q); // "('key'...", "{NUMBER", "{*" or EOL
+        if (token_q != TB_JSON_STRING)
         {
             index = 0;
             switch (token_q)
             {
-            case JSON_NUMBER:
-                query = json_atoi((char*)query, &index); // index value
+            case TB_JSON_NUMBER:
+                query = tb_json_atoi((char*)query, &index); // index value
                 break;
-            case JSON_QPARAM:
+            case TB_JSON_QPARAM:
                 query++;
                 index = (query_params != NULL) ? *query_params++ : 0; // substitute parameter
                 break;
             default:
-                result->error = JSON_BAD_OBJECT_KEY;
+                result->error = TB_JSON_BAD_OBJECT_KEY;
                 return json;
             }
-            return _json_count_object(json, result, index);
+            return _tb_json_count_object(json, result, index);
         }
-        query = _json_get_string(query, &element_q, JSON_QUERY_QUOTE); // element_q = query 'key'
+        query = _tb_json_get_string(query, &element_q, TB_JSON_QUERY_QUOTE); // element_q = query 'key'
 
         // read <key> : <value> , ... } loop until key matched
         while (1)
         {
-            json = _json_get_string(++json, &element_j, '\"');
-            if (element_j.data_type != JSON_STRING)
+            json = _tb_json_get_string(++json, &element_j, '\"');
+            if (element_j.data_type != TB_JSON_STRING)
             {
-                result->error = JSON_EXPECTED_KEY;
+                result->error = TB_JSON_EXPECTED_KEY;
                 break;
             }
-            json = _json_find_token(json, &token_j);
-            if (token_j != JSON_COLON)
+            json = _tb_json_find_token(json, &token_j);
+            if (token_j != TB_JSON_COLON)
             {
-                result->error = JSON_EXPECTED_COLON;
+                result->error = TB_JSON_EXPECTED_COLON;
                 break;
             }
             // compare object keys
-            if (json_strcmp(&element_q, &element_j) == 0)
+            if (tb_json_strcmp(&element_q, &element_j) == 0)
             {
                 // found object key
-                return json_read_param(++json, query, result, query_params);
+                return tb_json_read_param(++json, query, result, query_params);
             }
             // no key match... skip this value
-            json = json_read(++json, "", result);
-            json = _json_find_token(json, &token_j);
-            if (token_j == JSON_EOBJECT)
+            json = tb_json_read(++json, "", result);
+            json = _tb_json_find_token(json, &token_j);
+            if (token_j == TB_JSON_EOBJECT)
             {
-                result->error = JSON_KEY_NOT_FOUND;
+                result->error = TB_JSON_KEY_NOT_FOUND;
                 break;
             }
-            if (token_j != JSON_COMMA)
+            if (token_j != TB_JSON_COMMA)
             {
-                result->error = JSON_EXPECTED_COMMA_OBJECT;
+                result->error = TB_JSON_EXPECTED_COMMA_OBJECT;
                 break;
             }
         }
         break;
-    case JSON_ARRAY: // "[NUMBER" or "[*"
+    case TB_JSON_ARRAY: // "[NUMBER" or "[*"
         // read index, skip values until index
-        if (token_q == JSON_EOL)
-            return _json_count_array(json, result); // return length of object 
+        if (token_q == TB_JSON_EOL)
+            return _tb_json_count_array(json, result); // return length of object 
 
         index = 0;
-        query = _json_find_token(++query, &token_q); // "[NUMBER" or "[*"
-        if (token_q == JSON_NUMBER)
+        query = _tb_json_find_token(++query, &token_q); // "[NUMBER" or "[*"
+        if (token_q == TB_JSON_NUMBER)
         {
-            query = json_atoi(query, &index); // get array index
+            query = tb_json_atoi(query, &index); // get array index
         }
-        else if (token_q == JSON_QPARAM)
+        else if (token_q == TB_JSON_QPARAM)
         {
             query++;
             index = (query_params != NULL) ? *query_params++ : 0; // substitute parameter
@@ -608,33 +608,33 @@ char* json_read_param(char* json, char* query, json_element* result, int* query_
         while (1)
         {
             if (count == index)
-                return json_read_param(++json, query, result, query_params); // return value at index
+                return tb_json_read_param(++json, query, result, query_params); // return value at index
 
             // not this index... skip this value
-            json = json_read(++json, "", &element_j);
+            json = tb_json_read(++json, "", &element_j);
             if (result->error)
                 break;
             count++;
-            json = _json_find_token(json, &token_j); // , or ]
-            if (token_j == JSON_EARRAY)
+            json = _tb_json_find_token(json, &token_j); // , or ]
+            if (token_j == TB_JSON_EARRAY)
             {
-                result->error = JSON_BAD_INDEX_ARRAY;
+                result->error = TB_JSON_BAD_INDEX_ARRAY;
                 break;
             }
-            if (token_j != JSON_COMMA)
+            if (token_j != TB_JSON_COMMA)
             {
-                result->error = JSON_EXPECTED_COMMA_ARRAY;
+                result->error = TB_JSON_EXPECTED_COMMA_ARRAY;
                 break;
             }
         }
         break;
-    case JSON_STRING: // "string" 
-        json = _json_get_string(json, result, '\"');
+    case TB_JSON_STRING: // "string" 
+        json = _tb_json_get_string(json, result, '\"');
         break;
-    case JSON_NUMBER: // number (may be -ve) int or float
-    case JSON_BOOL: // true or false
-    case JSON_NULL: // null
-        bytelen = _json_text_len(json);
+    case TB_JSON_NUMBER: // number (may be -ve) int or float
+    case TB_JSON_BOOL: // true or false
+    case TB_JSON_NULL: // null
+        bytelen = _tb_json_text_len(json);
         result->data_type = token_j;
         result->bytelen = bytelen;
         result->value = json;
@@ -642,42 +642,42 @@ char* json_read_param(char* json, char* query, json_element* result, int* query_
         json += bytelen;
         break;
     default:
-        result->error = JSON_UNEXPECTED_CHARACTER;
+        result->error = TB_JSON_UNEXPECTED_CHARACTER;
     }
     // We get here on a 'terminal value'
     // - make sure the query string is empty also
-    query = _json_find_token(query, &token_q);
-    if (!result->error && (token_q != JSON_EOL))
-        result->error = JSON_TERMINAL_BEFORE_END;
+    query = _tb_json_find_token(query, &token_q);
+    if (!result->error && (token_q != TB_JSON_EOL))
+        result->error = TB_JSON_TERMINAL_BEFORE_END;
     if (result->error)
     {
-        result->data_type = JSON_ERROR;
+        result->data_type = TB_JSON_ERROR;
         result->elements = result->bytelen = 0;
         result->value = json; // return pointer into JSON at error point
     }
     return json;
 }
 
-// json_array_step
+// tb_json_array_step
 //  reads one value from an array
-//  assumes pJsonArray points at the start of an array or array element
-char* json_array_step(char* json_array, json_element* result)
+//  assumes json_array points at the start of an array or array element
+char* tb_json_array_step(char* json_array, tb_json_element* result)
 {
-    json_type token;
-    json_array = _json_find_token(json_array, &token);
+    tb_json_type token;
+    json_array = _tb_json_find_token(json_array, &token);
     switch (token)
     {
-    case JSON_ARRAY: // start of array
-    case JSON_COMMA: // element separator
-        return json_read(++json_array, "", result);
-    case JSON_EARRAY: // end of array
-        result->error = JSON_END_OF_ARRAY;
+    case TB_JSON_ARRAY:     // start of array
+    case TB_JSON_COMMA:     // element separator
+        return tb_json_read(++json_array, "", result);
+    case TB_JSON_EARRAY:    // end of array
+        result->error = TB_JSON_END_OF_ARRAY;
         break;
     default: // some other error
-        result->error = JSON_EXPECTED_COMMA_ARRAY;
+        result->error = TB_JSON_EXPECTED_COMMA_ARRAY;
         break;
     }
-    result->data_type = JSON_ERROR;
+    result->data_type = TB_JSON_ERROR;
     return json_array;
 }
 
@@ -692,58 +692,58 @@ char* json_array_step(char* json_array, json_element* result)
 // Note: by default, pass NULL for queryParams
 //       unless you are using '*' in the query for indexing
 
-// json_long
+// tb_json_long
 // - reads signed long value from JSON 
 // - returns number from NUMBER or STRING elements (if possible)
 //   returns 1 or 0 from BOOL elements
 //   otherwise returns 0
-long json_long(char* json, char* query, int* query_params)
+long tb_json_long(char* json, char* query, int* query_params)
 {
-    json_element elem;
+    tb_json_element elem;
     long result;
-    json_read_param(json, query, &elem, query_params);
-    if ((elem.data_type == JSON_ERROR) || (elem.data_type == JSON_NULL))
+    tb_json_read_param(json, query, &elem, query_params);
+    if ((elem.data_type == TB_JSON_ERROR) || (elem.data_type == TB_JSON_NULL))
         return 0;
-    if (elem.data_type == JSON_BOOL)
+    if (elem.data_type == TB_JSON_BOOL)
         return *((char *)elem.value)=='t' ? 1 : 0;
 
-    json_atol((char *)elem.value, &result);
+    tb_json_atol((char *)elem.value, &result);
     return result;
 }
 
-int json_int(char* json, char* query, int* query_params)
+int tb_json_int(char* json, char* query, int* query_params)
 {
-    return (int)json_long(json, query, query_params);
+    return (int)tb_json_long(json, query, query_params);
 }
 
-// json_double
+// tb_json_float
 // - returns float from JSON
 // - returns number from NUMBER or STRING elements
 //   otherwise returns 0.0f
-float json_float(char* json, char* query, int* query_params)
+float tb_json_float(char* json, char* query, int* query_params)
 {
-    json_element element;
-    json_read_param(json, query, &element, query_params);
-    if (element.data_type == JSON_ERROR)
+    tb_json_element element;
+    tb_json_read_param(json, query, &element, query_params);
+    if (element.data_type == TB_JSON_ERROR)
         return 0.0f;
     
     float result;
-    json_atof((char*)element.value, &result);
+    tb_json_atof((char*)element.value, &result);
     return result;
 }
 
-// json_string
+// tb_json_string
 // Copy string to dest and '\0'-terminate it (upto dest_len total bytes)
 // returns: character length of string (excluding '\0' terminator)
 //
 // Note: any element can be returned as a string
-int json_string(char* json, char* query, char* dest, int destlen, int* query_params)
+int tb_json_string(char* json, char* query, char* dest, int destlen, int* query_params)
 {
-    json_element element;
+    tb_json_element element;
 
     *dest = '\0';
-    json_read_param(json, query, &element, query_params);
-    if (element.data_type == JSON_ERROR)
+    tb_json_read_param(json, query, &element, query_params);
+    if (element.data_type == TB_JSON_ERROR)
         return 0;
 
     for (int i = 0; (i < element.bytelen) && (i < destlen - 1); i++)
@@ -753,7 +753,7 @@ int json_string(char* json, char* query, char* dest, int destlen, int* query_par
 }
 
 // read unsigned int from string
-char* json_atoi(char* p, unsigned int* result)
+char* tb_json_atoi(char* p, unsigned int* result)
 {
     unsigned int x = 0;
     while (*p >= '0' && *p <= '9')
@@ -766,7 +766,7 @@ char* json_atoi(char* p, unsigned int* result)
 }
 
 // read long int from string
-char* json_atol(char* p, long* result)
+char* tb_json_atol(char* p, long* result)
 {
     long x = 0;
     int neg = 0;
@@ -790,7 +790,7 @@ char* json_atol(char* p, long* result)
 
 // read double from string
 // *CAUTION* does not handle exponents
-char* json_atof(char* p, float* result)
+char* tb_json_atof(char* p, float* result)
 {
 #define VALID_DIGIT(c) ((c) >= '0' && (c) <= '9')
 
@@ -835,16 +835,16 @@ char* json_atof(char* p, float* result)
 
 // compare two json elements
 // returns: 0 if they are identical strings, else 1
-int json_strcmp(json_element* j1, json_element* j2)
+int tb_json_strcmp(tb_json_element* a, tb_json_element* b)
 {
     int i;
-    if ((j1->data_type != JSON_STRING) || 
-        (j2->data_type != JSON_STRING) ||
-        (j1->bytelen != j2->bytelen ))
+    if ((a->data_type != TB_JSON_STRING) || 
+        (b->data_type != TB_JSON_STRING) ||
+        (a->bytelen != b->bytelen ))
         return 1;
 
-    for (i = 0; i < j1->bytelen; i++)
-        if (((char *)(j1->value))[i] != ((char*)(j2->value))[i])
+    for (i = 0; i < a->bytelen; i++)
+        if (((char *)(a->value))[i] != ((char*)(b->value))[i])
             return 1;
     return 0; 
 }
@@ -853,7 +853,7 @@ int json_strcmp(json_element* j1, json_element* j2)
 // always copies element irrespective of data_type (unless it's an error)
 // dest_buffer is always '\0'-terminated (even on zero lenght returns)
 // returns pointer to dest_buffer
-char* json_strcpy(char* dest_buffer, int dest_length, json_element* element)
+char* tb_json_strcpy(char* dest_buffer, int dest_length, tb_json_element* element)
 {
     int len = element->bytelen;
     char* dest = dest_buffer;
@@ -870,7 +870,7 @@ char* json_strcpy(char* dest_buffer, int dest_length, json_element* element)
 }
 
 // prints the value of an element
-void json_print_element(json_element element)
+void tb_json_print_element(tb_json_element element)
 {
     printf("%.*s\n", element.bytelen, (char*)element.value);
 }
@@ -879,52 +879,52 @@ void json_print_element(json_element element)
 // String output Functions
 //--------------------------------------------------------------------
 
-char* json_type_to_string(json_type data_type)
+char* tb_json_type_to_string(tb_json_type data_type)
 {
     switch (data_type)
     {
-    case JSON_ERROR:    return "Error";
-    case JSON_OBJECT:   return "Object";
-    case JSON_ARRAY:    return "Array";
-    case JSON_STRING:   return "String";
-    case JSON_NUMBER:   return "Number";
-    case JSON_BOOL:     return "Bool";
-    case JSON_NULL:     return "null";
-    case JSON_KEY:      return "Object key";
-    case JSON_COLON:    return "colon";
-    case JSON_EOL:      return "eol";
-    case JSON_COMMA:    return "comma";
-    case JSON_EOBJECT:  return "}";
-    case JSON_EARRAY:   return "]";
-    case JSON_QPARAM:   return "* parameter";
-    default:            return "Unkown type";
+    case TB_JSON_ERROR:     return "Error";
+    case TB_JSON_OBJECT:    return "Object";
+    case TB_JSON_ARRAY:     return "Array";
+    case TB_JSON_STRING:    return "String";
+    case TB_JSON_NUMBER:    return "Number";
+    case TB_JSON_BOOL:      return "Bool";
+    case TB_JSON_NULL:      return "null";
+    case TB_JSON_KEY:       return "Object key";
+    case TB_JSON_COLON:     return "colon";
+    case TB_JSON_EOL:       return "eol";
+    case TB_JSON_COMMA:     return "comma";
+    case TB_JSON_EOBJECT:   return "}";
+    case TB_JSON_EARRAY:    return "]";
+    case TB_JSON_QPARAM:    return "* parameter";
+    default:                return "Unkown type";
     }
 };
 
-char* json_error_to_string(json_error error)
+char* tb_json_error_to_string(tb_json_error error)
 {
     switch (error)
     {
-    case JSON_OK:                   return "Ok";
-    case JSON_QUERY_MISMATCH:       return "JSON does not match Query";
-    case JSON_READ_ERROR:           return "Error reading JSON value";
-    case JSON_EXPECTED_KEY:         return "Expected \"key\"";
-    case JSON_EXPECTED_COLON:       return "Expected ':'";
-    case JSON_KEY_NOT_FOUND:        return "Object key not found";
-    case JSON_EXPECTED_COMMA_OBJECT:return "Expected ',' in object";
-    case JSON_TERMINAL_BEFORE_END:  return "Terminal value found before end of query";
-    case JSON_UNEXPECTED_CHARACTER: return "Unexpected character";
-    case JSON_EXPECTED_COMMA_ARRAY: return "Expected ',' in array";
-    case JSON_BAD_INDEX_ARRAY:      return "Array element not found (bad index)";
-    case JSON_BAD_INDEX_OBJECT:     return "Object key not found (bad index)";
-    case JSON_BAD_OBJECT_KEY:       return "Bad object key";
-    case JSON_END_OF_ARRAY:         return "End of array found";
-    case JSON_END_OF_OBJECT:        return "End of object found";
-    default:                        return "Unknown error";
+    case TB_JSON_OK:                    return "Ok";
+    case TB_JSON_QUERY_MISMATCH:        return "JSON does not match Query";
+    case TB_JSON_READ_ERROR:            return "Error reading JSON value";
+    case TB_JSON_EXPECTED_KEY:          return "Expected \"key\"";
+    case TB_JSON_EXPECTED_COLON:        return "Expected ':'";
+    case TB_JSON_KEY_NOT_FOUND:         return "Object key not found";
+    case TB_JSON_EXPECTED_COMMA_OBJECT: return "Expected ',' in object";
+    case TB_JSON_TERMINAL_BEFORE_END:   return "Terminal value found before end of query";
+    case TB_JSON_UNEXPECTED_CHARACTER:  return "Unexpected character";
+    case TB_JSON_EXPECTED_COMMA_ARRAY:  return "Expected ',' in array";
+    case TB_JSON_BAD_INDEX_ARRAY:       return "Array element not found (bad index)";
+    case TB_JSON_BAD_INDEX_OBJECT:      return "Object key not found (bad index)";
+    case TB_JSON_BAD_OBJECT_KEY:        return "Bad object key";
+    case TB_JSON_END_OF_ARRAY:          return "End of array found";
+    case TB_JSON_END_OF_OBJECT:         return "End of object found";
+    default:                            return "Unknown error";
     }
 };
 
-#endif // JSON_IMPLEMENTATION
+#endif // TB_JSON_IMPLEMENTATION
 
 /*
 ------------------------------------------------------------------------------

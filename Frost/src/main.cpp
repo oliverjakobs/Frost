@@ -1,6 +1,6 @@
-#include "Application.h"
+#include "Application.hpp"
 
-#include "SceneManager.h"
+#include "SceneManager.hpp"
 
 class Frost : public Application
 {
@@ -21,8 +21,8 @@ public:
 
 		Renderer2D::Init(ignisShadervf("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
 		Primitives2D::Init(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
-
 		FontRenderer::Init(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
+
 		m_font = ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f);
 
 		EnableDebugMode(true);

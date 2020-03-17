@@ -1,7 +1,7 @@
 #pragma once
 
 #include "TextureComponent.hpp"
-#include "Animation/Animator.h"
+#include "Animation/Animator.hpp"
 
 class AnimationComponent : public Component
 {

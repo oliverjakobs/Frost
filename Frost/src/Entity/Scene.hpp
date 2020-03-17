@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Entity/Components.hpp"
-#include "Event/EventHandler.h"
+#include "Event/EventHandler.hpp"
 
-#include "Camera/OrthographicCamera.h"
+#include "Camera/OrthographicCamera.hpp"
 
 class Scene
 {

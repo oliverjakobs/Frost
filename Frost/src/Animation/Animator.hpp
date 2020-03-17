@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Animation.h"
+#include "Animation.hpp"
 
 #include <unordered_map>
 #include <functional>

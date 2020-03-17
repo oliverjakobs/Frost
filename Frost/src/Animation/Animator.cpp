@@ -1,4 +1,4 @@
-#include "Animator.h"
+#include "Animator.hpp"
 
 #include "Entity/Entity.hpp"
 #include "Entity/Components.hpp"

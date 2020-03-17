@@ -1,4 +1,4 @@
-#include "Color.h"
+#include "Color.hpp"
 
 color BlendColor(const color& c, float a)
 {

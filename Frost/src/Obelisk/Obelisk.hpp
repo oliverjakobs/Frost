@@ -3,10 +3,10 @@
 #include <functional>
 #include <iterator>
 
-#include "Debugger.h"
-#include "FileUtility.h"
+#include "Debugger.hpp"
+#include "FileUtility.hpp"
 
-#include "Range.h"
+#include "Range.hpp"
 
 #define BIND_FUNCTION(fn) std::bind(&fn, this, std::placeholders::_1)
 

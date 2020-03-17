@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Obelisk/Obelisk.h"
-#include "Obelisk/Singelton.h"
+#include "Obelisk/Obelisk.hpp"
+#include "Obelisk/Singelton.hpp"
 
-#include "Event/ApplicationEvent.h"
-#include "Event/WindowEvent.h"
-#include "Event/MouseEvent.h"
-#include "Event/KeyEvent.h"
+#include "Event/ApplicationEvent.hpp"
+#include "Event/WindowEvent.hpp"
+#include "Event/MouseEvent.hpp"
+#include "Event/KeyEvent.hpp"
 
 #include <queue>
 

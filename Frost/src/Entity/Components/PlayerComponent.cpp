@@ -4,9 +4,9 @@
 #include "TextureComponent.hpp"
 #include "PhysicsComponent.hpp"
 
-#include "Obelisk/Obelisk.h"
+#include "Obelisk/Obelisk.hpp"
 
-#include "Input/Input.h"
+#include "Input/Input.hpp"
 
 #include "../Scene.hpp"
 

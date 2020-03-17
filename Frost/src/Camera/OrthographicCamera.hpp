@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Camera.h"
+#include "Camera.hpp"
 
 class OrthographicCamera : public Camera
 {

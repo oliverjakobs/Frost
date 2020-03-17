@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Logger.h"
-#include "Timer.h"
+#include "Logger.hpp"
+#include "Timer.hpp"
 
 #if _DEBUG
 	
