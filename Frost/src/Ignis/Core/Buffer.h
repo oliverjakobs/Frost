@@ -18,10 +18,11 @@ extern "C"
 	} ignis_buffer;
 
 	/* buffer generation */
-	ignis_buffer* ignisGenerateArrayBuffer(GLsizeiptr size, const void* data, GLenum usage);
-	ignis_buffer* ignisGenerateElementBuffer(GLsizei count, const GLuint* data, GLenum usage);
-	ignis_buffer* ignisGenerateTextureBuffer(GLenum format, GLuint buffer);
-	ignis_buffer* ignisGenerateRenderBuffer();
+	int ignisGenerateBuffer(ignis_buffer* buffer, GLenum target, GLenum format);
+	void ignisGenerateArrayBuffer(ignis_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
+	void ignisGenerateElementBuffer(ignis_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
+	void ignisGenerateTextureBuffer(ignis_buffer* tex_buffer, GLenum format, GLuint buffer);
+	void ignisGenerateRenderBuffer(ignis_buffer* buffer);
 
 	void ignisDeleteBuffer(ignis_buffer* buffer);
 

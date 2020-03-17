@@ -21,7 +21,20 @@ extern "C"
 #include "Core/Shader.h"
 #include "Core/Buffer.h"
 
+/* Font */
+#define IGNIS_FONT_VERTEX_SIZE			4
+#define IGNIS_FONT_VERTICES_PER_QUAD	4
+#define IGNIS_FONT_INDICES_PER_QUAD		4
+#define IGNIS_FONT_MAX_QUADS			1024
+#define IGNIS_FONT_MAX_VERTICES			IGNIS_FONT_MAX_QUADS * IGNIS_FONT_VERTICES_PER_QUAD
+#define IGNIS_FONT_MAX_INDICES			IGNIS_FONT_MAX_QUADS * IGNIS_FONT_INDICES_PER_QUAD
+
 #include "Font.h"
+
+/* Vertex Array */
+#define IGNIS_BUFFER_ARRAY_INITIAL_SIZE 4
+#define IGNIS_BUFFER_ARRAY_GROWTH_FACTOR 2
+
 #include "VertexArray.h"
 
 int ignisInit(int debug);

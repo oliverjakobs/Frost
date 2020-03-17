@@ -2,8 +2,6 @@
 
 #include "Ignis.h"
 
-#define INITIAL_SIZE 4
-
 ignis_vertex_array* ignisGenerateVertexArray()
 {
 	ignis_vertex_array* vertex_array = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
@@ -15,9 +13,9 @@ ignis_vertex_array* ignisGenerateVertexArray()
 
 		vertex_array->vertex_attrib_index = 0;
 
-		vertex_array->array_buffers = (ignis_buffer**)malloc(INITIAL_SIZE * sizeof(ignis_buffer));
-		vertex_array->array_size = INITIAL_SIZE;
-		vertex_array->buffer_count = 0;
+		vertex_array->array_buffers = (ignis_buffer*)malloc(IGNIS_BUFFER_ARRAY_INITIAL_SIZE * sizeof(ignis_buffer));
+		vertex_array->buffer_count = IGNIS_BUFFER_ARRAY_INITIAL_SIZE;
+		vertex_array->buffer_used = 0;
 
 		return vertex_array;
 	}
@@ -27,17 +25,16 @@ ignis_vertex_array* ignisGenerateVertexArray()
 
 void ignisDeleteVertexArray(ignis_vertex_array* vertex_array)
 {
-	for (size_t i = 0; i < vertex_array->buffer_count; i++)
+	for (size_t i = 0; i < vertex_array->buffer_used; i++)
 	{
-		ignisDeleteBuffer(vertex_array->array_buffers[i]);
+		ignisDeleteBuffer(&vertex_array->array_buffers[i]);
 	}
 
 	free(vertex_array->array_buffers);
-	vertex_array->array_buffers = NULL;
-	vertex_array->buffer_count = vertex_array->array_size = 0;
+	vertex_array->buffer_used = vertex_array->buffer_count = 0;
 
-	if (vertex_array->element_buffer)
-		ignisDeleteBuffer(vertex_array->element_buffer);
+	if (vertex_array->element_buffer.name > 0)
+		ignisDeleteBuffer(&vertex_array->element_buffer);
 
 
 	glDeleteVertexArrays(1, &vertex_array->name);
@@ -58,35 +55,33 @@ void ignisUnbindVertexArray(ignis_vertex_array* vertex_array)
 
 void _ignisInsertArrayBuffer(ignis_vertex_array* vertex_array, ignis_buffer* buffer)
 {
-	if (vertex_array->buffer_count == vertex_array->array_size) 
+	if (vertex_array->buffer_used == vertex_array->buffer_count) 
 	{
-		vertex_array->array_size *= 2;
-		vertex_array->array_size = (ignis_buffer**)realloc(vertex_array->array_buffers, vertex_array->array_size * sizeof(ignis_buffer));
+		vertex_array->buffer_count *= IGNIS_BUFFER_ARRAY_GROWTH_FACTOR;
+		vertex_array->buffer_count = (ignis_buffer*)realloc(vertex_array->array_buffers, vertex_array->buffer_count * sizeof(ignis_buffer));
 	}
 
-	vertex_array->array_buffers[vertex_array->buffer_count++] = buffer;
+	memcpy(vertex_array->array_buffers + vertex_array->buffer_used++, buffer, sizeof(ignis_buffer));
 }
 
-void ignisAddArrayBuffer(ignis_vertex_array* vertex_array, ignis_buffer* buffer)
+void ignisAddArrayBuffer(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage)
 {
-	if (buffer->target != GL_ARRAY_BUFFER)
-	{
-		_ignisErrorCallback(IGNIS_WARN, "[VertexArray] Buffer target is not GL_ARRAY_BUFFER");
-		return;
-	}
-
 	ignisBindVertexArray(vertex_array);
-	ignisBindBuffer(buffer);
 
-	_ignisInsertArrayBuffer(vertex_array, buffer);
+	ignis_buffer buffer;
+	ignisGenerateArrayBuffer(&buffer, size, data, usage);
+
+	_ignisInsertArrayBuffer(vertex_array, &buffer);
 }
 
 void ignisAddArrayBufferLayout(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage, ignis_buffer_element* elements, size_t count)
 {
 	ignisBindVertexArray(vertex_array);
 
-	ignis_buffer* buffer = ignisGenerateArrayBuffer(size, data, usage);
-	ignisBindBuffer(buffer);
+	ignis_buffer buffer;
+	ignisGenerateArrayBuffer(&buffer, size, data, usage);
+
+	_ignisInsertArrayBuffer(vertex_array, &buffer);
 
 	unsigned int stride = 0;
 	for (size_t i = 0; i < count; i++)
@@ -103,11 +98,9 @@ void ignisAddArrayBufferLayout(ignis_vertex_array* vertex_array, GLsizeiptr size
 		offset += ignisGetOpenGLTypeSize(elements[i].type) * elements[i].count;
 		vertex_array->vertex_attrib_index++;
 	}
-
-	_ignisInsertArrayBuffer(vertex_array, buffer);
 }
 
 void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, size_t count, GLenum usage)
 {
-	vertex_array->element_buffer = ignisGenerateElementBuffer(count, indices, usage);
+	 ignisGenerateElementBuffer(&vertex_array->element_buffer, count, indices, usage);
 }

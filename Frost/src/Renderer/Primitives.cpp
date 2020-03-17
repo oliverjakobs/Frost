@@ -49,7 +49,7 @@ void Primitives2D::Flush()
 		return;
 
 	ignisBindVertexArray(s_renderData->VertexArray);
-	ignisBufferSubData(s_renderData->VertexArray->array_buffers[0], 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
+	ignisBufferSubData(&s_renderData->VertexArray->array_buffers[0], 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
 
 	ignisUseShader(s_renderData->Shader);
 

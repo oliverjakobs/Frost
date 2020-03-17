@@ -2,6 +2,8 @@
 
 #include <map>
 
+const size_t FONT_BUFFER_SIZE = sizeof(float) * 4 * 4;
+
 struct FontRendererStorage
 {
 	ignis_vertex_array* VertexArray;
@@ -9,7 +11,8 @@ struct FontRendererStorage
 
 	std::map<std::string, ignis_font*> Fonts;
 
-	size_t BufferSize;
+	GLint UniformLocationProjection;
+	GLint UniformLocationColor;
 };
 
 static FontRendererStorage* s_renderData;
@@ -18,21 +21,22 @@ void FontRenderer::Init(ignis_shader* shader)
 {
 	s_renderData = new FontRendererStorage();
 
-	s_renderData->BufferSize = sizeof(float) * 4 * 4;
-
 	s_renderData->VertexArray = ignisGenerateVertexArray();
 
-	ignis_buffer_element layout[1] =
+	ignis_buffer_element layout[] =
 	{
 			{GL_FLOAT, 4, 0}
 	};
-	ignisAddArrayBufferLayout(s_renderData->VertexArray, s_renderData->BufferSize, NULL, GL_DYNAMIC_DRAW, layout, 1);
+	ignisAddArrayBufferLayout(s_renderData->VertexArray, FONT_BUFFER_SIZE, NULL, GL_DYNAMIC_DRAW, layout, 1);
 
-	GLuint indices[6] = { 0,1,2,2,3,0 };
+	GLuint indices[] = { 0,1,2,2,3,0 };
 
 	ignisLoadElementBuffer(s_renderData->VertexArray, indices, 6, GL_STATIC_DRAW);
 
 	s_renderData->Shader = shader;
+
+	s_renderData->UniformLocationProjection = ignisGetUniformLocation(s_renderData->Shader, "u_Projection");
+	s_renderData->UniformLocationColor = ignisGetUniformLocation(s_renderData->Shader, "u_Color");
 }
 
 void FontRenderer::Destroy()
@@ -74,8 +78,8 @@ void FontRenderer::RenderText(const std::string& fontname, const std::string& te
 	if (!font) return;
 
 	ignisUseShader(s_renderData->Shader);
-	ignisSetUniformMat4(s_renderData->Shader, "u_Projection", &proj[0][0]);
-	ignisSetUniform4f(s_renderData->Shader, "u_Color", &color[0]);
+	ignisSetUniformMat4l(s_renderData->UniformLocationProjection, &proj[0][0]);
+	ignisSetUniform4fl(s_renderData->UniformLocationColor, &color[0]);
 
 	ignisBindFont(font);
 	ignisBindVertexArray(s_renderData->VertexArray);
@@ -86,7 +90,7 @@ void FontRenderer::RenderText(const std::string& fontname, const std::string& te
 		if (ignisLoadFontCharQuad(font, c, &x, &y, vertices))
 		{
 			// Update content of VBO memory
-			ignisBufferSubData(s_renderData->VertexArray->array_buffers[0], 0, s_renderData->BufferSize, vertices);
+			ignisBufferSubData(&s_renderData->VertexArray->array_buffers[0], 0, FONT_BUFFER_SIZE, vertices);
 
 			// Render quad
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

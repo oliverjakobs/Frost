@@ -126,22 +126,15 @@ int ignisLoadFontCharQuad(ignis_font* font, char c, float* x, float* y, float* v
 		stbtt_aligned_quad q;
 		stbtt_GetBakedQuad(font->char_data, font->bitmap_width, font->bitmap_height, c - font->first_char, x, y, &q, 1);
 
-		vertices[0] = q.x0;
-		vertices[1] = q.y0;
-		vertices[2] = q.s0;
-		vertices[3] = q.t0;
-		vertices[4] = q.x0;
-		vertices[5] = q.y1;
-		vertices[6] = q.s0;
-		vertices[7] = q.t1;
-		vertices[8] = q.x1;
-		vertices[9] = q.y1;
-		vertices[10] = q.s1;
-		vertices[11] = q.t1;
-		vertices[12] = q.x1;
-		vertices[13] = q.y0;
-		vertices[14] = q.s1;
-		vertices[15] = q.t0;
+		float quad[] =
+		{
+			q.x0, q.y0, q.s0, q.t0,
+			q.x0, q.y1, q.s0, q.t1,
+			q.x1, q.y1, q.s1, q.t1,
+			q.x1, q.y0, q.s1, q.t0
+		};
+
+		memcpy(vertices, quad, sizeof(quad));
 
 		return 1;
 	}
