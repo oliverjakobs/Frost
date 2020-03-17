@@ -33,16 +33,6 @@ public:
 		m_sceneManager = std::make_shared<SceneManager>(camera, 32.0f, 4);
 		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
 		m_sceneManager->ChangeScene("scene");
-
-		// Animator
-		auto animator = std::make_shared<Animator>();
-		animator->LoadConditions();
-		animator->CreateAnimation("idle", 0, 4, 0.2f, { { "condition_jump", "jump" }, { "condition_fall", "fall" }, { "condition_walk", "walk" } });
-		animator->CreateAnimation("walk", 6, 6, 0.125f, { { "condition_jump", "jump" }, { "condition_fall", "fall" }, { "condition_idle", "idle" } });
-		animator->CreateAnimation("jump", 12, 3, 0.3f, { { "condition_fall", "fall" }, { "condition_walk", "walk" }, { "condition_idle", "idle" } });
-		animator->CreateAnimation("fall", 18, 2, 0.4f, { { "condition_jump", "jump" }, { "condition_walk", "walk" } , { "condition_idle", "idle" } });
-
-		m_sceneManager->GetScene()->GetEntity("player")->AddComponent<AnimationComponent>(animator);
 	}
 
 	~Frost()

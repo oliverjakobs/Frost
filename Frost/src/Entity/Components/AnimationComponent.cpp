@@ -1,4 +1,4 @@
-#include "AnimationComponent.h"
+#include "AnimationComponent.hpp"
 
 AnimationComponent::AnimationComponent(Entity* entity, std::shared_ptr<Animator> animator)
 	: Component(entity), m_animator(animator)

@@ -1,4 +1,4 @@
-#include "TextureComponent.h"
+#include "TextureComponent.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 

@@ -16,7 +16,7 @@ public:
 	void LoadConditions();
 
 	void RegisterCondition(const std::string& name, std::function<bool(Entity*, int)> condition);
-	void CreateAnimation(const std::string& name, int start, int length, float delay, std::initializer_list<Transition> transitions);
+	void CreateAnimation(const std::string& name, int start, int length, float delay, std::vector<Transition> transitions);
 
 	void Tick(Entity* entity, float deltaTime);
 	void Play(const std::string& name);

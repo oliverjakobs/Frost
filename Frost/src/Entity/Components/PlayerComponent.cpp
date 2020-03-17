@@ -1,14 +1,14 @@
-#include "PlayerComponent.h"
+#include "PlayerComponent.hpp"
 
-#include "AnimationComponent.h"
-#include "TextureComponent.h"
-#include "PhysicsComponent.h"
+#include "AnimationComponent.hpp"
+#include "TextureComponent.hpp"
+#include "PhysicsComponent.hpp"
 
 #include "Obelisk/Obelisk.h"
 
 #include "Input/Input.h"
 
-#include "../Scene.h"
+#include "../Scene.hpp"
 
 PlayerComponent::PlayerComponent(Entity* entity, float ms, float jp)
 	: Component(entity), m_movementSpeed(ms), m_jumpPower(jp)

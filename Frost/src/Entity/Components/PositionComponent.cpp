@@ -1,4 +1,4 @@
-#include "PositionComponent.h"
+#include "PositionComponent.hpp"
 
 PositionComponent::PositionComponent(Entity* entity, const glm::vec2& position)
 	: Component(entity), m_position(position)

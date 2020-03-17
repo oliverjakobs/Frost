@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity/Scene.h"
+#include "Entity/Scene.hpp"
 
 #include <map>
 

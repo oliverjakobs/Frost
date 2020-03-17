@@ -1,7 +1,7 @@
 #include "Animator.h"
 
-#include "Entity/Entity.h"
-#include "Entity/Components.h"
+#include "Entity/Entity.hpp"
+#include "Entity/Components.hpp"
 
 void Animator::LoadConditions()
 {
@@ -40,7 +40,7 @@ void Animator::RegisterCondition(const std::string& name, std::function<bool(Ent
 	m_conditions.insert({ name, condition });
 }
 
-void Animator::CreateAnimation(const std::string& name, int start, int length, float delay, std::initializer_list<Transition> transitions)
+void Animator::CreateAnimation(const std::string& name, int start, int length, float delay, std::vector<Transition> transitions)
 {
 	auto animation = std::make_shared<Animation>(start, length, delay);
 

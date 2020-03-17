@@ -75,41 +75,48 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	json_read(json.data(), "{'animation'", &element);
 	if (element.error == JSON_OK)
 	{
-		// std::map<std::string, Anim> animations;
-		// 
-		// for (int i = 0; i < element.elements; i++)
-		// {
-		// 	json_element anim;
-		// 	json_read_param((char*)element.value, "{*", &anim, &i);
-		// 
-		// 	std::string anim_name((char*)anim.value, anim.bytelen);
-		// 
-		// 	json_element array;
-		// 	json_read((char*)element.value, (char*)obelisk::format("{'%s'", anim_name.c_str()).c_str(), &array);
-		// 	if (array.data_type == JSON_ARRAY)
-		// 	{
-		// 		char* value = (char*)array.value;
-		// 		json_element array_element;
-		// 
-		// 		// start
-		// 		unsigned int start;
-		// 		value = json_array_step(value, &array_element);
-		// 		json_atoi((char*)array_element.value, &start);
-		// 
-		// 		// length
-		// 		unsigned int length;
-		// 		value = json_array_step(value, &array_element);
-		// 		json_atoi((char*)array_element.value, &length);
-		// 
-		// 		// duration
-		// 		float duration;
-		// 		value = json_array_step(value, &array_element);
-		// 		json_atof((char*)array_element.value, &duration);
-		// 
-		// 		animations.insert({ anim_name, Anim(start, length, duration) });
-		// 	}
-		// }
-		// entity->AddComponent<AnimationComponent>(animations);
+		auto animator = std::make_shared<Animator>();
+		animator->LoadConditions();
+		
+		for (int i = 0; i < element.elements; i++)
+		{
+			json_element anim_name;
+			json_read_param((char*)element.value, "{*", &anim_name, &i);
+
+			json_element anim; 
+			json_read((char*)element.value, (char*)obelisk::format("{'%.*s'", anim_name.bytelen, anim_name.value).c_str(), &anim);
+
+			unsigned int start = json_int((char*)anim.value, "{'start'", NULL);
+			unsigned int length = json_int((char*)anim.value, "{'length'", NULL);
+			float delay = json_float((char*)anim.value, "{'delay'", NULL);
+
+			json_element transition_array; 
+			json_read((char*)anim.value, "{'transitions'", &transition_array);
+
+			std::vector<Transition> transitions;
+
+			char* value = (char*)transition_array.value;
+			json_element transition_element;
+			for (int i = 0; i < transition_array.elements; i++)
+			{				
+				value = json_array_step(value, &transition_element);
+
+				if (transition_element.data_type == JSON_ARRAY)
+				{
+					json_element condition;
+					json_read_param((char*)transition_element.value, "[0", &condition, NULL);
+					json_element next;
+					json_read_param((char*)transition_element.value, "[1", &next, NULL);
+
+					transitions.push_back({ std::string((char*)condition.value, condition.bytelen), std::string((char*)next.value, next.bytelen) });
+				}
+			}
+
+			animator->CreateAnimation(std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
+			
+		}
+
+		entity->AddComponent<AnimationComponent>(animator);
 	}
 
 	json_read(json.data(), "{'player'", &element);

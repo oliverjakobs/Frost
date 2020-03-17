@@ -1,4 +1,4 @@
-#include "PhysicsComponent.h"
+#include "PhysicsComponent.hpp"
 
 PhysicsComponent::PhysicsComponent(Entity* entity, std::shared_ptr<Body> body, const glm::vec2& bodyPos)
 	: PositionComponent(entity, glm::vec2()), m_body(body), m_bodyPos(bodyPos)
