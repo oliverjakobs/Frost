@@ -119,7 +119,7 @@ void ignisUnbindFont(ignis_font* font)
 	ignisUnbindTexture(font->texture);
 }
 
-int ignisLoadFontCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices)
+int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices, size_t offset)
 {
 	if ((GLchar)c >= font->first_char && (GLchar)c < font->first_char + font->num_chars)
 	{
@@ -134,7 +134,7 @@ int ignisLoadFontCharQuad(ignis_font* font, char c, float* x, float* y, float* v
 			q.x1, q.y0, q.s1, q.t0
 		};
 
-		memcpy(vertices, quad, sizeof(quad));
+		memcpy(vertices + offset, quad, sizeof(quad));
 
 		return 1;
 	}

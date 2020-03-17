@@ -29,7 +29,7 @@ void ignisDeleteFont(ignis_font* font);
 void ignisBindFont(ignis_font* font);
 void ignisUnbindFont(ignis_font* font);
 
-int ignisLoadFontCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices);
+int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices, size_t offset);
 
 #ifdef __cplusplus
 }
