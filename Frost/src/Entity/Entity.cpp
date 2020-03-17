@@ -1,8 +1,8 @@
-#include "Entity.h"
+#include "Entity.hpp"
 
-#include "Components/PositionComponent.h"
+#include "Components/PositionComponent.hpp"
 
-#include "Obelisk/Obelisk.h"
+#include "Obelisk/Obelisk.hpp"
 
 Entity::Entity(const std::string& name)
 	: m_name(name), m_direction(Direction::RIGHT)

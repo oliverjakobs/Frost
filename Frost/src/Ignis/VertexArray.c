@@ -100,7 +100,7 @@ void ignisAddArrayBufferLayout(ignis_vertex_array* vertex_array, GLsizeiptr size
 	}
 }
 
-void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, size_t count, GLenum usage)
+void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, GLsizei count, GLenum usage)
 {
 	 ignisGenerateElementBuffer(&vertex_array->element_buffer, count, indices, usage);
 }

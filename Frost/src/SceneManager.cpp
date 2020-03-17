@@ -156,8 +156,8 @@ void SceneManager::OnRender()
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
 
-				Primitives2D::DrawRect(min, max - min, IGNIS_WHITE);
-				Primitives2D::DrawCircle(position, 2.0f, IGNIS_WHITE);
+				Primitives2D::DrawRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
+				Primitives2D::DrawCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
 			}
 		}
 

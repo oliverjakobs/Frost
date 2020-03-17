@@ -9,7 +9,7 @@
 #include "Event/EventHandler.hpp"
 
 // Renderer
-#include "Renderer/FontRenderer.hpp"
+#include "Renderer/FontRenderer.h"
 #include "Renderer/Renderer2D.hpp"
 #include "Renderer/Primitives.hpp"
 
@@ -17,6 +17,7 @@
 void SetViewport(int x, int y, int w, int h);
 
 const glm::mat4& GetScreenMat();
+const float* GetScreenMatPtr();
 
 class Application
 {

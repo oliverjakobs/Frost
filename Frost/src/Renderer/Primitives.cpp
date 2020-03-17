@@ -1,15 +1,17 @@
 #include "Primitives.hpp"
 
+#define PRIMITIVES2D_MAX_LINES		(2 * 1024)
+#define PRIMITIVES2D_VERTEX_SIZE	(2 + 4)
 
-static const int MAX_LINES = 2 * 1024;
-static const uint16_t BUFFER_SIZE = 2 + 4;
+#define PRIMITIVES2D_BUFFER_SIZE	(PRIMITIVES2D_VERTEX_SIZE * PRIMITIVES2D_MAX_LINES)
 
 struct Primitives2DStorage
 {
 	ignis_vertex_array* VertexArray;
 	ignis_shader* Shader;
 
-	std::vector<float> Vertices;
+	float* Vertices;
+	GLsizei Vertex_Count;
 };
 
 static Primitives2DStorage* s_renderData;
@@ -20,19 +22,24 @@ void Primitives2D::Init(ignis_shader* shader)
 
 	s_renderData->VertexArray = ignisGenerateVertexArray();
 
-	ignis_buffer_element layout[2] =
+	ignis_buffer_element layout[] =
 	{
 		{GL_FLOAT, 2, 0},
 		{GL_FLOAT, 4, 0}
 	};
 
-	ignisAddArrayBufferLayout(s_renderData->VertexArray, sizeof(float) * BUFFER_SIZE * MAX_LINES, NULL, GL_DYNAMIC_DRAW, layout, 2);
+	ignisAddArrayBufferLayout(s_renderData->VertexArray, PRIMITIVES2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 2);
+
+	s_renderData->Vertices = (float*)malloc(PRIMITIVES2D_BUFFER_SIZE * sizeof(float));
+	s_renderData->Vertex_Count = 0;
 
 	s_renderData->Shader = shader;
 }
 
 void Primitives2D::Destroy()
 {
+	free(s_renderData->Vertices);
+
 	ignisDeleteShader(s_renderData->Shader);
 	delete s_renderData;
 }
@@ -45,74 +52,74 @@ void Primitives2D::Start(const glm::mat4& viewProjection)
 
 void Primitives2D::Flush()
 {
-	if (s_renderData->Vertices.empty())
+	if (s_renderData->Vertex_Count == 0)
 		return;
 
 	ignisBindVertexArray(s_renderData->VertexArray);
-	ignisBufferSubData(&s_renderData->VertexArray->array_buffers[0], 0, s_renderData->Vertices.size() * sizeof(float), s_renderData->Vertices.data());
+	ignisBufferSubData(&s_renderData->VertexArray->array_buffers[0], 0, s_renderData->Vertex_Count * sizeof(float), s_renderData->Vertices);
 
 	ignisUseShader(s_renderData->Shader);
 
-	glDrawArrays(GL_LINES, 0, s_renderData->Vertices.size() / BUFFER_SIZE);
+	glDrawArrays(GL_LINES, 0, s_renderData->Vertex_Count / PRIMITIVES2D_VERTEX_SIZE);
 
-	s_renderData->Vertices.clear();
+	s_renderData->Vertex_Count = 0;
 }
 
-void Primitives2D::Vertex(const glm::vec2& v, const ignis_color_rgba& c)
+void Primitives2D::Vertex(float x, float y, const ignis_color_rgba& color)
 {
-	if (s_renderData->Vertices.size() / BUFFER_SIZE >= MAX_LINES)
+	if (s_renderData->Vertex_Count >= PRIMITIVES2D_BUFFER_SIZE)
 		Flush();
 
-	s_renderData->Vertices.push_back(v.x);
-	s_renderData->Vertices.push_back(v.y);
-	s_renderData->Vertices.push_back(c.r);
-	s_renderData->Vertices.push_back(c.g);
-	s_renderData->Vertices.push_back(c.b);
-	s_renderData->Vertices.push_back(c.a);
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = x;
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = y;
+
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = color.r;
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = color.g;
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = color.b;
+	s_renderData->Vertices[s_renderData->Vertex_Count++] = color.a;
 }
 
-void Primitives2D::DrawLine(float x1, float y1, float x2, float y2, const ignis_color_rgba& c)
+void Primitives2D::DrawLine(float x1, float y1, float x2, float y2, const ignis_color_rgba& color)
 {
-	DrawLine(glm::vec2(x1, y1), glm::vec2(x2, y2), c);
+	Vertex(x1, y1, color);
+	Vertex(x2, y2, color);
 }
 
-void Primitives2D::DrawLine(const glm::vec2& start, const glm::vec2& end, const ignis_color_rgba& c)
+void Primitives2D::DrawRect(float x, float y, float w, float h, const ignis_color_rgba& color)
 {
-	Vertex(start, c);
-	Vertex(end, c);
-}
-
-void Primitives2D::DrawRect(float x, float y, float w, float h, const ignis_color_rgba& c)
-{
-	std::vector<glm::vec2> vertices =
+	float vertices[] =
 	{
-		glm::vec2(x, y),
-		glm::vec2(x + w, y),
-		glm::vec2(x + w, y + h),
-		glm::vec2(x, y + h)
+		x + 0, y + 0,
+		x + w, y + 0,
+		x + w, y + h,
+		x + 0, y + h
 	};
 
-	DrawPolygon(vertices, c);
+	DrawPolygon(vertices, 8, color);
 }
 
-void Primitives2D::DrawRect(const glm::vec2& pos, const glm::vec2& dim, const ignis_color_rgba& c)
+void Primitives2D::DrawPolygon(float* vertices, size_t count, const ignis_color_rgba& color)
 {
-	DrawRect(pos.x, pos.y, dim.x, dim.y, c);
-}
+	if (!vertices || count < 2) return;
 
-void Primitives2D::DrawPolygon(const std::vector<glm::vec2>& vertices, const ignis_color_rgba& c)
-{
-	glm::vec2 p1 = vertices.back();
+	float p1x = vertices[count - 2];
+	float p1y = vertices[count - 1];
 
-	for (auto& p2 : vertices)
+	size_t i = 0;
+	while (i < count - 1)
 	{
-		Vertex(p1, c);
-		Vertex(p2, c);
-		p1 = p2;
+		float p2x = vertices[i++];
+		float p2y = vertices[i++];
+
+		Vertex(p1x, p1y, color);
+		Vertex(p2x, p2y, color);
+
+		p1x = p2x;
+		p1y = p2y;
 	}
 }
 
-void Primitives2D::DrawCircle(const glm::vec2& center, float radius, const ignis_color_rgba& c)
+void Primitives2D::DrawCircle(float x, float y, float radius, const ignis_color_rgba& color)
 {
 	const float PI = 3.14159265359f;
 
@@ -122,19 +129,27 @@ void Primitives2D::DrawCircle(const glm::vec2& center, float radius, const ignis
 	float sinInc = sinf(k_increment);
 	float cosInc = cosf(k_increment);
 
-	glm::vec2 r1(1.0f, 0.0f);
-	glm::vec2 v1 = center + radius * r1;
+	float r1x = 1.0f;
+	float r1y = 0.0f;
+
+	float v1x = x + radius * r1x;
+	float v1y = y + radius * r1y;
 
 	for (int i = 0; i < k_segments; ++i)
 	{
 		// Perform rotation to avoid additional trigonometry.
-		glm::vec2 r2;
-		r2.x = cosInc * r1.x - sinInc * r1.y;
-		r2.y = sinInc * r1.x + cosInc * r1.y;
-		glm::vec2 v2 = center + radius * r2;
-		Vertex(v1, c);
-		Vertex(v2, c);
-		r1 = r2;
-		v1 = v2;
+		float r2x = cosInc * r1x - sinInc * r1y;
+		float r2y = sinInc * r1x + cosInc * r1y;
+
+		float v2x = x + radius * r2x;
+		float v2y = y + radius * r2y;
+
+		Vertex(v1x, v1y, color);
+		Vertex(v2x, v2y, color);
+
+		r1x = r2x;
+		r1y = r2y;
+		v1x = v2x;
+		v1y = v2y;
 	}
 }

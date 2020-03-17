@@ -21,7 +21,8 @@ public:
 
 		Renderer2D::Init(ignisShadervf("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
 		Primitives2D::Init(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
-		FontRenderer::Init(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
+
+		FontRendererInit(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
 
 		m_font = ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f);
 
@@ -38,9 +39,9 @@ public:
 	~Frost()
 	{
 		ignisDeleteFont(m_font);
+		FontRendererDestroy();
 
 		Renderer2D::Destroy();
-		FontRenderer::Destroy();
 		Primitives2D::Destroy();
 	}
 	
@@ -89,7 +90,7 @@ public:
 		m_sceneManager->OnRenderDebug();
 
 		// debug info
-		FontRenderer::RenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMat(), IGNIS_WHITE);
+		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
 	}
 
 	void OnImGui() override

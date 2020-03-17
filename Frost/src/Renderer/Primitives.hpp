@@ -13,19 +13,10 @@ struct Primitives2D
 	static void Start(const glm::mat4& viewProjection);
 	static void Flush();
 
-	static void Vertex(const glm::vec2& v, const ignis_color_rgba& c);
+	static void Vertex(float x, float y, const ignis_color_rgba& c);
 
-	// Line
 	static void DrawLine(float x1, float y1, float x2, float y2, const ignis_color_rgba& c);
-	static void DrawLine(const glm::vec2& start, const glm::vec2& end, const ignis_color_rgba& c);
-
-	// Rect
 	static void DrawRect(float x, float y, float w, float h, const ignis_color_rgba& c);
-	static void DrawRect(const glm::vec2& pos, const glm::vec2& dim, const ignis_color_rgba& c);
-
-	// Polygon
-	static void DrawPolygon(const std::vector<glm::vec2>& vertices, const ignis_color_rgba& c);
-
-	// Circle
-	static void DrawCircle(const glm::vec2& center, float radius, const ignis_color_rgba& c);
+	static void DrawPolygon(float* vertices, size_t count, const ignis_color_rgba& c);
+	static void DrawCircle(float x, float y, float radius, const ignis_color_rgba& c);
 };

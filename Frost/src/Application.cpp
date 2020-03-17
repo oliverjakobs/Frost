@@ -17,6 +17,11 @@ const glm::mat4& GetScreenMat()
 	return s_screenMat;
 }
 
+const float* GetScreenMatPtr()
+{
+	return &s_screenMat[0][0];
+}
+
 void Application::SetGLFWCallback()
 {
 	glfwSetErrorCallback([](int error, const char* desc)

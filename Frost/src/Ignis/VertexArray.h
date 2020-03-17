@@ -36,7 +36,7 @@ void ignisUnbindVertexArray(ignis_vertex_array* vertex_array);
 
 void ignisAddArrayBuffer(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage);
 void ignisAddArrayBufferLayout(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage, ignis_buffer_element* elements, size_t count);
-void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, size_t count, GLenum usage);
+void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, GLsizei count, GLenum usage);
 
 #ifdef __cplusplus
 }
