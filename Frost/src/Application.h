@@ -4,13 +4,11 @@
 
 #include "ImGuiBinding/ImGuiRenderer.h"
 
-#include "Ignis/Ignis.h"
 #include "Obelisk/Obelisk.h"
 
 #include "Event/EventHandler.h"
 
 // Renderer
-#include "Renderer/RenderState.h"
 #include "Renderer/FontRenderer.h"
 #include "Renderer/Renderer2D.h"
 #include "Renderer/Primitives.h"

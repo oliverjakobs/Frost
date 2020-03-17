@@ -1,13 +1,6 @@
-#include "Memory/Memory.h"
-
 #include "Application.h"
 
 #include "SceneManager.h"
-
-#include "json/TemplateLoader.h"
-
-#include "Animation/Animator.h"
-#include <glm/gtc/matrix_transform.hpp>
 
 class Frost : public Application
 {
