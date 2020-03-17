@@ -1,6 +1,6 @@
 #include "Scene.hpp"
 
-#include "Renderer/Primitives2D.h"
+#include "IgnisRenderer/Primitives2D.h"
 #include "Obelisk/Obelisk.hpp"
 
 Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
@@ -75,12 +75,12 @@ void Scene::OnUpdate(float deltaTime)
 
 void Scene::OnRender()
 {
-	Renderer2D::Start(m_camera->GetViewProjection());
+	Renderer2DStart(m_camera->GetViewProjectionPtr());
 
 	for (auto& entity : m_entities)
 		entity->OnRender(this);
 
-	Renderer2D::Flush();
+	Renderer2DFlush();
 }
 
 void Scene::OnRenderDebug()

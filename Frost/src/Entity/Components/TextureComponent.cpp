@@ -60,5 +60,5 @@ void TextureComponent::OnRender(Scene* scene)
 		break;
 	}
 
-	Renderer2D::RenderTexture(m_texture, model, src);
+	Renderer2DRenderTexture(m_texture, &model[0][0], &src[0][0]);
 }

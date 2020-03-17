@@ -9,9 +9,9 @@
 #include "Event/EventHandler.hpp"
 
 // Renderer
-#include "Renderer/FontRenderer.h"
-#include "Renderer/Primitives2D.h"
-#include "Renderer/Renderer2D.hpp"
+#include "IgnisRenderer/FontRenderer.h"
+#include "IgnisRenderer/Primitives2D.h"
+#include "IgnisRenderer/Renderer2D.h"
 
 
 void SetViewport(int x, int y, int w, int h);
