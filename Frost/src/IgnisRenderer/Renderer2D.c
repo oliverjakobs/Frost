@@ -17,7 +17,8 @@ void Renderer2DInit(ignis_shader* shader)
 {
 	_render_data = (_Renderer2DStorage*)malloc(sizeof(_Renderer2DStorage));
 
-	_render_data->VertexArray = ignisGenerateVertexArray();
+	_render_data->VertexArray = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
+	ignisGenerateVertexArray(_render_data->VertexArray);
 
 	float vertices[] =
 	{
@@ -29,8 +30,8 @@ void Renderer2DInit(ignis_shader* shader)
 
 	ignis_buffer_element layout[] =
 	{
-		{GL_FLOAT, 3, 0},
-		{GL_FLOAT, 2, 0}
+		{GL_FLOAT, 3, GL_FALSE},
+		{GL_FLOAT, 2, GL_FALSE}
 	};
 
 	ignisAddArrayBufferLayout(_render_data->VertexArray, sizeof(vertices), vertices, GL_STATIC_DRAW, layout, 2);
@@ -51,7 +52,9 @@ void Renderer2DInit(ignis_shader* shader)
 void Renderer2DDestroy()
 {
 	ignisDeleteShader(_render_data->Shader);
+
 	ignisDeleteVertexArray(_render_data->VertexArray);
+	free(_render_data->VertexArray);
 
 	free(_render_data);
 }

@@ -22,12 +22,13 @@ void Primitives2DInit(ignis_shader* shader)
 {
 	_render_data = (_Primitives2DStorage*)malloc(sizeof(_Primitives2DStorage));
 
-	_render_data->VertexArray = ignisGenerateVertexArray();
+	_render_data->VertexArray = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
+	ignisGenerateVertexArray(_render_data->VertexArray);
 
 	ignis_buffer_element layout[] = 
 	{
-		{GL_FLOAT, 2, 0},
-		{GL_FLOAT, 4, 0}
+		{GL_FLOAT, 2, GL_FALSE},
+		{GL_FLOAT, 4, GL_FALSE}
 	};
 
 	ignisAddArrayBufferLayout(_render_data->VertexArray, PRIMITIVES2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 2);
@@ -41,7 +42,10 @@ void Primitives2DInit(ignis_shader* shader)
 void Primitives2DDestroy()
 {
 	ignisDeleteShader(_render_data->Shader);
+
 	ignisDeleteVertexArray(_render_data->VertexArray);
+	free(_render_data->VertexArray);
+
 	free(_render_data->Vertices);
 
 	free(_render_data);

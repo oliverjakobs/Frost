@@ -24,9 +24,10 @@ void FontRendererInit(ignis_shader* shader)
 {
 	_render_data = (_FontRendererStorage*)malloc(sizeof(_FontRendererStorage));
 
-	_render_data->VertexArray = ignisGenerateVertexArray();
+	_render_data->VertexArray = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
+	ignisGenerateVertexArray(_render_data->VertexArray);
 
-	ignis_buffer_element layout[] = { {GL_FLOAT, 4, 0} };
+	ignis_buffer_element layout[] = { {GL_FLOAT, 4, GL_FALSE} };
 	ignisAddArrayBufferLayout(_render_data->VertexArray, FONTRENDERER_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 1);
 
 	GLuint indices[FONTRENDERER_INDEX_COUNT];
@@ -55,7 +56,9 @@ void FontRendererInit(ignis_shader* shader)
 void FontRendererDestroy()
 {
 	ignisDeleteShader(_render_data->Shader);
+
 	ignisDeleteVertexArray(_render_data->VertexArray);
+	free(_render_data->VertexArray);
 
 	free(_render_data);
 }

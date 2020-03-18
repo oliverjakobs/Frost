@@ -28,15 +28,15 @@ typedef struct
     ignis_buffer element_buffer;
 } ignis_vertex_array;
 
-ignis_vertex_array* ignisGenerateVertexArray();
-void ignisDeleteVertexArray(ignis_vertex_array* vertex_array);
+void ignisGenerateVertexArray(ignis_vertex_array* vao);
+void ignisDeleteVertexArray(ignis_vertex_array* vao);
 
-void ignisBindVertexArray(ignis_vertex_array* vertex_array);
-void ignisUnbindVertexArray(ignis_vertex_array* vertex_array);
+void ignisBindVertexArray(ignis_vertex_array* vao);
+void ignisUnbindVertexArray(ignis_vertex_array* vao);
 
-void ignisAddArrayBuffer(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage);
-void ignisAddArrayBufferLayout(ignis_vertex_array* vertex_array, GLsizeiptr size, const void* data, GLenum usage, ignis_buffer_element* elements, size_t count);
-void ignisLoadElementBuffer(ignis_vertex_array* vertex_array, GLuint* indices, GLsizei count, GLenum usage);
+void ignisAddArrayBuffer(ignis_vertex_array* vao, GLsizeiptr size, const void* data, GLenum usage);
+void ignisAddArrayBufferLayout(ignis_vertex_array* vao, GLsizeiptr size, const void* data, GLenum usage, ignis_buffer_element* layout, size_t count);
+void ignisLoadElementBuffer(ignis_vertex_array* vao, GLuint* indices, GLsizei count, GLenum usage);
 
 #ifdef __cplusplus
 }
