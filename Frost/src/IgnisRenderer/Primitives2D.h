@@ -24,4 +24,4 @@ void Primitives2DRenderCircle(float x, float y, float radius, const ignis_color_
 }
 #endif
 
-#endif // !PRIMITIVES2D_H
+#endif /* !PRIMITIVES2D_H */

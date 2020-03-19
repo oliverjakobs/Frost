@@ -54,4 +54,4 @@ extern "C"
 }
 #endif
 
-#endif /* IGNIS_BUFFER_H */
+#endif /* !IGNIS_BUFFER_H */

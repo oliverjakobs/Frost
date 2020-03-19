@@ -21,4 +21,4 @@ void Renderer2DRenderTextureColor(ignis_texture* texture, const float* mat_model
 }
 #endif
 
-#endif // !RENDERER2D_H
+#endif /* !RENDERER2D_H */

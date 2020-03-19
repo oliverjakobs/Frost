@@ -36,4 +36,4 @@ int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* verti
 }
 #endif
 
-#endif /* IGNIS_FONT_H */
+#endif /* !IGNIS_FONT_H */

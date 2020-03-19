@@ -62,7 +62,7 @@ ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns
 
 		unsigned char* pixels = stbi_load(path, &texture->width, &texture->height, &bpp, 4);
 
-		// check if bpp and format matches
+		/* check if bpp and format matches */
 		if (bpp == 4)
 		{
 			if (config.format != GL_RGBA || config.internal_format != GL_RGBA8)

@@ -30,7 +30,7 @@ extern "C"
 	void ignisSetUniformMat3(const ignis_shader* shader, const char* name, const float* values);
 	void ignisSetUniformMat4(const ignis_shader* shader, const char* name, const float* values);
 
-	// unchecked location
+	/* unchecked location */
 	void ignisSetUniform1il(GLint location, int value);
 	void ignisSetUniform1fl(GLint location, float value);
 	void ignisSetUniform2fl(GLint location, const float* values);
@@ -40,7 +40,6 @@ extern "C"
 	void ignisSetUniformMat3l(GLint location, const float* values);
 	void ignisSetUniformMat4l(GLint location, const float* values);
 
-	// Shader utils
 	GLuint ignisCreateShaderProgram(GLenum* types, const char** sources, size_t count);
 	GLuint ignisCompileShader(GLenum type, const char* source);
 
@@ -53,4 +52,4 @@ extern "C"
 }
 #endif
 
-#endif /* IGNIS_SHADER_H */
+#endif /* !IGNIS_SHADER_H */

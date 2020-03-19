@@ -42,4 +42,4 @@ void ignisLoadElementBuffer(ignis_vertex_array* vao, GLuint* indices, GLsizei co
 }
 #endif
 
-#endif /* IGNIS_VERTEX_ARRAY_H */
+#endif /* !IGNIS_VERTEX_ARRAY_H */

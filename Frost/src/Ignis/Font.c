@@ -1,6 +1,6 @@
 #include "Font.h"
 
-#define STB_TRUETYPE_IMPLEMENTATION  // force following include to generate implementation
+#define STB_TRUETYPE_IMPLEMENTATION
 #include "Packages/stb_truetype.h"
 
 #include "Ignis.h"

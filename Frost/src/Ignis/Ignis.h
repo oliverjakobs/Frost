@@ -72,4 +72,4 @@ char* ignisReadFile(const char* path, size_t* sizeptr);
 }
 #endif
 
-#endif /* IGNIS_H */
+#endif /* !IGNIS_H */

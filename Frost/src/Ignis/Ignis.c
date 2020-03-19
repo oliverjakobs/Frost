@@ -2,7 +2,7 @@
 
 void APIENTRY _ignisDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
-	// ignore non-significant error/warning codes
+	/* ignore non-significant error/warning codes */
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
 	_ignisErrorCallback(IGNIS_ERROR, "[OpenGL] Debug output (%d):", id);
@@ -42,7 +42,7 @@ void APIENTRY _ignisDebugOutput(GLenum source, GLenum type, GLuint id, GLenum se
 
 int ignisInit(int debug)
 {
-	// loading glad
+	/* loading glad */
 	if (!gladLoadGL())
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[GLAD] Failed to initialize GLAD");
@@ -51,7 +51,7 @@ int ignisInit(int debug)
 
 	if (debug)
 	{
-		//Set up opengl debug output
+		/* Set up opengl debug output */
 		GLint flags, minor, major;
 		glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
 		glGetIntegerv(GL_MINOR_VERSION, &minor);
@@ -128,7 +128,7 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 		return NULL;
 	}
 
-	// find file size
+	/* find file size */
 	fseek(file, 0, SEEK_END);
 	size_t size = ftell(file);
 	rewind(file);
@@ -141,7 +141,7 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 		return NULL;
 	}
 
-	memset(buffer, 0, size + 1); // +1 guarantees trailing \0
+	memset(buffer, 0, size + 1); /* +1 guarantees trailing \0 */
 
 	if (fread(buffer, size, 1, file) != 1)
 	{

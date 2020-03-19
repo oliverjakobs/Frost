@@ -10,8 +10,7 @@ private:
 	ignis_font m_font;
 
 public:
-	Frost()
-		: Application("Frost", 1024, 800)
+	Frost() : Application("Frost", 1024, 800)
 	{
 		// ---------------| Config |------------------------------------------
 		glEnable(GL_BLEND);

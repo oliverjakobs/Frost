@@ -142,7 +142,7 @@ void Primitives2DRenderCircle(float x, float y, float radius, const ignis_color_
 
 	for (int i = 0; i < k_segments; ++i)
 	{
-		// Perform rotation to avoid additional trigonometry.
+		/* Perform rotation to avoid additional trigonometry. */
 		float r2x = cosInc * r1x - sinInc * r1y;
 		float r2y = sinInc * r1x + cosInc * r1y;
 

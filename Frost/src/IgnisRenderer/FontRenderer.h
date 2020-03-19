@@ -17,4 +17,4 @@ void FontRendererRenderText(ignis_font* font, const char* text, float x, float y
 }
 #endif
 
-#endif // !FONT_RENDERER_H
+#endif /* !FONT_RENDERER_H */

@@ -63,10 +63,10 @@ void FontRendererDestroy()
 
 static void _FontRendererFlush(float* vertices)
 {
-	// Update content of VBO memory
+	/* Update content of VBO memory */
 	ignisBufferSubData(&_render_data->vao.array_buffers[0], 0, FONTRENDERER_BUFFER_SIZE * sizeof(float), vertices);
 
-	// Render quad
+	/* Render quad */
 	glDrawElements(GL_TRIANGLES, FONTRENDERER_INDEX_COUNT, GL_UNSIGNED_INT, 0);
 }
 

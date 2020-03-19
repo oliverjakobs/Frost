@@ -21,4 +21,4 @@ void BatchRenderer2DRenderTextureColor(ignis_texture* texture, const float* mat_
 }
 #endif
 
-#endif // !BATCHRENDERER2D_H
+#endif /* !BATCHRENDERER2D_H */
