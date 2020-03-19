@@ -5,54 +5,24 @@
 
 #include "Ignis.h"
 
-GLubyte* _ignisReadFontFile(const char* path)
+int ignisLoadFont(ignis_font* font, const char* path, float size)
 {
-	FILE* file = fopen(path, "rb");
-	if (!file)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to open file: %s", path);
-		return NULL;
-	}
-
-	// find file size
-	fseek(file, 0, SEEK_END);
-	size_t file_size = ftell(file);
-	rewind(file);
-
-	GLubyte* buffer = (GLubyte*)malloc(file_size * sizeof(GLubyte));
-	if (!buffer)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for file: %s", path);
-		fclose(file);
-		return NULL;
-	}
-
-	if (fread(buffer, file_size, 1, file) != 1)
-	{
-		free(buffer);
-		fclose(file);
-		return NULL;
-	}
-
-	fclose(file);
-	return buffer;
+	return ignisLoadFontConfig(font, path, size, IGNIS_FONT_FIRST_CHAR, IGNIS_FONT_NUM_CHARS, IGNIS_FONT_BITMAP_WIDTH, IGNIS_FONT_BITMAP_HEIGHT);
 }
 
-ignis_font* ignisLoadFont(const char* path, float size)
+int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int first, int num, int bm_w, int bm_h)
 {
-	ignis_font* font = (ignis_font*)malloc(sizeof(ignis_font));
-
 	if (!font)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory");
-		return NULL;
+		return 0;
 	}
 
-	font->first_char = 32;
-	font->num_chars = 96; /* ASCII 32..126 is 95 glyphs */
+	font->first_char = first;
+	font->num_chars = num;
 
-	font->bitmap_width = 512;
-	font->bitmap_height = 512;
+	font->bitmap_width = bm_w;
+	font->bitmap_height = bm_h;
 
 	/* load char data */
 	font->char_data = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * font->num_chars);
@@ -66,16 +36,16 @@ ignis_font* ignisLoadFont(const char* path, float size)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for bitmap");
 		ignisDeleteFont(font);
-		return NULL;
+		return 0;
 	}
 
-	GLubyte* buffer = _ignisReadFontFile(path);
+	char* buffer = ignisReadFile(path, NULL);
 	if (!buffer)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to read file: %s", path);
 		ignisDeleteFont(font);
 		free(bitmap);
-		return NULL;
+		return 0;
 	}
 
 	stbtt_BakeFontBitmap(buffer, 0, size, bitmap, font->bitmap_width, font->bitmap_height, font->first_char, font->num_chars, font->char_data); // no guarantee this fits!
@@ -91,11 +61,11 @@ ignis_font* ignisLoadFont(const char* path, float size)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to create texture");
 		ignisDeleteFont(font);
-		font = NULL;
+		return 0;
 	}
 
 	free(bitmap);
-	return font;
+	return 1;
 }
 
 void ignisDeleteFont(ignis_font* font)
@@ -105,8 +75,6 @@ void ignisDeleteFont(ignis_font* font)
 
 	if (font->texture)
 		ignisDeleteTexture(font->texture);
-
-	free(font);
 }
 
 void ignisBindFont(ignis_font* font)
@@ -121,7 +89,7 @@ void ignisUnbindFont(ignis_font* font)
 
 int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices, size_t offset)
 {
-	if ((GLchar)c >= font->first_char && (GLchar)c < font->first_char + font->num_chars)
+	if (c >= font->first_char && c < font->first_char + font->num_chars)
 	{
 		stbtt_aligned_quad q;
 		stbtt_GetBakedQuad(font->char_data, font->bitmap_width, font->bitmap_height, c - font->first_char, x, y, &q, 1);

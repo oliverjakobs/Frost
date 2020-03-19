@@ -22,11 +22,16 @@ extern "C"
 #include "Core/Buffer.h"
 
 /* Font */
+#define IGNIS_FONT_FIRST_CHAR		32
+#define IGNIS_FONT_NUM_CHARS		96	/* ASCII 32..126 is 95 glyphs */
+#define IGNIS_FONT_BITMAP_WIDTH		512
+#define IGNIS_FONT_BITMAP_HEIGHT	512
+
 #include "Font.h"
 
 /* Vertex Array */
-#define IGNIS_BUFFER_ARRAY_INITIAL_SIZE 4
-#define IGNIS_BUFFER_ARRAY_GROWTH_FACTOR 2
+#define IGNIS_BUFFER_ARRAY_INITIAL_SIZE		4
+#define IGNIS_BUFFER_ARRAY_GROWTH_FACTOR	2
 
 #include "VertexArray.h"
 
@@ -60,6 +65,8 @@ extern const ignis_color_rgba IGNIS_MAGENTA;
 extern const ignis_color_rgba IGNIS_YELLOW;
 
 void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha);
+
+char* ignisReadFile(const char* path, size_t* sizeptr);
 
 #ifdef __cplusplus
 }

@@ -7,7 +7,7 @@ class Frost : public Application
 private:
 	std::shared_ptr<SceneManager> m_sceneManager;
 
-	ignis_font* m_font;
+	ignis_font m_font;
 
 public:
 	Frost()
@@ -23,7 +23,7 @@ public:
 		Primitives2DInit("res/shaders/lines.vert", "res/shaders/lines.frag");
 		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-		m_font = ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f);
+		ignisLoadFont(&m_font, "res/fonts/OpenSans.ttf", 32.0f);
 
 		EnableDebugMode(true);
 		EnableImGui(true);
@@ -37,7 +37,7 @@ public:
 
 	~Frost()
 	{
-		ignisDeleteFont(m_font);
+		ignisDeleteFont(&m_font);
 
 		FontRendererDestroy();
 		Primitives2DDestroy();
@@ -89,7 +89,7 @@ public:
 		m_sceneManager->OnRenderDebug();
 
 		// debug info
-		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
+		FontRendererRenderText(&m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
 	}
 
 	void OnImGui() override

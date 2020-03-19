@@ -4,46 +4,21 @@
 
 static GLuint _ignisActiveProgram = 0;
 
-static char* _ignisReadFile(const char* path)
-{
-	FILE* file = fopen(path, "rb");
-
-	if (!file)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to open file: %s", path);
-		return NULL;
-	}
-
-	// find file size
-	fseek(file, 0, SEEK_END);
-	size_t size = ftell(file);
-	rewind(file);
-
-	char* data = (char*)malloc(size + 1);
-	if (!data)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to allocate memory for %s", path);
-		fclose(file);
-		return NULL;
-	}
-
-	memset(data, 0, size + 1); // +1 guarantees trailing \0
-
-	if (fread(data, size, 1, file) != 1)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", path);
-		free(data);
-		fclose(file);
-		return NULL;
-	}
-
-	return data;
-}
-
 int ignisShadervf(ignis_shader* shader, const char* vert, const char* frag)
 {
-	char* vert_src = _ignisReadFile(vert);
-	char* frag_src = _ignisReadFile(frag);
+	char* vert_src = ignisReadFile(vert, NULL);
+	if (!vert_src)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", vert);
+		return 0;
+	}
+
+	char* frag_src = ignisReadFile(frag, NULL);
+	if (!frag_src)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", frag);
+		return 0;
+	}
 
 	if (!(vert_src && frag_src))
 		return 0;
@@ -64,12 +39,26 @@ int ignisShadervf(ignis_shader* shader, const char* vert, const char* frag)
 
 int ignisShadervgf(ignis_shader* shader, const char* vert, const char* geom, const char* frag)
 {
-	char* vert_src = _ignisReadFile(vert);
-	char* geom_src = _ignisReadFile(geom);
-	char* frag_src = _ignisReadFile(frag);
-
-	if (!(vert_src && geom_src && frag_src))
+	char* vert_src = ignisReadFile(vert, NULL);
+	if (!vert_src)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", vert);
 		return 0;
+	}
+
+	char* geom_src = ignisReadFile(geom, NULL);
+	if (!geom_src)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", geom);
+		return 0;
+	}
+
+	char* frag_src = ignisReadFile(frag, NULL);
+	if (!frag_src)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to read file: %s", frag);
+		return 0;
+	}
 
 	GLenum types[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 	const char* sources[] = { vert_src, geom_src, frag_src };

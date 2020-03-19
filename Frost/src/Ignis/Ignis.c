@@ -118,3 +118,41 @@ void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha)
 {
 	color->a = alpha;
 }
+
+char* ignisReadFile(const char* path, size_t* sizeptr)
+{
+	FILE* file = fopen(path, "rb");
+	if (!file)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to open file: %s", path);
+		return NULL;
+	}
+
+	// find file size
+	fseek(file, 0, SEEK_END);
+	size_t size = ftell(file);
+	rewind(file);
+
+	char* buffer = (char*)malloc(size + 1);
+	if (!buffer)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to allocate memory for file: %s", path);
+		fclose(file);
+		return NULL;
+	}
+
+	memset(buffer, 0, size + 1); // +1 guarantees trailing \0
+
+	if (fread(buffer, size, 1, file) != 1)
+	{
+		free(buffer);
+		fclose(file);
+		return NULL;
+	}
+
+	if (sizeptr)
+		*sizeptr = size + 1;
+
+	fclose(file);
+	return buffer;
+}

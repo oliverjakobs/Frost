@@ -23,7 +23,8 @@ typedef struct
 	ignis_texture* texture;
 } ignis_font;
 
-ignis_font* ignisLoadFont(const char* path, float size);
+int ignisLoadFont(ignis_font* font, const char* path, float size);
+int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int first, int num, int bm_w, int bm_h);
 void ignisDeleteFont(ignis_font* font);
 
 void ignisBindFont(ignis_font* font);
