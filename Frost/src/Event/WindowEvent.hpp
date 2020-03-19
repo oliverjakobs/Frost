@@ -2,31 +2,14 @@
 
 #include "Event.hpp"
 
-class WindowResizeEvent : public Event
+struct WindowResizeEvent : public Event
 {
-private:
-	unsigned int m_width, m_height;
+	unsigned int Width, Height;
 
-public:
-	WindowResizeEvent(unsigned int width, unsigned int height) : m_width(width), m_height(height) {}
-
-	inline unsigned int GetWidth() const { return m_width; }
-	inline unsigned int GetHeight() const { return m_height; }
-
-	std::string ToString() const override
-	{
-		std::stringstream ss;
-		ss << "WindowResizeEvent: " << m_width << ", " << m_height;
-		return ss.str();
-	}
-
-	EVENT_CLASS_TYPE(WindowResize);
+	WindowResizeEvent(unsigned int width, unsigned int height) : Event(EventType::WindowResize), Width(width), Height(height) {}
 };
 
-class WindowCloseEvent : public Event
+struct WindowCloseEvent : public Event
 {
-public:
-	WindowCloseEvent() {}
-
-	EVENT_CLASS_TYPE(WindowClose);
+	WindowCloseEvent() : Event(EventType::WindowClose) {}
 };

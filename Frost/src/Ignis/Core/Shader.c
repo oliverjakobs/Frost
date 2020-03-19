@@ -40,31 +40,29 @@ static char* _ignisReadFile(const char* path)
 	return data;
 }
 
-ignis_shader* ignisShadervf(const char* vert, const char* frag)
+int ignisShadervf(ignis_shader* shader, const char* vert, const char* frag)
 {
 	char* vert_src = _ignisReadFile(vert);
 	char* frag_src = _ignisReadFile(frag);
 
 	if (!(vert_src && frag_src))
-		return NULL;
+		return 0;
 
 	GLenum types[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
 	const char* sources[] = { vert_src, frag_src };
 
-	ignis_shader* shader = (ignis_shader*)malloc(sizeof(ignis_shader));
+	GLuint program = ignisCreateShaderProgram(types, sources, 2);
 
-	if (shader != NULL)
-		shader->program = ignisCreateShaderProgram(types, sources, 2);
-	else
-		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to allocate memory");
+	if (shader)
+		shader->program = program;
 
 	free(vert_src);
 	free(frag_src);
 
-	return shader;
+	return program;
 }
 
-ignis_shader* ignisShadervgf(const char* vert, const char* geom, const char* frag)
+int ignisShadervgf(ignis_shader* shader, const char* vert, const char* geom, const char* frag)
 {
 	char* vert_src = _ignisReadFile(vert);
 	char* geom_src = _ignisReadFile(geom);
@@ -76,24 +74,20 @@ ignis_shader* ignisShadervgf(const char* vert, const char* geom, const char* fra
 	GLenum types[] = { GL_VERTEX_SHADER, GL_GEOMETRY_SHADER, GL_FRAGMENT_SHADER };
 	const char* sources[] = { vert_src, geom_src, frag_src };
 
-	ignis_shader* shader = (ignis_shader*)malloc(sizeof(ignis_shader));
+	GLuint program = ignisCreateShaderProgram(types, sources, 2);
 
-	if (shader != NULL)
-		shader->program = ignisCreateShaderProgram(types, sources, 3);
-	else
-		_ignisErrorCallback(IGNIS_ERROR, "[SHADER] Failed to allocate memory");
+	if (shader)
+		shader->program = program;
 
 	free(vert_src);
-	free(geom_src);
 	free(frag_src);
 
-	return shader;
+	return program;
 }
 
 void ignisDeleteShader(ignis_shader* shader)
 {
 	glDeleteProgram(shader->program);
-	free(shader);
 }
 
 void ignisUseShader(ignis_shader* shader)

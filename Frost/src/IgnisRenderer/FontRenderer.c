@@ -11,24 +11,23 @@
 
 typedef struct 
 {
-	ignis_vertex_array* VertexArray;
-	ignis_shader* Shader;
+	ignis_vertex_array vao;
+	ignis_shader shader;
 
-	GLint UniformLocationProjection;
-	GLint UniformLocationColor;
+	GLint uniform_location_proj;
+	GLint uniform_location_color;
 } _FontRendererStorage;
 
 static _FontRendererStorage* _render_data;
 
-void FontRendererInit(ignis_shader* shader)
+void FontRendererInit(const char* vert, const char* frag)
 {
 	_render_data = (_FontRendererStorage*)malloc(sizeof(_FontRendererStorage));
 
-	_render_data->VertexArray = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
-	ignisGenerateVertexArray(_render_data->VertexArray);
+	ignisGenerateVertexArray(&_render_data->vao);
 
 	ignis_buffer_element layout[] = { {GL_FLOAT, 4, GL_FALSE} };
-	ignisAddArrayBufferLayout(_render_data->VertexArray, FONTRENDERER_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 1);
+	ignisAddArrayBufferLayout(&_render_data->vao, FONTRENDERER_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 1);
 
 	GLuint indices[FONTRENDERER_INDEX_COUNT];
 	GLuint offset = 0;
@@ -45,20 +44,19 @@ void FontRendererInit(ignis_shader* shader)
 		offset += 4;
 	}
 
-	ignisLoadElementBuffer(_render_data->VertexArray, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
+	ignisLoadElementBuffer(&_render_data->vao, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
 
-	_render_data->Shader = shader;
+	ignisShadervf(&_render_data->shader, vert, frag);
 
-	_render_data->UniformLocationProjection = ignisGetUniformLocation(_render_data->Shader, "u_Projection");
-	_render_data->UniformLocationColor = ignisGetUniformLocation(_render_data->Shader, "u_Color");
+	_render_data->uniform_location_proj = ignisGetUniformLocation(&_render_data->shader, "u_Projection");
+	_render_data->uniform_location_color = ignisGetUniformLocation(&_render_data->shader, "u_Color");
 }
 
 void FontRendererDestroy()
 {
-	ignisDeleteShader(_render_data->Shader);
+	ignisDeleteShader(&_render_data->shader);
 
-	ignisDeleteVertexArray(_render_data->VertexArray);
-	free(_render_data->VertexArray);
+	ignisDeleteVertexArray(&_render_data->vao);
 
 	free(_render_data);
 }
@@ -66,7 +64,7 @@ void FontRendererDestroy()
 static void _FontRendererFlush(float* vertices)
 {
 	// Update content of VBO memory
-	ignisBufferSubData(&_render_data->VertexArray->array_buffers[0], 0, FONTRENDERER_BUFFER_SIZE * sizeof(float), vertices);
+	ignisBufferSubData(&_render_data->vao.array_buffers[0], 0, FONTRENDERER_BUFFER_SIZE * sizeof(float), vertices);
 
 	// Render quad
 	glDrawElements(GL_TRIANGLES, FONTRENDERER_INDEX_COUNT, GL_UNSIGNED_INT, 0);
@@ -76,12 +74,12 @@ void FontRendererRenderText(ignis_font* font, const char* text, float x, float y
 {
 	if (!(_render_data && font)) return;
 
-	ignisUseShader(_render_data->Shader);
-	ignisSetUniformMat4l(_render_data->UniformLocationProjection, mat_proj);
-	ignisSetUniform4fl(_render_data->UniformLocationColor, &color.r);
+	ignisUseShader(&_render_data->shader);
+	ignisSetUniformMat4l(_render_data->uniform_location_proj, mat_proj);
+	ignisSetUniform4fl(_render_data->uniform_location_color, &color.r);
 
 	ignisBindFont(font);
-	ignisBindVertexArray(_render_data->VertexArray);
+	ignisBindVertexArray(&_render_data->vao);
 
 	size_t offset = 0;
 

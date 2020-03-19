@@ -9,21 +9,20 @@
 
 typedef struct
 {
-	ignis_vertex_array* VertexArray;
-	ignis_shader* Shader;
+	ignis_vertex_array vao;
+	ignis_shader shader;
 
-	float* Vertices;
-	GLsizei VertexCount;
+	float* vertices;
+	GLsizei vertex_count;
 } _Primitives2DStorage;
 
 static _Primitives2DStorage* _render_data;
 
-void Primitives2DInit(ignis_shader* shader)
+void Primitives2DInit(const char* vert, const char* frag)
 {
 	_render_data = (_Primitives2DStorage*)malloc(sizeof(_Primitives2DStorage));
 
-	_render_data->VertexArray = (ignis_vertex_array*)malloc(sizeof(ignis_vertex_array));
-	ignisGenerateVertexArray(_render_data->VertexArray);
+	ignisGenerateVertexArray(&_render_data->vao);
 
 	ignis_buffer_element layout[] = 
 	{
@@ -31,59 +30,58 @@ void Primitives2DInit(ignis_shader* shader)
 		{GL_FLOAT, 4, GL_FALSE}
 	};
 
-	ignisAddArrayBufferLayout(_render_data->VertexArray, PRIMITIVES2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 2);
+	ignisAddArrayBufferLayout(&_render_data->vao, PRIMITIVES2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 2);
 
-	_render_data->Vertices = (float*)malloc(PRIMITIVES2D_BUFFER_SIZE * sizeof(float));
-	_render_data->VertexCount = 0;
+	_render_data->vertices = (float*)malloc(PRIMITIVES2D_BUFFER_SIZE * sizeof(float));
+	_render_data->vertex_count = 0;
 
-	_render_data->Shader = shader;
+	ignisShadervf(&_render_data->shader, vert, frag);
 }
 
 void Primitives2DDestroy()
 {
-	ignisDeleteShader(_render_data->Shader);
+	ignisDeleteShader(&_render_data->shader);
 
-	ignisDeleteVertexArray(_render_data->VertexArray);
-	free(_render_data->VertexArray);
+	ignisDeleteVertexArray(&_render_data->vao);
 
-	free(_render_data->Vertices);
+	free(_render_data->vertices);
 
 	free(_render_data);
 }
 
 void Primitives2DStart(const float* mat_view_proj)
 {
-	ignisUseShader(_render_data->Shader);
-	ignisSetUniformMat4(_render_data->Shader, "u_ViewProjection", mat_view_proj);
+	ignisUseShader(&_render_data->shader);
+	ignisSetUniformMat4(&_render_data->shader, "u_ViewProjection", mat_view_proj);
 }
 
 void Primitives2DFlush()
 {
-	if (_render_data->VertexCount == 0)
+	if (_render_data->vertex_count == 0)
 		return;
 
-	ignisBindVertexArray(_render_data->VertexArray);
-	ignisBufferSubData(&_render_data->VertexArray->array_buffers[0], 0, _render_data->VertexCount * sizeof(float), _render_data->Vertices);
+	ignisBindVertexArray(&_render_data->vao);
+	ignisBufferSubData(&_render_data->vao.array_buffers[0], 0, _render_data->vertex_count * sizeof(float), _render_data->vertices);
 
-	ignisUseShader(_render_data->Shader);
+	ignisUseShader(&_render_data->shader);
 
-	glDrawArrays(GL_LINES, 0, _render_data->VertexCount / PRIMITIVES2D_VERTEX_SIZE);
+	glDrawArrays(GL_LINES, 0, _render_data->vertex_count / PRIMITIVES2D_VERTEX_SIZE);
 
-	_render_data->VertexCount = 0;
+	_render_data->vertex_count = 0;
 }
 
 void _Primitives2DVertex(float x, float y, const ignis_color_rgba color)
 {
-	if (_render_data->VertexCount >= PRIMITIVES2D_BUFFER_SIZE)
+	if (_render_data->vertex_count >= PRIMITIVES2D_BUFFER_SIZE)
 		Primitives2DFlush();
 
-	_render_data->Vertices[_render_data->VertexCount++] = x;
-	_render_data->Vertices[_render_data->VertexCount++] = y;
+	_render_data->vertices[_render_data->vertex_count++] = x;
+	_render_data->vertices[_render_data->vertex_count++] = y;
 
-	_render_data->Vertices[_render_data->VertexCount++] = color.r;
-	_render_data->Vertices[_render_data->VertexCount++] = color.g;
-	_render_data->Vertices[_render_data->VertexCount++] = color.b;
-	_render_data->Vertices[_render_data->VertexCount++] = color.a;
+	_render_data->vertices[_render_data->vertex_count++] = color.r;
+	_render_data->vertices[_render_data->vertex_count++] = color.g;
+	_render_data->vertices[_render_data->vertex_count++] = color.b;
+	_render_data->vertices[_render_data->vertex_count++] = color.a;
 }
 
 void Primitives2DRenderLine(float x1, float y1, float x2, float y2, const ignis_color_rgba color)

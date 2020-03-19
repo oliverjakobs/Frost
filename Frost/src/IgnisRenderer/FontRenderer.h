@@ -8,7 +8,7 @@ extern "C"
 
 #include "Ignis/Ignis.h"
 
-void FontRendererInit(ignis_shader* shader);
+void FontRendererInit(const char* vert, const char* frag);
 void FontRendererDestroy();
 
 void FontRendererRenderText(ignis_font* font, const char* text, float x, float y, const float* mat_proj, const ignis_color_rgba color);

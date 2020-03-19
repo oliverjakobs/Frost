@@ -8,7 +8,7 @@ extern "C"
 
 #include "Ignis/Ignis.h"
 
-void Renderer2DInit(ignis_shader* shader);
+void Renderer2DInit(const char* vert, const char* frag);
 void Renderer2DDestroy();
 
 void Renderer2DStart(const float* mat_view_proj);

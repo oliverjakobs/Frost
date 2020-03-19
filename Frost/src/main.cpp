@@ -19,9 +19,9 @@ public:
 		//glEnable(GL_DEPTH_TEST);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-		Renderer2DInit(ignisShadervf("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag"));
-		Primitives2DInit(ignisShadervf("res/shaders/lines.vert", "res/shaders/lines.frag"));
-		FontRendererInit(ignisShadervf("res/shaders/font.vert", "res/shaders/font.frag"));
+		Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
+		Primitives2DInit("res/shaders/lines.vert", "res/shaders/lines.frag");
+		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
 		m_font = ignisLoadFont("res/fonts/OpenSans.ttf", 32.0f);
 
@@ -46,9 +46,9 @@ public:
 	
 	void OnEvent(const Event& e) override
 	{
-		if (e.GetType() == EventType::KeyPressed)
+		if (e.Type == EventType::KeyPressed)
 		{
-			switch (((KeyPressedEvent&)e).GetKeyCode())
+			switch (((KeyPressedEvent&)e).KeyCode)
 			{
 			case KEY_ESCAPE:
 				Close();

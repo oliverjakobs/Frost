@@ -196,5 +196,3 @@ void ignisVertexAttribDivisor(GLuint index, GLuint divisor)
 {
 	glVertexAttribDivisor(index, divisor);
 }
-
-

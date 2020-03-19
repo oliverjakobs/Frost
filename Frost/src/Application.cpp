@@ -101,7 +101,7 @@ bool Application::OnWindowClose(WindowCloseEvent& e)
 
 void Application::EventCallback(Event& e)
 {
-	switch (e.GetType())
+	switch (e.Type)
 	{
 	case EventType::WindowClose:
 		OnWindowClose((WindowCloseEvent&)e);

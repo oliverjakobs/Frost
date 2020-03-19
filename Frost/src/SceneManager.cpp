@@ -72,15 +72,15 @@ std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
 
 void SceneManager::OnEvent(const Event& e)
 {
-	if (e.GetType() == EventType::WindowResize)
+	if (e.Type == EventType::WindowResize)
 	{
 		WindowResizeEvent& resize = (WindowResizeEvent&)e;
-		((OrthographicCamera*)m_camera.get())->SetProjection((float)resize.GetWidth(), (float)resize.GetHeight());
+		((OrthographicCamera*)m_camera.get())->SetProjection((float)resize.Width, (float)resize.Height);
 	}
 
-	if (e.GetType() == EventType::KeyPressed)
+	if (e.Type == EventType::KeyPressed)
 	{
-		switch (((KeyPressedEvent&)e).GetKeyCode())
+		switch (((KeyPressedEvent&)e).KeyCode)
 		{
 		case KEY_F1:
 			m_editmode = !m_editmode;

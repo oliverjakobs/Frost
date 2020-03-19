@@ -13,8 +13,8 @@ extern "C"
 		GLuint program;
 	} ignis_shader;
 
-	ignis_shader* ignisShadervf(const char* vert, const char* frag);
-	ignis_shader* ignisShadervgf(const char* vert, const char* geom, const char* frag);
+	int ignisShadervf(ignis_shader* shader, const char* vert, const char* frag);
+	int ignisShadervgf(ignis_shader* shader, const char* vert, const char* geom, const char* frag);
 	void ignisDeleteShader(ignis_shader* shader);
 
 	void ignisUseShader(ignis_shader* shader);

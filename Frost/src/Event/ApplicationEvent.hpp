@@ -2,22 +2,11 @@
 
 #include "Event.hpp"
 
-class ChangeSceneEvent : public Event
+#include <string>
+
+struct ChangeSceneEvent : public Event
 {
-private:
-	std::string m_targetScene;
+	std::string TargetScene;
 
-public:
-	ChangeSceneEvent(const std::string& target) : m_targetScene(target) {}
-
-	inline std::string GetTarget() const { return m_targetScene; }
-
-	std::string ToString() const override
-	{
-		std::stringstream ss;
-		ss << "ChangeSceneEvent: " << m_targetScene;
-		return ss.str();
-	}
-
-	EVENT_CLASS_TYPE(ChangeScene);
+	ChangeSceneEvent(const std::string& target) : Event(EventType::ChangeScene), TargetScene(target) {}
 };

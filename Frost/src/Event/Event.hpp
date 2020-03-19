@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <sstream>
-
 enum class EventType
 {
 	None = 0,
@@ -12,22 +9,10 @@ enum class EventType
 	MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 };
 
-#define EVENT_CLASS_TYPE(type)	static EventType GetStaticType() { return EventType::##type; }\
-								virtual EventType GetType() const override { return GetStaticType(); }\
-								virtual const char* GetName() const override { return #type; }
-
-class Event
+struct Event
 {
-public:
-	bool handled = false;
+	EventType Type;
+	bool Handled;
 
-	virtual EventType GetType() const = 0;
-	virtual const char* GetName() const = 0;
-
-	virtual std::string ToString() const { return GetName(); }
+	Event(EventType type) : Type(type), Handled(false) {}
 };
-
-inline std::ostream& operator<<(std::ostream& os, const Event& e)
-{
-	return os << e.ToString();
-}
