@@ -186,6 +186,8 @@
     <None Include="config.json" />
     <None Include="imgui.ini" />
     <None Include="res\fonts\OpenSans.ttf" />
+    <None Include="res\shaders\batchrenderer.frag" />
+    <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\font.frag" />
     <None Include="res\shaders\font.vert" />
     <None Include="res\shaders\lines.frag" />

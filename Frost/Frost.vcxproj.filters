@@ -132,5 +132,7 @@
     <None Include="res\templates\entities\tree_5.json" />
     <None Include="res\templates\scenes\register.json" />
     <None Include="res\templates\scenes\scene.json" />
+    <None Include="res\shaders\batchrenderer.vert" />
+    <None Include="res\shaders\batchrenderer.frag" />
   </ItemGroup>
 </Project>

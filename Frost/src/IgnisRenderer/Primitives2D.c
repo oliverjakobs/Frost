@@ -7,6 +7,11 @@
 
 #define PRIMITIVES2D_BUFFER_SIZE	(PRIMITIVES2D_VERTEX_SIZE * PRIMITIVES2D_MAX_LINES)
 
+#define PRIMITIVES2D_PI 3.14159265359f
+
+#define PRIMITIVES2D_K_SEGMENTS		36
+#define PRIMITIVES2D_K_INCREMENT	2.0f * PRIMITIVES2D_PI / PRIMITIVES2D_K_SEGMENTS
+
 typedef struct
 {
 	ignis_vertex_array vao;
@@ -122,13 +127,8 @@ void Primitives2DRenderPolygon(float* vertices, size_t count, const ignis_color_
 
 void Primitives2DRenderCircle(float x, float y, float radius, const ignis_color_rgba color)
 {
-	const float PI = 3.14159265359f;
-
-	const float k_segments = 36;
-	const float k_increment = 2.0f * PI / k_segments;
-
-	float sinInc = sinf(k_increment);
-	float cosInc = cosf(k_increment);
+	float sinInc = sinf(PRIMITIVES2D_K_INCREMENT);
+	float cosInc = cosf(PRIMITIVES2D_K_INCREMENT);
 
 	float r1x = 1.0f;
 	float r1y = 0.0f;
@@ -136,7 +136,7 @@ void Primitives2DRenderCircle(float x, float y, float radius, const ignis_color_
 	float v1x = x + radius * r1x;
 	float v1y = y + radius * r1y;
 
-	for (int i = 0; i < k_segments; ++i)
+	for (int i = 0; i < PRIMITIVES2D_K_SEGMENTS; ++i)
 	{
 		/* Perform rotation to avoid additional trigonometry. */
 		float r2x = cosInc * r1x - sinInc * r1y;

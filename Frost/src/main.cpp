@@ -19,6 +19,7 @@ public:
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
+		// BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 		Primitives2DInit("res/shaders/lines.vert", "res/shaders/lines.frag");
 		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
@@ -40,6 +41,7 @@ public:
 
 		FontRendererDestroy();
 		Primitives2DDestroy();
+		// BatchRenderer2DDestroy();
 		Renderer2DDestroy();
 	}
 	
