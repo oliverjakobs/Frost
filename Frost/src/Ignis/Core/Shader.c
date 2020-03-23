@@ -165,6 +165,22 @@ void ignisSetUniformMat4(const ignis_shader* shader, const char* name, const flo
 		ignisSetUniformMat4l(location, values);
 }
 
+void ignisSetUniform1iv(const ignis_shader* shader, const char* name, GLsizei count, const int* values)
+{
+	GLint location = ignisGetUniformLocation(shader, name);
+
+	if (location >= 0)
+		ignisSetUniform1ivl(location, count, values);
+}
+
+void ignisSetUniform1fv(const ignis_shader* shader, const char* name, GLsizei count, const float* values)
+{
+	GLint location = ignisGetUniformLocation(shader, name);
+
+	if (location >= 0)
+		ignisSetUniform1fvl(location, count, values);
+}
+
 void ignisSetUniform1il(GLint location, int value)
 {
 	glUniform1i(location, value);
@@ -203,6 +219,16 @@ void ignisSetUniformMat3l(GLint location, const float* values)
 void ignisSetUniformMat4l(GLint location, const float* values)
 {
 	glUniformMatrix4fv(location, 1, GL_FALSE, values);
+}
+
+void ignisSetUniform1ivl(GLint location, GLsizei count, const int* values)
+{
+	glUniform1iv(location, count, values);
+}
+
+void ignisSetUniform1fvl(GLint location, GLsizei count, const float* values)
+{
+	glUniform1fv(location, count, values);
 }
 
 GLuint ignisCreateShaderProgram(GLenum* types, const char** sources, size_t count)

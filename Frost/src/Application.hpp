@@ -11,6 +11,7 @@
 // Renderer
 #include "IgnisRenderer/FontRenderer.h"
 #include "IgnisRenderer/Primitives2D.h"
+#include "IgnisRenderer/BatchRenderer2D.h"
 #include "IgnisRenderer/Renderer2D.h"
 
 

@@ -98,7 +98,7 @@ ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns
 	return texture;
 }
 
-void ignisDeleteTexture(ignis_texture* texture)
+void ignisDestroyTexture(ignis_texture* texture)
 {
 	glDeleteTextures(1, &texture->name);
 	free(texture);

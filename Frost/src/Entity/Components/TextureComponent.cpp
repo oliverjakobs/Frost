@@ -10,7 +10,7 @@ TextureComponent::TextureComponent(Entity* entity, ignis_texture* texture, float
 
 TextureComponent::~TextureComponent()
 {
-	ignisDeleteTexture(m_texture);
+	ignisDestroyTexture(m_texture);
 }
 
 void TextureComponent::SetFrame(size_t frame)

@@ -110,6 +110,7 @@
     <ClInclude Include="src\Event\MouseEvent.hpp" />
     <ClInclude Include="src\Event\WindowEvent.hpp" />
     <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
+    <ClInclude Include="src\IgnisRenderer\IgnisRenderer.h" />
     <ClInclude Include="src\Ignis\Font.h" />
     <ClInclude Include="src\Camera\Camera.hpp" />
     <ClInclude Include="src\Camera\OrthographicCamera.hpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Entity\Entity.cpp" />
     <ClCompile Include="src\Entity\Scene.cpp" />
     <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
+    <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
     <ClCompile Include="src\Ignis\Font.c" />
     <ClCompile Include="src\Camera\OrthographicCamera.cpp" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />

@@ -43,4 +43,6 @@ public:
 
 	Scene* GetScene() const { return m_scene.get(); }
 	std::string GetSceneName() const { return m_sceneName; }
+
+	std::shared_ptr<Camera> GetCamera() const { return m_camera; }
 };

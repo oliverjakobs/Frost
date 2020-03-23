@@ -33,6 +33,7 @@
     <ClCompile Include="src\IgnisRenderer\Primitives2D.c" />
     <ClCompile Include="src\IgnisRenderer\Renderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
+    <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="src\IgnisRenderer\Primitives2D.h" />
     <ClInclude Include="src\IgnisRenderer\Renderer2D.h" />
     <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
+    <ClInclude Include="src\IgnisRenderer\IgnisRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\Textures&amp;trees.png" />

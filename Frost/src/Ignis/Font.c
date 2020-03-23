@@ -74,7 +74,7 @@ void ignisDeleteFont(ignis_font* font)
 		free(font->char_data);
 
 	if (font->texture)
-		ignisDeleteTexture(font->texture);
+		ignisDestroyTexture(font->texture);
 }
 
 void ignisBindFont(ignis_font* font)

@@ -1,5 +1,7 @@
 #include "FontRenderer.h"
 
+#include "IgnisRenderer.h"
+
 #define FONTRENDERER_MAX_QUADS			32
 #define FONTRENDERER_VERTEX_SIZE		4
 #define FONTRENDERER_VERTICES_PER_QUAD	4
@@ -28,19 +30,7 @@ void FontRendererInit(const char* vert, const char* frag)
 	ignisAddArrayBufferLayout(&_render_data.vao, FONTRENDERER_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 1);
 
 	GLuint indices[FONTRENDERER_INDEX_COUNT];
-	GLuint offset = 0;
-	for (size_t i = 0; i < FONTRENDERER_INDEX_COUNT - FONTRENDERER_INDICES_PER_QUAD; i += FONTRENDERER_INDICES_PER_QUAD)
-	{
-		indices[i + 0] = offset + 0;
-		indices[i + 1] = offset + 1;
-		indices[i + 2] = offset + 2;
-
-		indices[i + 3] = offset + 2;
-		indices[i + 4] = offset + 3;
-		indices[i + 5] = offset + 0;
-
-		offset += 4;
-	}
+	GenerateIndices(indices, FONTRENDERER_INDEX_COUNT, FONTRENDERER_INDICES_PER_QUAD);
 
 	ignisLoadElementBuffer(&_render_data.vao, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
 

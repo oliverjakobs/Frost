@@ -43,7 +43,7 @@ extern "C"
 	ignis_texture* ignisCreateTextureRawc(int width, int height, void* pixels, ignis_texture_config config);
 	ignis_texture* ignisCreateTexture(const char* path, GLuint rows, GLuint columns, int flip_on_load);
 	ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns, int flip_on_load, ignis_texture_config config);
-	void ignisDeleteTexture(ignis_texture* texture);
+	void ignisDestroyTexture(ignis_texture* texture);
 
 	GLuint ignisGenerateTexture2D(int width, int height, void* pixels, ignis_texture_config config);
 
