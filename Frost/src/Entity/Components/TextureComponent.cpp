@@ -28,37 +28,25 @@ void TextureComponent::OnRender(Scene* scene)
 	float x = m_entity->GetPosition().x - m_width / 2.0f;
 	float y = m_entity->GetPosition().y;
 
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(x, y, 0.0f));
-	model = glm::scale(model, glm::vec3(m_width, m_height, 1.0f));
-
 	float src_w = 1.0f / m_texture->columns;
 	float src_h = 1.0f / m_texture->rows;
 
 	float src_x = (m_frame % m_texture->columns) * src_w;
 	float src_y = 1 - src_h - ((m_frame / m_texture->columns) * src_h);
 
-	glm::mat4 src = glm::mat4(1.0f);
-
 	switch (m_renderFlip)
 	{
 	case RenderFlip::NONE:
-		src = glm::translate(src, glm::vec3(src_x, src_y, 0.0f));
-		src = glm::scale(src, glm::vec3(src_w, src_h, 1.0f));
+		BatchRenderer2DRenderTextureFrame(m_texture, x, y, m_width, m_height, src_x, src_y, src_w, src_h);
 		break;
 	case RenderFlip::HORIZONTAL:
-		src = glm::translate(src, glm::vec3(src_x + src_w, src_y, 0.0f));
-		src = glm::scale(src, glm::vec3(-src_w, src_h, 1.0f));
+		BatchRenderer2DRenderTextureFrame(m_texture, x, y, m_width, m_height, src_x + src_w, src_y, -src_w, src_h);
 		break;
 	case RenderFlip::VERTICAL:
-		src = glm::translate(src, glm::vec3(src_x, src_y + src_h, 0.0f));
-		src = glm::scale(src, glm::vec3(src_w, -src_h, 1.0f));
+		BatchRenderer2DRenderTextureFrame(m_texture, x, y, m_width, m_height, src_x, src_y + src_h, src_w, -src_h);
 		break;
 	case RenderFlip::BOTH:
-		src = glm::translate(src, glm::vec3(src_x + src_w, src_y + src_h, 0.0f));
-		src = glm::scale(src, glm::vec3(-src_w, -src_h, 1.0f));
+		BatchRenderer2DRenderTextureFrame(m_texture, x, y, m_width, m_height, src_x + src_w, src_y + src_h, -src_w, -src_h);
 		break;
 	}
-
-	Renderer2DRenderTexture(m_texture, &model[0][0], &src[0][0]);
 }

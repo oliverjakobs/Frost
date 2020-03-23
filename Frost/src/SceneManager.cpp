@@ -8,7 +8,8 @@ SceneManager::SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint1
 	: m_camera(camera)
 {
 	m_editmode = true;
-	m_showgrid = false;
+	m_showgrid = false; 
+	m_layer = 0;
 
 	m_gridsize = gridsize;
 	m_padding = gridsize * padding;
@@ -86,7 +87,7 @@ void SceneManager::OnEvent(const Event& e)
 			m_editmode = !m_editmode;
 			break;
 		case KEY_DELETE:
-			m_scene->RemoveEntity("tree");
+			m_scene->RemoveEntity("tree", 0);
 			break;
 		}
 	}
@@ -116,7 +117,7 @@ void SceneManager::OnUpdate(float deltaTime)
 
 		m_camera->SetPosition(position);
 
-		m_active = m_scene->GetEntityAt(GetMousePos());
+		m_active = m_scene->GetEntityAt(GetMousePos(), m_layer);
 	}
 }
 
@@ -135,14 +136,10 @@ void SceneManager::OnRender()
 			ignisBlendColorRGBA(&color, 0.5f);
 
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
-			{
 				Primitives2DRenderLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
-			}
 
 			for (float y = -m_padding; y <= m_scene->GetHeight() + m_padding; y += m_gridsize)
-			{
 				Primitives2DRenderLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
-			}
 		}
 
 		if (m_active)
@@ -180,6 +177,11 @@ void SceneManager::OnImGui()
 		ImGui::Text("Selected Entity: %s", m_active == nullptr ? "null" : m_active->GetName().c_str());
 
 		ImGui::Checkbox("Show grid", &m_showgrid);
+
+		ImGui::Separator();
+
+		for (size_t i : m_scene->GetLayers())
+			ImGui::RadioButton(obelisk::format("Layer%zu", i).c_str(), &m_layer, (int)i);
 
 		ImGui::End();
 	}

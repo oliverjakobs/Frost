@@ -125,6 +125,11 @@ void _BatchRenderer2DPushValue(float value)
 
 void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, float w, float h)
 {
+	BatchRenderer2DRenderTextureFrame(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+void BatchRenderer2DRenderTextureFrame(ignis_texture* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+{
 	if (_render_data.quad_count >= BATCHRENDERER2D_MAX_QUADS || _render_data.texture_slot_index >= BATCHRENDERER2D_TEXTURES)
 		BatchRenderer2DFlush();
 
@@ -149,8 +154,8 @@ void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, floa
 	_BatchRenderer2DPushValue(y);
 	_BatchRenderer2DPushValue(0.0f);
 
-	_BatchRenderer2DPushValue(0.0f);
-	_BatchRenderer2DPushValue(0.0f);
+	_BatchRenderer2DPushValue(src_x);
+	_BatchRenderer2DPushValue(src_y);
 
 	_BatchRenderer2DPushValue(texture_index);
 
@@ -159,8 +164,8 @@ void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, floa
 	_BatchRenderer2DPushValue(y);
 	_BatchRenderer2DPushValue(0.0f);
 
-	_BatchRenderer2DPushValue(1.0f);
-	_BatchRenderer2DPushValue(0.0f);
+	_BatchRenderer2DPushValue(src_x + src_w);
+	_BatchRenderer2DPushValue(src_y);
 
 	_BatchRenderer2DPushValue(texture_index);
 
@@ -169,8 +174,8 @@ void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, floa
 	_BatchRenderer2DPushValue(y + h);
 	_BatchRenderer2DPushValue(0.0f);
 
-	_BatchRenderer2DPushValue(1.0f);
-	_BatchRenderer2DPushValue(1.0f);
+	_BatchRenderer2DPushValue(src_x + src_w);
+	_BatchRenderer2DPushValue(src_y + src_h);
 
 	_BatchRenderer2DPushValue(texture_index);
 
@@ -179,8 +184,8 @@ void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, floa
 	_BatchRenderer2DPushValue(y + h);
 	_BatchRenderer2DPushValue(0.0f);
 
-	_BatchRenderer2DPushValue(0.0f);
-	_BatchRenderer2DPushValue(1.0f);
+	_BatchRenderer2DPushValue(src_x);
+	_BatchRenderer2DPushValue(src_y + src_h);
 
 	_BatchRenderer2DPushValue(texture_index);
 

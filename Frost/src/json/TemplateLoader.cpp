@@ -147,35 +147,26 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 	auto scene = std::make_shared<Scene>(camera, width, height);
 
 	tb_json_element element;
-
 	tb_json_read(json.data(), "{'templates'", &element);
-	if (element.error == TB_JSON_OK)
+
+	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
+		char* value = (char*)element.value;
+		tb_json_element entity;
+
 		for (int i = 0; i < element.elements; i++)
 		{
-			tb_json_element entity;
-			tb_json_read_param((char*)element.value, "{*", &entity, &i);
+			value = tb_json_array_step(value, &entity);
 
-			std::string templ((char*)entity.value, entity.bytelen);
+			tb_json_element path;
+			tb_json_read((char*)entity.value, "[0", &path);
 
-			tb_json_element positions;
-			tb_json_read((char*)element.value, (char*)obelisk::format("{'%s'", templ.c_str()).c_str(), &positions);
+			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
+			float y = tb_json_float((char*)entity.value, "[1[1", NULL);
 
-			if (positions.error == TB_JSON_OK)
-			{
-				char* value = (char*)positions.value;
-				tb_json_element array_element;
+			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-				for (int i = 0; i < positions.elements; i++)
-				{
-					value = tb_json_array_step(value, &array_element);
-
-					float x = tb_json_float((char*)array_element.value, "[0", NULL);
-					float y = tb_json_float((char*)array_element.value, "[1", NULL);
-
-					scene->AddEntity(TemplateLoader::LoadEntity(templ), glm::vec2(x, y));
-				}
-			}
+			scene->AddEntity(TemplateLoader::LoadEntity(std::string((char*)path.value, path.bytelen)), layer, glm::vec2(x, y));
 		}
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.hpp"
-#include "IgnisRenderer/Renderer2D.h"
+#include "IgnisRenderer/IgnisRenderer.h"
 
 enum class RenderFlip
 {
@@ -10,7 +10,6 @@ enum class RenderFlip
 	VERTICAL = 2,
 	BOTH = 3
 };
-
 
 class TextureComponent : public Component
 {

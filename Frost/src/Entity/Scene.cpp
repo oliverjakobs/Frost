@@ -1,6 +1,5 @@
 #include "Scene.hpp"
 
-#include "IgnisRenderer/Primitives2D.h"
 #include "Obelisk/Obelisk.hpp"
 
 Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
@@ -16,7 +15,7 @@ Scene::~Scene()
 
 }
 
-void Scene::AddEntity(std::shared_ptr<Entity> entity)
+void Scene::AddEntity(std::shared_ptr<Entity> entity, size_t layer)
 {
 	if (entity == nullptr)
 		return;
@@ -28,24 +27,28 @@ void Scene::AddEntity(std::shared_ptr<Entity> entity)
 		m_world->AddBody(phys->GetBody());
 	}
 
-	m_entities.push_back(entity);
+	m_entities[layer].push_back(entity);
 }
 
-void Scene::AddEntity(std::shared_ptr<Entity> entity, const glm::vec2& position)
+void Scene::AddEntity(std::shared_ptr<Entity> entity, size_t layer, const glm::vec2& position)
 {
 	if (entity == nullptr)
 		return;
 
 	entity->SetPosition(position);
-	AddEntity(entity);
+	AddEntity(entity, layer);
 }
 
-void Scene::RemoveEntity(const std::string& name)
+void Scene::RemoveEntity(const std::string& name, size_t layer)
 {
-	m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [&](auto& e) 
-	{ 
-		return obelisk::StringCompare(e->GetName(), name); 
-	}), m_entities.end());
+	auto it = m_entities.find(layer);
+	if (it != m_entities.end())
+	{
+		it->second.erase(std::remove_if(it->second.begin(), it->second.end(), [&](auto& e)
+			{
+				return obelisk::StringCompare(e->GetName(), name);
+			}), it->second.end());
+	}
 }
 
 void Scene::Clear()
@@ -69,31 +72,34 @@ void Scene::OnUpdate(float deltaTime)
 {
 	m_world->Tick(deltaTime);
 
-	for (auto& entity : m_entities)
-		entity->OnUpdate(this, deltaTime);
+	for (auto& layer : m_entities)
+		for (auto& entity : layer.second)
+			entity->OnUpdate(this, deltaTime);
 }
 
 void Scene::OnRender()
 {
-	Renderer2DStart(m_camera->GetViewProjectionPtr());
+	BatchRenderer2DStart(m_camera->GetViewProjectionPtr());
 
-	for (auto& entity : m_entities)
-		entity->OnRender(this);
+	for (auto& layer : m_entities)
+		for (auto& entity : layer.second)
+			entity->OnRender(this);
 
-	Renderer2DFlush();
+	BatchRenderer2DFlush();
 }
 
 void Scene::OnRenderDebug()
 {
 	Primitives2DStart(m_camera->GetViewProjectionPtr());
 
-	for (auto& entity : m_entities)
-	{
-		entity->OnRenderDebug();
+	for (auto& layer : m_entities)
+		for (auto& entity : layer.second)
+		{
+			entity->OnRenderDebug();
 
-		auto& pos = entity->GetPosition();
-		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
-	}
+			auto& pos = entity->GetPosition();
+			Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
+		}
 
 	for (auto& body : m_world->GetBodies())
 	{
@@ -147,12 +153,16 @@ void Scene::SetCameraPosition(const glm::vec3& position)
 	m_camera->SetPosition(center);
 }
 
-std::shared_ptr<Entity> Scene::GetEntity(const std::string& name) const
+std::shared_ptr<Entity> Scene::GetEntity(const std::string& name, size_t layer) const
 {
-	auto it = std::find_if(m_entities.begin(), m_entities.end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); });
-
+	auto it = m_entities.find(layer);
 	if (it != m_entities.end())
-		return *it;
+	{
+		auto entity = std::find_if(it->second.begin(), it->second.end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); });
+
+		if (entity != it->second.end())
+			return *entity;
+	}
 
 	return nullptr;
 }
@@ -165,23 +175,47 @@ bool inside(const glm::vec2& min, const glm::vec2& max, const glm::vec2& p)
 	return true;
 }
 
-std::shared_ptr<Entity> Scene::GetEntityAt(const glm::vec2& pos) const
+std::shared_ptr<Entity> Scene::GetEntityAt(const glm::vec2& pos, size_t layer) const
 {
-	for (auto& entity : m_entities)
+	auto it = m_entities.find(layer);
+	if (it != m_entities.end())
 	{
-		auto tex = entity->GetComponent<TextureComponent>();
+		for (auto& entity : it->second)
+		{
+			auto tex = entity->GetComponent<TextureComponent>();
 
-		if (tex == nullptr)
-			continue;
+			if (tex == nullptr)
+				continue;
 
-		glm::vec2 position = entity->GetPosition();
+			glm::vec2 position = entity->GetPosition();
 
-		glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
-		glm::vec2 max = min + tex->GetDimension();
+			glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
+			glm::vec2 max = min + tex->GetDimension();
 
-		if (inside(min, max, pos))
-			return entity;
-	}
+			if (inside(min, max, pos))
+				return entity;
+		}
+	}	
 
 	return nullptr;
+}
+
+std::vector<std::shared_ptr<Entity>> Scene::GetEntities(size_t layer) const
+{
+	auto it = m_entities.find(layer);
+	if (it != m_entities.end())
+	{
+		return it->second;
+	}
+
+	return std::vector<std::shared_ptr<Entity>>();
+}
+
+std::vector<size_t> Scene::GetLayers() const
+{
+	std::vector<size_t> layers;
+	for (auto& [key, value] : m_entities)
+		layers.push_back(key);
+
+	return layers;
 }

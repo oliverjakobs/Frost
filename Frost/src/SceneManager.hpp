@@ -17,6 +17,7 @@ private:
 	// editor
 	bool m_editmode;
 	bool m_showgrid;
+	int m_layer;
 
 	float m_gridsize;
 	float m_padding;

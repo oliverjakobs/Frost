@@ -36,9 +36,6 @@ public:
 		m_sceneManager = std::make_shared<SceneManager>(camera, 32.0f, 4);
 		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
 		m_sceneManager->ChangeScene("scene");
-
-		m_texture1 = ignisCreateTexture("res/textures/box.png", 1, 1, true);
-		m_texture2 = ignisCreateTexture("res/textures/door.png", 1, 1, true);
 	}
 
 	~Frost()
@@ -49,9 +46,6 @@ public:
 		Primitives2DDestroy();
 		BatchRenderer2DDestroy();
 		Renderer2DDestroy();
-
-		ignisDestroyTexture(m_texture1);
-		ignisDestroyTexture(m_texture2);
 	}
 	
 	void OnEvent(const Event& e) override
@@ -92,16 +86,6 @@ public:
 	void OnRender() override
 	{
 		m_sceneManager->OnRender();
-
-		BatchRenderer2DStart(m_sceneManager->GetCamera()->GetViewProjectionPtr());
-
-		int texture = 0;
-		for (float x = 32.0f; x < m_sceneManager->GetScene()->GetWidth(); x += 96.0f)
-		{
-			BatchRenderer2DRenderTexture((texture++ % 2 == 0) ? m_texture1 : m_texture2, x, 32.0f, 64.0f, 64.0f);
-		}
-
-		BatchRenderer2DFlush();
 	}
 
 	void OnRenderDebug() override
@@ -131,7 +115,7 @@ public:
 		// ----
 		ImGui::Begin("DEBUG");
 		
-		auto player = m_sceneManager->GetScene()->GetEntity("player");
+		auto player = m_sceneManager->GetScene()->GetEntity("player", 1);
 		 
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();
