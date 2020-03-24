@@ -1,6 +1,6 @@
 #include "Entity.hpp"
 
-#include "Components/PositionComponent.hpp"
+#include "Components.hpp"
 
 #include "Obelisk/Obelisk.hpp"
 

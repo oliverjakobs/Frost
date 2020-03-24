@@ -13,13 +13,15 @@ protected:
 	glm::vec2 m_size;
 
 public:
-	Camera() : m_view(1.0f), m_projection(1.0f), m_viewProjection(1.0f), m_position(), m_size() {}
-	Camera(const glm::vec3& pos, const glm::vec2& size) : m_view(1.0f), m_projection(1.0f), m_viewProjection(1.0f), m_position(pos), m_size(size) {}
+	Camera();
+	Camera(const glm::vec3& pos, const glm::vec2& size);
 
-	void SetPosition(const glm::vec3& position) { m_position = position; UpdateView(); }
+	void SetPosition(const glm::vec3& position);
+	void SetSize(const glm::vec2& size);
+
+	const glm::vec2 GetMousePos(const glm::vec2& mouse) const;
+
 	const glm::vec3& GetPosition() const { return m_position; }
-
-	void SetSize(const glm::vec2& size) { m_size = size; UpdateView(); }
 	const glm::vec2& GetSize() const { return m_size; }
 
 	const glm::mat4& GetView() const { return m_view; }

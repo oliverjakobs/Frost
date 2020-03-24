@@ -41,10 +41,10 @@ public:
 	glm::vec2 GetPosition() const;
 
 	void SetDirection(Direction dir) { m_direction = dir; }
+	Direction GetDirection() const { return m_direction; }
 
 	std::string GetName() const { return m_name; }
 
-	Direction GetDirection() const { return m_direction; }
 
 	template <class Type, class... Args>
 	void AddComponent(Args&&... args)

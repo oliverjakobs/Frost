@@ -14,6 +14,7 @@ SceneManager::SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint1
 	m_gridsize = gridsize;
 	m_padding = gridsize * padding;
 
+	m_hover = nullptr;
 	m_active = nullptr;
 }
 
@@ -30,7 +31,8 @@ void SceneManager::RegisterScenes(const std::string& path)
 
 void SceneManager::RegisterScene(const std::string& name, const std::string& path)
 {
-	m_register.insert({ name, path });
+	if (!(name.empty() || path.empty()))
+		m_register.insert({ name, path });
 }
 
 void SceneManager::ChangeScene(const std::string& name)
@@ -117,7 +119,7 @@ void SceneManager::OnUpdate(float deltaTime)
 
 		m_camera->SetPosition(position);
 
-		m_active = m_scene->GetEntityAt(GetMousePos(), m_layer);
+		m_hover = m_scene->GetEntityAt(m_camera->GetMousePos(Input::MousePosition()), m_layer).get();
 	}
 }
 
@@ -133,7 +135,7 @@ void SceneManager::OnRender()
 		if (m_showgrid)
 		{
 			ignis_color_rgba color = IGNIS_WHITE;
-			ignisBlendColorRGBA(&color, 0.5f);
+			ignisBlendColorRGBA(&color, 0.2f);
 
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
 				Primitives2DRenderLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
@@ -142,13 +144,31 @@ void SceneManager::OnRender()
 				Primitives2DRenderLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
 		}
 
-		if (m_active)
+		for (auto& entity : m_scene->GetEntities(m_layer))
 		{
-			auto tex = m_active->GetComponent<TextureComponent>();
+			ignis_color_rgba color = IGNIS_WHITE;
+			ignisBlendColorRGBA(&color, 0.4f);
+
+			auto tex = entity->GetComponent<TextureComponent>();
 
 			if (tex != nullptr)
 			{
-				glm::vec2 position = m_active->GetPosition();
+				glm::vec2 position = entity->GetPosition();
+
+				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
+				glm::vec2 max = min + tex->GetDimension();
+
+				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
+			}
+		}
+
+		if (m_hover)
+		{
+			auto tex = m_hover->GetComponent<TextureComponent>();
+
+			if (tex != nullptr)
+			{
+				glm::vec2 position = m_hover->GetPosition();
 
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
@@ -174,6 +194,7 @@ void SceneManager::OnImGui()
 	{
 		ImGui::Begin("Editor");
 
+		ImGui::Text("Hovered Entity: %s", m_hover == nullptr ? "null" : m_hover->GetName().c_str());
 		ImGui::Text("Selected Entity: %s", m_active == nullptr ? "null" : m_active->GetName().c_str());
 
 		ImGui::Checkbox("Show grid", &m_showgrid);
@@ -181,21 +202,8 @@ void SceneManager::OnImGui()
 		ImGui::Separator();
 
 		for (size_t i : m_scene->GetLayers())
-			ImGui::RadioButton(obelisk::format("Layer%zu", i).c_str(), &m_layer, (int)i);
+			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &m_layer, (int)i);
 
 		ImGui::End();
 	}
-}
-
-glm::vec2 SceneManager::GetMousePos() const
-{
-	glm::vec2 viewSize = m_camera->GetSize();
-	glm::vec2 viewPos = m_camera->GetPosition();
-
-	glm::vec2 mousePos = Input::MousePosition();
-	mousePos.y = m_camera->GetSize().y - mousePos.y;
-
-	mousePos += viewPos - (m_camera->GetSize() / 2.0f);
-
-	return mousePos;
 }

@@ -22,7 +22,8 @@ private:
 	float m_gridsize;
 	float m_padding;
 
-	std::shared_ptr<Entity> m_active;
+	Entity* m_hover;
+	Entity* m_active;
 public:
 	SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
 	~SceneManager();
@@ -39,8 +40,6 @@ public:
 	void OnRender();
 	void OnRenderDebug();
 	void OnImGui();
-
-	glm::vec2 GetMousePos() const;
 
 	Scene* GetScene() const { return m_scene.get(); }
 	std::string GetSceneName() const { return m_sceneName; }

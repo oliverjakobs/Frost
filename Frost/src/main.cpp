@@ -9,9 +9,6 @@ private:
 
 	ignis_font m_font;
 
-	ignis_texture* m_texture1;
-	ignis_texture* m_texture2;
-
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{

@@ -34,6 +34,8 @@
     <ClCompile Include="src\IgnisRenderer\Renderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
+    <ClCompile Include="src\Camera\Camera.cpp" />
+    <ClCompile Include="src\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -93,25 +95,7 @@
     <ClInclude Include="src\IgnisRenderer\Renderer2D.h" />
     <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
     <ClInclude Include="src\IgnisRenderer\IgnisRenderer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\textures\Textures&amp;trees.png" />
-    <Image Include="res\textures\Tlayer1.png" />
-    <Image Include="res\textures\Tlayer2.png" />
-    <Image Include="res\textures\Tlayer3.png" />
-    <Image Include="res\textures\bgcolor.png" />
-    <Image Include="res\textures\blocky_font.png" />
-    <Image Include="res\textures\box.png" />
-    <Image Include="res\textures\door.png" />
-    <Image Include="res\textures\floor.png" />
-    <Image Include="res\textures\num_font.png" />
-    <Image Include="res\textures\player.png" />
-    <Image Include="res\textures\tiles.png" />
-    <Image Include="res\textures\tree_1.png" />
-    <Image Include="res\textures\tree_2.png" />
-    <Image Include="res\textures\tree_3.png" />
-    <Image Include="res\textures\tree_4.png" />
-    <Image Include="res\textures\tree_5.png" />
+    <ClInclude Include="src\ResourceManager.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -136,5 +120,16 @@
     <None Include="res\templates\scenes\scene.json" />
     <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\batchrenderer.frag" />
+    <None Include="res\index.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\player.png" />
+    <Image Include="res\textures\tree_1.png" />
+    <Image Include="res\textures\tree_2.png" />
+    <Image Include="res\textures\tree_3.png" />
+    <Image Include="res\textures\tree_4.png" />
+    <Image Include="res\textures\tree_5.png" />
+    <Image Include="res\textures\trees.png" />
   </ItemGroup>
 </Project>
