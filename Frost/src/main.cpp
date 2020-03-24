@@ -1,11 +1,13 @@
 #include "Application.hpp"
 
 #include "SceneManager.hpp"
+#include "json/TemplateLoader.hpp"
 
 class Frost : public Application
 {
 private:
 	std::shared_ptr<SceneManager> m_sceneManager;
+	std::shared_ptr<ResourceManager> m_resources;
 
 	ignis_font m_font;
 
@@ -29,8 +31,10 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
+		m_resources = std::make_shared<ResourceManager>("res/index.json");
+
 		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
-		m_sceneManager = std::make_shared<SceneManager>(camera, 32.0f, 4);
+		m_sceneManager = std::make_shared<SceneManager>(m_resources.get(), camera, 32.0f, 4);
 		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
 		m_sceneManager->ChangeScene("scene");
 	}

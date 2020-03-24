@@ -4,8 +4,8 @@
 
 #include "Application.hpp"
 
-SceneManager::SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
-	: m_camera(camera)
+SceneManager::SceneManager(ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
+	: m_resources(resources), m_camera(camera)
 {
 	m_editmode = true;
 	m_showgrid = false; 
@@ -70,7 +70,7 @@ std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
 		return nullptr;
 	}
 
-	return TemplateLoader::LoadScene(path->second, m_camera);
+	return TemplateLoader::LoadScene(path->second, m_camera, m_resources);
 }
 
 void SceneManager::OnEvent(const Event& e)

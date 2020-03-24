@@ -2,12 +2,13 @@
 
 #include "Entity/Scene.hpp"
 
-#include <map>
+#include "ResourceManager.hpp"
 
 class SceneManager
 {
 private:
 	std::shared_ptr<Camera> m_camera;
+	ResourceManager* m_resources;
 
 	std::map<std::string, std::string> m_register;
 
@@ -25,7 +26,7 @@ private:
 	Entity* m_hover;
 	Entity* m_active;
 public:
-	SceneManager(std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
+	SceneManager(ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
 	~SceneManager();
 
 	void RegisterScenes(const std::string& path);

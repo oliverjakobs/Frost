@@ -8,7 +8,7 @@
     "offset": [ 0.0, 192.0 ]
   },
   "texture": {
-    "src": "res/textures/floor.png",
+    "name": "floor",
     "dimension": [ 256.0, 384.0 ]
   }
 }

@@ -2,15 +2,15 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-TextureComponent::TextureComponent(Entity* entity, ignis_texture* texture, float width, float height)
-	: Component(entity), m_texture(texture), m_frame(0), m_width(width), m_height(height), m_renderFlip(RenderFlip::NONE)
+TextureComponent::TextureComponent(Entity* entity, ignis_texture* texture, float width, float height, size_t frame)
+	: Component(entity), m_texture(texture), m_frame(frame), m_width(width), m_height(height), m_renderFlip(RenderFlip::NONE)
 {
 
 }
 
 TextureComponent::~TextureComponent()
 {
-	ignisDestroyTexture(m_texture);
+
 }
 
 void TextureComponent::SetFrame(size_t frame)

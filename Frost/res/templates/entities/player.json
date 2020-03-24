@@ -8,8 +8,7 @@
     "offset": [ 0.0, 30.0 ]
   },
   "texture": {
-    "src": "res/textures/player.png",
-    "atlas": [ 4, 6 ],
+    "name": "player",
 	"dimension": [ 40.0, 60.0 ]
   },
   "animation": {

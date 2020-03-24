@@ -6,7 +6,7 @@
 #define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
 
-std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
+std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, ResourceManager* res)
 {
 	std::string json = obelisk::ReadFile(path);
 
@@ -59,17 +59,18 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	tb_json_read(json.data(), &element, "{'texture'");
 	if (element.error == TB_JSON_OK)
 	{
-		tb_json_element texture;
-		tb_json_read((char*)element.value, &texture, "{'src'");
-		std::string src((char*)texture.value, texture.bytelen);
-
-		int rows = std::max(tb_json_int((char*)element.value, "{'atlas'[0", NULL), 1);
-		int columns = std::max(tb_json_int((char*)element.value, "{'atlas'[1", NULL), 1);
+		tb_json_element tex_name;
+		tb_json_read((char*)element.value, &tex_name, "{'name'");
 
 		float width = tb_json_float((char*)element.value, "{'dimension'[0", NULL);
 		float height = tb_json_float((char*)element.value, "{'dimension'[1", NULL);
 
-		entity->AddComponent<TextureComponent>(ignisCreateTexture(src.c_str(), rows, columns, true), width, height);
+		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
+
+		ignis_texture* texture = res->GetTexture(std::string((char*)tex_name.value, tex_name.bytelen));
+
+		if (texture)
+			entity->AddComponent<TextureComponent>(texture, width, height, frame);
 	}
 
 	tb_json_read(json.data(), &element, "{'animation'");
@@ -131,7 +132,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path)
 	return entity;
 }
 
-std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<Camera> camera)
+std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<Camera> camera, ResourceManager* res)
 {
 	std::string json = obelisk::ReadFile(path);
 
@@ -166,7 +167,7 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			scene->AddEntity(TemplateLoader::LoadEntity(std::string((char*)path.value, path.bytelen)), layer, glm::vec2(x, y));
+			scene->AddEntity(TemplateLoader::LoadEntity(std::string((char*)path.value, path.bytelen), res), layer, glm::vec2(x, y));
 		}
 	}
 
@@ -195,5 +196,36 @@ void TemplateLoader::LoadSceneRegister(SceneManager* manager, const std::string&
 		tb_json_read_format((char*)element.value, &templ, "{'%.*s'", scene.bytelen, (char*)scene.value);
 
 		manager->RegisterScene(std::string((char*)scene.value, scene.bytelen), std::string((char*)templ.value, templ.bytelen));
+	}
+}
+
+void TemplateLoader::LoadResourceManager(ResourceManager* manager, const std::string& path)
+{
+	std::string json = obelisk::ReadFile(path);
+
+	if (json.empty())
+	{
+		OBELISK_WARN("Index not found (%s)", path.c_str());
+		return;
+	}
+
+	tb_json_element element;
+	tb_json_read(json.data(), &element, "{'textures'");
+
+	for (int i = 0; i < element.elements; i++)
+	{
+		tb_json_element name;
+		tb_json_read_param((char*)element.value, &name, "{*", &i);
+
+		tb_json_element texture;
+		tb_json_read_format((char*)element.value, &texture, "{'%.*s'", name.bytelen, (char*)name.value);
+
+		tb_json_element src;
+		tb_json_read((char*)texture.value, &src, "{'src'");
+
+		int rows = std::max(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
+		int columns = std::max(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
+
+		manager->AddTexture(std::string((char*)name.value, name.bytelen), std::string((char*)src.value, src.bytelen), rows, columns);
 	}
 }

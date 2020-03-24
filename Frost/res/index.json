@@ -1,18 +1,7 @@
 {
 	"textures": {
-		"player": {
-			"src": "res/textures/player.png",
-			"atlas": [ 4, 6 ],
-			"dimension": [ 40.0, 60.0 ]
-		},
-		"trees": {
-			"src": "res/textures/trees.png",
-			"atlas": [ 1, 5 ],
-			"dimension": [ 96.0, 256.0 ]
-		},
-		"floor": {
-			"src": "res/textures/floor.png",
-			"dimension": [ 256.0, 384.0 ]
-		}
+		"player":	{ "src": "res/textures/player.png", "atlas": [ 4, 6 ] },
+		"trees":	{ "src": "res/textures/trees.png", "atlas": [ 1, 5 ] },
+		"floor":	{ "src": "res/textures/floor.png" }
 	}
 }

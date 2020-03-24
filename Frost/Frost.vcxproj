@@ -224,11 +224,6 @@
     <Image Include="res\textures\floor.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\trees.png" />
-    <Image Include="res\textures\tree_1.png" />
-    <Image Include="res\textures\tree_2.png" />
-    <Image Include="res\textures\tree_3.png" />
-    <Image Include="res\textures\tree_4.png" />
-    <Image Include="res\textures\tree_5.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

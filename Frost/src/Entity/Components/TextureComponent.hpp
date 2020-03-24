@@ -23,7 +23,7 @@ private:
 	RenderFlip m_renderFlip;
 
 public:
-	TextureComponent(Entity* entity, ignis_texture* texture, float width, float height);
+	TextureComponent(Entity* entity, ignis_texture* texture, float width, float height, size_t frame = 0);
 	~TextureComponent();
 
 	void SetFrame(size_t frame);

@@ -2,7 +2,8 @@
   "name": "tree",
   "position": { },
   "texture": {
-    "src": "res/textures/tree_4.png",
-	"dimension": [ 96.0, 256.0 ]
+    "name": "trees",
+	"dimension": [ 96.0, 256.0 ],
+    "frame": 3
   }
 }
