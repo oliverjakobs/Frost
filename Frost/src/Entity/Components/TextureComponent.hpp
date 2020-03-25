@@ -14,7 +14,7 @@ enum class RenderFlip
 class TextureComponent : public Component
 {
 private:
-	ignis_texture* m_texture;
+	IgnisTexture* m_texture;
 	size_t m_frame;
 
 	float m_width;
@@ -23,7 +23,7 @@ private:
 	RenderFlip m_renderFlip;
 
 public:
-	TextureComponent(Entity* entity, ignis_texture* texture, float width, float height, size_t frame = 0);
+	TextureComponent(Entity* entity, IgnisTexture* texture, float width, float height, size_t frame = 0);
 	~TextureComponent();
 
 	void SetFrame(size_t frame);

@@ -14,8 +14,8 @@
 
 typedef struct
 {
-	ignis_vertex_array vao;
-	ignis_shader shader;
+	IgnisVertexArray vao;
+	IgnisShader shader;
 
 	float* vertices;
 	GLsizei vertex_count;
@@ -27,7 +27,7 @@ void Primitives2DInit(const char* vert, const char* frag)
 {
 	ignisGenerateVertexArray(&_render_data.vao);
 
-	ignis_buffer_element layout[] = 
+	IgnisBufferElement layout[] = 
 	{
 		{GL_FLOAT, 2, GL_FALSE},
 		{GL_FLOAT, 4, GL_FALSE}
@@ -71,7 +71,7 @@ void Primitives2DFlush()
 	_render_data.vertex_count = 0;
 }
 
-void _Primitives2DVertex(float x, float y, const ignis_color_rgba color)
+void _Primitives2DVertex(float x, float y, const IgnisColorRGBA color)
 {
 	if (_render_data.vertex_count >= PRIMITIVES2D_BUFFER_SIZE)
 		Primitives2DFlush();
@@ -85,13 +85,13 @@ void _Primitives2DVertex(float x, float y, const ignis_color_rgba color)
 	_render_data.vertices[_render_data.vertex_count++] = color.a;
 }
 
-void Primitives2DRenderLine(float x1, float y1, float x2, float y2, const ignis_color_rgba color)
+void Primitives2DRenderLine(float x1, float y1, float x2, float y2, const IgnisColorRGBA color)
 {
 	_Primitives2DVertex(x1, y1, color);
 	_Primitives2DVertex(x2, y2, color);
 }
 
-void Primitives2DRenderRect(float x, float y, float w, float h, const ignis_color_rgba color)
+void Primitives2DRenderRect(float x, float y, float w, float h, const IgnisColorRGBA color)
 {
 	float vertices[] =
 	{
@@ -104,7 +104,7 @@ void Primitives2DRenderRect(float x, float y, float w, float h, const ignis_colo
 	Primitives2DRenderPolygon(vertices, 8, color);
 }
 
-void Primitives2DRenderPolygon(float* vertices, size_t count, const ignis_color_rgba color)
+void Primitives2DRenderPolygon(float* vertices, size_t count, const IgnisColorRGBA color)
 {
 	if (!vertices || count < 2) return;
 
@@ -125,7 +125,7 @@ void Primitives2DRenderPolygon(float* vertices, size_t count, const ignis_color_
 	}
 }
 
-void Primitives2DRenderCircle(float x, float y, float radius, const ignis_color_rgba color)
+void Primitives2DRenderCircle(float x, float y, float radius, const IgnisColorRGBA color)
 {
 	float sinInc = sinf(PRIMITIVES2D_K_INCREMENT);
 	float cosInc = cosf(PRIMITIVES2D_K_INCREMENT);

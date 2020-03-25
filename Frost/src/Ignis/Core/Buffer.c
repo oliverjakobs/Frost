@@ -2,7 +2,7 @@
 
 #include "../Ignis.h"
 
-int ignisGenerateBuffer(ignis_buffer* buffer, GLenum target, GLenum format)
+int ignisGenerateBuffer(IgnisBuffer* buffer, GLenum target)
 {
 	GLuint name = 0;
 
@@ -22,48 +22,46 @@ int ignisGenerateBuffer(ignis_buffer* buffer, GLenum target, GLenum format)
 	{
 		buffer->name = name;
 		buffer->target = target;
-		buffer->format = format;
-		buffer->count = 0;
 	}
 
 	return name;
 }
 
-void ignisGenerateArrayBuffer(ignis_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
+void ignisGenerateArrayBuffer(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
 {
 	if (!buffer) return;
 
-	if (ignisGenerateBuffer(buffer, GL_ARRAY_BUFFER, 0))
+	if (ignisGenerateBuffer(buffer, GL_ARRAY_BUFFER))
 		ignisBufferData(buffer, size, data, usage);
 }
 
-void ignisGenerateElementBuffer(ignis_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
+void ignisGenerateElementBuffer(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
 {
 	if (!buffer) return;
 
-	if (ignisGenerateBuffer(buffer, GL_ELEMENT_ARRAY_BUFFER, 0))
+	if (ignisGenerateBuffer(buffer, GL_ELEMENT_ARRAY_BUFFER))
 		ignisElementBufferData(buffer, count, data, usage);
 }
 
-void ignisGenerateTextureBuffer(ignis_buffer* tex_buffer, GLenum format, GLuint buffer)
+void ignisGenerateTextureBuffer(IgnisBuffer* tex_buffer, GLenum format, GLuint buffer)
 {
 	if (!tex_buffer) return;
 
-	if (ignisGenerateBuffer(tex_buffer, GL_TEXTURE_BUFFER, format))
+	if (ignisGenerateBuffer(tex_buffer, GL_TEXTURE_BUFFER))
 	{
 		glBindTexture(tex_buffer->target, tex_buffer->name);
-		glTexBuffer(tex_buffer->target, tex_buffer->format, buffer);
+		glTexBuffer(tex_buffer->target, format, buffer);
 	}
 }
 
-void ignisGenerateRenderBuffer(ignis_buffer* buffer)
+void ignisGenerateRenderBuffer(IgnisBuffer* buffer)
 {
 	if (!buffer) return;
 
-	ignisGenerateBuffer(buffer, GL_RENDERBUFFER, 0);
+	ignisGenerateBuffer(buffer, GL_RENDERBUFFER);
 }
 
-void ignisDeleteBuffer(ignis_buffer* buffer)
+void ignisDeleteBuffer(IgnisBuffer* buffer)
 {
 	switch (buffer->target)
 	{
@@ -81,11 +79,9 @@ void ignisDeleteBuffer(ignis_buffer* buffer)
 
 	buffer->name = 0;
 	buffer->target = 0;
-	buffer->format = 0;
-	buffer->count = 0;
 }
 
-void ignisBindBuffer(ignis_buffer* buffer)
+void ignisBindBuffer(IgnisBuffer* buffer)
 {
 	switch (buffer->target)
 	{
@@ -97,7 +93,7 @@ void ignisBindBuffer(ignis_buffer* buffer)
 	}
 }
 
-void ignisUnbindBuffer(ignis_buffer* buffer)
+void ignisUnbindBuffer(IgnisBuffer* buffer)
 {
 	switch (buffer->target)
 	{
@@ -109,19 +105,19 @@ void ignisUnbindBuffer(ignis_buffer* buffer)
 	}
 }
 
-void ignisBufferData(ignis_buffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
+void ignisBufferData(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage)
 {
 	ignisBindBuffer(buffer);
 	glBufferData(buffer->target, size, data, usage);
 }
 
-void ignisBufferSubData(ignis_buffer* buffer, GLintptr offset, GLsizeiptr size, const void* data)
+void ignisBufferSubData(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr size, const void* data)
 {
 	ignisBindBuffer(buffer);
 	glBufferSubData(buffer->target, offset, size, data);
 }
 
-void ignisElementBufferData(ignis_buffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
+void ignisElementBufferData(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage)
 {
 	if (buffer->target != GL_ELEMENT_ARRAY_BUFFER)
 	{
@@ -131,10 +127,9 @@ void ignisElementBufferData(ignis_buffer* buffer, GLsizei count, const GLuint* d
 
 	ignisBindBuffer(buffer);
 	glBufferData(buffer->target, count * sizeof(GLuint), data, usage);
-	buffer->count = count;
 }
 
-void ignisBindImageTexture(ignis_buffer* buffer, GLuint unit, GLenum access)
+void ignisBindImageTexture(IgnisBuffer* buffer, GLuint unit, GLenum access, GLenum format)
 {
 	if (buffer->target != GL_TEXTURE_BUFFER)
 	{
@@ -142,10 +137,10 @@ void ignisBindImageTexture(ignis_buffer* buffer, GLuint unit, GLenum access)
 		return;
 	}
 
-	glBindImageTexture(unit, buffer->name, 0, GL_FALSE, 0, access, buffer->format);
+	glBindImageTexture(unit, buffer->name, 0, GL_FALSE, 0, access, format);
 }
 
-void ignisRenderBufferStorage(ignis_buffer* buffer, GLenum format, GLsizei width, GLsizei height)
+void ignisRenderBufferStorage(IgnisBuffer* buffer, GLenum format, GLsizei width, GLsizei height)
 {
 	if (buffer->target != GL_RENDERBUFFER)
 	{
@@ -157,19 +152,19 @@ void ignisRenderBufferStorage(ignis_buffer* buffer, GLenum format, GLsizei width
 	glRenderbufferStorage(buffer->target, format, width, height);
 }
 
-void* ignisMapBuffer(ignis_buffer* buffer, GLenum access)
+void* ignisMapBuffer(IgnisBuffer* buffer, GLenum access)
 {
 	ignisBindBuffer(buffer);
 	return glMapBuffer(buffer->target, access);
 }
 
-void* ignisMapBufferRange(ignis_buffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access)
+void* ignisMapBufferRange(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access)
 {
 	ignisBindBuffer(buffer);
 	return glMapBufferRange(buffer->target, offset, length, access);
 }
 
-void ignisUnmapBuffer(ignis_buffer* buffer)
+void ignisUnmapBuffer(IgnisBuffer* buffer)
 {
 	glUnmapBuffer(buffer->target);
 }

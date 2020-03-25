@@ -15,8 +15,8 @@
 
 typedef struct
 {
-	ignis_vertex_array vao;
-	ignis_shader shader;
+	IgnisVertexArray vao;
+	IgnisShader shader;
 
 	float* vertices;
 	size_t vertex_index;
@@ -35,7 +35,7 @@ void BatchRenderer2DInit(const char* vert, const char* frag)
 {
 	ignisGenerateVertexArray(&_render_data.vao);
 
-	ignis_buffer_element layout[] =
+	IgnisBufferElement layout[] =
 	{
 		{GL_FLOAT, 3, GL_FALSE},	/* position */
 		{GL_FLOAT, 2, GL_FALSE},	/* Texture coords*/
@@ -98,11 +98,11 @@ void BatchRenderer2DFlush()
 	/* bind textures */
 	for (size_t i = 0; i < _render_data.texture_slot_index; i++)
 	{
-		glActiveTexture(GL_TEXTURE0 + i);
+		glActiveTexture(GL_TEXTURE0 + (GLenum)i);
 		glBindTexture(GL_TEXTURE_2D, _render_data.texture_slots[i]);
 	}
 
-	glDrawElements(GL_TRIANGLES, BATCHRENDERER2D_INDICES_PER_QUAD * _render_data.quad_count, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, BATCHRENDERER2D_INDICES_PER_QUAD * (GLsizei)_render_data.quad_count, GL_UNSIGNED_INT, NULL);
 
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
@@ -123,12 +123,12 @@ void _BatchRenderer2DPushValue(float value)
 	_render_data.vertices[_render_data.vertex_index++] = value;
 }
 
-void BatchRenderer2DRenderTexture(ignis_texture* texture, float x, float y, float w, float h)
+void BatchRenderer2DRenderTexture(IgnisTexture* texture, float x, float y, float w, float h)
 {
 	BatchRenderer2DRenderTextureFrame(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-void BatchRenderer2DRenderTextureFrame(ignis_texture* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+void BatchRenderer2DRenderTextureFrame(IgnisTexture* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
 {
 	if (_render_data.quad_count >= BATCHRENDERER2D_MAX_QUADS || _render_data.texture_slot_index >= BATCHRENDERER2D_TEXTURES)
 		BatchRenderer2DFlush();

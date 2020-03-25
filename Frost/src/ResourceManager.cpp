@@ -17,9 +17,9 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::AddTexture(const std::string& name, const std::string& path, int rows, int columns)
 {
-	ignis_texture* texture = ignisCreateTexture(path.c_str(), rows, columns, true);
+	IgnisTexture* texture = (IgnisTexture*)malloc(sizeof(IgnisTexture));
 
-	if (texture)
+	if (ignisCreateTexture(texture, path.c_str(), rows, columns, true, NULL))
 	{
 		const auto [it, success] = m_textures.insert({ name, texture });
 
@@ -31,10 +31,37 @@ void ResourceManager::AddTexture(const std::string& name, const std::string& pat
 	}
 }
 
-ignis_texture* ResourceManager::GetTexture(const std::string& name) const
+IgnisTexture* ResourceManager::GetTexture(const std::string& name) const
 {
 	auto it = m_textures.find(name);
 	if (it != m_textures.end())
+	{
+		return it->second;
+	}
+
+	return nullptr;
+}
+
+void ResourceManager::AddFont(const std::string& name, const std::string& path, float size)
+{
+	IgnisFont* font = (IgnisFont*)malloc(sizeof(IgnisFont));
+
+	if (ignisLoadFont(font, path.c_str(), size))
+	{
+		const auto [it, success] = m_fonts.insert({ name, font });
+
+		if (!success)
+		{
+			OBELISK_WARN("[res] Font \"%s\" already in use", name.c_str());
+			ignisDeleteFont(font);
+		}
+	}
+}
+
+IgnisFont* ResourceManager::GetFont(const std::string& name) const
+{
+	auto it = m_fonts.find(name);
+	if (it != m_fonts.end())
 	{
 		return it->second;
 	}

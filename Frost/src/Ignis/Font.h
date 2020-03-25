@@ -20,17 +20,17 @@ typedef struct
 
 	stbtt_bakedchar* char_data;
 
-	ignis_texture* texture;
-} ignis_font;
+	IgnisTexture texture;
+} IgnisFont;
 
-int ignisLoadFont(ignis_font* font, const char* path, float size);
-int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int first, int num, int bm_w, int bm_h);
-void ignisDeleteFont(ignis_font* font);
+int ignisLoadFont(IgnisFont* font, const char* path, float size);
+int ignisLoadFontConfig(IgnisFont* font, const char* path, float size, int first, int num, int bm_w, int bm_h);
+void ignisDeleteFont(IgnisFont* font);
 
-void ignisBindFont(ignis_font* font);
-void ignisUnbindFont(ignis_font* font);
+void ignisBindFont(IgnisFont* font);
+void ignisUnbindFont(IgnisFont* font);
 
-int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices, size_t offset);
+int ignisLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* vertices, size_t offset);
 
 #ifdef __cplusplus
 }

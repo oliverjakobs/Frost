@@ -5,12 +5,12 @@
 
 #include "Ignis.h"
 
-int ignisLoadFont(ignis_font* font, const char* path, float size)
+int ignisLoadFont(IgnisFont* font, const char* path, float size)
 {
 	return ignisLoadFontConfig(font, path, size, IGNIS_FONT_FIRST_CHAR, IGNIS_FONT_NUM_CHARS, IGNIS_FONT_BITMAP_WIDTH, IGNIS_FONT_BITMAP_HEIGHT);
 }
 
-int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int first, int num, int bm_w, int bm_h)
+int ignisLoadFontConfig(IgnisFont* font, const char* path, float size, int first, int num, int bm_w, int bm_h)
 {
 	if (!font)
 	{
@@ -52,12 +52,11 @@ int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int firs
 
 	free(buffer);
 
-	ignis_texture_config config = IGNIS_DEFAULT_CONFIG;
+	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
 	config.internal_format = GL_R8;
 	config.format = GL_RED;
 
-	font->texture = ignisCreateTextureRawc(font->bitmap_width, font->bitmap_height, bitmap, config);
-	if (!font->texture)
+	if (!ignisCreateTextureRaw(&font->texture, font->bitmap_width, font->bitmap_height, bitmap, &config))
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to create texture");
 		ignisDeleteFont(font);
@@ -68,26 +67,25 @@ int ignisLoadFontConfig(ignis_font* font, const char* path, float size, int firs
 	return 1;
 }
 
-void ignisDeleteFont(ignis_font* font)
+void ignisDeleteFont(IgnisFont* font)
 {
 	if (font->char_data)
 		free(font->char_data);
 
-	if (font->texture)
-		ignisDestroyTexture(font->texture);
+	ignisDestroyTexture(&font->texture);
 }
 
-void ignisBindFont(ignis_font* font)
+void ignisBindFont(IgnisFont* font)
 {
-	ignisBindTexture(font->texture, 0);
+	ignisBindTexture(&font->texture, 0);
 }
 
-void ignisUnbindFont(ignis_font* font)
+void ignisUnbindFont(IgnisFont* font)
 {
-	ignisUnbindTexture(font->texture);
+	ignisUnbindTexture(&font->texture);
 }
 
-int ignisLoadCharQuad(ignis_font* font, char c, float* x, float* y, float* vertices, size_t offset)
+int ignisLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* vertices, size_t offset)
 {
 	if (c >= font->first_char && c < font->first_char + font->num_chars)
 	{

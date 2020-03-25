@@ -6,25 +6,27 @@
 #define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
 
+#define TEMPLATE_LOADER_STRLEN	32
+
 std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, ResourceManager* res)
 {
-	std::string json = obelisk::ReadFile(path);
+	char* json = ignisReadFile(path.c_str(), NULL);
 
-	if (json.empty())
+	if (!json)
 	{
 		OBELISK_WARN("Template not found (%s)", path.c_str());
 		return nullptr;
 	}
 
 	tb_json_element element;
-	tb_json_read(json.data(), &element, "{'name'");
+	tb_json_read(json, &element, "{'name'");
 
 	std::string name((char*)element.value, element.bytelen);
 	if (name.empty()) return nullptr;
 
 	auto entity = std::make_shared<Entity>(name);
 
-	tb_json_read(json.data(), &element, "{'position'");
+	tb_json_read(json, &element, "{'position'");
 	if (element.error == TB_JSON_OK)
 	{
 		float x = tb_json_float((char*)element.value, "[0", NULL);
@@ -33,7 +35,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 		entity->AddComponent<PositionComponent>(glm::vec2(x, y));
 	}
 
-	tb_json_read(json.data(), &element, "{'physics'");
+	tb_json_read(json, &element, "{'physics'");
 	if (element.error == TB_JSON_OK)
 	{
 		tb_json_element body;
@@ -56,7 +58,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 		}
 	}
 
-	tb_json_read(json.data(), &element, "{'texture'");
+	tb_json_read(json, &element, "{'texture'");
 	if (element.error == TB_JSON_OK)
 	{
 		tb_json_element tex_name;
@@ -67,13 +69,13 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 
 		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
 
-		ignis_texture* texture = res->GetTexture(std::string((char*)tex_name.value, tex_name.bytelen));
+		IgnisTexture* texture = res->GetTexture(std::string((char*)tex_name.value, tex_name.bytelen));
 
 		if (texture)
 			entity->AddComponent<TextureComponent>(texture, width, height, frame);
 	}
 
-	tb_json_read(json.data(), &element, "{'animation'");
+	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
 		auto animator = std::make_shared<Animator>();
@@ -120,7 +122,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 		entity->AddComponent<AnimationComponent>(animator);
 	}
 
-	tb_json_read(json.data(), &element, "{'player'");
+	tb_json_read(json, &element, "{'player'");
 	if (element.error == TB_JSON_OK)
 	{
 		float ms = tb_json_float((char*)element.value, "{'movementspeed'", NULL);
@@ -129,26 +131,28 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 		entity->AddComponent<PlayerComponent>(ms, jp);
 	}
 
+	free(json);
+
 	return entity;
 }
 
 std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<Camera> camera, ResourceManager* res)
 {
-	std::string json = obelisk::ReadFile(path);
+	char* json = ignisReadFile(path.c_str(), NULL);
 
-	if (json.empty())
+	if (!json)
 	{
 		OBELISK_WARN("Template not found (%s)", path.c_str());
 		return nullptr;
 	}
 
-	float width = tb_json_float(json.data(), "{'size'[0", NULL);
-	float height = tb_json_float(json.data(), "{'size'[1", NULL);
+	float width = tb_json_float(json, "{'size'[0", NULL);
+	float height = tb_json_float(json, "{'size'[1", NULL);
 
 	auto scene = std::make_shared<Scene>(camera, width, height);
 
 	tb_json_element element;
-	tb_json_read(json.data(), &element, "{'templates'");
+	tb_json_read(json, &element, "{'templates'");
 
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
@@ -171,21 +175,23 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 		}
 	}
 
+	free(json);
+
 	return scene;
 }
 
 void TemplateLoader::LoadSceneRegister(SceneManager* manager, const std::string& path)
 {
-	std::string json = obelisk::ReadFile(path);
+	char* json = ignisReadFile(path.c_str(), NULL);
 
-	if (json.empty())
+	if (!json)
 	{
 		OBELISK_WARN("Register not found (%s)", path.c_str());
 		return;
 	}
 
 	tb_json_element element;
-	tb_json_read(json.data(), &element, "{'scenes'");
+	tb_json_read(json, &element, "{'scenes'");
 
 	for (int i = 0; i < element.elements; i++)
 	{
@@ -197,35 +203,62 @@ void TemplateLoader::LoadSceneRegister(SceneManager* manager, const std::string&
 
 		manager->RegisterScene(std::string((char*)scene.value, scene.bytelen), std::string((char*)templ.value, templ.bytelen));
 	}
+
+	free(json);
 }
 
 void TemplateLoader::LoadResourceManager(ResourceManager* manager, const std::string& path)
 {
-	std::string json = obelisk::ReadFile(path);
+	char* json = ignisReadFile(path.c_str(), NULL);
 
-	if (json.empty())
+	if (!json)
 	{
 		OBELISK_WARN("Index not found (%s)", path.c_str());
 		return;
 	}
 
-	tb_json_element element;
-	tb_json_read(json.data(), &element, "{'textures'");
+	// Textures
+	tb_json_element textures;
+	tb_json_read(json, &textures, "{'textures'");
 
-	for (int i = 0; i < element.elements; i++)
+	for (int i = 0; i < textures.elements; i++)
 	{
 		tb_json_element name;
-		tb_json_read_param((char*)element.value, &name, "{*", &i);
+		tb_json_read_param((char*)textures.value, &name, "{*", &i);
 
 		tb_json_element texture;
-		tb_json_read_format((char*)element.value, &texture, "{'%.*s'", name.bytelen, (char*)name.value);
+		tb_json_read_format((char*)textures.value, &texture, "{'%.*s'", name.bytelen, (char*)name.value);
 
-		tb_json_element src;
-		tb_json_read((char*)texture.value, &src, "{'src'");
+		tb_json_element path;
+		tb_json_read((char*)texture.value, &path, "{'path'");
 
 		int rows = std::max(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
 		int columns = std::max(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
 
-		manager->AddTexture(std::string((char*)name.value, name.bytelen), std::string((char*)src.value, src.bytelen), rows, columns);
+		manager->AddTexture(std::string((char*)name.value, name.bytelen), std::string((char*)path.value, path.bytelen), rows, columns);
 	}
+
+	// Fonts
+	tb_json_element fonts;
+	tb_json_read(json, &fonts, "{'fonts'");
+
+	for (int i = 0; i < fonts.elements; i++)
+	{
+		char name[TEMPLATE_LOADER_STRLEN];
+		tb_json_string((char*)fonts.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
+		//tb_json_read_param((char*)fonts.value, &name, "{*", &i);
+
+		tb_json_element font;
+		tb_json_read_format((char*)fonts.value, &font, "{'%s'", name);
+
+		char path[TEMPLATE_LOADER_STRLEN];
+		tb_json_string((char*)font.value, "{'path'", path, TEMPLATE_LOADER_STRLEN, NULL);
+		//tb_json_read((char*)font.value, &path, "{'path'");
+
+		float size = tb_json_float((char*)font.value, "{'size'", NULL);
+
+		manager->AddFont(name, path, size);
+	}
+
+	free(json);
 }

@@ -105,18 +105,20 @@ GLuint ignisGetOpenGLTypeSize(GLenum type)
 	}
 }
 
-const ignis_color_rgba IGNIS_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
-const ignis_color_rgba IGNIS_BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
-const ignis_color_rgba IGNIS_RED = { 1.0f, 0.0f, 0.0f, 1.0f };
-const ignis_color_rgba IGNIS_GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
-const ignis_color_rgba IGNIS_BLUE = { 0.0f, 0.0f, 1.0f, 1.0f };
-const ignis_color_rgba IGNIS_CYAN = { 0.0f, 1.0f, 1.0f, 1.0f };
-const ignis_color_rgba IGNIS_MAGENTA = { 1.0f, 0.0f, 1.0f, 1.0f };
-const ignis_color_rgba IGNIS_YELLOW = { 1.0f, 1.0f, 0.0f, 1.0f };
+const IgnisColorRGBA IGNIS_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
+const IgnisColorRGBA IGNIS_BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
+const IgnisColorRGBA IGNIS_RED = { 1.0f, 0.0f, 0.0f, 1.0f };
+const IgnisColorRGBA IGNIS_GREEN = { 0.0f, 1.0f, 0.0f, 1.0f };
+const IgnisColorRGBA IGNIS_BLUE = { 0.0f, 0.0f, 1.0f, 1.0f };
+const IgnisColorRGBA IGNIS_CYAN = { 0.0f, 1.0f, 1.0f, 1.0f };
+const IgnisColorRGBA IGNIS_MAGENTA = { 1.0f, 0.0f, 1.0f, 1.0f };
+const IgnisColorRGBA IGNIS_YELLOW = { 1.0f, 1.0f, 0.0f, 1.0f };
 
-void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha)
+IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha)
 {
 	color->a = alpha;
+
+	return color;
 }
 
 char* ignisReadFile(const char* path, size_t* sizeptr)

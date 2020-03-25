@@ -53,18 +53,18 @@ GLuint ignisGetOpenGLTypeSize(GLenum type);
 typedef struct
 {
 	float r, g, b, a;
-} ignis_color_rgba;
+} IgnisColorRGBA;
 
-extern const ignis_color_rgba IGNIS_WHITE;
-extern const ignis_color_rgba IGNIS_BLACK;
-extern const ignis_color_rgba IGNIS_RED;
-extern const ignis_color_rgba IGNIS_GREEN;
-extern const ignis_color_rgba IGNIS_BLUE;
-extern const ignis_color_rgba IGNIS_CYAN;
-extern const ignis_color_rgba IGNIS_MAGENTA;
-extern const ignis_color_rgba IGNIS_YELLOW;
+extern const IgnisColorRGBA IGNIS_WHITE;
+extern const IgnisColorRGBA IGNIS_BLACK;
+extern const IgnisColorRGBA IGNIS_RED;
+extern const IgnisColorRGBA IGNIS_GREEN;
+extern const IgnisColorRGBA IGNIS_BLUE;
+extern const IgnisColorRGBA IGNIS_CYAN;
+extern const IgnisColorRGBA IGNIS_MAGENTA;
+extern const IgnisColorRGBA IGNIS_YELLOW;
 
-void ignisBlendColorRGBA(ignis_color_rgba* color, float alpha);
+IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha);
 
 char* ignisReadFile(const char* path, size_t* sizeptr);
 

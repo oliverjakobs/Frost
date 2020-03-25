@@ -2,8 +2,8 @@
 
 typedef struct
 {
-	ignis_vertex_array vao;
-	ignis_shader shader;
+	IgnisVertexArray vao;
+	IgnisShader shader;
 
 	GLint uniform_location_view_proj;
 	GLint uniform_location_color;
@@ -25,7 +25,7 @@ void Renderer2DInit(const char* vert, const char* frag)
 		0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 	};
 
-	ignis_buffer_element layout[] =
+	IgnisBufferElement layout[] =
 	{
 		{GL_FLOAT, 3, GL_FALSE},
 		{GL_FLOAT, 2, GL_FALSE}
@@ -63,12 +63,12 @@ void Renderer2DFlush()
 {
 }
 
-void Renderer2DRenderTexture(ignis_texture* texture, const float* mat_model, const float* mat_src)
+void Renderer2DRenderTexture(IgnisTexture* texture, const float* mat_model, const float* mat_src)
 {
 	Renderer2DRenderTextureColor(texture, mat_model, mat_src, IGNIS_WHITE);
 }
 
-void Renderer2DRenderTextureColor(ignis_texture* texture, const float* mat_model, const float* mat_src, const ignis_color_rgba color)
+void Renderer2DRenderTextureColor(IgnisTexture* texture, const float* mat_model, const float* mat_src, const IgnisColorRGBA color)
 {
 	ignisSetUniform4fl(_render_data.uniform_location_color, &color.r);
 	ignisSetUniformMat4l(_render_data.uniform_location_model, mat_model);
@@ -77,5 +77,5 @@ void Renderer2DRenderTextureColor(ignis_texture* texture, const float* mat_model
 	ignisBindTexture(texture, 0);
 
 	ignisBindVertexArray(&_render_data.vao);
-	glDrawElements(GL_TRIANGLES, _render_data.vao.element_buffer.count, GL_UNSIGNED_INT, NULL);
+	glDrawElements(GL_TRIANGLES, _render_data.vao.element_count, GL_UNSIGNED_INT, NULL);
 }

@@ -14,8 +14,8 @@ void Renderer2DDestroy();
 void Renderer2DStart(const float* mat_view_proj);
 void Renderer2DFlush();
 
-void Renderer2DRenderTexture(ignis_texture* texture, const float* mat_model, const float* mat_src);
-void Renderer2DRenderTextureColor(ignis_texture* texture, const float* mat_model, const float* mat_src, const ignis_color_rgba color);
+void Renderer2DRenderTexture(IgnisTexture* texture, const float* mat_model, const float* mat_src);
+void Renderer2DRenderTextureColor(IgnisTexture* texture, const float* mat_model, const float* mat_src, const IgnisColorRGBA color);
 
 #ifdef __cplusplus
 }

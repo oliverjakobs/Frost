@@ -13,8 +13,8 @@
 
 typedef struct 
 {
-	ignis_vertex_array vao;
-	ignis_shader shader;
+	IgnisVertexArray vao;
+	IgnisShader shader;
 
 	GLint uniform_location_proj;
 	GLint uniform_location_color;
@@ -26,7 +26,7 @@ void FontRendererInit(const char* vert, const char* frag)
 {
 	ignisGenerateVertexArray(&_render_data.vao);
 
-	ignis_buffer_element layout[] = { {GL_FLOAT, 4, GL_FALSE} };
+	IgnisBufferElement layout[] = { {GL_FLOAT, 4, GL_FALSE} };
 	ignisAddArrayBufferLayout(&_render_data.vao, FONTRENDERER_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, layout, 1);
 
 	GLuint indices[FONTRENDERER_INDEX_COUNT];
@@ -56,7 +56,7 @@ static void _FontRendererFlush(float* vertices)
 	glDrawElements(GL_TRIANGLES, FONTRENDERER_INDEX_COUNT, GL_UNSIGNED_INT, 0);
 }
 
-void FontRendererRenderText(ignis_font* font, const char* text, float x, float y, const float* mat_proj, const ignis_color_rgba color)
+void FontRendererRenderText(IgnisFont* font, const char* text, float x, float y, const float* mat_proj, const IgnisColorRGBA color)
 {
 	if (!font) return;
 

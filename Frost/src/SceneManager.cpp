@@ -134,7 +134,7 @@ void SceneManager::OnRender()
 
 		if (m_showgrid)
 		{
-			ignis_color_rgba color = IGNIS_WHITE;
+			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.2f);
 
 			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
@@ -146,7 +146,7 @@ void SceneManager::OnRender()
 
 		for (auto& entity : m_scene->GetEntities(m_layer))
 		{
-			ignis_color_rgba color = IGNIS_WHITE;
+			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.4f);
 
 			auto tex = entity->GetComponent<TextureComponent>();

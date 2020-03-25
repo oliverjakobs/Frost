@@ -9,7 +9,7 @@ private:
 	std::shared_ptr<SceneManager> m_sceneManager;
 	std::shared_ptr<ResourceManager> m_resources;
 
-	ignis_font m_font;
+	IgnisFont* m_font;
 
 public:
 	Frost() : Application("Frost", 1024, 800)
@@ -25,13 +25,13 @@ public:
 		BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-		ignisLoadFont(&m_font, "res/fonts/OpenSans.ttf", 32.0f);
+		m_resources = std::make_shared<ResourceManager>("res/index.json");
+		m_font = m_resources->GetFont("font");
 
 		EnableDebugMode(true);
 		EnableImGui(true);
 		EnableVsync(false);
 
-		m_resources = std::make_shared<ResourceManager>("res/index.json");
 
 		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
 		m_sceneManager = std::make_shared<SceneManager>(m_resources.get(), camera, 32.0f, 4);
@@ -41,8 +41,6 @@ public:
 
 	~Frost()
 	{
-		ignisDeleteFont(&m_font);
-
 		FontRendererDestroy();
 		Primitives2DDestroy();
 		BatchRenderer2DDestroy();
@@ -94,7 +92,7 @@ public:
 		m_sceneManager->OnRenderDebug();
 
 		// debug info
-		FontRendererRenderText(&m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
+		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
 	}
 
 	void OnImGui() override

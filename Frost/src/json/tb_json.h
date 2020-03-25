@@ -98,35 +98,39 @@ extern "C"
 
 #include <stdarg.h>
 
-// -----------------------------------------------------------------------------
-// ----| Version |--------------------------------------------------------------
-// -----------------------------------------------------------------------------
+/*
+* -----------------------------------------------------------------------------
+* ----| Version |--------------------------------------------------------------
+* -----------------------------------------------------------------------------
+*/
 
 #define TB_JSON_VERSION_MAJOR   1
 #define TB_JSON_VERSION_MINOR   2
 
-//--------------------------------------------------------------------
-// enums
-//--------------------------------------------------------------------
+/*
+* --------------------------------------------------------------------
+* enums
+* --------------------------------------------------------------------
+*/
 
 typedef enum
 {
-    // return types:
-    TB_JSON_ERROR,      // general error, eof etc.
-    TB_JSON_OBJECT,     // "{"
-    TB_JSON_ARRAY,      // "["
-    TB_JSON_STRING,     // "string" 
-    TB_JSON_NUMBER,     // number (may be -ve) int or float
-    TB_JSON_BOOL,       // true or false
-    TB_JSON_NULL,       // null
-    TB_JSON_KEY,        // object "key"
-    // internal values:
-    TB_JSON_COLON,      // ":"
-    TB_JSON_EOL,        // end of input string (ptr at '\0')
-    TB_JSON_COMMA,      // ","
-    TB_JSON_EOBJECT,    // "}"
-    TB_JSON_EARRAY,     // "]"
-    TB_JSON_QPARAM      // "*" query string parameter
+    /* return types: */
+    TB_JSON_ERROR,      /* general error, eof etc. */
+    TB_JSON_OBJECT,     /* "{" */
+    TB_JSON_ARRAY,      /* "[" */
+    TB_JSON_STRING,     /* "string" */
+    TB_JSON_NUMBER,     /* number (may be -ve) int or float */
+    TB_JSON_BOOL,       /* true or false */
+    TB_JSON_NULL,       /* null */
+    TB_JSON_KEY,        /* object "key" */
+    /* internal values: */
+    TB_JSON_COLON,      /* ":" */
+    TB_JSON_EOL,        /* end of input string (ptr at '\0') */
+    TB_JSON_COMMA,      /* "," */
+    TB_JSON_EOBJECT,    /* "}" */
+    TB_JSON_EARRAY,     /* "]" */
+    TB_JSON_QPARAM      /* "*" query string parameter */
 } tb_json_type;
 
 typedef enum

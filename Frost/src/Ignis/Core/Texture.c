@@ -5,26 +5,17 @@
 
 #include "../Ignis.h"
 
-ignis_texture* ignisCreateTextureEmpty(int width, int height)
+int ignisCreateTextureEmpty(IgnisTexture* texture, int width, int height, IgnisTextureConfig* config)
 {
-	ignis_texture_config config = IGNIS_DEFAULT_CONFIG;
-	return ignisCreateTextureRawc(width, height, NULL, config);
+	return ignisCreateTextureRaw(texture, width, height, NULL, config);
 }
 
-ignis_texture* ignisCreateTextureEmptyc(int width, int height, ignis_texture_config config)
+int ignisCreateTextureRaw(IgnisTexture* texture, int width, int height, void* pixels, IgnisTextureConfig* configptr)
 {
-	return ignisCreateTextureRawc(width, height, NULL, config);
-}
+	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
 
-ignis_texture* ignisCreateTextureRaw(int width, int height, void* pixels)
-{
-	ignis_texture_config config = IGNIS_DEFAULT_CONFIG;
-	return ignisCreateTextureRawc(width, height, pixels, config);
-}
-
-ignis_texture* ignisCreateTextureRawc(int width, int height, void* pixels, ignis_texture_config config)
-{
-	ignis_texture* texture = (ignis_texture*)malloc(sizeof(ignis_texture));
+	if (configptr)
+		config = *configptr;
 
 	if (texture)
 	{
@@ -35,24 +26,19 @@ ignis_texture* ignisCreateTextureRawc(int width, int height, void* pixels, ignis
 		texture->columns = 1;
 		texture->slot = 0;
 		texture->config = config;
-	}
-	else
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Tex] Failed to allocate memory");
+
+		return texture->name;
 	}
 
-	return texture;
+	return 0;
 }
 
-ignis_texture* ignisCreateTexture(const char* path, GLuint rows, GLuint columns, int flip_on_load)
+int ignisCreateTexture(IgnisTexture* texture, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* configptr)
 {
-	ignis_texture_config config = IGNIS_DEFAULT_CONFIG;
-	return ignisCreateTexturec(path, rows, columns, flip_on_load, config);
-}
+	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
 
-ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns, int flip_on_load, ignis_texture_config config)
-{
-	ignis_texture* texture = (ignis_texture*)malloc(sizeof(ignis_texture));
+	if (configptr)
+		config = *configptr;
 
 	if (texture)
 	{
@@ -89,22 +75,19 @@ ignis_texture* ignisCreateTexturec(const char* path, GLuint rows, GLuint columns
 		texture->columns = columns;
 		texture->slot = 0;
 		texture->config = config;
-	}
-	else
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Tex] Failed to allocate memory");
+
+		return texture->name;
 	}
 
-	return texture;
+	return 0;
 }
 
-void ignisDestroyTexture(ignis_texture* texture)
+void ignisDestroyTexture(IgnisTexture* texture)
 {
 	glDeleteTextures(1, &texture->name);
-	free(texture);
 }
 
-GLuint ignisGenerateTexture2D(int width, int height, void* pixels, ignis_texture_config config)
+GLuint ignisGenerateTexture2D(int width, int height, void* pixels, IgnisTextureConfig config)
 {
 	GLuint name;
 	glGenTextures(1, &name);
@@ -122,14 +105,14 @@ GLuint ignisGenerateTexture2D(int width, int height, void* pixels, ignis_texture
 	return name;
 }
 
-void ignisBindTexture(ignis_texture* texture, GLuint slot)
+void ignisBindTexture(IgnisTexture* texture, GLuint slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, texture->name);
 	texture->slot = slot;
 }
 
-void ignisUnbindTexture(ignis_texture* texture)
+void ignisUnbindTexture(IgnisTexture* texture)
 {
 	glActiveTexture(GL_TEXTURE0 + texture->slot);
 	glBindTexture(GL_TEXTURE_2D, 0);

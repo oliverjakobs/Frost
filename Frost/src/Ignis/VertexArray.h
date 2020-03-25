@@ -13,7 +13,7 @@ typedef struct
     GLenum type;
     GLsizei count;
     GLboolean normalized;
-} ignis_buffer_element;
+} IgnisBufferElement;
 
 typedef struct
 {
@@ -21,22 +21,23 @@ typedef struct
     GLuint vertex_attrib_index;
 
     /* dynamic buffer array */
-    ignis_buffer* array_buffers;
+    IgnisBuffer* array_buffers;
     size_t buffer_used;
     size_t buffer_count;
 
-    ignis_buffer element_buffer;
-} ignis_vertex_array;
+    IgnisBuffer element_buffer;
+    GLsizei element_count;
+} IgnisVertexArray;
 
-void ignisGenerateVertexArray(ignis_vertex_array* vao);
-void ignisDeleteVertexArray(ignis_vertex_array* vao);
+void ignisGenerateVertexArray(IgnisVertexArray* vao);
+void ignisDeleteVertexArray(IgnisVertexArray* vao);
 
-void ignisBindVertexArray(ignis_vertex_array* vao);
-void ignisUnbindVertexArray(ignis_vertex_array* vao);
+void ignisBindVertexArray(IgnisVertexArray* vao);
+void ignisUnbindVertexArray(IgnisVertexArray* vao);
 
-void ignisAddArrayBuffer(ignis_vertex_array* vao, GLsizeiptr size, const void* data, GLenum usage);
-void ignisAddArrayBufferLayout(ignis_vertex_array* vao, GLsizeiptr size, const void* data, GLenum usage, ignis_buffer_element* layout, size_t count);
-void ignisLoadElementBuffer(ignis_vertex_array* vao, GLuint* indices, GLsizei count, GLenum usage);
+void ignisAddArrayBuffer(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage);
+void ignisAddArrayBufferLayout(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage, IgnisBufferElement* layout, size_t count);
+void ignisLoadElementBuffer(IgnisVertexArray* vao, GLuint* indices, GLsizei count, GLenum usage);
 
 #ifdef __cplusplus
 }

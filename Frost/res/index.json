@@ -1,7 +1,10 @@
 {
 	"textures": {
-		"player":	{ "src": "res/textures/player.png", "atlas": [ 4, 6 ] },
-		"trees":	{ "src": "res/textures/trees.png", "atlas": [ 1, 5 ] },
-		"floor":	{ "src": "res/textures/floor.png" }
+		"player":	{ "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
+		"trees":	{ "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
+		"floor":	{ "path": "res/textures/floor.png" }
+	},
+	"fonts": {
+		"font": { "path": "res/fonts/OpenSans.ttf", "size": 32.0 }
 	}
 }
