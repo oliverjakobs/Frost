@@ -36,6 +36,7 @@
     <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\Background.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -96,6 +97,7 @@
     <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
     <ClInclude Include="src\IgnisRenderer\IgnisRenderer.h" />
     <ClInclude Include="src\ResourceManager.hpp" />
+    <ClInclude Include="src\Background.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

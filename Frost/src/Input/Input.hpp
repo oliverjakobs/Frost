@@ -147,6 +147,16 @@
 
 #include <glm/glm.hpp>
 
+bool InputKeyPressed(int keycode);
+bool InputKeyReleased(int keycode);
+
+bool InputMousePressed(int button);
+bool InputMouseReleased(int button);
+
+glm::vec2 InputMousePosition();
+float InputMouseX();
+float InputMouseY();
+
 class Input
 {
 public:

@@ -27,14 +27,14 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	
 	bool collidesBottom = phys->GetBody()->CollidesBottom();
 	
-	if (Input::KeyPressed(KEY_A))
+	if (InputKeyPressed(KEY_A))
 		velocity.x -= m_movementSpeed;
-	if (Input::KeyPressed(KEY_D))
+	if (InputKeyPressed(KEY_D))
 		velocity.x += m_movementSpeed;
 	
-	if (Input::KeyPressed(KEY_SPACE) && collidesBottom)
+	if (InputKeyPressed(KEY_SPACE) && collidesBottom)
 		velocity.y = m_jumpPower;
-	else if (Input::KeyReleased(KEY_SPACE) && (velocity.y > 0.0f))
+	else if (InputKeyReleased(KEY_SPACE) && (velocity.y > 0.0f))
 		velocity.y *= 0.5f;
 	
 	if (velocity.x > 0.0f)

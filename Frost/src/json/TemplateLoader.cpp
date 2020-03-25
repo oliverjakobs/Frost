@@ -7,25 +7,24 @@
 #include "json/tb_json.h"
 
 #define TEMPLATE_LOADER_STRLEN	32
+#define TEMPLATE_LOADER_PATHLEN	64
 
-std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, ResourceManager* res)
+std::shared_ptr<Entity> TemplateLoader::LoadEntity(const char* json_path, ResourceManager* res)
 {
-	char* json = ignisReadFile(path.c_str(), NULL);
+	char* json = ignisReadFile(json_path, NULL);
 
 	if (!json)
 	{
-		OBELISK_WARN("Template not found (%s)", path.c_str());
+		OBELISK_WARN("Template not found (%s)", json_path);
 		return nullptr;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'name'");
-
-	std::string name((char*)element.value, element.bytelen);
-	if (name.empty()) return nullptr;
+	char name[TEMPLATE_LOADER_STRLEN];
+	tb_json_string(json, "{'name'", name, TEMPLATE_LOADER_STRLEN, NULL);
 
 	auto entity = std::make_shared<Entity>(name);
 
+	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");
 	if (element.error == TB_JSON_OK)
 	{
@@ -61,15 +60,15 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 	tb_json_read(json, &element, "{'texture'");
 	if (element.error == TB_JSON_OK)
 	{
-		tb_json_element tex_name;
-		tb_json_read((char*)element.value, &tex_name, "{'name'");
+		char tex_name[TEMPLATE_LOADER_STRLEN];
+		tb_json_string((char*)element.value, "{'name'", tex_name, TEMPLATE_LOADER_STRLEN, NULL);
 
 		float width = tb_json_float((char*)element.value, "{'dimension'[0", NULL);
 		float height = tb_json_float((char*)element.value, "{'dimension'[1", NULL);
 
 		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
 
-		IgnisTexture* texture = res->GetTexture(std::string((char*)tex_name.value, tex_name.bytelen));
+		IgnisTexture* texture = res->GetTexture(tex_name);
 
 		if (texture)
 			entity->AddComponent<TextureComponent>(texture, width, height, frame);
@@ -106,17 +105,15 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 
 				if (transition_element.data_type == TB_JSON_ARRAY)
 				{
-					tb_json_element condition;
-					tb_json_read_param((char*)transition_element.value, &condition, "[0", NULL);
-					tb_json_element next;
-					tb_json_read_param((char*)transition_element.value, &next, "[1", NULL);
+					char condition[TEMPLATE_LOADER_STRLEN];
+					tb_json_string((char*)transition_element.value, "[0", condition, TEMPLATE_LOADER_STRLEN, NULL);
+					char next[TEMPLATE_LOADER_STRLEN];
+					tb_json_string((char*)transition_element.value, "[1", next, TEMPLATE_LOADER_STRLEN, NULL);
 
-					transitions.push_back({ std::string((char*)condition.value, condition.bytelen), std::string((char*)next.value, next.bytelen) });
+					transitions.push_back({ condition, next });
 				}
 			}
-
 			animator->CreateAnimation(std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
-			
 		}
 
 		entity->AddComponent<AnimationComponent>(animator);
@@ -136,13 +133,13 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const std::string& path, Reso
 	return entity;
 }
 
-std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::shared_ptr<Camera> camera, ResourceManager* res)
+std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, std::shared_ptr<Camera> camera, ResourceManager* res)
 {
-	char* json = ignisReadFile(path.c_str(), NULL);
+	char* json = ignisReadFile(json_path, NULL);
 
 	if (!json)
 	{
-		OBELISK_WARN("Template not found (%s)", path.c_str());
+		OBELISK_WARN("Template not found (%s)", json_path);
 		return nullptr;
 	}
 
@@ -151,27 +148,27 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 
 	auto scene = std::make_shared<Scene>(camera, width, height);
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'templates'");
+	tb_json_element templates;
+	tb_json_read(json, &templates, "{'templates'");
 
-	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
+	if (templates.error == TB_JSON_OK && templates.data_type == TB_JSON_ARRAY)
 	{
-		char* value = (char*)element.value;
+		char* value = (char*)templates.value;
 		tb_json_element entity;
 
-		for (int i = 0; i < element.elements; i++)
+		for (int i = 0; i < templates.elements; i++)
 		{
 			value = tb_json_array_step(value, &entity);
 
-			tb_json_element path;
-			tb_json_read((char*)entity.value, &path, "[0");
+			char path[TEMPLATE_LOADER_PATHLEN];
+			tb_json_string((char*)entity.value, "[0", path, TEMPLATE_LOADER_PATHLEN, NULL);
 
 			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
 			float y = tb_json_float((char*)entity.value, "[1[1", NULL);
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			scene->AddEntity(TemplateLoader::LoadEntity(std::string((char*)path.value, path.bytelen), res), layer, glm::vec2(x, y));
+			scene->AddEntity(TemplateLoader::LoadEntity(path, res), layer, glm::vec2(x, y));
 		}
 	}
 
@@ -180,40 +177,45 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const std::string& path, std::s
 	return scene;
 }
 
-void TemplateLoader::LoadSceneRegister(SceneManager* manager, const std::string& path)
+void TemplateLoader::LoadSceneRegister(SceneManager* manager, const char* json_path)
 {
-	char* json = ignisReadFile(path.c_str(), NULL);
+	char* json = ignisReadFile(json_path, NULL);
 
 	if (!json)
 	{
-		OBELISK_WARN("Register not found (%s)", path.c_str());
+		OBELISK_WARN("Register not found (%s)", json_path);
 		return;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'scenes'");
+	tb_json_element scenes;
+	tb_json_read(json, &scenes, "{'scenes'");
 
-	for (int i = 0; i < element.elements; i++)
+	for (int i = 0; i < scenes.elements; i++)
 	{
+		char name[TEMPLATE_LOADER_STRLEN];
+		tb_json_string((char*)scenes.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
+
 		tb_json_element scene;
-		tb_json_read_param((char*)element.value, &scene, "{*", &i);
+		tb_json_read_format((char*)scenes.value, &scene, "{'%s'", name);
 
-		tb_json_element templ;
-		tb_json_read_format((char*)element.value, &templ, "{'%.*s'", scene.bytelen, (char*)scene.value);
+		char path[TEMPLATE_LOADER_PATHLEN];
+		strncpy(path, (char*)scene.value, scene.bytelen);
 
-		manager->RegisterScene(std::string((char*)scene.value, scene.bytelen), std::string((char*)templ.value, templ.bytelen));
+		path[scene.bytelen] = '\0';
+
+		manager->RegisterScene(name, path);
 	}
 
 	free(json);
 }
 
-void TemplateLoader::LoadResourceManager(ResourceManager* manager, const std::string& path)
+void TemplateLoader::LoadResourceManager(ResourceManager* manager, const char* json_path)
 {
-	char* json = ignisReadFile(path.c_str(), NULL);
+	char* json = ignisReadFile(json_path, NULL);
 
 	if (!json)
 	{
-		OBELISK_WARN("Index not found (%s)", path.c_str());
+		OBELISK_WARN("Index not found (%s)", json_path);
 		return;
 	}
 
@@ -223,19 +225,19 @@ void TemplateLoader::LoadResourceManager(ResourceManager* manager, const std::st
 
 	for (int i = 0; i < textures.elements; i++)
 	{
-		tb_json_element name;
-		tb_json_read_param((char*)textures.value, &name, "{*", &i);
+		char name[TEMPLATE_LOADER_STRLEN];
+		tb_json_string((char*)textures.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
 
 		tb_json_element texture;
-		tb_json_read_format((char*)textures.value, &texture, "{'%.*s'", name.bytelen, (char*)name.value);
+		tb_json_read_format((char*)textures.value, &texture, "{'%s'", name);
 
-		tb_json_element path;
-		tb_json_read((char*)texture.value, &path, "{'path'");
+		char path[TEMPLATE_LOADER_PATHLEN];
+		tb_json_string((char*)texture.value, "{'path'", path, TEMPLATE_LOADER_PATHLEN, NULL);
 
 		int rows = std::max(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
 		int columns = std::max(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
 
-		manager->AddTexture(std::string((char*)name.value, name.bytelen), std::string((char*)path.value, path.bytelen), rows, columns);
+		manager->AddTexture(name, path, rows, columns);
 	}
 
 	// Fonts
@@ -246,14 +248,12 @@ void TemplateLoader::LoadResourceManager(ResourceManager* manager, const std::st
 	{
 		char name[TEMPLATE_LOADER_STRLEN];
 		tb_json_string((char*)fonts.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
-		//tb_json_read_param((char*)fonts.value, &name, "{*", &i);
 
 		tb_json_element font;
 		tb_json_read_format((char*)fonts.value, &font, "{'%s'", name);
 
-		char path[TEMPLATE_LOADER_STRLEN];
-		tb_json_string((char*)font.value, "{'path'", path, TEMPLATE_LOADER_STRLEN, NULL);
-		//tb_json_read((char*)font.value, &path, "{'path'");
+		char path[TEMPLATE_LOADER_PATHLEN];
+		tb_json_string((char*)font.value, "{'path'", path, TEMPLATE_LOADER_PATHLEN, NULL);
 
 		float size = tb_json_float((char*)font.value, "{'size'", NULL);
 

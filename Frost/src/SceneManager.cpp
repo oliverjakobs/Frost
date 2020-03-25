@@ -26,7 +26,7 @@ SceneManager::~SceneManager()
 
 void SceneManager::RegisterScenes(const std::string& path)
 {
-	TemplateLoader::LoadSceneRegister(this, path);
+	TemplateLoader::LoadSceneRegister(this, path.c_str());
 }
 
 void SceneManager::RegisterScene(const std::string& name, const std::string& path)
@@ -70,7 +70,7 @@ std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
 		return nullptr;
 	}
 
-	return TemplateLoader::LoadScene(path->second, m_camera, m_resources);
+	return TemplateLoader::LoadScene(path->second.c_str(), m_camera, m_resources);
 }
 
 void SceneManager::OnEvent(const Event& e)
@@ -108,18 +108,18 @@ void SceneManager::OnUpdate(float deltaTime)
 		float cameraspeed = 400.0f;
 		glm::vec3 position = m_camera->GetPosition();
 
-		if (Input::KeyPressed(KEY_A))
+		if (InputKeyPressed(KEY_A))
 			position.x -= cameraspeed * deltaTime;
-		if (Input::KeyPressed(KEY_D))
+		if (InputKeyPressed(KEY_D))
 			position.x += cameraspeed * deltaTime;
-		if (Input::KeyPressed(KEY_S))
+		if (InputKeyPressed(KEY_S))
 			position.y -= cameraspeed * deltaTime;
-		if (Input::KeyPressed(KEY_W))
+		if (InputKeyPressed(KEY_W))
 			position.y += cameraspeed * deltaTime;
 
 		m_camera->SetPosition(position);
 
-		m_hover = m_scene->GetEntityAt(m_camera->GetMousePos(Input::MousePosition()), m_layer).get();
+		m_hover = m_scene->GetEntityAt(m_camera->GetMousePos(InputMousePosition()), m_layer).get();
 	}
 }
 

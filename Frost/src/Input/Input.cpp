@@ -2,43 +2,43 @@
 
 #include <GLFW\glfw3.h>
 
-bool Input::KeyPressed(int keycode)
+bool InputKeyPressed(int keycode)
 {
 	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)
 		return false;
 
-	auto state = glfwGetKey(glfwGetCurrentContext(), keycode);
+	int state = glfwGetKey(glfwGetCurrentContext(), keycode);
 	return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-bool Input::KeyReleased(int keycode)
+bool InputKeyReleased(int keycode)
 {
 	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)
 		return false;
 
-	auto state = glfwGetKey(glfwGetCurrentContext(), keycode);
+	int state = glfwGetKey(glfwGetCurrentContext(), keycode);
 	return state == GLFW_RELEASE;
 }
 
-bool Input::MousePressed(int button)
+bool InputMousePressed(int button)
 {
 	if (button > MOUSE_BUTTON_LAST || button < MOUSE_BUTTON_1)
 		return false;
 
-	auto state = glfwGetMouseButton(glfwGetCurrentContext(), button);
+	int state = glfwGetMouseButton(glfwGetCurrentContext(), button);
 	return state == GLFW_PRESS;
 }
 
-bool Input::MouseReleased(int button)
+bool InputMouseReleased(int button)
 {
 	if (button > MOUSE_BUTTON_LAST || button < MOUSE_BUTTON_1)
 		return false;
 
-	auto state = glfwGetMouseButton(glfwGetCurrentContext(), button);
+	int state = glfwGetMouseButton(glfwGetCurrentContext(), button);
 	return state == GLFW_RELEASE;
 }
 
-glm::vec2 Input::MousePosition()
+glm::vec2 InputMousePosition()
 {
 	double xpos, ypos;
 	glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
@@ -46,13 +46,12 @@ glm::vec2 Input::MousePosition()
 	return glm::vec2((float)xpos, (float)ypos);
 }
 
-float Input::MouseX()
+float InputMouseX()
 {
-	return MousePosition().x;
+	return InputMousePosition().x;
 }
 
-float Input::MouseY()
+float InputMouseY()
 {
-	return MousePosition().y;
+	return InputMousePosition().y;
 }
-

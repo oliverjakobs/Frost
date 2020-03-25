@@ -2,7 +2,11 @@
 	"textures": {
 		"player":	{ "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
 		"trees":	{ "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
-		"floor":	{ "path": "res/textures/floor.png" }
+		"floor":	{ "path": "res/textures/floor.png" },
+		"bg_layer_0":	{ "path": "res/textures/background/0.png" },
+		"bg_layer_1":	{ "path": "res/textures/background/1.png" },
+		"bg_layer_2":	{ "path": "res/textures/background/2.png" },
+		"bg_layer_3":	{ "path": "res/textures/background/3.png" }
 	},
 	"fonts": {
 		"font": { "path": "res/fonts/OpenSans.ttf", "size": 32.0 }

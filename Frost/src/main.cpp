@@ -1,7 +1,8 @@
 #include "Application.hpp"
 
 #include "SceneManager.hpp"
-#include "json/TemplateLoader.hpp"
+
+#include "Background.h"
 
 class Frost : public Application
 {
@@ -11,6 +12,7 @@ private:
 
 	IgnisFont* m_font;
 
+	Background m_background;
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{
@@ -32,15 +34,22 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-
 		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
 		m_sceneManager = std::make_shared<SceneManager>(m_resources.get(), camera, 32.0f, 4);
 		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
 		m_sceneManager->ChangeScene("scene");
+
+		BackgroundInit(&m_background, 5);
+		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_0"), 0.0f, 288.0f, 1088.0f, 600.0f, 1.0f);
+		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_1"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.5f);
+		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_2"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.3f);
+		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_3"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.0f);
 	}
 
 	~Frost()
 	{
+		BackgroundClear(&m_background);
+
 		FontRendererDestroy();
 		Primitives2DDestroy();
 		BatchRenderer2DDestroy();
@@ -79,11 +88,15 @@ public:
 		// discard frames that took to long
 		// if (deltaTime > 0.4f) return;
 
+		BackgroundUpdate(&m_background, m_sceneManager->GetCamera()->GetPosition().x - m_sceneManager->GetCamera()->GetSize().x / 2.0f, deltaTime);
+
 		m_sceneManager->OnUpdate(deltaTime);
 	}
 
 	void OnRender() override
 	{
+		BackgroundRender(&m_background, m_sceneManager->GetCamera()->GetViewProjectionPtr());
+
 		m_sceneManager->OnRender();
 	}
 

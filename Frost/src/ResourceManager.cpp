@@ -6,7 +6,7 @@
 
 ResourceManager::ResourceManager(const std::string& path)
 {
-	TemplateLoader::LoadResourceManager(this, path);
+	TemplateLoader::LoadResourceManager(this, path.c_str());
 }
 
 ResourceManager::~ResourceManager()
