@@ -4,7 +4,7 @@
 
 #include "Application.hpp"
 
-int SceneManagerInit(SceneManager* manager, ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
+int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
 	manager->camera = camera;
@@ -81,7 +81,7 @@ void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 	if (e.Type == EventType::WindowResize)
 	{
 		WindowResizeEvent& resize = (WindowResizeEvent&)e;
-		((OrthographicCamera*)manager->camera.get())->SetProjection((float)resize.Width, (float)resize.Height);
+		CameraSetProjectionOrtho(manager->camera, (float)resize.Width, (float)resize.Height);
 	}
 
 	if (e.Type == EventType::KeyPressed)
@@ -109,7 +109,7 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 	else
 	{
 		float cameraspeed = 400.0f;
-		glm::vec3 position = manager->camera->GetPosition();
+		glm::vec3 position = manager->camera->position;
 
 		if (InputKeyPressed(KEY_A))
 			position.x -= cameraspeed * deltaTime;
@@ -120,9 +120,10 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 		if (InputKeyPressed(KEY_W))
 			position.y += cameraspeed * deltaTime;
 
-		manager->camera->SetPosition(position);
+		manager->camera->position = position;
+		CameraUpdateViewOrtho(manager->camera);
 
-		manager->hover = manager->scene->GetEntityAt(manager->camera->GetMousePos(InputMousePosition()), manager->layer).get();
+		manager->hover = manager->scene->GetEntityAt(CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer).get();
 	}
 }
 
@@ -133,7 +134,7 @@ void SceneManagerOnRender(SceneManager* manager)
 	if (manager->editmode)
 	{
 		// render grid
-		Primitives2DStart(manager->camera->GetViewProjectionPtr());
+		Primitives2DStart(CameraGetViewProjectionPtr(manager->camera));
 
 		if (manager->showgrid)
 		{

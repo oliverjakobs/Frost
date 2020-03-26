@@ -133,7 +133,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const char* json_path, Resour
 	return entity;
 }
 
-std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, std::shared_ptr<Camera> camera, ResourceManager* res)
+std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, Camera* camera, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
 

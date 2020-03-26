@@ -11,6 +11,7 @@ class Frost : public Application
 private:
 	SceneManager m_sceneManager;
 	ResourceManager m_resources;
+	Camera m_camera;
 
 	IgnisFont* m_font;
 
@@ -38,8 +39,8 @@ public:
 		EnableImGui(true);
 		EnableVsync(false);
 
-		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
-		SceneManagerInit(&m_sceneManager, &m_resources, camera, 32.0f, 4);
+		CameraCreateOrtho(&m_camera, glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
+		SceneManagerInit(&m_sceneManager, &m_resources, &m_camera, 32.0f, 4);
 		SceneManagerRegisterScenes(&m_sceneManager, "res/templates/scenes/register.json");
 		SceneManagerChangeScene(&m_sceneManager, "scene");
 
@@ -94,14 +95,14 @@ public:
 		// discard frames that took to long
 		// if (deltaTime > 0.4f) return;
 
-		BackgroundUpdate(&m_background, m_sceneManager.camera->GetPosition().x - m_sceneManager.camera->GetSize().x / 2.0f, deltaTime);
+		BackgroundUpdate(&m_background, m_camera.position.x - m_camera.size.x / 2.0f, deltaTime);
 
 		SceneManagerOnUpdate(&m_sceneManager, deltaTime);
 	}
 
 	void OnRender() override
 	{
-		BackgroundRender(&m_background, m_sceneManager.camera->GetViewProjectionPtr());
+		BackgroundRender(&m_background, CameraGetViewProjectionPtr(&m_camera));
 
 		SceneManagerOnRender(&m_sceneManager);
 	}

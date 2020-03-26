@@ -8,7 +8,7 @@
 
 struct SceneManager
 {
-	std::shared_ptr<Camera> camera;
+	Camera* camera;
 	ResourceManager* resources;
 
 	std::map<std::string, std::string> scenes;
@@ -27,7 +27,7 @@ struct SceneManager
 	Entity* hover;
 };
 
-int SceneManagerInit(SceneManager* manager, ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding);
+int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
 void SceneManagerDelete(SceneManager* manager);
 
 void SceneManagerRegisterScenes(SceneManager* manager, const std::string& path);

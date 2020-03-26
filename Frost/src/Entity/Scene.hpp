@@ -3,14 +3,14 @@
 #include "Entity/Components.hpp"
 #include "Event/EventHandler.hpp"
 
-#include "Camera/OrthographicCamera.hpp"
+#include "Camera/Camera.hpp"
 
 #include <map>
 
 class Scene
 {
 private:
-	std::shared_ptr<Camera> m_camera;
+	Camera* m_camera;
 
 	float m_width;
 	float m_height;
@@ -20,7 +20,7 @@ private:
 
 	float m_smoothMovement;
 public:
-	Scene(std::shared_ptr<Camera> camera, float w, float h);
+	Scene(Camera* camera, float w, float h);
 	~Scene();
 
 	void AddEntity(std::shared_ptr<Entity> entity, size_t layer);
@@ -45,7 +45,7 @@ public:
 	std::vector<size_t> GetLayers() const;
 
 	World* GetWorld() const { return m_world.get(); }
-	Camera* GetCamera() const { return m_camera.get(); }
+	Camera* GetCamera() const { return m_camera; }
 
 	const float GetWidth() const { return m_width; }
 	const float GetHeight() const { return m_height; }

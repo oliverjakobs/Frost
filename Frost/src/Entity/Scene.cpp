@@ -2,7 +2,7 @@
 
 #include "Obelisk/Obelisk.hpp"
 
-Scene::Scene(std::shared_ptr<Camera> camera, float w, float h)
+Scene::Scene(Camera* camera, float w, float h)
 	: m_camera(camera), m_width(w), m_height(h)
 {	
 	m_world = std::make_unique<World>(glm::vec2(0.0f, -980.0f));
@@ -79,7 +79,7 @@ void Scene::OnUpdate(float deltaTime)
 
 void Scene::OnRender()
 {
-	BatchRenderer2DStart(m_camera->GetViewProjectionPtr());
+	BatchRenderer2DStart(CameraGetViewProjectionPtr(m_camera));
 
 	for (auto& layer : m_entities)
 		for (auto& entity : layer.second)
@@ -90,7 +90,7 @@ void Scene::OnRender()
 
 void Scene::OnRenderDebug()
 {
-	Primitives2DStart(m_camera->GetViewProjectionPtr());
+	Primitives2DStart(CameraGetViewProjectionPtr(m_camera));
 
 	for (auto& layer : m_entities)
 		for (auto& entity : layer.second)
@@ -121,24 +121,24 @@ void Scene::OnRenderDebug()
 
 void Scene::SetCameraPosition(const glm::vec3& position)
 {
-	float smooth_w = (m_camera->GetSize().x / 2.0f) * m_smoothMovement;
-	float smooth_h = (m_camera->GetSize().y / 2.0f) * m_smoothMovement;
+	float smooth_w = (m_camera->size.x / 2.0f) * m_smoothMovement;
+	float smooth_h = (m_camera->size.y / 2.0f) * m_smoothMovement;
 
-	glm::vec3 center = m_camera->GetPosition();
+	glm::vec3 center = m_camera->position;
 
-	if (position.x > m_camera->GetPosition().x + smooth_w)
+	if (position.x > m_camera->position.x + smooth_w)
 		center.x = position.x - smooth_w;
-	if (position.x < m_camera->GetPosition().x - smooth_w)
+	if (position.x < m_camera->position.x - smooth_w)
 		center.x = position.x + smooth_w;
 
-	if (position.y > m_camera->GetPosition().y + smooth_h)
+	if (position.y > m_camera->position.y + smooth_h)
 		center.y = position.y - smooth_h;
-	if (position.y < m_camera->GetPosition().y - smooth_h)
+	if (position.y < m_camera->position.y - smooth_h)
 		center.y = position.y + smooth_h;
 
 	// constraint
-	float constraint_x = m_camera->GetSize().x / 2.0f;
-	float constraint_y = m_camera->GetSize().y / 2.0f;
+	float constraint_x = m_camera->size.x / 2.0f;
+	float constraint_y = m_camera->size.y / 2.0f;
 
 	if (center.x < constraint_x)
 		center.x = constraint_x;
@@ -150,7 +150,8 @@ void Scene::SetCameraPosition(const glm::vec3& position)
 	if (center.y > GetHeight() - constraint_y)
 		center.y = GetHeight() - constraint_y;
 
-	m_camera->SetPosition(center);
+	m_camera->position = center;
+	CameraUpdateViewOrtho(m_camera);
 }
 
 std::shared_ptr<Entity> Scene::GetEntity(const std::string& name, size_t layer) const
