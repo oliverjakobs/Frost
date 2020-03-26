@@ -30,8 +30,7 @@ public:
 		BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-		ResourceManagerInit(&m_resources, "");
-		TemplateLoader::LoadResourceManager(&m_resources, "res/index.json");
+		ResourceManagerInit(&m_resources, "res/index.json");
 
 		m_font = ResourceManagerGetFont(&m_resources, "font");
 

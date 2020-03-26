@@ -12,11 +12,7 @@ int ignisLoadFont(IgnisFont* font, const char* path, float size)
 
 int ignisLoadFontConfig(IgnisFont* font, const char* path, float size, int first, int num, int bm_w, int bm_h)
 {
-	if (!font)
-	{
-		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory");
-		return 0;
-	}
+	if (!font) return 0;
 
 	font->first_char = first;
 	font->num_chars = num;

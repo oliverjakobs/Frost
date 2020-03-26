@@ -1,6 +1,5 @@
 #include "TemplateLoader.hpp"
 
-#include "Obelisk/FileUtility.hpp"
 #include "Obelisk/Debugger.hpp"
 
 #define TB_JSON_IMPLEMENTATION
@@ -9,7 +8,7 @@
 #define TEMPLATE_LOADER_STRLEN	32
 #define TEMPLATE_LOADER_PATHLEN	64
 
-std::shared_ptr<Entity> TemplateLoader::LoadEntity(const char* json_path, ResourceManager* res)
+std::shared_ptr<Entity> TemplateLoadEntity(const char* json_path, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -133,7 +132,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const char* json_path, Resour
 	return entity;
 }
 
-std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, Camera* camera, ResourceManager* res)
+std::shared_ptr<Scene> TemplateLoadScene(const char* json_path, Camera* camera, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -168,7 +167,7 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, Camera* 
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			scene->AddEntity(TemplateLoader::LoadEntity(path, res), layer, glm::vec2(x, y));
+			scene->AddEntity(TemplateLoadEntity(path, res), layer, glm::vec2(x, y));
 		}
 	}
 
@@ -177,7 +176,7 @@ std::shared_ptr<Scene> TemplateLoader::LoadScene(const char* json_path, Camera* 
 	return scene;
 }
 
-void TemplateLoader::LoadSceneRegister(SceneManager* manager, const char* json_path)
+void TemplateLoadSceneRegister(SceneManager* manager, const char* json_path)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -204,60 +203,6 @@ void TemplateLoader::LoadSceneRegister(SceneManager* manager, const char* json_p
 		path[scene.bytelen] = '\0';
 
 		SceneManagerRegisterScene(manager, name, path);
-	}
-
-	free(json);
-}
-
-void TemplateLoader::LoadResourceManager(ResourceManager* manager, const char* json_path)
-{
-	char* json = ignisReadFile(json_path, NULL);
-
-	if (!json)
-	{
-		OBELISK_WARN("Index not found (%s)", json_path);
-		return;
-	}
-
-	// Textures
-	tb_json_element textures;
-	tb_json_read(json, &textures, "{'textures'");
-
-	for (int i = 0; i < textures.elements; i++)
-	{
-		char name[TEMPLATE_LOADER_STRLEN];
-		tb_json_string((char*)textures.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
-
-		tb_json_element texture;
-		tb_json_read_format((char*)textures.value, &texture, "{'%s'", name);
-
-		char path[TEMPLATE_LOADER_PATHLEN];
-		tb_json_string((char*)texture.value, "{'path'", path, TEMPLATE_LOADER_PATHLEN, NULL);
-
-		int rows = std::max(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
-		int columns = std::max(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
-
-		ResourceManagerAddTexture(manager, name, path, rows, columns);
-	}
-
-	// Fonts
-	tb_json_element fonts;
-	tb_json_read(json, &fonts, "{'fonts'");
-
-	for (int i = 0; i < fonts.elements; i++)
-	{
-		char name[TEMPLATE_LOADER_STRLEN];
-		tb_json_string((char*)fonts.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
-
-		tb_json_element font;
-		tb_json_read_format((char*)fonts.value, &font, "{'%s'", name);
-
-		char path[TEMPLATE_LOADER_PATHLEN];
-		tb_json_string((char*)font.value, "{'path'", path, TEMPLATE_LOADER_PATHLEN, NULL);
-
-		float size = tb_json_float((char*)font.value, "{'size'", NULL);
-
-		ResourceManagerAddFont(manager, name, path, size);
 	}
 
 	free(json);

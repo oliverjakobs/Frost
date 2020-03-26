@@ -96,6 +96,7 @@
     <ClInclude Include="src\Background.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\ResourceManager.h" />
+    <ClInclude Include="src\clib\clib.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

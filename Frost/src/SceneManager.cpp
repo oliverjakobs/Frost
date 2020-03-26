@@ -29,7 +29,7 @@ void SceneManagerDelete(SceneManager* manager)
 
 void SceneManagerRegisterScenes(SceneManager* manager, const std::string& path)
 {
-	TemplateLoader::LoadSceneRegister(manager, path.c_str());
+	TemplateLoadSceneRegister(manager, path.c_str());
 }
 
 void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path)
@@ -73,7 +73,7 @@ std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::s
 		return nullptr;
 	}
 
-	return TemplateLoader::LoadScene(path->second.c_str(), manager->camera, manager->resources);
+	return TemplateLoadScene(path->second.c_str(), manager->camera, manager->resources);
 }
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e)

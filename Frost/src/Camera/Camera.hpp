@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CAMERA_H
+#define CAMERA_H
 
 #include <glm/glm.hpp>
 
@@ -28,3 +29,5 @@ const glm::vec2 CameraGetMousePos(Camera* camera, const glm::vec2& mouse);
 const float* CameraGetViewPtr(Camera* camera);
 const float* CameraGetProjectionPtr(Camera* camera);
 const float* CameraGetViewProjectionPtr(Camera* camera);
+
+#endif /* !CAMERA_H */
