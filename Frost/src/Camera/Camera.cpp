@@ -1,32 +1,67 @@
 #include "Camera.hpp"
 
-Camera::Camera() : m_view(1.0f), m_projection(1.0f), m_viewProjection(1.0f), m_position(), m_size() 
+#include <glm/gtc/matrix_transform.hpp>
+
+int CameraCreate(Camera* camera, const glm::vec3& pos, const glm::vec2& size)
 {
+	camera->view = glm::mat4(1.0f);
+	camera->projection = glm::mat4(1.0f);
+	camera->viewProjection = glm::mat4(1.0f);
 
+	camera->position = pos;
+	camera->size = size;
+
+	return 1;
 }
 
-Camera::Camera(const glm::vec3& pos, const glm::vec2& size) 
-	: m_view(1.0f), m_projection(1.0f), m_viewProjection(1.0f), m_position(pos), m_size(size)
+int CameraCreateOrtho(Camera* camera, const glm::vec3& center, const glm::vec2& size)
 {
+	int result = CameraCreate(camera, center, size);
+	CameraSetProjectionOrtho(camera, size);
 
+	return result;
 }
 
-void Camera::SetPosition(const glm::vec3& position)
-{ 
-	m_position = position;
-	UpdateView(); 
-}
-
-void Camera::SetSize(const glm::vec2& size)
-{ 
-	m_size = size;
-	UpdateView();
-}
-
-const glm::vec2 Camera::GetMousePos(const glm::vec2& mouse) const
+void CameraUpdateViewOrtho(Camera* camera)
 {
-	float x = mouse.x + (m_position.x - (m_size.x / 2.0f));
-	float y = (m_size.y - mouse.y) + (m_position.y - (m_size.y / 2.0f));
+	glm::mat4 transform = glm::mat4(1.0f);
+	transform = glm::translate(transform, camera->position);
+
+	camera->view = glm::inverse(transform);
+	camera->viewProjection = camera->projection * camera->view;
+}
+
+void CameraSetProjectionOrtho(Camera* camera, float w, float h)
+{
+	camera->projection = glm::ortho(-w / 2.0f, w / 2.0f, -h / 2.0f, h / 2.0f, -1.0f, 1.0f);
+
+	CameraUpdateViewOrtho(camera);
+}
+
+void CameraSetProjectionOrtho(Camera* camera, const glm::vec2& size)
+{
+	CameraSetProjectionOrtho(camera, size.x, size.y);
+}
+
+const glm::vec2 CameraGetMousePos(Camera* camera, const glm::vec2& mouse)
+{
+	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
+	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
 
 	return glm::vec2(x, y);
+}
+
+const float* CameraGetViewPtr(Camera* camera)
+{
+	return &camera->view[0][0];
+}
+
+const float* CameraGetProjectionPtr(Camera* camera)
+{
+	return &camera->projection[0][0];
+}
+
+const float* CameraGetViewProjectionPtr(Camera* camera)
+{
+	return &camera->viewProjection[0][0];
 }
