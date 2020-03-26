@@ -14,7 +14,6 @@
 #include "IgnisRenderer/BatchRenderer2D.h"
 #include "IgnisRenderer/Renderer2D.h"
 
-
 void SetViewport(int x, int y, int w, int h);
 
 const glm::mat4& GetScreenMat();

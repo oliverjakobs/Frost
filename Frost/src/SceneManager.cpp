@@ -4,54 +4,57 @@
 
 #include "Application.hpp"
 
-SceneManager::SceneManager(ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
-	: m_resources(resources), m_camera(camera)
+int SceneManagerInit(SceneManager* manager, ResourceManager* resources, std::shared_ptr<Camera> camera, float gridsize, uint16_t padding)
 {
-	m_editmode = true;
-	m_showgrid = false; 
-	m_layer = 0;
+	manager->resources = resources;
+	manager->camera = camera;
 
-	m_gridsize = gridsize;
-	m_padding = gridsize * padding;
+	manager->editmode = true;
+	manager->showgrid = false;
+	manager->layer = 0;
 
-	m_hover = nullptr;
-	m_active = nullptr;
+	manager->gridsize = gridsize;
+	manager->padding = gridsize * padding;
+
+	manager->hover = nullptr;
+
+	return 1;
 }
 
-SceneManager::~SceneManager()
+void SceneManagerDelete(SceneManager* manager)
 {
-	if (m_scene)
-		m_scene->OnExtit();
+	if (manager->scene)
+		manager->scene->OnExtit();
 }
 
-void SceneManager::RegisterScenes(const std::string& path)
+void SceneManagerRegisterScenes(SceneManager* manager, const std::string& path)
 {
-	TemplateLoader::LoadSceneRegister(this, path.c_str());
+	TemplateLoader::LoadSceneRegister(manager, path.c_str());
 }
 
-void SceneManager::RegisterScene(const std::string& name, const std::string& path)
+void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path)
 {
 	if (!(name.empty() || path.empty()))
-		m_register.insert({ name, path });
+		manager->scenes.insert({ name, path });
 }
 
-void SceneManager::ChangeScene(const std::string& name)
+void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
 {
-	if (!obelisk::StringCompare(m_sceneName, name))
+	if (!obelisk::StringCompare(manager->sceneName, name))
 	{
-		auto newScene = LoadScene(name);
+		auto newScene = SceneManagerLoadScene(manager, name);
 
 		if (newScene)
 		{
 			// Exit old Scene
-			if (m_scene)
-				m_scene->OnExtit();
+			if (manager->scene)
+				manager->scene->OnExtit();
 
-			m_scene = newScene;
-			m_sceneName = name;
+			manager->scene = newScene;
+			manager->sceneName = name;
 
 			// Enter new scene
-			m_scene->OnEntry();
+			manager->scene->OnEntry();
 		}
 		else
 		{
@@ -60,25 +63,25 @@ void SceneManager::ChangeScene(const std::string& name)
 	}
 }
 
-std::shared_ptr<Scene> SceneManager::LoadScene(const std::string& name)
+std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::string& name)
 {
-	auto path = m_register.find(name);
+	auto path = manager->scenes.find(name);
 
-	if (path == m_register.end())
+	if (path == manager->scenes.end())
 	{
 		OBELISK_WARN("Couldn't find scene: ", name.c_str());
 		return nullptr;
 	}
 
-	return TemplateLoader::LoadScene(path->second.c_str(), m_camera, m_resources);
+	return TemplateLoader::LoadScene(path->second.c_str(), manager->camera, manager->resources);
 }
 
-void SceneManager::OnEvent(const Event& e)
+void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 {
 	if (e.Type == EventType::WindowResize)
 	{
 		WindowResizeEvent& resize = (WindowResizeEvent&)e;
-		((OrthographicCamera*)m_camera.get())->SetProjection((float)resize.Width, (float)resize.Height);
+		((OrthographicCamera*)manager->camera.get())->SetProjection((float)resize.Width, (float)resize.Height);
 	}
 
 	if (e.Type == EventType::KeyPressed)
@@ -86,27 +89,27 @@ void SceneManager::OnEvent(const Event& e)
 		switch (((KeyPressedEvent&)e).KeyCode)
 		{
 		case KEY_F1:
-			m_editmode = !m_editmode;
+			manager->editmode = !manager->editmode;
 			break;
 		case KEY_DELETE:
-			m_scene->RemoveEntity("tree", 0);
+			manager->scene->RemoveEntity("tree", 0);
 			break;
 		}
 	}
 
-	m_scene->OnEvent(e);
+	manager->scene->OnEvent(e);
 }
 
-void SceneManager::OnUpdate(float deltaTime)
+void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 {
-	if (!m_editmode)
+	if (!manager->editmode)
 	{
-		m_scene->OnUpdate(deltaTime);
+		manager->scene->OnUpdate(deltaTime);
 	}
 	else
 	{
 		float cameraspeed = 400.0f;
-		glm::vec3 position = m_camera->GetPosition();
+		glm::vec3 position = manager->camera->GetPosition();
 
 		if (InputKeyPressed(KEY_A))
 			position.x -= cameraspeed * deltaTime;
@@ -117,34 +120,34 @@ void SceneManager::OnUpdate(float deltaTime)
 		if (InputKeyPressed(KEY_W))
 			position.y += cameraspeed * deltaTime;
 
-		m_camera->SetPosition(position);
+		manager->camera->SetPosition(position);
 
-		m_hover = m_scene->GetEntityAt(m_camera->GetMousePos(InputMousePosition()), m_layer).get();
+		manager->hover = manager->scene->GetEntityAt(manager->camera->GetMousePos(InputMousePosition()), manager->layer).get();
 	}
 }
 
-void SceneManager::OnRender()
+void SceneManagerOnRender(SceneManager* manager)
 {
-	m_scene->OnRender();
+	manager->scene->OnRender();
 
-	if (m_editmode)
+	if (manager->editmode)
 	{
 		// render grid
-		Primitives2DStart(m_camera->GetViewProjectionPtr());
+		Primitives2DStart(manager->camera->GetViewProjectionPtr());
 
-		if (m_showgrid)
+		if (manager->showgrid)
 		{
 			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.2f);
 
-			for (float x = -m_padding; x <= m_scene->GetWidth() + m_padding; x += m_gridsize)
-				Primitives2DRenderLine(x, -m_padding, x, m_scene->GetHeight() + m_padding, color);
+			for (float x = -manager->padding; x <= manager->scene->GetWidth() + manager->padding; x += manager->gridsize)
+				Primitives2DRenderLine(x, -manager->padding, x, manager->scene->GetHeight() + manager->padding, color);
 
-			for (float y = -m_padding; y <= m_scene->GetHeight() + m_padding; y += m_gridsize)
-				Primitives2DRenderLine(-m_padding, y, m_scene->GetWidth() + m_padding, y, color);
+			for (float y = -manager->padding; y <= manager->scene->GetHeight() + manager->padding; y += manager->gridsize)
+				Primitives2DRenderLine(-manager->padding, y, manager->scene->GetWidth() + manager->padding, y, color);
 		}
 
-		for (auto& entity : m_scene->GetEntities(m_layer))
+		for (auto& entity : manager->scene->GetEntities(manager->layer))
 		{
 			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.4f);
@@ -162,13 +165,13 @@ void SceneManager::OnRender()
 			}
 		}
 
-		if (m_hover)
+		if (manager->hover)
 		{
-			auto tex = m_hover->GetComponent<TextureComponent>();
+			auto tex = manager->hover->GetComponent<TextureComponent>();
 
 			if (tex != nullptr)
 			{
-				glm::vec2 position = m_hover->GetPosition();
+				glm::vec2 position = manager->hover->GetPosition();
 
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
@@ -182,27 +185,26 @@ void SceneManager::OnRender()
 	}
 }
 
-void SceneManager::OnRenderDebug()
+void SceneManagerOnRenderDebug(SceneManager* manager)
 {
-	if (!m_editmode)
-		m_scene->OnRenderDebug();
+	if (!manager->editmode)
+		manager->scene->OnRenderDebug();
 }
 
-void SceneManager::OnImGui()
+void SceneManagerOnImGui(SceneManager* manager)
 {
-	if (m_editmode)
+	if (manager->editmode)
 	{
 		ImGui::Begin("Editor");
 
-		ImGui::Text("Hovered Entity: %s", m_hover == nullptr ? "null" : m_hover->GetName().c_str());
-		ImGui::Text("Selected Entity: %s", m_active == nullptr ? "null" : m_active->GetName().c_str());
+		ImGui::Text("Hovered Entity: %s", manager->hover == nullptr ? "null" : manager->hover->GetName().c_str());
 
-		ImGui::Checkbox("Show grid", &m_showgrid);
+		ImGui::Checkbox("Show grid", &manager->showgrid);
 
 		ImGui::Separator();
 
-		for (size_t i : m_scene->GetLayers())
-			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &m_layer, (int)i);
+		for (size_t i : manager->scene->GetLayers())
+			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
 
 		ImGui::End();
 	}

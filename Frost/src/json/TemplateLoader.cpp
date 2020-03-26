@@ -68,7 +68,7 @@ std::shared_ptr<Entity> TemplateLoader::LoadEntity(const char* json_path, Resour
 
 		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
 
-		IgnisTexture* texture = res->GetTexture(tex_name);
+		IgnisTexture* texture = ResourceManagerGetTexture(res, tex_name);
 
 		if (texture)
 			entity->AddComponent<TextureComponent>(texture, width, height, frame);
@@ -203,7 +203,7 @@ void TemplateLoader::LoadSceneRegister(SceneManager* manager, const char* json_p
 
 		path[scene.bytelen] = '\0';
 
-		manager->RegisterScene(name, path);
+		SceneManagerRegisterScene(manager, name, path);
 	}
 
 	free(json);
@@ -237,7 +237,7 @@ void TemplateLoader::LoadResourceManager(ResourceManager* manager, const char* j
 		int rows = std::max(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
 		int columns = std::max(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
 
-		manager->AddTexture(name, path, rows, columns);
+		ResourceManagerAddTexture(manager, name, path, rows, columns);
 	}
 
 	// Fonts
@@ -257,7 +257,7 @@ void TemplateLoader::LoadResourceManager(ResourceManager* manager, const char* j
 
 		float size = tb_json_float((char*)font.value, "{'size'", NULL);
 
-		manager->AddFont(name, path, size);
+		ResourceManagerAddFont(manager, name, path, size);
 	}
 
 	free(json);

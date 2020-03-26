@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SceneManager.hpp"
-#include "ResourceManager.hpp"
+#include "ResourceManager.h"
 
 struct TemplateLoader
 {

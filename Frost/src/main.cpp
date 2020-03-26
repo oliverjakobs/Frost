@@ -4,11 +4,13 @@
 
 #include "Background.h"
 
+#include "json/TemplateLoader.hpp"
+
 class Frost : public Application
 {
 private:
-	std::shared_ptr<SceneManager> m_sceneManager;
-	std::shared_ptr<ResourceManager> m_resources;
+	SceneManager m_sceneManager;
+	ResourceManager m_resources;
 
 	IgnisFont* m_font;
 
@@ -27,23 +29,25 @@ public:
 		BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 		FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-		m_resources = std::make_shared<ResourceManager>("res/index.json");
-		m_font = m_resources->GetFont("font");
+		ResourceManagerInit(&m_resources, "");
+		TemplateLoader::LoadResourceManager(&m_resources, "res/index.json");
+
+		m_font = ResourceManagerGetFont(&m_resources, "font");
 
 		EnableDebugMode(true);
 		EnableImGui(true);
 		EnableVsync(false);
 
 		auto camera = std::make_shared<OrthographicCamera>(glm::vec3(m_width / 2.0f, m_height / 2.0f, 0.0f), glm::vec2(m_width, m_height));
-		m_sceneManager = std::make_shared<SceneManager>(m_resources.get(), camera, 32.0f, 4);
-		m_sceneManager->RegisterScenes("res/templates/scenes/register.json");
-		m_sceneManager->ChangeScene("scene");
+		SceneManagerInit(&m_sceneManager, &m_resources, camera, 32.0f, 4);
+		SceneManagerRegisterScenes(&m_sceneManager, "res/templates/scenes/register.json");
+		SceneManagerChangeScene(&m_sceneManager, "scene");
 
-		BackgroundInit(&m_background, 5);
-		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_0"), 0.0f, 288.0f, 1088.0f, 600.0f, 1.0f);
-		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_1"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.5f);
-		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_2"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.3f);
-		BackgroundPushLayer(&m_background, m_resources->GetTexture("bg_layer_3"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.0f);
+		BackgroundInit(&m_background, 4);
+		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_0"), 0.0f, 288.0f, 1088.0f, 600.0f, 1.0f);
+		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_1"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.5f);
+		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_2"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.3f);
+		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_3"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.0f);
 	}
 
 	~Frost()
@@ -54,6 +58,8 @@ public:
 		Primitives2DDestroy();
 		BatchRenderer2DDestroy();
 		Renderer2DDestroy();
+
+		ResourceManagerDestroy(&m_resources);
 	}
 	
 	void OnEvent(const Event& e) override
@@ -80,7 +86,7 @@ public:
 			}
 		}
 
-		m_sceneManager->OnEvent(e);
+		SceneManagerOnEvent(&m_sceneManager, e);
 	}
 
 	void OnUpdate(float deltaTime) override
@@ -88,21 +94,21 @@ public:
 		// discard frames that took to long
 		// if (deltaTime > 0.4f) return;
 
-		BackgroundUpdate(&m_background, m_sceneManager->GetCamera()->GetPosition().x - m_sceneManager->GetCamera()->GetSize().x / 2.0f, deltaTime);
+		BackgroundUpdate(&m_background, m_sceneManager.camera->GetPosition().x - m_sceneManager.camera->GetSize().x / 2.0f, deltaTime);
 
-		m_sceneManager->OnUpdate(deltaTime);
+		SceneManagerOnUpdate(&m_sceneManager, deltaTime);
 	}
 
 	void OnRender() override
 	{
-		BackgroundRender(&m_background, m_sceneManager->GetCamera()->GetViewProjectionPtr());
+		BackgroundRender(&m_background, m_sceneManager.camera->GetViewProjectionPtr());
 
-		m_sceneManager->OnRender();
+		SceneManagerOnRender(&m_sceneManager);
 	}
 
 	void OnRenderDebug() override
 	{
-		m_sceneManager->OnRenderDebug();
+		SceneManagerOnRenderDebug(&m_sceneManager);
 
 		// debug info
 		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
@@ -127,7 +133,7 @@ public:
 		// ----
 		ImGui::Begin("DEBUG");
 		
-		auto player = m_sceneManager->GetScene()->GetEntity("player", 1);
+		auto player = m_sceneManager.scene->GetEntity("player", 1);
 		 
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();
@@ -136,11 +142,11 @@ public:
 		
 		ImGui::Separator();
 		
-		ImGui::Text("Scene: %s", m_sceneManager->GetSceneName().c_str());
+		ImGui::Text("Scene: %s", m_sceneManager.sceneName.c_str());
 
 		ImGui::End();
 
-		m_sceneManager->OnImGui();
+		SceneManagerOnImGui(&m_sceneManager);
 	}
 }; 
 
