@@ -2,7 +2,6 @@
 
 #include "Obelisk/Obelisk.hpp"
 
-
 void _SceneLayerInit(SceneLayer* layer, size_t initial_size)
 {
 	layer->entities = (Entity**)malloc(initial_size * sizeof(Entity));
@@ -12,11 +11,6 @@ void _SceneLayerInit(SceneLayer* layer, size_t initial_size)
 
 void _SceneLayerFree(SceneLayer* layer)
 {
-	for (size_t i = 0; i < layer->used; i++)
-	{
-		delete layer->entities[i];
-	}
-
 	free(layer->entities);
 	layer->entities = NULL;
 	layer->used = layer->size = 0;
@@ -34,16 +28,18 @@ void _SceneLayerInsert(SceneLayer* layer, Entity* entity)
 	layer->entities[layer->used++] = entity;
 }
 
-
 int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 {
 	scene->camera = camera;
 	scene->width = w;
 	scene->height = h;
 
-	scene->world = std::make_unique<World>(glm::vec2(0.0f, -980.0f));
+	scene->world = new World(glm::vec2(0.0f, -980.0f));
 	
 	scene->smooth_movement = 0.5f;
+
+	for (size_t i = 0; i < SCENE_MAX_LAYER; i++)
+		_SceneLayerInit(&scene->layers[i], 4);
 
 	return 1;
 }
@@ -51,6 +47,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 void SceneQuit(Scene* scene)
 {
 	SceneClearEntities(scene);
+
+	delete scene->world;
 }
 
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer)
@@ -58,14 +56,14 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer)
 	if (entity == nullptr)
 		return;
 
-	auto phys = entity->GetComponent<PhysicsComponent>();
+	auto phys = EntityGetComponent<PhysicsComponent>(entity);
 
 	if (phys != nullptr)
 	{
 		scene->world->AddBody(phys->GetBody());
 	}
 
-	scene->entities[layer].push_back(entity);
+	_SceneLayerInsert(&scene->layers[layer], entity);
 }
 
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2& position)
@@ -73,7 +71,7 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2&
 	if (entity == nullptr)
 		return;
 
-	entity->SetPosition(position);
+	EntitySetPosition(entity, position);
 	SceneAddEntity(scene, entity, layer);
 }
 
@@ -82,22 +80,22 @@ void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer)
 	if (layer >= SCENE_MAX_LAYER)
 		return;
 
-	scene->entities[layer].erase(std::remove_if(scene->entities[layer].begin(), scene->entities[layer].end(), [&](auto& e)
-		{
-			return obelisk::StringCompare(e->GetName(), name);
-		}), scene->entities[layer].end());
+	// scene->entities[layer].erase(std::remove_if(scene->entities[layer].begin(), scene->entities[layer].end(), [&](auto& e)
+	// 	{
+	// 		return obelisk::StringCompare(e->GetName(), name);
+	// 	}), scene->entities[layer].end());
 }
 
 void SceneClearEntities(Scene* scene)
 {
 	for (size_t layer = 0; layer < SCENE_MAX_LAYER; layer++)
 	{
-		for (auto& entity : scene->entities[layer])
+		for (size_t i = 0; i < scene->layers[layer].used; i++)
 		{
-			delete entity;
+			delete scene->layers[layer].entities[i];
 		}
 
-		scene->entities[layer].clear();
+		_SceneLayerFree(&scene->layers[layer]);
 	}
 }
 
@@ -110,8 +108,8 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 	scene->world->Tick(deltaTime);
 
 	for (size_t layer = 0; layer < SCENE_MAX_LAYER; layer++)
-		for (auto& entity : scene->entities[layer])
-			entity->OnUpdate(scene, deltaTime);
+		for (size_t i = 0; i < scene->layers[layer].used; i++)
+			EntityOnUpdate(scene->layers[layer].entities[i], scene, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
@@ -119,8 +117,8 @@ void SceneOnRender(Scene* scene)
 	BatchRenderer2DStart(CameraGetViewProjectionPtr(scene->camera));
 
 	for (size_t layer = 0; layer < SCENE_MAX_LAYER; layer++)
-		for (auto& entity : scene->entities[layer])
-			entity->OnRender(scene);
+		for (size_t i = 0; i < scene->layers[layer].used; i++)
+			EntityOnRender(scene->layers[layer].entities[i], scene);
 
 	BatchRenderer2DFlush();
 }
@@ -130,13 +128,15 @@ void SceneOnRenderDebug(Scene* scene)
 	Primitives2DStart(CameraGetViewProjectionPtr(scene->camera));
 
 	for (size_t layer = 0; layer < SCENE_MAX_LAYER; layer++)
-		for (auto& entity : scene->entities[layer])
+	{
+		for (size_t i = 0; i < scene->layers[layer].used; i++)
 		{
-			entity->OnRenderDebug();
+			EntityOnRenderDebug(scene->layers[layer].entities[i]);
 
-			auto& pos = entity->GetPosition();
+			auto& pos = EntityGetPosition(scene->layers[layer].entities[i]);
 			Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 		}
+	}
 
 	for (auto& body : scene->world->GetBodies())
 	{
@@ -196,10 +196,12 @@ Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer)
 	if (layer >= SCENE_MAX_LAYER)
 		return nullptr;
 
-	auto entity = std::find_if(scene->entities[layer].begin(), scene->entities[layer].end(), [&](auto& e) { return obelisk::StringCompare(e->GetName(), name); });
-
-	if (entity != scene->entities[layer].end())
-		return *entity;
+	SceneLayer* scene_layer = &scene->layers[layer];
+	for (size_t i = 0; i < scene_layer->used; i++)
+	{
+		if (obelisk::StringCompare(scene_layer->entities[i]->name, name))
+			return scene_layer->entities[i];
+	}
 
 	return nullptr;
 }
@@ -217,31 +219,31 @@ Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer)
 	if (layer >= SCENE_MAX_LAYER)
 		return nullptr;
 
-	for (auto& entity : scene->entities[layer])
+	for (size_t i = 0; i < scene->layers[layer].used; i++)
 	{
-		auto tex = entity->GetComponent<TextureComponent>();
+		auto tex = EntityGetComponent<TextureComponent>(scene->layers[layer].entities[i]);
 
 		if (tex == nullptr)
 			continue;
 
-		glm::vec2 position = entity->GetPosition();
+		glm::vec2 position = EntityGetPosition(scene->layers[layer].entities[i]);
 
 		glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 		glm::vec2 max = min + tex->GetDimension();
 
 		if (inside(min, max, pos))
-			return entity;
+			return scene->layers[layer].entities[i];
 	}
 
 	return nullptr;
 }
 
-std::vector<Entity*> SceneGetEntities(Scene* scene, size_t layer)
+SceneLayer* SceneGetLayer(Scene* scene, size_t layer)
 {
 	if (layer >= SCENE_MAX_LAYER)
-		return std::vector<Entity*>();
+		return NULL;
 
-	return scene->entities[layer];
+	return &scene->layers[layer];
 }
 
 std::vector<size_t> SceneGetUsedLayers(Scene* scene)
@@ -249,7 +251,7 @@ std::vector<size_t> SceneGetUsedLayers(Scene* scene)
 	std::vector<size_t> layers;
 	for (size_t i = 0; i < SCENE_MAX_LAYER; i++)
 	{
-		if (!scene->entities[i].empty())
+		if (scene->layers[i].used > 0)
 			layers.push_back(i);
 	}
 

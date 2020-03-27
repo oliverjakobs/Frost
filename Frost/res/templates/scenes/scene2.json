@@ -1,0 +1,7 @@
+{
+	"size": [ 2048.0, 800.0 ],
+	"templates": [
+		[ "res/templates/entities/player.json", [ 120.0, 288.0 ], 1 ],
+		[ "res/templates/entities/floor.json", [ 128.0, -96.0 ], 0 ]
+	]
+}

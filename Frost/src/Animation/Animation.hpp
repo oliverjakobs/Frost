@@ -5,7 +5,7 @@
 
 typedef std::pair<std::string, std::string> Transition;
 
-class Entity;
+struct Entity;
 
 class Animation
 {

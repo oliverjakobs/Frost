@@ -90,7 +90,16 @@ extern "C"
 
 
 struct hashmap_iter;
-struct hashmap_entry;
+
+typedef struct
+{
+    void* key;
+    void* value;
+
+#ifdef HASHMAP_METRICS
+    size_t num_collisions;
+#endif
+} hashmap_entry;
 
 /*
  * The hashmap state structure.
@@ -100,7 +109,7 @@ typedef struct
     size_t table_size_init;
     size_t table_size;
     size_t num_entries;
-    struct hashmap_entry* table;
+    hashmap_entry* table;
     size_t  (*hash)(const void*);
     int     (*key_compare)(const void*, const void*);
     void*   (*key_alloc)(const void*);

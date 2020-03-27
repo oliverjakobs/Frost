@@ -10,7 +10,7 @@ void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	m_animator->Tick(m_entity, deltaTime);
 
-	TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
+	TextureComponent* tex = EntityGetComponent<TextureComponent>(m_entity);
 
 	if (tex != nullptr)
 		tex->SetFrame(m_animator->GetFrame());

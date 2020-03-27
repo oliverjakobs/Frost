@@ -13,7 +13,7 @@ struct SceneManager
 
 	std::map<std::string, std::string> scenes;
 
-	std::shared_ptr<Scene> scene;
+	Scene* scene;
 	std::string sceneName;
 
 	// editor
@@ -35,7 +35,7 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* path);
 void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path);
 void SceneManagerChangeScene(SceneManager* manager, const std::string& name);
 
-std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::string& name);
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string& name);
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltaTime);

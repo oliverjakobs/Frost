@@ -30,7 +30,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		float x = tb_json_float((char*)element.value, "[0", NULL);
 		float y = tb_json_float((char*)element.value, "[1", NULL);
 
-		entity->AddComponent<PositionComponent>(glm::vec2(x, y));
+		EntityAddComponent<PositionComponent>(entity, glm::vec2(x, y));
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -52,7 +52,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 			float offset_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
 			float offset_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
 
-			entity->AddComponent<PhysicsComponent>(std::make_shared<Body>(x, y, w, h, type), glm::vec2(offset_x, offset_y));
+			EntityAddComponent<PhysicsComponent>(entity, std::make_shared<Body>(x, y, w, h, type), glm::vec2(offset_x, offset_y));
 		}
 	}
 
@@ -70,7 +70,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		IgnisTexture* texture = ResourceManagerGetTexture(res, tex_name);
 
 		if (texture)
-			entity->AddComponent<TextureComponent>(texture, width, height, frame);
+			EntityAddComponent<TextureComponent>(entity, texture, width, height, frame);
 	}
 
 	tb_json_read(json, &element, "{'animation'");
@@ -115,7 +115,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 			animator->CreateAnimation(std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
 		}
 
-		entity->AddComponent<AnimationComponent>(animator);
+		EntityAddComponent<AnimationComponent>(entity, animator);
 	}
 
 	tb_json_read(json, &element, "{'player'");
@@ -124,7 +124,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		float ms = tb_json_float((char*)element.value, "{'movementspeed'", NULL);
 		float jp = tb_json_float((char*)element.value, "{'jumppower'", NULL);
 		
-		entity->AddComponent<PlayerComponent>(ms, jp);
+		EntityAddComponent<PlayerComponent>(entity, ms, jp);
 	}
 
 	free(json);

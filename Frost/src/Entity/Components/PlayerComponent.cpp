@@ -17,11 +17,11 @@ PlayerComponent::PlayerComponent(Entity* entity, float ms, float jp)
 
 void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 {
-	PhysicsComponent* phys = m_entity->GetComponent<PhysicsComponent>();
+	PhysicsComponent* phys = EntityGetComponent<PhysicsComponent>(m_entity);
 	OBELISK_ASSERT(phys, "[COMP] Entity has no PhysicsComponent");
 	
-	TextureComponent* tex = m_entity->GetComponent<TextureComponent>();
-	OBELISK_ASSERT(tex, "[COMP] Entity has no TextureComponent");	
+	TextureComponent* tex = EntityGetComponent<TextureComponent>(m_entity);
+	OBELISK_ASSERT(tex, "[COMP] Entity has no TextureComponent");
 	
 	glm::vec2 velocity = glm::vec2(0.0f, phys->GetBody()->GetVelocity().y);
 	
@@ -39,12 +39,12 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	
 	if (velocity.x > 0.0f)
 	{
-		m_entity->SetDirection(Direction::RIGHT);
+		m_entity->direction = Direction::RIGHT;
 		tex->SetRenderFlip(RenderFlip::NONE);
 	}
 	else if (velocity.x < 0.0f)
 	{
-		m_entity->SetDirection(Direction::LEFT);
+		m_entity->direction = Direction::LEFT;
 		tex->SetRenderFlip(RenderFlip::HORIZONTAL);
 	}
 	
@@ -62,5 +62,5 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	phys->GetBody()->SetVelocity(velocity);
 	
 	// set view
-	SceneSetCameraPosition(scene, glm::vec3(m_entity->GetPosition(), 0.0f));
+	SceneSetCameraPosition(scene, glm::vec3(EntityGetPosition(m_entity), 0.0f));
 }

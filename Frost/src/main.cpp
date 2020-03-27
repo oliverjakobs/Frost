@@ -83,6 +83,12 @@ public:
 			case KEY_F8:
 				ToggleImGui();
 				break;
+			case KEY_1:
+				SceneManagerChangeScene(&m_sceneManager, "scene");
+				break;
+			case KEY_2:
+				SceneManagerChangeScene(&m_sceneManager, "scene2");
+				break;
 			}
 		}
 
@@ -133,10 +139,10 @@ public:
 		// ----
 		ImGui::Begin("DEBUG");
 		
-		auto player = SceneGetEntity(m_sceneManager.scene.get(), "player", 1);
+		auto player = SceneGetEntity(m_sceneManager.scene, "player", 1);
 		 
-		ImGui::Text("Name: %s", player->GetName().c_str());
-		auto position = player->GetPosition();
+		ImGui::Text("Name: %s", player->name.c_str());
+		auto position = EntityGetPosition(player);
 		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
 		ImGui::Text("Precise Y: %f", position.y);
 		

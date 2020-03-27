@@ -23,8 +23,8 @@ struct Scene
 	float width;
 	float height;
 
-	std::unique_ptr<World> world;
-	std::vector<Entity*> entities[SCENE_MAX_LAYER];
+	World* world;
+	SceneLayer layers[SCENE_MAX_LAYER];
 
 	float smooth_movement;
 };
@@ -46,6 +46,6 @@ void SceneSetCameraPosition(Scene* scene, const glm::vec3& position);
 
 Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer);
 Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer);
-std::vector<Entity*> SceneGetEntities(Scene* scene, size_t layer);
+SceneLayer* SceneGetLayer(Scene* scene, size_t layer);
 
 std::vector<size_t> SceneGetUsedLayers(Scene* scene);

@@ -122,6 +122,8 @@
     <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\batchrenderer.frag" />
     <None Include="res\index.json" />
+    <None Include="res\templates\scenes\scene2.json" />
+    <None Include="res\templates\entities\box.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\floor.png" />

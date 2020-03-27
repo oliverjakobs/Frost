@@ -22,13 +22,18 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 
 	manager->hover = nullptr;
 
+	manager->scene = (Scene*)malloc(sizeof(Scene));
+	manager->sceneName = "";
+
 	return 1;
 }
 
 void SceneManagerDelete(SceneManager* manager)
 {
-	if (manager->scene)
-		SceneQuit(manager->scene.get());
+	if (!manager->sceneName.empty())
+		SceneQuit(manager->scene);
+
+	free(manager->scene);
 }
 
 void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
@@ -80,45 +85,32 @@ void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
 {
 	if (!obelisk::StringCompare(manager->sceneName, name))
 	{
-		auto newScene = SceneManagerLoadScene(manager, name);
-
-		if (newScene)
+		/* Check if scene is in the register */
+		auto entry = manager->scenes.find(name);
+		if (entry == manager->scenes.end())
 		{
-			// Exit old Scene
-			if (manager->scene)
-				SceneQuit(manager->scene.get());
-
-			manager->scene = newScene;
-			manager->sceneName = name;
-
-			// Enter new scene
-			// SceneOnEntry(manager->scene.get());
+			OBELISK_WARN("Couldn't find scene: ", name.c_str());
+			return;
 		}
-		else
-		{
-			OBELISK_WARN("Failed to load scene: %s", name.c_str());
-		}
+
+		// Exit old Scene
+		if (!manager->sceneName.empty())
+			SceneQuit(manager->scene);
+
+		// Enter new scene
+		SceneManagerLoadScene(manager, manager->scene, entry->second);
+		manager->sceneName = name;
 	}
 }
 
-std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::string& name)
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string& templ)
 {
-	/* Check if scene is in the register */
-	auto path = manager->scenes.find(name);
-
-	if (path == manager->scenes.end())
-	{
-		OBELISK_WARN("Couldn't find scene: ", name.c_str());
-		return nullptr;
-	}
-
-	char* json = (char*)path->second.c_str();
+	char* json = (char*)templ.c_str();
 
 	float width = tb_json_float(json, "{'size'[0", NULL);
 	float height = tb_json_float(json, "{'size'[1", NULL);
 
-	auto scene = std::make_shared<Scene>();
-	SceneLoad(scene.get(), manager->camera, width, height);
+	SceneLoad(scene, manager->camera, width, height);
 
 	tb_json_element templates;
 	tb_json_read(json, &templates, "{'templates'");
@@ -140,11 +132,11 @@ std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::s
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntity(scene.get(), TemplateLoadEntity(path, manager->resources), layer, glm::vec2(x, y));
+			SceneAddEntity(scene, TemplateLoadEntity(path, manager->resources), layer, glm::vec2(x, y));
 		}
 	}
 
-	return scene;
+	return 1;
 }
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e)
@@ -163,19 +155,19 @@ void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 			manager->editmode = !manager->editmode;
 			break;
 		case KEY_DELETE:
-			SceneRemoveEntity(manager->scene.get(), "tree", 0);
+			SceneRemoveEntity(manager->scene, "tree", 0);
 			break;
 		}
 	}
 
-	SceneOnEvent(manager->scene.get(), e);
+	SceneOnEvent(manager->scene, e);
 }
 
 void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 {
 	if (!manager->editmode)
 	{
-		SceneOnUpdate(manager->scene.get(), deltaTime);
+		SceneOnUpdate(manager->scene, deltaTime);
 	}
 	else
 	{
@@ -194,13 +186,13 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 		manager->camera->position = position;
 		CameraUpdateViewOrtho(manager->camera);
 
-		manager->hover = SceneGetEntityAt(manager->scene.get(), CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer);
+		manager->hover = SceneGetEntityAt(manager->scene, CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer);
 	}
 }
 
 void SceneManagerOnRender(SceneManager* manager)
 {
-	SceneOnRender(manager->scene.get());
+	SceneOnRender(manager->scene);
 
 	if (manager->editmode)
 	{
@@ -219,31 +211,37 @@ void SceneManagerOnRender(SceneManager* manager)
 				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
 		}
 
-		for (auto& entity : SceneGetEntities(manager->scene.get(), manager->layer))
+		SceneLayer* layer = SceneGetLayer(manager->scene, manager->layer);
+
+		if (layer)
 		{
-			IgnisColorRGBA color = IGNIS_WHITE;
-			ignisBlendColorRGBA(&color, 0.4f);
-
-			auto tex = entity->GetComponent<TextureComponent>();
-
-			if (tex != nullptr)
+			for (size_t i = 0; i < layer->used; i++)
 			{
-				glm::vec2 position = entity->GetPosition();
+				IgnisColorRGBA color = IGNIS_WHITE;
+				ignisBlendColorRGBA(&color, 0.4f);
 
-				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
-				glm::vec2 max = min + tex->GetDimension();
+				auto tex = EntityGetComponent<TextureComponent>(layer->entities[i]);
 
-				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
+				if (tex != nullptr)
+				{
+					glm::vec2 position = EntityGetPosition(layer->entities[i]);
+
+					glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
+					glm::vec2 max = min + tex->GetDimension();
+
+					Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
+				}
 			}
+
 		}
 
 		if (manager->hover)
 		{
-			auto tex = manager->hover->GetComponent<TextureComponent>();
+			auto tex = EntityGetComponent<TextureComponent>(manager->hover);
 
 			if (tex != nullptr)
 			{
-				glm::vec2 position = manager->hover->GetPosition();
+				glm::vec2 position = EntityGetPosition(manager->hover);
 
 				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 				glm::vec2 max = min + tex->GetDimension();
@@ -260,7 +258,7 @@ void SceneManagerOnRender(SceneManager* manager)
 void SceneManagerOnRenderDebug(SceneManager* manager)
 {
 	if (!manager->editmode)
-		SceneOnRenderDebug(manager->scene.get());
+		SceneOnRenderDebug(manager->scene);
 }
 
 void SceneManagerOnImGui(SceneManager* manager)
@@ -269,13 +267,13 @@ void SceneManagerOnImGui(SceneManager* manager)
 	{
 		ImGui::Begin("Editor");
 
-		ImGui::Text("Hovered Entity: %s", manager->hover == nullptr ? "null" : manager->hover->GetName().c_str());
+		ImGui::Text("Hovered Entity: %s", manager->hover == nullptr ? "null" : manager->hover->name.c_str());
 
 		ImGui::Checkbox("Show grid", &manager->showgrid);
 
 		ImGui::Separator();
 
-		for (size_t i : SceneGetUsedLayers(manager->scene.get()))
+		for (size_t i : SceneGetUsedLayers(manager->scene))
 			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
 
 		ImGui::End();

@@ -25,8 +25,8 @@ void TextureComponent::SetRenderFlip(RenderFlip flip)
 
 void TextureComponent::OnRender(Scene* scene)
 {
-	float x = m_entity->GetPosition().x - m_width / 2.0f;
-	float y = m_entity->GetPosition().y;
+	float x = EntityGetPosition(m_entity).x - m_width / 2.0f;
+	float y = EntityGetPosition(m_entity).y;
 
 	float src_w = 1.0f / m_texture->columns;
 	float src_h = 1.0f / m_texture->rows;

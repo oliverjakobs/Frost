@@ -21,52 +21,42 @@ enum class Direction
 std::string DirectionToString(Direction dir);
 Direction StringToDirection(const std::string& str);
 
-class Entity
+struct Entity
 {
-private:
-	std::string m_name;
+	std::string name;
+	Direction direction;
 
-	Direction m_direction;
+	std::vector<std::unique_ptr<Component>> components;
 
-	std::vector<std::unique_ptr<Component>> m_components;
-public:
 	Entity(const std::string& name);
 	~Entity();
-
-	void OnUpdate(Scene* scene, float deltaTime);
-	void OnRender(Scene* scene);
-	void OnRenderDebug();
-
-	void SetPosition(const glm::vec2& pos);
-	glm::vec2 GetPosition() const;
-
-	void SetDirection(Direction dir) { m_direction = dir; }
-	Direction GetDirection() const { return m_direction; }
-
-	std::string GetName() const { return m_name; }
-
-
-	template <class Type, class... Args>
-	void AddComponent(Args&&... args)
-	{
-		m_components.push_back(std::unique_ptr<Type>(new Type(this, std::forward<Args>(args)...)));
-	}
-
-	template<typename Type>
-	Type* GetComponent() const
-	{
-		Type* component = nullptr;
-
-		for (auto& c : m_components)
-		{
-			component = dynamic_cast<Type*>(c.get());
-
-			if (component != nullptr)
-				break;
-		}
-
-		return component;
-	}
-
-	friend EntityManager;
 };
+
+void EntityOnUpdate(Entity* entity, Scene* scene, float deltaTime);
+void EntityOnRender(Entity* entity, Scene* scene);
+void EntityOnRenderDebug(Entity* entity);
+
+void EntitySetPosition(Entity* entity, const glm::vec2& pos);
+glm::vec2 EntityGetPosition(Entity* entity);
+
+template <class Type, class... Args>
+void EntityAddComponent(Entity* entity, Args&&... args)
+{
+	entity->components.push_back(std::unique_ptr<Type>(new Type(entity, std::forward<Args>(args)...)));
+}
+
+template<typename Type>
+Type* EntityGetComponent(Entity* entity)
+{
+	Type* component = nullptr;
+
+	for (auto& c : entity->components)
+	{
+		component = dynamic_cast<Type*>(c.get());
+
+		if (component != nullptr)
+			break;
+	}
+
+	return component;
+}
