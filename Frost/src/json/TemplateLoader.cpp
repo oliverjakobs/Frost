@@ -8,7 +8,7 @@
 #define TEMPLATE_LOADER_STRLEN	32
 #define TEMPLATE_LOADER_PATHLEN	64
 
-std::shared_ptr<Entity> TemplateLoadEntity(const char* json_path, ResourceManager* res)
+Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -21,7 +21,7 @@ std::shared_ptr<Entity> TemplateLoadEntity(const char* json_path, ResourceManage
 	char name[TEMPLATE_LOADER_STRLEN];
 	tb_json_string(json, "{'name'", name, TEMPLATE_LOADER_STRLEN, NULL);
 
-	auto entity = std::make_shared<Entity>(name);
+	Entity* entity = new Entity(name);
 
 	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");
@@ -130,80 +130,4 @@ std::shared_ptr<Entity> TemplateLoadEntity(const char* json_path, ResourceManage
 	free(json);
 
 	return entity;
-}
-
-std::shared_ptr<Scene> TemplateLoadScene(const char* json_path, Camera* camera, ResourceManager* res)
-{
-	char* json = ignisReadFile(json_path, NULL);
-
-	if (!json)
-	{
-		OBELISK_WARN("Template not found (%s)", json_path);
-		return nullptr;
-	}
-
-	float width = tb_json_float(json, "{'size'[0", NULL);
-	float height = tb_json_float(json, "{'size'[1", NULL);
-
-	auto scene = std::make_shared<Scene>(camera, width, height);
-
-	tb_json_element templates;
-	tb_json_read(json, &templates, "{'templates'");
-
-	if (templates.error == TB_JSON_OK && templates.data_type == TB_JSON_ARRAY)
-	{
-		char* value = (char*)templates.value;
-		tb_json_element entity;
-
-		for (int i = 0; i < templates.elements; i++)
-		{
-			value = tb_json_array_step(value, &entity);
-
-			char path[TEMPLATE_LOADER_PATHLEN];
-			tb_json_string((char*)entity.value, "[0", path, TEMPLATE_LOADER_PATHLEN, NULL);
-
-			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
-			float y = tb_json_float((char*)entity.value, "[1[1", NULL);
-
-			int layer = tb_json_int((char*)entity.value, "[2", NULL);
-
-			scene->AddEntity(TemplateLoadEntity(path, res), layer, glm::vec2(x, y));
-		}
-	}
-
-	free(json);
-
-	return scene;
-}
-
-void TemplateLoadSceneRegister(SceneManager* manager, const char* json_path)
-{
-	char* json = ignisReadFile(json_path, NULL);
-
-	if (!json)
-	{
-		OBELISK_WARN("Register not found (%s)", json_path);
-		return;
-	}
-
-	tb_json_element scenes;
-	tb_json_read(json, &scenes, "{'scenes'");
-
-	for (int i = 0; i < scenes.elements; i++)
-	{
-		char name[TEMPLATE_LOADER_STRLEN];
-		tb_json_string((char*)scenes.value, "{*", name, TEMPLATE_LOADER_STRLEN, &i);
-
-		tb_json_element scene;
-		tb_json_read_format((char*)scenes.value, &scene, "{'%s'", name);
-
-		char path[TEMPLATE_LOADER_PATHLEN];
-		strncpy(path, (char*)scene.value, scene.bytelen);
-
-		path[scene.bytelen] = '\0';
-
-		SceneManagerRegisterScene(manager, name, path);
-	}
-
-	free(json);
 }

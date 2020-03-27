@@ -7,46 +7,45 @@
 
 #include <map>
 
-class Scene
+#define SCENE_MAX_LAYER	8
+
+struct SceneLayer
 {
-private:
-	Camera* m_camera;
-
-	float m_width;
-	float m_height;
-
-	std::unique_ptr<World> m_world;
-	std::map<size_t, std::vector<std::shared_ptr<Entity>>> m_entities;
-
-	float m_smoothMovement;
-public:
-	Scene(Camera* camera, float w, float h);
-	~Scene();
-
-	void AddEntity(std::shared_ptr<Entity> entity, size_t layer);
-	void AddEntity(std::shared_ptr<Entity> entity, size_t layer, const glm::vec2& position);
-	void RemoveEntity(const std::string& name, size_t layer);
-	void Clear();
-
-	void OnEntry();
-	void OnExtit();
-
-	void OnEvent(const Event& e);
-	void OnUpdate(float deltaTime);
-	void OnRender();
-	void OnRenderDebug();
-
-	void SetCameraPosition(const glm::vec3& position);
-
-	std::shared_ptr<Entity> GetEntity(const std::string& name, size_t layer) const;
-	std::shared_ptr<Entity> GetEntityAt(const glm::vec2& pos, size_t layer) const;
-	std::vector<std::shared_ptr<Entity>> GetEntities(size_t layer) const;
-
-	std::vector<size_t> GetLayers() const;
-
-	World* GetWorld() const { return m_world.get(); }
-	Camera* GetCamera() const { return m_camera; }
-
-	const float GetWidth() const { return m_width; }
-	const float GetHeight() const { return m_height; }
+	Entity** entities;
+	size_t used;
+	size_t size;
 };
+
+struct Scene
+{
+	Camera* camera;
+
+	float width;
+	float height;
+
+	std::unique_ptr<World> world;
+	std::vector<Entity*> entities[SCENE_MAX_LAYER];
+
+	float smooth_movement;
+};
+
+int SceneLoad(Scene* scene, Camera* camera, float w, float h);
+void SceneQuit(Scene* scene);
+
+void SceneAddEntity(Scene* scene, Entity* entity, size_t layer);
+void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2& position);
+void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer);
+void SceneClearEntities(Scene* scene);
+
+void SceneOnEvent(Scene* scene, const Event& e);
+void SceneOnUpdate(Scene* scene, float deltaTime);
+void SceneOnRender(Scene* scene);
+void SceneOnRenderDebug(Scene* scene);
+
+void SceneSetCameraPosition(Scene* scene, const glm::vec3& position);
+
+Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer);
+Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer);
+std::vector<Entity*> SceneGetEntities(Scene* scene, size_t layer);
+
+std::vector<size_t> SceneGetUsedLayers(Scene* scene);

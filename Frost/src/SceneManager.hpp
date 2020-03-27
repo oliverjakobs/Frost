@@ -30,7 +30,7 @@ struct SceneManager
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
 void SceneManagerDelete(SceneManager* manager);
 
-void SceneManagerRegisterScenes(SceneManager* manager, const std::string& path);
+void SceneManagerRegisterScenes(SceneManager* manager, const char* path);
 
 void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path);
 void SceneManagerChangeScene(SceneManager* manager, const std::string& name);

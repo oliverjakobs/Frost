@@ -62,7 +62,7 @@ extern "C"
     void name##_hashmap_iter_set_value(const struct hashmap_iter* iter, value_type* value)  \
     {                                                                                       \
         hashmap_iter_set_value(iter, (void*)value);                                         \
-    }                                                                                       \
+    }
 
 /*
  * Macros to declare type-specific versions of hashmap_foreach_*() functions to
@@ -95,15 +95,16 @@ struct hashmap_entry;
 /*
  * The hashmap state structure.
  */
-typedef struct {
+typedef struct
+{
     size_t table_size_init;
     size_t table_size;
     size_t num_entries;
     struct hashmap_entry* table;
-    size_t (*hash)(const void*);
-    int (*key_compare)(const void*, const void*);
-    void* (*key_alloc)(const void*);
-    void (*key_free)(void*);
+    size_t  (*hash)(const void*);
+    int     (*key_compare)(const void*, const void*);
+    void*   (*key_alloc)(const void*);
+    void    (*key_free)(void*);
 } hashmap;
 
 /*

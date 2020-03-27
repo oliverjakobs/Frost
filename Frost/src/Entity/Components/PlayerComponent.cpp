@@ -62,5 +62,5 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	phys->GetBody()->SetVelocity(velocity);
 	
 	// set view
-	scene->SetCameraPosition(glm::vec3(m_entity->GetPosition(), 0.0f));
+	SceneSetCameraPosition(scene, glm::vec3(m_entity->GetPosition(), 0.0f));
 }

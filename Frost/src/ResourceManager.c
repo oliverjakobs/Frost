@@ -3,28 +3,28 @@
 #include "json/tb_json.h"
 #include "clib/clib.h"
 
-struct _texkvp
+typedef struct
 {
 	char key[RESOURCE_MANAGER_KEYLEN];
 	IgnisTexture* value;
-};
+} _texkvp;
 
-struct _fontkvp
+typedef struct
 {
 	char key[RESOURCE_MANAGER_KEYLEN];
 	IgnisFont* value;
-};
+} _fontkvp;
 
 /* Declare type-specific type_hashmap_* functions with this handy macro */
-HASHMAP_DEFINE_FUNCS(tex, char, struct _texkvp)
-HASHMAP_DEFINE_FUNCS(font, char, struct _fontkvp)
+HASHMAP_DEFINE_FUNCS(tex, char, _texkvp)
+HASHMAP_DEFINE_FUNCS(font, char, _fontkvp)
 
-struct _texkvp* _tex_kvp(const char* key, IgnisTexture* value)
+_texkvp* _tex_kvp(const char* key, IgnisTexture* value)
 {
 	if (strlen(key) > RESOURCE_MANAGER_KEYLEN)
 		return NULL;
 
-	struct _texkvp* kvp = (struct _texkvp*)malloc(sizeof(struct _texkvp));
+	_texkvp* kvp = (_texkvp*)malloc(sizeof(_texkvp));
 
 	if (kvp)
 	{
@@ -35,12 +35,12 @@ struct _texkvp* _tex_kvp(const char* key, IgnisTexture* value)
 	return kvp;
 }
 
-struct _fontkvp* _font_kvp(const char* key, IgnisFont* value)
+_fontkvp* _font_kvp(const char* key, IgnisFont* value)
 {
 	if (strlen(key) > RESOURCE_MANAGER_KEYLEN)
 		return NULL;
 
-	struct _fontkvp* kvp = (struct _fontkvp*)malloc(sizeof(struct _fontkvp));
+	_fontkvp* kvp = (_fontkvp*)malloc(sizeof(_fontkvp));
 
 	if (kvp)
 	{
@@ -129,7 +129,7 @@ IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* na
 
 	if (ignisCreateTexture(texture, path, rows, columns, 1, NULL))
 	{
-		struct _texkvp* kvp = _tex_kvp(name, texture);
+		_texkvp* kvp = _tex_kvp(name, texture);
 
 		if (kvp && tex_hashmap_put(&manager->textures, kvp->key, kvp) == kvp)
 			return texture;
@@ -143,7 +143,7 @@ IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* na
 
 IgnisTexture* ResourceManagerGetTexture(ResourceManager* manager, const char* name)
 {
-	struct _texkvp* kvp = tex_hashmap_get(&manager->textures, name);
+	_texkvp* kvp = tex_hashmap_get(&manager->textures, name);
 
 	if (kvp) return kvp->value;
 
@@ -156,7 +156,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 	if (ignisLoadFont(font, path, size))
 	{
-		struct _fontkvp* kvp = _font_kvp(name, font);
+		_fontkvp* kvp = _font_kvp(name, font);
 
 		if (kvp && font_hashmap_put(&manager->fonts, kvp->key, kvp) == kvp)
 			return font;
@@ -170,7 +170,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 {
-	struct _fontkvp* kvp = font_hashmap_get(&manager->fonts, name);
+	_fontkvp* kvp = font_hashmap_get(&manager->fonts, name);
 
 	if (kvp) return kvp->value;
 

@@ -5,7 +5,7 @@
 #include <vector>
 #include <memory>
 
-class Scene;
+struct Scene;
 class Component;
 struct EntityManager;
 

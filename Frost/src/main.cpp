@@ -133,7 +133,7 @@ public:
 		// ----
 		ImGui::Begin("DEBUG");
 		
-		auto player = m_sceneManager.scene->GetEntity("player", 1);
+		auto player = SceneGetEntity(m_sceneManager.scene.get(), "player", 1);
 		 
 		ImGui::Text("Name: %s", player->GetName().c_str());
 		auto position = player->GetPosition();

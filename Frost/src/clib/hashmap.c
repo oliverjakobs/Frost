@@ -36,8 +36,8 @@
 
 struct hashmap_entry
 {
-    void *key;
-    void *value;
+    void* key;
+    void* value;
 #ifdef HASHMAP_METRICS
     size_t num_collisions;
 #endif
@@ -58,16 +58,13 @@ static inline size_t hashmap_table_min_size_calc(size_t num_entries)
  */
 static size_t hashmap_table_size_calc(size_t num_entries)
 {
-    size_t table_size;
-    size_t min_size;
-
-    table_size = hashmap_table_min_size_calc(num_entries);
+    size_t table_size = hashmap_table_min_size_calc(num_entries);
 
     /* Table size is always a power of 2 */
-    min_size = HASHMAP_SIZE_MIN;
-    while (min_size < table_size) {
+    size_t min_size = HASHMAP_SIZE_MIN;
+    while (min_size < table_size)
         min_size <<= 1;
-    }
+
     return min_size;
 }
 
@@ -85,10 +82,10 @@ static inline size_t hashmap_calc_index(const hashmap* map, const void* key)
  */
 static struct hashmap_entry* hashmap_entry_get_populated(const hashmap* map, struct hashmap_entry* entry)
 {
-    for (; entry < &map->table[map->table_size]; ++entry) {
-        if (entry->key) {
+    for (; entry < &map->table[map->table_size]; ++entry) 
+    {
+        if (entry->key)
             return entry;
-        }
     }
     return NULL;
 }
@@ -99,17 +96,13 @@ static struct hashmap_entry* hashmap_entry_get_populated(const hashmap* map, str
  */
 static struct hashmap_entry* hashmap_entry_find(const hashmap* map, const void* key, bool find_empty)
 {
-    size_t i;
-    size_t index;
     size_t probe_len = HASHMAP_PROBE_LEN(map);
-    struct hashmap_entry *entry;
-
-    index = hashmap_calc_index(map, key);
+    size_t index = hashmap_calc_index(map, key);
 
     /* Linear probing */
-    for (i = 0; i < probe_len; ++i)
+    for (size_t i = 0; i < probe_len; ++i)
     {
-        entry = &map->table[index];
+        struct hashmap_entry* entry = &map->table[index];
         if (!entry->key)
         {
             if (find_empty)
@@ -137,14 +130,11 @@ static struct hashmap_entry* hashmap_entry_find(const hashmap* map, const void* 
  */
 static void hashmap_entry_remove(hashmap* map, struct hashmap_entry* removed_entry)
 {
-    size_t i;
+    size_t removed_index = (removed_entry - map->table);
+
 #ifdef HASHMAP_METRICS
     size_t removed_i = 0;
 #endif
-    size_t index;
-    size_t entry_index;
-    size_t removed_index = (removed_entry - map->table);
-    struct hashmap_entry *entry;
 
     /* Free the key */
     if (map->key_free)
@@ -153,16 +143,17 @@ static void hashmap_entry_remove(hashmap* map, struct hashmap_entry* removed_ent
     --map->num_entries;
 
     /* Fill the free slot in the chain */
-    index = HASHMAP_PROBE_NEXT(map, removed_index);
-    for (i = 1; i < map->table_size; ++i) {
-        entry = &map->table[index];
-        if (!entry->key) {
-            /* Reached end of chain */
-            break;
-        }
-        entry_index = hashmap_calc_index(map, entry->key);
+    size_t index = HASHMAP_PROBE_NEXT(map, removed_index);
+    for (size_t i = 1; i < map->table_size; ++i)
+    {
+        struct hashmap_entry* entry = &map->table[index];
+        if (!entry->key)
+            break; /* Reached end of chain */
+
+        size_t entry_index = hashmap_calc_index(map, entry->key);
         /* Shift in entries with an index <= to the removed slot */
-        if (HASHMAP_INDEX_LE(map, removed_index, entry_index)) {
+        if (HASHMAP_INDEX_LE(map, removed_index, entry_index))
+        {
 #ifdef HASHMAP_METRICS
             entry->num_collisions -= (i - removed_i);
             removed_i = i;
@@ -184,36 +175,33 @@ static void hashmap_entry_remove(hashmap* map, struct hashmap_entry* removed_ent
  */
 static int hashmap_rehash(hashmap* map, size_t new_size)
 {
-    size_t old_size;
-    struct hashmap_entry* old_table;
-    struct hashmap_entry* new_table;
-    struct hashmap_entry* entry;
-    struct hashmap_entry* new_entry;
-
     HASHMAP_ASSERT(new_size >= HASHMAP_SIZE_MIN);
     HASHMAP_ASSERT((new_size & (new_size - 1)) == 0);
 
-    new_table = (struct hashmap_entry*)calloc(new_size, sizeof(struct hashmap_entry));
+    struct hashmap_entry* new_table = (struct hashmap_entry*)calloc(new_size, sizeof(struct hashmap_entry));
     if (!new_table) return -ENOMEM;
 
     /* Backup old elements in case of rehash failure */
-    old_size = map->table_size;
-    old_table = map->table;
+    size_t old_size = map->table_size;
+    struct hashmap_entry* old_table = map->table;
     map->table_size = new_size;
     map->table = new_table;
     /* Rehash */
-    for (entry = old_table; entry < &old_table[old_size]; ++entry)
+    for (struct hashmap_entry* entry = old_table; entry < &old_table[old_size]; ++entry)
     {
         if (!entry->value) continue; /* Only copy entries with value */
 
-        new_entry = hashmap_entry_find(map, entry->key, true);
+        struct hashmap_entry* new_entry = hashmap_entry_find(map, entry->key, true);
         if (!new_entry)
         {
             /*
              * The load factor is too high with the new table
              * size, or a poor hash function was used.
              */
-            goto revert;
+            map->table_size = old_size;
+            map->table = old_table;
+            free(new_table);
+            return -EINVAL;
         }
         /* Shallow copy (intentionally omits num_collisions) */
         new_entry->key = entry->key;
@@ -221,12 +209,6 @@ static int hashmap_rehash(hashmap* map, size_t new_size)
     }
     free(old_table);
     return 0;
-
-revert:
-    map->table_size = old_size;
-    map->table = old_table;
-    free(new_table);
-    return -EINVAL;
 }
 
 /*
@@ -316,8 +298,6 @@ void hashmap_set_key_alloc_funcs(hashmap* map, void* (*key_alloc_func)(const voi
  */
 void* hashmap_put(hashmap* map, const void* key, void* value)
 {
-    struct hashmap_entry *entry;
-
     HASHMAP_ASSERT(map != NULL);
     HASHMAP_ASSERT(key != NULL);
 
@@ -325,7 +305,7 @@ void* hashmap_put(hashmap* map, const void* key, void* value)
     if (map->table_size <= hashmap_table_min_size_calc(map->num_entries))
         hashmap_rehash(map, map->table_size << 1);
 
-    entry = hashmap_entry_find(map, key, true);
+    struct hashmap_entry* entry = hashmap_entry_find(map, key, true);
     if (!entry)
     {
         /*
@@ -370,12 +350,10 @@ void* hashmap_put(hashmap* map, const void* key, void* value)
  */
 void* hashmap_get(const hashmap* map, const void* key)
 {
-    struct hashmap_entry* entry;
-
     HASHMAP_ASSERT(map != NULL);
     HASHMAP_ASSERT(key != NULL);
 
-    entry = hashmap_entry_find(map, key, false);
+    struct hashmap_entry* entry = hashmap_entry_find(map, key, false);
 
     if (!entry) return NULL;
 
@@ -388,17 +366,14 @@ void* hashmap_get(const hashmap* map, const void* key)
  */
 void* hashmap_remove(hashmap* map, const void *key)
 {
-    struct hashmap_entry* entry;
-    void* value;
-
     HASHMAP_ASSERT(map != NULL);
     HASHMAP_ASSERT(key != NULL);
 
-    entry = hashmap_entry_find(map, key, false);
+    struct hashmap_entry* entry = hashmap_entry_find(map, key, false);
     if (!entry)
         return NULL;
 
-    value = entry->value;
+    void* value = entry->value;
     /* Clear the entry and make the chain contiguous */
     hashmap_entry_remove(map, entry);
     return value;
@@ -421,15 +396,13 @@ void hashmap_clear(hashmap* map)
  */
 void hashmap_reset(hashmap* map)
 {
-    struct hashmap_entry* new_table;
-
     HASHMAP_ASSERT(map != NULL);
 
     hashmap_clear(map);
     if (map->table_size == map->table_size_init)
         return;
 
-    new_table = (struct hashmap_entry*)realloc(map->table, sizeof(struct hashmap_entry) * map->table_size_init);
+    struct hashmap_entry* new_table = (struct hashmap_entry*)realloc(map->table, sizeof(struct hashmap_entry) * map->table_size_init);
     if (!new_table)
         return;
 
@@ -453,7 +426,7 @@ size_t hashmap_size(const hashmap* map)
  * Hashmap iterators are INVALID after a put or remove operation is performed.
  * hashmap_iter_remove() allows safe removal during iteration.
  */
-struct hashmap_iter *hashmap_iter(const hashmap* map)
+struct hashmap_iter* hashmap_iter(const hashmap* map)
 {
     HASHMAP_ASSERT(map != NULL);
 
@@ -469,12 +442,11 @@ struct hashmap_iter *hashmap_iter(const hashmap* map)
  */
 struct hashmap_iter* hashmap_iter_next(const hashmap* map, const struct hashmap_iter* iter)
 {
-    struct hashmap_entry* entry = (struct hashmap_entry*)iter;
-
     HASHMAP_ASSERT(map != NULL);
 
-    if (!iter)
-        return NULL;
+    if (!iter) return NULL;
+
+    struct hashmap_entry* entry = (struct hashmap_entry*)iter;
 
     return (struct hashmap_iter*)hashmap_entry_get_populated(map, entry + 1);
 }
@@ -485,12 +457,12 @@ struct hashmap_iter* hashmap_iter_next(const hashmap* map, const struct hashmap_
  */
 struct hashmap_iter* hashmap_iter_remove(hashmap* map, const struct hashmap_iter* iter)
 {
-    struct hashmap_entry* entry = (struct hashmap_entry*)iter;
-
     HASHMAP_ASSERT(map != NULL);
 
     if (!iter)
         return NULL;
+
+    struct hashmap_entry* entry = (struct hashmap_entry*)iter;
 
     if (!entry->key)
         return hashmap_iter_next(map, iter); /* Iterator is invalid, so just return the next valid entry */
@@ -542,23 +514,17 @@ void hashmap_iter_set_value(const struct hashmap_iter* iter, void* value)
  */
 int hashmap_foreach(const hashmap* map, int (*func)(const void*, void*, void*), void* arg)
 {
-    struct hashmap_entry* entry;
-    size_t num_entries;
-    const void* key;
-    int rc;
-
     HASHMAP_ASSERT(map != NULL);
     HASHMAP_ASSERT(func != NULL);
 
-    entry = map->table;
-    for (entry = map->table; entry < &map->table[map->table_size]; ++entry)
+    for (struct hashmap_entry* entry = map->table; entry < &map->table[map->table_size]; ++entry)
     {
         if (!entry->key)
             continue;
 
-        num_entries = map->num_entries;
-        key = entry->key;
-        rc = func(entry->key, entry->value, arg);
+        size_t num_entries = map->num_entries;
+        const void* key = entry->key;
+        int rc = func(entry->key, entry->value, arg);
 
         if (rc < 0)
             return rc;
@@ -572,6 +538,7 @@ int hashmap_foreach(const hashmap* map, int (*func)(const void*, void*, void*), 
         else if (num_entries != map->num_entries)
             return -1; /* Stop immediately if func put/removed another entry */
     }
+
     return 0;
 }
 
@@ -582,10 +549,9 @@ int hashmap_foreach(const hashmap* map, int (*func)(const void*, void*, void*), 
  */
 size_t hashmap_hash_string(const void* key)
 {
-    const char* key_str = (const char*)key;
     size_t hash = 0;
 
-    for (; *key_str; ++key_str)
+    for (const char* key_str = (const char*)key; *key_str; ++key_str)
     {
         hash += *key_str;
         hash += (hash << 10);
@@ -610,9 +576,9 @@ int hashmap_compare_string(const void *a, const void *b)
  * Default key allocation function for string keys.  Use free() for the
  * key_free_func.
  */
-void *hashmap_alloc_key_string(const void *key)
+void* hashmap_alloc_key_string(const void* key)
 {
-    return (void *)strdup((const char *)key);
+    return (void*)strdup((const char*)key);
 }
 
 /*
@@ -620,14 +586,15 @@ void *hashmap_alloc_key_string(const void *key)
  */
 size_t hashmap_hash_string_i(const void *key)
 {
-    const char *key_str = (const char *)key;
     size_t hash = 0;
 
-    for (; *key_str; ++key_str) {
+    for (const char* key_str = (const char*)key; *key_str; ++key_str)
+    {
         hash += tolower(*key_str);
         hash += (hash << 10);
         hash ^= (hash >> 6);
     }
+
     hash += (hash << 3);
     hash ^= (hash >> 11);
     hash += (hash << 15);
@@ -637,9 +604,9 @@ size_t hashmap_hash_string_i(const void *key)
 /*
  * Case insensitive key comparator function for string keys.
  */
-int hashmap_compare_string_i(const void *a, const void *b)
+int hashmap_compare_string_i(const void* a, const void* b)
 {
-    return strcmp((const char *)a, (const char *)b);
+    return strcmp((const char*)a, (const char*)b);
 }
 
 
@@ -647,13 +614,13 @@ int hashmap_compare_string_i(const void *a, const void *b)
 /*
  * Return the load factor.
  */
-double hashmap_load_factor(const hashmap *map)
+double hashmap_load_factor(const hashmap* map)
 {
     HASHMAP_ASSERT(map != NULL);
 
-    if (!map->table_size) {
+    if (!map->table_size)
         return 0;
-    }
+
     return (double)map->num_entries / map->table_size;
 }
 
@@ -667,16 +634,17 @@ double hashmap_collisions_mean(const hashmap *map)
 
     HASHMAP_ASSERT(map != NULL);
 
-    if (!map->num_entries) {
+    if (!map->num_entries)
         return 0;
-    }
-    for (entry = map->table; entry < &map->table[map->table_size];
-        ++entry) {
-        if (!entry->key) {
+
+    for (entry = map->table; entry < &map->table[map->table_size]; ++entry) 
+    {
+        if (!entry->key)
             continue;
-        }
+
         total_collisions += entry->num_collisions;
     }
+
     return (double)total_collisions / map->num_entries;
 }
 
@@ -693,15 +661,15 @@ double hashmap_collisions_variance(const hashmap *map)
 
     HASHMAP_ASSERT(map != NULL);
 
-    if (!map->num_entries) {
+    if (!map->num_entries)
         return 0;
-    }
+
     mean_collisions = hashmap_collisions_mean(map);
-    for (entry = map->table; entry < &map->table[map->table_size];
-        ++entry) {
-        if (!entry->key) {
+    for (entry = map->table; entry < &map->table[map->table_size]; ++entry) 
+    {
+        if (!entry->key)
             continue;
-        }
+
         variance = (double)entry->num_collisions - mean_collisions;
         total_variance += variance * variance;
     }

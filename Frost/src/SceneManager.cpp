@@ -1,8 +1,12 @@
 #include "SceneManager.hpp"
 
 #include "json/TemplateLoader.hpp"
+#include "json/tb_json.h"
 
 #include "Application.hpp"
+
+#define SCENE_MANAGER_NAMELEN	32
+#define SCENE_MANAGER_PATHLEN	64
 
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
@@ -24,18 +28,52 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 void SceneManagerDelete(SceneManager* manager)
 {
 	if (manager->scene)
-		manager->scene->OnExtit();
+		SceneQuit(manager->scene.get());
 }
 
-void SceneManagerRegisterScenes(SceneManager* manager, const std::string& path)
+void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 {
-	TemplateLoadSceneRegister(manager, path.c_str());
+	char* json = ignisReadFile(json_path, NULL);
+
+	if (!json)
+	{
+		OBELISK_WARN("Register not found (%s)", json_path);
+		return;
+	}
+
+	tb_json_element scenes;
+	tb_json_read(json, &scenes, "{'scenes'");
+
+	for (int i = 0; i < scenes.elements; i++)
+	{
+		char name[SCENE_MANAGER_NAMELEN];
+		tb_json_string((char*)scenes.value, "{*", name, SCENE_MANAGER_NAMELEN, &i);
+
+		tb_json_element scene;
+		tb_json_read_format((char*)scenes.value, &scene, "{'%s'", name);
+
+		char path[SCENE_MANAGER_PATHLEN];
+		strncpy(path, (char*)scene.value, scene.bytelen);
+
+		path[scene.bytelen] = '\0';
+
+		SceneManagerRegisterScene(manager, name, path);
+	}
+
+	free(json);
 }
 
 void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path)
 {
 	if (!(name.empty() || path.empty()))
-		manager->scenes.insert({ name, path });
+	{
+		char* json = ignisReadFile(path.c_str(), NULL);
+
+		if (json)
+			manager->scenes.insert({ name, json });
+
+		free(json);
+	}
 }
 
 void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
@@ -48,13 +86,13 @@ void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
 		{
 			// Exit old Scene
 			if (manager->scene)
-				manager->scene->OnExtit();
+				SceneQuit(manager->scene.get());
 
 			manager->scene = newScene;
 			manager->sceneName = name;
 
 			// Enter new scene
-			manager->scene->OnEntry();
+			// SceneOnEntry(manager->scene.get());
 		}
 		else
 		{
@@ -65,6 +103,7 @@ void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
 
 std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::string& name)
 {
+	/* Check if scene is in the register */
 	auto path = manager->scenes.find(name);
 
 	if (path == manager->scenes.end())
@@ -73,7 +112,39 @@ std::shared_ptr<Scene> SceneManagerLoadScene(SceneManager* manager, const std::s
 		return nullptr;
 	}
 
-	return TemplateLoadScene(path->second.c_str(), manager->camera, manager->resources);
+	char* json = (char*)path->second.c_str();
+
+	float width = tb_json_float(json, "{'size'[0", NULL);
+	float height = tb_json_float(json, "{'size'[1", NULL);
+
+	auto scene = std::make_shared<Scene>();
+	SceneLoad(scene.get(), manager->camera, width, height);
+
+	tb_json_element templates;
+	tb_json_read(json, &templates, "{'templates'");
+
+	if (templates.error == TB_JSON_OK && templates.data_type == TB_JSON_ARRAY)
+	{
+		char* value = (char*)templates.value;
+
+		for (int i = 0; i < templates.elements; i++)
+		{
+			tb_json_element entity;
+			value = tb_json_array_step(value, &entity);
+
+			char path[SCENE_MANAGER_PATHLEN];
+			tb_json_string((char*)entity.value, "[0", path, SCENE_MANAGER_PATHLEN, NULL);
+
+			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
+			float y = tb_json_float((char*)entity.value, "[1[1", NULL);
+
+			int layer = tb_json_int((char*)entity.value, "[2", NULL);
+
+			SceneAddEntity(scene.get(), TemplateLoadEntity(path, manager->resources), layer, glm::vec2(x, y));
+		}
+	}
+
+	return scene;
 }
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e)
@@ -92,19 +163,19 @@ void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 			manager->editmode = !manager->editmode;
 			break;
 		case KEY_DELETE:
-			manager->scene->RemoveEntity("tree", 0);
+			SceneRemoveEntity(manager->scene.get(), "tree", 0);
 			break;
 		}
 	}
 
-	manager->scene->OnEvent(e);
+	SceneOnEvent(manager->scene.get(), e);
 }
 
 void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 {
 	if (!manager->editmode)
 	{
-		manager->scene->OnUpdate(deltaTime);
+		SceneOnUpdate(manager->scene.get(), deltaTime);
 	}
 	else
 	{
@@ -123,13 +194,13 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 		manager->camera->position = position;
 		CameraUpdateViewOrtho(manager->camera);
 
-		manager->hover = manager->scene->GetEntityAt(CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer).get();
+		manager->hover = SceneGetEntityAt(manager->scene.get(), CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer);
 	}
 }
 
 void SceneManagerOnRender(SceneManager* manager)
 {
-	manager->scene->OnRender();
+	SceneOnRender(manager->scene.get());
 
 	if (manager->editmode)
 	{
@@ -141,14 +212,14 @@ void SceneManagerOnRender(SceneManager* manager)
 			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.2f);
 
-			for (float x = -manager->padding; x <= manager->scene->GetWidth() + manager->padding; x += manager->gridsize)
-				Primitives2DRenderLine(x, -manager->padding, x, manager->scene->GetHeight() + manager->padding, color);
+			for (float x = -manager->padding; x <= manager->scene->width + manager->padding; x += manager->gridsize)
+				Primitives2DRenderLine(x, -manager->padding, x, manager->scene->height + manager->padding, color);
 
-			for (float y = -manager->padding; y <= manager->scene->GetHeight() + manager->padding; y += manager->gridsize)
-				Primitives2DRenderLine(-manager->padding, y, manager->scene->GetWidth() + manager->padding, y, color);
+			for (float y = -manager->padding; y <= manager->scene->height + manager->padding; y += manager->gridsize)
+				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
 		}
 
-		for (auto& entity : manager->scene->GetEntities(manager->layer))
+		for (auto& entity : SceneGetEntities(manager->scene.get(), manager->layer))
 		{
 			IgnisColorRGBA color = IGNIS_WHITE;
 			ignisBlendColorRGBA(&color, 0.4f);
@@ -189,7 +260,7 @@ void SceneManagerOnRender(SceneManager* manager)
 void SceneManagerOnRenderDebug(SceneManager* manager)
 {
 	if (!manager->editmode)
-		manager->scene->OnRenderDebug();
+		SceneOnRenderDebug(manager->scene.get());
 }
 
 void SceneManagerOnImGui(SceneManager* manager)
@@ -204,7 +275,7 @@ void SceneManagerOnImGui(SceneManager* manager)
 
 		ImGui::Separator();
 
-		for (size_t i : manager->scene->GetLayers())
+		for (size_t i : SceneGetUsedLayers(manager->scene.get()))
 			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
 
 		ImGui::End();
