@@ -5,6 +5,8 @@
 
 #include "Camera/Camera.hpp"
 
+#include "Background.h"
+
 #include <map>
 
 #include "clib/vector.h"
@@ -23,6 +25,8 @@ struct Scene
 	World* world;
 	clib_vector* layers;
 	size_t max_layer;
+
+	Background background;
 
 	float smooth_movement;
 };

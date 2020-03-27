@@ -114,6 +114,35 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string
 
 	SceneLoad(scene, manager->camera, width, height, SCENE_MANAGER_LAYER_COUNT);
 
+	tb_json_element background;
+	tb_json_read(json, &background, "{'background'");
+
+	if (background.error == TB_JSON_OK && background.data_type == TB_JSON_ARRAY)
+	{
+		char* value = (char*)background.value;
+
+		BackgroundInit(&scene->background, background.elements);
+		for (int i = 0; i < background.elements; i++)
+		{
+			tb_json_element entity;
+			value = tb_json_array_step(value, &entity);
+
+			char name[SCENE_MANAGER_NAMELEN];
+			tb_json_string((char*)entity.value, "[0", name, SCENE_MANAGER_NAMELEN, NULL);
+
+			float x = tb_json_float((char*)entity.value, "[1", NULL);
+			float y = tb_json_float((char*)entity.value, "[2", NULL);
+
+			float w = tb_json_float((char*)entity.value, "[3", NULL);
+			float h = tb_json_float((char*)entity.value, "[4", NULL);
+
+			float parallax = tb_json_float((char*)entity.value, "[5", NULL);
+
+			BackgroundPushLayer(&scene->background, ResourceManagerGetTexture(manager->resources, name), x, y, w, h, parallax);
+		}
+	}
+
+
 	tb_json_element templates;
 	tb_json_read(json, &templates, "{'templates'");
 

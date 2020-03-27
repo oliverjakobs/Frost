@@ -28,6 +28,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 
 void SceneQuit(Scene* scene)
 {
+	BackgroundClear(&scene->background);
+
 	SceneClearEntities(scene);
 
 	free(scene->layers);
@@ -64,10 +66,14 @@ void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer)
 	if (layer >= scene->max_layer)
 		return;
 
-	// scene->entities[layer].erase(std::remove_if(scene->entities[layer].begin(), scene->entities[layer].end(), [&](auto& e)
-	// 	{
-	// 		return obelisk::StringCompare(e->GetName(), name);
-	// 	}), scene->entities[layer].end());
+	for (size_t i = 0; i < scene->layers[layer].size; i++)
+	{
+		if (obelisk::StringCompare(layer_vector_get(&scene->layers[layer], i)->name, name))
+		{
+			layer_vector_delete(&scene->layers[layer], i);
+			return;
+		}
+	}
 }
 
 void SceneClearEntities(Scene* scene)
@@ -89,10 +95,14 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
 			EntityOnUpdate(layer_vector_get(&scene->layers[layer], i), scene, deltaTime);
+
+	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
 {
+	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
+
 	BatchRenderer2DStart(CameraGetViewProjectionPtr(scene->camera));
 
 	for (size_t layer = 0; layer < scene->max_layer; layer++)

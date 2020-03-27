@@ -1,7 +1,18 @@
 {
 	"size": [ 2048.0, 800.0 ],
+	"background": [
+		[ "bg2_layer_0", 0.0, 0.0, 1024.0, 800.0, 1.0],
+		[ "bg2_layer_1", 0.0, 0.0, 1024.0, 800.0, 0.2]
+	],
 	"templates": [
-		[ "res/templates/entities/player.json", [ 120.0, 288.0 ], 1 ],
-		[ "res/templates/entities/floor.json", [ 128.0, -96.0 ], 0 ]
+		[ "res/templates/entities/player.json", [ 120.0, 128.0 ], 1 ],
+		[ "res/templates/entities/box.json", [ 128.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 384.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 640.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 896.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 1152.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 1408.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 1664.0, 0.0 ], 0 ],
+		[ "res/templates/entities/box.json", [ 1920.0, 0.0 ], 0 ]
 	]
 }

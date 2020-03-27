@@ -226,6 +226,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\textures\box.png" />
     <Image Include="res\textures\floor.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\trees.png" />

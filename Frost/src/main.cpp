@@ -2,10 +2,6 @@
 
 #include "SceneManager.hpp"
 
-#include "Background.h"
-
-#include "json/TemplateLoader.hpp"
-
 class Frost : public Application
 {
 private:
@@ -14,15 +10,12 @@ private:
 	Camera m_camera;
 
 	IgnisFont* m_font;
-
-	Background m_background;
 public:
 	Frost() : Application("Frost", 1024, 800)
 	{
 		// ---------------| Config |------------------------------------------
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		//glEnable(GL_DEPTH_TEST);
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 		Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
@@ -42,18 +35,10 @@ public:
 		SceneManagerInit(&m_sceneManager, &m_resources, &m_camera, 32.0f, 4);
 		SceneManagerRegisterScenes(&m_sceneManager, "res/templates/scenes/register.json");
 		SceneManagerChangeScene(&m_sceneManager, "scene");
-
-		BackgroundInit(&m_background, 4);
-		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_0"), 0.0f, 288.0f, 1088.0f, 600.0f, 1.0f);
-		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_1"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.5f);
-		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_2"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.3f);
-		BackgroundPushLayer(&m_background, ResourceManagerGetTexture(&m_resources, "bg_layer_3"), 0.0f, 288.0f, 1088.0f, 600.0f, 0.0f);
 	}
 
 	~Frost()
 	{
-		BackgroundClear(&m_background);
-
 		FontRendererDestroy();
 		Primitives2DDestroy();
 		BatchRenderer2DDestroy();
@@ -100,15 +85,11 @@ public:
 		// discard frames that took to long
 		// if (deltaTime > 0.4f) return;
 
-		BackgroundUpdate(&m_background, m_camera.position.x - m_camera.size.x / 2.0f, deltaTime);
-
 		SceneManagerOnUpdate(&m_sceneManager, deltaTime);
 	}
 
 	void OnRender() override
 	{
-		BackgroundRender(&m_background, CameraGetViewProjectionPtr(&m_camera));
-
 		SceneManagerOnRender(&m_sceneManager);
 	}
 
