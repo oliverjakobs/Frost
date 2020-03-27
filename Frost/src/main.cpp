@@ -98,7 +98,7 @@ public:
 		SceneManagerOnRenderDebug(&m_sceneManager);
 
 		// debug info
-		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.FPS).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
+		FontRendererRenderText(m_font, obelisk::format("FPS: %d", m_timer.fps).c_str(), 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
 	}
 
 	void OnImGui() override

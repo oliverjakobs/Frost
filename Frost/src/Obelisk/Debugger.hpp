@@ -1,13 +1,12 @@
 #pragma once
 
 #include "Logger.hpp"
-#include "Timer.hpp"
 
 #if _DEBUG
 	
 #define OBELISK_ENABLE_LOGGING
 #define OBELISK_ENABLE_ASSERT
-#define OBELISK_ENABLE_CHRONO
+// #define OBELISK_ENABLE_CHRONO
 
 #endif
 

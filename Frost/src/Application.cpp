@@ -195,6 +195,8 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
 	ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
+	TimerReset(&m_timer);
+
 	return true;
 }
 
@@ -233,10 +235,10 @@ void Application::Run()
 	// Game loop
 	while (m_running)
 	{
-		m_timer.Start((float)glfwGetTime());
+		TimerStart(&m_timer, (float)glfwGetTime());
 
 		if (!m_paused)
-			OnUpdate(m_timer.DeltaTime);
+			OnUpdate(m_timer.deltatime);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -256,7 +258,7 @@ void Application::Run()
 		EventHandler::Poll();
 		glfwSwapBuffers(m_window);
 
-		m_timer.End((float)glfwGetTime());
+		TimerEnd(&m_timer, (float)glfwGetTime());
 	}
 }
 

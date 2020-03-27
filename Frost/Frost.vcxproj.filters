@@ -37,6 +37,7 @@
     <ClCompile Include="src\Background.c" />
     <ClCompile Include="src\ResourceManager.c" />
     <ClCompile Include="src\clib\vector.c" />
+    <ClCompile Include="src\Timer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -78,10 +79,8 @@
     <ClInclude Include="src\Camera\Camera.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
-    <ClInclude Include="src\Obelisk\Timer.hpp" />
     <ClInclude Include="src\Obelisk\Singelton.hpp" />
     <ClInclude Include="src\Obelisk\Range.hpp" />
-    <ClInclude Include="src\Obelisk\rang.hpp" />
     <ClInclude Include="src\Obelisk\Obelisk.hpp" />
     <ClInclude Include="src\Obelisk\Memory.hpp" />
     <ClInclude Include="src\Obelisk\Logger.hpp" />
@@ -99,6 +98,7 @@
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\vector.h" />
+    <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

@@ -8,6 +8,8 @@
 
 #include "Event/EventHandler.hpp"
 
+#include "Timer.h"
+
 // Renderer
 #include "IgnisRenderer/FontRenderer.h"
 #include "IgnisRenderer/Primitives2D.h"
@@ -44,7 +46,7 @@ protected:
 	int m_width;
 	int m_height;
 
-	obelisk::Timer m_timer;
+	Timer m_timer;
 public:
 	Application(const std::string& title, int width, int height);
 	virtual ~Application();

@@ -120,7 +120,6 @@
     <ClInclude Include="src\IgnisRenderer\FontRenderer.h" />
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\json\tb_json.h" />
-    <ClInclude Include="src\Obelisk\rang.hpp" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
@@ -145,12 +144,12 @@
     <ClInclude Include="src\Obelisk\Obelisk.hpp" />
     <ClInclude Include="src\Obelisk\Range.hpp" />
     <ClInclude Include="src\Obelisk\Singelton.hpp" />
-    <ClInclude Include="src\Obelisk\Timer.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\SceneManager.hpp" />
     <ClInclude Include="src\json\TemplateLoader.hpp" />
+    <ClInclude Include="src\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.cpp" />
@@ -189,6 +188,7 @@
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Timer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
