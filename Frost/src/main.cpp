@@ -132,7 +132,7 @@ public:
 			ImGui::Separator();
 		}
 		
-		ImGui::Text("Scene: %s", m_sceneManager.sceneName.c_str());
+		ImGui::Text("Scene: %s", m_sceneManager.scene_name);
 
 		ImGui::End();
 

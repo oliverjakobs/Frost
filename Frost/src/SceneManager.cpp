@@ -5,11 +5,6 @@
 
 #include "Application.hpp"
 
-#define SCENE_MANAGER_NAMELEN	32
-#define SCENE_MANAGER_PATHLEN	64
-
-#define SCENE_MANAGER_LAYER_COUNT	4
-
 typedef struct
 {
 	char key[SCENE_MANAGER_NAMELEN];
@@ -55,7 +50,7 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	if (!manager->scene)
 		return 0;
 
-	manager->sceneName = "";
+	memset(manager->scene_name, '\0', SCENE_MANAGER_NAMELEN);
 
 	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
@@ -64,7 +59,7 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 
 void SceneManagerDelete(SceneManager* manager)
 {
-	if (!manager->sceneName.empty())
+	if (manager->scene_name[0] != '\0')
 		SceneQuit(manager->scene);
 
 	free(manager->scene);
@@ -115,7 +110,7 @@ void SceneManagerRegisterScene(SceneManager* manager, const char* name, const ch
 
 void SceneManagerChangeScene(SceneManager* manager, const char* name)
 {
-	if (!obelisk::StringCompare(manager->sceneName, name))
+	if (strcmp(manager->scene_name, name) != 0)
 	{
 		/* Check if scene is in the register */
 		_scenekvp* kvp = scene_hashmap_get(&manager->scenes, name);
@@ -134,12 +129,12 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 		}
 
 		// Exit old Scene
-		if (!manager->sceneName.empty())
+		if (manager->scene_name[0] != '\0')
 			SceneQuit(manager->scene);
 
 		// Enter new scene
 		SceneManagerLoadScene(manager, manager->scene, json);
-		manager->sceneName = name;
+		strcpy(manager->scene_name, name);
 
 		free(json);
 	}

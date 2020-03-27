@@ -4,6 +4,11 @@
 
 #include "ResourceManager.h"
 
+#define SCENE_MANAGER_NAMELEN	32
+#define SCENE_MANAGER_PATHLEN	64
+
+#define SCENE_MANAGER_LAYER_COUNT	4
+
 struct SceneManager
 {
 	Camera* camera;
@@ -12,7 +17,7 @@ struct SceneManager
 	clib_hashmap scenes; /* <str,str> */
 
 	Scene* scene;
-	std::string sceneName;
+	char scene_name[SCENE_MANAGER_NAMELEN];
 
 	// editor
 	bool editmode;
