@@ -14,8 +14,8 @@ extern "C"
 
 typedef struct
 {
-	hashmap textures;
-	hashmap fonts;
+	clib_hashmap textures;
+	clib_hashmap fonts;
 } ResourceManager;
 
 int ResourceManagerInit(ResourceManager* manager, const char* path);

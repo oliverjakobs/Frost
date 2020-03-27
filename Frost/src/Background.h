@@ -24,12 +24,12 @@ typedef struct
 typedef struct
 {
 	BackgroundLayer* layers;
-	size_t layer_count;
 
-	size_t max_layer;
+	size_t size;
+	size_t capacity;
 } Background;
 
-int BackgroundInit(Background* background, size_t max_layer);
+int BackgroundInit(Background* background, size_t capacity);
 void BackgroundClear(Background* background);
 
 int BackgroundPushLayer(Background* background, IgnisTexture* texture, float x, float y, float w, float h, float parallax);

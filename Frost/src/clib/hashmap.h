@@ -15,63 +15,63 @@ extern "C"
 #include <stddef.h>
 
 /*
- * Define HASHMAP_METRICS to compile in performance analysis
+ * Define CLIB_HASHMAP_METRICS to compile in performance analysis
  * functions for use in assessing hash function performance.
  */
-/* #define HASHMAP_METRICS */
+/* #define CLIB_HASHMAP_METRICS */
 
 /*
- * Define HASHMAP_NOASSERT to compile out all assertions used internally.
+ * Define CLIB_HASHMAP_NOASSERT to compile out all assertions used internally.
  */
-/* #define HASHMAP_NOASSERT */
+/* #define CLIB_HASHMAP_NOASSERT */
 
 /*
  * Macros to declare type-specific versions of hashmap_*() functions to
  * allow compile-time type checking and avoid the need for type casting.
  */
-#define HASHMAP_DECLARE_FUNCS(name, key_type, value_type)                                   \
-    value_type* name##_hashmap_put(hashmap* map, const key_type* key, value_type* value);   \
-    value_type* name##_hashmap_get(const hashmap* map, const key_type* key);                \
-    value_type* name##_hashmap_remove(hashmap* map, const key_type* key);                   \
-    const key_type* name##_hashmap_iter_get_key(const struct hashmap_iter* iter);           \
-    value_type* name##_hashmap_iter_get_value(const struct hashmap_iter* iter);             \
-    void name##_hashmap_iter_set_value(const struct hashmap_iter* iter, value_type* value);
+#define CLIB_HASHMAP_DECLARE_FUNCS(name, key_type, value_type)                              \
+    value_type* name##_hashmap_put(clib_hashmap* map, const key_type* key, value_type* value);   \
+    value_type* name##_hashmap_get(const clib_hashmap* map, const key_type* key);                \
+    value_type* name##_hashmap_remove(clib_hashmap* map, const key_type* key);                   \
+    const key_type* name##_hashmap_iter_get_key(const struct clib_hashmap_iter* iter);           \
+    value_type* name##_hashmap_iter_get_value(const struct clib_hashmap_iter* iter);             \
+    void name##_hashmap_iter_set_value(const struct clib_hashmap_iter* iter, value_type* value);
 
 
-#define HASHMAP_DEFINE_FUNCS(name, key_type, value_type)                                    \
-    value_type* name##_hashmap_put(hashmap* map, const key_type* key, value_type* value)    \
+#define CLIB_HASHMAP_DEFINE_FUNCS(name, key_type, value_type)                               \
+    value_type* name##_hashmap_put(clib_hashmap* map, const key_type* key, value_type* value)    \
     {                                                                                       \
-        return (value_type*)hashmap_put(map, (const void*)key, (void*)value);               \
+        return (value_type*)clib_hashmap_put(map, (const void*)key, (void*)value);               \
     }                                                                                       \
-    value_type* name##_hashmap_get(const hashmap* map, const key_type* key)                 \
+    value_type* name##_hashmap_get(const clib_hashmap* map, const key_type* key)                 \
     {                                                                                       \
-        return (value_type*)hashmap_get(map, (const void*)key);                             \
+        return (value_type*)clib_hashmap_get(map, (const void*)key);                             \
     }                                                                                       \
-    value_type* name##_hashmap_remove(hashmap* map, const key_type* key)                    \
+    value_type* name##_hashmap_remove(clib_hashmap* map, const key_type* key)                    \
     {                                                                                       \
-        return (value_type*)hashmap_remove(map, (const void*)key);                          \
+        return (value_type*)clib_hashmap_remove(map, (const void*)key);                          \
     }                                                                                       \
-    const key_type* name##_hashmap_iter_get_key(const struct hashmap_iter* iter)            \
+    const key_type* name##_hashmap_iter_get_key(const struct clib_hashmap_iter* iter)            \
     {                                                                                       \
-        return (const key_type*)hashmap_iter_get_key(iter);                                 \
+        return (const key_type*)clib_hashmap_iter_get_key(iter);                                 \
     }                                                                                       \
-    value_type* name##_hashmap_iter_get_value(const struct hashmap_iter* iter)              \
+    value_type* name##_hashmap_iter_get_value(const struct clib_hashmap_iter* iter)              \
     {                                                                                       \
-        return (value_type*)hashmap_iter_get_value(iter);                                   \
+        return (value_type*)clib_hashmap_iter_get_value(iter);                                   \
     }                                                                                       \
-    void name##_hashmap_iter_set_value(const struct hashmap_iter* iter, value_type* value)  \
+    void name##_hashmap_iter_set_value(const struct clib_hashmap_iter* iter, value_type* value)  \
     {                                                                                       \
-        hashmap_iter_set_value(iter, (void*)value);                                         \
+        clib_hashmap_iter_set_value(iter, (void*)value);                                         \
     }
 
 /*
  * Macros to declare type-specific versions of hashmap_foreach_*() functions to
  * allow compile-time type checking and avoid the need for type casting.
  */
-#define HASHMAP_DECLARE_FUNCS_FOR_EACH(name, key_type, value_type)              \
-    int name##_hashmap_foreach(const hashmap* map, int (*func)(const key_type*, value_type*, void*), void* arg);
+#define CLIB_HASHMAP_DECLARE_FUNCS_FOR_EACH(name, key_type, value_type)         \
+    int name##_hashmap_foreach(const clib_hashmap* map, int (*func)(const key_type*, value_type*, void*), void* arg);
 
-#define HASHMAP_DEFINE_FUNCS_FOR_EACH(name, key_type, value_type)               \
+#define CLIB_HASHMAP_DEFINE_FUNCS_FOR_EACH(name, key_type, value_type)          \
     struct __##name##_hashmap_foreach_state                                     \
     {                                                                           \
         int (*func)(const key_type*, value_type*, void*);                       \
@@ -82,24 +82,24 @@ extern "C"
         struct __##name##_hashmap_foreach_state* s = (struct __##name##_hashmap_foreach_state*)arg; \
         return s->func((const key_type*)key, (value_type*)value, s->arg);       \
     }                                                                           \
-    int name##_hashmap_foreach(const hashmap* map, int (*func)(const key_type*, value_type*, void*), void* arg) \
+    int name##_hashmap_foreach(const clib_hashmap* map, int (*func)(const key_type*, value_type*, void*), void* arg) \
     {                                                                           \
         struct __##name##_hashmap_foreach_state s = { func, arg };              \
-        return hashmap_foreach(map, __##name##_hashmap_foreach_callback, &s);   \
+        return clib_hashmap_foreach(map, __##name##_hashmap_foreach_callback, &s);   \
     }
 
 
-struct hashmap_iter;
+struct clib_hashmap_iter;
 
 typedef struct
 {
     void* key;
     void* value;
 
-#ifdef HASHMAP_METRICS
+#ifdef CLIB_HASHMAP_METRICS
     size_t num_collisions;
 #endif
-} hashmap_entry;
+} clib_hashmap_entry;
 
 /*
  * The hashmap state structure.
@@ -109,12 +109,12 @@ typedef struct
     size_t table_size_init;
     size_t table_size;
     size_t num_entries;
-    hashmap_entry* table;
+    clib_hashmap_entry* table;
     size_t  (*hash)(const void*);
     int     (*key_compare)(const void*, const void*);
     void*   (*key_alloc)(const void*);
     void    (*key_free)(void*);
-} hashmap;
+} clib_hashmap;
 
 /*
  * Initialize an empty hashmap.
@@ -134,17 +134,17 @@ typedef struct
  *
  * Returns 0 on success and -errno on failure.
  */
-int hashmap_init(hashmap* map, size_t (*hash_func)(const void*), int (*comp_func)(const void*, const void*), size_t initial_size);
+int clib_hashmap_init(clib_hashmap* map, size_t (*hash_func)(const void*), int (*comp_func)(const void*, const void*), size_t initial_size);
 
 /*
  * Free the hashmap and all associated memory.
  */
-void hashmap_destroy(hashmap* map);
+void clib_hashmap_destroy(clib_hashmap* map);
 
 /*
  * Enable internal memory allocation and management of hash keys.
  */
-void hashmap_set_key_alloc_funcs(hashmap* map, void* (*key_alloc_func)(const void*), void (*key_free_func)(void*));
+void clib_hashmap_set_key_alloc_funcs(clib_hashmap* map, void* (*key_alloc_func)(const void*), void (*key_free_func)(void*));
 
 /*
  * Add an entry to the hashmap.  If an entry with a matching key already
@@ -154,33 +154,33 @@ void hashmap_set_key_alloc_funcs(hashmap* map, void* (*key_alloc_func)(const voi
  * new entry was created.
  * Returns NULL if memory allocation failed.
  */
-void* hashmap_put(hashmap* map, const void* key, void* value);
+void* clib_hashmap_put(clib_hashmap* map, const void* key, void* value);
 
 /*
  * Return the value pointer, or NULL if no entry exists.
  */
-void* hashmap_get(const hashmap* map, const void* key);
+void* clib_hashmap_get(const clib_hashmap* map, const void* key);
 
 /*
  * Remove an entry with the specified key from the map.
  * Returns the value pointer, or NULL, if no entry was found.
  */
-void* hashmap_remove(hashmap* map, const void* key);
+void* clib_hashmap_remove(clib_hashmap* map, const void* key);
 
 /*
  * Remove all entries.
  */
-void hashmap_clear(hashmap* map);
+void clib_hashmap_clear(clib_hashmap* map);
 
 /*
  * Remove all entries and reset the hash table to its initial size.
  */
-void hashmap_reset(hashmap* map);
+void clib_hashmap_reset(clib_hashmap* map);
 
 /*
  * Return the number of entries in the hash map.
  */
-size_t hashmap_size(const hashmap* map);
+size_t clib_hashmap_size(const clib_hashmap* map);
 
 /*
  * Get a new hashmap iterator.  The iterator is an opaque
@@ -188,34 +188,34 @@ size_t hashmap_size(const hashmap* map);
  * Hashmap iterators are INVALID after a put or remove operation is performed.
  * hashmap_iter_remove() allows safe removal during iteration.
  */
-struct hashmap_iter* hashmap_iter(const hashmap* map);
+struct clib_hashmap_iter* clib_hashmap_iter(const clib_hashmap* map);
 
 /*
  * Return an iterator to the next hashmap entry.  Returns NULL if there are
  * no more entries.
  */
-struct hashmap_iter* hashmap_iter_next(const hashmap* map, const struct hashmap_iter* iter);
+struct clib_hashmap_iter* clib_hashmap_iter_next(const clib_hashmap* map, const struct clib_hashmap_iter* iter);
 
 /*
  * Remove the hashmap entry pointed to by this iterator and returns an
  * iterator to the next entry.  Returns NULL if there are no more entries.
  */
-struct hashmap_iter* hashmap_iter_remove(hashmap* map, const struct hashmap_iter* iter);
+struct clib_hashmap_iter* clib_hashmap_iter_remove(clib_hashmap* map, const struct clib_hashmap_iter* iter);
 
 /*
  * Return the key of the entry pointed to by the iterator.
  */
-const void* hashmap_iter_get_key(const struct hashmap_iter* iter);
+const void* clib_hashmap_iter_get_key(const struct clib_hashmap_iter* iter);
 
 /*
  * Return the value of the entry pointed to by the iterator.
  */
-void* hashmap_iter_get_value(const struct hashmap_iter* iter);
+void* clib_hashmap_iter_get_value(const struct clib_hashmap_iter* iter);
 
 /*
  * Set the value pointer of the entry pointed to by the iterator.
  */
-void hashmap_iter_set_value(const struct hashmap_iter* iter, void* value);
+void clib_hashmap_iter_set_value(const struct clib_hashmap_iter* iter, void* value);
 
 /*
  * Invoke func for each entry in the hashmap.  Unlike the hashmap_iter_*()
@@ -225,53 +225,53 @@ void hashmap_iter_set_value(const struct hashmap_iter* iter, void* value);
  * Iteration is stopped if func returns non-zero.  Returns func's return
  * value if it is < 0, otherwise, 0.
  */
-int hashmap_foreach(const hashmap* map, int (*func)(const void*, void*, void*), void* arg);
+int clib_hashmap_foreach(const clib_hashmap* map, int (*func)(const void*, void*, void*), void* arg);
 
 /*
  * Default hash function for string keys.
  * This is an implementation of the well-documented Jenkins one-at-a-time
  * hash function.
  */
-size_t hashmap_hash_string(const void* key);
+size_t clib_hashmap_hash_string(const void* key);
 
 /*
  * Default key comparator function for string keys.
  */
-int hashmap_compare_string(const void* a, const void* b);
+int clib_hashmap_compare_string(const void* a, const void* b);
 
 /*
  * Default key allocation function for string keys.  Use free() for the
  * key_free_func.
  */
-void* hashmap_alloc_key_string(const void* key);
+void* clib_hashmap_alloc_key_string(const void* key);
 
 /*
  * Case insensitive hash function for string keys.
  */
-size_t hashmap_hash_string_i(const void* key);
+size_t clib_hashmap_hash_string_i(const void* key);
 
 /*
  * Case insensitive key comparator function for string keys.
  */
-int hashmap_compare_string_i(const void* a, const void* b);
+int clib_hashmap_compare_string_i(const void* a, const void* b);
 
 
-#ifdef HASHMAP_METRICS
+#ifdef CLIB_HASHMAP_METRICS
 /*
  * Return the load factor.
  */
-double hashmap_load_factor(const hashmap* map);
+double clib_hashmap_load_factor(const clib_hashmap* map);
 
 /*
  * Return the average number of collisions per entry.
  */
-double hashmap_collisions_mean(const hashmap* map);
+double clib_hashmap_collisions_mean(const clib_hashmap* map);
 
 /*
  * Return the variance between entry collisions.  The higher the variance,
  * the more likely the hash function is poor and is resulting in clustering.
  */
-double hashmap_collisions_variance(const hashmap* map);
+double clib_hashmap_collisions_variance(const clib_hashmap* map);
 #endif
 
 

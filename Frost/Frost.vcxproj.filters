@@ -36,6 +36,7 @@
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\Background.c" />
     <ClCompile Include="src\ResourceManager.c" />
+    <ClCompile Include="src\clib\vector.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -97,6 +98,7 @@
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\clib\clib.h" />
+    <ClInclude Include="src\clib\vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

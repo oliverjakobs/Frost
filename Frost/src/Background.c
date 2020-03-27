@@ -2,11 +2,11 @@
 
 #include "IgnisRenderer/IgnisRenderer.h"
 
-int BackgroundInit(Background* background, size_t max_layer)
+int BackgroundInit(Background* background, size_t capacity)
 {
-	background->layers = (BackgroundLayer*)malloc(sizeof(BackgroundLayer) * max_layer);
-	background->layer_count = 0;
-	background->max_layer = max_layer;
+	background->layers = (BackgroundLayer*)malloc(sizeof(BackgroundLayer) * capacity);
+	background->size = 0;
+	background->capacity = capacity;
 
 	return background->layers != NULL;
 }
@@ -14,23 +14,23 @@ int BackgroundInit(Background* background, size_t max_layer)
 void BackgroundClear(Background* background)
 {
 	free(background->layers);
-	background->layer_count = 0;
-	background->max_layer = 0;
+	background->size = 0;
+	background->capacity = 0;
 }
 
 int BackgroundPushLayer(Background* background, IgnisTexture* texture, float x, float y, float w, float h, float parallax)
 {
-	if (background->layer_count >= background->max_layer)
+	if (background->size >= background->capacity)
 		return 0;
 
-	background->layers[background->layer_count].texture = texture;
-	background->layers[background->layer_count].startpos = x;
-	background->layers[background->layer_count].pos_x = x;
-	background->layers[background->layer_count].pos_y = y;
-	background->layers[background->layer_count].width = w;
-	background->layers[background->layer_count].height = h;
-	background->layers[background->layer_count].parallax = parallax;
-	background->layer_count++;
+	background->layers[background->size].texture = texture;
+	background->layers[background->size].startpos = x;
+	background->layers[background->size].pos_x = x;
+	background->layers[background->size].pos_y = y;
+	background->layers[background->size].width = w;
+	background->layers[background->size].height = h;
+	background->layers[background->size].parallax = parallax;
+	background->size++;
 	return 1;
 }
 
@@ -54,7 +54,7 @@ static void _LayerRender(BackgroundLayer* layer)
 
 void BackgroundUpdate(Background* background, float x, float deltatime)
 {
-	for (size_t i = 0; i < background->layer_count; i++)
+	for (size_t i = 0; i < background->size; i++)
 		_LayerUpdate(&background->layers[i], x, deltatime);
 }
 
@@ -62,7 +62,7 @@ void BackgroundRender(Background* background, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (size_t i = 0; i < background->layer_count; i++)
+	for (size_t i = 0; i < background->size; i++)
 		_LayerRender(&background->layers[i]);
 
 	BatchRenderer2DFlush();

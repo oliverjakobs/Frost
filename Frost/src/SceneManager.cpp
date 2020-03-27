@@ -8,6 +8,8 @@
 #define SCENE_MANAGER_NAMELEN	32
 #define SCENE_MANAGER_PATHLEN	64
 
+#define SCENE_MANAGER_LAYER_COUNT	4
+
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
@@ -110,7 +112,7 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string
 	float width = tb_json_float(json, "{'size'[0", NULL);
 	float height = tb_json_float(json, "{'size'[1", NULL);
 
-	SceneLoad(scene, manager->camera, width, height);
+	SceneLoad(scene, manager->camera, width, height, SCENE_MANAGER_LAYER_COUNT);
 
 	tb_json_element templates;
 	tb_json_read(json, &templates, "{'templates'");
@@ -211,20 +213,20 @@ void SceneManagerOnRender(SceneManager* manager)
 				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
 		}
 
-		SceneLayer* layer = SceneGetLayer(manager->scene, manager->layer);
+		clib_vector* layer = SceneGetLayer(manager->scene, manager->layer);
 
 		if (layer)
 		{
-			for (size_t i = 0; i < layer->used; i++)
+			for (size_t i = 0; i < layer->size; i++)
 			{
 				IgnisColorRGBA color = IGNIS_WHITE;
 				ignisBlendColorRGBA(&color, 0.4f);
 
-				auto tex = EntityGetComponent<TextureComponent>(layer->entities[i]);
+				auto tex = EntityGetComponent<TextureComponent>(layer_vector_get(layer, i));
 
 				if (tex != nullptr)
 				{
-					glm::vec2 position = EntityGetPosition(layer->entities[i]);
+					glm::vec2 position = EntityGetPosition(layer_vector_get(layer, i));
 
 					glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
 					glm::vec2 max = min + tex->GetDimension();

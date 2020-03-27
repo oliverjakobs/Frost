@@ -97,6 +97,7 @@
     <ClInclude Include="src\Background.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
+    <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\Entity\Components.hpp" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.hpp" />
     <ClInclude Include="src\Entity\Components\Component.hpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="src\Background.c" />
     <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\clib\hashmap.c" />
+    <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />

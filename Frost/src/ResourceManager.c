@@ -16,8 +16,8 @@ typedef struct
 } _fontkvp;
 
 /* Declare type-specific type_hashmap_* functions with this handy macro */
-HASHMAP_DEFINE_FUNCS(tex, char, _texkvp)
-HASHMAP_DEFINE_FUNCS(font, char, _fontkvp)
+CLIB_HASHMAP_DEFINE_FUNCS(tex, char, _texkvp)
+CLIB_HASHMAP_DEFINE_FUNCS(font, char, _fontkvp)
 
 _texkvp* _tex_kvp(const char* key, IgnisTexture* value)
 {
@@ -53,8 +53,8 @@ _fontkvp* _font_kvp(const char* key, IgnisFont* value)
 
 int ResourceManagerInit(ResourceManager* manager, const char* json_path)
 {
-	hashmap_init(&manager->textures, hashmap_hash_string, hashmap_compare_string, 0);
-	hashmap_init(&manager->fonts, hashmap_hash_string, hashmap_compare_string, 0);
+	clib_hashmap_init(&manager->textures, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
+	clib_hashmap_init(&manager->fonts, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -112,15 +112,15 @@ int ResourceManagerInit(ResourceManager* manager, const char* json_path)
 
 void ResourceManagerDestroy(ResourceManager* manager)
 {
-	for (struct hashmap_iter* iter = hashmap_iter(&manager->textures); iter; iter = hashmap_iter_next(&manager->textures, iter))
+	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&manager->textures); iter; iter = clib_hashmap_iter_next(&manager->textures, iter))
 		ignisDestroyTexture(tex_hashmap_iter_get_value(iter)->value);
 
-	hashmap_destroy(&manager->textures);
+	clib_hashmap_destroy(&manager->textures);
 
-	for (struct hashmap_iter* iter = hashmap_iter(&manager->fonts); iter; iter = hashmap_iter_next(&manager->fonts, iter))
+	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&manager->fonts); iter; iter = clib_hashmap_iter_next(&manager->fonts, iter))
 		ignisDeleteFont(font_hashmap_iter_get_value(iter)->value);
 
-	hashmap_destroy(&manager->fonts);
+	clib_hashmap_destroy(&manager->fonts);
 }
 
 IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* name, const char* path, int rows, int columns)

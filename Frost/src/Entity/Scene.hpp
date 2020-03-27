@@ -7,14 +7,11 @@
 
 #include <map>
 
-#define SCENE_MAX_LAYER	8
+#include "clib/vector.h"
 
-struct SceneLayer
-{
-	Entity** entities;
-	size_t used;
-	size_t size;
-};
+#define SCENE_INITIAL_LAYER_SIZE	8
+
+CLIB_VECTOR_DECLARE_FUNCS(layer, Entity)
 
 struct Scene
 {
@@ -24,12 +21,13 @@ struct Scene
 	float height;
 
 	World* world;
-	SceneLayer layers[SCENE_MAX_LAYER];
+	clib_vector* layers;
+	size_t max_layer;
 
 	float smooth_movement;
 };
 
-int SceneLoad(Scene* scene, Camera* camera, float w, float h);
+int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer);
 void SceneQuit(Scene* scene);
 
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer);
@@ -46,6 +44,6 @@ void SceneSetCameraPosition(Scene* scene, const glm::vec3& position);
 
 Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer);
 Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer);
-SceneLayer* SceneGetLayer(Scene* scene, size_t layer);
+clib_vector* SceneGetLayer(Scene* scene, size_t layer);
 
 std::vector<size_t> SceneGetUsedLayers(Scene* scene);
