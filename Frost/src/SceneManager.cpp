@@ -10,6 +10,33 @@
 
 #define SCENE_MANAGER_LAYER_COUNT	4
 
+typedef struct
+{
+	char key[SCENE_MANAGER_NAMELEN];
+	char value[SCENE_MANAGER_PATHLEN];
+} _scenekvp;
+
+_scenekvp* _scene_kvp(const char* key, const char* value)
+{
+	if (strlen(key) > SCENE_MANAGER_NAMELEN)
+		return NULL;
+
+	if (strlen(value) > SCENE_MANAGER_PATHLEN)
+		return NULL;
+
+	_scenekvp* kvp = (_scenekvp*)malloc(sizeof(_scenekvp));
+
+	if (kvp)
+	{
+		strcpy(kvp->key, key);
+		strcpy(kvp->value, value);
+	}
+
+	return kvp;
+}
+
+CLIB_HASHMAP_DEFINE_FUNCS(scene, char, _scenekvp)
+
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
@@ -25,7 +52,12 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	manager->hover = nullptr;
 
 	manager->scene = (Scene*)malloc(sizeof(Scene));
+	if (!manager->scene)
+		return 0;
+
 	manager->sceneName = "";
+
+	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
 	return 1;
 }
@@ -36,6 +68,7 @@ void SceneManagerDelete(SceneManager* manager)
 		SceneQuit(manager->scene);
 
 	free(manager->scene);
+	clib_hashmap_destroy(&manager->scenes);
 }
 
 void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
@@ -70,28 +103,33 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 	free(json);
 }
 
-void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path)
+void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path)
 {
-	if (!(name.empty() || path.empty()))
+	_scenekvp* kvp = _scene_kvp(name, path);
+
+	if (kvp && scene_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
 	{
-		char* json = ignisReadFile(path.c_str(), NULL);
-
-		if (json)
-			manager->scenes.insert({ name, json });
-
-		free(json);
+		free(kvp);
 	}
 }
 
-void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
+void SceneManagerChangeScene(SceneManager* manager, const char* name)
 {
 	if (!obelisk::StringCompare(manager->sceneName, name))
 	{
 		/* Check if scene is in the register */
-		auto entry = manager->scenes.find(name);
-		if (entry == manager->scenes.end())
+		_scenekvp* kvp = scene_hashmap_get(&manager->scenes, name);
+		if (!kvp)
 		{
-			OBELISK_WARN("Couldn't find scene: ", name.c_str());
+			OBELISK_WARN("Couldn't find scene: ", name);
+			return;
+		}
+		
+		char* json = ignisReadFile(kvp->value, NULL);
+
+		if (!json)
+		{
+			OBELISK_WARN("Couldn't read scene template: ", kvp->value);
 			return;
 		}
 
@@ -100,14 +138,16 @@ void SceneManagerChangeScene(SceneManager* manager, const std::string& name)
 			SceneQuit(manager->scene);
 
 		// Enter new scene
-		SceneManagerLoadScene(manager, manager->scene, entry->second);
+		SceneManagerLoadScene(manager, manager->scene, json);
 		manager->sceneName = name;
+
+		free(json);
 	}
 }
 
-int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string& templ)
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ)
 {
-	char* json = (char*)templ.c_str();
+	char* json = (char*)templ;
 
 	float width = tb_json_float(json, "{'size'[0", NULL);
 	float height = tb_json_float(json, "{'size'[1", NULL);
@@ -186,7 +226,7 @@ void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 			manager->editmode = !manager->editmode;
 			break;
 		case KEY_DELETE:
-			SceneRemoveEntity(manager->scene, "tree", 0);
+			SceneClearEntities(manager->scene);
 			break;
 		}
 	}

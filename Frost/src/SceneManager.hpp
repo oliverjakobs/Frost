@@ -4,14 +4,12 @@
 
 #include "ResourceManager.h"
 
-#include <map>
-
 struct SceneManager
 {
 	Camera* camera;
 	ResourceManager* resources;
 
-	std::map<std::string, std::string> scenes;
+	clib_hashmap scenes; /* <str,str> */
 
 	Scene* scene;
 	std::string sceneName;
@@ -32,10 +30,10 @@ void SceneManagerDelete(SceneManager* manager);
 
 void SceneManagerRegisterScenes(SceneManager* manager, const char* path);
 
-void SceneManagerRegisterScene(SceneManager* manager, const std::string& name, const std::string& path);
-void SceneManagerChangeScene(SceneManager* manager, const std::string& name);
+void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path);
+void SceneManagerChangeScene(SceneManager* manager, const char* name);
 
-int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const std::string& name);
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* name);
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltaTime);

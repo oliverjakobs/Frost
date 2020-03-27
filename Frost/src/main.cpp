@@ -121,13 +121,16 @@ public:
 		ImGui::Begin("DEBUG");
 		
 		auto player = SceneGetEntity(m_sceneManager.scene, "player", 1);
-		 
-		ImGui::Text("Name: %s", player->name.c_str());
-		auto position = EntityGetPosition(player);
-		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
-		ImGui::Text("Precise Y: %f", position.y);
 		
-		ImGui::Separator();
+		if (player != nullptr)
+		{
+			ImGui::Text("Name: %s", player->name.c_str());
+			auto position = EntityGetPosition(player);
+			ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
+			ImGui::Text("Precise Y: %f", position.y);
+
+			ImGui::Separator();
+		}
 		
 		ImGui::Text("Scene: %s", m_sceneManager.sceneName.c_str());
 

@@ -2,7 +2,7 @@
 	"size": [ 2048.0, 800.0 ],
 	"background": [
 		[ "bg2_layer_0", 0.0, 0.0, 1024.0, 800.0, 1.0],
-		[ "bg2_layer_1", 0.0, 0.0, 1024.0, 800.0, 0.2]
+		[ "bg2_layer_1", 0.0, 0.0, 1024.0, 800.0, 0.7]
 	],
 	"templates": [
 		[ "res/templates/entities/player.json", [ 120.0, 128.0 ], 1 ],

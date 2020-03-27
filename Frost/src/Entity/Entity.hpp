@@ -48,6 +48,8 @@ void EntityAddComponent(Entity* entity, Args&&... args)
 template<typename Type>
 Type* EntityGetComponent(Entity* entity)
 {
+	if (entity == nullptr) return nullptr;
+
 	Type* component = nullptr;
 
 	for (auto& c : entity->components)

@@ -80,6 +80,8 @@ void SceneClearEntities(Scene* scene)
 {
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 	{
+		for (size_t i = 0; i < scene->layers[layer].size; i++)
+			delete layer_vector_get(&scene->layers[layer], i);
 		clib_vector_free(&scene->layers[layer]);
 	}
 }

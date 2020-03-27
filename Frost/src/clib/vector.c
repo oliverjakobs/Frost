@@ -15,7 +15,14 @@ int clib_vector_init(clib_vector* v, size_t initial_capacity)
 
 void clib_vector_free(clib_vector* v)
 {
-    free(v->items);
+    v->capacity = 0;
+    v->size = 0;
+
+    if (v->items)
+    {
+        free(v->items);
+        v->items = NULL;
+    }
 }
 
 static void _clib_vector_resize(clib_vector *v, size_t capacity)
