@@ -3,8 +3,10 @@
 #include "json/TemplateLoader.hpp"
 #include "json/tb_json.h"
 
-#include "Application.hpp"
+#include "Application.h"
 #include "ImGuiBinding/ImGuiRenderer.hpp"
+
+#include "Obelisk/Obelisk.hpp"
 
 typedef struct
 {
@@ -73,7 +75,7 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 
 	if (!json)
 	{
-		OBELISK_WARN("Register not found (%s)", json_path);
+		printf("Register not found (%s)\n", json_path);
 		return;
 	}
 
@@ -117,7 +119,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 		_scenekvp* kvp = scene_hashmap_get(&manager->scenes, name);
 		if (!kvp)
 		{
-			OBELISK_WARN("Couldn't find scene: ", name);
+			printf("Couldn't find scene: %s\n", name);
 			return;
 		}
 		
@@ -125,7 +127,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 		if (!json)
 		{
-			OBELISK_WARN("Couldn't read scene template: ", kvp->value);
+			printf("Couldn't read scene template: %s\n", kvp->value);
 			return;
 		}
 
@@ -208,15 +210,14 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 
 void SceneManagerOnEvent(SceneManager* manager, const Event& e)
 {
-	if (e.Type == EventType::WindowResize)
+	if (e.type == EVENT_WINDOW_RESIZE)
 	{
-		WindowResizeEvent& resize = (WindowResizeEvent&)e;
-		CameraSetProjectionOrtho(manager->camera, (float)resize.Width, (float)resize.Height);
+		CameraSetProjectionOrtho(manager->camera, (float)e.window.width, (float)e.window.height);
 	}
 
-	if (e.Type == EventType::KeyPressed)
+	if (e.type == EVENT_KEY_PRESSED)
 	{
-		switch (((KeyPressedEvent&)e).KeyCode)
+		switch (e.key.keycode)
 		{
 		case KEY_F1:
 			manager->editmode = !manager->editmode;
@@ -340,8 +341,11 @@ void SceneManagerOnImGui(SceneManager* manager)
 
 		ImGui::Separator();
 
-		for (size_t i : SceneGetUsedLayers(manager->scene))
-			ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
+		for (size_t i = 0; i < manager->scene->max_layer; i++)
+		{
+			if (manager->scene->layers[i].size > 0)
+				ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
+		}
 
 		ImGui::End();
 	}

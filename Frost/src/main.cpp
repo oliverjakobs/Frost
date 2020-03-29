@@ -1,4 +1,4 @@
-#include "Application.hpp"
+#include "Application.h"
 
 #include "SceneManager.hpp"
 #include <glm/gtc/matrix_transform.hpp>
@@ -30,17 +30,16 @@ struct Game : public Application
 	IgnisFont* font;
 };
 
-void OnEvent(Application* app, const Event& e)
+void OnEvent(Application* app, const Event e)
 {
-	if (e.Type == EventType::WindowResize)
+	if (e.type == EVENT_WINDOW_RESIZE)
 	{
-		auto& resize = (WindowResizeEvent&)e;
-		SetViewport(0, 0, resize.Width, resize.Height);
+		SetViewport(0, 0, e.window.width, e.window.height);
 	}
 
-	if (e.Type == EventType::KeyPressed)
+	if (e.type == EVENT_KEY_PRESSED)
 	{
-		switch (((KeyPressedEvent&)e).KeyCode)
+		switch (e.key.keycode)
 		{
 		case KEY_ESCAPE:
 			ApplicationClose(app);

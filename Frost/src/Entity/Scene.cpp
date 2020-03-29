@@ -86,7 +86,7 @@ void SceneClearEntities(Scene* scene)
 	}
 }
 
-void SceneOnEvent(Scene* scene, const Event& e)
+void SceneOnEvent(Scene* scene, const Event e)
 {
 }
 

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
     <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
@@ -37,8 +36,10 @@
     <ClCompile Include="src\ResourceManager.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\Timer.c" />
-    <ClCompile Include="src\Event\EventHandler.cpp" />
     <ClCompile Include="src\Input\Input.c" />
+    <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Application.c" />
+    <ClCompile Include="src\ApplicationCallback.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -64,14 +65,7 @@
     <ClInclude Include="src\Animation\Animator.hpp" />
     <ClInclude Include="src\Animation\Animation.hpp" />
     <ClInclude Include="src\json\tb_json.h" />
-    <ClInclude Include="src\Event\WindowEvent.hpp" />
-    <ClInclude Include="src\Event\MouseEvent.hpp" />
-    <ClInclude Include="src\Event\KeyEvent.hpp" />
-    <ClInclude Include="src\Event\EventHandler.hpp" />
-    <ClInclude Include="src\Event\Event.hpp" />
-    <ClInclude Include="src\Event\ApplicationEvent.hpp" />
     <ClInclude Include="src\SceneManager.hpp" />
-    <ClInclude Include="src\Application.hpp" />
     <ClInclude Include="src\json\TemplateLoader.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
@@ -102,6 +96,10 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Application.h" />
+    <ClInclude Include="src\ApplicationCallback.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

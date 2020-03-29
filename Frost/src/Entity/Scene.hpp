@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Entity/Components.hpp"
-#include "Event/EventHandler.hpp"
 
 #include "Camera/Camera.hpp"
 
+#include "Event/EventHandler.h"
 #include "Background.h"
-
-#include <map>
 
 #include "clib/vector.h"
 
@@ -23,6 +21,7 @@ struct Scene
 	float height;
 
 	World* world;
+
 	clib_vector* layers;
 	size_t max_layer;
 
@@ -39,7 +38,7 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2&
 void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer);
 void SceneClearEntities(Scene* scene);
 
-void SceneOnEvent(Scene* scene, const Event& e);
+void SceneOnEvent(Scene* scene, const Event e);
 void SceneOnUpdate(Scene* scene, float deltaTime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
@@ -49,5 +48,3 @@ void SceneSetCameraPosition(Scene* scene, const glm::vec3& position);
 Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer);
 Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer);
 clib_vector* SceneGetLayer(Scene* scene, size_t layer);
-
-std::vector<size_t> SceneGetUsedLayers(Scene* scene);
