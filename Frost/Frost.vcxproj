@@ -99,6 +99,7 @@
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
+    <ClInclude Include="src\Debugger.h" />
     <ClInclude Include="src\Entity\Components.hpp" />
     <ClInclude Include="src\Entity\Components\AnimationComponent.hpp" />
     <ClInclude Include="src\Entity\Components\Component.hpp" />
@@ -134,15 +135,6 @@
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
-    <ClInclude Include="src\Obelisk\Average.hpp" />
-    <ClInclude Include="src\Obelisk\Debugger.hpp" />
-    <ClInclude Include="src\Obelisk\FileUtility.hpp" />
-    <ClInclude Include="src\Obelisk\Flags.hpp" />
-    <ClInclude Include="src\Obelisk\Logger.hpp" />
-    <ClInclude Include="src\Obelisk\Memory.hpp" />
-    <ClInclude Include="src\Obelisk\Obelisk.hpp" />
-    <ClInclude Include="src\Obelisk\Range.hpp" />
-    <ClInclude Include="src\Obelisk\Singelton.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\ResourceManager.h" />
@@ -183,6 +175,7 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Input\Input.c" />
+    <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\Physics\Body.cpp" />
     <ClCompile Include="src\Physics\World.cpp" />
     <ClCompile Include="src\ResourceManager.c" />

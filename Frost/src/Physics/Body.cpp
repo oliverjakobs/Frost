@@ -1,69 +1,96 @@
 #include "Body.hpp"
 
-#include <algorithm>
+#include "World.hpp"
 
-Body::Body(float x, float y, float hWidth, float hHeight, BodyType type)
-	: m_position(x, y), m_halfSize(hWidth, hHeight), m_velocity(0.0f, 0.0f), m_type(type), m_world(nullptr)
+#include "clib/clib.h"
+
+void BodyLoad(Body* body, float x, float y, float hw, float hh, BodyType type)
 {
-	m_collidesBottom = false;
-	m_collidesTop = false;
-	m_collidesLeft = false;
-	m_collidesRight = false;
+	body->position = glm::vec2(x, y);
+	body->halfSize = glm::vec2(hw, hh);
+	body->velocity = glm::vec2(0.0f, 0.0f);
+	
+	body->type = type;
+	
+	body->world = nullptr;
+
+	body->collidesBottom = false;
+	body->collidesTop = false;
+	body->collidesLeft = false;
+	body->collidesRight = false;
 }
 
-void Body::Tick(float deltaTime, const glm::vec2& gravity)
+void BodyTick(Body* body, float deltatime)
 {
-	m_velocity += gravity * deltaTime;
+	body->velocity += body->world->gravity * deltatime;
 
-	m_collidesBottom = false;
-	m_collidesTop = false;
-	m_collidesLeft = false;
-	m_collidesRight = false;
+	body->collidesBottom = false;
+	body->collidesTop = false;
+	body->collidesLeft = false;
+	body->collidesRight = false;
 
-	m_position += m_velocity * deltaTime;
+	body->position += body->velocity * deltatime;
 }
 
-void Body::ResolveCollision(const Body& b, const glm::vec2& oldPos)
+void BodyResolveCollision(Body* body, const Body* other, const glm::vec2& oldpos)
 {
-	glm::vec2 overlap;
-
-	overlap.x = std::min(GetX2() - b.GetX(), b.GetX2() - GetX());
-	overlap.y = std::min((oldPos.y + m_halfSize.y) - b.GetY(), b.GetY2() - (oldPos.y - m_halfSize.y));
+	float overlap_x = MIN(BodyGetX2(body) - BodyGetX(other), BodyGetX2(other) - BodyGetX(body));
+	float overlap_y = MIN((oldpos.y + body->halfSize.y) - BodyGetY(other), BodyGetY2(other) - (oldpos.y - body->halfSize.y));
 
 	// horizontal resolve
-	if (overlap.x > 0.0f && overlap.y > 0.0f)
+	if (overlap_x > 0.0f && overlap_y > 0.0f)
 	{
-		if (m_velocity.x < 0.0f)
+		if (body->velocity.x < 0.0f)
 		{
-			m_position.x += std::max(overlap.x, 0.0f);
-			m_velocity.x = 0.0f;
-			m_collidesLeft = true;
+			body->position.x += MAX(overlap_x, 0.0f);
+			body->velocity.x = 0.0f;
+			body->collidesLeft = true;
 		}
-		else if (m_velocity.x > 0.0f)
+		else if (body->velocity.x > 0.0f)
 		{
-			m_position.x -= std::max(overlap.x, 0.0f);
-			m_velocity.x = 0.0f;
-			m_collidesRight = true;
+			body->position.x -= MAX(overlap_x, 0.0f);
+			body->velocity.x = 0.0f;
+			body->collidesRight = true;
 		}
 	}
 
-	overlap.x = std::min((oldPos.x + m_halfSize.x) - b.GetX(), b.GetX2() - (oldPos.x - m_halfSize.x));
-	overlap.y = std::min(GetY2() - b.GetY(), b.GetY2() - GetY());
+	overlap_x = MIN((oldpos.x + body->halfSize.x) - BodyGetX(other), BodyGetX2(other) - (oldpos.x - body->halfSize.x));
+	overlap_y = MIN(BodyGetY2(body) - BodyGetY(other), BodyGetY2(other) - BodyGetY(body));
 
 	// vertical resolve
-	if (overlap.x > 0.0f && overlap.y > 0.0f)
+	if (overlap_x > 0.0f && overlap_y > 0.0f)
 	{
-		if (m_velocity.y < 0.0f)
+		if (body->velocity.y < 0.0f)
 		{
-			m_position.y += std::max(overlap.y, 0.0f);
-			m_velocity.y = 0.0f;
-			m_collidesBottom = true;
+			body->position.y += MAX(overlap_y, 0.0f);
+			body->velocity.y = 0.0f;
+			body->collidesBottom = true;
 		}
-		else if (m_velocity.y > 0.0f)
+		else if (body->velocity.y > 0.0f)
 		{
-			m_position.y -= std::max(overlap.y, 0.0f);
-			m_velocity.y = 0.0f;
-			m_collidesTop = true;
+			body->position.y -= MAX(overlap_y, 0.0f);
+			body->velocity.y = 0.0f;
+			body->collidesTop = true;
 		}
 	}
+}
+
+const float BodyGetX(const Body* body)
+{
+	return body->position.x - body->halfSize.x;
+}
+
+const float BodyGetX2(const Body* body)
+{
+	return body->position.x + body->halfSize.x;
+}
+
+const float BodyGetY(const Body* body)
+{
+	return body->position.y - body->halfSize.y;
+}
+
+const float BodyGetY2(const Body* body)
+{
+	return body->position.y + body->halfSize.y;
 }

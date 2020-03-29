@@ -35,7 +35,7 @@ void SceneQuit(Scene* scene);
 
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer);
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2& position);
-void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer);
+void SceneRemoveEntity(Scene* scene, const char* name, size_t layer);
 void SceneClearEntities(Scene* scene);
 
 void SceneOnEvent(Scene* scene, const Event e);
@@ -45,6 +45,6 @@ void SceneOnRenderDebug(Scene* scene);
 
 void SceneSetCameraPosition(Scene* scene, const glm::vec3& position);
 
-Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer);
+Entity* SceneGetEntity(Scene* scene, const char* name, size_t layer);
 Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer);
 clib_vector* SceneGetLayer(Scene* scene, size_t layer);

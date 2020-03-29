@@ -2,52 +2,58 @@
 
 #include <algorithm>
 
-World::World(const glm::vec2& gravity) : m_gravity(gravity)
+void WorldLoad(World* world, const glm::vec2& gravity)
+{
+	world->gravity = gravity;
+	world->bodies = std::vector<Body*>();
+}
+
+void WorldDestroy(World* world)
 {
 }
 
-void World::AddBody(std::shared_ptr<Body> body)
+void WorldAddBody(World* world, Body* body)
 {
-	body->SetWorld(this);
-	m_bodies.push_back(body);
+	body->world = world;
+	world->bodies.push_back(body);
 }
 
-void World::RemoveBody(std::shared_ptr<Body> body)
+void WorldRemoveBody(World* world, Body* body)
 {
-	auto it = std::find_if(m_bodies.begin(), m_bodies.end(), [&](auto& e) { return e == body; });
+	auto it = std::find_if(world->bodies.begin(), world->bodies.end(), [&](auto& e) { return e == body; });
 
-	if (it != m_bodies.end())
+	if (it != world->bodies.end())
 	{
-		(*it)->SetWorld(nullptr);
-		m_bodies.erase(it);
+		(*it)->world = nullptr;
+		world->bodies.erase(it);
 	}
 }
 
-void World::Tick(float deltaTime)
+void WorldTick(World* world, float deltatime)
 {
-	for (auto& body : m_bodies)
+	for (auto& body : world->bodies)
 	{
-		if (body->GetType() == BodyType::STATIC)
+		if (body->type == BodyType::STATIC)
 			continue;
 
-		glm::vec2 oldPosition = body->GetPosition();
+		glm::vec2 oldPosition = body->position;
 
-		body->Tick(deltaTime, m_gravity);
+		BodyTick(body, deltatime);
 
-		for (auto& other : GetOtherBodies(body.get()))
+		for (auto& other : WorldGetOtherBodies(world, body))
 		{
-			body->ResolveCollision(*other, oldPosition);
+			BodyResolveCollision(body, other, oldPosition);
 		}
 	}
 }
 
-std::vector<std::shared_ptr<Body>> World::GetOtherBodies(const Body* body) const
+std::vector<Body*> WorldGetOtherBodies(World* world, const Body* body)
 {
-	std::vector<std::shared_ptr<Body>> others;
+	std::vector<Body*> others;
 
-	for (auto& b : m_bodies)
+	for (auto& b : world->bodies)
 	{
-		if (b.get() != body)
+		if (b != body)
 			others.push_back(b);
 	}
 

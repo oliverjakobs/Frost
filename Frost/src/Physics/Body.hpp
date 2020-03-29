@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-class World;
+struct World;
 
 enum class BodyType
 {
@@ -10,53 +10,32 @@ enum class BodyType
 	DYNAMIC
 };
 
-class Body
+struct Body
 {
-private:
-	glm::vec2 m_position;
-	glm::vec2 m_halfSize;
+	glm::vec2 position;
+	glm::vec2 halfSize;
 
-	glm::vec2 m_velocity;
+	glm::vec2 velocity;
 
-	BodyType m_type;
+	BodyType type;
 
 	// CollisionState
-	bool m_collidesBottom;
-	bool m_collidesTop;
-	bool m_collidesLeft;
-	bool m_collidesRight;
+	bool collidesBottom;
+	bool collidesTop;
+	bool collidesLeft;
+	bool collidesRight;
 
-	World* m_world;
-public:
-	Body(float x, float y, float hWidth, float hHeight, BodyType type);
-
-	void SetWorld(World* world) { m_world = world; }
-	World* GetWorld() const { return m_world; }
-
-	void Tick(float deltaTime, const glm::vec2& gravity);
-
-	void ResolveCollision(const Body& b, const glm::vec2& oldPos);
-	
-	void SetPosition(const glm::vec2& position) { m_position = position; }
-	const glm::vec2 GetPosition() const { return m_position; }
-
-	void SetVelocity(const glm::vec2& velocity) { m_velocity = velocity; }
-	const glm::vec2 GetVelocity() const { return m_velocity; }
-
-	const glm::vec2 GetHalfSize() const { return m_halfSize; }
-	const glm::vec2 GetSize() const { return m_halfSize * 2.0f; }
-
-	BodyType GetType() const { return m_type; }
-
-	// get the collision state
-	const bool CollidesBottom() const { return m_collidesBottom; }
-	const bool CollidesTop() const { return m_collidesTop; }
-	const bool CollidesLeft() const { return m_collidesLeft; }
-	const bool CollidesRight() const { return m_collidesRight; }
-
-	// get the edges of the body
-	const float GetX() const { return m_position.x - m_halfSize.x; }
-	const float GetX2() const { return m_position.x + m_halfSize.x; }
-	const float GetY() const { return m_position.y - m_halfSize.y; }
-	const float GetY2() const { return m_position.y + m_halfSize.y; }
+	World* world;
 };
+
+void BodyLoad(Body* body, float x, float y, float hw, float hh, BodyType type);
+
+void BodyTick(Body* body, float deltatime);
+
+void BodyResolveCollision(Body* body, const Body* other, const glm::vec2& oldpos);
+
+/* get the edges of the body */
+const float BodyGetX(const Body* body);
+const float BodyGetX2(const Body* body);
+const float BodyGetY(const Body* body);
+const float BodyGetY2(const Body* body);

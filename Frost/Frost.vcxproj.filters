@@ -40,6 +40,7 @@
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Application.c" />
     <ClCompile Include="src\ApplicationCallback.c" />
+    <ClCompile Include="src\math\vec2.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -73,15 +74,6 @@
     <ClInclude Include="src\Camera\Camera.hpp" />
     <ClInclude Include="src\Physics\World.hpp" />
     <ClInclude Include="src\Physics\Body.hpp" />
-    <ClInclude Include="src\Obelisk\Singelton.hpp" />
-    <ClInclude Include="src\Obelisk\Range.hpp" />
-    <ClInclude Include="src\Obelisk\Obelisk.hpp" />
-    <ClInclude Include="src\Obelisk\Memory.hpp" />
-    <ClInclude Include="src\Obelisk\Logger.hpp" />
-    <ClInclude Include="src\Obelisk\Flags.hpp" />
-    <ClInclude Include="src\Obelisk\FileUtility.hpp" />
-    <ClInclude Include="src\Obelisk\Debugger.hpp" />
-    <ClInclude Include="src\Obelisk\Average.hpp" />
     <ClInclude Include="src\IgnisRenderer\FontRenderer.h" />
     <ClInclude Include="src\IgnisRenderer\Primitives2D.h" />
     <ClInclude Include="src\IgnisRenderer\Renderer2D.h" />
@@ -100,6 +92,7 @@
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\ApplicationCallback.h" />
+    <ClInclude Include="src\Debugger.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

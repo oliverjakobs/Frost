@@ -4,7 +4,7 @@
 #include "TextureComponent.hpp"
 #include "PhysicsComponent.hpp"
 
-#include "Obelisk/Obelisk.hpp"
+#include "Debugger.h"
 
 #include "Input/Input.h"
 
@@ -18,14 +18,14 @@ PlayerComponent::PlayerComponent(Entity* entity, float ms, float jp)
 void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 {
 	PhysicsComponent* phys = EntityGetComponent<PhysicsComponent>(m_entity);
-	OBELISK_ASSERT(phys, "[COMP] Entity has no PhysicsComponent");
+	DEBUG_ASSERT(phys, "[COMP] Entity has no PhysicsComponent\n");
 	
 	TextureComponent* tex = EntityGetComponent<TextureComponent>(m_entity);
-	OBELISK_ASSERT(tex, "[COMP] Entity has no TextureComponent");
+	DEBUG_ASSERT(tex, "[COMP] Entity has no TextureComponent\n");
 	
-	glm::vec2 velocity = glm::vec2(0.0f, phys->GetBody()->GetVelocity().y);
+	glm::vec2 velocity = glm::vec2(0.0f, phys->GetBody()->velocity.y);
 	
-	bool collidesBottom = phys->GetBody()->CollidesBottom();
+	bool collidesBottom = phys->GetBody()->collidesBottom;
 	
 	if (InputKeyPressed(KEY_A))
 		velocity.x -= m_movementSpeed;
@@ -59,7 +59,7 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	// 	anim->PlayAnimation("idle");
 	
 	// apply velocity
-	phys->GetBody()->SetVelocity(velocity);
+	phys->GetBody()->velocity = velocity;
 	
 	// set view
 	SceneSetCameraPosition(scene, glm::vec3(EntityGetPosition(m_entity), 0.0f));

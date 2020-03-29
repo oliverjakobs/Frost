@@ -19,7 +19,7 @@ enum class Direction
 };
 
 std::string DirectionToString(Direction dir);
-Direction StringToDirection(const std::string& str);
+Direction StringToDirection(const char* str);
 
 struct Entity
 {

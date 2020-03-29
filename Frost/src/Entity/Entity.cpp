@@ -2,7 +2,7 @@
 
 #include "Components.hpp"
 
-#include "Obelisk/Obelisk.hpp"
+#include "Debugger.h"
 
 std::string DirectionToString(Direction dir)
 {
@@ -16,15 +16,15 @@ std::string DirectionToString(Direction dir)
 	}
 }
 
-Direction StringToDirection(const std::string& str)
+Direction StringToDirection(const char* str)
 {
-	if (obelisk::StringCompare(str, "LEFT"))
+	if (strcmp(str, "LEFT") == 0)
 		return Direction::LEFT;
-	if (obelisk::StringCompare(str, "RIGHT"))
+	if (strcmp(str, "RIGHT") == 0)
 		return Direction::RIGHT;
-	if (obelisk::StringCompare(str, "UP"))
+	if (strcmp(str, "UP") == 0)
 		return Direction::UP;
-	if (obelisk::StringCompare(str, "DOWN"))
+	if (strcmp(str, "DOWN") == 0)
 		return Direction::DOWN;
 
 	return Direction::NONE;
@@ -71,7 +71,7 @@ void EntitySetPosition(Entity* entity, const glm::vec2& pos)
 
 	if (comp == nullptr)
 	{
-		OBELISK_WARN("Setting position for an entity without position component");
+		DEBUG_WARN("Setting position for an entity without position component\n");
 		return;
 	}
 
@@ -84,7 +84,7 @@ glm::vec2 EntityGetPosition(Entity* entity)
 
 	if (comp == nullptr)
 	{
-		OBELISK_WARN("Getting position from an entity without position component");
+		DEBUG_WARN("Getting position from an entity without position component\n");
 		return glm::vec2();
 	}
 

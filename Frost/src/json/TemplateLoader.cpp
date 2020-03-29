@@ -1,6 +1,6 @@
 #include "TemplateLoader.hpp"
 
-#include "Obelisk/Debugger.hpp"
+#include "Debugger.h"
 
 #define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
@@ -14,7 +14,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 
 	if (!json)
 	{
-		OBELISK_WARN("Template not found (%s)", json_path);
+		DEBUG_WARN("Template not found (%s)", json_path);
 		return nullptr;
 	}
 
@@ -52,7 +52,10 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 			float offset_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
 			float offset_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
 
-			EntityAddComponent<PhysicsComponent>(entity, std::make_shared<Body>(x, y, w, h, type), glm::vec2(offset_x, offset_y));
+			auto body = std::make_shared<Body>();
+			BodyLoad(body.get(), x, y, w, h, type);
+
+			EntityAddComponent<PhysicsComponent>(entity, body, glm::vec2(offset_x, offset_y));
 		}
 	}
 

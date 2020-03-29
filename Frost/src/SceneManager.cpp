@@ -6,8 +6,6 @@
 #include "Application.h"
 #include "ImGuiBinding/ImGuiRenderer.hpp"
 
-#include "Obelisk/Obelisk.hpp"
-
 typedef struct
 {
 	char key[SCENE_MANAGER_NAMELEN];
@@ -344,7 +342,11 @@ void SceneManagerOnImGui(SceneManager* manager)
 		for (size_t i = 0; i < manager->scene->max_layer; i++)
 		{
 			if (manager->scene->layers[i].size > 0)
-				ImGui::RadioButton(obelisk::format("Layer: %zu", i).c_str(), &manager->layer, (int)i);
+			{
+				char buffer[16];
+				snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
+				ImGui::RadioButton(buffer, &manager->layer, (int)i);
+			}
 		}
 
 		ImGui::End();

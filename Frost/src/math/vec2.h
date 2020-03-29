@@ -12,6 +12,8 @@ typedef struct
 	float y;
 } vec2;
 
+vec2 vec_2(float x, float y);
+
 #ifdef __cplusplus
 }
 #endif

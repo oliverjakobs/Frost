@@ -8,28 +8,28 @@ void Animator::LoadConditions()
 	RegisterCondition("condition_jump", [](Entity* e, int s)
 		{
 			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->GetVelocity().y > 0.0f;
+				return comp->GetBody()->velocity.y > 0.0f;
 
 			return false;
 		});
 	RegisterCondition("condition_fall", [](Entity* e, int s)
 		{
 			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return !comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().y <= 0.0f;
+				return !comp->GetBody()->collidesBottom && comp->GetBody()->velocity.y <= 0.0f;
 
 			return false;
 		});
 	RegisterCondition("condition_walk", [](Entity* e, int s)
 		{
 			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x != 0.0f;
+				return comp->GetBody()->collidesBottom && comp->GetBody()->velocity.x != 0.0f;
 
 			return false;
 		});
 	RegisterCondition("condition_idle", [](Entity* e, int s)
 		{
 			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->CollidesBottom() && comp->GetBody()->GetVelocity().x == 0.0f;
+				return comp->GetBody()->collidesBottom && comp->GetBody()->velocity.x == 0.0f;
 
 			return false;
 		});

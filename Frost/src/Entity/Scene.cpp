@@ -1,7 +1,5 @@
 #include "Scene.hpp"
 
-#include "Obelisk/Obelisk.hpp"
-
 CLIB_VECTOR_DEFINE_FUNCS(layer, Entity)
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
@@ -19,7 +17,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 	scene->width = w;
 	scene->height = h;
 
-	scene->world = new World(glm::vec2(0.0f, -980.0f));
+	scene->world = new World();
+	WorldLoad(scene->world, glm::vec2(0.0f, -980.0f));
 	
 	scene->smooth_movement = 0.5f;
 
@@ -34,6 +33,7 @@ void SceneQuit(Scene* scene)
 
 	free(scene->layers);
 
+	WorldDestroy(scene->world);
 	delete scene->world;
 }
 
@@ -46,7 +46,7 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer)
 
 	if (phys != nullptr)
 	{
-		scene->world->AddBody(phys->GetBody());
+		WorldAddBody(scene->world, phys->GetBody().get());
 	}
 
 	layer_vector_push(&scene->layers[layer], entity);
@@ -61,14 +61,14 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2&
 	SceneAddEntity(scene, entity, layer);
 }
 
-void SceneRemoveEntity(Scene* scene, const std::string& name, size_t layer)
+void SceneRemoveEntity(Scene* scene, const char* name, size_t layer)
 {
 	if (layer >= scene->max_layer)
 		return;
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		if (obelisk::StringCompare(layer_vector_get(&scene->layers[layer], i)->name, name))
+		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name.c_str(), name) == 0)
 		{
 			layer_vector_delete(&scene->layers[layer], i);
 			return;
@@ -92,7 +92,7 @@ void SceneOnEvent(Scene* scene, const Event e)
 
 void SceneOnUpdate(Scene* scene, float deltaTime)
 {
-	scene->world->Tick(deltaTime);
+	WorldTick(scene->world, deltaTime);
 
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
@@ -129,11 +129,11 @@ void SceneOnRenderDebug(Scene* scene)
 		}
 	}
 
-	for (auto& body : scene->world->GetBodies())
+	for (auto& body : scene->world->bodies)
 	{
-		auto& pos = body->GetPosition() - body->GetHalfSize();
-		auto& dim = body->GetSize();
-		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->GetType() == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
+		auto& pos = body->position - body->halfSize;
+		auto& dim = body->halfSize * 2.0f;
+		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
 	}
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
@@ -182,14 +182,14 @@ void SceneSetCameraPosition(Scene* scene, const glm::vec3& position)
 	CameraUpdateViewOrtho(scene->camera);
 }
 
-Entity* SceneGetEntity(Scene* scene, const std::string& name, size_t layer)
+Entity* SceneGetEntity(Scene* scene, const char* name, size_t layer)
 {
 	if (layer >= scene->max_layer)
 		return nullptr;
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		if (obelisk::StringCompare(layer_vector_get(&scene->layers[layer], i)->name, name))
+		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name.c_str(), name))
 			return layer_vector_get(&scene->layers[layer], i);
 	}
 
