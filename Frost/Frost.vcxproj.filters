@@ -12,7 +12,6 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Physics\Body.cpp" />
     <ClCompile Include="src\Physics\World.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
@@ -38,6 +37,8 @@
     <ClCompile Include="src\ResourceManager.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\Timer.c" />
+    <ClCompile Include="src\Event\EventHandler.cpp" />
+    <ClCompile Include="src\Input\Input.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -71,7 +72,6 @@
     <ClInclude Include="src\Event\ApplicationEvent.hpp" />
     <ClInclude Include="src\SceneManager.hpp" />
     <ClInclude Include="src\Application.hpp" />
-    <ClInclude Include="src\Input\Input.hpp" />
     <ClInclude Include="src\json\TemplateLoader.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
@@ -99,6 +99,9 @@
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\Timer.h" />
+    <ClInclude Include="src\math\math.h" />
+    <ClInclude Include="src\math\vec2.h" />
+    <ClInclude Include="src\Input\Input.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

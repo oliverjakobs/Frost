@@ -1,52 +1,28 @@
 #include "Application.hpp"
 
-#include <GLFW/glfw3.h>
-#include <glm/gtc/matrix_transform.hpp>
-
-static glm::mat4 s_screenMat = glm::mat4(1.0f);
-
-void SetViewport(int x, int y, int w, int h)
-{
-	s_screenMat = glm::ortho((float)x, (float)w, (float)h, (float)y);
-
-	glViewport(x, y, w, h);
-}
-
-const glm::mat4& GetScreenMat()
-{
-	return s_screenMat;
-}
-
-const float* GetScreenMatPtr()
-{
-	return &s_screenMat[0][0];
-}
-
-void Application::SetGLFWCallback()
+static void _ApplicationSetGLFWCallback(Application* app)
 {
 	glfwSetErrorCallback([](int error, const char* desc)
 	{
 		OBELISK_ERROR("[GLFW] ({0}) {1}", error, desc);
 	});
 
-	glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
+	glfwSetWindowSizeCallback(app->window, [](GLFWwindow* window, int width, int height)
 	{
 		auto game = (Application*)glfwGetWindowUserPointer(window);
 
-		game->m_width = width;
-		game->m_height = height;
-
-		SetViewport(0, 0, width, height);
+		game->width = width;
+		game->height = height;
 
 		EventHandler::Throw<WindowResizeEvent>(width, height);
 	});
 
-	glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
+	glfwSetWindowCloseCallback(app->window, [](GLFWwindow* window)
 	{
 		EventHandler::Throw<WindowCloseEvent>();
 	});
 
-	glfwSetKeyCallback(m_window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+	glfwSetKeyCallback(app->window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
 		switch (action)
 		{
@@ -62,12 +38,12 @@ void Application::SetGLFWCallback()
 		}
 	});
 
-	glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int keycode)
+	glfwSetCharCallback(app->window, [](GLFWwindow* window, unsigned int keycode)
 	{
 		EventHandler::Throw<KeyTypedEvent>(keycode);
 	});
 
-	glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
+	glfwSetMouseButtonCallback(app->window, [](GLFWwindow* window, int button, int action, int mods)
 	{
 		auto game = (Application*)glfwGetWindowUserPointer(window);
 
@@ -82,55 +58,60 @@ void Application::SetGLFWCallback()
 		}
 	});
 
-	glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
+	glfwSetScrollCallback(app->window, [](GLFWwindow* window, double xOffset, double yOffset)
 	{
 		EventHandler::Throw<MouseScrolledEvent>((float)xOffset, (float)yOffset);
 	});
 
-	glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
+	glfwSetCursorPosCallback(app->window, [](GLFWwindow* window, double xPos, double yPos)
 	{
 		EventHandler::Throw<MouseMovedEvent>((float)xPos, (float)yPos);
 	});
 }
 
-bool Application::OnWindowClose(WindowCloseEvent& e)
+static int _ApplicationOnWindowClose(Application* app, WindowCloseEvent& e)
 {
-	Close();
-	return true;
+	app->running = 0;
+	return 1;
 }
 
-void Application::EventCallback(Event& e)
+// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
+// and passes the rest to OnEvent, which is implemented in the game class
+void _ApplicationEventCallback(Application* app, Event& e)
 {
 	switch (e.Type)
 	{
 	case EventType::WindowClose:
-		OnWindowClose((WindowCloseEvent&)e);
+		_ApplicationOnWindowClose(app, (WindowCloseEvent&)e);
 		break;
 	case EventType::ChangeScene:
 		//m_sceneManager.ChangeScene(((ChangeSceneEvent&)e).GetTarget());
 		break;
 	default:
-		OnEvent(e);
+		app->on_event(app, e);
 		break;
 	}
 }
 
-bool Application::LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor)
+int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor)
 {
-	m_title = title;
-	m_width = width;
-	m_height = height;
+	app->title = title;
+	app->width = width;
+	app->height = height;
 
-	m_debug = false;
-	m_paused = false;
-	m_showImGui = false;
+	app->debug = 0;
+	app->paused = 0;
+
+	app->show_gui = 0;
+
+	app->running = 0;
 
 	// GLFW initialization
 	if (glfwInit() == GLFW_FALSE)
 	{
 		OBELISK_ERROR("[GLFW] Failed to initialize GLFW");
 		glfwTerminate();
-		return false;
+		return 0;
 	}
 
 	OBELISK_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
@@ -144,23 +125,21 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 #endif
 
 	// creating the window
-	m_window = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
-	if (m_window == nullptr)
+	app->window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	if (app->window == NULL)
 	{
 		OBELISK_ERROR("[GLFW] Failed to create GLFW window");
 		glfwTerminate();
-		return false;
+		return 0;
 	}
 
-	glfwMakeContextCurrent(m_window);
-	glfwSetWindowUserPointer(m_window, this);
+	glfwMakeContextCurrent(app->window);
+	glfwSetWindowUserPointer(app->window, app);
 
-	EventHandler::SetEventCallback(BIND_FUNCTION(Application::EventCallback));
+	EventHandler::SetEventCallback(_ApplicationEventCallback);
 
 	// Set GLFW callbacks
-	SetGLFWCallback();
-
-	s_screenMat = glm::ortho(0.0f, (float)width, (float)height, 0.0f);
+	_ApplicationSetGLFWCallback(app);
 
 	ignisSetErrorCallback([](ignisErrorLevel level, const char* desc)
 	{
@@ -172,10 +151,10 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 		}
 	});
 
-	bool debug = false;
-	
+	int debug = 0;
+
 #ifdef _DEBUG
-	debug = true;
+	debug = 1;
 #endif // _DEBUG
 
 	// ingis initialization
@@ -183,7 +162,7 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	{
 		OBELISK_ERROR("[IGNIS] Failed to initialize Ignis");
 		glfwTerminate();
-		return nullptr;
+		return 0;
 	}
 
 	OBELISK_INFO("[OpenGL] Version: %s", glGetString(GL_VERSION));
@@ -191,108 +170,103 @@ bool Application::LoadApplication(const std::string& title, int width, int heigh
 	OBELISK_INFO("[OpenGL] Renderer: %s", glGetString(GL_RENDERER));
 	OBELISK_INFO("[OpenGL] GLSL Version: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	// initialize imgui
-	//ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable);
-	ImGuiRenderer::Init(m_window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
+	TimerReset(&app->timer);
 
-	TimerReset(&m_timer);
-
-	return true;
+	app->running = 1;
+	return 1;
 }
 
-Application::Application(const std::string& title, int width, int height)
+void ApplicationDestroy(Application* app)
 {
-	m_running = LoadApplication(title, width, height, 4, 4);
-}
-
-Application::~Application()
-{
-	glfwDestroyWindow(m_window);
+	glfwDestroyWindow(app->window);
 	glfwTerminate();
 }
 
-void Application::EnableDebugMode(bool b) { m_debug = b; }
-void Application::EnableImGui(bool b) { m_showImGui = b; }
-void Application::EnableVsync(bool b) { glfwSwapInterval(b); m_vsync = b; }
-
-void Application::ToggleDebugMode() { EnableDebugMode(!m_debug); }
-void Application::ToggleImGui() { EnableImGui(!m_showImGui); }
-void Application::ToggleVsync() { EnableVsync(!m_vsync); }
-
-void Application::Pause() 
-{
-	m_paused = !m_paused;
-
-	if (m_paused)
-		SetTitle(m_title + " | Paused");
-	else
-		SetTitle(m_title);
-}
-
-
-void Application::Run()
+void ApplicationRun(Application* app)
 {
 	// Game loop
-	while (m_running)
+	while (app->running)
 	{
-		TimerStart(&m_timer, (float)glfwGetTime());
+		TimerStart(&app->timer, glfwGetTime());
 
-		if (!m_paused)
-			OnUpdate(m_timer.deltatime);
+		if (!app->paused)
+			app->on_update(app, (float)app->timer.deltatime);
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		OnRender();
+		app->on_render(app);
 
-		if (m_debug)
-			OnRenderDebug();
+		if (app->debug)
+			app->on_render_debug(app);
 
-		if (m_showImGui)
-		{
-			ImGuiRenderer::Begin();
-			OnImGui();
-			ImGuiRenderer::End();
-		}
+		if (app->show_gui)
+			app->on_render_gui(app);
 
 		glfwPollEvents();
-		EventHandler::Poll();
-		glfwSwapBuffers(m_window);
+		EventHandler::Poll(app);
+		glfwSwapBuffers(app->window);
 
-		TimerEnd(&m_timer, (float)glfwGetTime());
+		TimerEnd(&app->timer, glfwGetTime());
 	}
 }
 
-void Application::Close()
+void ApplicationPause(Application* app)
 {
-	m_running = false;
+	app->paused = !app->paused;
+
+	if (app->paused)
+		ApplicationSetWindowTitleFormat(app, "%s | Paused", app->title);
+	else
+		ApplicationSetWindowTitle(app, app->title);
 }
 
-void Application::SetTitle(const std::string& title)
+void ApplicationClose(Application* app) { app->running = false; }
+
+void ApplicationSetOnEventCallback(Application* app, void(*callback)(Application*, const Event&))
 {
-	glfwSetWindowTitle(m_window, title.c_str());
+	app->on_event = callback;
 }
 
-int Application::GetWidth() const
+void ApplicationSetOnUpdateCallback(Application* app, void(*callback)(Application*, float))
 {
-	return m_width;
+	app->on_update = callback;
 }
 
-int Application::GetHeight() const
+void ApplicationSetOnRenderCallback(Application* app, void(*callback)(Application*))
 {
-	return m_height;
+	app->on_render = callback;
 }
 
-float Application::GetWidthF() const
+void ApplicationSetOnRenderDebugCallback(Application* app, void(*callback)(Application*))
 {
-	return static_cast<float>(m_width);
+	app->on_render_debug = callback;
 }
 
-float Application::GetHeightF() const
+void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Application*))
 {
-	return static_cast<float>(m_height);
+	app->on_render_gui = callback;
 }
 
-GLFWwindow* Application::GetContext() const
+void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }
+void ApplicationEnableVsync(Application* app, int b) { glfwSwapInterval(b); app->vsync = b; }
+void ApplicationShowGui(Application* app, int b) { app->show_gui = b; }
+
+void ApplicationToggleDebugMode(Application* app) { ApplicationEnableDebugMode(app, !app->debug); }
+void ApplicationToggleVsync(Application* app) { ApplicationEnableVsync(app, !app->vsync); }
+void ApplicationToggleGui(Application* app) { ApplicationShowGui(app, !app->show_gui); }
+
+void ApplicationSetWindowTitle(Application* app, const char* title) { glfwSetWindowTitle(app->window, title); }
+
+void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...)
 {
-	return m_window;
+	va_list args;
+	va_start(args, fmt);
+	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
+	char* buffer = (char*)malloc(buffer_size + 1);
+	vsnprintf(buffer, buffer_size + 1, fmt, args);
+	va_end(args);
+
+	ApplicationSetWindowTitle(app, buffer);
+
+	free(buffer);
 }

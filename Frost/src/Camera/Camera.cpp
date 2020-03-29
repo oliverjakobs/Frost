@@ -51,6 +51,14 @@ const glm::vec2 CameraGetMousePos(Camera* camera, const glm::vec2& mouse)
 	return glm::vec2(x, y);
 }
 
+const glm::vec2 CameraGetMousePos(Camera* camera, const vec2 mouse)
+{
+	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
+	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
+
+	return glm::vec2(x, y);
+}
+
 const float* CameraGetViewPtr(Camera* camera)
 {
 	return &camera->view[0][0];

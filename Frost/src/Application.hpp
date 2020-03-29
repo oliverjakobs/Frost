@@ -1,13 +1,9 @@
 #pragma once
 
-#include "Input/Input.hpp"
-
-#include "ImGuiBinding/ImGuiRenderer.hpp"
-
+#include "Event/EventHandler.hpp"
 #include "Obelisk/Obelisk.hpp"
 
-#include "Event/EventHandler.hpp"
-
+#include "Input/Input.h"
 #include "Timer.h"
 
 // Renderer
@@ -16,68 +12,56 @@
 #include "IgnisRenderer/BatchRenderer2D.h"
 #include "IgnisRenderer/Renderer2D.h"
 
-void SetViewport(int x, int y, int w, int h);
+#include <GLFW/glfw3.h>
 
-const glm::mat4& GetScreenMat();
-const float* GetScreenMatPtr();
-
-class Application
+struct Application
 {
-private:
-	GLFWwindow* m_window;
+	GLFWwindow* window;
 
-	bool m_running;
-	bool m_paused;
+	char* title;
 
-	bool m_debug;
-	bool m_showImGui;
-	bool m_vsync;
+	int width;
+	int height;
 
-	// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
-	// and passes the rest to OnEvent, which is implemented in the game class
-	void EventCallback(Event& e);
-	bool OnWindowClose(WindowCloseEvent& e);
+	int running;
+	int paused;
 
-	void SetGLFWCallback();
-	bool LoadApplication(const std::string& title, int width, int height, int glMajor, int glMinor);
-protected:
-	std::string m_title;
+	int debug;
+	int vsync;
 
-	int m_width;
-	int m_height;
+	int show_gui;
 
-	Timer m_timer;
-public:
-	Application(const std::string& title, int width, int height);
-	virtual ~Application();
+	Timer timer;
 
-	// --------------------------| Settings |--------------------------------
-	void EnableDebugMode(bool b);
-	void EnableImGui(bool b);
-	void EnableVsync(bool b);
-
-	void ToggleDebugMode();
-	void ToggleImGui();
-	void ToggleVsync();
-
-	void Pause();
-
-	// --------------------------| Game Loop |-------------------------------
-	void Run();
-	void Close();
-
-	virtual void OnEvent(const Event& e) = 0;
-	virtual void OnUpdate(float deltaTime) = 0;
-	virtual void OnRender() = 0;
-	virtual void OnRenderDebug() {}
-	virtual void OnImGui() {}
-
-	// ----------------------------------------------------------------------
-	void SetTitle(const std::string& title);
-
-	int GetWidth() const;
-	int GetHeight() const;
-	float GetWidthF() const;
-	float GetHeightF() const;
-	GLFWwindow* GetContext() const;
+	void (*on_event)(Application*, const Event&);
+	void (*on_update)(Application*, float);
+	void (*on_render)(Application*);
+	void (*on_render_debug)(Application*);
+	void (*on_render_gui)(Application*);
 };
+
+int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor);
+void ApplicationDestroy(Application* app);
+
+// --------------------------| Game Loop |-------------------------------
+void ApplicationRun(Application* app);
+void ApplicationPause(Application* app);
+void ApplicationClose(Application* app);
+
+void ApplicationSetOnEventCallback(Application* app, void (*callback)(Application*, const Event&));
+void ApplicationSetOnUpdateCallback(Application* app, void (*callback)(Application*, float));
+void ApplicationSetOnRenderCallback(Application* app, void (*callback)(Application*));
+void ApplicationSetOnRenderDebugCallback(Application* app, void (*callback)(Application*));
+void ApplicationSetOnRenderGuiCallback(Application* app, void (*callback)(Application*));
+
+// --------------------------| Settings |--------------------------------
+void ApplicationEnableDebugMode(Application* app, int b);
+void ApplicationEnableVsync(Application* app, int b);
+void ApplicationShowGui(Application* app, int b);
+
+void ApplicationToggleDebugMode(Application* app);
+void ApplicationToggleVsync(Application* app);
+void ApplicationToggleGui(Application* app);
+
+void ApplicationSetWindowTitle(Application* app, const char* title);
+void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...);

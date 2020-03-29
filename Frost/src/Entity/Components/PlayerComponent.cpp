@@ -6,7 +6,7 @@
 
 #include "Obelisk/Obelisk.hpp"
 
-#include "Input/Input.hpp"
+#include "Input/Input.h"
 
 #include "../Scene.hpp"
 

@@ -8,17 +8,17 @@ extern "C"
 
 	typedef struct
 	{
-		float seconds;
+		double seconds;
 		int frames;
 		int fps;
 
-		float deltatime;
-		float lastframe;
+		double deltatime;
+		double lastframe;
 	} Timer;
 
 	void TimerReset(Timer* timer);
-	void TimerStart(Timer* timer, float seconds);
-	void TimerEnd(Timer* timer, float seconds);
+	void TimerStart(Timer* timer, double seconds);
+	void TimerEnd(Timer* timer, double seconds);
 
 #ifdef __cplusplus
 }

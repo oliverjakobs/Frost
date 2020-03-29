@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <glm/glm.hpp>
+#include "math/math.h"
 
 struct Camera
 {
@@ -25,6 +26,7 @@ void CameraSetProjectionOrtho(Camera* camera, float w, float h);
 void CameraSetProjectionOrtho(Camera* camera, const glm::vec2& size);
 
 const glm::vec2 CameraGetMousePos(Camera* camera, const glm::vec2& mouse);
+const glm::vec2 CameraGetMousePos(Camera* camera, const vec2 mouse);
 
 const float* CameraGetViewPtr(Camera* camera);
 const float* CameraGetProjectionPtr(Camera* camera);

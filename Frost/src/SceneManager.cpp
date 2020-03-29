@@ -4,6 +4,7 @@
 #include "json/tb_json.h"
 
 #include "Application.hpp"
+#include "ImGuiBinding/ImGuiRenderer.hpp"
 
 typedef struct
 {
@@ -252,7 +253,7 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 		manager->camera->position = position;
 		CameraUpdateViewOrtho(manager->camera);
 
-		manager->hover = SceneGetEntityAt(manager->scene, CameraGetMousePos(manager->camera, InputMousePosition()), manager->layer);
+		manager->hover = SceneGetEntityAt(manager->scene, CameraGetMousePos(manager->camera, InputMousePositionVec2()), manager->layer);
 	}
 }
 
