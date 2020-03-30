@@ -7,6 +7,9 @@ extern "C"
 #endif
 
 #include "vec2.h"
+#include "vec3.h"
+
+#include "mat4.h"
 
 #ifdef __cplusplus
 }

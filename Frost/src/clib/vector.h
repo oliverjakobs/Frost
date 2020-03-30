@@ -1,6 +1,8 @@
 #ifndef CLIB_VECTOR_H
 #define CLIB_VECTOR_H
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C"
 {

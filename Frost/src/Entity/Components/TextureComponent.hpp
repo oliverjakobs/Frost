@@ -31,7 +31,7 @@ public:
 
 	float GetWidth() const { return m_width; }
 	float GetHeight() const { return m_height; }
-	glm::vec2 GetDimension() const { return glm::vec2(m_width, m_height); }
+	vec2 GetDimension() const { return vec2_(m_width, m_height); }
 
 	void OnRender(Scene* scene) override;
 };

@@ -65,7 +65,7 @@ void EntityOnRenderDebug(Entity* entity)
 	}
 }
 
-void EntitySetPosition(Entity* entity, const glm::vec2& pos)
+void EntitySetPosition(Entity* entity, const vec2 pos)
 {
 	auto comp = EntityGetComponent<PositionComponent>(entity);
 
@@ -78,14 +78,14 @@ void EntitySetPosition(Entity* entity, const glm::vec2& pos)
 	comp->SetPosition(pos);
 }
 
-glm::vec2 EntityGetPosition(Entity* entity)
+vec2 EntityGetPosition(Entity* entity)
 {
 	auto comp = EntityGetComponent<PositionComponent>(entity);
 
 	if (comp == nullptr)
 	{
 		DEBUG_WARN("Getting position from an entity without position component\n");
-		return glm::vec2();
+		return vec2_(0.0f, 0.0f);
 	}
 
 	return comp->GetPosition();

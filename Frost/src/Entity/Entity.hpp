@@ -1,6 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "math/vec2.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -36,8 +37,8 @@ void EntityOnUpdate(Entity* entity, Scene* scene, float deltaTime);
 void EntityOnRender(Entity* entity, Scene* scene);
 void EntityOnRenderDebug(Entity* entity);
 
-void EntitySetPosition(Entity* entity, const glm::vec2& pos);
-glm::vec2 EntityGetPosition(Entity* entity);
+void EntitySetPosition(Entity* entity, const vec2 pos);
+vec2 EntityGetPosition(Entity* entity);
 
 template <class Type, class... Args>
 void EntityAddComponent(Entity* entity, Args&&... args)

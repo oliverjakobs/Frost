@@ -30,7 +30,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		float x = tb_json_float((char*)element.value, "[0", NULL);
 		float y = tb_json_float((char*)element.value, "[1", NULL);
 
-		EntityAddComponent<PositionComponent>(entity, glm::vec2(x, y));
+		EntityAddComponent<PositionComponent>(entity, vec2_(x, y));
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -55,7 +55,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 			auto body = std::make_shared<Body>();
 			BodyLoad(body.get(), x, y, w, h, type);
 
-			EntityAddComponent<PhysicsComponent>(entity, body, glm::vec2(offset_x, offset_y));
+			EntityAddComponent<PhysicsComponent>(entity, body, vec2_(offset_x, offset_y));
 		}
 	}
 

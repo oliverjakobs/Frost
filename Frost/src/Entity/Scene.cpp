@@ -17,8 +17,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 	scene->width = w;
 	scene->height = h;
 
-	scene->world = new World();
-	WorldLoad(scene->world, glm::vec2(0.0f, -980.0f));
+	scene->world = (World*)malloc(sizeof(World));
+	WorldLoad(scene->world, vec2_(0.0f, -980.0f));
 	
 	scene->smooth_movement = 0.5f;
 
@@ -34,7 +34,7 @@ void SceneQuit(Scene* scene)
 	free(scene->layers);
 
 	WorldDestroy(scene->world);
-	delete scene->world;
+	free(scene->world);
 }
 
 void SceneAddEntity(Scene* scene, Entity* entity, size_t layer)
@@ -52,7 +52,7 @@ void SceneAddEntity(Scene* scene, Entity* entity, size_t layer)
 	layer_vector_push(&scene->layers[layer], entity);
 }
 
-void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const glm::vec2& position)
+void SceneAddEntity(Scene* scene, Entity* entity, size_t layer, const vec2 position)
 {
 	if (entity == nullptr)
 		return;
@@ -129,11 +129,13 @@ void SceneOnRenderDebug(Scene* scene)
 		}
 	}
 
-	for (auto& body : scene->world->bodies)
+	for (size_t i = 0; i < scene->world->bodies.size; i++)
 	{
-		auto& pos = body->position - body->halfSize;
-		auto& dim = body->halfSize * 2.0f;
-		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == BodyType::DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
+		Body* body = WorldGetBody(scene->world, i);
+
+		auto& pos = vec2_sub(body->position, body->halfSize);
+		auto& dim = vec2_mult(body->halfSize, 2.0f);
+		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == BODY_TYPE_DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
 	}
 
 	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
@@ -147,38 +149,40 @@ void SceneOnRenderDebug(Scene* scene)
 	Primitives2DFlush();
 }
 
-void SceneSetCameraPosition(Scene* scene, const glm::vec3& position)
+void SceneSetCameraPosition(Scene* scene, const vec2 position)
 {
 	float smooth_w = (scene->camera->size.x / 2.0f) * scene->smooth_movement;
 	float smooth_h = (scene->camera->size.y / 2.0f) * scene->smooth_movement;
 
-	glm::vec3 center = scene->camera->position;
+	float center_x = scene->camera->position.x;
+	float center_y = scene->camera->position.y;
 
 	if (position.x > scene->camera->position.x + smooth_w)
-		center.x = position.x - smooth_w;
+		center_x = position.x - smooth_w;
 	if (position.x < scene->camera->position.x - smooth_w)
-		center.x = position.x + smooth_w;
+		center_x = position.x + smooth_w;
 
 	if (position.y > scene->camera->position.y + smooth_h)
-		center.y = position.y - smooth_h;
+		center_y = position.y - smooth_h;
 	if (position.y < scene->camera->position.y - smooth_h)
-		center.y = position.y + smooth_h;
+		center_y = position.y + smooth_h;
 
 	// constraint
 	float constraint_x = scene->camera->size.x / 2.0f;
 	float constraint_y = scene->camera->size.y / 2.0f;
 
-	if (center.x < constraint_x)
-		center.x = constraint_x;
-	if (center.x > scene->width - constraint_x)
-		center.x = scene->width - constraint_x;
+	if (center_x < constraint_x)
+		center_x = constraint_x;
+	if (center_x > scene->width - constraint_x)
+		center_x = scene->width - constraint_x;
 
-	if (center.y < constraint_y)
-		center.y = constraint_y;
-	if (center.y > scene->height - constraint_y)
-		center.y = scene->height - constraint_y;
+	if (center_y < constraint_y)
+		center_y = constraint_y;
+	if (center_y > scene->height - constraint_y)
+		center_y = scene->height - constraint_y;
 
-	scene->camera->position = center;
+	scene->camera->position.x = center_x;
+	scene->camera->position.y = center_y;
 	CameraUpdateViewOrtho(scene->camera);
 }
 
@@ -189,14 +193,14 @@ Entity* SceneGetEntity(Scene* scene, const char* name, size_t layer)
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name.c_str(), name))
+		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name.c_str(), name) == 0)
 			return layer_vector_get(&scene->layers[layer], i);
 	}
 
 	return nullptr;
 }
 
-bool inside(const glm::vec2& min, const glm::vec2& max, const glm::vec2& p)
+bool inside(const vec2 min, const vec2 max, const vec2& p)
 {
 	if (p.x < min.x || p.y < min.y) return false;
 	if (p.x > max.x || p.y > max.y) return false;
@@ -204,7 +208,7 @@ bool inside(const glm::vec2& min, const glm::vec2& max, const glm::vec2& p)
 	return true;
 }
 
-Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer)
+Entity* SceneGetEntityAt(Scene* scene, const vec2 pos, size_t layer)
 {
 	if (layer >= scene->max_layer)
 		return nullptr;
@@ -216,34 +220,14 @@ Entity* SceneGetEntityAt(Scene* scene, const glm::vec2& pos, size_t layer)
 		if (tex == nullptr)
 			continue;
 
-		glm::vec2 position = EntityGetPosition(layer_vector_get(&scene->layers[layer], i));
+		vec2 position = EntityGetPosition(layer_vector_get(&scene->layers[layer], i));
 
-		glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
-		glm::vec2 max = min + tex->GetDimension();
+		vec2 min = vec2_sub(position, vec2_(tex->GetWidth() / 2.0f, 0.0f));
+		vec2 max = vec2_add(min, tex->GetDimension());
 
 		if (inside(min, max, pos))
 			return layer_vector_get(&scene->layers[layer], i);
 	}
 
 	return nullptr;
-}
-
-clib_vector* SceneGetLayer(Scene* scene, size_t layer)
-{
-	if (layer >= scene->max_layer)
-		return NULL;
-
-	return &scene->layers[layer];
-}
-
-std::vector<size_t> SceneGetUsedLayers(Scene* scene)
-{
-	std::vector<size_t> layers;
-	for (size_t i = 0; i < scene->max_layer; i++)
-	{
-		if (scene->layers[i].size > 0)
-			layers.push_back(i);
-	}
-
-	return layers;
 }

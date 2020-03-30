@@ -5,11 +5,11 @@
 class PositionComponent : public Component
 {
 private:
-	glm::vec2 m_position;
+	vec2 m_position;
 
 public:
-	PositionComponent(Entity* entity, const glm::vec2& position = glm::vec2());
+	PositionComponent(Entity* entity, const vec2 position);
 
-	virtual void SetPosition(const glm::vec2& position);
-	virtual glm::vec2 GetPosition() const;
+	virtual void SetPosition(const vec2 position);
+	virtual vec2 GetPosition() const;
 };

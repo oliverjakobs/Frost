@@ -23,7 +23,7 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	TextureComponent* tex = EntityGetComponent<TextureComponent>(m_entity);
 	DEBUG_ASSERT(tex, "[COMP] Entity has no TextureComponent\n");
 	
-	glm::vec2 velocity = glm::vec2(0.0f, phys->GetBody()->velocity.y);
+	vec2 velocity = vec2_(0.0f, phys->GetBody()->velocity.y);
 	
 	bool collidesBottom = phys->GetBody()->collidesBottom;
 	
@@ -62,5 +62,5 @@ void PlayerComponent::OnUpdate(Scene* scene, float deltaTime)
 	phys->GetBody()->velocity = velocity;
 	
 	// set view
-	SceneSetCameraPosition(scene, glm::vec3(EntityGetPosition(m_entity), 0.0f));
+	SceneSetCameraPosition(scene, EntityGetPosition(m_entity));
 }

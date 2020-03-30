@@ -11,8 +11,6 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\Physics\Body.cpp" />
-    <ClCompile Include="src\Physics\World.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -30,17 +28,21 @@
     <ClCompile Include="src\IgnisRenderer\Renderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
-    <ClCompile Include="src\Camera\Camera.cpp" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\Background.c" />
     <ClCompile Include="src\ResourceManager.c" />
     <ClCompile Include="src\clib\vector.c" />
-    <ClCompile Include="src\Timer.c" />
     <ClCompile Include="src\Input\Input.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
-    <ClCompile Include="src\Application.c" />
-    <ClCompile Include="src\ApplicationCallback.c" />
     <ClCompile Include="src\math\vec2.c" />
+    <ClCompile Include="src\Physics\Body.c" />
+    <ClCompile Include="src\Physics\World.c" />
+    <ClCompile Include="src\Application\Application.c" />
+    <ClCompile Include="src\Application\ApplicationCallback.c" />
+    <ClCompile Include="src\Application\Timer.c" />
+    <ClCompile Include="src\math\vec3.c" />
+    <ClCompile Include="src\math\mat4.c" />
+    <ClCompile Include="src\Camera\Camera.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -71,9 +73,6 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.hpp" />
-    <ClInclude Include="src\Camera\Camera.hpp" />
-    <ClInclude Include="src\Physics\World.hpp" />
-    <ClInclude Include="src\Physics\Body.hpp" />
     <ClInclude Include="src\IgnisRenderer\FontRenderer.h" />
     <ClInclude Include="src\IgnisRenderer\Primitives2D.h" />
     <ClInclude Include="src\IgnisRenderer\Renderer2D.h" />
@@ -84,15 +83,21 @@
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\vector.h" />
-    <ClInclude Include="src\Timer.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\ApplicationCallback.h" />
     <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\ecs\components.h" />
+    <ClInclude Include="src\Physics\Body.h" />
+    <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\Application\ApplicationCallback.h" />
+    <ClInclude Include="src\Application\Application.h" />
+    <ClInclude Include="src\Application\Timer.h" />
+    <ClInclude Include="src\math\vec3.h" />
+    <ClInclude Include="src\math\mat4.h" />
+    <ClInclude Include="src\Camera\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

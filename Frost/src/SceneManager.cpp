@@ -3,7 +3,7 @@
 #include "json/TemplateLoader.hpp"
 #include "json/tb_json.h"
 
-#include "Application.h"
+#include "Application/Application.h"
 #include "ImGuiBinding/ImGuiRenderer.hpp"
 
 typedef struct
@@ -199,7 +199,7 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntity(scene, TemplateLoadEntity(path, manager->resources), layer, glm::vec2(x, y));
+			SceneAddEntity(scene, TemplateLoadEntity(path, manager->resources), layer, vec2_(x, y));
 		}
 	}
 
@@ -238,7 +238,7 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 	else
 	{
 		float cameraspeed = 400.0f;
-		glm::vec3 position = manager->camera->position;
+		vec3 position = manager->camera->position;
 
 		if (InputKeyPressed(KEY_A))
 			position.x -= cameraspeed * deltaTime;
@@ -277,7 +277,7 @@ void SceneManagerOnRender(SceneManager* manager)
 				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
 		}
 
-		clib_vector* layer = SceneGetLayer(manager->scene, manager->layer);
+		clib_vector* layer = &manager->scene->layers[manager->layer];
 
 		if (layer)
 		{
@@ -290,10 +290,10 @@ void SceneManagerOnRender(SceneManager* manager)
 
 				if (tex != nullptr)
 				{
-					glm::vec2 position = EntityGetPosition(layer_vector_get(layer, i));
+					vec2 position = EntityGetPosition(layer_vector_get(layer, i));
 
-					glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
-					glm::vec2 max = min + tex->GetDimension();
+					vec2 min = vec2_sub(position, vec2_(tex->GetWidth() / 2.0f, 0.0f));
+					vec2 max = vec2_add(min, tex->GetDimension());
 
 					Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 				}
@@ -307,10 +307,10 @@ void SceneManagerOnRender(SceneManager* manager)
 
 			if (tex != nullptr)
 			{
-				glm::vec2 position = EntityGetPosition(manager->hover);
+				vec2 position = EntityGetPosition(manager->hover);
 
-				glm::vec2 min = position - glm::vec2(tex->GetWidth() / 2.0f, 0.0f);
-				glm::vec2 max = min + tex->GetDimension();
+				vec2 min = vec2_sub(position, vec2_(tex->GetWidth() / 2.0f, 0.0f));
+				vec2 max = vec2_add(min, tex->GetDimension());
 
 				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
 				Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);

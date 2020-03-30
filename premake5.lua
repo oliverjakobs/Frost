@@ -54,7 +54,6 @@ project "Frost"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/packages/glm",
 		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/glfw/include"
 	}

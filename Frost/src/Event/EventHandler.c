@@ -1,7 +1,5 @@
 #include "EventHandler.h"
 
-#include "Application.h"
-
 #include "clib/vector.h"
 
 CLIB_VECTOR_DEFINE_FUNCS(event_queue, Event)

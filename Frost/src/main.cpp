@@ -1,22 +1,21 @@
-#include "Application.h"
+#include "Application/Application.h"
 
 #include "SceneManager.hpp"
-#include <glm/gtc/matrix_transform.hpp>
 
 #include "ImGuiBinding/ImGuiRenderer.hpp"
 
-static glm::mat4 SCREEN_MAT = glm::mat4(1.0f);
+static mat4 SCREEN_MAT;
 
 void SetViewport(int x, int y, int w, int h)
 {
-	SCREEN_MAT = glm::ortho((float)x, (float)w, (float)h, (float)y);
+	SCREEN_MAT = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
 
 	glViewport(x, y, w, h);
 }
 
 const float* GetScreenMatPtr()
 {
-	return &SCREEN_MAT[0][0];
+	return &SCREEN_MAT.values[0][0];
 }
 
 SceneManager sceneManager;
@@ -144,7 +143,7 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
-	SCREEN_MAT = glm::ortho(0.0f, (float)app->width, (float)app->height, 0.0f);
+	SCREEN_MAT = mat4_ortho(0.0f, (float)app->width, (float)app->height, 0.0f, -1.0f, 1.0f);
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
 	Primitives2DInit("res/shaders/lines.vert", "res/shaders/lines.frag");
@@ -162,7 +161,7 @@ int main()
 	// initialize imgui
 	ImGuiRenderer::Init(app->window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
-	CameraCreateOrtho(&camera, glm::vec3(app->width / 2.0f, app->height / 2.0f, 0.0f), glm::vec2(app->width, app->height));
+	CameraCreateOrtho(&camera, vec3_(app->width / 2.0f, app->height / 2.0f, 0.0f), vec2_((float)app->width, (float)app->height));
 	SceneManagerInit(&sceneManager, &resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&sceneManager, "res/templates/scenes/register.json");
 	SceneManagerChangeScene(&sceneManager, "scene");

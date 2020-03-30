@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include "Event.h"
-#include "Application.h"
+#include "Application/Application.h"
 
 #define EVENT_HANDLER_INITIAL_QUEUE_SIZE	4
 
