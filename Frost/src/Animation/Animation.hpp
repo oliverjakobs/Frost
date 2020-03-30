@@ -7,28 +7,22 @@ typedef std::pair<std::string, std::string> Transition;
 
 struct Entity;
 
-class Animation
+struct Animation
 {
-private:
-	int m_start;
-	int m_length;
+	int start;
+	int length;
 
-	float m_delay;
-	float m_clock;
+	float delay;
+	float clock;
 
-	int m_frame;
+	int frame;
 
-	std::vector<Transition> m_transitions;
-
-public:
-	Animation() = default;
-	Animation(int start, int length, float delay);
-
-	void Start();
-	void Tick(float deltaTime);
-
-	void AddTransition(const std::string& name, const std::string& next);
-	const std::vector<Transition> GetTransitions() const { return m_transitions; }
-
-	int GetFrame() const { return m_frame; }
+	std::vector<Transition> transitions;
 };
+
+void AnimationLoad(Animation* animation, int start, int length, float delay);
+
+void AnimationStart(Animation* animation);
+void AnimationTick(Animation* animation, float deltatime);
+
+void AnimationAddTransition(Animation* animation, const std::string& name, const std::string& next);

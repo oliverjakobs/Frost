@@ -1,36 +1,40 @@
 #include "Animation.hpp"
 
-Animation::Animation(int start, int length, float delay)
-	: m_start(start), m_length(length), m_delay(delay), m_clock(0.0f), m_frame(0)
+void AnimationLoad(Animation* animation, int start, int length, float delay)
 {
+	animation->start = start;
+	animation->length = length;
+	animation->delay = delay;
+	animation->clock = 0.0f;
+	animation->frame = 0;
 }
 
-void Animation::Start()
+void AnimationStart(Animation* animation)
 {
-	m_frame = m_start;
-	m_clock = 0.0f;
+	animation->frame = animation->start;
+	animation->clock = 0.0f;
 }
 
-void Animation::Tick(float deltaTime)
+void AnimationTick(Animation* animation, float deltatime)
 {
-	m_clock += deltaTime;
+	animation->clock += deltatime;
 
 	// change frame
-	if (m_clock > m_delay)
+	if (animation->clock > animation->delay)
 	{
-		m_clock = 0.0f;
-		m_frame++;
+		animation->clock = 0.0f;
+		animation->frame++;
 	}
 
 	// restart animation
-	if (m_frame >= m_start + m_length || m_frame < m_start)
+	if (animation->frame >= animation->start + animation->length || animation->frame < animation->start)
 	{
-		m_frame = m_start;
-		m_clock = 0.0f;
+		animation->frame = animation->start;
+		animation->clock = 0.0f;
 	}
 }
 
-void Animation::AddTransition(const std::string& name, const std::string& next)
+void AnimationAddTransition(Animation* animation, const std::string& name, const std::string& next)
 {
-	m_transitions.push_back({ name, next });
+	animation->transitions.push_back({ name, next });
 }

@@ -1,94 +1,74 @@
 #include "Animator.hpp"
 
-#include "Entity/Entity.hpp"
-#include "Entity/Components.hpp"
+#include "AnimationConditions.h"
 
-void Animator::LoadConditions()
+void AnimatorInit(Animator* animator)
 {
-	RegisterCondition("condition_jump", [](Entity* e, int s)
-		{
-			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->velocity.y > 0.0f;
-
-			return false;
-		});
-	RegisterCondition("condition_fall", [](Entity* e, int s)
-		{
-			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return !comp->GetBody()->collidesBottom && comp->GetBody()->velocity.y <= 0.0f;
-
-			return false;
-		});
-	RegisterCondition("condition_walk", [](Entity* e, int s)
-		{
-			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->collidesBottom && comp->GetBody()->velocity.x != 0.0f;
-
-			return false;
-		});
-	RegisterCondition("condition_idle", [](Entity* e, int s)
-		{
-			if (auto comp = EntityGetComponent<PhysicsComponent>(e))
-				return comp->GetBody()->collidesBottom && comp->GetBody()->velocity.x == 0.0f;
-
-			return false;
-		});
+	AnimatorRegisterConition(animator, "condition_jump", AnimationConditionJump);
+	AnimatorRegisterConition(animator, "condition_fall", AnimationConditionFall);
+	AnimatorRegisterConition(animator, "condition_walk", AnimationConditionWalk);
+	AnimatorRegisterConition(animator, "condition_idle", AnimationConditionIdle);
 }
 
-void Animator::RegisterCondition(const std::string& name, std::function<bool(Entity*, int)> condition)
+void AnimatorDestroy(Animator* animator)
 {
-	m_conditions.insert({ name, condition });
 }
 
-void Animator::CreateAnimation(const std::string& name, int start, int length, float delay, std::vector<Transition> transitions)
+void AnimatorRegisterConition(Animator* animator, const std::string& name, std::function<bool(Entity*, int)> condition)
 {
-	auto animation = std::make_shared<Animation>(start, length, delay);
+	animator->conditions.insert({ name, condition });
+}
+
+void AnimatorCreateAnimation(Animator* animator, const std::string& name, int start, int length, float delay, std::vector<Transition> transitions)
+{
+	auto animation = std::make_shared<Animation>();
+	AnimationLoad(animation.get(), start, length, delay);
 
 	for (auto& transition : transitions)
 	{
-		animation->AddTransition(transition.first, transition.second);
+		AnimationAddTransition(animation.get(), transition.first, transition.second);
 	}
 
-	m_animations.insert({ name, animation });
+	animator->animations.insert({ name, animation });
 
-	if (m_current.empty())
-		m_current = name;
+	if (animator->current.empty())
+		animator->current = name;
 }
 
-void Animator::Tick(Entity* entity, float deltaTime)
+void AnimatorTick(Animator* animator, Entity* entity, float deltatime)
 {
-	if (m_current.empty())
+	if (animator->current.empty())
 		return;
 
-	auto& animation = m_animations.at(m_current);
+	auto& animation = animator->animations.at(animator->current);
 
-	animation->Tick(deltaTime);
-	for (const auto& [name, next] : animation->GetTransitions())
+	AnimationTick(animation.get(), deltatime);
+	for (const auto& [name, next] : animation->transitions)
 	{
-		if (m_conditions.find(name) != m_conditions.end())
+		if (animator->conditions.find(name) != animator->conditions.end())
 		{
-			if (m_conditions.at(name)(entity, 0))
-				Play(next);
+			if (animator->conditions.at(name)(entity, 0))
+				AnimatorPlay(animator, next);
 		}
 	}
 }
 
-void Animator::Play(const std::string& name)
+void AnimatorPlay(Animator* animator, const std::string& name)
 {
-	if (m_current.compare(name) == 0)
+	if (animator->current.compare(name) == 0)
 		return;
 
-	if (m_animations.find(name) != m_animations.end())
+	if (animator->animations.find(name) != animator->animations.end())
 	{
-		m_animations[name]->Start();
-		m_current = name;
+		AnimationStart(animator->animations[name].get());
+		animator->current = name;
 	}
 }
 
-int Animator::GetFrame() const
+int AnimatorGetFrame(Animator* animator)
 {
-	if (m_current.empty())
+	if (animator->current.empty())
 		return 0;
 
-	return m_animations.at(m_current)->GetFrame();
+	return animator->animations.at(animator->current)->frame;
 }

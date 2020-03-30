@@ -8,10 +8,10 @@ AnimationComponent::AnimationComponent(Entity* entity, std::shared_ptr<Animator>
 
 void AnimationComponent::OnUpdate(Scene* scene, float deltaTime)
 {
-	m_animator->Tick(m_entity, deltaTime);
+	AnimatorTick(m_animator.get(), m_entity, deltaTime);
 
 	TextureComponent* tex = EntityGetComponent<TextureComponent>(m_entity);
 
 	if (tex != nullptr)
-		tex->SetFrame(m_animator->GetFrame());
+		tex->SetFrame(AnimatorGetFrame(m_animator.get()));
 }

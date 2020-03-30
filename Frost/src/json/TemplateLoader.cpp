@@ -80,7 +80,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 	if (element.error == TB_JSON_OK)
 	{
 		auto animator = std::make_shared<Animator>();
-		animator->LoadConditions();
+		AnimatorInit(animator.get());
 		
 		for (int i = 0; i < element.elements; i++)
 		{
@@ -115,7 +115,8 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 					transitions.push_back({ condition, next });
 				}
 			}
-			animator->CreateAnimation(std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
+
+			AnimatorCreateAnimation(animator.get(), std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
 		}
 
 		EntityAddComponent<AnimationComponent>(entity, animator);

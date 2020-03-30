@@ -5,21 +5,20 @@
 #include <unordered_map>
 #include <functional>
 
-class Animator
+struct Animator
 {
-private:
-	std::unordered_map<std::string, std::function<bool(Entity*, int)>> m_conditions;
-	std::unordered_map<std::string, std::shared_ptr<Animation>> m_animations;
-	std::string m_current;
-
-public:
-	void LoadConditions();
-
-	void RegisterCondition(const std::string& name, std::function<bool(Entity*, int)> condition);
-	void CreateAnimation(const std::string& name, int start, int length, float delay, std::vector<Transition> transitions);
-
-	void Tick(Entity* entity, float deltaTime);
-	void Play(const std::string& name);
-
-	int GetFrame() const;
+	std::unordered_map<std::string, std::function<bool(Entity*, int)>> conditions;
+	std::unordered_map<std::string, std::shared_ptr<Animation>> animations;
+	std::string current;
 };
+
+void AnimatorInit(Animator* animator);
+void AnimatorDestroy(Animator* animator);
+
+void AnimatorRegisterConition(Animator* animator, const std::string& name, std::function<bool(Entity*, int)> condition);
+void AnimatorCreateAnimation(Animator* animator, const std::string& name, int start, int length, float delay, std::vector<Transition> transitions);
+
+void AnimatorTick(Animator* animator, Entity* entity, float deltatime);
+void AnimatorPlay(Animator* animator, const std::string& name);
+
+int AnimatorGetFrame(Animator* animator);
