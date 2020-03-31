@@ -3,4 +3,4 @@
 #include "SceneManager.hpp"
 #include "ResourceManager.h"
 
-Entity* TemplateLoadEntity(const char* path, ResourceManager* res);
+EcsEntity* TemplateLoadEntity(const char* path, ResourceManager* res);

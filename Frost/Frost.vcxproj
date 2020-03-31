@@ -91,9 +91,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation\Animation.hpp" />
-    <ClInclude Include="src\Animation\AnimationConditions.h" />
-    <ClInclude Include="src\Animation\Animator.hpp" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Background.h" />
@@ -101,16 +98,12 @@
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\Debugger.h" />
-    <ClInclude Include="src\ecs\components.h" />
-    <ClInclude Include="src\Entity\Components.hpp" />
-    <ClInclude Include="src\Entity\Components\AnimationComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\Component.hpp" />
-    <ClInclude Include="src\Entity\Components\PhysicsComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\PlayerComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\PositionComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\TextureComponent.hpp" />
-    <ClInclude Include="src\Entity\Entity.hpp" />
-    <ClInclude Include="src\Entity\Scene.hpp" />
+    <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
+    <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\Scene.hpp" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
@@ -147,22 +140,18 @@
     <ClInclude Include="src\Application\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation\Animation.cpp" />
-    <ClCompile Include="src\Animation\AnimationConditions.cpp" />
-    <ClCompile Include="src\Animation\Animator.cpp" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Background.c" />
     <ClCompile Include="src\Camera\Camera.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />
-    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PositionComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
-    <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Entity\Scene.cpp" />
+    <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\ECS\Systems.h" />
+    <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
+    <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
+    <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
+    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
     <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />

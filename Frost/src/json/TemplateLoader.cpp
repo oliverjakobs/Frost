@@ -8,7 +8,7 @@
 #define TEMPLATE_LOADER_STRLEN	32
 #define TEMPLATE_LOADER_PATHLEN	64
 
-Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
+EcsEntity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -21,7 +21,8 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 	char name[TEMPLATE_LOADER_STRLEN];
 	tb_json_string(json, "{'name'", name, TEMPLATE_LOADER_STRLEN, NULL);
 
-	Entity* entity = new Entity(name);
+	EcsEntity* entity = (EcsEntity*)malloc(sizeof(EcsEntity));
+	EcsEntityLoad(entity, name);
 
 	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");
@@ -30,7 +31,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		float x = tb_json_float((char*)element.value, "[0", NULL);
 		float y = tb_json_float((char*)element.value, "[1", NULL);
 
-		EntityAddComponent<PositionComponent>(entity, vec2_(x, y));
+		EcsEntityAddPosition(entity, x, y);
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -52,10 +53,10 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 			float offset_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
 			float offset_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
 
-			auto body = std::make_shared<Body>();
-			BodyLoad(body.get(), x, y, w, h, type);
+			Body* body = (Body*)malloc(sizeof(Body));
+			BodyLoad(body, x, y, w, h, type);
 
-			EntityAddComponent<PhysicsComponent>(entity, body, vec2_(offset_x, offset_y));
+			EcsEntityAddPhysics(entity, body, offset_x, offset_y);
 		}
 	}
 
@@ -73,53 +74,53 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		IgnisTexture* texture = ResourceManagerGetTexture(res, tex_name);
 
 		if (texture)
-			EntityAddComponent<TextureComponent>(entity, texture, width, height, frame);
+			EcsEntityAddTexture(entity, texture, width, height, frame);
 	}
 
 	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
-		auto animator = std::make_shared<Animator>();
-		AnimatorInit(animator.get());
-		
-		for (int i = 0; i < element.elements; i++)
-		{
-			tb_json_element anim_name;
-			tb_json_read_param((char*)element.value, &anim_name, "{*", &i);
-
-			tb_json_element anim; 
-			tb_json_read_format((char*)element.value, &anim, "{'%.*s'", anim_name.bytelen, anim_name.value);
-
-			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
-			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
-			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
-
-			tb_json_element transition_array; 
-			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
-
-			std::vector<Transition> transitions;
-
-			char* value = (char*)transition_array.value;
-			tb_json_element transition_element;
-			for (int i = 0; i < transition_array.elements; i++)
-			{				
-				value = tb_json_array_step(value, &transition_element);
-
-				if (transition_element.data_type == TB_JSON_ARRAY)
-				{
-					char condition[TEMPLATE_LOADER_STRLEN];
-					tb_json_string((char*)transition_element.value, "[0", condition, TEMPLATE_LOADER_STRLEN, NULL);
-					char next[TEMPLATE_LOADER_STRLEN];
-					tb_json_string((char*)transition_element.value, "[1", next, TEMPLATE_LOADER_STRLEN, NULL);
-
-					transitions.push_back({ condition, next });
-				}
-			}
-
-			AnimatorCreateAnimation(animator.get(), std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
-		}
-
-		EntityAddComponent<AnimationComponent>(entity, animator);
+		// auto animator = std::make_shared<Animator>();
+		// AnimatorInit(animator.get());
+		// 
+		// for (int i = 0; i < element.elements; i++)
+		// {
+		// 	tb_json_element anim_name;
+		// 	tb_json_read_param((char*)element.value, &anim_name, "{*", &i);
+		// 
+		// 	tb_json_element anim; 
+		// 	tb_json_read_format((char*)element.value, &anim, "{'%.*s'", anim_name.bytelen, anim_name.value);
+		// 
+		// 	unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
+		// 	unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
+		// 	float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
+		// 
+		// 	tb_json_element transition_array; 
+		// 	tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
+		// 
+		// 	std::vector<Transition> transitions;
+		// 
+		// 	char* value = (char*)transition_array.value;
+		// 	tb_json_element transition_element;
+		// 	for (int i = 0; i < transition_array.elements; i++)
+		// 	{				
+		// 		value = tb_json_array_step(value, &transition_element);
+		// 
+		// 		if (transition_element.data_type == TB_JSON_ARRAY)
+		// 		{
+		// 			char condition[TEMPLATE_LOADER_STRLEN];
+		// 			tb_json_string((char*)transition_element.value, "[0", condition, TEMPLATE_LOADER_STRLEN, NULL);
+		// 			char next[TEMPLATE_LOADER_STRLEN];
+		// 			tb_json_string((char*)transition_element.value, "[1", next, TEMPLATE_LOADER_STRLEN, NULL);
+		// 
+		// 			transitions.push_back({ condition, next });
+		// 		}
+		// 	}
+		// 
+		// 	AnimatorCreateAnimation(animator.get(), std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
+		// }
+		// 
+		// EntityAddComponent<AnimationComponent>(entity, animator);
 	}
 
 	tb_json_read(json, &element, "{'player'");
@@ -128,7 +129,7 @@ Entity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 		float ms = tb_json_float((char*)element.value, "{'movementspeed'", NULL);
 		float jp = tb_json_float((char*)element.value, "{'jumppower'", NULL);
 		
-		EntityAddComponent<PlayerComponent>(entity, ms, jp);
+		EcsEntityAddMovement(entity, ms, jp);
 	}
 
 	free(json);

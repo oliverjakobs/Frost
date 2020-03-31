@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Entity/Scene.hpp"
+#include "Scene.hpp"
 
 #include "ResourceManager.h"
 
@@ -27,7 +27,7 @@ struct SceneManager
 	float gridsize;
 	float padding;
 
-	Entity* hover;
+	EcsEntity* hover;
 };
 
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
@@ -44,4 +44,4 @@ void SceneManagerOnEvent(SceneManager* manager, const Event& e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltaTime);
 void SceneManagerOnRender(SceneManager* manager);
 void SceneManagerOnRenderDebug(SceneManager* manager);
-void SceneManagerOnImGui(SceneManager* manager);
+void SceneManagerOnRenderGui(SceneManager* manager);

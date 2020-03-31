@@ -286,14 +286,14 @@ void SceneManagerOnRender(SceneManager* manager)
 				IgnisColorRGBA color = IGNIS_WHITE;
 				ignisBlendColorRGBA(&color, 0.4f);
 
-				auto tex = EntityGetComponent<TextureComponent>(layer_vector_get(layer, i));
+				auto tex = layer_vector_get(layer, i)->texture;
 
 				if (tex != nullptr)
 				{
-					vec2 position = EntityGetPosition(layer_vector_get(layer, i));
+					vec2 position = EcsEntityGetPosition(layer_vector_get(layer, i));
 
-					vec2 min = vec2_sub(position, vec2_(tex->GetWidth() / 2.0f, 0.0f));
-					vec2 max = vec2_add(min, tex->GetDimension());
+					vec2 min = vec2_sub(position, vec2_(tex->width / 2.0f, 0.0f));
+					vec2 max = vec2_add(min, { tex->width, tex->height });
 
 					Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 				}
@@ -303,14 +303,14 @@ void SceneManagerOnRender(SceneManager* manager)
 
 		if (manager->hover)
 		{
-			auto tex = EntityGetComponent<TextureComponent>(manager->hover);
+			auto tex = manager->hover->texture;
 
 			if (tex != nullptr)
 			{
-				vec2 position = EntityGetPosition(manager->hover);
+				vec2 position = EcsEntityGetPosition(manager->hover);
 
-				vec2 min = vec2_sub(position, vec2_(tex->GetWidth() / 2.0f, 0.0f));
-				vec2 max = vec2_add(min, tex->GetDimension());
+				vec2 min = vec2_sub(position, vec2_(tex->width / 2.0f, 0.0f));
+				vec2 max = vec2_add(min, { tex->width, tex->height });
 
 				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
 				Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
@@ -327,28 +327,7 @@ void SceneManagerOnRenderDebug(SceneManager* manager)
 		SceneOnRenderDebug(manager->scene);
 }
 
-void SceneManagerOnImGui(SceneManager* manager)
+void SceneManagerOnRenderGui(SceneManager* manager)
 {
-	if (manager->editmode)
-	{
-		ImGui::Begin("Editor");
 
-		ImGui::Text("Hovered Entity: %s", manager->hover == nullptr ? "null" : manager->hover->name.c_str());
-
-		ImGui::Checkbox("Show grid", &manager->showgrid);
-
-		ImGui::Separator();
-
-		for (size_t i = 0; i < manager->scene->max_layer; i++)
-		{
-			if (manager->scene->layers[i].size > 0)
-			{
-				char buffer[16];
-				snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
-				ImGui::RadioButton(buffer, &manager->layer, (int)i);
-			}
-		}
-
-		ImGui::End();
-	}
 }

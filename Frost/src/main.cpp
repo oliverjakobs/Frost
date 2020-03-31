@@ -18,7 +18,7 @@ const float* GetScreenMatPtr()
 	return &SCREEN_MAT.v[0];
 }
 
-SceneManager sceneManager;
+SceneManager scene_manager;
 ResourceManager resources;
 Camera camera;
 
@@ -51,15 +51,15 @@ void OnEvent(Application* app, const Event e)
 			ApplicationToggleGui(app);
 			break;
 		case KEY_1:
-			SceneManagerChangeScene(&sceneManager, "scene");
+			SceneManagerChangeScene(&scene_manager, "scene");
 			break;
 		case KEY_2:
-			SceneManagerChangeScene(&sceneManager, "scene2");
+			SceneManagerChangeScene(&scene_manager, "scene2");
 			break;
 		}
 	}
 
-	SceneManagerOnEvent(&sceneManager, e);
+	SceneManagerOnEvent(&scene_manager, e);
 }
 
 void OnUpdate(Application* app, float deltaTime)
@@ -67,17 +67,17 @@ void OnUpdate(Application* app, float deltaTime)
 	// discard frames that took to long
 	// if (deltaTime > 0.4f) return;
 
-	SceneManagerOnUpdate(&sceneManager, deltaTime);
+	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
 void OnRender(Application* app)
 {
-	SceneManagerOnRender(&sceneManager);
+	SceneManagerOnRender(&scene_manager);
 }
 
 void OnRenderDebug(Application* app)
 {
-	SceneManagerOnRenderDebug(&sceneManager);
+	SceneManagerOnRenderDebug(&scene_manager);
 
 	// debug info
 	char buffer[16];
@@ -106,23 +106,46 @@ void OnRenderGui(Application* app)
 	// ----
 	ImGui::Begin("DEBUG");
 
-	auto player = SceneGetEntity(sceneManager.scene, "player", 1);
+	auto player = SceneGetEntity(scene_manager.scene, "player", 1);
 
 	if (player != nullptr)
 	{
-		ImGui::Text("Name: %s", player->name.c_str());
-		auto position = EntityGetPosition(player);
+		ImGui::Text("Name: %s", player->name);
+		auto position = EcsEntityGetPosition(player);
 		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
 		ImGui::Text("Precise Y: %f", position.y);
 
 		ImGui::Separator();
 	}
 
-	ImGui::Text("Scene: %s", sceneManager.scene_name);
+	ImGui::Text("Scene: %s", scene_manager.scene_name);
 
 	ImGui::End();
 
-	SceneManagerOnImGui(&sceneManager);
+	if (scene_manager.editmode)
+	{
+		ImGui::Begin("Editor");
+
+		ImGui::Text("Hovered Entity: %s", scene_manager.hover == nullptr ? "null" : scene_manager.hover->name);
+
+		ImGui::Checkbox("Show grid", &scene_manager.showgrid);
+
+		ImGui::Separator();
+
+		for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
+		{
+			if (scene_manager.scene->layers[i].size > 0)
+			{
+				char buffer[16];
+				snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
+				ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
+			}
+		}
+
+		ImGui::End();
+	}
+
+	SceneManagerOnRenderGui(&scene_manager);
 
 	ImGuiRenderer::End();
 }
@@ -162,9 +185,9 @@ int main()
 	ImGuiRenderer::Init(app->window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
 	CameraCreateOrtho(&camera, vec3_(app->width / 2.0f, app->height / 2.0f, 0.0f), vec2_((float)app->width, (float)app->height));
-	SceneManagerInit(&sceneManager, &resources, &camera, 32.0f, 4);
-	SceneManagerRegisterScenes(&sceneManager, "res/templates/scenes/register.json");
-	SceneManagerChangeScene(&sceneManager, "scene");
+	SceneManagerInit(&scene_manager, &resources, &camera, 32.0f, 4);
+	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
+	SceneManagerChangeScene(&scene_manager, "scene");
 
 	ApplicationSetOnEventCallback(app, OnEvent);
 	ApplicationSetOnUpdateCallback(app, OnUpdate);

@@ -1,36 +1,50 @@
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#ifndef ECS_COMPONENTS_H
+#define ECS_COMPONENTS_H
 
-#include "Animation/Animator.hpp"
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+// #include "Animation/Animator.hpp"
 #include "Ignis/Ignis.h"
-#include "Physics/World.hpp"
+#include "Physics/World.h"
 
 typedef struct
 {
 	float x;
 	float y;
-} ecs_PositionComponent;
+} EcsPositionComponent;
 
 typedef struct
 {
 	Body* body;
 	float body_x;
 	float body_y;
-} ecs_PhysicsComponent;
+} EcsPhysicsComponent;
+
+typedef enum
+{
+	DIRECTION_RIGHT = 0,
+	DIRECTION_DOWN,
+	DIRECTION_LEFT,
+	DIRECTION_UP
+} Direction;
 
 typedef struct
 {
-	float movement_speed;
+	Direction direction;
+	float speed;
 	float jump_power;
-} ecs_MovemenetComponent;
+} EcsMovementComponent;
 
-typedef enum RenderFlip
+typedef enum
 {
 	RENDER_FLIP_NONE = 0,
 	RENDER_FLIP_HORIZONTAL,
 	RENDER_FLIP_VERTICAL,
 	RENDER_FLIP_BOTH
-} render_flip;
+} RenderFlip;
 
 typedef struct
 {
@@ -40,12 +54,16 @@ typedef struct
 	float width;
 	float height;
 
-	render_flip render_flip;
-} ecs_TextureComponent;
+	RenderFlip render_flip;
+} EcsTextureComponent;
 
-typedef struct
-{
-	Animator* animator;
-} ecs_AnimationComponent;
+// typedef struct
+// {
+// 	Animator* animator;
+// } ecs_AnimationComponent;
 
-#endif // !COMPONENTS_H
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* !ECS_COMPONENTS_H */

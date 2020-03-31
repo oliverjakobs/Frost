@@ -1,21 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\Entity\Components\AnimationComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PhysicsComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PlayerComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\PositionComponent.cpp" />
-    <ClCompile Include="src\Entity\Components\TextureComponent.cpp" />
-    <ClCompile Include="src\Entity\Entity.cpp" />
-    <ClCompile Include="src\Entity\Scene.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Animation\Animation.cpp" />
-    <ClCompile Include="src\Animation\Animator.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
     <ClCompile Include="src\Ignis\Font.c" />
@@ -42,8 +33,13 @@
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\math\vec3.c" />
     <ClCompile Include="src\Camera\Camera.c" />
-    <ClCompile Include="src\Animation\AnimationConditions.cpp" />
     <ClCompile Include="src\math\mat4.c" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
+    <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
+    <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
+    <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\ECS\Systems.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -57,17 +53,6 @@
     <ClInclude Include="src\Ignis\Core\Texture.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
-    <ClInclude Include="src\Entity\Entity.hpp" />
-    <ClInclude Include="src\Entity\Scene.hpp" />
-    <ClInclude Include="src\Entity\Components\TextureComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\PositionComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\PlayerComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\PhysicsComponent.hpp" />
-    <ClInclude Include="src\Entity\Components\Component.hpp" />
-    <ClInclude Include="src\Entity\Components\AnimationComponent.hpp" />
-    <ClInclude Include="src\Entity\Components.hpp" />
-    <ClInclude Include="src\Animation\Animator.hpp" />
-    <ClInclude Include="src\Animation\Animation.hpp" />
     <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\SceneManager.hpp" />
     <ClInclude Include="src\json\TemplateLoader.hpp" />
@@ -90,7 +75,6 @@
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Debugger.h" />
-    <ClInclude Include="src\ecs\components.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
@@ -98,8 +82,13 @@
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\Camera\Camera.h" />
-    <ClInclude Include="src\Animation\AnimationConditions.h" />
     <ClInclude Include="src\math\mat4.h" />
+    <ClInclude Include="src\Scene.hpp" />
+    <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
+    <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
