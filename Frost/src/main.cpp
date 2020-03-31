@@ -15,7 +15,7 @@ void SetViewport(int x, int y, int w, int h)
 
 const float* GetScreenMatPtr()
 {
-	return &SCREEN_MAT.values[0][0];
+	return &SCREEN_MAT.v[0];
 }
 
 SceneManager sceneManager;

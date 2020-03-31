@@ -41,9 +41,9 @@
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\math\vec3.c" />
-    <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\Camera\Camera.c" />
     <ClCompile Include="src\Animation\AnimationConditions.cpp" />
+    <ClCompile Include="src\math\mat4.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -97,9 +97,9 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\math\vec3.h" />
-    <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Animation\AnimationConditions.h" />
+    <ClInclude Include="src\math\mat4.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

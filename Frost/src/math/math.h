@@ -6,6 +6,8 @@ extern "C"
 {
 #endif
 
+
+/* based on https://github.com/felselva/mathc */
 #include "vec2.h"
 #include "vec3.h"
 

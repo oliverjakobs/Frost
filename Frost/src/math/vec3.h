@@ -15,9 +15,14 @@ typedef struct
 
 vec3 vec3_(float x, float y, float z);
 
-vec3 vec3_mult(const vec3 v, float f);
-vec3 vec3_add(const vec3 a, const vec3 b);
-vec3 vec3_sub(const vec3 a, const vec3 b);
+vec3 vec3_mult(vec3 v, float f);
+vec3 vec3_add(vec3 a, vec3 b);
+vec3 vec3_sub(vec3 a, vec3 b);
+
+vec3 vec3_normalize(vec3 v);
+vec3 vec3_cross(vec3 left, vec3 right);
+
+float vec3_dot(vec3 left, vec3 right);
 
 #ifdef __cplusplus
 }
