@@ -6,9 +6,9 @@
 
 void BodyLoad(Body* body, float x, float y, float hw, float hh, BodyType type)
 {
-	body->position = vec2_(x, y);
-	body->halfSize = vec2_(hw, hh);
-	body->velocity = vec2_(0.0f, 0.0f);
+	body->position = (vec2){ x, y };
+	body->halfSize = (vec2){ hw, hh };
+	body->velocity = (vec2){ 0.0f, 0.0f };
 	
 	body->type = type;
 	

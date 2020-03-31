@@ -1,6 +1,6 @@
 #include "Application/Application.h"
 
-#include "SceneManager.hpp"
+#include "SceneManager.h"
 
 #include "ImGuiBinding/ImGuiRenderer.hpp"
 
@@ -184,7 +184,7 @@ int main()
 	// initialize imgui
 	ImGuiRenderer::Init(app->window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
-	CameraCreateOrtho(&camera, vec3_(app->width / 2.0f, app->height / 2.0f, 0.0f), vec2_((float)app->width, (float)app->height));
+	CameraCreateOrtho(&camera, { app->width / 2.0f, app->height / 2.0f, 0.0f }, { (float)app->width, (float)app->height });
 	SceneManagerInit(&scene_manager, &resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");

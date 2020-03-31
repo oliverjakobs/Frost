@@ -9,6 +9,7 @@ extern "C"
 #include "Animation/Animator.h"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
+#include "Camera/Camera.h"
 
 typedef struct
 {
@@ -61,6 +62,14 @@ typedef struct
 {
 	Animator* animator;
 } EcsAnimationComponent;
+
+typedef struct
+{
+	Camera* camera;
+	float smooth;
+	float scene_w;
+	float scene_h;
+} EcsCameraComponent;
 
 #ifdef __cplusplus
 }

@@ -10,6 +10,7 @@ void EcsEntityLoad(EcsEntity* entity, const char* name)
 	entity->movement = NULL;
 	entity->texture = NULL;
 	entity->animation = NULL;
+	entity->camera = NULL;
 }
 
 void EcsEntityDestroy(EcsEntity* entity)
@@ -21,6 +22,7 @@ void EcsEntityDestroy(EcsEntity* entity)
 	EcsEntityRemoveMovement(entity);
 	EcsEntityRemoveTexture(entity);
 	EcsEntityRemoveAnimation(entity);
+	EcsEntityRemoveCamera(entity);
 }
 
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y)
@@ -107,6 +109,24 @@ int EcsEntityAddAnimation(EcsEntity* entity, Animator* animator)
 	return 0;
 }
 
+int EcsEntityAddCamera(EcsEntity* entity, float smooth)
+{
+	if (entity->camera) return 0;
+
+	entity->camera = (EcsCameraComponent*)malloc(sizeof(EcsCameraComponent));
+
+	if (entity->camera)
+	{
+		entity->camera->camera = NULL;
+		entity->camera->smooth = smooth;
+		entity->camera->scene_w = -1.0f;
+		entity->camera->scene_h = -1.0f;
+		return 1;
+	}
+
+	return 0;
+}
+
 void EcsEntityRemovePosition(EcsEntity* entity)
 {
 	if (entity->position)
@@ -155,9 +175,18 @@ void EcsEntityRemoveAnimation(EcsEntity* entity)
 	}
 }
 
+void EcsEntityRemoveCamera(EcsEntity* entity)
+{
+	if (entity->camera)
+	{
+		free(entity->camera);
+		entity->camera = NULL;
+	}
+}
+
 void EcsEntitySetPosition(EcsEntity* entity, vec2 pos)
 {
-	if (entity->physics)
+	if (entity->physics && entity->physics->body)
 		entity->physics->body->position = vec2_add(pos, (vec2){ entity->physics->body_x, entity->physics->body_y });
 
 	if (entity->position)
@@ -169,7 +198,7 @@ void EcsEntitySetPosition(EcsEntity* entity, vec2 pos)
 
 vec2 EcsEntityGetPosition(EcsEntity* entity)
 {
-	if (entity->physics)
+	if (entity->physics && entity->physics->body)
 		return vec2_sub(entity->physics->body->position, (vec2){ entity->physics->body_x, entity->physics->body_y });
 
 	if (entity->position)

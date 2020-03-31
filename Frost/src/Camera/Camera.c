@@ -46,7 +46,7 @@ const vec2 CameraGetMousePos(Camera* camera, const vec2 mouse)
 	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
 	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
 
-	return vec2_(x, y);
+	return (vec2){ x, y };
 }
 
 const float* CameraGetViewPtr(Camera* camera)

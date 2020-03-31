@@ -2,16 +2,6 @@
 
 #include <math.h>
 
-vec3 vec3_(float x, float y, float z)
-{
-	vec3 v;
-	v.x = x;
-	v.y = y;
-	v.z = z;
-
-	return v;
-}
-
 vec3 vec3_mult(vec3 vec, float f)
 {
 	vec3 v;

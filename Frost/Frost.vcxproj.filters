@@ -4,8 +4,6 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\SceneManager.cpp" />
-    <ClCompile Include="src\json\TemplateLoader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
@@ -14,14 +12,7 @@
     <ClCompile Include="src\Ignis\Core\Texture.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
-    <ClCompile Include="src\IgnisRenderer\FontRenderer.c" />
-    <ClCompile Include="src\IgnisRenderer\Primitives2D.c" />
-    <ClCompile Include="src\IgnisRenderer\Renderer2D.c" />
-    <ClCompile Include="src\IgnisRenderer\BatchRenderer2D.c" />
-    <ClCompile Include="src\IgnisRenderer\IgnisRenderer.cpp" />
     <ClCompile Include="src\clib\hashmap.c" />
-    <ClCompile Include="src\Background.c" />
-    <ClCompile Include="src\ResourceManager.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\Input\Input.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
@@ -34,7 +25,6 @@
     <ClCompile Include="src\math\vec3.c" />
     <ClCompile Include="src\Camera\Camera.c" />
     <ClCompile Include="src\math\mat4.c" />
-    <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
@@ -43,6 +33,17 @@
     <ClCompile Include="src\Animation\Animation.c" />
     <ClCompile Include="src\Animation\AnimationConditions.c" />
     <ClCompile Include="src\Animation\Animator.c" />
+    <ClCompile Include="src\Scene.c" />
+    <ClCompile Include="src\SceneManager.c" />
+    <ClCompile Include="src\json\TemplateLoader.c" />
+    <ClCompile Include="src\ECS\Ecs.c" />
+    <ClCompile Include="src\Graphics\Background.c" />
+    <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
+    <ClCompile Include="src\Graphics\FontRenderer.c" />
+    <ClCompile Include="src\Graphics\Primitives2D.c" />
+    <ClCompile Include="src\Graphics\Renderer2D.c" />
+    <ClCompile Include="src\Graphics\ResourceManager.c" />
+    <ClCompile Include="src\Graphics\Renderer.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -57,19 +58,10 @@
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\json\tb_json.h" />
-    <ClInclude Include="src\SceneManager.hpp" />
-    <ClInclude Include="src\json\TemplateLoader.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.hpp" />
-    <ClInclude Include="src\IgnisRenderer\FontRenderer.h" />
-    <ClInclude Include="src\IgnisRenderer\Primitives2D.h" />
-    <ClInclude Include="src\IgnisRenderer\Renderer2D.h" />
-    <ClInclude Include="src\IgnisRenderer\BatchRenderer2D.h" />
-    <ClInclude Include="src\IgnisRenderer\IgnisRenderer.h" />
-    <ClInclude Include="src\Background.h" />
     <ClInclude Include="src\clib\hashmap.h" />
-    <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\math\math.h" />
@@ -86,7 +78,6 @@
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\math\mat4.h" />
-    <ClInclude Include="src\Scene.hpp" />
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
@@ -95,6 +86,17 @@
     <ClInclude Include="src\Animation\AnimationConditions.h" />
     <ClInclude Include="src\Animation\Animation.h" />
     <ClInclude Include="src\Animation\Animator.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\json\TemplateLoader.h" />
+    <ClInclude Include="src\ECS\Ecs.h" />
+    <ClInclude Include="src\Graphics\Background.h" />
+    <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
+    <ClInclude Include="src\Graphics\FontRenderer.h" />
+    <ClInclude Include="src\Graphics\Primitives2D.h" />
+    <ClInclude Include="src\Graphics\Renderer2D.h" />
+    <ClInclude Include="src\Graphics\ResourceManager.h" />
+    <ClInclude Include="src\Graphics\Renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

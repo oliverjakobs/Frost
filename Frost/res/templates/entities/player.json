@@ -53,8 +53,11 @@
       ]
     }
   },
-  "player": {
-    "movementspeed": 400.0,
+  "movement": {
+    "speed": 400.0,
 	"jumppower": 600.0
+  },
+  "camera": {
+    "smooth": 0.5
   }
 }

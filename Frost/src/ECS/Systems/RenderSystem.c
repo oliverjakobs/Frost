@@ -1,5 +1,5 @@
 #include "RenderSystem.h"
-#include "IgnisRenderer/IgnisRenderer.h"
+#include "Graphics/Renderer.h"
 
 void EcsSystemRender(EcsEntity* entity)
 {

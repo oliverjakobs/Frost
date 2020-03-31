@@ -12,10 +12,7 @@ extern "C"
 #include "Timer.h"
 
 // Renderer
-#include "IgnisRenderer/FontRenderer.h"
-#include "IgnisRenderer/Primitives2D.h"
-#include "IgnisRenderer/BatchRenderer2D.h"
-#include "IgnisRenderer/Renderer2D.h"
+#include "Graphics/Renderer.h"
 
 #include <GLFW/glfw3.h>
 
