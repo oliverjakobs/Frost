@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-// #include "Animation/Animator.hpp"
+#include "Animation/Animator.h"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
 
@@ -57,10 +57,10 @@ typedef struct
 	RenderFlip render_flip;
 } EcsTextureComponent;
 
-// typedef struct
-// {
-// 	Animator* animator;
-// } ecs_AnimationComponent;
+typedef struct
+{
+	Animator* animator;
+} EcsAnimationComponent;
 
 #ifdef __cplusplus
 }

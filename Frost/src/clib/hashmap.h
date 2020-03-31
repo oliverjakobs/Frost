@@ -13,6 +13,12 @@ extern "C"
 #endif
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+#include <errno.h>
 
 /*
  * Define CLIB_HASHMAP_METRICS to compile in performance analysis

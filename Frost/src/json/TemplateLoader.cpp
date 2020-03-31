@@ -8,6 +8,9 @@
 #define TEMPLATE_LOADER_STRLEN	32
 #define TEMPLATE_LOADER_PATHLEN	64
 
+#include <string>
+#include <vector>
+
 EcsEntity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 {
 	char* json = ignisReadFile(json_path, NULL);
@@ -80,47 +83,48 @@ EcsEntity* TemplateLoadEntity(const char* json_path, ResourceManager* res)
 	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
-		// auto animator = std::make_shared<Animator>();
-		// AnimatorInit(animator.get());
-		// 
-		// for (int i = 0; i < element.elements; i++)
-		// {
-		// 	tb_json_element anim_name;
-		// 	tb_json_read_param((char*)element.value, &anim_name, "{*", &i);
-		// 
-		// 	tb_json_element anim; 
-		// 	tb_json_read_format((char*)element.value, &anim, "{'%.*s'", anim_name.bytelen, anim_name.value);
-		// 
-		// 	unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
-		// 	unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
-		// 	float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
-		// 
-		// 	tb_json_element transition_array; 
-		// 	tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
-		// 
-		// 	std::vector<Transition> transitions;
-		// 
-		// 	char* value = (char*)transition_array.value;
-		// 	tb_json_element transition_element;
-		// 	for (int i = 0; i < transition_array.elements; i++)
-		// 	{				
-		// 		value = tb_json_array_step(value, &transition_element);
-		// 
-		// 		if (transition_element.data_type == TB_JSON_ARRAY)
-		// 		{
-		// 			char condition[TEMPLATE_LOADER_STRLEN];
-		// 			tb_json_string((char*)transition_element.value, "[0", condition, TEMPLATE_LOADER_STRLEN, NULL);
-		// 			char next[TEMPLATE_LOADER_STRLEN];
-		// 			tb_json_string((char*)transition_element.value, "[1", next, TEMPLATE_LOADER_STRLEN, NULL);
-		// 
-		// 			transitions.push_back({ condition, next });
-		// 		}
-		// 	}
-		// 
-		// 	AnimatorCreateAnimation(animator.get(), std::string((char*)anim_name.value, anim_name.bytelen), start, length, delay, transitions);
-		// }
-		// 
-		// EntityAddComponent<AnimationComponent>(entity, animator);
+		auto animator = (Animator*)malloc(sizeof(Animator));
+		AnimatorInit(animator);
+		
+		for (int i = 0; i < element.elements; i++)
+		{
+			tb_json_element anim_name;
+			tb_json_read_param((char*)element.value, &anim_name, "{*", &i);
+		
+			tb_json_element anim; 
+			tb_json_read_format((char*)element.value, &anim, "{'%.*s'", anim_name.bytelen, anim_name.value);
+		
+			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
+			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
+			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
+		
+			tb_json_element transition_array; 
+			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
+		
+			Animation* animation = (Animation*)malloc(sizeof(Animation));
+			AnimationLoad(animation, start, length, delay, transition_array.elements);
+		
+			char* value = (char*)transition_array.value;
+			tb_json_element transition_element;
+			for (int i = 0; i < transition_array.elements; i++)
+			{				
+				value = tb_json_array_step(value, &transition_element);
+		
+				if (transition_element.data_type == TB_JSON_ARRAY)
+				{
+					char condition[TEMPLATE_LOADER_STRLEN];
+					tb_json_string((char*)transition_element.value, "[0", condition, TEMPLATE_LOADER_STRLEN, NULL);
+					char next[TEMPLATE_LOADER_STRLEN];
+					tb_json_string((char*)transition_element.value, "[1", next, TEMPLATE_LOADER_STRLEN, NULL);
+		
+					AnimationAddTransition(animation, condition, next);
+				}
+			}
+		
+			AnimatorAddAnimation(animator, std::string((char*)anim_name.value, anim_name.bytelen).c_str(), animation);
+		}
+		
+		EcsEntityAddAnimation(entity, animator);
 	}
 
 	tb_json_read(json, &element, "{'player'");

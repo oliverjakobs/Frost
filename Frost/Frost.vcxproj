@@ -91,6 +91,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Animation\Animation.h" />
+    <ClInclude Include="src\Animation\AnimationConditions.h" />
+    <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Background.h" />
@@ -140,6 +143,9 @@
     <ClInclude Include="src\Application\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Animation\Animation.c" />
+    <ClCompile Include="src\Animation\AnimationConditions.c" />
+    <ClCompile Include="src\Animation\Animator.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Background.c" />

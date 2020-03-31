@@ -40,6 +40,9 @@
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems.h" />
+    <ClCompile Include="src\Animation\Animation.c" />
+    <ClCompile Include="src\Animation\AnimationConditions.c" />
+    <ClCompile Include="src\Animation\Animator.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -89,6 +92,9 @@
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\Animation\AnimationConditions.h" />
+    <ClInclude Include="src\Animation\Animation.h" />
+    <ClInclude Include="src\Animation\Animator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

@@ -6,13 +6,6 @@
  */
 #include "hashmap.h"
 
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <ctype.h>
-#include <errno.h>
-
 #ifndef CLIB_HASHMAP_NOASSERT
 #include <assert.h>
 #define CLIB_HASHMAP_ASSERT(expr)           assert(expr)

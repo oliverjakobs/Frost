@@ -9,6 +9,7 @@ void EcsEntityLoad(EcsEntity* entity, const char* name)
 	entity->physics = NULL;
 	entity->movement = NULL;
 	entity->texture = NULL;
+	entity->animation = NULL;
 }
 
 void EcsEntityDestroy(EcsEntity* entity)
@@ -19,6 +20,7 @@ void EcsEntityDestroy(EcsEntity* entity)
 	EcsEntityRemovePhysics(entity);
 	EcsEntityRemoveMovement(entity);
 	EcsEntityRemoveTexture(entity);
+	EcsEntityRemoveAnimation(entity);
 }
 
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y)
@@ -90,6 +92,21 @@ int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture* texture, float width, f
 	return 0;
 }
 
+int EcsEntityAddAnimation(EcsEntity* entity, Animator* animator)
+{
+	if (entity->animation) return 0;
+
+	entity->animation = (EcsAnimationComponent*)malloc(sizeof(EcsAnimationComponent));
+
+	if (entity->animation)
+	{
+		entity->animation->animator = animator;
+		return 1;
+	}
+
+	return 0;
+}
+
 void EcsEntityRemovePosition(EcsEntity* entity)
 {
 	if (entity->position)
@@ -124,6 +141,17 @@ void EcsEntityRemoveTexture(EcsEntity* entity)
 	{
 		free(entity->texture);
 		entity->texture = NULL;
+	}
+}
+
+void EcsEntityRemoveAnimation(EcsEntity* entity)
+{
+	if (entity->animation)
+	{
+		AnimatorDestroy(entity->animation->animator);
+		free(entity->animation->animator);
+		free(entity->animation);
+		entity->animation = NULL;
 	}
 }
 
