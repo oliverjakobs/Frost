@@ -8,12 +8,9 @@ void EcsSystemPlayer(EcsEntity* entity, float deltatime)
 	if (!entity->texture) return;
 	if (!entity->movement) return;
 
-	vec2 velocity = (vec2){ 0.0f, entity->physics->body->velocity.y };
-
-	if (InputKeyPressed(KEY_A))
-		velocity.x -= entity->movement->speed;
-	if (InputKeyPressed(KEY_D))
-		velocity.x += entity->movement->speed;
+	vec2 velocity;
+	velocity.x = (-InputKeyPressed(KEY_A) + InputKeyPressed(KEY_D)) * entity->movement->speed;
+	velocity.y = entity->physics->body->velocity.y;
 
 	if (InputKeyPressed(KEY_SPACE) && entity->physics->body->collidesBottom)
 		velocity.y = entity->movement->jump_power;

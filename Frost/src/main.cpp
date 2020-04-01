@@ -80,9 +80,7 @@ void OnRenderDebug(Application* app)
 	SceneManagerOnRenderDebug(&scene_manager);
 
 	// debug info
-	char buffer[16];
-	snprintf(buffer, sizeof(buffer), "FPS: %d", app->timer.fps);
-	FontRendererRenderText(font, buffer, 0.0f, 32.0f, GetScreenMatPtr(), IGNIS_WHITE);
+	FontRendererRenderTextFormat(0.0f, 32.0f, GetScreenMatPtr(), "FPS: %d", app->timer.fps);
 }
 
 void OnRenderGui(Application* app)
@@ -174,6 +172,7 @@ int main()
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
 	ResourceManagerInit(&resources, "res/index.json");
+	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"));
 
 	font = ResourceManagerGetFont(&resources, "font");
 
