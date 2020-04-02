@@ -4,7 +4,6 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
     <ClCompile Include="src\Ignis\Font.c" />
@@ -14,7 +13,6 @@
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />
-    <ClCompile Include="src\Input\Input.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\Physics\Body.c" />
@@ -35,7 +33,6 @@
     <ClCompile Include="src\Animation\Animator.c" />
     <ClCompile Include="src\Scene.c" />
     <ClCompile Include="src\SceneManager.c" />
-    <ClCompile Include="src\json\TemplateLoader.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
@@ -44,6 +41,9 @@
     <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Graphics\ResourceManager.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Application\Input.c" />
+    <ClCompile Include="src\ECS\TemplateLoader.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -66,10 +66,8 @@
     <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
-    <ClInclude Include="src\Input\Input.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Debugger.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
@@ -88,7 +86,6 @@
     <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneManager.h" />
-    <ClInclude Include="src\json\TemplateLoader.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
@@ -97,6 +94,9 @@
     <ClInclude Include="src\Graphics\Renderer2D.h" />
     <ClInclude Include="src\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
+    <ClInclude Include="src\Application\Input.h" />
+    <ClInclude Include="src\Application\Debugger.h" />
+    <ClInclude Include="src\ECS\TemplateLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

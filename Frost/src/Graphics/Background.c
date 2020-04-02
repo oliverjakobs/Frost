@@ -1,6 +1,6 @@
 #include "Background.h"
 
-#include "IgnisRenderer/IgnisRenderer.h"
+#include "Graphics/Renderer.h"
 
 int BackgroundInit(Background* background, size_t capacity)
 {

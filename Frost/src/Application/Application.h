@@ -8,7 +8,7 @@ extern "C"
 
 #include "Event/Event.h"
 
-#include "Input/Input.h"
+#include "Input.h"
 #include "Timer.h"
 
 // Renderer

@@ -1,6 +1,6 @@
 #include "PlayerSystem.h"
 
-#include "Input/Input.h"
+#include "Application/Input.h"
 
 void EcsSystemPlayer(EcsEntity* entity, float deltatime)
 {
@@ -36,8 +36,8 @@ void EcsSystemPlayer(EcsEntity* entity, float deltatime)
 	{
 		vec2 position = EcsEntityGetPosition(entity);
 
-		float smooth_w = (entity->camera->camera->size.x / 2.0f) * entity->camera->smooth;
-		float smooth_h = (entity->camera->camera->size.y / 2.0f) * entity->camera->smooth;
+		float smooth_w = (entity->camera->camera->size.x * 0.5f) * entity->camera->smooth;
+		float smooth_h = (entity->camera->camera->size.y * 0.5f) * entity->camera->smooth;
 
 		float center_x = entity->camera->camera->position.x;
 		float center_y = entity->camera->camera->position.y;
@@ -53,8 +53,8 @@ void EcsSystemPlayer(EcsEntity* entity, float deltatime)
 			center_y = position.y + smooth_h;
 
 		// constraint
-		float constraint_x = entity->camera->camera->size.x / 2.0f;
-		float constraint_y = entity->camera->camera->size.y / 2.0f;
+		float constraint_x = entity->camera->camera->size.x * 0.5f;
+		float constraint_y = entity->camera->camera->size.y * 0.5f;
 
 		if (center_x < constraint_x)
 			center_x = constraint_x;

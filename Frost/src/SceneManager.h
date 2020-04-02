@@ -7,8 +7,7 @@ extern "C"
 #endif
 
 #include "Scene.h"
-
-#include "Graphics/ResourceManager.h"
+#include "ECS/TemplateLoader.h"
 
 #define SCENE_MANAGER_NAMELEN	32
 #define SCENE_MANAGER_PATHLEN	64

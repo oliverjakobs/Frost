@@ -100,7 +100,7 @@
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
-    <ClInclude Include="src\Debugger.h" />
+    <ClInclude Include="src\Application\Debugger.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\Components.h" />
@@ -131,7 +131,7 @@
     <ClInclude Include="src\ImGuiBinding\ImGuiBinding.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
     <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
-    <ClInclude Include="src\Input\Input.h" />
+    <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
@@ -140,7 +140,7 @@
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Graphics\ResourceManager.h" />
     <ClInclude Include="src\SceneManager.h" />
-    <ClInclude Include="src\json\TemplateLoader.h" />
+    <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\Application\Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +176,7 @@
     <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
     <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
-    <ClCompile Include="src\Input\Input.c" />
+    <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
@@ -184,7 +184,7 @@
     <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Graphics\ResourceManager.c" />
     <ClCompile Include="src\SceneManager.c" />
-    <ClCompile Include="src\json\TemplateLoader.c" />
+    <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Application\Timer.c" />
   </ItemGroup>

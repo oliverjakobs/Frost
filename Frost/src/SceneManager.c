@@ -2,8 +2,6 @@
 
 #include "json/tb_json.h"
 
-#include "json/TemplateLoader.h"
-
 #include "Application/Application.h"
 
 typedef struct
@@ -199,7 +197,7 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntityPos(scene, TemplateLoadEntity(path, manager->resources), layer, (vec2){ x, y });
+			SceneAddEntityPos(scene, EcsEntityLoadTemplate(path, manager->resources), layer, (vec2){ x, y });
 		}
 	}
 
@@ -298,7 +296,6 @@ void SceneManagerOnRender(SceneManager* manager)
 					Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 				}
 			}
-
 		}
 
 		if (manager->hover)
