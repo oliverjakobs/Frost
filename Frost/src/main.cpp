@@ -24,6 +24,12 @@ Camera camera;
 
 IgnisFont* font;
 
+#include "nanovg/nanovg.h"
+#define NANOVG_GL3_IMPLEMENTATION	// Use GL2 implementation.
+#include "nanovg/nanovg_gl.h"
+
+struct NVGcontext* vg;
+
 void OnEvent(Application* app, const Event e)
 {
 	if (e.type == EVENT_WINDOW_RESIZE)
@@ -85,6 +91,15 @@ void OnRenderDebug(Application* app)
 
 void OnRenderGui(Application* app)
 {
+	nvgBeginFrame(vg, 100.0f, 100.0f, 1.0f);
+
+	nvgBeginPath(vg);
+	nvgRect(vg, 100, 100, 120, 30);
+	nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
+	nvgFill(vg);
+
+	nvgEndFrame(vg);
+
 	ImGuiRenderer::Begin();
 
 	ImGui::Begin("Settings");
@@ -173,6 +188,8 @@ int main()
 
 	ResourceManagerInit(&resources, "res/index.json");
 	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"));
+
+	vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
 	font = ResourceManagerGetFont(&resources, "font");
 

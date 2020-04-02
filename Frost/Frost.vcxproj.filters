@@ -44,6 +44,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
+    <ClCompile Include="src\nanovg\nanovg.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -97,6 +98,10 @@
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\Application\Debugger.h" />
     <ClInclude Include="src\ECS\TemplateLoader.h" />
+    <ClInclude Include="src\nanovg\fontstash.h" />
+    <ClInclude Include="src\nanovg\nanovg.h" />
+    <ClInclude Include="src\nanovg\nanovg_gl.h" />
+    <ClInclude Include="src\nanovg\nanovg_gl_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
