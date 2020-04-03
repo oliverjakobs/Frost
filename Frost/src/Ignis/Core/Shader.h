@@ -15,6 +15,7 @@ extern "C"
 
 	int ignisShadervf(IgnisShader* shader, const char* vert, const char* frag);
 	int ignisShadervgf(IgnisShader* shader, const char* vert, const char* geom, const char* frag);
+	int ignisShaderSrcvf(IgnisShader* shader, const char* vert, const char* frag);
 	void ignisDeleteShader(IgnisShader* shader);
 
 	void ignisUseShader(IgnisShader* shader);

@@ -74,6 +74,22 @@ int ignisShadervgf(IgnisShader* shader, const char* vert, const char* geom, cons
 	return program;
 }
 
+int ignisShaderSrcvf(IgnisShader* shader, const char* vert, const char* frag)
+{
+	if (!(vert && frag))
+		return 0;
+
+	GLenum types[] = { GL_VERTEX_SHADER, GL_FRAGMENT_SHADER };
+	const char* sources[] = { vert, frag };
+
+	GLuint program = ignisCreateShaderProgram(types, sources, 2);
+
+	if (shader)
+		shader->program = program;
+
+	return program;
+}
+
 void ignisDeleteShader(IgnisShader* shader)
 {
 	glDeleteProgram(shader->program);

@@ -24,12 +24,6 @@ Camera camera;
 
 IgnisFont* font;
 
-#include "nanovg/nanovg.h"
-#define NANOVG_GL3_IMPLEMENTATION	// Use GL2 implementation.
-#include "nanovg/nanovg_gl.h"
-
-struct NVGcontext* vg;
-
 void OnEvent(Application* app, const Event e)
 {
 	if (e.type == EVENT_WINDOW_RESIZE)
@@ -91,18 +85,11 @@ void OnRenderDebug(Application* app)
 
 void OnRenderGui(Application* app)
 {
-	nvgBeginFrame(vg, 100.0f, 100.0f, 1.0f);
-
-	nvgBeginPath(vg);
-	nvgRect(vg, 100, 100, 120, 30);
-	nvgFillColor(vg, nvgRGBA(255, 192, 0, 255));
-	nvgFill(vg);
-
-	nvgEndFrame(vg);
-
 	ImGuiRenderer::Begin();
 
 	ImGui::Begin("Settings");
+
+	ImGui::Text("FPS: %d", app->timer.fps);
 
 	ImGui::Text("F5: Pause/Unpause");
 	ImGui::Text("F6: Toggle Vsync");
@@ -182,14 +169,12 @@ int main()
 	SCREEN_MAT = mat4_ortho(0.0f, (float)app->width, (float)app->height, 0.0f, -1.0f, 1.0f);
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
-	Primitives2DInit("res/shaders/lines.vert", "res/shaders/lines.frag");
+	Primitives2DInit();
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
 	ResourceManagerInit(&resources, "res/index.json");
 	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"));
-
-	vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
 	font = ResourceManagerGetFont(&resources, "font");
 
