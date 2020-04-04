@@ -13,7 +13,6 @@ outputDir = "%{cfg.buildcfg}"
 group "Packages"
 
 include "Frost/packages/glfw"
-include "Frost/packages/imgui"
 
 group ""
 
@@ -34,7 +33,6 @@ project "Frost"
 		"%{prj.name}/src/**.hpp",
 		"%{prj.name}/src/**.cpp",
 		--Config
-		"%{prj.name}/imgui.ini",
 		"%{prj.name}/config.json",
 		--Resources
 		"%{prj.name}/res/fonts/**.ttf",
@@ -47,14 +45,12 @@ project "Frost"
 	links
 	{
 		"GLFW",
-		"ImGui",
 		"opengl32"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/packages/imgui",
 		"%{prj.name}/packages/glfw/include"
 	}
 

@@ -11,11 +11,18 @@ extern "C"
 void FontRendererInit(const char* vert, const char* frag);
 void FontRendererDestroy();
 
-void FontRendererBindFont(IgnisFont* font);
-void FontRendererSetColor(IgnisColorRGBA color);
+void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color);
 
 void FontRendererRenderText(float x, float y, const float* mat_proj, const char* text);
 void FontRendererRenderTextFormat(float x, float y, const float* mat_proj, const char* fmt, ...);
+
+
+/* Render Queue */
+void FontRendererStart(const float* mat_proj);
+void FontRendererFlush();
+
+void FontRendererRenderTextQ(float x, float y, const char* text);
+void FontRendererRenderTextQFormat(float x, float y, const char* text, ...);
 
 #ifdef __cplusplus
 }

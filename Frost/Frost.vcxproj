@@ -107,6 +107,9 @@
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\gui\gui.h" />
+    <ClInclude Include="src\gui\nuklear.h" />
+    <ClInclude Include="src\gui\nuklear_glfw_gl3.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
@@ -128,9 +131,6 @@
     <ClInclude Include="src\Graphics\Renderer2D.h" />
     <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiBinding.hpp" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiGLFW.hpp" />
-    <ClInclude Include="src\ImGuiBinding\ImGuiRenderer.hpp" />
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\math\math.h" />
@@ -159,6 +159,7 @@
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
+    <ClCompile Include="src\gui\gui.c" />
     <ClCompile Include="src\Scene.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
@@ -173,9 +174,6 @@
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiBinding.cpp" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiGLFW.cpp" />
-    <ClCompile Include="src\ImGuiBinding\ImGuiRenderer.cpp" />
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />

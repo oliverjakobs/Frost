@@ -2,8 +2,6 @@
 
 #include "SceneManager.h"
 
-#include "ImGuiBinding/ImGuiRenderer.hpp"
-
 static mat4 SCREEN_MAT;
 
 void SetViewport(int x, int y, int w, int h)
@@ -79,59 +77,47 @@ void OnRenderDebug(Application* app)
 {
 	SceneManagerOnRenderDebug(&scene_manager);
 
-	// debug info
-	FontRendererRenderTextFormat(0.0f, 32.0f, GetScreenMatPtr(), "FPS: %d", app->timer.fps);
 }
 
 void OnRenderGui(Application* app)
 {
-	ImGuiRenderer::Begin();
+	FontRendererStart(GetScreenMatPtr());
 
-	ImGui::Begin("Settings");
+	FontRendererRenderTextQFormat(0.0f, 32.0f, "FPS: %d", app->timer.fps);
 
-	ImGui::Text("FPS: %d", app->timer.fps);
+	/* Settings */
+	FontRendererRenderTextQ(760.0f, 32.0f, "F1: Toggle edit mode");
+	FontRendererRenderTextQ(760.0f, 64.0f, "F5: Pause/Unpause");
+	FontRendererRenderTextQ(760.0f, 96.0f, "F6: Toggle Vsync");
+	FontRendererRenderTextQ(760.0f, 128.0f, "F7: Toggle debug mode");
+	FontRendererRenderTextQ(760.0f, 160.0f, "F8: Toggle ImGui");
+	// ImGui::Text("DEL: Remove Trees");
 
-	ImGui::Text("F5: Pause/Unpause");
-	ImGui::Text("F6: Toggle Vsync");
-	ImGui::Text("F7: Toggle debug mode");
-	ImGui::Text("F8: Toggle ImGui");
-
-	ImGui::Separator();
-
-	ImGui::Text("F1: Toggle edit mode");
-	ImGui::Text("DEL: Remove Trees");
-
-	ImGui::End();
-
-	// ----
-	ImGui::Begin("DEBUG");
-
-	auto player = SceneGetEntity(scene_manager.scene, "player", 1);
-
-	if (player != nullptr)
+	/* Debug */
+	FontRendererRenderTextQFormat(760.0f, 726.0f, "Scene: %s", scene_manager.scene_name);
+	
+	EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
+	if (player)
 	{
-		ImGui::Text("Name: %s", player->name);
-		auto position = EcsEntityGetPosition(player);
-		ImGui::Text("Position: %4.2f, %4.2f", position.x, position.y);
-		ImGui::Text("Precise Y: %f", position.y);
-
-		ImGui::Separator();
+		FontRendererRenderTextQFormat(760.0f, 748.0f, "Name: %s", player->name);
+		vec2 position = EcsEntityGetPosition(player);
+		FontRendererRenderTextQFormat(760.0f, 770.0f, "Position: %4.2f, %4.2f", position.x, position.y);
+		FontRendererRenderTextQFormat(760.0f, 792.0f, "Precise Y: %f", position.y);
 	}
 
-	ImGui::Text("Scene: %s", scene_manager.scene_name);
+	FontRendererFlush();
 
-	ImGui::End();
-
+	/*
 	if (scene_manager.editmode)
 	{
 		ImGui::Begin("Editor");
-
+	
 		ImGui::Text("Hovered Entity: %s", scene_manager.hover == nullptr ? "null" : scene_manager.hover->name);
-
+	
 		ImGui::Checkbox("Show grid", &scene_manager.showgrid);
-
+	
 		ImGui::Separator();
-
+	
 		for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
 		{
 			if (scene_manager.scene->layers[i].size > 0)
@@ -141,13 +127,12 @@ void OnRenderGui(Application* app)
 				ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
 			}
 		}
-
+	
 		ImGui::End();
 	}
-
+	*/
+	
 	SceneManagerOnRenderGui(&scene_manager);
-
-	ImGuiRenderer::End();
 }
 
 
@@ -157,8 +142,7 @@ int main()
 {
 #if RUN_GAME
 
-	Application* app = new Application();
-	
+	Application* app = (Application*)malloc(sizeof(Application));
 	ApplicationLoad(app, "Frost", 1024, 800, 4, 4);
 
 	// ---------------| Config |------------------------------------------
@@ -174,16 +158,13 @@ int main()
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
 	ResourceManagerInit(&resources, "res/index.json");
-	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"));
+	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"), IGNIS_WHITE);
 
 	font = ResourceManagerGetFont(&resources, "font");
 
 	ApplicationEnableDebugMode(app, true);
 	ApplicationEnableVsync(app, false);
 	ApplicationShowGui(app, true);
-
-	// initialize imgui
-	ImGuiRenderer::Init(app->window, ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable);
 
 	CameraCreateOrtho(&camera, { app->width / 2.0f, app->height / 2.0f, 0.0f }, { (float)app->width, (float)app->height });
 	SceneManagerInit(&scene_manager, &resources, &camera, 32.0f, 4);
@@ -207,7 +188,7 @@ int main()
 
 	ApplicationDestroy(app);
 
-	delete app;
+	free(app);
 #else
 
 	system("Pause");

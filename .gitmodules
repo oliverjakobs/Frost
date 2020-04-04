@@ -1,6 +1,3 @@
-[submodule "Frost/packages/imgui"]
-	path = Frost/packages/imgui
-	url = https://github.com/oliverjakobs/imgui
 [submodule "Frost/packages/glfw"]
 	path = Frost/packages/glfw
 	url = https://github.com/oliverjakobs/glfw
