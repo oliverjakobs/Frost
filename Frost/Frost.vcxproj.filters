@@ -93,8 +93,6 @@
     <ClInclude Include="src\Application\Debugger.h" />
     <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\gui\gui.h" />
-    <ClInclude Include="src\gui\nuklear_glfw_gl3.h" />
-    <ClInclude Include="src\gui\nuklear.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

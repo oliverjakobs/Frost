@@ -32,6 +32,9 @@ void ignisUnbindFont(IgnisFont* font);
 
 int ignisLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* vertices, size_t offset);
 
+float ignisFontGetTextWidth(IgnisFont* font, const char* text);
+float ignisFontGetTextHeight(IgnisFont* font, const char* text, float* y_offset);
+
 #ifdef __cplusplus
 }
 #endif

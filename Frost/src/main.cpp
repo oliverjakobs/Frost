@@ -2,6 +2,8 @@
 
 #include "SceneManager.h"
 
+#include "gui/gui.h"
+
 static mat4 SCREEN_MAT;
 
 void SetViewport(int x, int y, int w, int h)
@@ -81,31 +83,61 @@ void OnRenderDebug(Application* app)
 
 void OnRenderGui(Application* app)
 {
-	FontRendererStart(GetScreenMatPtr());
-
-	FontRendererRenderTextFormat(0.0f, 32.0f, "FPS: %d", app->timer.fps);
-
-	/* Settings */
-	FontRendererRenderText(760.0f, 32.0f, "F1: Toggle edit mode");
-	FontRendererRenderText(760.0f, 64.0f, "F5: Pause/Unpause");
-	FontRendererRenderText(760.0f, 96.0f, "F6: Toggle Vsync");
-	FontRendererRenderText(760.0f, 128.0f, "F7: Toggle debug mode");
-	FontRendererRenderText(760.0f, 160.0f, "F8: Toggle Gui");
-	FontRendererRenderText(760.0f, 180.0f, "DEL: Remove Trees");
-
 	/* Debug */
-	FontRendererRenderTextFormat(760.0f, 726.0f, "Scene: %s", scene_manager.scene_name);
-	
+	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, 4, GUI_BG_FILL);
+
+	gui_text("Scene: %s", scene_manager.scene_name);
 	EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
 	if (player)
 	{
-		FontRendererRenderTextFormat(760.0f, 748.0f, "Name: %s", player->name);
+		gui_text("Name: %s", player->name);
 		vec2 position = EcsEntityGetPosition(player);
-		FontRendererRenderTextFormat(760.0f, 770.0f, "Position: %4.2f, %4.2f", position.x, position.y);
-		FontRendererRenderTextFormat(760.0f, 792.0f, "Precise Y: %f", position.y);
+		gui_text("Position: %4.2f, %4.2f", position.x, position.y);
+		gui_text("Precise Y: %f", position.y);
 	}
 
-	FontRendererFlush();
+	gui_end();
+
+	/* fps */
+	gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, 1, GUI_BG_NONE);
+
+	gui_text("FPS: %d", app->timer.fps);
+
+	gui_end();
+
+	/* Settings */
+	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, 6, GUI_BG_FILL);
+
+	gui_text("F1: Toggle edit mode");
+	gui_text("F5: Pause/Unpause");
+	gui_text("F6: Toggle Vsync");
+	gui_text("F7: Toggle debug mode");
+	gui_text("F8: Toggle Gui");
+	gui_text("DEL: Remove Trees");
+
+	gui_end();
+
+
+	gui_render(GetScreenMatPtr());
+
+	//float x = 100.0f;
+	//float y = 200.0f;
+	//FontRendererRenderText(x, y, "Test String");
+	//
+	//
+	//Primitives2DStart(GetScreenMatPtr());
+	//
+	//float y_offset = 0.0f;
+	//float w = ignisFontGetTextWidth(font, "Test String");
+	//float h = ignisFontGetTextHeight(font, "Test String", &y_offset);
+	//
+	//// Primitives2DRenderLine(x, y - y_offset, x, y - h, IGNIS_RED);
+	//// Primitives2DRenderLine(x, y - y_offset, x + w, y - y_offset, IGNIS_RED);
+	//
+	////Primitives2DRenderRect(x, y, w, -h, IGNIS_RED);
+	//Primitives2DRenderRect(x, y - y_offset, w, -(h - y_offset), IGNIS_RED);
+	//
+	//Primitives2DFlush();
 
 	/*
 	if (scene_manager.editmode)
@@ -162,6 +194,9 @@ int main()
 
 	font = ResourceManagerGetFont(&resources, "font");
 
+	gui_init();
+	gui_set_font(font, IGNIS_WHITE);
+
 	ApplicationEnableDebugMode(app, true);
 	ApplicationEnableVsync(app, false);
 	ApplicationShowGui(app, true);
@@ -178,6 +213,8 @@ int main()
 	ApplicationSetOnRenderGuiCallback(app, OnRenderGui);
 
 	ApplicationRun(app);
+
+	gui_free();
 
 	FontRendererDestroy();
 	Primitives2DDestroy();

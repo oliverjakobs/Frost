@@ -108,8 +108,6 @@
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\gui\gui.h" />
-    <ClInclude Include="src\gui\nuklear.h" />
-    <ClInclude Include="src\gui\nuklear_glfw_gl3.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />

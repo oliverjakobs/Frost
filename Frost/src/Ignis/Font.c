@@ -1,6 +1,6 @@
 #include "Font.h"
 
-// #define STB_TRUETYPE_IMPLEMENTATION
+#define STB_TRUETYPE_IMPLEMENTATION
 #include "Packages/stb_truetype.h"
 
 #include "Ignis.h"
@@ -102,4 +102,40 @@ int ignisLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* vertic
 	}
 
 	return 0;
+}
+
+float ignisFontGetTextWidth(IgnisFont* font, const char* text)
+{
+	float x = 0.0f;
+	float y = 0.0f;
+	for (size_t i = 0; i < strlen(text); i++)
+	{
+		if (text[i] >= font->first_char && text[i] < font->first_char + font->num_chars)
+		{
+			stbtt_aligned_quad q;
+			stbtt_GetBakedQuad(font->char_data, font->bitmap_width, font->bitmap_height, text[i] - font->first_char, &x, &y, &q, 1);
+		}
+	}
+	return x;
+}
+
+float ignisFontGetTextHeight(IgnisFont* font, const char* text, float* y_offset)
+{
+	float x = 0.0f;
+	float y = 0.0f;
+
+	float height = 0.0f;
+
+	for (size_t i = 0; i < strlen(text); i++)
+	{
+		if (text[i] >= font->first_char && text[i] < font->first_char + font->num_chars)
+		{
+			stbtt_aligned_quad q;
+			stbtt_GetBakedQuad(font->char_data, font->bitmap_width, font->bitmap_height, text[i] - font->first_char, &x, &y, &q, 1);
+
+			if (height < y - q.y0) height = y - q.y0;
+			if (y_offset && *y_offset > y - q.y1) *y_offset = y - q.y1;
+		}
+	}
+	return height;
 }
