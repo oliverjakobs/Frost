@@ -48,6 +48,8 @@ void FontRendererInit(const char* vert, const char* frag)
 
 void FontRendererDestroy()
 {
+	free(_render_data.vertices);
+
 	ignisDeleteShader(&_render_data.shader);
 
 	ignisDeleteVertexArray(&_render_data.vao);
@@ -60,64 +62,6 @@ void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color)
 
 	ignisUseShader(&_render_data.shader);
 	ignisSetUniform4fl(_render_data.uniform_location_color, &_render_data.color.r);
-}
-
-static void _FontRendererFlush(float* vertices)
-{
-	/* Update content of VBO memory */
-	ignisBufferSubData(&_render_data.vao.array_buffers[0], 0, FONTRENDERER_BUFFER_SIZE * sizeof(float), vertices);
-
-	/* Render quad */
-	glDrawElements(GL_TRIANGLES, FONTRENDERER_INDEX_COUNT, GL_UNSIGNED_INT, 0);
-}
-
-void FontRendererRenderText(float x, float y, const float* mat_proj, const char* text)
-{
-	if (!_render_data.font)
-	{
-		_ignisErrorCallback(IGNIS_WARN, "[FontRenderer] No font bound");
-		return;
-	}
-
-	ignisUseShader(&_render_data.shader);
-	ignisSetUniformMat4l(_render_data.uniform_location_proj, mat_proj);
-	ignisSetUniform4fl(_render_data.uniform_location_color, &_render_data.color.r);
-
-	ignisBindFont(_render_data.font);
-	ignisBindVertexArray(&_render_data.vao);
-
-	size_t offset = 0;
-
-	float vertices[FONTRENDERER_BUFFER_SIZE];
-	for (size_t i = 0; i < strlen(text); i++)
-	{
-		if (offset + FONTRENDERER_BUFFER_SIZE >= FONTRENDERER_BUFFER_SIZE)
-		{
-			_FontRendererFlush(vertices);
-			offset = 0;
-		}
-
-		if (!ignisLoadCharQuad(_render_data.font, text[i], &x, &y, vertices, offset))
-			_ignisErrorCallback(IGNIS_WARN, "[FontRenderer] Failed to load quad for %c", text[i]);
-
-		offset += FONTRENDERER_VERTICES_PER_QUAD * FONTRENDERER_VERTEX_SIZE;
-	}
-
-	_FontRendererFlush(vertices);
-}
-
-void FontRendererRenderTextFormat(float x, float y, const float* mat_proj, const char* fmt, ...)
-{
-	va_list args;
-	va_start(args, fmt);
-	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = (char*)malloc(buffer_size + 1);
-	vsnprintf(buffer, buffer_size + 1, fmt, args);
-	va_end(args);
-
-	FontRendererRenderText(x, y, mat_proj, buffer);
-
-	free(buffer);
 }
 
 void FontRendererStart(const float* mat_proj)
@@ -143,7 +87,7 @@ void FontRendererFlush()
 	_render_data.quad_count = 0;
 }
 
-void FontRendererRenderTextQ(float x, float y, const char* text)
+void FontRendererRenderText(float x, float y, const char* text)
 {
 	if (!_render_data.font)
 	{
@@ -153,10 +97,9 @@ void FontRendererRenderTextQ(float x, float y, const char* text)
 
 	for (size_t i = 0; i < strlen(text); i++)
 	{
-		if(_render_data.quad_count >= FONTRENDERER_MAX_QUADS)
-		{
+		if (_render_data.vertex_index + FONTRENDERER_VERTICES_PER_QUAD * FONTRENDERER_VERTEX_SIZE >= FONTRENDERER_BUFFER_SIZE)
 			FontRendererFlush();
-		}
+
 		if (!ignisLoadCharQuad(_render_data.font, text[i], &x, &y, _render_data.vertices, _render_data.vertex_index))
 			_ignisErrorCallback(IGNIS_WARN, "[FontRenderer] Failed to load quad for %c", text[i]);
 
@@ -165,7 +108,7 @@ void FontRendererRenderTextQ(float x, float y, const char* text)
 	}
 }
 
-void FontRendererRenderTextQFormat(float x, float y, const char* fmt, ...)
+void FontRendererRenderTextFormat(float x, float y, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
@@ -174,7 +117,7 @@ void FontRendererRenderTextQFormat(float x, float y, const char* fmt, ...)
 	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 
-	FontRendererRenderTextQ(x, y, buffer);
+	FontRendererRenderText(x, y, buffer);
 
 	free(buffer);
 }

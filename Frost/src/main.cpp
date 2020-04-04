@@ -83,26 +83,26 @@ void OnRenderGui(Application* app)
 {
 	FontRendererStart(GetScreenMatPtr());
 
-	FontRendererRenderTextQFormat(0.0f, 32.0f, "FPS: %d", app->timer.fps);
+	FontRendererRenderTextFormat(0.0f, 32.0f, "FPS: %d", app->timer.fps);
 
 	/* Settings */
-	FontRendererRenderTextQ(760.0f, 32.0f, "F1: Toggle edit mode");
-	FontRendererRenderTextQ(760.0f, 64.0f, "F5: Pause/Unpause");
-	FontRendererRenderTextQ(760.0f, 96.0f, "F6: Toggle Vsync");
-	FontRendererRenderTextQ(760.0f, 128.0f, "F7: Toggle debug mode");
-	FontRendererRenderTextQ(760.0f, 160.0f, "F8: Toggle ImGui");
-	// ImGui::Text("DEL: Remove Trees");
+	FontRendererRenderText(760.0f, 32.0f, "F1: Toggle edit mode");
+	FontRendererRenderText(760.0f, 64.0f, "F5: Pause/Unpause");
+	FontRendererRenderText(760.0f, 96.0f, "F6: Toggle Vsync");
+	FontRendererRenderText(760.0f, 128.0f, "F7: Toggle debug mode");
+	FontRendererRenderText(760.0f, 160.0f, "F8: Toggle Gui");
+	FontRendererRenderText(760.0f, 180.0f, "DEL: Remove Trees");
 
 	/* Debug */
-	FontRendererRenderTextQFormat(760.0f, 726.0f, "Scene: %s", scene_manager.scene_name);
+	FontRendererRenderTextFormat(760.0f, 726.0f, "Scene: %s", scene_manager.scene_name);
 	
 	EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
 	if (player)
 	{
-		FontRendererRenderTextQFormat(760.0f, 748.0f, "Name: %s", player->name);
+		FontRendererRenderTextFormat(760.0f, 748.0f, "Name: %s", player->name);
 		vec2 position = EcsEntityGetPosition(player);
-		FontRendererRenderTextQFormat(760.0f, 770.0f, "Position: %4.2f, %4.2f", position.x, position.y);
-		FontRendererRenderTextQFormat(760.0f, 792.0f, "Precise Y: %f", position.y);
+		FontRendererRenderTextFormat(760.0f, 770.0f, "Position: %4.2f, %4.2f", position.x, position.y);
+		FontRendererRenderTextFormat(760.0f, 792.0f, "Precise Y: %f", position.y);
 	}
 
 	FontRendererFlush();
