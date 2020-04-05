@@ -117,27 +117,7 @@ void OnRenderGui(Application* app)
 
 	gui_end();
 
-
 	gui_render(GetScreenMatPtr());
-
-	//float x = 100.0f;
-	//float y = 200.0f;
-	//FontRendererRenderText(x, y, "Test String");
-	//
-	//
-	//Primitives2DStart(GetScreenMatPtr());
-	//
-	//float y_offset = 0.0f;
-	//float w = ignisFontGetTextWidth(font, "Test String");
-	//float h = ignisFontGetTextHeight(font, "Test String", &y_offset);
-	//
-	//// Primitives2DRenderLine(x, y - y_offset, x, y - h, IGNIS_RED);
-	//// Primitives2DRenderLine(x, y - y_offset, x + w, y - y_offset, IGNIS_RED);
-	//
-	////Primitives2DRenderRect(x, y, w, -h, IGNIS_RED);
-	//Primitives2DRenderRect(x, y - y_offset, w, -(h - y_offset), IGNIS_RED);
-	//
-	//Primitives2DFlush();
 
 	/*
 	if (scene_manager.editmode)
@@ -167,13 +147,8 @@ void OnRenderGui(Application* app)
 	SceneManagerOnRenderGui(&scene_manager);
 }
 
-
-#define RUN_GAME 1
-
 int main()
 {
-#if RUN_GAME
-
 	Application* app = (Application*)malloc(sizeof(Application));
 	ApplicationLoad(app, "Frost", 1024, 800, 4, 4);
 
@@ -195,7 +170,7 @@ int main()
 	font = ResourceManagerGetFont(&resources, "font");
 
 	gui_init();
-	gui_set_font(font, IGNIS_WHITE);
+	gui_set_font(ResourceManagerGetFont(&resources, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, true);
 	ApplicationEnableVsync(app, false);
@@ -226,10 +201,6 @@ int main()
 	ApplicationDestroy(app);
 
 	free(app);
-#else
-
-	system("Pause");
-#endif
 
 	return 0;
 }

@@ -4,11 +4,11 @@
 
 typedef struct
 {
+    char* text;
     float x;
     float y;
     float w;
     float h;
-    char* text;
 } gui_row;
 
 typedef struct
@@ -31,15 +31,23 @@ typedef struct
 
 typedef struct
 {
+    IgnisFont* font;
+    IgnisColorRGBA font_color;
+    IgnisColorRGBA bg_color;
+    IgnisColorRGBA border_color;
+
+    float border_width;
+} gui_theme;
+
+typedef struct
+{
     gui_window windows[3];
     size_t window_index;
+
+    gui_theme theme;
 } gui_context;
 
-static IgnisFont* _font;
-
 static gui_context _context;
-
-static IgnisColorRGBA _dark_grey = { 0.2f, 0.2f, 0.2f, 1.0f };
 
 static void _gui_window_reset(gui_window* window)
 {
@@ -65,9 +73,21 @@ static void _gui_window_reset(gui_window* window)
     window->row_y = 0.0f;
 }
 
+static void _gui_load_theme(gui_theme* theme)
+{
+    theme->font = NULL;
+    theme->font_color = IGNIS_WHITE;
+    theme->bg_color = (IgnisColorRGBA){ 0.2f, 0.2f, 0.2f, 1.0f };
+    theme->border_color = IGNIS_BLACK;
+
+    theme->border_width = 2.0f;
+}
+
 void gui_init()
 {
     _context.window_index = 0;
+
+    _gui_load_theme(&_context.theme);
 }
 
 void gui_free()
@@ -77,7 +97,8 @@ void gui_free()
 
 void gui_set_font(IgnisFont* font, IgnisColorRGBA color)
 {
-    _font = font;
+    _context.theme.font = font;
+    _context.theme.font_color = color;
 }
 
 void gui_start()
@@ -85,36 +106,30 @@ void gui_start()
     _gui_window_reset(&_context.windows[_context.window_index]);
 }
 
-static void _gui_render_window(gui_window* window, const float* proj_mat)
-{
-    
-
-    FontRendererStart(proj_mat);
-
-    for (size_t row = 0; row < window->row_index; row++)
-    {
-        FontRendererRenderText(window->x + window->rows[row].x, window->y + window->rows[row].y + window->rows[row].h, window->rows[row].text);
-    }
-
-    FontRendererFlush();
-
-}
-
 void gui_render(const float* proj_mat)
 {
+    float w = 1.0f;
+    glGetFloatv(GL_LINE_WIDTH, &w);
+
+    glLineWidth(_context.theme.border_width);
+
     for (size_t i = 0; i < _context.window_index; i++)
     {
         Primitives2DStart(proj_mat);
 
-        switch (_context.windows[i].background)
+        gui_window* window = &_context.windows[i];
+
+        if (window->background != GUI_BG_NONE)
         {
-        case GUI_BG_FILL: Primitives2DFillRect(_context.windows[i].x, _context.windows[i].y, _context.windows[i].w, _context.windows[i].h, _dark_grey); break;
-        case GUI_BG_BORDER: Primitives2DRenderRect(_context.windows[i].x, _context.windows[i].y, _context.windows[i].w, _context.windows[i].h, _dark_grey); break;
+            Primitives2DFillRect(window->x, window->y, window->w, window->h, _context.theme.bg_color);
+            Primitives2DRenderRect(window->x, window->y, window->w, window->h, _context.theme.border_color);
         }
 
         Primitives2DFlush();
     }
+    glLineWidth(w);
 
+    FontRendererBindFont(_context.theme.font, IGNIS_WHITE);
     for (size_t i = 0; i < _context.window_index; i++)
     {
         FontRendererStart(proj_mat);
@@ -200,8 +215,8 @@ void gui_text(const char* fmt, ...)
     _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].x = _context.windows[_context.window_index].padding;
     _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].y = _context.windows[_context.window_index].row_y;
 
-    float row_width = ignisFontGetTextWidth(_font, text);
-    float row_height = ignisFontGetTextHeight(_font, text, NULL);
+    float row_width = ignisFontGetTextWidth(_context.theme.font, text);
+    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
 
     _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].w = row_width;
     _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].h = row_height;

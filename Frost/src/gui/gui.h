@@ -28,7 +28,6 @@ typedef enum
 {
 	GUI_BG_NONE,
 	GUI_BG_FILL,
-	GUI_BG_BORDER,
 } gui_background;
 
 void gui_init();
