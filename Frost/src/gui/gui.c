@@ -1,6 +1,7 @@
 #include "gui.h"
 
 #include "clib/clib.h"
+#include "clib/vector.h"
 
 typedef struct
 {
@@ -20,12 +21,13 @@ typedef struct
 
     gui_valign v_align;
     gui_halign h_align;
-    gui_background background;
+    gui_bg_style bg_style;
 
     float padding;
 
     gui_row* rows;
     size_t row_index;
+    size_t row_capacity;
     float row_y;
 } gui_window;
 
@@ -39,15 +41,20 @@ typedef struct
     float border_width;
 } gui_theme;
 
+CLIB_VECTOR_DEFINE_FUNCS(gui_window, gui_window)
+
 typedef struct
 {
-    gui_window windows[3];
-    size_t window_index;
+    clib_vector windows;
+
+    float width;
+    float height;
 
     gui_theme theme;
 } gui_context;
 
 static gui_context _context;
+static gui_window* _current;
 
 static void _gui_window_reset(gui_window* window)
 {
@@ -58,7 +65,7 @@ static void _gui_window_reset(gui_window* window)
 
     window->v_align = GUI_VALIGN_NONE;
     window->h_align = GUI_HALIGN_NONE;
-    window->background = GUI_BG_NONE;
+    window->bg_style = GUI_BG_NONE;
 
     window->padding = 0.0f;
 
@@ -83,16 +90,20 @@ static void _gui_load_theme(gui_theme* theme)
     theme->border_width = 2.0f;
 }
 
-void gui_init()
+void gui_init(float width, float height)
 {
-    _context.window_index = 0;
+    clib_vector_init(&_context.windows, 4);
 
     _gui_load_theme(&_context.theme);
+    _context.width = width;
+    _context.height = height;
+
+    _current = NULL;
 }
 
 void gui_free()
 {
-
+    clib_vector_free(&_context.windows);
 }
 
 void gui_set_font(IgnisFont* font, IgnisColorRGBA color)
@@ -103,7 +114,7 @@ void gui_set_font(IgnisFont* font, IgnisColorRGBA color)
 
 void gui_start()
 {
-    _gui_window_reset(&_context.windows[_context.window_index]);
+    // _gui_window_reset(&_context.windows[_context.window_index]);
 }
 
 void gui_render(const float* proj_mat)
@@ -113,96 +124,140 @@ void gui_render(const float* proj_mat)
 
     glLineWidth(_context.theme.border_width);
 
-    for (size_t i = 0; i < _context.window_index; i++)
+    Primitives2DStart(proj_mat);
+    for (size_t i = 0; i < _context.windows.size; i++)
     {
-        Primitives2DStart(proj_mat);
+        gui_window* window = gui_window_vector_get(&_context.windows, i);
 
-        gui_window* window = &_context.windows[i];
-
-        if (window->background != GUI_BG_NONE)
+        if (window->bg_style != GUI_BG_NONE)
         {
             Primitives2DFillRect(window->x, window->y, window->w, window->h, _context.theme.bg_color);
             Primitives2DRenderRect(window->x, window->y, window->w, window->h, _context.theme.border_color);
         }
-
-        Primitives2DFlush();
     }
+    Primitives2DFlush();
     glLineWidth(w);
 
-    FontRendererBindFont(_context.theme.font, IGNIS_WHITE);
-    for (size_t i = 0; i < _context.window_index; i++)
+    FontRendererBindFont(_context.theme.font, _context.theme.font_color);
+    FontRendererStart(proj_mat);
+    for (size_t i = 0; i < _context.windows.size; i++)
     {
-        FontRendererStart(proj_mat);
+        gui_window* window = gui_window_vector_get(&_context.windows, i);
 
-        for (size_t row = 0; row < _context.windows[i].row_index; row++)
+        for (size_t row = 0; row < window->row_index; row++)
         {
-            FontRendererRenderText(_context.windows[i].x + _context.windows[i].rows[row].x, _context.windows[i].y + _context.windows[i].rows[row].y + _context.windows[i].rows[row].h, _context.windows[i].rows[row].text);
+            FontRendererRenderText(window->x + window->rows[row].x, window->y + window->rows[row].y + window->rows[row].h, window->rows[row].text);
         }
 
-        FontRendererFlush();
+        /* Free window */
+        for (size_t i = 0; i < window->row_index; i++)
+            free(window->rows[i].text);
+        free(window->rows);
 
-        _gui_window_reset(&_context.windows[i]);
+        gui_window_vector_delete(&_context.windows, i);
+        free(window);
+    }
+    FontRendererFlush();
+}
+
+gui_window* _gui_window_create(size_t rows)
+{
+    gui_window* window = (gui_window*)malloc(sizeof(gui_window));
+
+    if (window)
+    {
+        window->x = 0.0f;
+        window->y = 0.0f;
+        window->w = 0.0f;
+        window->h = 0.0f;
+
+        window->v_align = GUI_VALIGN_NONE;
+        window->h_align = GUI_HALIGN_NONE;
+        window->bg_style = GUI_BG_NONE;
+
+        window->padding = 0.0f;
+
+        window->rows = (gui_row*)malloc(sizeof(gui_row) * rows);
+        window->row_capacity = rows;
+        window->row_index = 0;
+        window->row_y = 0.0f;
     }
 
-    _context.window_index = 0;
+    return window;
 }
 
-void gui_begin(float x, float y, float padding, int rows, gui_background bg)
+void gui_begin(float x, float y, float padding, int rows, gui_bg_style bg_style)
 {
-    _context.windows[_context.window_index].x = x;
-    _context.windows[_context.window_index].y = y;
-    _context.windows[_context.window_index].w = padding;
-    _context.windows[_context.window_index].h = padding;
+    if (_current) return;
 
-    _context.windows[_context.window_index].background = bg;
+    _current = _gui_window_create(rows);
 
-    _context.windows[_context.window_index].row_y = padding;
+    _current->x = x;
+    _current->y = y;
+    _current->w = padding;
+    _current->h = padding;
 
-    _context.windows[_context.window_index].padding = padding;
+    _current->bg_style = bg_style;
 
-    _context.windows[_context.window_index].rows = (gui_row*)malloc(sizeof(gui_row) * rows);
+    _current->row_y = padding;
+    _current->padding = padding;
 }
 
-void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, int rows, gui_background bg)
+void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, int rows, gui_bg_style bg_style)
 {
-    _context.windows[_context.window_index].h_align = h_align;
-    _context.windows[_context.window_index].v_align = v_align;
-    _context.windows[_context.window_index].w = padding;
-    _context.windows[_context.window_index].h = padding;
+    if (_current) return;
 
-    _context.windows[_context.window_index].background = bg;
+    _current = _gui_window_create(rows);
 
-    _context.windows[_context.window_index].row_y = padding;
+    _current->h_align = h_align;
+    _current->v_align = v_align;
+    _current->w = padding;
+    _current->h = padding;
 
-    _context.windows[_context.window_index].padding = padding;
+    _current->bg_style = bg_style;
 
-    _context.windows[_context.window_index].rows = (gui_row*)malloc(sizeof(gui_row) * rows);
+    _current->row_y = padding;
+    _current->padding = padding;
 }
-
-static float SCREEN_WIDTH = 1024.0f;
-static float SCREEN_HEIGHT = 800.0f;
 
 void gui_end()
 {
-    switch (_context.windows[_context.window_index].v_align)
+    if (!_current) return;
+
+    switch (_current->v_align)
     {
-    case GUI_VALIGN_TOP:    _context.windows[_context.window_index].y = 0.0f; break;
-    case GUI_VALIGN_CENTER: _context.windows[_context.window_index].y = (SCREEN_HEIGHT - _context.windows[_context.window_index].h) / 2.0f; break;
-    case GUI_VALIGN_BOTTOM: _context.windows[_context.window_index].y = SCREEN_HEIGHT - _context.windows[_context.window_index].h; break;
+    case GUI_VALIGN_TOP:    _current->y = 0.0f; break;
+    case GUI_VALIGN_CENTER: _current->y = (_context.height - _current->h) / 2.0f; break;
+    case GUI_VALIGN_BOTTOM: _current->y = _context.height - _current->h; break;
     }
 
-    switch (_context.windows[_context.window_index].h_align)
+    switch (_current->h_align)
     {
-    case GUI_HALIGN_LEFT:   _context.windows[_context.window_index].x = 0.0f; break;
-    case GUI_HALIGN_CENTER: _context.windows[_context.window_index].x = (SCREEN_WIDTH - _context.windows[_context.window_index].w) / 2.0f; break;
-    case GUI_HALIGN_RIGHT:  _context.windows[_context.window_index].x = SCREEN_WIDTH - _context.windows[_context.window_index].w; break;
+    case GUI_HALIGN_LEFT:   _current->x = 0.0f; break;
+    case GUI_HALIGN_CENTER: _current->x = (_context.width - _current->w) / 2.0f; break;
+    case GUI_HALIGN_RIGHT:  _current->x = _context.width - _current->w; break;
     }
 
-    _context.window_index++;
+    gui_window_vector_push(&_context.windows, _current);
+    _current = NULL;
+}
+
+gui_row* gui_row_init(float x, float y, float w, float h)
+{
+    gui_row* row = &_current->rows[_current->row_index];
+
+    row->x = x;
+    row->y = y;
+    row->w = w;
+    row->h = h;
+
+    return row;
 }
 
 void gui_text(const char* fmt, ...)
 {
+    if (!_current) return;
+
     va_list args;
     va_start(args, fmt);
     size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
@@ -210,21 +265,17 @@ void gui_text(const char* fmt, ...)
     vsnprintf(text, buffer_size + 1, fmt, args);
     va_end(args);
 
-    _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].text = text;
-
-    _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].x = _context.windows[_context.window_index].padding;
-    _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].y = _context.windows[_context.window_index].row_y;
-
     float row_width = ignisFontGetTextWidth(_context.theme.font, text);
     float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
 
-    _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].w = row_width;
-    _context.windows[_context.window_index].rows[_context.windows[_context.window_index].row_index].h = row_height;
+    gui_row* row = gui_row_init(_current->padding, _current->row_y, row_width, row_height);
 
-    _context.windows[_context.window_index].w = MAX(_context.windows[_context.window_index].w, row_width + (2.0f * _context.windows[_context.window_index].padding));
-    _context.windows[_context.window_index].h += row_height + _context.windows[_context.window_index].padding;
+    row->text = text;
 
-    _context.windows[_context.window_index].row_y += row_height + _context.windows[_context.window_index].padding;
-    _context.windows[_context.window_index].row_index++;
+    _current->w = MAX(_current->w, row_width + (2.0f * _current->padding));
+    _current->h += row_height + _current->padding;
+
+    _current->row_y += row_height + _current->padding;
+    _current->row_index++;
 }
 

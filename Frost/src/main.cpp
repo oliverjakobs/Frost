@@ -169,7 +169,7 @@ int main()
 
 	font = ResourceManagerGetFont(&resources, "font");
 
-	gui_init();
+	gui_init(app->width, app->height);
 	gui_set_font(ResourceManagerGetFont(&resources, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, true);
