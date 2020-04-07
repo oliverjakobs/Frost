@@ -7,6 +7,9 @@ extern "C"
 
 #include "Graphics/Renderer.h"
 
+#define GUI_INITIAL_WINDOWS		4
+#define GUI_INITIAL_ROWS		8
+
 typedef enum
 {
 	GUI_HALIGN_NONE,
@@ -37,8 +40,8 @@ void gui_set_font(IgnisFont* font, IgnisColorRGBA color);
 void gui_start();
 void gui_render(const float* proj_mat);
 
-void gui_begin(float x, float y, float padding, int rows, gui_bg_style bg_style);
-void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, int rows, gui_bg_style bg_style);
+void gui_begin(float x, float y, float padding, gui_bg_style bg_style);
+void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style);
 void gui_end();
 
 void gui_text(const char* text, ...);

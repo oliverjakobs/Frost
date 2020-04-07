@@ -84,7 +84,7 @@ void OnRenderDebug(Application* app)
 void OnRenderGui(Application* app)
 {
 	/* Debug */
-	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, 4, GUI_BG_FILL);
+	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, GUI_BG_FILL);
 
 	gui_text("Scene: %s", scene_manager.scene_name);
 	EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
@@ -99,14 +99,14 @@ void OnRenderGui(Application* app)
 	gui_end();
 
 	/* fps */
-	gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, 1, GUI_BG_NONE);
+	gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, GUI_BG_NONE);
 
 	gui_text("FPS: %d", app->timer.fps);
 
 	gui_end();
 
 	/* Settings */
-	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, 6, GUI_BG_FILL);
+	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, GUI_BG_FILL);
 
 	gui_text("F1: Toggle edit mode");
 	gui_text("F5: Pause/Unpause");

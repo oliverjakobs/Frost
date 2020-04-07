@@ -108,6 +108,7 @@
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\gui\gui.h" />
+    <ClInclude Include="src\gui\row.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\gui\gui.c" />
+    <ClCompile Include="src\gui\row.c" />
     <ClCompile Include="src\Scene.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />

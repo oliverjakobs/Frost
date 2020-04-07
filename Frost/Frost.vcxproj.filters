@@ -42,6 +42,7 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\gui\gui.c" />
+    <ClCompile Include="src\gui\row.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ignis\Ignis.h" />
@@ -93,6 +94,7 @@
     <ClInclude Include="src\Application\Debugger.h" />
     <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\gui\gui.h" />
+    <ClInclude Include="src\gui\row.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
