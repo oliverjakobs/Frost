@@ -1,50 +1,7 @@
 #include "gui.h"
 
-#include "clib/clib.h"
-#include "clib/vector.h"
-
-#include "row.h"
-
 CLIB_VECTOR_DEFINE_FUNCS(gui_row, gui_row)
-
-typedef struct
-{
-    float x;
-    float y;
-    float w;
-    float h;
-
-    gui_valign v_align;
-    gui_halign h_align;
-    gui_bg_style bg_style;
-
-    float padding;
-
-    clib_vector rows;
-    float row_y;
-} gui_window;
-
-typedef struct
-{
-    IgnisFont* font;
-    IgnisColorRGBA font_color;
-    IgnisColorRGBA bg_color;
-    IgnisColorRGBA border_color;
-
-    float border_width;
-} gui_theme;
-
 CLIB_VECTOR_DEFINE_FUNCS(gui_window, gui_window)
-
-typedef struct
-{
-    clib_vector windows;
-
-    float width;
-    float height;
-
-    gui_theme theme;
-} gui_context;
 
 static gui_context _context;
 static gui_window* _current;
@@ -57,6 +14,8 @@ static void _gui_load_theme(gui_theme* theme)
     theme->border_color = IGNIS_BLACK;
 
     theme->border_width = 2.0f;
+    theme->separator_line_width = 2.0f;
+    theme->separator_height = 8.0f;
 }
 
 void gui_init(float width, float height)
@@ -103,12 +62,18 @@ void gui_render(const float* proj_mat)
             Primitives2DFillRect(window->x, window->y, window->w, window->h, _context.theme.bg_color);
             Primitives2DRenderRect(window->x, window->y, window->w, window->h, _context.theme.border_color);
         }
+
+        for (size_t row_i = 0; row_i < window->rows.size; row_i++)
+        {
+            gui_row* row = gui_row_vector_get(&window->rows, row_i);
+            gui_row_render(window, row, window->x, window->y, _context.theme);
+        }
     }
     Primitives2DFlush();
     glLineWidth(w);
 
-    FontRendererBindFont(_context.theme.font, _context.theme.font_color);
     FontRendererStart(proj_mat);
+    FontRendererBindFont(_context.theme.font, _context.theme.font_color);
     for (size_t i = 0; i < _context.windows.size; i++)
     {
         gui_window* window = gui_window_vector_get(&_context.windows, i);
@@ -116,7 +81,7 @@ void gui_render(const float* proj_mat)
         for (size_t row_i = 0; row_i < window->rows.size; row_i++)
         {
             gui_row* row = gui_row_vector_get(&window->rows, row_i);
-            FontRendererRenderText(window->x + row->x, window->y + row->y + row->h, row->text);
+            gui_row_render_font(window, row, window->x, window->y, _context.theme);
             gui_row_free(row);
         }
 
@@ -127,14 +92,9 @@ void gui_render(const float* proj_mat)
     FontRendererFlush();
 }
 
-gui_window* _gui_window_create(float x, float y, gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style)
+int gui_begin(float x, float y, float padding, gui_bg_style bg_style)
 {
-    
-}
-
-void gui_begin(float x, float y, float padding, gui_bg_style bg_style)
-{
-    if (_current) return;
+    if (_current) return 0;
 
     gui_window* window = (gui_window*)malloc(sizeof(gui_window));
 
@@ -155,20 +115,24 @@ void gui_begin(float x, float y, float padding, gui_bg_style bg_style)
         window->row_y = padding;
 
         _current = window;
+
+        return 1;
     }
+
+    return 0;
 }
 
-void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style)
+int gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style)
 {
-    if (_current) return;
-
-    gui_begin(0.0f, 0.0f, padding, bg_style);
-
-    if (_current)
+    if (gui_begin(0.0f, 0.0f, padding, bg_style))
     {
         _current->h_align = h_align;
         _current->v_align = v_align;
+
+        return 1;
     }
+
+    return 0;
 }
 
 void gui_end()
@@ -218,6 +182,13 @@ void gui_text(const char* fmt, ...)
     float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
 
     gui_row* row = gui_row_create_text(text, _current->padding, _current->row_y, row_width, row_height);
+
+    _gui_add_row(row);
+}
+
+void gui_separator()
+{
+    gui_row* row = gui_row_create_separator(_current->padding, _current->row_y, _current->w, _context.theme.separator_height);
 
     _gui_add_row(row);
 }

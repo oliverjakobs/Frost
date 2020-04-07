@@ -84,37 +84,38 @@ void OnRenderDebug(Application* app)
 void OnRenderGui(Application* app)
 {
 	/* Debug */
-	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, GUI_BG_FILL);
-
-	gui_text("Scene: %s", scene_manager.scene_name);
-	EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
-	if (player)
+	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, GUI_BG_FILL))
 	{
-		gui_text("Name: %s", player->name);
-		vec2 position = EcsEntityGetPosition(player);
-		gui_text("Position: %4.2f, %4.2f", position.x, position.y);
-		gui_text("Precise Y: %f", position.y);
+		gui_text("Scene: %s", scene_manager.scene_name);
+		gui_separator();
+		EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
+		if (player)
+		{
+			gui_text("Name: %s", player->name);
+			vec2 position = EcsEntityGetPosition(player);
+			gui_text("Position: %4.2f, %4.2f", position.x, position.y);
+			gui_text("Precise Y: %f", position.y);
+		}
 	}
-
 	gui_end();
 
 	/* fps */
-	gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, GUI_BG_NONE);
-
-	gui_text("FPS: %d", app->timer.fps);
-
+	if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, GUI_BG_NONE))
+	{
+		gui_text("FPS: %d", app->timer.fps);
+	}
 	gui_end();
 
 	/* Settings */
-	gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, GUI_BG_FILL);
-
-	gui_text("F1: Toggle edit mode");
-	gui_text("F5: Pause/Unpause");
-	gui_text("F6: Toggle Vsync");
-	gui_text("F7: Toggle debug mode");
-	gui_text("F8: Toggle Gui");
-	gui_text("DEL: Remove Trees");
-
+	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, GUI_BG_FILL))
+	{
+		gui_text("F1: Toggle edit mode");
+		gui_text("F5: Pause/Unpause");
+		gui_text("F6: Toggle Vsync");
+		gui_text("F7: Toggle debug mode");
+		gui_text("F8: Toggle Gui");
+		gui_text("DEL: Remove Trees");
+	}
 	gui_end();
 
 	gui_render(GetScreenMatPtr());

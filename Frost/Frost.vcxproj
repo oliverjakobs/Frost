@@ -107,6 +107,7 @@
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\gui\context.h" />
     <ClInclude Include="src\gui\gui.h" />
     <ClInclude Include="src\gui\row.h" />
     <ClInclude Include="src\Scene.h" />

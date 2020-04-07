@@ -1,36 +1,14 @@
-#pragma once
+#ifndef GUI_H
+#define GUI_H
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
+#include "row.h"
+
 #include "Graphics/Renderer.h"
-
-#define GUI_INITIAL_WINDOWS		4
-#define GUI_INITIAL_ROWS		8
-
-typedef enum
-{
-	GUI_HALIGN_NONE,
-	GUI_HALIGN_LEFT,
-	GUI_HALIGN_CENTER,
-	GUI_HALIGN_RIGHT
-} gui_halign;
-
-typedef enum
-{
-	GUI_VALIGN_NONE,
-	GUI_VALIGN_TOP,
-	GUI_VALIGN_CENTER,
-	GUI_VALIGN_BOTTOM
-} gui_valign;
-
-typedef enum
-{
-	GUI_BG_NONE,
-	GUI_BG_FILL,
-} gui_bg_style;
 
 void gui_init(float width, float height);
 void gui_free();
@@ -40,13 +18,16 @@ void gui_set_font(IgnisFont* font, IgnisColorRGBA color);
 void gui_start();
 void gui_render(const float* proj_mat);
 
-void gui_begin(float x, float y, float padding, gui_bg_style bg_style);
-void gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style);
+int gui_begin(float x, float y, float padding, gui_bg_style bg_style);
+int gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style);
 void gui_end();
 
 void gui_text(const char* text, ...);
+void gui_separator();
 
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* !GUI_H */

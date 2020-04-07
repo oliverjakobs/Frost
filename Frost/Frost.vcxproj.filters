@@ -95,6 +95,7 @@
     <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\gui\gui.h" />
     <ClInclude Include="src\gui\row.h" />
+    <ClInclude Include="src\gui\context.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
