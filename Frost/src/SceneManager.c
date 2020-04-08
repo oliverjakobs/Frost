@@ -3,31 +3,13 @@
 #include "json/tb_json.h"
 
 #include "Application/Application.h"
+#include "Application/Debugger.h"
 
 typedef struct
 {
-	char key[SCENE_MANAGER_NAMELEN];
-	char value[SCENE_MANAGER_PATHLEN];
+	char key[APPLICATION_STR_LEN];
+	char value[APPLICATION_PATH_LEN];
 } _scenekvp;
-
-_scenekvp* _scene_kvp(const char* key, const char* value)
-{
-	if (strlen(key) > SCENE_MANAGER_NAMELEN)
-		return NULL;
-
-	if (strlen(value) > SCENE_MANAGER_PATHLEN)
-		return NULL;
-
-	_scenekvp* kvp = (_scenekvp*)malloc(sizeof(_scenekvp));
-
-	if (kvp)
-	{
-		strcpy(kvp->key, key);
-		strcpy(kvp->value, value);
-	}
-
-	return kvp;
-}
 
 CLIB_HASHMAP_DEFINE_FUNCS(scene, char, _scenekvp)
 
@@ -49,7 +31,7 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	if (!manager->scene)
 		return 0;
 
-	memset(manager->scene_name, '\0', SCENE_MANAGER_NAMELEN);
+	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
 
 	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
@@ -71,7 +53,7 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 
 	if (!json)
 	{
-		printf("Register not found (%s)\n", json_path);
+		DEBUG_ERROR("[SceneManager] Failed to read register (%s)\n", json_path);
 		return;
 	}
 
@@ -80,13 +62,13 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 
 	for (int i = 0; i < scenes.elements; i++)
 	{
-		char name[SCENE_MANAGER_NAMELEN];
-		tb_json_string((char*)scenes.value, "{*", name, SCENE_MANAGER_NAMELEN, &i);
+		char name[APPLICATION_STR_LEN];
+		tb_json_string((char*)scenes.value, "{*", name, APPLICATION_STR_LEN, &i);
 
 		tb_json_element scene;
 		tb_json_read_format((char*)scenes.value, &scene, "{'%s'", name);
 
-		char path[SCENE_MANAGER_PATHLEN];
+		char path[APPLICATION_PATH_LEN];
 		strncpy(path, (char*)scene.value, scene.bytelen);
 
 		path[scene.bytelen] = '\0';
@@ -99,11 +81,30 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 
 void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path)
 {
-	_scenekvp* kvp = _scene_kvp(name, path);
-
-	if (kvp && scene_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
+	if (strlen(name) > APPLICATION_STR_LEN)
 	{
-		free(kvp);
+		DEBUG_ERROR("[SceneManager] Scene name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
+		return;
+	}
+
+	if (strlen(path) > APPLICATION_PATH_LEN)
+	{
+		DEBUG_ERROR("[SceneManager] Scene path (%s) too long. Max. name length is %d\n", path, APPLICATION_PATH_LEN);
+		return;
+	}
+
+	_scenekvp* kvp = (_scenekvp*)malloc(sizeof(_scenekvp));
+
+	if (kvp)
+	{
+		strcpy(kvp->key, name);
+		strcpy(kvp->value, path);
+
+		if (scene_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
+		{
+			DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
+			free(kvp);
+		}
 	}
 }
 
@@ -115,7 +116,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 		_scenekvp* kvp = scene_hashmap_get(&manager->scenes, name);
 		if (!kvp)
 		{
-			printf("Couldn't find scene: %s\n", name);
+			DEBUG_ERROR("Couldn't find scene: %s\n", name);
 			return;
 		}
 		
@@ -123,7 +124,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 		if (!json)
 		{
-			printf("Couldn't read scene template: %s\n", kvp->value);
+			DEBUG_ERROR("Couldn't read scene template: %s\n", kvp->value);
 			return;
 		}
 
@@ -161,8 +162,8 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
 
-			char name[SCENE_MANAGER_NAMELEN];
-			tb_json_string((char*)entity.value, "[0", name, SCENE_MANAGER_NAMELEN, NULL);
+			char name[APPLICATION_STR_LEN];
+			tb_json_string((char*)entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
 
 			float x = tb_json_float((char*)entity.value, "[1", NULL);
 			float y = tb_json_float((char*)entity.value, "[2", NULL);
@@ -176,7 +177,6 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 		}
 	}
 
-
 	tb_json_element templates;
 	tb_json_read(json, &templates, "{'templates'");
 
@@ -189,8 +189,8 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
 
-			char path[SCENE_MANAGER_PATHLEN];
-			tb_json_string((char*)entity.value, "[0", path, SCENE_MANAGER_PATHLEN, NULL);
+			char path[APPLICATION_PATH_LEN];
+			tb_json_string((char*)entity.value, "[0", path, APPLICATION_PATH_LEN, NULL);
 
 			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
 			float y = tb_json_float((char*)entity.value, "[1[1", NULL);

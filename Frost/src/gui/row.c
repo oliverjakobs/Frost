@@ -46,8 +46,6 @@ void gui_row_render(const gui_window* window, gui_row* row, float x, float y, gu
 {
     switch (row->type)
     {
-    case GUI_ROW_TEXT: break;
-    case GUI_ROW_BUTTON: break;
     case GUI_ROW_SEPARATOR: Primitives2DFillRect(x + row->x, y + row->y + (row->h * 0.5f), window->w - 2.0f * window->padding, theme.separator_line_width, theme.font_color); break;
     }
 }
@@ -57,6 +55,5 @@ void gui_row_render_font(const gui_window* window, gui_row* row, float x, float 
     switch (row->type)
     {
     case GUI_ROW_TEXT: FontRendererRenderText(x + row->x, y + row->y + row->h, row->text.text); break;
-    case GUI_ROW_BUTTON: break;
     }
 }

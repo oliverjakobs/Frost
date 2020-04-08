@@ -3,15 +3,18 @@
 #include "json/tb_json.h"
 #include "clib/clib.h"
 
+#include "Application/Debugger.h"
+#include "Application/defines.h"
+
 typedef struct
 {
-	char key[RESOURCE_MANAGER_KEYLEN];
+	char key[APPLICATION_STR_LEN];
 	IgnisTexture* value;
 } _texkvp;
 
 typedef struct
 {
-	char key[RESOURCE_MANAGER_KEYLEN];
+	char key[APPLICATION_STR_LEN];
 	IgnisFont* value;
 } _fontkvp;
 
@@ -19,90 +22,58 @@ typedef struct
 CLIB_HASHMAP_DEFINE_FUNCS(tex, char, _texkvp)
 CLIB_HASHMAP_DEFINE_FUNCS(font, char, _fontkvp)
 
-_texkvp* _tex_kvp(const char* key, IgnisTexture* value)
+int ResourceManagerInit(ResourceManager* resources, const char* path)
 {
-	if (strlen(key) > RESOURCE_MANAGER_KEYLEN)
-		return NULL;
+	clib_hashmap_init(&resources->textures, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
+	clib_hashmap_init(&resources->fonts, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
-	_texkvp* kvp = (_texkvp*)malloc(sizeof(_texkvp));
-
-	if (kvp)
-	{
-		strcpy(kvp->key, key);
-		kvp->value = value;
-	}
-
-	return kvp;
-}
-
-_fontkvp* _font_kvp(const char* key, IgnisFont* value)
-{
-	if (strlen(key) > RESOURCE_MANAGER_KEYLEN)
-		return NULL;
-
-	_fontkvp* kvp = (_fontkvp*)malloc(sizeof(_fontkvp));
-
-	if (kvp)
-	{
-		strcpy(kvp->key, key);
-		kvp->value = value;
-	}
-
-	return kvp;
-}
-
-int ResourceManagerInit(ResourceManager* manager, const char* json_path)
-{
-	clib_hashmap_init(&manager->textures, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
-	clib_hashmap_init(&manager->fonts, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
-
-	char* json = ignisReadFile(json_path, NULL);
+	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
 	{
-		printf("Index not found (%s)", json_path);
+		DEBUG_ERROR("[Resources] Failed to read index (%s)", path);
 		return 0;
 	}
 
-	// Textures
+	/* textures */
 	tb_json_element textures;
 	tb_json_read(json, &textures, "{'textures'");
 
 	for (int i = 0; i < textures.elements; i++)
 	{
-		char name[RESOURCE_MANAGER_KEYLEN];
-		tb_json_string((char*)textures.value, "{*", name, RESOURCE_MANAGER_KEYLEN, &i);
+		char texture_name[APPLICATION_STR_LEN];
+		tb_json_string((char*)textures.value, "{*", texture_name, APPLICATION_STR_LEN, &i);
 
 		tb_json_element texture;
-		tb_json_read_format((char*)textures.value, &texture, "{'%s'", name);
+		tb_json_read_format((char*)textures.value, &texture, "{'%s'", texture_name);
 
-		char path[RESOURCE_MANAGER_PATHLEN];
-		tb_json_string((char*)texture.value, "{'path'", path, RESOURCE_MANAGER_PATHLEN, NULL);
+		char texture_path[APPLICATION_PATH_LEN];
+		tb_json_string((char*)texture.value, "{'path'", texture_path, APPLICATION_PATH_LEN, NULL);
 
 		int rows = MAX(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
 		int columns = MAX(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
 
-		ResourceManagerAddTexture(manager, name, path, rows, columns);
+		ResourceManagerAddTexture(resources, texture_name, texture_path, rows, columns);
 	}
 
-	// Fonts
+	/* fonts */
 	tb_json_element fonts;
 	tb_json_read(json, &fonts, "{'fonts'");
 
 	for (int i = 0; i < fonts.elements; i++)
 	{
-		char name[RESOURCE_MANAGER_KEYLEN];
-		tb_json_string((char*)fonts.value, "{*", name, RESOURCE_MANAGER_KEYLEN, &i);
+		char font_name[APPLICATION_STR_LEN];
+		tb_json_string((char*)fonts.value, "{*", font_name, APPLICATION_STR_LEN, &i);
 
 		tb_json_element font;
-		tb_json_read_format((char*)fonts.value, &font, "{'%s'", name);
+		tb_json_read_format((char*)fonts.value, &font, "{'%s'", font_name);
 
-		char path[RESOURCE_MANAGER_PATHLEN];
-		tb_json_string((char*)font.value, "{'path'", path, RESOURCE_MANAGER_PATHLEN, NULL);
+		char font_path[APPLICATION_PATH_LEN];
+		tb_json_string((char*)font.value, "{'path'", font_path, APPLICATION_PATH_LEN, NULL);
 
-		float size = tb_json_float((char*)font.value, "{'size'", NULL);
+		float font_size = tb_json_float((char*)font.value, "{'size'", NULL);
 
-		ResourceManagerAddFont(manager, name, path, size);
+		ResourceManagerAddFont(resources, font_name, font_path, font_size);
 	}
 
 	free(json);
@@ -125,19 +96,62 @@ void ResourceManagerDestroy(ResourceManager* manager)
 
 IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* name, const char* path, int rows, int columns)
 {
+	if (strlen(name) > APPLICATION_STR_LEN)
+	{
+		DEBUG_ERROR("[Resources] Texture name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
+		return NULL;
+	}
+
 	IgnisTexture* texture = (IgnisTexture*)malloc(sizeof(IgnisTexture));
 
 	if (ignisCreateTexture(texture, path, rows, columns, 1, NULL))
 	{
-		_texkvp* kvp = _tex_kvp(name, texture);
+		_texkvp* kvp = (_texkvp*)malloc(sizeof(_texkvp));
 
-		if (kvp && tex_hashmap_put(&manager->textures, kvp->key, kvp) == kvp)
-			return texture;
+		if (kvp)
+		{
+			strcpy(kvp->key, name);
+			kvp->value = texture;
 
+			if (tex_hashmap_put(&manager->textures, kvp->key, kvp) == kvp)
+				return texture;
+		}
+
+		DEBUG_ERROR("[Resources] Failed to add texture: %s (%s)\n", name, path);
 		ignisDestroyTexture(texture);
 		free(kvp);
 	}
 	free(texture);
+	return NULL;
+}
+
+IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, const char* path, float size)
+{
+	if (strlen(name) > APPLICATION_STR_LEN)
+	{
+		DEBUG_ERROR("[Resources] Font name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
+		return NULL;
+	}
+
+	IgnisFont* font = (IgnisFont*)malloc(sizeof(IgnisFont));
+
+	if (ignisLoadFont(font, path, size))
+	{
+		_fontkvp* kvp = (_fontkvp*)malloc(sizeof(_fontkvp));
+
+		if (kvp)
+		{
+			strcpy(kvp->key, name);
+			kvp->value = font;
+
+			if (font_hashmap_put(&manager->fonts, kvp->key, kvp) == kvp)
+				return font;
+		}
+		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
+		ignisDeleteFont(font);
+		free(kvp);
+	}
+	free(font);
 	return NULL;
 }
 
@@ -147,24 +161,7 @@ IgnisTexture* ResourceManagerGetTexture(ResourceManager* manager, const char* na
 
 	if (kvp) return kvp->value;
 
-	return NULL;
-}
-
-IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, const char* path, float size)
-{
-	IgnisFont* font = (IgnisFont*)malloc(sizeof(IgnisFont));
-
-	if (ignisLoadFont(font, path, size))
-	{
-		_fontkvp* kvp = _font_kvp(name, font);
-
-		if (kvp && font_hashmap_put(&manager->fonts, kvp->key, kvp) == kvp)
-			return font;
-			
-		ignisDeleteFont(font);
-		free(kvp);
-	}
-	free(font);
+	DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 	return NULL;
 }
 
@@ -174,5 +171,6 @@ IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 
 	if (kvp) return kvp->value;
 
+	DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 	return NULL;
 }

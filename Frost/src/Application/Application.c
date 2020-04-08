@@ -4,6 +4,11 @@
 
 #include "ApplicationCallback.h"
 
+#include "json/tb_json.h"
+
+#include "Debugger.h"
+#include "defines.h"
+
 int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor)
 {
 	app->title = title;
@@ -17,15 +22,15 @@ int ApplicationLoad(Application* app, char* title, int width, int height, int gl
 
 	app->running = 0;
 
-	// GLFW initialization
+	/* GLFW initialization */
 	if (glfwInit() == GLFW_FALSE)
 	{
-		printf("[GLFW] Failed to initialize GLFW\n");
+		DEBUG_ERROR("[GLFW] Failed to initialize GLFW\n");
 		glfwTerminate();
 		return 0;
 	}
 
-	printf("[GLFW] Initialized GLFW %s\n", glfwGetVersionString());
+	DEBUG_INFO("[GLFW] Initialized GLFW %s\n", glfwGetVersionString());
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
@@ -35,11 +40,11 @@ int ApplicationLoad(Application* app, char* title, int width, int height, int gl
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
 
-	// creating the window
+	/* creating the window */
 	app->window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (app->window == NULL)
 	{
-		printf("[GLFW] Failed to create GLFW window\n");
+		DEBUG_ERROR("[GLFW] Failed to create GLFW window\n");
 		glfwTerminate();
 		return 0;
 	}
@@ -50,7 +55,7 @@ int ApplicationLoad(Application* app, char* title, int width, int height, int gl
 	EventHandlerInit();
 	EventHandlerSetEventCallback(ApplicationEventCallback);
 
-	// Set GLFW callbacks
+	/* Set GLFW callbacks */
 	glfwSetErrorCallback(ApplicationGLFWErrorCallback);
 	glfwSetWindowSizeCallback(app->window, ApplicationGLFWWindowSizeCallback);
 	glfwSetWindowCloseCallback(app->window, ApplicationGLFWWindowCloseCallback);
@@ -66,29 +71,65 @@ int ApplicationLoad(Application* app, char* title, int width, int height, int gl
 
 #ifdef _DEBUG
 	debug = 1;
-#endif // _DEBUG
+#endif /* !_DEBUG */
 
-	// ingis initialization
+	/* ingis initialization */
 	if (!ignisInit(debug))
 	{
-		printf("[IGNIS] Failed to initialize Ignis\n");
+		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis\n");
 		glfwTerminate();
 		return 0;
 	}
 
-	printf("[OpenGL] Version: %s\n", glGetString(GL_VERSION));
-	printf("[OpenGL] Vendor: %s\n", glGetString(GL_VENDOR));
-	printf("[OpenGL] Renderer: %s\n", glGetString(GL_RENDERER));
-	printf("[OpenGL] GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	DEBUG_INFO("[OpenGL] Version: %s\n", glGetString(GL_VERSION));
+	DEBUG_INFO("[OpenGL] Vendor: %s\n", glGetString(GL_VENDOR));
+	DEBUG_INFO("[OpenGL] Renderer: %s\n", glGetString(GL_RENDERER));
+	DEBUG_INFO("[OpenGL] GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	ApplicationSetViewport(app, 0.0f, 0.0f, (float)app->width, (float)app->height);
 	TimerReset(&app->timer);
 
 	app->running = 1;
 	return 1;
 }
 
+int ApplicationLoadConfig(Application* app, const char* path)
+{
+	char* json = ignisReadFile(path, NULL);
+
+	if (!json)
+	{
+		DEBUG_ERROR("Failed to read config (%s)\n", path);
+		return 0;
+	}
+
+	tb_json_element element;
+	tb_json_read(json, &element, "{'app'");
+
+	char title[APPLICATION_STR_LEN];
+	tb_json_string((char*)element.value, "{'title'", title, APPLICATION_STR_LEN, NULL);
+
+	int width = tb_json_int((char*)element.value, "{'width'", NULL);
+	int height = tb_json_int((char*)element.value, "{'height'", NULL);
+
+	int major = tb_json_int((char*)element.value, "{'opengl'[0", NULL);
+	int minor = tb_json_int((char*)element.value, "{'opengl'[1", NULL);
+
+	char index[APPLICATION_PATH_LEN];
+	tb_json_string(json, "{'resources'", index, APPLICATION_PATH_LEN, NULL);
+
+	free(json);
+
+	if (ApplicationLoad(app, title, width, height, major, minor))
+		return ResourceManagerInit(&app->resources, index);
+
+	return 0;
+}
+
 void ApplicationDestroy(Application* app)
 {
+	ResourceManagerDestroy(&app->resources);
+
 	EventHandlerDestroy();
 
 	glfwDestroyWindow(app->window);
@@ -97,7 +138,7 @@ void ApplicationDestroy(Application* app)
 
 void ApplicationRun(Application* app)
 {
-	// Game loop
+	/* game loop */
 	while (app->running)
 	{
 		TimerStart(&app->timer, glfwGetTime());
@@ -158,6 +199,17 @@ void ApplicationSetOnRenderDebugCallback(Application* app, void(*callback)(Appli
 void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Application*))
 {
 	app->on_render_gui = callback;
+}
+
+void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
+{
+	app->screen_projection = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
+	glViewport(x, y, w, h);
+}
+
+const float* ApplicationGetScreenProjPtr(Application* app)
+{
+	return &app->screen_projection.v[0];
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }

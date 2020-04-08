@@ -141,8 +141,6 @@ void SceneOnRenderDebug(Scene* scene)
 	{
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
 		{
-			// EntityOnRenderDebug(layer_vector_get(&scene->layers[layer], i));
-
 			vec2 pos = EcsEntityGetPosition(layer_vector_get(&scene->layers[layer], i));
 			Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 		}
@@ -156,14 +154,6 @@ void SceneOnRenderDebug(Scene* scene)
 		vec2 dim = vec2_mult(body->halfSize, 2.0f);
 		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == BODY_TYPE_DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
 	}
-
-	//Primitives2D::DrawCircle(m_camera->GetPosition(), 2.0f);
-	//
-	//// smooth movement area
-	//float smooth_w = (m_camera->GetSize().x / 2.0f) * m_smoothMovement;
-	//float smooth_h = (m_camera->GetSize().y / 2.0f) * m_smoothMovement;
-	//
-	//Primitives2D::DrawRect(m_camera->GetPosition().x - smooth_w, m_camera->GetPosition().y - smooth_h, smooth_w * 2.0f, smooth_h * 2.0f);
 
 	Primitives2DFlush();
 }

@@ -4,31 +4,14 @@
 
 #include "gui/gui.h"
 
-static mat4 SCREEN_MAT;
-
-void SetViewport(int x, int y, int w, int h)
-{
-	SCREEN_MAT = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
-
-	glViewport(x, y, w, h);
-}
-
-const float* GetScreenMatPtr()
-{
-	return &SCREEN_MAT.v[0];
-}
-
 SceneManager scene_manager;
-ResourceManager resources;
 Camera camera;
-
-IgnisFont* font;
 
 void OnEvent(Application* app, const Event e)
 {
 	if (e.type == EVENT_WINDOW_RESIZE)
 	{
-		SetViewport(0, 0, e.window.width, e.window.height);
+		ApplicationSetViewport(app, 0, 0, e.window.width, e.window.height);
 	}
 
 	if (e.type == EVENT_KEY_PRESSED)
@@ -64,7 +47,7 @@ void OnEvent(Application* app, const Event e)
 
 void OnUpdate(Application* app, float deltaTime)
 {
-	// discard frames that took to long
+	/* discard frames that took to long */
 	// if (deltaTime > 0.4f) return;
 
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
@@ -118,7 +101,7 @@ void OnRenderGui(Application* app)
 	}
 	gui_end();
 
-	gui_render(GetScreenMatPtr());
+	gui_render(ApplicationGetScreenProjPtr(app));
 
 	/*
 	if (scene_manager.editmode)
@@ -151,34 +134,29 @@ void OnRenderGui(Application* app)
 int main()
 {
 	Application* app = (Application*)malloc(sizeof(Application));
-	ApplicationLoad(app, "Frost", 1024, 800, 4, 4);
+	ApplicationLoadConfig(app, "config.json");
 
-	// ---------------| Config |------------------------------------------
+	/* ---------------| Config |------------------------------------------ */
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-
-	SCREEN_MAT = mat4_ortho(0.0f, (float)app->width, (float)app->height, 0.0f, -1.0f, 1.0f);
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
 	Primitives2DInit();
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	ResourceManagerInit(&resources, "res/index.json");
-	FontRendererBindFont(ResourceManagerGetFont(&resources, "font"), IGNIS_WHITE);
+	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "font"), IGNIS_WHITE);
 
-	font = ResourceManagerGetFont(&resources, "font");
-
-	gui_init(app->width, app->height);
-	gui_set_font(ResourceManagerGetFont(&resources, "gui"), IGNIS_WHITE);
+	gui_init((float)app->width, (float)app->height);
+	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, true);
 	ApplicationEnableVsync(app, false);
 	ApplicationShowGui(app, true);
 
 	CameraCreateOrtho(&camera, { app->width / 2.0f, app->height / 2.0f, 0.0f }, { (float)app->width, (float)app->height });
-	SceneManagerInit(&scene_manager, &resources, &camera, 32.0f, 4);
+	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");
 
@@ -196,8 +174,6 @@ int main()
 	Primitives2DDestroy();
 	BatchRenderer2DDestroy();
 	Renderer2DDestroy();
-
-	ResourceManagerDestroy(&resources);
 
 	ApplicationDestroy(app);
 

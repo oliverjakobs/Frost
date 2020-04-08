@@ -11,8 +11,9 @@ extern "C"
 #include "Input.h"
 #include "Timer.h"
 
-// Renderer
+/* Graphics */
 #include "Graphics/Renderer.h"
+#include "Graphics/ResourceManager.h"
 
 #include <GLFW/glfw3.h>
 
@@ -34,6 +35,9 @@ typedef struct Application
 	int show_gui;
 
 	Timer timer;
+	ResourceManager resources;
+
+	mat4 screen_projection;
 
 	void (*on_event)(struct Application*, const Event);
 	void (*on_update)(struct Application*, float);
@@ -43,9 +47,10 @@ typedef struct Application
 } Application;
 
 int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor);
+int ApplicationLoadConfig(Application* app, const char* path);
 void ApplicationDestroy(Application* app);
 
-// --------------------------| Game Loop |-------------------------------
+/* --------------------------| Game Loop |------------------------------- */
 void ApplicationRun(Application* app);
 void ApplicationPause(Application* app);
 void ApplicationClose(Application* app);
@@ -56,7 +61,10 @@ void ApplicationSetOnRenderCallback(Application* app, void (*callback)(Applicati
 void ApplicationSetOnRenderDebugCallback(Application* app, void (*callback)(Application*));
 void ApplicationSetOnRenderGuiCallback(Application* app, void (*callback)(Application*));
 
-// --------------------------| Settings |--------------------------------
+void ApplicationSetViewport(Application* app, int x, int y, int w, int h);
+const float* ApplicationGetScreenProjPtr(Application* app);
+
+/* --------------------------| Settings |-------------------------------- */
 void ApplicationEnableDebugMode(Application* app, int b);
 void ApplicationEnableVsync(Application* app, int b);
 void ApplicationShowGui(Application* app, int b);
@@ -72,4 +80,4 @@ void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...);
 }
 #endif
 
-#endif // !APPLICATION_H
+#endif /* !APPLICATION_H */

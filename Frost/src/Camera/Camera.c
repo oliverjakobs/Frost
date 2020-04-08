@@ -15,7 +15,7 @@ int CameraCreate(Camera* camera, const vec3 pos, const vec2 size)
 int CameraCreateOrtho(Camera* camera, const vec3 center, const vec2 size)
 {
 	int result = CameraCreate(camera, center, size);
-	CameraSetProjectionOrthoVec2(camera, size);
+	CameraSetProjectionOrtho(camera, size.x, size.y);
 
 	return result;
 }

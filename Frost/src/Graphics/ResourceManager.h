@@ -9,23 +9,20 @@ extern "C"
 #include "Ignis/Ignis.h"
 #include "clib/hashmap.h"
 
-#define RESOURCE_MANAGER_KEYLEN		32
-#define RESOURCE_MANAGER_PATHLEN	64
-
 typedef struct
 {
 	clib_hashmap textures;	/* <str,IgnisTexture> */
 	clib_hashmap fonts;		/* <str,IgnisFont> */
 } ResourceManager;
 
-int ResourceManagerInit(ResourceManager* manager, const char* path);
-void ResourceManagerDestroy(ResourceManager* manager);
+int ResourceManagerInit(ResourceManager* resources, const char* path);
+void ResourceManagerDestroy(ResourceManager* resources);
 
-IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* name, const char* path, int rows, int columns);
-IgnisTexture* ResourceManagerGetTexture(ResourceManager* manager, const char* name);
+IgnisTexture* ResourceManagerAddTexture(ResourceManager* resources, const char* name, const char* path, int rows, int columns);
+IgnisFont* ResourceManagerAddFont(ResourceManager* resources, const char* name, const char* path, float size);
 
-IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, const char* path, float size);
-IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name);
+IgnisTexture* ResourceManagerGetTexture(ResourceManager* resources, const char* name);
+IgnisFont* ResourceManagerGetFont(ResourceManager* resources, const char* name);
 
 #ifdef __cplusplus
 }

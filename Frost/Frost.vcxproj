@@ -58,7 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -74,7 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>src;packages\glm;packages\imgui;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -96,52 +96,54 @@
     <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
-    <ClInclude Include="src\Graphics\Background.h" />
-    <ClInclude Include="src\clib\clib.h" />
-    <ClInclude Include="src\clib\hashmap.h" />
-    <ClInclude Include="src\clib\vector.h" />
     <ClInclude Include="src\Application\Debugger.h" />
+    <ClInclude Include="src\Application\defines.h" />
+    <ClInclude Include="src\Application\Input.h" />
+    <ClInclude Include="src\Application\Timer.h" />
+    <ClInclude Include="src\Camera\Camera.h" />
+    <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
-    <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
-    <ClInclude Include="src\gui\context.h" />
-    <ClInclude Include="src\gui\gui.h" />
-    <ClInclude Include="src\gui\row.h" />
-    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
-    <ClInclude Include="src\Graphics\Renderer.h" />
-    <ClInclude Include="src\Ignis\Font.h" />
-    <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
-    <ClInclude Include="src\Ignis\VertexArray.h" />
-    <ClInclude Include="src\json\tb_json.h" />
+    <ClInclude Include="src\Graphics\Primitives2D.h" />
+    <ClInclude Include="src\Graphics\Renderer.h" />
+    <ClInclude Include="src\Graphics\Renderer2D.h" />
+    <ClInclude Include="src\Graphics\ResourceManager.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
+    <ClInclude Include="src\Ignis\Font.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
+    <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
+    <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
-    <ClInclude Include="src\Graphics\Primitives2D.h" />
-    <ClInclude Include="src\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
-    <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
-    <ClInclude Include="src\Application\Input.h" />
+    <ClInclude Include="src\Ignis\VertexArray.h" />
+    <ClInclude Include="src\Physics\Body.h" />
+    <ClInclude Include="src\Physics\World.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\clib\clib.h" />
+    <ClInclude Include="src\clib\hashmap.h" />
+    <ClInclude Include="src\clib\vector.h" />
+    <ClInclude Include="src\gui\context.h" />
+    <ClInclude Include="src\gui\gui.h" />
+    <ClInclude Include="src\gui\row.h" />
+    <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
-    <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\World.h" />
-    <ClInclude Include="src\Graphics\ResourceManager.h" />
-    <ClInclude Include="src\SceneManager.h" />
-    <ClInclude Include="src\ECS\TemplateLoader.h" />
-    <ClInclude Include="src\Application\Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c" />
@@ -149,48 +151,48 @@
     <ClCompile Include="src\Animation\Animator.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
-    <ClCompile Include="src\Graphics\Background.c" />
+    <ClCompile Include="src\Application\Input.c" />
+    <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
-    <ClCompile Include="src\clib\hashmap.c" />
-    <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
-    <ClCompile Include="src\ECS\Systems.h" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
-    <ClCompile Include="src\gui\gui.c" />
-    <ClCompile Include="src\gui\row.c" />
-    <ClCompile Include="src\Scene.c" />
+    <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
-    <ClCompile Include="src\Graphics\Renderer.c" />
-    <ClCompile Include="src\Ignis\Font.c" />
-    <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
-    <ClCompile Include="src\Ignis\VertexArray.c" />
+    <ClCompile Include="src\Graphics\Primitives2D.c" />
+    <ClCompile Include="src\Graphics\Renderer.c" />
+    <ClCompile Include="src\Graphics\Renderer2D.c" />
+    <ClCompile Include="src\Graphics\ResourceManager.c" />
+    <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.c" />
+    <ClCompile Include="src\Ignis\Font.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
-    <ClCompile Include="src\Graphics\Primitives2D.c" />
-    <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
-    <ClCompile Include="src\Application\Input.c" />
+    <ClCompile Include="src\Ignis\VertexArray.c" />
+    <ClCompile Include="src\Physics\Body.c" />
+    <ClCompile Include="src\Physics\World.c" />
+    <ClCompile Include="src\Scene.c" />
+    <ClCompile Include="src\SceneManager.c" />
+    <ClCompile Include="src\clib\hashmap.c" />
+    <ClCompile Include="src\clib\vector.c" />
+    <ClCompile Include="src\gui\gui.c" />
+    <ClCompile Include="src\gui\row.c" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
-    <ClCompile Include="src\Physics\Body.c" />
-    <ClCompile Include="src\Physics\World.c" />
-    <ClCompile Include="src\Graphics\ResourceManager.c" />
-    <ClCompile Include="src\SceneManager.c" />
-    <ClCompile Include="src\ECS\TemplateLoader.c" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Application\Timer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="imgui.ini" />
+    <None Include="res\fonts\JetBrainsMono-Regular.ttf" />
     <None Include="res\fonts\OpenSans.ttf" />
+    <None Include="res\fonts\ProggyTiny.ttf" />
     <None Include="res\shaders\batchrenderer.frag" />
     <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\font.frag" />
@@ -211,22 +213,24 @@
     <None Include="res\templates\entities\tree_5.json" />
     <None Include="res\templates\scenes\register.json" />
     <None Include="res\templates\scenes\scene.json" />
-    <None Include="res\index.json" />
     <None Include="res\templates\scenes\scene2.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\background\0.png" />
+    <Image Include="res\textures\background\1.png" />
+    <Image Include="res\textures\background\2.png" />
+    <Image Include="res\textures\background\3.png" />
+    <Image Include="res\textures\background_2\0.png" />
+    <Image Include="res\textures\background_2\1.png" />
+    <Image Include="res\textures\box.png" />
+    <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\player.png" />
+    <Image Include="res\textures\trees.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="packages\glfw\GLFW.vcxproj">
       <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
     </ProjectReference>
-    <ProjectReference Include="packages\imgui\ImGui.vcxproj">
-      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\textures\box.png" />
-    <Image Include="res\textures\floor.png" />
-    <Image Include="res\textures\player.png" />
-    <Image Include="res\textures\trees.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

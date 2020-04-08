@@ -31,6 +31,21 @@ void gui_init(float width, float height)
 
 void gui_free()
 {
+    for (size_t i = 0; i < _context.windows.size; i++)
+    {
+        gui_window* window = gui_window_vector_get(&_context.windows, i);
+
+        for (size_t row_i = 0; row_i < window->rows.size; row_i++)
+        {
+            gui_row* row = gui_row_vector_get(&window->rows, row_i);
+            gui_row_free(row);
+        }
+
+        gui_window_vector_delete(&_context.windows, i);
+        clib_vector_free(&window->rows);
+        free(window);
+    }
+
     clib_vector_free(&_context.windows);
 }
 

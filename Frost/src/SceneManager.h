@@ -9,8 +9,7 @@ extern "C"
 #include "Scene.h"
 #include "ECS/TemplateLoader.h"
 
-#define SCENE_MANAGER_NAMELEN	32
-#define SCENE_MANAGER_PATHLEN	64
+#include "Application/defines.h"
 
 #define SCENE_MANAGER_LAYER_COUNT	4
 
@@ -22,7 +21,7 @@ typedef struct
 	clib_hashmap scenes; /* <str,str> */
 
 	Scene* scene;
-	char scene_name[SCENE_MANAGER_NAMELEN];
+	char scene_name[APPLICATION_STR_LEN];
 
 	// editor
 	bool editmode;
