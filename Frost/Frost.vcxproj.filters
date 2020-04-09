@@ -108,6 +108,9 @@
     <ClInclude Include="src\Application\Timer.h">
       <Filter>src\Application</Filter>
     </ClInclude>
+    <ClInclude Include="src\Application\defines.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
     <ClInclude Include="src\Camera\Camera.h">
       <Filter>src\Camera</Filter>
     </ClInclude>
@@ -240,7 +243,6 @@
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\defines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -354,7 +356,7 @@
     <ClCompile Include="src\gui\row.c">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\main.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\math\mat4.c">
@@ -388,12 +390,6 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\font.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\lines.frag">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\lines.vert">
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\renderer2D.frag">
@@ -440,6 +436,12 @@
     </None>
     <None Include="res\templates\scenes\scene2.json">
       <Filter>res\templates\scenes</Filter>
+    </None>
+    <None Include="res\shaders\primitives.vert">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\primitives.frag">
+      <Filter>res\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

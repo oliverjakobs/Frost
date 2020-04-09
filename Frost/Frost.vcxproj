@@ -62,7 +62,6 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -81,7 +80,6 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,9 +95,9 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
-    <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\Application\Timer.h" />
+    <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
@@ -183,7 +181,7 @@
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\gui\gui.c" />
     <ClCompile Include="src\gui\row.c" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
@@ -197,8 +195,8 @@
     <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\font.frag" />
     <None Include="res\shaders\font.vert" />
-    <None Include="res\shaders\lines.frag" />
-    <None Include="res\shaders\lines.vert" />
+    <None Include="res\shaders\primitives.frag" />
+    <None Include="res\shaders\primitives.vert" />
     <None Include="res\shaders\renderer2D.frag" />
     <None Include="res\shaders\renderer2D.vert" />
     <None Include="res\shaders\tile.frag" />

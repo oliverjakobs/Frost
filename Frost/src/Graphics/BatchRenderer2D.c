@@ -70,8 +70,7 @@ void BatchRenderer2DDestroy()
 
 void BatchRenderer2DStart(const float* mat_view_proj)
 {
-	ignisUseShader(&_render_data.shader);
-	ignisSetUniformMat4l(_render_data.uniform_location_view_proj, mat_view_proj);
+	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_view_proj, mat_view_proj);
 }
 
 void BatchRenderer2DFlush()

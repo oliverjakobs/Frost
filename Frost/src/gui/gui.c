@@ -81,7 +81,7 @@ void gui_render(const float* proj_mat)
         for (size_t row_i = 0; row_i < window->rows.size; row_i++)
         {
             gui_row* row = gui_row_vector_get(&window->rows, row_i);
-            gui_row_render(window, row, window->x, window->y, _context.theme);
+            gui_row_render(window, row, _context.theme);
         }
     }
     Primitives2DFlush();
@@ -96,7 +96,7 @@ void gui_render(const float* proj_mat)
         for (size_t row_i = 0; row_i < window->rows.size; row_i++)
         {
             gui_row* row = gui_row_vector_get(&window->rows, row_i);
-            gui_row_render_font(window, row, window->x, window->y, _context.theme);
+            gui_row_render_font(window, row, _context.theme);
             gui_row_free(row);
         }
 
@@ -107,7 +107,7 @@ void gui_render(const float* proj_mat)
     FontRendererFlush();
 }
 
-int gui_begin(float x, float y, float padding, gui_bg_style bg_style)
+int gui_begin(float x, float y, float w, float h, float padding, gui_bg_style bg_style)
 {
     if (_current) return 0;
 
@@ -117,8 +117,8 @@ int gui_begin(float x, float y, float padding, gui_bg_style bg_style)
     {
         window->x = x;
         window->y = y;
-        window->w = padding;
-        window->h = padding;
+        window->w = w;
+        window->h = h;
 
         window->h_align = GUI_HALIGN_NONE;
         window->v_align = GUI_HALIGN_NONE;
@@ -137,12 +137,23 @@ int gui_begin(float x, float y, float padding, gui_bg_style bg_style)
     return 0;
 }
 
-int gui_begin_align(gui_halign h_align, gui_valign v_align, float padding, gui_bg_style bg_style)
+int gui_begin_align(gui_halign h_align, gui_valign v_align, float w, float h, float padding, gui_bg_style bg_style)
 {
-    if (gui_begin(0.0f, 0.0f, padding, bg_style))
+    if (gui_begin(0.0f, 0.0f, w, h, padding, bg_style))
     {
-        _current->h_align = h_align;
-        _current->v_align = v_align;
+        switch (v_align)
+        {
+        case GUI_VALIGN_TOP:    _current->y = 0.0f; break;
+        case GUI_VALIGN_CENTER: _current->y = (_context.height - _current->h) / 2.0f; break;
+        case GUI_VALIGN_BOTTOM: _current->y = _context.height - _current->h; break;
+        }
+
+        switch (h_align)
+        {
+        case GUI_HALIGN_LEFT:   _current->x = 0.0f; break;
+        case GUI_HALIGN_CENTER: _current->x = (_context.width - _current->w) / 2.0f; break;
+        case GUI_HALIGN_RIGHT:  _current->x = _context.width - _current->w; break;
+        }
 
         return 1;
     }
@@ -154,28 +165,14 @@ void gui_end()
 {
     if (!_current) return;
 
-    switch (_current->v_align)
-    {
-    case GUI_VALIGN_TOP:    _current->y = 0.0f; break;
-    case GUI_VALIGN_CENTER: _current->y = (_context.height - _current->h) / 2.0f; break;
-    case GUI_VALIGN_BOTTOM: _current->y = _context.height - _current->h; break;
-    }
-
-    switch (_current->h_align)
-    {
-    case GUI_HALIGN_LEFT:   _current->x = 0.0f; break;
-    case GUI_HALIGN_CENTER: _current->x = (_context.width - _current->w) / 2.0f; break;
-    case GUI_HALIGN_RIGHT:  _current->x = _context.width - _current->w; break;
-    }
-
     gui_window_vector_push(&_context.windows, _current);
     _current = NULL;
 }
 
 static void _gui_add_row(gui_row* row)
 {
-    _current->w = MAX(_current->w, row->w + (2.0f * _current->padding));
-    _current->h += row->h + _current->padding;
+    row->x += _current->x;
+    row->y += _current->y;
 
     _current->row_y += row->h + _current->padding;
 
@@ -206,5 +203,31 @@ void gui_separator()
     gui_row* row = gui_row_create_separator(_current->padding, _current->row_y, _current->w, _context.theme.separator_height);
 
     _gui_add_row(row);
+}
+
+void gui_checkbox(const char* text, int* state)
+{
+}
+
+#include "Application/Input.h"
+
+int gui_button(const char* text)
+{
+    float row_width = ignisFontGetTextWidth(_context.theme.font, text);
+    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
+
+    gui_row* row = gui_row_create_button(text, _current->padding, _current->row_y, row_width, row_height);
+
+    _gui_add_row(row);
+
+    vec2 mouse_pos = InputMousePositionVec2();
+
+    if (vec2_inside(mouse_pos, (vec2) { row->x, row->y }, (vec2) { row->x + row->w, row->y + row->h }))
+    {
+        row->button.state = 1;
+        return InputMousePressed(MOUSE_BUTTON_LEFT);
+    }
+
+    return 0;
 }
 

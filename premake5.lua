@@ -19,8 +19,8 @@ group ""
 project "Frost"
 	location "Frost"
 	kind "ConsoleApp"
-	language "C++"
-	cppdialect "C++17"
+	language "C"
+	cdialect "C99"
 	staticruntime "On"
 	
 	targetdir ("bin/" .. outputDir .. "/%{prj.name}")

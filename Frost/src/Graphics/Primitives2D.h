@@ -8,7 +8,7 @@ extern "C"
 
 #include "Ignis/Ignis.h"
 
-void Primitives2DInit();
+void Primitives2DInit(const char* vert, const char* frag);
 void Primitives2DDestroy();
 
 void Primitives2DStart(const float* mat_view_proj);

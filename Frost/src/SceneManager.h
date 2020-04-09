@@ -24,8 +24,8 @@ typedef struct
 	char scene_name[APPLICATION_STR_LEN];
 
 	// editor
-	bool editmode;
-	bool showgrid;
+	int editmode;
+	int showgrid;
 	int layer;
 
 	float gridsize;

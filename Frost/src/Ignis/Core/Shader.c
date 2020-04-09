@@ -122,7 +122,7 @@ void ignisSetUniform1i(const IgnisShader* shader, const char* name, int value)
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform1il(location, value);
+		ignisSetUniform1il(shader, location, value);
 }
 
 void ignisSetUniform1f(const IgnisShader* shader, const char* name, float value)
@@ -130,7 +130,7 @@ void ignisSetUniform1f(const IgnisShader* shader, const char* name, float value)
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform1fl(location, value);
+		ignisSetUniform1fl(shader, location, value);
 }
 
 void ignisSetUniform2f(const IgnisShader* shader, const char* name, const float* values)
@@ -138,7 +138,7 @@ void ignisSetUniform2f(const IgnisShader* shader, const char* name, const float*
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform2fl(location, values);
+		ignisSetUniform2fl(shader, location, values);
 }
 
 void ignisSetUniform3f(const IgnisShader* shader, const char* name, const float* values)
@@ -146,7 +146,7 @@ void ignisSetUniform3f(const IgnisShader* shader, const char* name, const float*
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform3fl(location, values);
+		ignisSetUniform3fl(shader, location, values);
 }
 
 void ignisSetUniform4f(const IgnisShader* shader, const char* name, const float* values)
@@ -154,7 +154,7 @@ void ignisSetUniform4f(const IgnisShader* shader, const char* name, const float*
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform4fl(location, values);
+		ignisSetUniform4fl(shader, location, values);
 }
 
 void ignisSetUniformMat2(const IgnisShader* shader, const char* name, const float* values)
@@ -162,7 +162,7 @@ void ignisSetUniformMat2(const IgnisShader* shader, const char* name, const floa
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniformMat2l(location, values);
+		ignisSetUniformMat2l(shader, location, values);
 }
 
 void ignisSetUniformMat3(const IgnisShader* shader, const char* name, const float* values)
@@ -170,7 +170,7 @@ void ignisSetUniformMat3(const IgnisShader* shader, const char* name, const floa
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniformMat3l(location, values);
+		ignisSetUniformMat3l(shader, location, values);
 }
 
 void ignisSetUniformMat4(const IgnisShader* shader, const char* name, const float* values)
@@ -178,7 +178,7 @@ void ignisSetUniformMat4(const IgnisShader* shader, const char* name, const floa
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniformMat4l(location, values);
+		ignisSetUniformMat4l(shader, location, values);
 }
 
 void ignisSetUniform1iv(const IgnisShader* shader, const char* name, GLsizei count, const int* values)
@@ -186,7 +186,7 @@ void ignisSetUniform1iv(const IgnisShader* shader, const char* name, GLsizei cou
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform1ivl(location, count, values);
+		ignisSetUniform1ivl(shader, location, count, values);
 }
 
 void ignisSetUniform1fv(const IgnisShader* shader, const char* name, GLsizei count, const float* values)
@@ -194,57 +194,57 @@ void ignisSetUniform1fv(const IgnisShader* shader, const char* name, GLsizei cou
 	GLint location = ignisGetUniformLocation(shader, name);
 
 	if (location >= 0)
-		ignisSetUniform1fvl(location, count, values);
+		ignisSetUniform1fvl(shader, location, count, values);
 }
 
-void ignisSetUniform1il(GLint location, int value)
+void ignisSetUniform1il(const IgnisShader* shader, GLint location, int value)
 {
-	glUniform1i(location, value);
+	glProgramUniform1i(shader->program, location, value);
 }
 
-void ignisSetUniform1fl(GLint location, float value)
+void ignisSetUniform1fl(const IgnisShader* shader, GLint location, float value)
 {
-	glUniform1f(location, value);
+	glProgramUniform1f(shader->program, location, value);
 }
 
-void ignisSetUniform2fl(GLint location, const float* values)
+void ignisSetUniform2fl(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniform2fv(location, 1, values);
+	glProgramUniform2fv(shader->program, location, 1, values);
 }
 
-void ignisSetUniform3fl(GLint location, const float* values)
+void ignisSetUniform3fl(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniform3fv(location, 1, values);
+	glProgramUniform3fv(shader->program, location, 1, values);
 }
 
-void ignisSetUniform4fl(GLint location, const float* values)
+void ignisSetUniform4fl(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniform4fv(location, 1, values);
+	glProgramUniform4fv(shader->program, location, 1, values);
 }
 
-void ignisSetUniformMat2l(GLint location, const float* values)
+void ignisSetUniformMat2l(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniformMatrix2fv(location, 1, GL_FALSE, values);
+	glProgramUniformMatrix2fv(shader->program, location, 1, GL_FALSE, values);
 }
 
-void ignisSetUniformMat3l(GLint location, const float* values)
+void ignisSetUniformMat3l(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniformMatrix3fv(location, 1, GL_FALSE, values);
+	glProgramUniformMatrix3fv(shader->program, location, 1, GL_FALSE, values);
 }
 
-void ignisSetUniformMat4l(GLint location, const float* values)
+void ignisSetUniformMat4l(const IgnisShader* shader, GLint location, const float* values)
 {
-	glUniformMatrix4fv(location, 1, GL_FALSE, values);
+	glProgramUniformMatrix4fv(shader->program, location, 1, GL_FALSE, values);
 }
 
-void ignisSetUniform1ivl(GLint location, GLsizei count, const int* values)
+void ignisSetUniform1ivl(const IgnisShader* shader, GLint location, GLsizei count, const int* values)
 {
-	glUniform1iv(location, count, values);
+	glProgramUniform1iv(shader->program, location, count, values);
 }
 
-void ignisSetUniform1fvl(GLint location, GLsizei count, const float* values)
+void ignisSetUniform1fvl(const IgnisShader* shader, GLint location, GLsizei count, const float* values)
 {
-	glUniform1fv(location, count, values);
+	glProgramUniform1fv(shader->program, location, count, values);
 }
 
 GLuint ignisCreateShaderProgram(GLenum* types, const char** sources, size_t count)

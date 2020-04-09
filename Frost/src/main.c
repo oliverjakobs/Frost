@@ -66,8 +66,17 @@ void OnRenderDebug(Application* app)
 
 void OnRenderGui(Application* app)
 {
+	gui_start();
+
+	/* fps */
+	if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 200.0f, 28.0f, 8.0f, GUI_BG_NONE))
+	{
+		gui_text("FPS: %d", app->timer.fps);
+	}
+	gui_end();
+
 	/* Debug */
-	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 8.0f, GUI_BG_FILL))
+	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 250.0f, 105.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("Scene: %s", scene_manager.scene_name);
 		gui_separator();
@@ -82,15 +91,8 @@ void OnRenderGui(Application* app)
 	}
 	gui_end();
 
-	/* fps */
-	if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 8.0f, GUI_BG_NONE))
-	{
-		gui_text("FPS: %d", app->timer.fps);
-	}
-	gui_end();
-
 	/* Settings */
-	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 8.0f, GUI_BG_FILL))
+	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("F1: Toggle edit mode");
 		gui_text("F5: Pause/Unpause");
@@ -101,34 +103,34 @@ void OnRenderGui(Application* app)
 	}
 	gui_end();
 
-	gui_render(ApplicationGetScreenProjPtr(app));
-
-	/*
 	if (scene_manager.editmode)
 	{
-		ImGui::Begin("Editor");
-	
-		ImGui::Text("Hovered Entity: %s", scene_manager.hover == nullptr ? "null" : scene_manager.hover->name);
-	
-		ImGui::Checkbox("Show grid", &scene_manager.showgrid);
-	
-		ImGui::Separator();
-	
-		for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
+		if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_BOTTOM, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 		{
-			if (scene_manager.scene->layers[i].size > 0)
+			gui_text("Hovered Entity: %s", scene_manager.hover ? scene_manager.hover->name : "null");
+			gui_checkbox("Show grid", &scene_manager.showgrid);
+
+			if (gui_button("Press me"))
+				printf("Button Pressed\n");
+
+			gui_separator();
+
+			for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
 			{
-				char buffer[16];
-				snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
-				ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
+				if (scene_manager.scene->layers[i].size > 0)
+				{
+					char buffer[16];
+					snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
+					// ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
+				}
 			}
 		}
-	
-		ImGui::End();
+		gui_end();
 	}
-	*/
 	
 	SceneManagerOnRenderGui(&scene_manager);
+
+	gui_render(ApplicationGetScreenProjPtr(app));
 }
 
 int main()
@@ -142,7 +144,7 @@ int main()
 	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
-	Primitives2DInit();
+	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
@@ -155,7 +157,7 @@ int main()
 	ApplicationEnableVsync(app, false);
 	ApplicationShowGui(app, true);
 
-	CameraCreateOrtho(&camera, { app->width / 2.0f, app->height / 2.0f, 0.0f }, { (float)app->width, (float)app->height });
+	CameraCreateOrtho(&camera, (vec3){ app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2){ (float)app->width, (float)app->height });
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");

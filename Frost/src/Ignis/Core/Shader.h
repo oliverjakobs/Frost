@@ -35,17 +35,17 @@ extern "C"
 	void ignisSetUniform1fv(const IgnisShader* shader, const char* name, GLsizei count, const float* values);
 
 	/* unchecked location */
-	void ignisSetUniform1il(GLint location, int value);
-	void ignisSetUniform1fl(GLint location, float value);
-	void ignisSetUniform2fl(GLint location, const float* values);
-	void ignisSetUniform3fl(GLint location, const float* values);
-	void ignisSetUniform4fl(GLint location, const float* values);
-	void ignisSetUniformMat2l(GLint location, const float* values);
-	void ignisSetUniformMat3l(GLint location, const float* values);
-	void ignisSetUniformMat4l(GLint location, const float* values);
+	void ignisSetUniform1il(const IgnisShader* shader, GLint location, int value);
+	void ignisSetUniform1fl(const IgnisShader* shader, GLint location, float value);
+	void ignisSetUniform2fl(const IgnisShader* shader, GLint location, const float* values);
+	void ignisSetUniform3fl(const IgnisShader* shader, GLint location, const float* values);
+	void ignisSetUniform4fl(const IgnisShader* shader, GLint location, const float* values);
+	void ignisSetUniformMat2l(const IgnisShader* shader, GLint location, const float* values);
+	void ignisSetUniformMat3l(const IgnisShader* shader, GLint location, const float* values);
+	void ignisSetUniformMat4l(const IgnisShader* shader, GLint location, const float* values);
 
-	void ignisSetUniform1ivl(GLint location, GLsizei count, const int* values);
-	void ignisSetUniform1fvl(GLint location, GLsizei count, const float* values);
+	void ignisSetUniform1ivl(const IgnisShader* shader, GLint location, GLsizei count, const int* values);
+	void ignisSetUniform1fvl(const IgnisShader* shader, GLint location, GLsizei count, const float* values);
 
 	GLuint ignisCreateShaderProgram(GLenum* types, const char** sources, size_t count);
 	GLuint ignisCompileShader(GLenum type, const char* source);

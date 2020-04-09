@@ -18,8 +18,8 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	manager->resources = resources;
 	manager->camera = camera;
 
-	manager->editmode = true;
-	manager->showgrid = false;
+	manager->editmode = 1;
+	manager->showgrid = 0;
 	manager->layer = 0;
 
 	manager->gridsize = gridsize;

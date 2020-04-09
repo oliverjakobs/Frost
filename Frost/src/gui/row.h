@@ -14,7 +14,7 @@ typedef struct
 typedef struct
 {
     char* label;
-    void (*callback)(int);
+    int state;
 } gui_row_button;
 
 typedef enum
@@ -42,11 +42,12 @@ typedef struct gui_row
 
 gui_row* gui_row_create_text(char* text, float x, float y, float w, float h);
 gui_row* gui_row_create_separator(float x, float y, float w, float h);
+gui_row* gui_row_create_button(char* text, float x, float y, float w, float h);
 
 void gui_row_free(gui_row* row);
 
-void gui_row_render(const gui_window* window, gui_row* row, float x, float y, gui_theme theme);
-void gui_row_render_font(const gui_window* window, gui_row* row, float x, float y, gui_theme theme);
+void gui_row_render(const gui_window* window, gui_row* row, gui_theme theme);
+void gui_row_render_font(const gui_window* window, gui_row* row, gui_theme theme);
 
 
 #endif /* !GUI_ROW_H */

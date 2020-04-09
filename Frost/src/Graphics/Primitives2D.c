@@ -26,7 +26,7 @@ _Primitives2DLines* _Primitives2DLinesCreate(const char* vert, const char* frag,
 		lines->vertices = (float*)malloc(PRIMITIVES2D_LINES_BUFFER_SIZE * sizeof(float));
 		lines->vertex_count = 0;
 
-		ignisShaderSrcvf(&lines->shader, vert, frag);
+		ignisShadervf(&lines->shader, vert, frag);
 	}
 
 	return lines;
@@ -44,7 +44,6 @@ void _Primitives2DLinesDestroy(_Primitives2DLines* lines)
 
 void _Primitives2DLinesStart(_Primitives2DLines* lines, const float* mat_view_proj)
 {
-	ignisUseShader(&lines->shader);
 	ignisSetUniformMat4(&lines->shader, "u_ViewProjection", mat_view_proj);
 }
 
@@ -52,8 +51,6 @@ void _Primitives2DLinesFlush(_Primitives2DLines* lines)
 {
 	if (lines->vertex_count == 0)
 		return;
-
-	ignisUseShader(&lines->shader);
 
 	ignisBindVertexArray(&lines->vao);
 	ignisBufferSubData(&lines->vao.array_buffers[0], 0, lines->vertex_count * sizeof(float), lines->vertices);
@@ -102,7 +99,7 @@ _Primitives2DTriangles* _Primitives2DTrianglesCreate(const char* vert, const cha
 		triangles->vertices = (float*)malloc(PRIMITIVES2D_TRIANGLES_BUFFER_SIZE * sizeof(float));
 		triangles->vertex_count = 0;
 
-		ignisShaderSrcvf(&triangles->shader, vert, frag);
+		ignisShadervf(&triangles->shader, vert, frag);
 	}
 
 	return triangles;
@@ -120,7 +117,6 @@ void _Primitives2DTrianglesDestroy(_Primitives2DTriangles* triangles)
 
 void _Primitives2DTrianglesStart(_Primitives2DTriangles* triangles, const float* mat_view_proj)
 {
-	ignisUseShader(&triangles->shader);
 	ignisSetUniformMat4(&triangles->shader, "u_ViewProjection", mat_view_proj);
 }
 
@@ -128,8 +124,6 @@ void _Primitives2DTrianglesFlush(_Primitives2DTriangles* triangles)
 {
 	if (triangles->vertex_count == 0)
 		return;
-
-	ignisUseShader(&triangles->shader);
 
 	ignisBindVertexArray(&triangles->vao);
 	ignisBufferSubData(&triangles->vao.array_buffers[0], 0, triangles->vertex_count * sizeof(float), triangles->vertices);
@@ -159,31 +153,10 @@ void _Primitives2DTrianglesVertex(_Primitives2DTriangles* triangles, float x, fl
 static _Primitives2DLines* _lines;
 static _Primitives2DTriangles* _triangles;
 
-void Primitives2DInit()
+void Primitives2DInit(const char* vert, const char* frag)
 {
 	IgnisBufferElement layout[] = { {GL_FLOAT, 2, GL_FALSE}, {GL_FLOAT, 4, GL_FALSE} };
 	size_t layout_size = 2;
-
-	const char* vert = \
-		"#version 330\n"
-		"layout(location = 0) in vec2 a_Position;\n"
-		"layout(location = 1) in vec4 a_Color;\n"
-		"uniform mat4 u_ViewProjection;\n"
-		"out vec4 v_Color;\n"
-		"void main()\n"
-		"{\n"
-		"	gl_Position = u_ViewProjection * vec4(a_Position, 0.0f, 1.0f);\n"
-		"	v_Color = a_Color;\n"
-		"}\n";
-
-	const char* frag = \
-		"#version 330\n"
-		"layout(location = 0) out vec4 f_Color;\n"
-		"in vec4 v_Color;\n"
-		"void main()\n"
-		"{\n"
-		"	f_Color = v_Color;\n"
-		"}\n";
 
 	_lines = _Primitives2DLinesCreate(vert, frag, layout, layout_size);
 	_triangles = _Primitives2DTrianglesCreate(vert, frag, layout, layout_size);

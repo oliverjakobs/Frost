@@ -67,7 +67,6 @@ extern "C"
 #include "Renderer2D.h"
 
 
-
 void GenerateIndices(GLuint* indices, size_t max, size_t step);
 
 #ifdef __cplusplus
