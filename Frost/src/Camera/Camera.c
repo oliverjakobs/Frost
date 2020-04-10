@@ -51,15 +51,15 @@ const vec2 CameraGetMousePos(Camera* camera, const vec2 mouse)
 
 const float* CameraGetViewPtr(Camera* camera)
 {
-	return &camera->view.v[0];
+	return camera->view.v;
 }
 
 const float* CameraGetProjectionPtr(Camera* camera)
 {
-	return &camera->projection.v[0];
+	return camera->projection.v;
 }
 
 const float* CameraGetViewProjectionPtr(Camera* camera)
 {
-	return &camera->viewProjection.v[0];
+	return camera->viewProjection.v;
 }

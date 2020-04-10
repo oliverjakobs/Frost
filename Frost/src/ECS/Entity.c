@@ -187,7 +187,9 @@ void EcsEntityRemoveCamera(EcsEntity* entity)
 void EcsEntitySetPosition(EcsEntity* entity, vec2 pos)
 {
 	if (entity->physics && entity->physics->body)
+	{
 		entity->physics->body->position = vec2_add(pos, (vec2){ entity->physics->body_x, entity->physics->body_y });
+	}
 
 	if (entity->position)
 	{
@@ -199,10 +201,14 @@ void EcsEntitySetPosition(EcsEntity* entity, vec2 pos)
 vec2 EcsEntityGetPosition(EcsEntity* entity)
 {
 	if (entity->physics && entity->physics->body)
-		return vec2_sub(entity->physics->body->position, (vec2){ entity->physics->body_x, entity->physics->body_y });
+	{
+		return vec2_sub(entity->physics->body->position, (vec2) { entity->physics->body_x, entity->physics->body_y });
+	}
 
 	if (entity->position)
+	{
 		return (vec2){ entity->position->x, entity->position->y };
+	}
 
 	return (vec2){ 0.0f, 0.0f };
 }

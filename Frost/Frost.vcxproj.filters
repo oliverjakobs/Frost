@@ -243,7 +243,7 @@
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Framebuffer.h" />
+    <ClInclude Include="src\Ignis\Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -369,7 +369,7 @@
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Framebuffer.c" />
+    <ClCompile Include="src\Ignis\Framebuffer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

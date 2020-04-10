@@ -41,7 +41,6 @@ void Renderer2DInit(const char* vert, const char* frag)
 	_render_data.uniform_location_view_proj = ignisGetUniformLocation(&_render_data.shader, "u_ViewProjection");
 	_render_data.uniform_location_color = ignisGetUniformLocation(&_render_data.shader, "u_Color");
 	_render_data.uniform_location_model = ignisGetUniformLocation(&_render_data.shader, "u_Model");
-	_render_data.uniform_location_src = ignisGetUniformLocation(&_render_data.shader, "u_Src");
 
 	ignisSetUniform1i(&_render_data.shader, "u_Texture", 0);
 }
@@ -52,28 +51,39 @@ void Renderer2DDestroy()
 	ignisDeleteVertexArray(&_render_data.vao);
 }
 
-void Renderer2DStart(const float* mat_view_proj)
+void Renderer2DRenderTexture(IgnisTexture* texture, float x, float y, float w, float h, const float* mat_view_proj)
 {
+	Renderer2DRenderTextureColor(texture, x, y, w, h, IGNIS_WHITE, mat_view_proj);
+}
+
+void Renderer2DRenderTextureColor(IgnisTexture* texture, float x, float y, float w, float h, IgnisColorRGBA color, const float* mat_view_proj)
+{
+	/* creating a mat4 that translates and scales */
+	float model[16];
+	model[0] = w;
+	model[1] = 0.0f;
+	model[2] = 0.0f;
+	model[3] = 0.0f;
+	model[4] = 0.0f;
+	model[5] = h;
+	model[6] = 0.0f;
+	model[7] = 0.0f;
+	model[8] = 0.0f;
+	model[9] = 0.0f;
+	model[10] = 1.0f;
+	model[11] = 0.0f;
+	model[12] = x;
+	model[13] = y;
+	model[14] = 0.0f;
+	model[15] = 1.0f;
+
+	ignisUseShader(&_render_data.shader);
+
 	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_view_proj, mat_view_proj);
-}
-
-void Renderer2DFlush()
-{
-}
-
-void Renderer2DRenderTexture(IgnisTexture* texture, const float* mat_model, const float* mat_src)
-{
-	Renderer2DRenderTextureColor(texture, mat_model, mat_src, IGNIS_WHITE);
-}
-
-void Renderer2DRenderTextureColor(IgnisTexture* texture, const float* mat_model, const float* mat_src, const IgnisColorRGBA color)
-{
 	ignisSetUniform4fl(&_render_data.shader, _render_data.uniform_location_color, &color.r);
-	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_model, mat_model);
-	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_src, mat_src);
+	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_model, model);
 
 	ignisBindTexture(texture, 0);
-	ignisUseShader(&_render_data.shader);
 
 	ignisBindVertexArray(&_render_data.vao);
 	glDrawElements(GL_TRIANGLES, _render_data.vao.element_count, GL_UNSIGNED_INT, NULL);

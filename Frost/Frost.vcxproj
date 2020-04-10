@@ -109,7 +109,7 @@
     <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Framebuffer.h" />
+    <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -160,7 +160,7 @@
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
-    <ClCompile Include="src\Framebuffer.c" />
+    <ClCompile Include="src\Ignis\Framebuffer.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />

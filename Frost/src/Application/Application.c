@@ -86,7 +86,7 @@ int ApplicationLoad(Application* app, char* title, int width, int height, int gl
 	DEBUG_INFO("[OpenGL] Renderer: %s\n", glGetString(GL_RENDERER));
 	DEBUG_INFO("[OpenGL] GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	ApplicationSetViewport(app, 0.0f, 0.0f, (float)app->width, (float)app->height);
+	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
 
 	app->running = 1;
@@ -210,12 +210,12 @@ void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
 
 const float* ApplicationGetScreenProjPtr(Application* app)
 {
-	return &app->screen_projection.v[0];
+	return app->screen_projection.v;
 }
 
 const float* ApplicationGetScreenProjFlipPtr(Application* app)
 {
-	return &app->screen_projection_flipped.v[0];
+	return app->screen_projection_flipped.v;
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }

@@ -11,11 +11,8 @@ extern "C"
 void Renderer2DInit(const char* vert, const char* frag);
 void Renderer2DDestroy();
 
-void Renderer2DStart(const float* mat_view_proj);
-void Renderer2DFlush();
-
-void Renderer2DRenderTexture(IgnisTexture* texture, const float* mat_model, const float* mat_src);
-void Renderer2DRenderTextureColor(IgnisTexture* texture, const float* mat_model, const float* mat_src, const IgnisColorRGBA color);
+void Renderer2DRenderTexture(IgnisTexture* texture, float x, float y, float w, float h, const float* mat_view_proj);
+void Renderer2DRenderTextureColor(IgnisTexture* texture, float x, float y, float w, float h, IgnisColorRGBA color, const float* mat_view_proj);
 
 #ifdef __cplusplus
 }
