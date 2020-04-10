@@ -2,6 +2,32 @@
 
 #include <GLFW\glfw3.h>
 
+typedef struct
+{
+	int key_state[KEY_LAST + 1];
+	int key_prev_state[KEY_LAST + 1];
+} InputState;
+
+static InputState _input_state;
+
+void InputChangeKeyState(int keycode, int state)
+{
+	if (keycode > KEY_LAST || keycode <= KEY_UNKNOWN)
+		return;
+
+	_input_state.key_prev_state[keycode] = _input_state.key_state[keycode];
+	_input_state.key_state[keycode] = state;
+}
+
+int InputQueryKeyState(int keycode)
+{
+	if (_input_state.key_state[keycode]) return 1;
+	if (_input_state.key_state[keycode] && !_input_state.key_prev_state[keycode]) return 2;
+
+	// return (prevKeys[key] && !keys[key]);
+	return _input_state.key_state[keycode];
+}
+
 int InputKeyPressed(int keycode)
 {
 	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)

@@ -1,5 +1,7 @@
 #include "ApplicationCallback.h"
 
+#include "Input.h"
+
 #include "Event/EventHandler.h"
 
 void ApplicationEventCallback(Application* app, const Event e)
@@ -47,6 +49,8 @@ void ApplicationGLFWWindowCloseCallback(GLFWwindow* window)
 
 void ApplicationGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	InputChangeKeyState(key, (action == GLFW_RELEASE) ? 0 : 1);
+
 	switch (action)
 	{
 	case GLFW_PRESS:

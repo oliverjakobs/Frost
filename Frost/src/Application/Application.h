@@ -38,6 +38,7 @@ typedef struct Application
 	ResourceManager resources;
 
 	mat4 screen_projection;
+	mat4 screen_projection_flipped;
 
 	void (*on_event)(struct Application*, const Event);
 	void (*on_update)(struct Application*, float);
@@ -63,6 +64,7 @@ void ApplicationSetOnRenderGuiCallback(Application* app, void (*callback)(Applic
 
 void ApplicationSetViewport(Application* app, int x, int y, int w, int h);
 const float* ApplicationGetScreenProjPtr(Application* app);
+const float* ApplicationGetScreenProjFlipPtr(Application* app);
 
 /* --------------------------| Settings |-------------------------------- */
 void ApplicationEnableDebugMode(Application* app, int b);

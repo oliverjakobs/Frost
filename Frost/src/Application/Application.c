@@ -204,12 +204,18 @@ void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Applica
 void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
 {
 	app->screen_projection = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
+	app->screen_projection_flipped = mat4_ortho((float)x, (float)w, (float)y, (float)h, -1.0f, 1.0f);
 	glViewport(x, y, w, h);
 }
 
 const float* ApplicationGetScreenProjPtr(Application* app)
 {
 	return &app->screen_projection.v[0];
+}
+
+const float* ApplicationGetScreenProjFlipPtr(Application* app)
+{
+	return &app->screen_projection_flipped.v[0];
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }

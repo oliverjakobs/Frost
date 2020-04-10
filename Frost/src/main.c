@@ -4,8 +4,13 @@
 
 #include "gui/gui.h"
 
+#include "Framebuffer.h"
+
 SceneManager scene_manager;
 Camera camera;
+
+FrameBuffer framebuffer;
+IgnisShader framebuffer_shader;
 
 void OnEvent(Application* app, const Event e)
 {
@@ -53,15 +58,44 @@ void OnUpdate(Application* app, float deltaTime)
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "Ignis/Packages/stb_image_write.h"
+
 void OnRender(Application* app)
 {
+	FrameBufferBind(&framebuffer);
+
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT); // we're not using the stencil buffer now
+
 	SceneManagerOnRender(&scene_manager);
+
+	/*
+	GLubyte* data = (GLubyte*)malloc(4 * framebuffer.width * framebuffer.height);
+
+	if (data)
+	{
+		glReadPixels(0, 0, framebuffer.width, framebuffer.height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		stbi_flip_vertically_on_write(1);
+
+		stbi_write_bmp("output.bmp", framebuffer.width, framebuffer.height, 4, data);
+	}
+
+	free(data);
+	*/
+
+	FrameBufferUnbind();
+
+	BatchRenderer2DStart(ApplicationGetScreenProjFlipPtr(app));
+
+	BatchRenderer2DRenderTexture(&framebuffer.texture, 0.0f, 0.0f, app->width, app->height);
+
+	BatchRenderer2DFlush();
 }
 
 void OnRenderDebug(Application* app)
 {
 	SceneManagerOnRenderDebug(&scene_manager);
-
 }
 
 void OnRenderGui(Application* app)
@@ -110,9 +144,6 @@ void OnRenderGui(Application* app)
 			gui_text("Hovered Entity: %s", scene_manager.hover ? scene_manager.hover->name : "null");
 			gui_checkbox("Show grid", &scene_manager.showgrid);
 
-			if (gui_button("Press me"))
-				printf("Button Pressed\n");
-
 			gui_separator();
 
 			for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
@@ -150,6 +181,33 @@ int main()
 
 	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "font"), IGNIS_WHITE);
 
+	/* framebuffer */
+	FrameBufferGenerate(&framebuffer, app->width, app->height);
+
+	const char* vert = \
+		"#version 330\n"
+		"layout(location = 0) in vec2 a_Position;\n"
+		"layout(location = 1) in vec2 a_TexCoord;\n"
+		"out vec2 v_TexCoord;\n"
+		"void main()\n"
+		"{\n"
+		"	gl_Position = vec4(a_Position, 0.0f, 1.0f);\n"
+		"	v_TexCoord = a_TexCoord;\n"
+		"}\n";
+
+	const char* frag = \
+		"#version 330\n"
+		"layout(location = 0) out vec4 f_Color;\n"
+		"in vec2 v_TexCoord;\n"
+		"uniform sampler2D u_Texture;\n"
+		"void main()\n"
+		"{\n"
+		"	f_Color = texture(u_Texture, v_TexCoord);\n"
+		"}\n";
+
+	ignisShaderSrcvf(&framebuffer_shader, vert, frag);
+	ignisSetUniform1i(&framebuffer_shader, "u_Texture", 0);
+
 	gui_init((float)app->width, (float)app->height);
 	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
@@ -169,6 +227,8 @@ int main()
 	ApplicationSetOnRenderGuiCallback(app, OnRenderGui);
 
 	ApplicationRun(app);
+
+	FrameBufferDelete(&framebuffer);
 
 	gui_free();
 

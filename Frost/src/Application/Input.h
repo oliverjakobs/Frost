@@ -150,8 +150,10 @@ extern "C"
 #define MOUSE_BUTTON_RIGHT     MOUSE_BUTTON_2
 #define MOUSE_BUTTON_MIDDLE    MOUSE_BUTTON_3
 
-
 #include "math/math.h"
+
+void InputChangeKeyState(int keycode, int state);
+int InputQueryKeyState(int keycode);
 
 int InputKeyPressed(int keycode);
 int InputKeyReleased(int keycode);

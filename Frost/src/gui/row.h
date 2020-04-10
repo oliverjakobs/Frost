@@ -15,6 +15,7 @@ typedef struct
 {
     char* label;
     int state;
+    float padding;
 } gui_row_button;
 
 typedef enum
@@ -42,7 +43,7 @@ typedef struct gui_row
 
 gui_row* gui_row_create_text(char* text, float x, float y, float w, float h);
 gui_row* gui_row_create_separator(float x, float y, float w, float h);
-gui_row* gui_row_create_button(char* text, float x, float y, float w, float h);
+gui_row* gui_row_create_button(char* text, float x, float y, float w, float h, float padding);
 
 void gui_row_free(gui_row* row);
 

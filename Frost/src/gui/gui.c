@@ -68,7 +68,7 @@ void gui_render(const float* proj_mat)
     glLineWidth(_context.theme.border_width);
 
     Primitives2DStart(proj_mat);
-    for (size_t i = 0; i < _context.windows.size; i++)
+    for (size_t i = 0; i < _context.windows.size; ++i)
     {
         gui_window* window = gui_window_vector_get(&_context.windows, i);
 
@@ -78,7 +78,7 @@ void gui_render(const float* proj_mat)
             Primitives2DRenderRect(window->x, window->y, window->w, window->h, _context.theme.border_color);
         }
 
-        for (size_t row_i = 0; row_i < window->rows.size; row_i++)
+        for (size_t row_i = 0; row_i < window->rows.size; ++row_i)
         {
             gui_row* row = gui_row_vector_get(&window->rows, row_i);
             gui_row_render(window, row, _context.theme);
@@ -89,11 +89,11 @@ void gui_render(const float* proj_mat)
 
     FontRendererStart(proj_mat);
     FontRendererBindFont(_context.theme.font, _context.theme.font_color);
-    for (size_t i = 0; i < _context.windows.size; i++)
+    for (size_t i = 0; i < _context.windows.size; ++i)
     {
         gui_window* window = gui_window_vector_get(&_context.windows, i);
 
-        for (size_t row_i = 0; row_i < window->rows.size; row_i++)
+        for (size_t row_i = 0; row_i < window->rows.size; ++row_i)
         {
             gui_row* row = gui_row_vector_get(&window->rows, row_i);
             gui_row_render_font(window, row, _context.theme);
@@ -200,7 +200,7 @@ void gui_text(const char* fmt, ...)
 
 void gui_separator()
 {
-    gui_row* row = gui_row_create_separator(_current->padding, _current->row_y, _current->w, _context.theme.separator_height);
+    gui_row* row = gui_row_create_separator(_current->padding, _current->row_y, _current->w - 2.0f * _current->padding, _context.theme.separator_height);
 
     _gui_add_row(row);
 }
@@ -213,10 +213,12 @@ void gui_checkbox(const char* text, int* state)
 
 int gui_button(const char* text)
 {
-    float row_width = ignisFontGetTextWidth(_context.theme.font, text);
-    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
+    float padding = _current->padding;
 
-    gui_row* row = gui_row_create_button(text, _current->padding, _current->row_y, row_width, row_height);
+    float row_width = ignisFontGetTextWidth(_context.theme.font, text) + (2.0f * padding);
+    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL) + (2.0f * padding);
+
+    gui_row* row = gui_row_create_button(text, _current->padding, _current->row_y, row_width, row_height, padding);
 
     _gui_add_row(row);
 
