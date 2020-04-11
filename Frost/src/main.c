@@ -57,9 +57,6 @@ void OnUpdate(Application* app, float deltaTime)
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "Ignis/Packages/stb_image_write.h"
-
 void OnRender(Application* app)
 {
 	/* framebuffer */
@@ -70,24 +67,24 @@ void OnRender(Application* app)
 
 	/* framebuffer */
 	ignisFrameBufferUnbind();
-	Renderer2DRenderTexture(&framebuffer.texture, 0.0f, 0.0f, (float)app->width, (float)app->height, ApplicationGetScreenProjFlipPtr(app));
+	Renderer2DRenderTexture(&framebuffer.texture, 0.0f, (float)app->height, (float)app->width, -(float)app->height, ApplicationGetScreenProjPtr(app));
 }
 
 void OnRenderDebug(Application* app)
 {
 	SceneManagerOnRenderDebug(&scene_manager);
+
+	/* fps */
+	FontRendererStart(ApplicationGetScreenProjPtr(app));
+
+	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
+
+	FontRendererFlush();
 }
 
 void OnRenderGui(Application* app)
 {
 	gui_start();
-
-	/* fps */
-	if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_TOP, 200.0f, 28.0f, 8.0f, GUI_BG_NONE))
-	{
-		gui_text("FPS: %d", app->timer.fps);
-	}
-	gui_end();
 
 	/* Debug */
 	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 250.0f, 105.0f, 8.0f, GUI_BG_FILL))
@@ -159,7 +156,7 @@ int main()
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "font"), IGNIS_WHITE);
+	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
 	/* framebuffer */
 	ignisFrameBufferGenerate(&framebuffer, app->width, app->height);
@@ -167,14 +164,14 @@ int main()
 	gui_init((float)app->width, (float)app->height);
 	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
-	ApplicationEnableDebugMode(app, true);
-	ApplicationEnableVsync(app, false);
-	ApplicationShowGui(app, true);
+	ApplicationEnableDebugMode(app, 1);
+	ApplicationEnableVsync(app, 0);
+	ApplicationShowGui(app, 0);
 
 	CameraCreateOrtho(&camera, (vec3){ app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2){ (float)app->width, (float)app->height });
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
-	SceneManagerChangeScene(&scene_manager, "scene");
+	SceneManagerChangeScene(&scene_manager, "scene2");
 
 	ApplicationSetOnEventCallback(app, OnEvent);
 	ApplicationSetOnUpdateCallback(app, OnUpdate);

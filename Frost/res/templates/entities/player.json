@@ -55,7 +55,7 @@
   },
   "movement": {
     "speed": 400.0,
-	"jumppower": 600.0
+	"jumppower": 800.0
   },
   "camera": {
     "smooth": 0.5

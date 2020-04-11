@@ -94,3 +94,8 @@ const float BodyGetY2(const Body* body)
 {
 	return body->position.y + body->halfSize.y;
 }
+
+rect BodyGetRect(Body* body)
+{
+	return (rect) { body->position.x - body->halfSize.x, body->position.y - body->halfSize.y, body->halfSize.x * 2.0f, body->halfSize.y * 2.0f };
+}

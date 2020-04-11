@@ -254,6 +254,13 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 	}
 }
 
+#include "Visibility.h"
+
+int cmp_intersection_angle(const void* a, const void* b)
+{
+	return 0;
+}
+
 void SceneManagerOnRender(SceneManager* manager)
 {
 	SceneOnRender(manager->scene);
@@ -274,6 +281,22 @@ void SceneManagerOnRender(SceneManager* manager)
 			for (float y = -manager->padding; y <= manager->scene->height + manager->padding; y += manager->gridsize)
 				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
 		}
+
+		vec2 mouse = CameraGetMousePos(manager->camera, InputMousePositionVec2());
+
+		size_t edge_count = 0;
+		line* edges = SceneGetEdges(manager->scene, &edge_count);
+
+		size_t intersection_count = 0;
+		vec3* intersections = Visibility(mouse, edges, edge_count, &intersection_count);
+
+		for (size_t i = 0; i < intersection_count; i++)
+		{
+			Primitives2DRenderLine(mouse.x, mouse.y, intersections[i].x, intersections[i].y, IGNIS_WHITE);
+		}
+
+		free(edges);
+		free(intersections);
 
 		clib_vector* layer = &manager->scene->layers[manager->layer];
 

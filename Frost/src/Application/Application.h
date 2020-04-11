@@ -6,15 +6,14 @@ extern "C"
 {
 #endif
 
-#include "Event/Event.h"
-
-#include "Input.h"
 #include "Timer.h"
+#include "Event/Event.h"
 
 /* Graphics */
 #include "Graphics/Renderer.h"
 #include "Graphics/ResourceManager.h"
 
+#include "Input.h"
 #include <GLFW/glfw3.h>
 
 typedef struct Application
@@ -38,7 +37,6 @@ typedef struct Application
 	ResourceManager resources;
 
 	mat4 screen_projection;
-	mat4 screen_projection_flipped;
 
 	void (*on_event)(struct Application*, const Event);
 	void (*on_update)(struct Application*, float);
@@ -47,7 +45,7 @@ typedef struct Application
 	void (*on_render_gui)(struct Application*);
 } Application;
 
-int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor);
+int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor);
 int ApplicationLoadConfig(Application* app, const char* path);
 void ApplicationDestroy(Application* app);
 
@@ -64,7 +62,6 @@ void ApplicationSetOnRenderGuiCallback(Application* app, void (*callback)(Applic
 
 void ApplicationSetViewport(Application* app, int x, int y, int w, int h);
 const float* ApplicationGetScreenProjPtr(Application* app);
-const float* ApplicationGetScreenProjFlipPtr(Application* app);
 
 /* --------------------------| Settings |-------------------------------- */
 void ApplicationEnableDebugMode(Application* app, int b);

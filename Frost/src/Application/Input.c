@@ -1,31 +1,23 @@
 #include "Input.h"
 
-#include <GLFW\glfw3.h>
+
+#define INPUT_NUM_KEYS  (KEY_LAST + 1)
 
 typedef struct
 {
-	int key_state[KEY_LAST + 1];
-	int key_prev_state[KEY_LAST + 1];
-} InputState;
+	int state;
+	int prev;
+} InputKeyState;
 
-static InputState _input_state;
+static InputKeyState key_states[INPUT_NUM_KEYS];
 
-void InputChangeKeyState(int keycode, int state)
+void InputUpdate(GLFWwindow* context)
 {
-	if (keycode > KEY_LAST || keycode <= KEY_UNKNOWN)
-		return;
-
-	_input_state.key_prev_state[keycode] = _input_state.key_state[keycode];
-	_input_state.key_state[keycode] = state;
-}
-
-int InputQueryKeyState(int keycode)
-{
-	if (_input_state.key_state[keycode]) return 1;
-	if (_input_state.key_state[keycode] && !_input_state.key_prev_state[keycode]) return 2;
-
-	// return (prevKeys[key] && !keys[key]);
-	return _input_state.key_state[keycode];
+	for (size_t i = KEY_SPACE; i < INPUT_NUM_KEYS; i++)
+	{
+		key_states[i].prev = key_states[i].state;
+		key_states[i].state = (glfwGetKey(context, i) == GLFW_PRESS);
+	}
 }
 
 int InputKeyPressed(int keycode)
@@ -44,6 +36,30 @@ int InputKeyReleased(int keycode)
 
 	int state = glfwGetKey(glfwGetCurrentContext(), keycode);
 	return state == GLFW_RELEASE;
+}
+
+int InputKeyHit(int keycode)
+{
+	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)
+		return 0;
+
+	return key_states[keycode].state && !key_states[keycode].prev;
+}
+
+int InputKeyDown(int keycode)
+{
+	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)
+		return 0;
+
+	return key_states[keycode].state;
+}
+
+int InputKeyUp(int keycode)
+{
+	if (keycode > KEY_LAST || keycode == KEY_UNKNOWN)
+		return 0;
+
+	return key_states[keycode].prev && !key_states[keycode].state;
 }
 
 int InputMousePressed(int button)

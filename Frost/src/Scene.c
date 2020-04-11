@@ -194,3 +194,24 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos, size_t layer)
 
 	return NULL;
 }
+
+line* SceneGetEdges(Scene* scene, size_t* line_count)
+{
+	line* lines = (line*)malloc(sizeof(line) * scene->world->bodies.size * 4);
+
+	size_t line_index = 0;
+	for (size_t i = 0; i < scene->world->bodies.size; i++)
+	{
+		Body* body = WorldGetBody(scene->world, i);
+		rect r = BodyGetRect(body);
+
+		lines[line_index++] = (line){ { r.x, r.y }, { r.x + r.w, r.y } };
+		lines[line_index++] = (line){ { r.x + r.w, r.y }, { r.x + r.w, r.y + r.h } };
+		lines[line_index++] = (line){ { r.x + r.w, r.y + r.h }, { r.x, r.y + r.h } };
+		lines[line_index++] = (line){ { r.x, r.y + r.h }, {  r.x, r.y } };
+	}
+
+	*line_count = line_index;
+
+	return lines;
+}

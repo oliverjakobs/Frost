@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "math/vec2.h"
+#include "math/math.h"
 
 struct World;
 
@@ -45,6 +45,8 @@ const float BodyGetX(const Body* body);
 const float BodyGetX2(const Body* body);
 const float BodyGetY(const Body* body);
 const float BodyGetY2(const Body* body);
+
+rect BodyGetRect(Body* body);
 
 #ifdef __cplusplus
 }

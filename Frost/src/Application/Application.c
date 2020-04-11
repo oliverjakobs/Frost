@@ -9,9 +9,11 @@
 #include "Debugger.h"
 #include "defines.h"
 
-int ApplicationLoad(Application* app, char* title, int width, int height, int glMajor, int glMinor)
+int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor)
 {
-	app->title = title;
+	app->title = malloc(strlen(title));
+	strcpy(app->title, title);
+
 	app->width = width;
 	app->height = height;
 
@@ -142,6 +144,7 @@ void ApplicationRun(Application* app)
 	while (app->running)
 	{
 		TimerStart(&app->timer, glfwGetTime());
+		InputUpdate(app->window);
 
 		if (!app->paused)
 			app->on_update(app, (float)app->timer.deltatime);
@@ -204,18 +207,12 @@ void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Applica
 void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
 {
 	app->screen_projection = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
-	app->screen_projection_flipped = mat4_ortho((float)x, (float)w, (float)y, (float)h, -1.0f, 1.0f);
 	glViewport(x, y, w, h);
 }
 
 const float* ApplicationGetScreenProjPtr(Application* app)
 {
 	return app->screen_projection.v;
-}
-
-const float* ApplicationGetScreenProjFlipPtr(Application* app)
-{
-	return app->screen_projection_flipped.v;
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }
@@ -226,7 +223,10 @@ void ApplicationToggleDebugMode(Application* app) { ApplicationEnableDebugMode(a
 void ApplicationToggleVsync(Application* app) { ApplicationEnableVsync(app, !app->vsync); }
 void ApplicationToggleGui(Application* app) { ApplicationShowGui(app, !app->show_gui); }
 
-void ApplicationSetWindowTitle(Application* app, const char* title) { glfwSetWindowTitle(app->window, title); }
+void ApplicationSetWindowTitle(Application* app, const char* title) 
+{ 
+	glfwSetWindowTitle(app->window, title);
+}
 
 void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...)
 {

@@ -244,6 +244,7 @@
       <Filter>src\math</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\Framebuffer.h" />
+    <ClInclude Include="src\Visibility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -370,6 +371,7 @@
       <Filter>src\math</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Framebuffer.c" />
+    <ClCompile Include="src\Visibility.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
