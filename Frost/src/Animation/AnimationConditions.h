@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "ECS/Entity.h"
+#include "entity/Entity.h"
 
 int AnimationConditionJump(EcsEntity* e, int s);
 int AnimationConditionFall(EcsEntity* e, int s);

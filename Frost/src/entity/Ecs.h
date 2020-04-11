@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include "clib/vector.h"
-#include "ECS/Entity.h"
+#include "entity/Entity.h"
 
 typedef void (EcsUpdateSystem)(EcsEntity* entity, float deltatime);
 typedef void (EcsRenderSystem)(EcsEntity* entity);

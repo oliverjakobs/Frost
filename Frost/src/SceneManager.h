@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include "Scene.h"
-#include "ECS/TemplateLoader.h"
+#include "entity/TemplateLoader.h"
 
 #include "Application/defines.h"
 

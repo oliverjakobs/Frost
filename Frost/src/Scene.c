@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "ecs/systems.h"
+#include "entity/systems.h"
 
 CLIB_VECTOR_DEFINE_FUNCS(layer, EcsEntity)
 

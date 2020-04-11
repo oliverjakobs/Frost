@@ -114,30 +114,6 @@
     <ClInclude Include="src\Camera\Camera.h">
       <Filter>src\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Components.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Ecs.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Entity.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\AnimationSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\PlayerSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\RenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\TemplateLoader.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\Event\Event.h">
       <Filter>src\Event</Filter>
     </ClInclude>
@@ -242,6 +218,30 @@
     </ClInclude>
     <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Visibility.h" />
+    <ClInclude Include="src\entity\Systems\AnimationSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Systems\PlayerSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Systems\RenderSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Ecs.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Entity.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\Systems.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entity\TemplateLoader.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -267,24 +267,6 @@
     </ClCompile>
     <ClCompile Include="src\Camera\Camera.c">
       <Filter>src\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Ecs.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Entity.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\AnimationSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\PlayerSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\RenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\TemplateLoader.c">
-      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Event\EventHandler.c">
       <Filter>src\Event</Filter>
@@ -369,6 +351,24 @@
     </ClCompile>
     <ClCompile Include="src\Ignis\Framebuffer.c" />
     <ClCompile Include="src\Visibility.c" />
+    <ClCompile Include="src\entity\Systems\AnimationSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity\Systems\PlayerSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity\Systems\RenderSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity\Ecs.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity\Entity.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity\TemplateLoader.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

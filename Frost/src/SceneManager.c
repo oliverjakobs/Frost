@@ -140,10 +140,8 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 	}
 }
 
-int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* templ)
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 {
-	char* json = (char*)templ;
-
 	float width = tb_json_float(json, "{'size'[0", NULL);
 	float height = tb_json_float(json, "{'size'[1", NULL);
 
@@ -255,11 +253,6 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
 }
 
 #include "Visibility.h"
-
-int cmp_intersection_angle(const void* a, const void* b)
-{
-	return 0;
-}
 
 void SceneManagerOnRender(SceneManager* manager)
 {
