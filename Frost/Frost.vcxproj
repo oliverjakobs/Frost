@@ -125,7 +125,6 @@
     <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
     <ClInclude Include="src\Ignis\Packages\stb_image.h" />
-    <ClInclude Include="src\Ignis\Packages\stb_image_write.h" />
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\Physics\Body.h" />

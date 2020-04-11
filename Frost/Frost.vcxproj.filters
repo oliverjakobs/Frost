@@ -189,9 +189,6 @@
     <ClInclude Include="src\Ignis\Packages\stb_image.h">
       <Filter>src\Ignis\Packages</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_image_write.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\Packages\stb_truetype.h">
       <Filter>src\Ignis\Packages</Filter>
     </ClInclude>
