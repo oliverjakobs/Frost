@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "entity/Ecs.h"
+#include "ECS/Ecs.h"
 
 #include "Camera/Camera.h"
 

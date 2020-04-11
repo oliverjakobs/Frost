@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "entity/Entity.h"
+#include "ECS/Entity.h"
 #include "Graphics/ResourceManager.h"
 
 EcsEntity* EcsEntityLoadTemplate(const char* path, ResourceManager* res);
