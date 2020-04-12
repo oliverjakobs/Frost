@@ -27,6 +27,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
 	
+	ShadowMapperInit(&scene->shadow);
+
 	scene->smooth_movement = 0.5f;
 
 	return 1;
@@ -35,6 +37,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
+
+	ShadowMapperDestroy(&scene->shadow);
 
 	SceneClearEntities(scene);
 
@@ -65,6 +69,11 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, size_t layer)
 		entity->camera->scene_h = scene->height;
 	}
 
+	if (entity->shadow)
+	{
+		ShadowMapperAddEntity(&scene->shadow, entity);
+	}
+
 	layer_vector_push(&scene->layers[layer], entity);
 }
 
@@ -85,6 +94,7 @@ void SceneRemoveEntity(Scene* scene, const char* name, size_t layer)
 	{
 		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name, name) == 0)
 		{
+			/* TODO: decrease shadow_edge_count */
 			layer_vector_delete(&scene->layers[layer], i);
 			return;
 		}
@@ -195,23 +205,7 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos, size_t layer)
 	return NULL;
 }
 
-line* SceneGetEdges(Scene* scene, size_t* line_count)
+line* SceneGetEdges(Scene* scene, size_t* edge_count)
 {
-	line* lines = (line*)malloc(sizeof(line) * scene->world->bodies.size * 4);
-
-	size_t line_index = 0;
-	for (size_t i = 0; i < scene->world->bodies.size; i++)
-	{
-		Body* body = WorldGetBody(scene->world, i);
-		rect r = BodyGetRect(body);
-
-		lines[line_index++] = (line){ { r.x, r.y }, { r.x + r.w, r.y } };
-		lines[line_index++] = (line){ { r.x + r.w, r.y }, { r.x + r.w, r.y + r.h } };
-		lines[line_index++] = (line){ { r.x + r.w, r.y + r.h }, { r.x, r.y + r.h } };
-		lines[line_index++] = (line){ { r.x, r.y + r.h }, {  r.x, r.y } };
-	}
-
-	*line_count = line_index;
-
-	return lines;
+	return ShadowMapperGetEdges(&scene->shadow, edge_count);
 }

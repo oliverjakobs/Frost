@@ -13,6 +13,8 @@ extern "C"
 #include "Event/EventHandler.h"
 #include "Graphics/Background.h"
 
+#include "ShadowMapper.h"
+
 #include "clib/vector.h"
 
 #define SCENE_INITIAL_LAYER_SIZE	8
@@ -35,6 +37,7 @@ typedef struct
 	size_t max_layer;
 
 	Background background;
+	ShadowMapper shadow;
 
 	float smooth_movement;
 } Scene;
@@ -55,7 +58,7 @@ void SceneOnRenderDebug(Scene* scene);
 EcsEntity* SceneGetEntity(Scene* scene, const char* name, size_t layer);
 EcsEntity* SceneGetEntityAt(Scene* scene, vec2 position, size_t layer);
 
-line* SceneGetEdges(Scene* scene, size_t* line_count);
+line* SceneGetEdges(Scene* scene, size_t* edge_count);
 
 #ifdef __cplusplus
 }

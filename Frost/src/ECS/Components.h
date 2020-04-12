@@ -10,6 +10,7 @@ extern "C"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
 #include "Camera/Camera.h"
+#include "math/math.h"
 
 typedef struct
 {
@@ -70,6 +71,12 @@ typedef struct
 	float scene_w;
 	float scene_h;
 } EcsCameraComponent;
+
+typedef struct
+{
+	line* edges;
+	size_t edge_count;
+} EcsShadowComponent;
 
 #ifdef __cplusplus
 }

@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 
-
 vec3* Visibility(vec2 pos, line* edges, size_t edge_count, size_t* intersection_count)
 {
 	vec3* intersections = (vec3*)malloc(sizeof(vec3) * 3 * 2 * edge_count);

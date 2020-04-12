@@ -242,6 +242,7 @@
     <ClInclude Include="src\ECS\TemplateLoader.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\ShadowMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -369,6 +370,7 @@
     <ClCompile Include="src\ECS\TemplateLoader.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\ShadowMapper.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
