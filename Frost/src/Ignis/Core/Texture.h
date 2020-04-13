@@ -6,46 +6,48 @@ extern "C"
 {
 #endif
 
-#include "../Packages/glad/glad.h"
+#include "../glad/glad.h"
 
-	typedef struct
-	{
-		GLint internal_format;
-		GLenum format;
+typedef struct
+{
+	GLint internal_format;
+	GLenum format;
 
-		GLint min_filter;
-		GLint mag_filter;
+	GLint min_filter;
+	GLint mag_filter;
 
-		GLint wrap_s;
-		GLint wrap_t;
-	} IgnisTextureConfig;
+	GLint wrap_s;
+	GLint wrap_t;
+} IgnisTextureConfig;
 
 #define IGNIS_DEFAULT_CONFIG { GL_RGBA8, GL_RGBA, GL_LINEAR, GL_NEAREST, GL_REPEAT, GL_REPEAT }
 
-	typedef struct
-	{
-		GLuint name;
+typedef struct
+{
+	GLuint name;
+	GLuint target;
 
-		int width;
-		int height;
+	int width;
+	int height;
 
-		GLuint rows;
-		GLuint columns;
+	GLuint rows;
+	GLuint columns;
 
-		GLuint slot;
+	GLuint slot;
 
-		IgnisTextureConfig config;
-	} IgnisTexture;
+	IgnisTextureConfig config;
+} IgnisTexture;
 
-	int ignisCreateTextureEmpty(IgnisTexture* texture, int width, int height, IgnisTextureConfig* config);
-	int ignisCreateTextureRaw(IgnisTexture* texture, int width, int height, void* pixels, IgnisTextureConfig* config);
-	int ignisCreateTexture(IgnisTexture* texture, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* config);
-	void ignisDestroyTexture(IgnisTexture* texture);
+int ignisCreateTextureEmpty(IgnisTexture* texture, GLuint target, int width, int height, IgnisTextureConfig* config);
+int ignisCreateTextureRaw(IgnisTexture* texture, GLuint target, int width, int height, void* pixels, IgnisTextureConfig* config);
+int ignisCreateTexture(IgnisTexture* texture, GLuint target, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* config);
 
-	GLuint ignisGenerateTexture2D(int width, int height, void* pixels, IgnisTextureConfig config);
+void ignisDestroyTexture(IgnisTexture* texture);
 
-	void ignisBindTexture(IgnisTexture* texture, GLuint slot);
-	void ignisUnbindTexture(IgnisTexture* texture);
+GLuint ignisGenerateTexture(GLuint target, int width, int height, void* pixels, IgnisTextureConfig config);
+
+void ignisBindTexture(IgnisTexture* texture, GLuint slot);
+void ignisUnbindTexture(IgnisTexture* texture);
 
 #ifdef __cplusplus
 }

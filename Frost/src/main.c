@@ -60,13 +60,13 @@ void OnUpdate(Application* app, float deltaTime)
 void OnRender(Application* app)
 {
 	/* framebuffer */
-	ignisFrameBufferBind(&framebuffer);
+	ignisBindFrameBuffer(&framebuffer);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	SceneManagerOnRender(&scene_manager);
 
 	/* framebuffer */
-	ignisFrameBufferUnbind();
+	ignisBindFrameBuffer(NULL);
 	Renderer2DRenderTexture(&framebuffer.texture, 0.0f, (float)app->height, (float)app->width, -(float)app->height, ApplicationGetScreenProjPtr(app));
 }
 
@@ -159,7 +159,7 @@ int main()
 	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
 	/* framebuffer */
-	ignisFrameBufferGenerate(&framebuffer, app->width, app->height);
+	ignisGenerateFrameBuffer(&framebuffer, GL_TEXTURE_2D, app->width, app->height);
 
 	gui_init((float)app->width, (float)app->height);
 	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
@@ -182,7 +182,7 @@ int main()
 	ApplicationRun(app);
 
 	/* framebuffer */
-	ignisFrameBufferDelete(&framebuffer);
+	ignisDeleteFrameBuffer(&framebuffer);
 
 	gui_free();
 

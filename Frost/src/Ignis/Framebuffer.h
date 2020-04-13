@@ -14,17 +14,15 @@ typedef struct
 	GLuint name;
 
 	IgnisTexture texture;
-	IgnisBuffer rbo;
 
 	int width;
 	int height;
 } IgnisFrameBuffer;
 
-int ignisFrameBufferGenerate(IgnisFrameBuffer* fbo, int width, int height);
-void ignisFrameBufferDelete(IgnisFrameBuffer* fbo);
+int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int width, int height);
+void ignisDeleteFrameBuffer(IgnisFrameBuffer* fbo);
 
-void ignisFrameBufferBind(IgnisFrameBuffer* fbo);
-void ignisFrameBufferUnbind();
+void ignisBindFrameBuffer(IgnisFrameBuffer* fbo);
 
 #ifdef __cplusplus
 }

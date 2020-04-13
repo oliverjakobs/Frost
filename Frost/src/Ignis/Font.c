@@ -1,7 +1,7 @@
 #include "Font.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION
-#include "Packages/stb_truetype.h"
+#include "stb_truetype.h"
 
 #include "Ignis.h"
 
@@ -52,7 +52,7 @@ int ignisLoadFontConfig(IgnisFont* font, const char* path, float size, int first
 	config.internal_format = GL_R8;
 	config.format = GL_RED;
 
-	if (!ignisCreateTextureRaw(&font->texture, font->bitmap_width, font->bitmap_height, bitmap, &config))
+	if (!ignisCreateTextureRaw(&font->texture, GL_TEXTURE_2D, font->bitmap_width, font->bitmap_height, bitmap, &config))
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to create texture");
 		ignisDeleteFont(font);

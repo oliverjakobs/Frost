@@ -2,28 +2,24 @@
 
 #include "Ignis.h"
 
-int ignisFrameBufferGenerate(IgnisFrameBuffer* fbo, int width, int height)
+int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int width, int height)
 {
 	fbo->width = width;
 	fbo->height = height;
 
 	/* create a color attachment texture */
-	ignisCreateTextureEmpty(&fbo->texture, width, height, NULL);
-
-	/* create a renderbuffer object for depth and stencil attachment */
-	ignisGenerateRenderBuffer(&fbo->rbo);
-	ignisRenderBufferStorage(&fbo->rbo, GL_DEPTH24_STENCIL8, width, height);
+	ignisCreateTextureEmpty(&fbo->texture, texture_target, width, height, NULL);
 
 	glGenFramebuffers(1, &fbo->name);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo->name);
 
 	/* create the actual framebuffer object */
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo->texture.name, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, fbo->rbo.name);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, fbo->texture.name, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		_ignisErrorCallback(IGNIS_CRITICAL, "Framebuffer is not complete!");
+		_ignisErrorCallback(IGNIS_CRITICAL, "[Framebuffer] Framebuffer is not complete!");
+		ignisDeleteFrameBuffer(fbo);
 		return 0;
 	}
 
@@ -31,20 +27,14 @@ int ignisFrameBufferGenerate(IgnisFrameBuffer* fbo, int width, int height)
 	return 1;
 }
 
-void ignisFrameBufferDelete(IgnisFrameBuffer* fbo)
+void ignisDeleteFrameBuffer(IgnisFrameBuffer* fbo)
 {
 	ignisDestroyTexture(&fbo->texture);
-	ignisDeleteBuffer(&fbo->rbo);
 
 	glDeleteFramebuffers(1, &fbo->name);
 }
 
-void ignisFrameBufferBind(IgnisFrameBuffer* fbo)
+void ignisBindFrameBuffer(IgnisFrameBuffer* fbo)
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo->name);
-}
-
-void ignisFrameBufferUnbind()
-{
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, (fbo) ? fbo->name : 0);
 }

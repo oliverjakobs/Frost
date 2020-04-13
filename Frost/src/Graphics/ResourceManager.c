@@ -104,7 +104,7 @@ IgnisTexture* ResourceManagerAddTexture(ResourceManager* manager, const char* na
 
 	IgnisTexture* texture = (IgnisTexture*)malloc(sizeof(IgnisTexture));
 
-	if (ignisCreateTexture(texture, path, rows, columns, 1, NULL))
+	if (ignisCreateTexture(texture, GL_TEXTURE_2D, path, rows, columns, 1, NULL))
 	{
 		_texkvp* kvp = (_texkvp*)malloc(sizeof(_texkvp));
 

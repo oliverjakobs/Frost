@@ -58,14 +58,11 @@
     <Filter Include="src\Ignis\Core">
       <UniqueIdentifier>{4E1E7098-3AEC-639E-2380-D4C40FED3F03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Ignis\Packages">
-      <UniqueIdentifier>{2438211C-101C-E271-797C-DCC4657FCCF3}</UniqueIdentifier>
+    <Filter Include="src\Ignis\glad">
+      <UniqueIdentifier>{FDCC8398-E99A-779E-D22E-E8C4BE9B5303}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Ignis\Packages\glad">
-      <UniqueIdentifier>{ABC12AD1-17F9-7268-2003-D78B8CB99961}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Packages\glad\KHR">
-      <UniqueIdentifier>{9FADD406-0BBB-02ED-94A1-FED700AECEA3}</UniqueIdentifier>
+    <Filter Include="src\Ignis\glad\KHR">
+      <UniqueIdentifier>{F111879F-DDF5-47F5-4656-424832593277}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Physics">
       <UniqueIdentifier>{9F8B9316-0B41-0C0C-9435-06E300EA0210}</UniqueIdentifier>
@@ -114,6 +111,30 @@
     <ClInclude Include="src\Camera\Camera.h">
       <Filter>src\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Components.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Ecs.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Entity.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\AnimationSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\PlayerSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\Systems\RenderSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\TemplateLoader.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Event\Event.h">
       <Filter>src\Event</Filter>
     </ClInclude>
@@ -153,22 +174,25 @@
     <ClInclude Include="src\Ignis\Font.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Framebuffer.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ignis\Ignis.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h">
-      <Filter>src\Ignis\Packages\glad\KHR</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\glad\glad.h">
-      <Filter>src\Ignis\Packages\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_image.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Packages\stb_truetype.h">
-      <Filter>src\Ignis\Packages</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\VertexArray.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h">
+      <Filter>src\Ignis\glad\KHR</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\glad\glad.h">
+      <Filter>src\Ignis\glad</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\stb_image.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ignis\stb_truetype.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
     <ClInclude Include="src\Physics\Body.h">
@@ -181,6 +205,12 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\SceneManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ShadowMapper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Visibility.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\clib\clib.h">
@@ -216,33 +246,6 @@
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Framebuffer.h" />
-    <ClInclude Include="src\Visibility.h" />
-    <ClInclude Include="src\ECS\Systems\AnimationSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\PlayerSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\RenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Ecs.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Entity.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\TemplateLoader.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShadowMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -268,6 +271,24 @@
     </ClCompile>
     <ClCompile Include="src\Camera\Camera.c">
       <Filter>src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Ecs.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Entity.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Systems\AnimationSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Systems\PlayerSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\Systems\RenderSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\TemplateLoader.c">
+      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Event\EventHandler.c">
       <Filter>src\Event</Filter>
@@ -305,14 +326,17 @@
     <ClCompile Include="src\Ignis\Font.c">
       <Filter>src\Ignis</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ignis\Framebuffer.c">
+      <Filter>src\Ignis</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ignis\Ignis.c">
       <Filter>src\Ignis</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Packages\glad\glad.c">
-      <Filter>src\Ignis\Packages\glad</Filter>
-    </ClCompile>
     <ClCompile Include="src\Ignis\VertexArray.c">
       <Filter>src\Ignis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\glad\glad.c">
+      <Filter>src\Ignis\glad</Filter>
     </ClCompile>
     <ClCompile Include="src\Physics\Body.c">
       <Filter>src\Physics</Filter>
@@ -324,6 +348,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\SceneManager.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShadowMapper.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Visibility.c">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\clib\hashmap.c">
@@ -350,27 +380,6 @@
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Framebuffer.c" />
-    <ClCompile Include="src\Visibility.c" />
-    <ClCompile Include="src\ECS\Systems\AnimationSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\PlayerSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\RenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Ecs.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Entity.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\TemplateLoader.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShadowMapper.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -393,6 +402,12 @@
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\font.vert">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\primitives.frag">
+      <Filter>res\shaders</Filter>
+    </None>
+    <None Include="res\shaders\primitives.vert">
       <Filter>res\shaders</Filter>
     </None>
     <None Include="res\shaders\renderer2D.frag">
@@ -439,12 +454,6 @@
     </None>
     <None Include="res\templates\scenes\scene2.json">
       <Filter>res\templates\scenes</Filter>
-    </None>
-    <None Include="res\shaders\primitives.vert">
-      <Filter>res\shaders</Filter>
-    </None>
-    <None Include="res\shaders\primitives.frag">
-      <Filter>res\shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

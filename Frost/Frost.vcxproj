@@ -109,7 +109,6 @@
     <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -121,16 +120,19 @@
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
     <ClInclude Include="src\Ignis\Font.h" />
+    <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
-    <ClInclude Include="src\Ignis\Packages\glad\KHR\khrplatform.h" />
-    <ClInclude Include="src\Ignis\Packages\glad\glad.h" />
-    <ClInclude Include="src\Ignis\Packages\stb_image.h" />
-    <ClInclude Include="src\Ignis\Packages\stb_truetype.h" />
     <ClInclude Include="src\Ignis\VertexArray.h" />
+    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
+    <ClInclude Include="src\Ignis\glad\glad.h" />
+    <ClInclude Include="src\Ignis\stb_image.h" />
+    <ClInclude Include="src\Ignis\stb_truetype.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\ShadowMapper.h" />
+    <ClInclude Include="src\Visibility.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
@@ -142,8 +144,6 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
-    <ClInclude Include="src\ShadowMapper.h" />
-    <ClInclude Include="src\Visibility.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c" />
@@ -161,7 +161,6 @@
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
-    <ClCompile Include="src\Ignis\Framebuffer.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
@@ -173,13 +172,16 @@
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.c" />
     <ClCompile Include="src\Ignis\Font.c" />
+    <ClCompile Include="src\Ignis\Framebuffer.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
-    <ClCompile Include="src\Ignis\Packages\glad\glad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
+    <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Physics\Body.c" />
     <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Scene.c" />
     <ClCompile Include="src\SceneManager.c" />
+    <ClCompile Include="src\ShadowMapper.c" />
+    <ClCompile Include="src\Visibility.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\gui\gui.c" />
@@ -188,8 +190,6 @@
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
-    <ClCompile Include="src\ShadowMapper.c" />
-    <ClCompile Include="src\Visibility.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

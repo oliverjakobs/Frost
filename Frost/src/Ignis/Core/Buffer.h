@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "../Packages/glad/glad.h"
+#include "../glad/glad.h"
 
 	/* Buffer */
 	typedef struct
