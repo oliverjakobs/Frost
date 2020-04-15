@@ -122,6 +122,7 @@
     <ClInclude Include="src\Ignis\Font.h" />
     <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
+    <ClInclude Include="src\Ignis\Quad.h" />
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\glad\glad.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Ignis\Font.c" />
     <ClCompile Include="src\Ignis\Framebuffer.c" />
     <ClCompile Include="src\Ignis\Ignis.c" />
+    <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Physics\Body.c" />

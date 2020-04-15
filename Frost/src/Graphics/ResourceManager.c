@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 
+#define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
 #include "clib/clib.h"
 

@@ -20,11 +20,11 @@ int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int w
 	{
 		_ignisErrorCallback(IGNIS_CRITICAL, "[Framebuffer] Framebuffer is not complete!");
 		ignisDeleteFrameBuffer(fbo);
-		return 0;
+		return IGNIS_FAILURE;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	return 1;
+	return IGNIS_SUCCESS;
 }
 
 void ignisDeleteFrameBuffer(IgnisFrameBuffer* fbo)

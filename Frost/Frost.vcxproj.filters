@@ -180,6 +180,9 @@
     <ClInclude Include="src\Ignis\Ignis.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ignis\Quad.h">
+      <Filter>src\Ignis</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ignis\VertexArray.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
@@ -330,6 +333,9 @@
       <Filter>src\Ignis</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\Ignis.c">
+      <Filter>src\Ignis</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ignis\Quad.c">
       <Filter>src\Ignis</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\VertexArray.c">

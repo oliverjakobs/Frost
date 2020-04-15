@@ -2,7 +2,6 @@
 
 #include "Application/Debugger.h"
 
-#define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
 
 #define TEMPLATE_LOADER_STRLEN	32

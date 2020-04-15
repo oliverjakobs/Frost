@@ -16,6 +16,10 @@ extern "C"
 #define IGNIS_ASSERT(x) assert(x)
 #endif
 
+/* defines */
+#define IGNIS_SUCCESS	1
+#define IGNIS_FAILURE	0
+
 /* Core */
 #include "Core/Texture.h"
 #include "Core/Shader.h"

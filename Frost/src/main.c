@@ -4,12 +4,8 @@
 
 #include "gui/gui.h"
 
-#include "Ignis/Framebuffer.h"
-
 SceneManager scene_manager;
 Camera camera;
-
-IgnisFrameBuffer framebuffer;
 
 void OnEvent(Application* app, const Event e)
 {
@@ -59,15 +55,7 @@ void OnUpdate(Application* app, float deltaTime)
 
 void OnRender(Application* app)
 {
-	/* framebuffer */
-	ignisBindFrameBuffer(&framebuffer);
-	glClear(GL_COLOR_BUFFER_BIT);
-
 	SceneManagerOnRender(&scene_manager);
-
-	/* framebuffer */
-	ignisBindFrameBuffer(NULL);
-	Renderer2DRenderTexture(&framebuffer.texture, 0.0f, (float)app->height, (float)app->width, -(float)app->height, ApplicationGetScreenProjPtr(app));
 }
 
 void OnRenderDebug(Application* app)
@@ -158,9 +146,6 @@ int main()
 
 	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
-	/* framebuffer */
-	ignisGenerateFrameBuffer(&framebuffer, GL_TEXTURE_2D, app->width, app->height);
-
 	gui_init((float)app->width, (float)app->height);
 	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
@@ -180,9 +165,6 @@ int main()
 	ApplicationSetOnRenderGuiCallback(app, OnRenderGui);
 
 	ApplicationRun(app);
-
-	/* framebuffer */
-	ignisDeleteFrameBuffer(&framebuffer);
 
 	gui_free();
 
