@@ -7,6 +7,42 @@
 SceneManager scene_manager;
 Camera camera;
 
+void OnInit(Application* app)
+{
+	/* ---------------| Config |------------------------------------------ */
+	ignisEnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
+	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
+	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
+	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
+
+	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
+
+	gui_init((float)app->width, (float)app->height);
+	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
+
+	ApplicationEnableDebugMode(app, 1);
+	ApplicationEnableVsync(app, 0);
+	ApplicationShowGui(app, 1);
+
+	CameraCreateOrtho(&camera, (vec3) { app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2) { (float)app->width, (float)app->height });
+	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
+	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
+	SceneManagerChangeScene(&scene_manager, "scene");
+}
+
+void OnDestroy(Application* app)
+{
+	gui_free();
+
+	FontRendererDestroy();
+	Primitives2DDestroy();
+	BatchRenderer2DDestroy();
+	Renderer2DDestroy();
+}
+
 void OnEvent(Application* app, const Event e)
 {
 	if (e.type == EVENT_WINDOW_RESIZE)
@@ -131,51 +167,21 @@ void OnRenderGui(Application* app)
 
 int main()
 {
-	Application* app = (Application*)malloc(sizeof(Application));
-	ApplicationLoadConfig(app, "config.json");
+	Application app;
 
-	/* ---------------| Config |------------------------------------------ */
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	ApplicationSetOnInitCallback(&app, OnInit);
+	ApplicationSetOnDestroyCallback(&app, OnDestroy);
+	ApplicationSetOnEventCallback(&app, OnEvent);
+	ApplicationSetOnUpdateCallback(&app, OnUpdate);
+	ApplicationSetOnRenderCallback(&app, OnRender);
+	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
+	ApplicationSetOnRenderGuiCallback(&app, OnRenderGui);
 
-	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
-	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
-	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
-	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
+	ApplicationLoadConfig(&app, "config.json");
 
-	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
+	ApplicationRun(&app);
 
-	gui_init((float)app->width, (float)app->height);
-	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
-
-	ApplicationEnableDebugMode(app, 1);
-	ApplicationEnableVsync(app, 0);
-	ApplicationShowGui(app, 0);
-
-	CameraCreateOrtho(&camera, (vec3){ app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2){ (float)app->width, (float)app->height });
-	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
-	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
-	SceneManagerChangeScene(&scene_manager, "scene2");
-
-	ApplicationSetOnEventCallback(app, OnEvent);
-	ApplicationSetOnUpdateCallback(app, OnUpdate);
-	ApplicationSetOnRenderCallback(app, OnRender);
-	ApplicationSetOnRenderDebugCallback(app, OnRenderDebug);
-	ApplicationSetOnRenderGuiCallback(app, OnRenderGui);
-
-	ApplicationRun(app);
-
-	gui_free();
-
-	FontRendererDestroy();
-	Primitives2DDestroy();
-	BatchRenderer2DDestroy();
-	Renderer2DDestroy();
-
-	ApplicationDestroy(app);
-
-	free(app);
+	ApplicationDestroy(&app);
 
 	return 0;
 }

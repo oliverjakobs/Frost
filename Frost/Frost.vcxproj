@@ -95,6 +95,8 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
+    <ClInclude Include="src\Application\Event.h" />
+    <ClInclude Include="src\Application\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
     <ClInclude Include="src\Graphics\ResourceManager.h" />
+    <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
     <ClInclude Include="src\Ignis\Core\Texture.h" />
@@ -123,11 +126,11 @@
     <ClInclude Include="src\Ignis\Framebuffer.h" />
     <ClInclude Include="src\Ignis\Ignis.h" />
     <ClInclude Include="src\Ignis\Quad.h" />
+    <ClInclude Include="src\Ignis\stb\stb_image.h" />
+    <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\glad\glad.h" />
-    <ClInclude Include="src\Ignis\stb_image.h" />
-    <ClInclude Include="src\Ignis\stb_truetype.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scene.h" />
@@ -152,6 +155,7 @@
     <ClCompile Include="src\Animation\Animator.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
+    <ClCompile Include="src\Application\EventHandler.c" />
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
@@ -169,6 +173,7 @@
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Graphics\ResourceManager.c" />
+    <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
     <ClCompile Include="src\Ignis\Core\Texture.c" />

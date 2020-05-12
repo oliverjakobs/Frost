@@ -70,7 +70,7 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 
 		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
 
-		IgnisTexture* texture = ResourceManagerGetTexture(res, tex_name);
+		IgnisTexture2D* texture = ResourceManagerGetTexture2D(res, tex_name);
 
 		if (texture)
 			EcsEntityAddTexture(entity, texture, width, height, frame);

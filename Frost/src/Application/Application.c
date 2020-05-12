@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#include "Event/EventHandler.h"
+#include "EventHandler.h"
 
 #include "ApplicationCallback.h"
 
@@ -9,7 +9,7 @@
 #include "Debugger.h"
 #include "defines.h"
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor)
+int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor, const char* res)
 {
 	app->title = malloc(strlen(title));
 	strcpy(app->title, title);
@@ -91,8 +91,13 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
 
-	app->running = 1;
-	return 1;
+	if (res)
+		app->running = ResourceManagerInit(&app->resources, res);
+
+	if (app->on_init)
+		app->on_init(app);
+
+	return app->running;
 }
 
 int ApplicationLoadConfig(Application* app, const char* path)
@@ -122,14 +127,14 @@ int ApplicationLoadConfig(Application* app, const char* path)
 
 	free(json);
 
-	if (ApplicationLoad(app, title, width, height, major, minor))
-		return ResourceManagerInit(&app->resources, index);
-
-	return 0;
+	return ApplicationLoad(app, title, width, height, major, minor, index);
 }
 
 void ApplicationDestroy(Application* app)
 {
+	if (app->on_destroy)
+		app->on_destroy(app);
+
 	ResourceManagerDestroy(&app->resources);
 
 	EventHandlerDestroy();
@@ -178,6 +183,16 @@ void ApplicationPause(Application* app)
 }
 
 void ApplicationClose(Application* app) { app->running = 0; }
+
+void ApplicationSetOnInitCallback(Application* app, void(*callback)(Application*))
+{
+	app->on_init = callback;
+}
+
+void ApplicationSetOnDestroyCallback(Application* app, void(*callback)(Application*))
+{
+	app->on_destroy = callback;
+}
 
 void ApplicationSetOnEventCallback(Application* app, void(*callback)(Application*, const Event))
 {

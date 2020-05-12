@@ -20,34 +20,29 @@ typedef struct
 	GLint wrap_t;
 } IgnisTextureConfig;
 
-#define IGNIS_DEFAULT_CONFIG { GL_RGBA8, GL_RGBA, GL_LINEAR, GL_NEAREST, GL_REPEAT, GL_REPEAT }
+GLuint ignisGenerateTexture(GLuint target, int width, int height, void* pixels, IgnisTextureConfig config);
+
+#define IGNIS_DEFAULT_CONFIG (IgnisTextureConfig){ GL_RGBA8, GL_RGBA, GL_LINEAR, GL_NEAREST, GL_REPEAT, GL_REPEAT }
 
 typedef struct
 {
 	GLuint name;
-	GLuint target;
 
 	int width;
 	int height;
 
 	GLuint rows;
 	GLuint columns;
+} IgnisTexture2D;
 
-	GLuint slot;
+int ignisGenerateTexture2D(IgnisTexture2D* texture, int width, int height, void* pixels, IgnisTextureConfig* config);
+int ignisGenerateTexStorage(IgnisTexture2D* texture, int width, int height, GLenum internal_format);
 
-	IgnisTextureConfig config;
-} IgnisTexture;
+int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* config);
 
-int ignisCreateTextureEmpty(IgnisTexture* texture, GLuint target, int width, int height, IgnisTextureConfig* config);
-int ignisCreateTextureRaw(IgnisTexture* texture, GLuint target, int width, int height, void* pixels, IgnisTextureConfig* config);
-int ignisCreateTexture(IgnisTexture* texture, GLuint target, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* config);
+void ignisDeleteTexture2D(IgnisTexture2D* texture);
 
-void ignisDestroyTexture(IgnisTexture* texture);
-
-GLuint ignisGenerateTexture(GLuint target, int width, int height, void* pixels, IgnisTextureConfig config);
-
-void ignisBindTexture(IgnisTexture* texture, GLuint slot);
-void ignisUnbindTexture(IgnisTexture* texture);
+void ignisBindTexture2D(IgnisTexture2D* texture, GLuint slot);
 
 #ifdef __cplusplus
 }

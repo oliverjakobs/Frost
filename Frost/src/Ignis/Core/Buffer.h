@@ -8,45 +8,40 @@ extern "C"
 
 #include "../glad/glad.h"
 
-	/* Buffer */
-	typedef struct
-	{
-		GLuint name;
-		GLenum target;
-	} IgnisBuffer;
+#define IGNIS_BUFFER_OFFSET(offset) ((void*) (offset))
 
-	/* buffer generation */
-	int ignisGenerateBuffer(IgnisBuffer* buffer, GLenum target);
-	void ignisGenerateArrayBuffer(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
-	void ignisGenerateElementBuffer(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
-	void ignisGenerateTextureBuffer(IgnisBuffer* tex_buffer, GLenum format, GLuint buffer);
-	void ignisGenerateRenderBuffer(IgnisBuffer* buffer);
+/* Buffer */
+typedef struct
+{
+	GLuint name;
+	GLenum target;
+} IgnisBuffer;
 
-	void ignisDeleteBuffer(IgnisBuffer* buffer);
+/* buffer generation */
+int ignisGenerateBuffer(IgnisBuffer* buffer, GLenum target);
+int ignisGenerateArrayBuffer(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
+int ignisGenerateElementBuffer(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
+int ignisGenerateTextureBuffer(IgnisBuffer* tex_buffer, GLenum format, GLuint buffer);
+int ignisGenerateRenderBuffer(IgnisBuffer* buffer);
 
-	/* buffer binding */
-	void ignisBindBuffer(IgnisBuffer* buffer);
-	void ignisUnbindBuffer(IgnisBuffer* buffer);
+void ignisDeleteBuffer(IgnisBuffer* buffer);
 
-	/* buffer data */
-	void ignisBufferData(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
-	void ignisBufferSubData(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr size, const void* data);
+/* buffer binding */
+void ignisBindBuffer(IgnisBuffer* buffer, GLenum target);
 
-	void ignisElementBufferData(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
+/* buffer data */
+void ignisBufferData(IgnisBuffer* buffer, GLsizeiptr size, const void* data, GLenum usage);
+void ignisBufferSubData(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr size, const void* data);
 
-	void ignisBindImageTexture(IgnisBuffer* buffer, GLuint unit, GLenum access, GLenum format);
-	void ignisRenderBufferStorage(IgnisBuffer* buffer, GLenum format, GLsizei width, GLsizei height);
+void ignisElementBufferData(IgnisBuffer* buffer, GLsizei count, const GLuint* data, GLenum usage);
 
-	/* buffer mapping */
-	void* ignisMapBuffer(IgnisBuffer* buffer, GLenum access);
-	void* ignisMapBufferRange(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access);
-	void ignisUnmapBuffer(IgnisBuffer* buffer);
+void ignisBindImageTexture(IgnisBuffer* buffer, GLuint unit, GLenum access, GLenum format);
+void ignisRenderBufferStorage(IgnisBuffer* buffer, GLenum format, GLsizei width, GLsizei height);
 
-	/* vertex attrib pointer */
-	void ignisVertexAttribPointerR(GLuint index, GLint size, GLboolean normalized, GLsizei stride, const void* offset);
-	void ignisVertexAttribPointer(GLuint index, GLint size, GLboolean normalized, GLsizei stride, GLintptr offset);
-	void ignisVertexAttribIPointer(GLuint index, GLint size, GLsizei stride, GLintptr offset);
-	void ignisVertexAttribDivisor(GLuint index, GLuint divisor);
+/* buffer mapping */
+void* ignisMapBuffer(IgnisBuffer* buffer, GLenum access);
+void* ignisMapBufferRange(IgnisBuffer* buffer, GLintptr offset, GLsizeiptr length, GLbitfield access);
+void ignisUnmapBuffer(IgnisBuffer* buffer);
 
 #ifdef __cplusplus
 }

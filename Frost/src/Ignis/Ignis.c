@@ -105,6 +105,19 @@ GLuint ignisGetOpenGLTypeSize(GLenum type)
 	}
 }
 
+int ignisEnableBlend(GLenum sfactor, GLenum dfactor)
+{
+	if (sfactor == GL_NONE && dfactor == GL_NONE)
+	{
+		glDisable(GL_BLEND);
+		return 0;
+	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(sfactor, dfactor);
+	return 1;
+}
+
 const IgnisColorRGBA IGNIS_WHITE = { 1.0f, 1.0f, 1.0f, 1.0f };
 const IgnisColorRGBA IGNIS_BLACK = { 0.0f, 0.0f, 0.0f, 1.0f };
 const IgnisColorRGBA IGNIS_RED = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -119,6 +132,11 @@ IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha)
 	color->a = alpha;
 
 	return color;
+}
+
+void ignisClearColorBuffer(IgnisColorRGBA color)
+{
+	glClearBufferfv(GL_COLOR, 0, &color.r);
 }
 
 char* ignisReadFile(const char* path, size_t* sizeptr)

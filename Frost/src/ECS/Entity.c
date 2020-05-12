@@ -77,7 +77,7 @@ int EcsEntityAddMovement(EcsEntity* entity, float ms, float jp)
 	return 0;
 }
 
-int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture* texture, float width, float height, size_t frame)
+int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture2D* texture, float width, float height, size_t frame)
 {
 	if (entity->texture) return 0;
 

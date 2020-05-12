@@ -53,6 +53,8 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...);
 
 GLuint ignisGetOpenGLTypeSize(GLenum type);
 
+int ignisEnableBlend(GLenum sfactor, GLenum dfactor);
+
 /* Color */
 typedef struct
 {
@@ -69,6 +71,8 @@ extern const IgnisColorRGBA IGNIS_MAGENTA;
 extern const IgnisColorRGBA IGNIS_YELLOW;
 
 IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha);
+
+void ignisClearColorBuffer(IgnisColorRGBA color);
 
 char* ignisReadFile(const char* path, size_t* sizeptr);
 

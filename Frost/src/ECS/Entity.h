@@ -26,7 +26,7 @@ void EcsEntityDestroy(EcsEntity* entity);
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y);
 int EcsEntityAddPhysics(EcsEntity* entity, Body* body, float x, float y);
 int EcsEntityAddMovement(EcsEntity* entity, float ms, float jp);
-int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture* texture, float width, float height, size_t frame);
+int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture2D* texture, float width, float height, size_t frame);
 int EcsEntityAddAnimation(EcsEntity* entity, Animator* animator);
 int EcsEntityAddCamera(EcsEntity* entity, float smooth);
 int EcsEntityAddShadow(EcsEntity* entity, line* edges, size_t edge_count);

@@ -2,7 +2,7 @@
 
 #include "Input.h"
 
-#include "Event/EventHandler.h"
+#include "EventHandler.h"
 
 void ApplicationEventCallback(Application* app, const Event e)
 {

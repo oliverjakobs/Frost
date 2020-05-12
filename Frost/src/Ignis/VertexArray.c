@@ -2,34 +2,39 @@
 
 #include "Ignis.h"
 
-void ignisGenerateVertexArray(IgnisVertexArray* vao)
+int ignisGenerateVertexArray(IgnisVertexArray* vao)
 {
-	if (vao)
+	if (!vao) return IGNIS_FAILURE;
+
+	glGenVertexArrays(1, &vao->name);
+	glBindVertexArray(vao->name);
+
+	vao->array_buffers = (IgnisBuffer*)malloc(IGNIS_BUFFER_ARRAY_INITIAL_SIZE * sizeof(IgnisBuffer));
+	if (!vao->array_buffers)
 	{
-		glGenVertexArrays(1, &vao->name);
-		glBindVertexArray(vao->name);
-
-		vao->vertex_attrib_index = 0;
-
-		vao->array_buffers = (IgnisBuffer*)malloc(IGNIS_BUFFER_ARRAY_INITIAL_SIZE * sizeof(IgnisBuffer));
-		vao->buffer_count = IGNIS_BUFFER_ARRAY_INITIAL_SIZE;
-		vao->buffer_used = 0;
-
-		vao->element_buffer.name = 0;
-		vao->element_buffer.target = 0;
-		vao->element_count = 0;
+		_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to allocate memeory for array buffers");
+		return IGNIS_FAILURE;
 	}
+
+	vao->array_buffer_capacity = IGNIS_BUFFER_ARRAY_INITIAL_SIZE;
+	vao->array_buffer_count = 0;
+
+	vao->element_buffer.name = 0;
+	vao->element_buffer.target = 0;
+	vao->element_count = 0;
+
+	return IGNIS_SUCCESS;
 }
 
 void ignisDeleteVertexArray(IgnisVertexArray* vao)
 {
-	for (size_t i = 0; i < vao->buffer_used; i++)
+	for (size_t i = 0; i < vao->array_buffer_count; i++)
 	{
 		ignisDeleteBuffer(&vao->array_buffers[i]);
 	}
 
 	free(vao->array_buffers);
-	vao->buffer_used = vao->buffer_count = 0;
+	vao->array_buffer_count = vao->array_buffer_capacity = 0;
 
 	if (vao->element_buffer.target == GL_ELEMENT_ARRAY_BUFFER)
 		ignisDeleteBuffer(&vao->element_buffer);
@@ -40,51 +45,56 @@ void ignisDeleteVertexArray(IgnisVertexArray* vao)
 
 void ignisBindVertexArray(IgnisVertexArray* vao)
 {
-	glBindVertexArray(vao->name);
+	glBindVertexArray((vao) ? vao->name : 0);
 }
 
-void ignisUnbindVertexArray(IgnisVertexArray* vao)
+int _ignisInsertArrayBuffer(IgnisVertexArray* vao, IgnisBuffer* buffer)
 {
-	glBindVertexArray(0);
-}
-
-void _ignisInsertArrayBuffer(IgnisVertexArray* vao, IgnisBuffer* buffer)
-{
-	if (vao->buffer_used == vao->buffer_count)
+	if (vao->array_buffer_count == vao->array_buffer_capacity)
 	{
-		vao->buffer_count *= IGNIS_BUFFER_ARRAY_GROWTH_FACTOR;
-		void* temp = realloc(vao->array_buffers, vao->buffer_count * sizeof(IgnisBuffer));
+		vao->array_buffer_capacity *= IGNIS_BUFFER_ARRAY_GROWTH_FACTOR;
+		void* temp = realloc(vao->array_buffers, vao->array_buffer_capacity * sizeof(IgnisBuffer));
 
 		if (!temp)
 		{
-			_ignisErrorCallback(IGNIS_ERROR, "[VAO] Failed to grow dynamic buffer array");
-			return;
+			_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to grow dynamic buffer array");
+			return IGNIS_FAILURE;
 		}
 
 		vao->array_buffers = (IgnisBuffer*)temp;
 	}
 
-	memcpy(vao->array_buffers + vao->buffer_used++, buffer, sizeof(IgnisBuffer));
+	memcpy(vao->array_buffers + vao->array_buffer_count++, buffer, sizeof(IgnisBuffer));
+	return IGNIS_SUCCESS;
 }
 
-void ignisAddArrayBuffer(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage)
+int ignisAddArrayBuffer(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage)
 {
 	ignisBindVertexArray(vao);
 
 	IgnisBuffer buffer;
-	ignisGenerateArrayBuffer(&buffer, size, data, usage);
+	if (ignisGenerateArrayBuffer(&buffer, size, data, usage) == IGNIS_SUCCESS)
+		return _ignisInsertArrayBuffer(vao, &buffer);
 
-	_ignisInsertArrayBuffer(vao, &buffer);
+	_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to generate array buffer");
+
+	return IGNIS_FAILURE;
 }
 
-void ignisAddArrayBufferLayout(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage, IgnisBufferElement* layout, size_t count)
+int ignisAddArrayBufferLayout(IgnisVertexArray* vao, GLsizeiptr size, const void* data, GLenum usage, GLuint vertex_attrib_index, IgnisBufferElement* layout, size_t count)
 {
 	ignisBindVertexArray(vao);
 
 	IgnisBuffer buffer;
-	ignisGenerateArrayBuffer(&buffer, size, data, usage);
 
-	_ignisInsertArrayBuffer(vao, &buffer);
+	if (ignisGenerateArrayBuffer(&buffer, size, data, usage) == IGNIS_FAILURE)
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to generate array buffer");
+		return IGNIS_FAILURE;
+	}
+
+	if (_ignisInsertArrayBuffer(vao, &buffer) == IGNIS_FAILURE)
+		return IGNIS_FAILURE;
 
 	unsigned int stride = 0;
 	for (size_t i = 0; i < count; i++)
@@ -95,17 +105,86 @@ void ignisAddArrayBufferLayout(IgnisVertexArray* vao, GLsizeiptr size, const voi
 	unsigned offset = 0;
 	for (size_t i = 0; i < count; i++)
 	{
-		glEnableVertexAttribArray(vao->vertex_attrib_index);
-		glVertexAttribPointer(vao->vertex_attrib_index, layout[i].count, layout[i].type, layout[i].normalized ? GL_TRUE : GL_FALSE, stride, (const void*)(intptr_t)offset);
+		glEnableVertexAttribArray(vertex_attrib_index);
+		glVertexAttribPointer(vertex_attrib_index, layout[i].count, layout[i].type, layout[i].normalized ? GL_TRUE : GL_FALSE, stride, IGNIS_BUFFER_OFFSET((intptr_t)offset));
 
 		offset += ignisGetOpenGLTypeSize(layout[i].type) * layout[i].count;
-		vao->vertex_attrib_index++;
+		vertex_attrib_index++;
 	}
+
+	return IGNIS_SUCCESS;
 }
 
-void ignisLoadElementBuffer(IgnisVertexArray* vao, GLuint* indices, GLsizei count, GLenum usage)
+int ignisLoadElementBuffer(IgnisVertexArray* vao, GLuint* indices, GLsizei count, GLenum usage)
 {
-	 ignisGenerateElementBuffer(&vao->element_buffer, count, indices, usage);
+	if (ignisGenerateElementBuffer(&vao->element_buffer, count, indices, usage) == IGNIS_SUCCESS)
+	{
+		vao->element_count = count;
+		return IGNIS_SUCCESS;
+	}
+	_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to generate element buffer");
+	return IGNIS_FAILURE;
+}
 
-	 vao->element_count = count;
+void ignisVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* offset)
+{
+	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, size, type, normalized, stride, offset);
+}
+
+void ignisVertexAttribFloat(GLuint index, GLint size, GLboolean normalized, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribPointer(index, size, GL_FLOAT, normalized, stride * sizeof(GLfloat), IGNIS_BUFFER_OFFSET(offset * sizeof(GLfloat)));
+}
+
+void ignisVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void* offset)
+{
+	glEnableVertexAttribArray(index);
+	glVertexAttribIPointer(index, size, type, stride, offset);
+}
+
+void ignisVertexAttribLPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void* offset)
+{
+	glEnableVertexAttribArray(index);
+	glVertexAttribLPointer(index, size, type, stride, offset);
+}
+
+void ignisVertexAttribUnsignedByte(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribUnsignedShort(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_SHORT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribUnsignedInt(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribByte(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribShort(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribInt(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribIPointer(index, size, GL_UNSIGNED_INT, stride * sizeof(GLuint), IGNIS_BUFFER_OFFSET(offset * sizeof(GLuint)));
+}
+
+void ignisVertexAttribDouble(GLuint index, GLint size, GLsizei stride, GLintptr offset)
+{
+	ignisVertexAttribLPointer(index, size, GL_DOUBLE, stride * sizeof(GLdouble), IGNIS_BUFFER_OFFSET(offset * sizeof(GLdouble)));
+}
+
+void ignisVertexAttribDivisor(GLuint index, GLuint divisor)
+{
+	glVertexAttribDivisor(index, divisor);
 }

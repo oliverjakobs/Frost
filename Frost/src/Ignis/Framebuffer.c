@@ -2,13 +2,13 @@
 
 #include "Ignis.h"
 
-int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int width, int height)
+int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, int width, int height)
 {
 	fbo->width = width;
 	fbo->height = height;
 
 	/* create a color attachment texture */
-	ignisCreateTextureEmpty(&fbo->texture, texture_target, width, height, NULL);
+	ignisGenerateTexture2D(&fbo->texture, width, height, NULL, NULL);
 
 	glGenFramebuffers(1, &fbo->name);
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo->name);
@@ -18,7 +18,7 @@ int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int w
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	{
-		_ignisErrorCallback(IGNIS_CRITICAL, "[Framebuffer] Framebuffer is not complete!");
+		_ignisErrorCallback(IGNIS_ERROR, "[Framebuffer] Framebuffer is not complete!");
 		ignisDeleteFrameBuffer(fbo);
 		return IGNIS_FAILURE;
 	}
@@ -29,7 +29,7 @@ int ignisGenerateFrameBuffer(IgnisFrameBuffer* fbo, GLuint texture_target, int w
 
 void ignisDeleteFrameBuffer(IgnisFrameBuffer* fbo)
 {
-	ignisDestroyTexture(&fbo->texture);
+	ignisDeleteTexture2D(&fbo->texture);
 
 	glDeleteFramebuffers(1, &fbo->name);
 }
