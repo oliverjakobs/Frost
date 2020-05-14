@@ -134,9 +134,8 @@
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\SceneEditor.h" />
     <ClInclude Include="src\SceneManager.h" />
-    <ClInclude Include="src\ShadowMapper.h" />
-    <ClInclude Include="src\Visibility.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
@@ -186,9 +185,8 @@
     <ClCompile Include="src\Physics\Body.c" />
     <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Scene.c" />
+    <ClCompile Include="src\SceneEditor.c" />
     <ClCompile Include="src\SceneManager.c" />
-    <ClCompile Include="src\ShadowMapper.c" />
-    <ClCompile Include="src\Visibility.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\gui\gui.c" />

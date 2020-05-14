@@ -72,12 +72,6 @@ typedef struct
 	float scene_h;
 } EcsCameraComponent;
 
-typedef struct
-{
-	line* edges;
-	size_t edge_count;
-} EcsShadowComponent;
-
 #ifdef __cplusplus
 }
 #endif

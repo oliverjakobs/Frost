@@ -204,12 +204,6 @@
     <ClInclude Include="src\SceneManager.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ShadowMapper.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Visibility.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\clib\clib.h">
       <Filter>src\clib</Filter>
     </ClInclude>
@@ -248,6 +242,7 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
+    <ClInclude Include="src\SceneEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -355,12 +350,6 @@
     <ClCompile Include="src\SceneManager.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ShadowMapper.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Visibility.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\clib\hashmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
@@ -387,6 +376,7 @@
     </ClCompile>
     <ClCompile Include="src\Application\EventHandler.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
+    <ClCompile Include="src\SceneEditor.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

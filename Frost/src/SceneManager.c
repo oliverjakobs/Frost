@@ -19,18 +19,14 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	manager->camera = camera;
 
 	manager->editmode = 1;
-	manager->showgrid = 0;
-	manager->layer = 0;
-
-	manager->gridsize = gridsize;
-	manager->padding = gridsize * padding;
-
-	manager->hover = NULL;
+	SceneEditorInit(&manager->editor, 400.0f, gridsize, gridsize * padding);
 
 	manager->scene = (Scene*)malloc(sizeof(Scene));
 	if (!manager->scene)
+	{
+		DEBUG_ERROR("[SceneManager] Failed to allocate memory for scene name\n");
 		return 0;
-
+	}
 	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
 
 	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
@@ -134,6 +130,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 		// Enter new scene
 		SceneManagerLoadScene(manager, manager->scene, json);
+		SceneEditorReset(&manager->editor);
 		strcpy(manager->scene_name, name);
 
 		free(json);
@@ -216,39 +213,24 @@ void SceneManagerOnEvent(SceneManager* manager, Event e)
 		case KEY_F1:
 			manager->editmode = !manager->editmode;
 			break;
-		case KEY_DELETE:
-			SceneClearEntities(manager->scene);
-			break;
 		}
 	}
+
+	if (manager->editmode)
+		SceneEditorOnEvent(&manager->editor, manager->scene, e);
 
 	SceneOnEvent(manager->scene, e);
 }
 
-void SceneManagerOnUpdate(SceneManager* manager, float deltaTime)
+void SceneManagerOnUpdate(SceneManager* manager, float deltatime)
 {
 	if (!manager->editmode)
 	{
-		SceneOnUpdate(manager->scene, deltaTime);
+		SceneOnUpdate(manager->scene, deltatime);
 	}
 	else
 	{
-		float cameraspeed = 400.0f;
-		vec3 position = manager->camera->position;
-
-		if (InputKeyPressed(KEY_A))
-			position.x -= cameraspeed * deltaTime;
-		if (InputKeyPressed(KEY_D))
-			position.x += cameraspeed * deltaTime;
-		if (InputKeyPressed(KEY_S))
-			position.y -= cameraspeed * deltaTime;
-		if (InputKeyPressed(KEY_W))
-			position.y += cameraspeed * deltaTime;
-
-		manager->camera->position = position;
-		CameraUpdateViewOrtho(manager->camera);
-
-		manager->hover = SceneGetEntityAt(manager->scene, CameraGetMousePos(manager->camera, InputMousePositionVec2()), manager->layer);
+		SceneEditorOnUpdate(&manager->editor, manager->scene, deltatime);
 	}
 }
 
@@ -258,61 +240,7 @@ void SceneManagerOnRender(SceneManager* manager)
 
 	if (manager->editmode)
 	{
-		// render grid
-		Primitives2DStart(CameraGetViewProjectionPtr(manager->camera));
-
-		if (manager->showgrid)
-		{
-			IgnisColorRGBA color = IGNIS_WHITE;
-			ignisBlendColorRGBA(&color, 0.2f);
-
-			for (float x = -manager->padding; x <= manager->scene->width + manager->padding; x += manager->gridsize)
-				Primitives2DRenderLine(x, -manager->padding, x, manager->scene->height + manager->padding, color);
-
-			for (float y = -manager->padding; y <= manager->scene->height + manager->padding; y += manager->gridsize)
-				Primitives2DRenderLine(-manager->padding, y, manager->scene->width + manager->padding, y, color);
-		}
-
-		clib_vector* layer = &manager->scene->layers[manager->layer];
-
-		if (layer)
-		{
-			for (size_t i = 0; i < layer->size; i++)
-			{
-				IgnisColorRGBA color = IGNIS_WHITE;
-				ignisBlendColorRGBA(&color, 0.4f);
-
-				EcsTextureComponent* tex = layer_vector_get(layer, i)->texture;
-
-				if (tex)
-				{
-					vec2 position = EcsEntityGetPosition(layer_vector_get(layer, i));
-
-					vec2 min = vec2_sub(position, (vec2){tex->width / 2.0f, 0.0f});
-					vec2 max = vec2_add(min, (vec2){ tex->width, tex->height });
-
-					Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
-				}
-			}
-		}
-
-		if (manager->hover)
-		{
-			EcsTextureComponent* tex = manager->hover->texture;
-
-			if (tex)
-			{
-				vec2 position = EcsEntityGetPosition(manager->hover);
-
-				vec2 min = vec2_sub(position, (vec2) { tex->width / 2.0f, 0.0f });
-				vec2 max = vec2_add(min, (vec2){ tex->width, tex->height });
-
-				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
-				Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
-			}
-		}
-
-		Primitives2DFlush();
+		SceneEditorOnRender(&manager->editor, manager->scene);
 	}
 }
 

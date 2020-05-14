@@ -140,29 +140,6 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 		EcsEntityAddCamera(entity, smooth);
 	}
 
-	tb_json_read(json, &element, "{'shadow'");
-	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
-	{
-		char* value = (char*)element.value;
-
-		line* edges = (line*)malloc(sizeof(line) * element.elements);
-		for (int i = 0; i < element.elements; i++)
-		{
-			tb_json_element edge;
-			value = tb_json_array_step(value, &edge);
-
-			float x1 = tb_json_float((char*)edge.value, "[0", NULL);
-			float y1 = tb_json_float((char*)edge.value, "[1", NULL);
-			float x2 = tb_json_float((char*)edge.value, "[2", NULL);
-			float y2 = tb_json_float((char*)edge.value, "[3", NULL);
-
-			edges[i].start = (vec2){ x1, y1 };
-			edges[i].end = (vec2){ x2, y2 };
-		}
-
-		EcsEntityAddShadow(entity, edges, element.elements);
-	}
-
 	free(json);
 
 	return entity;

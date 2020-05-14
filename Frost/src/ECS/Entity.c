@@ -11,7 +11,6 @@ void EcsEntityLoad(EcsEntity* entity, const char* name)
 	entity->texture = NULL;
 	entity->animation = NULL;
 	entity->camera = NULL;
-	entity->shadow = NULL;
 }
 
 void EcsEntityDestroy(EcsEntity* entity)
@@ -24,7 +23,6 @@ void EcsEntityDestroy(EcsEntity* entity)
 	EcsEntityRemoveTexture(entity);
 	EcsEntityRemoveAnimation(entity);
 	EcsEntityRemoveCamera(entity);
-	EcsEntityRemoveShadow(entity);
 }
 
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y)
@@ -129,22 +127,6 @@ int EcsEntityAddCamera(EcsEntity* entity, float smooth)
 	return 0;
 }
 
-int EcsEntityAddShadow(EcsEntity* entity, line* edges, size_t edge_count)
-{
-	if (entity->shadow) return 0;
-
-	entity->shadow = (EcsShadowComponent*)malloc(sizeof(EcsShadowComponent));
-
-	if (entity->shadow)
-	{
-		entity->shadow->edges = edges;
-		entity->shadow->edge_count = edge_count;
-		return 1;
-	}
-
-	return 0;
-}
-
 void EcsEntityRemovePosition(EcsEntity* entity)
 {
 	if (entity->position)
@@ -199,16 +181,6 @@ void EcsEntityRemoveCamera(EcsEntity* entity)
 	{
 		free(entity->camera);
 		entity->camera = NULL;
-	}
-}
-
-void EcsEntityRemoveShadow(EcsEntity* entity)
-{
-	if (entity->shadow)
-	{
-		free(entity->shadow->edges);
-		free(entity->shadow);
-		entity->shadow = NULL;
 	}
 }
 

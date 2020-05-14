@@ -114,6 +114,7 @@ void OnRenderGui(Application* app)
 	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 250.0f, 105.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("Scene: %s", scene_manager.scene_name);
+		gui_text("Layer: %d", scene_manager.editor.layer);
 		gui_separator();
 		EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
 		if (player)
@@ -134,7 +135,6 @@ void OnRenderGui(Application* app)
 		gui_text("F6: Toggle Vsync");
 		gui_text("F7: Toggle debug mode");
 		gui_text("F8: Toggle Gui");
-		gui_text("DEL: Remove Trees");
 	}
 	gui_end();
 
@@ -142,8 +142,11 @@ void OnRenderGui(Application* app)
 	{
 		if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_BOTTOM, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 		{
-			gui_text("Hovered Entity: %s", scene_manager.hover ? scene_manager.hover->name : "null");
-			gui_checkbox("Show grid", &scene_manager.showgrid);
+			gui_text("Hovered Entity: %s", scene_manager.editor.hover ? scene_manager.editor.hover->name : "null");
+			gui_text("Offset: %4.2f, %4.2f", scene_manager.editor.offset.x, scene_manager.editor.offset.y);
+			
+			/*
+			gui_checkbox("Show grid", &scene_manager.editor.showgrid);
 
 			gui_separator();
 
@@ -156,6 +159,7 @@ void OnRenderGui(Application* app)
 					// ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
 				}
 			}
+			*/
 		}
 		gui_end();
 	}

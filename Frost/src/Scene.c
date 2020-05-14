@@ -26,8 +26,6 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
-	
-	ShadowMapperInit(&scene->shadow);
 
 	scene->smooth_movement = 0.5f;
 
@@ -37,8 +35,6 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
-
-	ShadowMapperDestroy(&scene->shadow);
 
 	SceneClearEntities(scene);
 
@@ -69,11 +65,6 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, size_t layer)
 		entity->camera->scene_h = scene->height;
 	}
 
-	if (entity->shadow)
-	{
-		ShadowMapperAddEntity(&scene->shadow, entity);
-	}
-
 	layer_vector_push(&scene->layers[layer], entity);
 }
 
@@ -94,7 +85,6 @@ void SceneRemoveEntity(Scene* scene, const char* name, size_t layer)
 	{
 		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name, name) == 0)
 		{
-			/* TODO: decrease shadow_edge_count */
 			layer_vector_delete(&scene->layers[layer], i);
 			return;
 		}
@@ -203,9 +193,4 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos, size_t layer)
 	}
 
 	return NULL;
-}
-
-line* SceneGetEdges(Scene* scene, size_t* edge_count)
-{
-	return ShadowMapperGetEdges(&scene->shadow, edge_count);
 }

@@ -13,8 +13,6 @@ extern "C"
 #include "Event/EventHandler.h"
 #include "Graphics/Background.h"
 
-#include "ShadowMapper.h"
-
 #include "clib/vector.h"
 
 #define SCENE_INITIAL_LAYER_SIZE	8
@@ -37,7 +35,6 @@ typedef struct
 	size_t max_layer;
 
 	Background background;
-	ShadowMapper shadow;
 
 	float smooth_movement;
 } Scene;
