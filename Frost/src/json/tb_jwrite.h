@@ -56,6 +56,8 @@ extern "C"
 {
 #endif
 
+#include <stdio.h>
+
 // -----------------------------------------------------------------------------
 // ----| Version |--------------------------------------------------------------
 // -----------------------------------------------------------------------------
@@ -76,12 +78,12 @@ typedef enum
 typedef enum
 {
     TB_JWRITE_OK,
-    TB_JWRITE_BUF_FULL,    // output buffer full
     TB_JWRITE_NOT_ARRAY,   // tried to write Array value into Object
     TB_JWRITE_NOT_OBJECT,  // tried to write Object key/value into Array
     TB_JWRITE_STACK_FULL,  // array/object nesting > TB_JWRITE_STACK_DEPTH
     TB_JWRITE_STACK_EMPTY, // stack underflow error (too many 'end's)
-    TB_JWRITE_NEST_ERROR   // nesting error, not all objects closed when tb_jwrite_close() called
+    TB_JWRITE_NEST_ERROR,   // nesting error, not all objects closed when tb_jwrite_close() called
+    TB_JWRITE_WRITE_ERROR
 } tb_jwrite_error;
 
 typedef enum
@@ -98,9 +100,7 @@ typedef struct
 
 typedef struct
 {
-    char* buffer;           // pointer to application's buffer
-    unsigned int buflen;    // length of buffer
-    char* writepos;         // current write position in buffer
+    FILE* file;
     char tmpbuf[32];        // local buffer for int/double convertions
     tb_jwrite_error error;  // error code
     int call;               // call on which error occurred
@@ -116,7 +116,7 @@ typedef struct
 // - tb_jwrite will not overrun the buffer (it returns an "output buffer full" error)
 // - rootType is the base JSON type: TB_JWRITE_OBJECT or TB_JWRITE_ARRAY
 // - style controls 'prettifying' the output: TB_JWRITE_PRETTY or TB_JWRITE_COMPACT
-void tb_jwrite_open(tb_jwrite_control* jwc, char* buffer, unsigned int buflen, tb_jwrite_node_type root_type, tb_jwrite_style style);
+void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_type root_type, tb_jwrite_style style);
 
 // tb_jwrite_close
 // - closes the element opened by tb_jwrite_open()

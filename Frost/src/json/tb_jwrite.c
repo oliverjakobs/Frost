@@ -1,7 +1,6 @@
 #include "tb_jwrite.h"
 
 #include <stddef.h>
-#include <stdio.h>
 #include <string.h> // memset()
 
 //#include <stdint.h> // definintion of uint32_t, int32_t
@@ -15,14 +14,8 @@ static void _tb_jwrite_modp_ftoa2(float value, char* str, int prec);
 // Internal functions
 static void _tb_jwrite_put_ch(tb_jwrite_control* jwc, char c)
 {
-    if ((unsigned int)(jwc->writepos - jwc->buffer) >= jwc->buflen)
-    {
-        jwc->error = TB_JWRITE_BUF_FULL;
-    }
-    else
-    {
-        *jwc->writepos++ = c;
-    }
+    if (fprintf(jwc->file, "%c", c) < 0)
+        jwc->error = TB_JWRITE_WRITE_ERROR;
 }
 
 // put string enclosed in quotes
@@ -82,18 +75,16 @@ static tb_jwrite_node_type _tb_jwrite_pop(tb_jwrite_control* jwc)
 // - open writing of JSON starting with rootType = TB_JWRITE_OBJECT or TB_JWRITE_ARRAY
 // - initialise with user string buffer of length buflen
 // - isPretty=TB_JWRITE_PRETTY adds \n and spaces to prettify output (else TB_JWRITE_COMPACT)
-void tb_jwrite_open(tb_jwrite_control* jwc, char* buffer, unsigned int buflen, tb_jwrite_node_type root_type, tb_jwrite_style style)
+void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_type root_type, tb_jwrite_style style)
 {
-    memset(buffer, 0, buflen); // zap the whole destination buffer
-    jwc->buffer = buffer;
-    jwc->buflen = buflen;
-    jwc->writepos = buffer;
     jwc->nodes[0].type = root_type;
     jwc->nodes[0].element = 0;
     jwc->stackpos = 0;
     jwc->error = TB_JWRITE_OK;
     jwc->call = 1;
     jwc->style = style;
+    jwc->file = fopen(target, "w");
+
     _tb_jwrite_put_ch(jwc, (root_type == TB_JWRITE_OBJECT) ? '{' : '[');
 }
 
@@ -118,6 +109,7 @@ tb_jwrite_error tb_jwrite_close(tb_jwrite_control* jwc)
             jwc->error = TB_JWRITE_NEST_ERROR; // nesting error, not all objects closed when tb_jwrite_close() called
         }
     }
+    fclose(jwc->file);
     return jwc->error;
 }
 
@@ -314,12 +306,12 @@ char* tb_jwrite_error_string(tb_jwrite_error err)
     switch (err)
     {
     case TB_JWRITE_OK:          return "OK";
-    case TB_JWRITE_BUF_FULL:    return "output buffer full";
     case TB_JWRITE_NOT_ARRAY:   return "tried to write Array value into Object";
     case TB_JWRITE_NOT_OBJECT:  return "tried to write Object key/value into Array";
     case TB_JWRITE_STACK_FULL:  return "array/object nesting > TB_JWRITE_STACK_DEPTH";
     case TB_JWRITE_STACK_EMPTY: return "stack underflow error (too many 'end's)";
     case TB_JWRITE_NEST_ERROR:  return "nesting error, not all objects closed when tb_jwrite_close() called";
+    case TB_JWRITE_WRITE_ERROR: return "failed to write to file";
     default:                    return "Unknown error";
     }
 }

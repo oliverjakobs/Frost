@@ -202,11 +202,8 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 
 int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 {
-	char buffer[2048];
-	unsigned int buflen = 2048;
-
 	tb_jwrite_control jwc;
-	tb_jwrite_open(&jwc, buffer, buflen, TB_JWRITE_OBJECT, TB_JWRITE_PRETTY);
+	tb_jwrite_open(&jwc, path, TB_JWRITE_OBJECT, TB_JWRITE_PRETTY);
 
 	/* size */
 	tb_jwrite_object_array(&jwc, "size");
@@ -254,12 +251,6 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 	tb_jwrite_end(&jwc);
 
 	tb_jwrite_error err = tb_jwrite_close(&jwc);
-
-	FILE* file = fopen(path, "w");
-
-	fwrite(buffer, strlen(buffer), 1, file);
-
-	fclose(file);
 
 	if (err != TB_JWRITE_OK)
 	{
