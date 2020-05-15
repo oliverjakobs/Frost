@@ -21,7 +21,7 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 	tb_json_string(json, "{'name'", name, TEMPLATE_LOADER_STRLEN, NULL);
 
 	EcsEntity* entity = (EcsEntity*)malloc(sizeof(EcsEntity));
-	EcsEntityLoad(entity, name);
+	EcsEntityLoad(entity, name, json_path);
 
 	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");

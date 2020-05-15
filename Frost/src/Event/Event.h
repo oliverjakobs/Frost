@@ -59,6 +59,9 @@ typedef struct
 	};
 } Event;
 
+int EventMouseButtonPressed(Event* e, int buttoncode);
+int EventMouseButtonReleased(Event* e, int buttoncode);
+
 #ifdef __cplusplus
 }
 #endif

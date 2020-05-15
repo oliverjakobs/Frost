@@ -1,8 +1,7 @@
 #include "SceneEditor.h"
 
 #include "Application/Debugger.h"
-
-static void SceneEditorClipToGrid(SceneEditor* editor)
+#include "Grid.h"
 
 void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, float padding)
 {
@@ -37,7 +36,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		}
 	}
 
-	if (e.type == EVENT_MOUSE_BUTTON_PRESSED && e.mousebutton.buttoncode == MOUSE_BUTTON_LEFT)
+	if (EventMouseButtonPressed(&e, MOUSE_BUTTON_LEFT))
 	{
 		if (editor->hover)
 		{
@@ -47,7 +46,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		}
 	}
 
-	if (e.type == EVENT_MOUSE_BUTTON_RELEASED && e.mousebutton.buttoncode == MOUSE_BUTTON_LEFT)
+	if (EventMouseButtonReleased(&e, MOUSE_BUTTON_LEFT))
 	{
 		editor->offset = (vec2){ 0.0f,0.0f };
 		editor->clicked = 0;
@@ -73,7 +72,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		EcsEntitySetPosition(editor->hover, vec2_sub(mouse, editor->offset));
+		EcsEntitySetPosition(editor->hover, GridClipVec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
 		editor->hover = SceneGetEntityAt(active, mouse, editor->layer);
 }
@@ -88,11 +87,7 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 		IgnisColorRGBA color = IGNIS_WHITE;
 		ignisBlendColorRGBA(&color, 0.2f);
 
-		for (float x = -editor->padding; x <= active->width + editor->padding; x += editor->gridsize)
-			Primitives2DRenderLine(x, -editor->padding, x, active->height + editor->padding, color);
-
-		for (float y = -editor->padding; y <= active->height + editor->padding; y += editor->gridsize)
-			Primitives2DRenderLine(-editor->padding, y, active->width + editor->padding, y, color);
+		GridRender(editor->gridsize, editor->padding, active->width, active->height, color);
 	}
 
 	clib_vector* layer = &active->layers[editor->layer];

@@ -11,6 +11,8 @@ extern "C"
 typedef struct ecs_entity
 {
 	char* name;
+	char* template;
+
 	EcsPositionComponent* position;
 	EcsPhysicsComponent* physics;
 	EcsMovementComponent* movement;
@@ -19,7 +21,7 @@ typedef struct ecs_entity
 	EcsCameraComponent* camera;
 } EcsEntity;
 
-void EcsEntityLoad(EcsEntity* entity, const char* name);
+void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template);
 void EcsEntityDestroy(EcsEntity* entity);
 
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y);

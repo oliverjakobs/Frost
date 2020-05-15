@@ -118,6 +118,7 @@
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
     <ClInclude Include="src\Graphics\ResourceManager.h" />
+    <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -131,6 +132,7 @@
     <ClInclude Include="src\Ignis\VertexArray.h" />
     <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
     <ClInclude Include="src\Ignis\glad\glad.h" />
+    <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scene.h" />
@@ -164,6 +166,7 @@
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
+    <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
@@ -172,6 +175,7 @@
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Graphics\ResourceManager.c" />
+    <ClCompile Include="src\Grid.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
@@ -182,6 +186,7 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\Physics\Body.c" />
     <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Scene.c" />

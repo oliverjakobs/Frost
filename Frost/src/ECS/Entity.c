@@ -1,9 +1,12 @@
 #include "Entity.h"
 
-void EcsEntityLoad(EcsEntity* entity, const char* name)
+void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template)
 {
 	entity->name = (char*)malloc(strlen(name));
 	strcpy(entity->name, name);
+
+	entity->template = (char*)malloc(strlen(template));
+	strcpy(entity->template, template);
 
 	entity->position = NULL;
 	entity->physics = NULL;
@@ -16,6 +19,7 @@ void EcsEntityLoad(EcsEntity* entity, const char* name)
 void EcsEntityDestroy(EcsEntity* entity)
 {
 	free(entity->name);
+	free(entity->template);
 
 	EcsEntityRemovePosition(entity);
 	EcsEntityRemovePhysics(entity);

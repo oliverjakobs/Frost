@@ -36,7 +36,8 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* path);
 void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path);
 void SceneManagerChangeScene(SceneManager* manager, const char* name);
 
-int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* name);
+int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json);
+int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path);
 
 void SceneManagerOnEvent(SceneManager* manager, Event e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltatime);

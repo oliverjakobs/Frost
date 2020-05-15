@@ -1,6 +1,7 @@
 #include "SceneManager.h"
 
 #include "json/tb_json.h"
+#include "json/tb_jwrite.h"
 
 #include "Application/Application.h"
 #include "Application/Debugger.h"
@@ -194,6 +195,76 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 
 			SceneAddEntityPos(scene, EcsEntityLoadTemplate(path, manager->resources), layer, (vec2){ x, y });
 		}
+	}
+
+	return 1;
+}
+
+int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
+{
+	char buffer[2048];
+	unsigned int buflen = 2048;
+
+	tb_jwrite_control jwc;
+	tb_jwrite_open(&jwc, buffer, buflen, TB_JWRITE_OBJECT, TB_JWRITE_PRETTY);
+
+	/* size */
+	tb_jwrite_object_array(&jwc, "size");
+	tb_jwrite_array_float(&jwc, scene->width);
+	tb_jwrite_array_float(&jwc, scene->height);
+	tb_jwrite_end(&jwc);
+
+	/* bakcground */
+	tb_jwrite_object_array(&jwc, "background");
+
+	for (int i = 0; i < scene->background.size; ++i)
+	{
+		BackgroundLayer* bg = &scene->background.layers[i];
+
+		tb_jwrite_array_array(&jwc);
+
+		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(manager->resources, bg->texture));
+
+		tb_jwrite_array_float(&jwc, bg->startpos);
+		tb_jwrite_array_float(&jwc, bg->pos_y);
+		tb_jwrite_array_float(&jwc, bg->width);
+		tb_jwrite_array_float(&jwc, bg->height);
+		tb_jwrite_array_float(&jwc, bg->parallax);
+		tb_jwrite_end(&jwc);
+	}
+
+	tb_jwrite_end(&jwc);
+
+	/* templates */
+	tb_jwrite_object_array(&jwc, "templates");
+
+	for (int l = 0; l < scene->max_layer; ++l)
+	{
+		for (int i = 0; i < scene->layers[l].size; ++i)
+		{
+			EcsEntity* e = layer_vector_get(&scene->layers[l], i);
+
+			tb_jwrite_array_array(&jwc);
+
+			tb_jwrite_array_string(&jwc, e->template);
+			tb_jwrite_end(&jwc);
+		}
+	}
+
+	tb_jwrite_end(&jwc);
+
+	tb_jwrite_error err = tb_jwrite_close(&jwc);
+
+	FILE* file = fopen(path, "w");
+
+	fwrite(buffer, strlen(buffer), 1, file);
+
+	fclose(file);
+
+	if (err != TB_JWRITE_OK)
+	{
+		printf("Error: %s at function call %d\n", tb_jwrite_error_string(err), tb_jwrite_error_pos(&jwc));
+		return 0;
 	}
 
 	return 1;

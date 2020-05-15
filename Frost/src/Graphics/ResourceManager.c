@@ -175,3 +175,18 @@ IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 	DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 	return NULL;
 }
+
+const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture)
+{
+	struct clib_hashmap_iter* iter = clib_hashmap_iter(&resources->textures);
+
+	while (iter)
+	{
+		if (texture == tex_hashmap_iter_get_value(iter)->value)
+			return tex_hashmap_iter_get_key(iter);
+
+		iter = clib_hashmap_iter_next(&resources->textures, iter);
+	}
+
+	return NULL;
+}

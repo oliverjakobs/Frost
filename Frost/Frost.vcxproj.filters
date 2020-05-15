@@ -243,6 +243,8 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\SceneEditor.h" />
+    <ClInclude Include="src\Grid.h" />
+    <ClInclude Include="src\json\tb_jwrite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -377,6 +379,9 @@
     <ClCompile Include="src\Application\EventHandler.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\SceneEditor.c" />
+    <ClCompile Include="src\Grid.c" />
+    <ClCompile Include="src\Event\Event.c" />
+    <ClCompile Include="src\json\tb_jwrite.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

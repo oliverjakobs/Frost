@@ -31,6 +31,8 @@ void OnInit(Application* app)
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");
+
+	SceneManagerSaveScene(&scene_manager, scene_manager.scene, "res/templates/scenes/save.json");
 }
 
 void OnDestroy(Application* app)
@@ -143,7 +145,6 @@ void OnRenderGui(Application* app)
 		if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_BOTTOM, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 		{
 			gui_text("Hovered Entity: %s", scene_manager.editor.hover ? scene_manager.editor.hover->name : "null");
-			gui_text("Offset: %4.2f, %4.2f", scene_manager.editor.offset.x, scene_manager.editor.offset.y);
 			
 			/*
 			gui_checkbox("Show grid", &scene_manager.editor.showgrid);

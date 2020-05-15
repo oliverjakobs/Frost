@@ -55,8 +55,6 @@ void SceneOnRenderDebug(Scene* scene);
 EcsEntity* SceneGetEntity(Scene* scene, const char* name, size_t layer);
 EcsEntity* SceneGetEntityAt(Scene* scene, vec2 position, size_t layer);
 
-line* SceneGetEdges(Scene* scene, size_t* edge_count);
-
 #ifdef __cplusplus
 }
 #endif
