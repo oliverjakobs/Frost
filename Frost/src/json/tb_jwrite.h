@@ -67,10 +67,12 @@ extern "C"
 
 #define TB_JWRITE_STACK_DEPTH 32   // max nesting depth of objects/arrays
 
+// output string control for tb_jwrite_open()
 typedef enum
 {
-    TB_JWRITE_COMPACT, // output string control for tb_jwrite_open()
-    TB_JWRITE_PRETTY   // pretty adds \n and indentation
+    TB_JWRITE_COMPACT,
+    TB_JWRITE_INLINE,
+    TB_JWRITE_NEWLINE
 } tb_jwrite_style;
 
 // Error Codes
@@ -125,22 +127,22 @@ void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_t
 //   so the error code is for the first error detected
 tb_jwrite_error tb_jwrite_close(tb_jwrite_control* jwc);
 
+void tb_jwrite_set_style(tb_jwrite_control* jwc, tb_jwrite_style style);
+
 // Object insertion functions
 // - used to insert "key":"value" pairs into an object
-void tb_jwrite_object_string(tb_jwrite_control* jwc, char* key, char* value);
-void tb_jwrite_object_int(tb_jwrite_control* jwc, char* key, int value);
-void tb_jwrite_object_float(tb_jwrite_control* jwc, char* key, float value);
-void tb_jwrite_object_bool(tb_jwrite_control* jwc, char* key, int oneOrZero);
-void tb_jwrite_object_null(tb_jwrite_control* jwc, char* key);
-void tb_jwrite_object_object(tb_jwrite_control* jwc, char* key);
-void tb_jwrite_object_array(tb_jwrite_control* jwc, char* key);
+void tb_jwrite_string(tb_jwrite_control* jwc, char* key, char* value);
+void tb_jwrite_int(tb_jwrite_control* jwc, char* key, int value);
+void tb_jwrite_float(tb_jwrite_control* jwc, char* key, float value);
+void tb_jwrite_null(tb_jwrite_control* jwc, char* key);
+void tb_jwrite_object(tb_jwrite_control* jwc, char* key);
+void tb_jwrite_array(tb_jwrite_control* jwc, char* key);
 
 // Array insertion functions
 // - used to insert "value" elements into an array
 void tb_jwrite_array_string(tb_jwrite_control* jwc, char* value);
 void tb_jwrite_array_int(tb_jwrite_control* jwc, int value);
 void tb_jwrite_array_float(tb_jwrite_control* jwc, float value);
-void tb_jwrite_array_bool(tb_jwrite_control* jwc, int oneOrZero);
 void tb_jwrite_array_null(tb_jwrite_control* jwc);
 void tb_jwrite_array_object(tb_jwrite_control* jwc);
 void tb_jwrite_array_array(tb_jwrite_control* jwc);

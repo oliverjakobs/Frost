@@ -1,57 +1,60 @@
 #include "tb_jwrite.h"
 
 #include <stddef.h>
-#include <string.h> // memset()
+#include <string.h>
 
-//#include <stdint.h> // definintion of uint32_t, int32_t
+/* definintion of uint32_t, int32_t */
+/* #include <stdint.h> */
 typedef unsigned int uint32_t;
 typedef int int32_t;
 
 static void _tb_jwrite_modp_itoa10(int32_t value, char* str);
 static void _tb_jwrite_modp_ftoa2(float value, char* str, int prec);
 
-//------------------------------------------
-// Internal functions
+/*
+ *------------------------------------------
+ * Internal functions
+ */
 static void _tb_jwrite_put_ch(tb_jwrite_control* jwc, char c)
 {
     if (fprintf(jwc->file, "%c", c) < 0)
         jwc->error = TB_JWRITE_WRITE_ERROR;
 }
 
-// put string enclosed in quotes
+/* put string enclosed in quotes */
 static void _tb_jwrite_put_str(tb_jwrite_control* jwc, char* str)
 {
-    _tb_jwrite_put_ch(jwc, '\"');
-
-    while (*str != '\0')
-        _tb_jwrite_put_ch(jwc, *str++);
-
-    _tb_jwrite_put_ch(jwc, '\"');
+    if (fprintf(jwc->file, "\"%s\"", str) < 0)
+        jwc->error = TB_JWRITE_WRITE_ERROR;
 }
 
-// put raw string
+/* put raw string */
 static void _tb_jwrite_put_raw(tb_jwrite_control* jwc, char* str)
 {
-    while (*str != '\0')
-        _tb_jwrite_put_ch(jwc, *str++);
+    if (fprintf(jwc->file, "%s", str) < 0)
+        jwc->error = TB_JWRITE_WRITE_ERROR;
 }
 
-static void _tb_jwrite_pretty(tb_jwrite_control* jwc)
+static void _tb_jwrite_style(tb_jwrite_control* jwc)
 {
-    if (jwc->style == TB_JWRITE_PRETTY)
+    if (jwc->style == TB_JWRITE_NEWLINE)
     {
         _tb_jwrite_put_ch(jwc, '\n');
         for (int i = 0; i < jwc->stackpos + 1; i++)
             _tb_jwrite_put_raw(jwc, "    ");
     }
+    else if (jwc->style == TB_JWRITE_INLINE)
+    {
+        _tb_jwrite_put_ch(jwc, ' ');
+    }
 }
 
-// Push / Pop node stack
+/* Push / Pop node stack */
 static void _tb_jwrite_push(tb_jwrite_control* jwc, tb_jwrite_node_type node_type)
 {
     if ((jwc->stackpos + 1) >= TB_JWRITE_STACK_DEPTH)
     {
-        jwc->error = TB_JWRITE_STACK_FULL; // array/object nesting > TB_JWRITE_STACK_DEPTH
+        jwc->error = TB_JWRITE_STACK_FULL; /* array/object nesting > TB_JWRITE_STACK_DEPTH */
     }
     else
     {
@@ -62,12 +65,12 @@ static void _tb_jwrite_push(tb_jwrite_control* jwc, tb_jwrite_node_type node_typ
 
 static tb_jwrite_node_type _tb_jwrite_pop(tb_jwrite_control* jwc)
 {
-    tb_jwrite_node_type retval = jwc->nodes[jwc->stackpos].type;
+    tb_jwrite_node_type node = jwc->nodes[jwc->stackpos].type;
     if (jwc->stackpos == 0)
-        jwc->error = TB_JWRITE_STACK_EMPTY; // stack underflow error (too many 'end's)
+        jwc->error = TB_JWRITE_STACK_EMPTY; /* stack underflow error (too many 'end's) */
     else
         jwc->stackpos--;
-    return retval;
+    return node;
 }
 
 //------------------------------------------
@@ -77,13 +80,14 @@ static tb_jwrite_node_type _tb_jwrite_pop(tb_jwrite_control* jwc)
 // - isPretty=TB_JWRITE_PRETTY adds \n and spaces to prettify output (else TB_JWRITE_COMPACT)
 void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_type root_type, tb_jwrite_style style)
 {
+    jwc->file = fopen(target, "w");
+
     jwc->nodes[0].type = root_type;
     jwc->nodes[0].element = 0;
     jwc->stackpos = 0;
     jwc->error = TB_JWRITE_OK;
     jwc->call = 1;
     jwc->style = style;
-    jwc->file = fopen(target, "w");
 
     _tb_jwrite_put_ch(jwc, (root_type == TB_JWRITE_OBJECT) ? '{' : '[');
 }
@@ -99,18 +103,24 @@ tb_jwrite_error tb_jwrite_close(tb_jwrite_control* jwc)
         if (jwc->stackpos == 0)
         {
             tb_jwrite_node_type node = jwc->nodes[0].type;
-            if (jwc->style == TB_JWRITE_PRETTY)
+            if (jwc->style == TB_JWRITE_NEWLINE)
                 _tb_jwrite_put_ch(jwc, '\n');
 
             _tb_jwrite_put_ch(jwc, (node == TB_JWRITE_OBJECT) ? '}' : ']');
         }
         else
         {
-            jwc->error = TB_JWRITE_NEST_ERROR; // nesting error, not all objects closed when tb_jwrite_close() called
+            /* nesting error, not all objects closed when tb_jwrite_close() called */
+            jwc->error = TB_JWRITE_NEST_ERROR;
         }
     }
     fclose(jwc->file);
     return jwc->error;
+}
+
+void tb_jwrite_set_style(tb_jwrite_control* jwc, tb_jwrite_style style)
+{
+    jwc->style = style;
 }
 
 //------------------------------------------
@@ -122,7 +132,7 @@ tb_jwrite_error tb_jwrite_end(tb_jwrite_control* jwc)
         int last_element = jwc->nodes[jwc->stackpos].element;
         tb_jwrite_node_type node = _tb_jwrite_pop(jwc);
         if (last_element > 0)
-            _tb_jwrite_pretty(jwc);
+            _tb_jwrite_style(jwc);
         _tb_jwrite_put_ch(jwc, (node == TB_JWRITE_OBJECT) ? '}' : ']');
     }
     return jwc->error;
@@ -146,10 +156,10 @@ tb_jwrite_error _tb_jwrite_object(tb_jwrite_control* jwc, char* key)
             jwc->error = TB_JWRITE_NOT_OBJECT; // tried to write Object key/value into Array
         else if (jwc->nodes[jwc->stackpos].element++ > 0)
             _tb_jwrite_put_ch(jwc, ',');
-        _tb_jwrite_pretty(jwc);
+        _tb_jwrite_style(jwc);
         _tb_jwrite_put_str(jwc, key);
         _tb_jwrite_put_ch(jwc, ':');
-        if (jwc->style == TB_JWRITE_PRETTY)
+        if (jwc->style == TB_JWRITE_NEWLINE)
             _tb_jwrite_put_ch(jwc, ' ');
     }
     return jwc->error;
@@ -163,51 +173,46 @@ void tb_jwrite_object_raw(tb_jwrite_control* jwc, char* key, char* rawtext)
 }
 
 // put "quoted" string to object
-void tb_jwrite_object_string(tb_jwrite_control* jwc, char* key, char* value)
+void tb_jwrite_string(tb_jwrite_control* jwc, char* key, char* value)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
         _tb_jwrite_put_str(jwc, value);
 }
 
-void tb_jwrite_object_int(tb_jwrite_control* jwc, char* key, int value)
+void tb_jwrite_int(tb_jwrite_control* jwc, char* key, int value)
 {
     _tb_jwrite_modp_itoa10(value, jwc->tmpbuf);
     tb_jwrite_object_raw(jwc, key, jwc->tmpbuf);
 }
 
-void tb_jwrite_object_float(tb_jwrite_control* jwc, char* key, float value)
+void tb_jwrite_float(tb_jwrite_control* jwc, char* key, float value)
 {
     _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, 6);
     tb_jwrite_object_raw(jwc, key, jwc->tmpbuf);
 }
 
-void tb_jwrite_object_bool(tb_jwrite_control* jwc, char* key, int oneOrZero)
-{
-    tb_jwrite_object_raw(jwc, key, (oneOrZero) ? "true" : "false");
-}
-
-void tb_jwrite_object_null(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_null(tb_jwrite_control* jwc, char* key)
 {
     tb_jwrite_object_raw(jwc, key, "null");
 }
 
 // put Object in Object
-void tb_jwrite_object_object(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_object(tb_jwrite_control* jwc, char* key)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '{');
-        _tb_jwrite_push(jwc, TB_JWRITE_OBJECT);
+        _tb_jwrite_push(jwc, TB_JWRITE_OBJECT, 0);
     }
 }
 
 // put Array in Object
-void tb_jwrite_object_array(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_array(tb_jwrite_control* jwc, char* key)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '[');
-        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY);
+        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY, 0);
     }
 }
 
@@ -228,7 +233,7 @@ tb_jwrite_error _tb_jwrite_array(tb_jwrite_control* jwc)
             jwc->error = TB_JWRITE_NOT_ARRAY; // tried to write array value into Object
         else if (jwc->nodes[jwc->stackpos].element++ > 0)
             _tb_jwrite_put_ch(jwc, ',');
-        _tb_jwrite_pretty(jwc);
+        _tb_jwrite_style(jwc);
     }
     return jwc->error;
 }
@@ -261,11 +266,6 @@ void tb_jwrite_array_float(tb_jwrite_control* jwc, float value)
     tb_jwrite_array_raw(jwc, jwc->tmpbuf);
 }
 
-void tb_jwrite_array_bool(tb_jwrite_control* jwc, int oneOrZero)
-{
-    tb_jwrite_array_raw(jwc, (oneOrZero) ? "true" : "false");
-}
-
 void tb_jwrite_array_null(tb_jwrite_control* jwc)
 {
     tb_jwrite_array_raw(jwc, "null");
@@ -285,7 +285,7 @@ void tb_jwrite_array_array(tb_jwrite_control* jwc)
     if (_tb_jwrite_array(jwc) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '[');
-        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY);
+        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY, 0);
     }
 }
 

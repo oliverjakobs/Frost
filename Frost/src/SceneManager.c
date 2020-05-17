@@ -203,16 +203,18 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 {
 	tb_jwrite_control jwc;
-	tb_jwrite_open(&jwc, path, TB_JWRITE_OBJECT, TB_JWRITE_PRETTY);
+	tb_jwrite_open(&jwc, path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
 
 	/* size */
-	tb_jwrite_object_array(&jwc, "size");
+	tb_jwrite_array(&jwc, "size");
+	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 	tb_jwrite_array_float(&jwc, scene->width);
 	tb_jwrite_array_float(&jwc, scene->height);
 	tb_jwrite_end(&jwc);
 
-	/* bakcground */
-	tb_jwrite_object_array(&jwc, "background");
+	/* background */
+	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
+	tb_jwrite_array(&jwc, "background");
 
 	for (int i = 0; i < scene->background.size; ++i)
 	{
@@ -220,6 +222,7 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 
 		tb_jwrite_array_array(&jwc);
 
+		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(manager->resources, bg->texture));
 
 		tb_jwrite_array_float(&jwc, bg->startpos);
@@ -228,12 +231,14 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 		tb_jwrite_array_float(&jwc, bg->height);
 		tb_jwrite_array_float(&jwc, bg->parallax);
 		tb_jwrite_end(&jwc);
+
+		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	}
 
 	tb_jwrite_end(&jwc);
 
 	/* templates */
-	tb_jwrite_object_array(&jwc, "templates");
+	tb_jwrite_array(&jwc, "templates", TB_JWRITE_NEWLINE);
 
 	for (int l = 0; l < scene->max_layer; ++l)
 	{
@@ -243,8 +248,25 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 
 			tb_jwrite_array_array(&jwc);
 
+			tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
+
+			/* template-src */
 			tb_jwrite_array_string(&jwc, e->template);
+
+			/* pos */
+			vec2 pos = EcsEntityGetPosition(e);
+
+			tb_jwrite_array_array(&jwc);
+			tb_jwrite_array_float(&jwc, pos.x);
+			tb_jwrite_array_float(&jwc, pos.y);
 			tb_jwrite_end(&jwc);
+
+			/* layer */
+			tb_jwrite_array_int(&jwc, l);
+
+			tb_jwrite_end(&jwc);
+
+			tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 		}
 	}
 
