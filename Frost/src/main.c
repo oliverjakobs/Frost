@@ -5,6 +5,7 @@
 #include "gui/gui.h"
 
 #include "Console.h"
+#include "Command.h"
 
 SceneManager scene_manager;
 Camera camera;
@@ -58,6 +59,11 @@ void OnEvent(Application* app, Event e)
 		ApplicationSetViewport(app, 0, 0, e.window.width, e.window.height);
 	}
 
+	if (e.type == EVENT_CONSOLE_EXEC)
+	{
+		CommandExecute(app, &scene_manager, e.console.cmd);
+	}
+
 	if (e.type == EVENT_KEY_PRESSED)
 	{
 		switch (e.key.keycode)
@@ -80,14 +86,6 @@ void OnEvent(Application* app, Event e)
 		case KEY_F8:
 			ApplicationToggleGui(app);
 			break;
-		/*
-		case KEY_1:
-			SceneManagerChangeScene(&scene_manager, "scene");
-			break;
-		case KEY_2:
-			SceneManagerChangeScene(&scene_manager, "scene2");
-			break;
-		*/
 		}
 	}
 

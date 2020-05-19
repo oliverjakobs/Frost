@@ -52,61 +52,21 @@ void ConsoleOnEvent(Console* console, Event* e)
 		e->handled = 1;
 }
 
-typedef enum
+static int ConsoleExecuteChange(Console* console)
 {
-	CONSOLE_CMD_NONE = -1,
-	CONSOLE_CMD_CHANGE,
-	CONSOLE_CMD_CREATE
-} console_cmd;
+	char* args[1];
+	char* spec = _cmd_get_args(console->cmd_buffer, 6, args, 1);
 
-/* Check the rest of a potential cmd’s lexeme */
-static console_cmd _cmd_check_keyword(char* buffer, int s, int l, const char* r, console_cmd cmd)
-{
-	if (buffer[s + l] != ' ' && buffer[s + l] != '\0')
-		return CONSOLE_CMD_NONE;
+	if (!spec)
+		return 0;
 
-	if (memcmp(buffer + s, r, l) == 0)
-		return cmd;
-
-	return CONSOLE_CMD_NONE;
-}
-
-static char* _cmd_get_arg(char* buffer, int offset)
-{
-	char* tok;
-
-	/* get the first token */
-	tok = strtok(buffer + offset, " ,.-");
-
-	/* walk through other tokens */
-	while (tok != NULL) 
+	if (strcmp(spec, "scene") == 0)
 	{
-		printf(" %s\n", tok);
-
-		tok = strtok(NULL, " ,.-");
+		// EventHandlerThrowChangeSceneEvent(EVENT_CHANGE_SCENE, args[0]);
+		return 1;
 	}
 
-	return tok;
-}
-
-static console_cmd _ConsoleGetCmd(Console* console)
-{
-	if (console->cusor_pos <= 0)
-		return CONSOLE_CMD_NONE;
-
-	switch (console->cmd_buffer[0])
-	{
-	case 'c':
-		if (console->cusor_pos > 1)
-			switch (console->cmd_buffer[1])
-			{
-			case 'h': return _cmd_check_keyword(console->cmd_buffer, 2, 4, "ange", CONSOLE_CMD_CHANGE);
-			case 'r': return _cmd_check_keyword(console->cmd_buffer, 2, 4, "eate", CONSOLE_CMD_CREATE);
-			}
-		break;
-	}
-
-	return CONSOLE_CMD_NONE;
+	return 0;
 }
 
 void ConsoleExecuteCmd(Console* console)
@@ -114,22 +74,7 @@ void ConsoleExecuteCmd(Console* console)
 	/* NULL-terminate cmd */
 	ConsoleCharTyped(console, '\0');
 
-	printf("CMD:\n");
-
-	console_cmd cmd = _ConsoleGetCmd(console);
-	switch (cmd)
-	{
-	case CONSOLE_CMD_CHANGE:
-		printf(" > change\n");
-		_cmd_get_arg(console->cmd_buffer, 6);
-		break;
-	case CONSOLE_CMD_CREATE:
-		printf(" > create\n");
-		break;
-	default:
-		printf(" > unkown\n");
-		break;
-	}
+	EventHandlerThrowConsoleEvent(EVENT_CONSOLE_EXEC, console->cmd_buffer);
 
 	/* reset cmd-buffer */
 	console->cusor_pos = 0;

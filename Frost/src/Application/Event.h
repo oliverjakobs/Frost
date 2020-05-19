@@ -23,7 +23,9 @@ typedef enum
 	EVENT_MOUSE_BUTTON_PRESSED,
 	EVENT_MOUSE_BUTTON_RELEASED,
 	EVENT_MOUSE_MOVED,
-	EVENT_MOUSE_SCROLLED
+	EVENT_MOUSE_SCROLLED,
+	/* console events */
+	EVENT_CONSOLE_EXEC
 } EventType;
 
 typedef struct
@@ -49,6 +51,11 @@ typedef struct
 
 typedef struct
 {
+	char* cmd;
+} ConsoleEvent;
+
+typedef struct
+{
 	EventType type;
 	union
 	{
@@ -56,6 +63,7 @@ typedef struct
 		MouseEvent mouse;
 		MouseButtonEvent mousebutton;
 		WindowEvent window;
+		ConsoleEvent console;
 	};
 	int handled;
 } Event;

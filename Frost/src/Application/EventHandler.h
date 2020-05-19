@@ -20,6 +20,7 @@ void EventHandlerThrowWindowEvent(EventType type, int width, int height);
 void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount);
 void EventHandlerThrowMouseButtonEvent(EventType type, int button);
 void EventHandlerThrowMouseEvent(EventType type, float x, float y);
+void EventHandlerThrowConsoleEvent(EventType type, const char* cmd);
 
 void EventHandlerPoll(Application* app);
 

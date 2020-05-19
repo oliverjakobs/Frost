@@ -31,7 +31,7 @@ void EventHandlerSetEventCallback(void (*callback)(Application*, const Event))
 	event_handler.callback = callback;
 }
 
-void EventHandlerThrowWindowEvent(EventType type, int width, int height)
+static Event* _EventHandlerAllocate(EventType type)
 {
 	Event* e = (Event*)malloc(sizeof(Event));
 
@@ -39,6 +39,17 @@ void EventHandlerThrowWindowEvent(EventType type, int width, int height)
 	{
 		e->type = type;
 		e->handled = 0;
+	}
+
+	return e;
+}
+
+void EventHandlerThrowWindowEvent(EventType type, int width, int height)
+{
+	Event* e = _EventHandlerAllocate(type);
+
+	if (e)
+	{
 		e->window.width = width;
 		e->window.height = height;
 		event_queue_vector_push(&event_handler.queue, e);
@@ -47,12 +58,10 @@ void EventHandlerThrowWindowEvent(EventType type, int width, int height)
 
 void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount)
 {
-	Event* e = (Event*)malloc(sizeof(Event));
+	Event* e = _EventHandlerAllocate(type);
 
 	if (e)
 	{
-		e->type = type;
-		e->handled = 0;
 		e->key.keycode = keycode;
 		e->key.repeatcount = repeatcount;
 		event_queue_vector_push(&event_handler.queue, e);
@@ -61,12 +70,10 @@ void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount)
 
 void EventHandlerThrowMouseButtonEvent(EventType type, int button)
 {
-	Event* e = (Event*)malloc(sizeof(Event));
+	Event* e = _EventHandlerAllocate(type);
 
 	if (e)
 	{
-		e->type = type;
-		e->handled = 0;
 		e->mousebutton.buttoncode = button;
 		event_queue_vector_push(&event_handler.queue, e);
 	}
@@ -74,14 +81,23 @@ void EventHandlerThrowMouseButtonEvent(EventType type, int button)
 
 void EventHandlerThrowMouseEvent(EventType type, float x, float y)
 {
-	Event* e = (Event*)malloc(sizeof(Event));
+	Event* e = _EventHandlerAllocate(type);
 
 	if (e)
 	{
-		e->type = EVENT_MOUSE_MOVED;
-		e->handled = 0;
 		e->mouse.x = x;
 		e->mouse.y = y;
+		event_queue_vector_push(&event_handler.queue, e);
+	}
+}
+
+void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
+{
+	Event* e = _EventHandlerAllocate(type);
+
+	if (e)
+	{
+		e->console.cmd = cmd;
 		event_queue_vector_push(&event_handler.queue, e);
 	}
 }

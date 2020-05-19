@@ -240,6 +240,7 @@
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\Console.h" />
+    <ClInclude Include="src\Command.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -375,6 +376,7 @@
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\Console.c" />
     <ClCompile Include="src\Application\Event.c" />
+    <ClCompile Include="src\Command.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
