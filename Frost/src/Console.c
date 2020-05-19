@@ -3,10 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-static int _between(int start, int end, int value)
-{
-	return value >= start && value <= end;
-}
+#include "clib/clib.h"
 
 void ConsoleInit(Console* console)
 {
@@ -45,10 +42,10 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 	/* block key events */
 	int key = EventKeyPressed(e);
-	if (_between(KEY_SPACE, KEY_WORLD_2, key))
+	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 	key = EventKeyReleased(e);
-	if (_between(KEY_SPACE, KEY_WORLD_2, key))
+	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 }
 
