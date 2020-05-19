@@ -36,7 +36,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		}
 	}
 
-	if (EventMouseButtonPressed(&e, MOUSE_BUTTON_LEFT))
+	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
 	{
 		if (editor->hover)
 		{
@@ -46,7 +46,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		}
 	}
 
-	if (EventMouseButtonReleased(&e, MOUSE_BUTTON_LEFT))
+	if (EventMouseButtonReleased(&e) == MOUSE_BUTTON_LEFT)
 	{
 		editor->offset = (vec2){ 0.0f,0.0f };
 		editor->clicked = 0;

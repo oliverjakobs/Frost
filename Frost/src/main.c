@@ -4,8 +4,12 @@
 
 #include "gui/gui.h"
 
+#include "Console.h"
+
 SceneManager scene_manager;
 Camera camera;
+
+Console console;
 
 void OnInit(Application* app)
 {
@@ -33,6 +37,8 @@ void OnInit(Application* app)
 	SceneManagerChangeScene(&scene_manager, "scene");
 
 	SceneManagerSaveScene(&scene_manager, scene_manager.scene, "res/templates/scenes/save.json");
+
+	ConsoleInit(&console);
 }
 
 void OnDestroy(Application* app)
@@ -45,7 +51,7 @@ void OnDestroy(Application* app)
 	Renderer2DDestroy();
 }
 
-void OnEvent(Application* app, const Event e)
+void OnEvent(Application* app, Event e)
 {
 	if (e.type == EVENT_WINDOW_RESIZE)
 	{
@@ -59,6 +65,9 @@ void OnEvent(Application* app, const Event e)
 		case KEY_ESCAPE:
 			ApplicationClose(app);
 			break;
+		case KEY_F2:
+			ConsoleFocus(&console);
+			break;
 		case KEY_F5:
 			ApplicationPause(app);
 			break;
@@ -71,23 +80,28 @@ void OnEvent(Application* app, const Event e)
 		case KEY_F8:
 			ApplicationToggleGui(app);
 			break;
+		/*
 		case KEY_1:
 			SceneManagerChangeScene(&scene_manager, "scene");
 			break;
 		case KEY_2:
 			SceneManagerChangeScene(&scene_manager, "scene2");
 			break;
+		*/
 		}
 	}
 
+	ConsoleOnEvent(&console, &e);
 	SceneManagerOnEvent(&scene_manager, e);
 }
 
 void OnUpdate(Application* app, float deltaTime)
 {
+	if (console.focus)
+		return;
+
 	/* discard frames that took to long */
 	// if (deltaTime > 0.4f) return;
-
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
@@ -104,6 +118,9 @@ void OnRenderDebug(Application* app)
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
+
+	if (console.focus)
+		FontRendererRenderTextFormat(8.0f, app->height - 8.0f, "> %.*s", console.cusor_pos, console.cmd_buffer);
 
 	FontRendererFlush();
 }
@@ -133,6 +150,7 @@ void OnRenderGui(Application* app)
 	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("F1: Toggle edit mode");
+		gui_text("F2: Open console");
 		gui_text("F5: Pause/Unpause");
 		gui_text("F6: Toggle Vsync");
 		gui_text("F7: Toggle debug mode");
@@ -140,30 +158,16 @@ void OnRenderGui(Application* app)
 	}
 	gui_end();
 
+	/*
 	if (scene_manager.editmode)
 	{
 		if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_BOTTOM, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
 		{
 			gui_text("Hovered Entity: %s", scene_manager.editor.hover ? scene_manager.editor.hover->name : "null");
-			
-			/*
-			gui_checkbox("Show grid", &scene_manager.editor.showgrid);
-
-			gui_separator();
-
-			for (size_t i = 0; i < scene_manager.scene->max_layer; i++)
-			{
-				if (scene_manager.scene->layers[i].size > 0)
-				{
-					char buffer[16];
-					snprintf(buffer, sizeof(buffer), "Layer: %zu", i);
-					// ImGui::RadioButton(buffer, &scene_manager.layer, (int)i);
-				}
-			}
-			*/
 		}
 		gui_end();
 	}
+	*/
 	
 	SceneManagerOnRenderGui(&scene_manager);
 

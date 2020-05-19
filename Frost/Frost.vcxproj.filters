@@ -135,12 +135,6 @@
     <ClInclude Include="src\ECS\TemplateLoader.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\Event.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\EventHandler.h">
-      <Filter>src\Event</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\Background.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
@@ -245,6 +239,7 @@
     <ClInclude Include="src\SceneEditor.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
+    <ClInclude Include="src\Console.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -288,9 +283,6 @@
     </ClCompile>
     <ClCompile Include="src\ECS\TemplateLoader.c">
       <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Event\EventHandler.c">
-      <Filter>src\Event</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Background.c">
       <Filter>src\Graphics</Filter>
@@ -380,8 +372,9 @@
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\SceneEditor.c" />
     <ClCompile Include="src\Grid.c" />
-    <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
+    <ClCompile Include="src\Console.c" />
+    <ClCompile Include="src\Application\Event.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

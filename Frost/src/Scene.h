@@ -10,7 +10,7 @@ extern "C"
 
 #include "Camera/Camera.h"
 
-#include "Event/EventHandler.h"
+#include "Application/EventHandler.h"
 #include "Graphics/Background.h"
 
 #include "clib/vector.h"

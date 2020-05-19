@@ -151,7 +151,7 @@ extern "C"
 #define MOUSE_BUTTON_RIGHT		MOUSE_BUTTON_2
 #define MOUSE_BUTTON_MIDDLE		MOUSE_BUTTON_3
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include "math/math.h"
 

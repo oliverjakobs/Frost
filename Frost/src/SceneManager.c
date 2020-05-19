@@ -238,7 +238,7 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 	tb_jwrite_end(&jwc);
 
 	/* templates */
-	tb_jwrite_array(&jwc, "templates", TB_JWRITE_NEWLINE);
+	tb_jwrite_array(&jwc, "templates");
 
 	for (int l = 0; l < scene->max_layer; ++l)
 	{

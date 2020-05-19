@@ -38,6 +38,7 @@ void EventHandlerThrowWindowEvent(EventType type, int width, int height)
 	if (e)
 	{
 		e->type = type;
+		e->handled = 0;
 		e->window.width = width;
 		e->window.height = height;
 		event_queue_vector_push(&event_handler.queue, e);
@@ -51,6 +52,7 @@ void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount)
 	if (e)
 	{
 		e->type = type;
+		e->handled = 0;
 		e->key.keycode = keycode;
 		e->key.repeatcount = repeatcount;
 		event_queue_vector_push(&event_handler.queue, e);
@@ -64,6 +66,7 @@ void EventHandlerThrowMouseButtonEvent(EventType type, int button)
 	if (e)
 	{
 		e->type = type;
+		e->handled = 0;
 		e->mousebutton.buttoncode = button;
 		event_queue_vector_push(&event_handler.queue, e);
 	}
@@ -76,6 +79,7 @@ void EventHandlerThrowMouseEvent(EventType type, float x, float y)
 	if (e)
 	{
 		e->type = EVENT_MOUSE_MOVED;
+		e->handled = 0;
 		e->mouse.x = x;
 		e->mouse.y = y;
 		event_queue_vector_push(&event_handler.queue, e);

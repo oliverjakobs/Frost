@@ -101,6 +101,7 @@
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Camera\Camera.h" />
+    <ClInclude Include="src\Console.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
@@ -109,8 +110,6 @@
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\ECS\TemplateLoader.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -160,14 +159,14 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
+    <ClCompile Include="src\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\ECS\TemplateLoader.c" />
-    <ClCompile Include="src\Event\Event.c" />
-    <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Application\Event.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />

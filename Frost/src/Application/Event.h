@@ -57,7 +57,17 @@ typedef struct
 		MouseButtonEvent mousebutton;
 		WindowEvent window;
 	};
+	int handled;
 } Event;
+
+/* Utility */
+int EventMouseButtonPressed(Event* e);
+int EventMouseButtonReleased(Event* e);
+
+int EventKeyPressed(Event* e);
+int EventKeyReleased(Event* e);
+
+char EventKeyTyped(Event* e);
 
 #ifdef __cplusplus
 }
