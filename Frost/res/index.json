@@ -1,15 +1,15 @@
 {
 	"textures": {
-		"player":	{ "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
-		"trees":	{ "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
-		"floor":	{ "path": "res/textures/floor.png" },
-		"box":	{ "path": "res/textures/box.png" },
-		"bg_layer_0":	{ "path": "res/textures/background/0.png" },
-		"bg_layer_1":	{ "path": "res/textures/background/1.png" },
-		"bg_layer_2":	{ "path": "res/textures/background/2.png" },
-		"bg_layer_3":	{ "path": "res/textures/background/3.png" },
-		"bg2_layer_0":	{ "path": "res/textures/background_2/0.png" },
-		"bg2_layer_1":	{ "path": "res/textures/background_2/1.png" }
+		"player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
+		"trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
+		"floor": { "path": "res/textures/floor.png" },
+		"box": { "path": "res/textures/box.png" },
+		"bg_layer_0": { "path": "res/textures/background/0.png" },
+		"bg_layer_1": { "path": "res/textures/background/1.png" },
+		"bg_layer_2": { "path": "res/textures/background/2.png" },
+		"bg_layer_3": { "path": "res/textures/background/3.png" },
+		"bg2_layer_0": { "path": "res/textures/background_2/0.png" },
+		"bg2_layer_1": { "path": "res/textures/background_2/1.png" }
 	},
 	"fonts": {
 		"font": { "path": "res/fonts/OpenSans.ttf", "size": 32.0 },

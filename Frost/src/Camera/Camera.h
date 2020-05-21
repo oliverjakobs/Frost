@@ -18,8 +18,8 @@ typedef struct
 	vec2 size;
 } Camera;
 
-int CameraCreate(Camera* camera, const vec3 pos, const vec2 size);
-int CameraCreateOrtho(Camera* camera, const vec3 center, const vec2 size);
+int CameraCreate(Camera* camera, vec3 pos, vec2 size);
+int CameraCreateOrtho(Camera* camera, vec3 center, vec2 size);
 
 /*
  * Call after changing size or position
@@ -27,9 +27,9 @@ int CameraCreateOrtho(Camera* camera, const vec3 center, const vec2 size);
 void CameraUpdateViewOrtho(Camera* camera);
 
 void CameraSetProjectionOrtho(Camera* camera, float w, float h);
-void CameraSetProjectionOrthoVec2(Camera* camera, const vec2 size);
+void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size);
 
-const vec2 CameraGetMousePos(Camera* camera, const vec2 mouse);
+const vec2 CameraGetMousePos(Camera* camera, vec2 mouse);
 
 const float* CameraGetViewPtr(Camera* camera);
 const float* CameraGetProjectionPtr(Camera* camera);

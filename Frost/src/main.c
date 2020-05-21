@@ -4,8 +4,7 @@
 
 #include "gui/gui.h"
 
-#include "Console.h"
-#include "Command.h"
+#include "Console/Console.h"
 
 SceneManager scene_manager;
 Camera camera;
@@ -34,7 +33,7 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, (vec3) { app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2) { (float)app->width, (float)app->height });
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
-	SceneManagerRegisterScenes(&scene_manager, "res/templates/scenes/register.json");
+	SceneManagerLoadRegister(&scene_manager, "res/templates/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");
 
 	SceneManagerSaveScene(&scene_manager, scene_manager.scene, "res/templates/scenes/save.json");
@@ -98,8 +97,6 @@ void OnUpdate(Application* app, float deltaTime)
 	if (console.focus)
 		return;
 
-	/* discard frames that took to long */
-	// if (deltaTime > 0.4f) return;
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 

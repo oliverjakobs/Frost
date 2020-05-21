@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-int CameraCreate(Camera* camera, const vec3 pos, const vec2 size)
+int CameraCreate(Camera* camera, vec3 pos, vec2 size)
 {
 	camera->view = mat4_indentity();
 	camera->projection = mat4_indentity();
@@ -12,7 +12,7 @@ int CameraCreate(Camera* camera, const vec3 pos, const vec2 size)
 	return 1;
 }
 
-int CameraCreateOrtho(Camera* camera, const vec3 center, const vec2 size)
+int CameraCreateOrtho(Camera* camera, vec3 center, vec2 size)
 {
 	int result = CameraCreate(camera, center, size);
 	CameraSetProjectionOrtho(camera, size.x, size.y);
@@ -36,12 +36,12 @@ void CameraSetProjectionOrtho(Camera* camera, float w, float h)
 	CameraUpdateViewOrtho(camera);
 }
 
-void CameraSetProjectionOrthoVec2(Camera* camera, const vec2 size)
+void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size)
 {
 	CameraSetProjectionOrtho(camera, size.x, size.y);
 }
 
-const vec2 CameraGetMousePos(Camera* camera, const vec2 mouse)
+const vec2 CameraGetMousePos(Camera* camera, vec2 mouse)
 {
 	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
 	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));

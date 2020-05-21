@@ -20,6 +20,7 @@ typedef struct
 	ResourceManager* resources;
 
 	clib_hashmap scenes; /* <str,str> */
+	clib_hashmap templates; /* <str,str> */
 
 	Scene* scene;
 	char scene_name[APPLICATION_STR_LEN];
@@ -31,9 +32,11 @@ typedef struct
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
 void SceneManagerDelete(SceneManager* manager);
 
-void SceneManagerRegisterScenes(SceneManager* manager, const char* path);
+void SceneManagerLoadRegister(SceneManager* manager, const char* path);
 
 void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path);
+void SceneManagerRegisterTemplate(SceneManager* manager, const char* name, const char* path);
+
 void SceneManagerChangeScene(SceneManager* manager, const char* name);
 
 int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json);
@@ -44,6 +47,8 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltatime);
 void SceneManagerOnRender(SceneManager* manager);
 void SceneManagerOnRenderDebug(SceneManager* manager);
 void SceneManagerOnRenderGui(SceneManager* manager);
+
+char* SceneManagerGetTemplate(SceneManager* manager, const char* name);
 
 #ifdef __cplusplus
 }

@@ -10,9 +10,9 @@ typedef struct
 {
 	char key[APPLICATION_STR_LEN];
 	char value[APPLICATION_PATH_LEN];
-} _scenekvp;
+} _strkvp;
 
-CLIB_HASHMAP_DEFINE_FUNCS(scene, char, _scenekvp)
+CLIB_HASHMAP_DEFINE_FUNCS(str, char, _strkvp)
 
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
@@ -31,6 +31,7 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
 
 	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
+	clib_hashmap_init(&manager->templates, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
 
 	return 1;
 }
@@ -42,9 +43,10 @@ void SceneManagerDelete(SceneManager* manager)
 
 	free(manager->scene);
 	clib_hashmap_destroy(&manager->scenes);
+	clib_hashmap_destroy(&manager->templates);
 }
 
-void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
+void SceneManagerLoadRegister(SceneManager* manager, const char* json_path)
 {
 	char* json = ignisReadFile(json_path, NULL);
 
@@ -73,6 +75,25 @@ void SceneManagerRegisterScenes(SceneManager* manager, const char* json_path)
 		SceneManagerRegisterScene(manager, name, path);
 	}
 
+	tb_json_element templates;
+	tb_json_read(json, &templates, "{'templates'");
+
+	for (int i = 0; i < templates.elements; i++)
+	{
+		char name[APPLICATION_STR_LEN];
+		tb_json_string((char*)templates.value, "{*", name, APPLICATION_STR_LEN, &i);
+
+		tb_json_element templ;
+		tb_json_read_format((char*)templates.value, &templ, "{'%s'", name);
+
+		char path[APPLICATION_PATH_LEN];
+		strncpy(path, (char*)templ.value, templ.bytelen);
+
+		path[templ.bytelen] = '\0';
+
+		SceneManagerRegisterTemplate(manager, name, path);
+	}
+
 	free(json);
 }
 
@@ -90,16 +111,45 @@ void SceneManagerRegisterScene(SceneManager* manager, const char* name, const ch
 		return;
 	}
 
-	_scenekvp* kvp = (_scenekvp*)malloc(sizeof(_scenekvp));
+	_strkvp* kvp = (_strkvp*)malloc(sizeof(_strkvp));
 
 	if (kvp)
 	{
 		strcpy(kvp->key, name);
 		strcpy(kvp->value, path);
 
-		if (scene_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
+		if (str_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
 		{
 			DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
+			free(kvp);
+		}
+	}
+}
+
+void SceneManagerRegisterTemplate(SceneManager* manager, const char* name, const char* path)
+{
+	if (strlen(name) > APPLICATION_STR_LEN)
+	{
+		DEBUG_ERROR("[SceneManager] Template name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
+		return;
+	}
+
+	if (strlen(path) > APPLICATION_PATH_LEN)
+	{
+		DEBUG_ERROR("[SceneManager] Template path (%s) too long. Max. name length is %d\n", path, APPLICATION_PATH_LEN);
+		return;
+	}
+
+	_strkvp* kvp = (_strkvp*)malloc(sizeof(_strkvp));
+
+	if (kvp)
+	{
+		strcpy(kvp->key, name);
+		strcpy(kvp->value, path);
+
+		if (str_hashmap_put(&manager->templates, kvp->key, kvp) != kvp)
+		{
+			DEBUG_ERROR("[SceneManager] Failed to add template: %s (%s)", name, path);
 			free(kvp);
 		}
 	}
@@ -110,7 +160,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 	if (strcmp(manager->scene_name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		_scenekvp* kvp = scene_hashmap_get(&manager->scenes, name);
+		_strkvp* kvp = str_hashmap_get(&manager->scenes, name);
 		if (!kvp)
 		{
 			DEBUG_ERROR("Couldn't find scene: %s\n", name);
@@ -337,4 +387,16 @@ void SceneManagerOnRenderDebug(SceneManager* manager)
 void SceneManagerOnRenderGui(SceneManager* manager)
 {
 
+}
+
+char* SceneManagerGetTemplate(SceneManager* manager, const char* name)
+{
+	_strkvp* kvp = str_hashmap_get(&manager->templates, name);
+	if (!kvp)
+	{
+		DEBUG_ERROR("Couldn't find template: %s\n", name);
+		return NULL;
+	}
+
+	return kvp->value;
 }

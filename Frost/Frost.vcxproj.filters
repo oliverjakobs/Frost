@@ -239,8 +239,8 @@
     <ClInclude Include="src\SceneEditor.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
-    <ClInclude Include="src\Console.h" />
-    <ClInclude Include="src\Command.h" />
+    <ClInclude Include="src\Console\Console.h" />
+    <ClInclude Include="src\Console\Command.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -374,9 +374,9 @@
     <ClCompile Include="src\SceneEditor.c" />
     <ClCompile Include="src\Grid.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
-    <ClCompile Include="src\Console.c" />
     <ClCompile Include="src\Application\Event.c" />
-    <ClCompile Include="src\Command.c" />
+    <ClCompile Include="src\Console\Console.c" />
+    <ClCompile Include="src\Console\Command.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -443,13 +443,13 @@
     <None Include="res\templates\entities\tree_5.json">
       <Filter>res\templates\entities</Filter>
     </None>
-    <None Include="res\templates\scenes\register.json">
-      <Filter>res\templates\scenes</Filter>
-    </None>
     <None Include="res\templates\scenes\scene.json">
       <Filter>res\templates\scenes</Filter>
     </None>
     <None Include="res\templates\scenes\scene2.json">
+      <Filter>res\templates\scenes</Filter>
+    </None>
+    <None Include="res\templates\register.json">
       <Filter>res\templates\scenes</Filter>
     </None>
   </ItemGroup>
