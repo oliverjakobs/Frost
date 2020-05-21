@@ -8,9 +8,10 @@ typedef enum
 	CONSOLE_CMD_NONE = -1,
 	CONSOLE_CMD_CHANGE,
 	CONSOLE_CMD_CREATE,
+	CONSOLE_CMD_LIST,
 	CONSOLE_CMD_REGISTER,
 	CONSOLE_CMD_REMOVE,
-	CONSOLE_CMD_SHOW
+	CONSOLE_CMD_SAVE
 } ConsoleCmd;
 
 /* Check the rest of a potential cmd’s lexeme */
@@ -67,6 +68,8 @@ static ConsoleCmd _CommandGetType(char* buffer)
 			case 'r': return _CommandCheckKeyword(buffer, 2, 4, "eate", CONSOLE_CMD_CREATE);
 			}
 		break;
+	case 'l':
+		return _CommandCheckKeyword(buffer, 1, 3, "ist", CONSOLE_CMD_LIST);
 	case 'r':
 		if (length > 2 && buffer[1] == 'e')
 			switch (buffer[2])
@@ -76,13 +79,13 @@ static ConsoleCmd _CommandGetType(char* buffer)
 			}
 		break;
 	case 's':
-		return _CommandCheckKeyword(buffer, 1, 3, "how", CONSOLE_CMD_SHOW);
+		return _CommandCheckKeyword(buffer, 1, 3, "ave", CONSOLE_CMD_SAVE);
 	}
 
 	return CONSOLE_CMD_NONE;
 }
 
-void CommandExecute(Application* app, SceneManager* manager, char* cmd_buffer)
+void CommandExecute(SceneManager* manager, char* cmd_buffer)
 {
 	ConsoleCmd cmd = _CommandGetType(cmd_buffer);
 
@@ -98,7 +101,18 @@ void CommandExecute(Application* app, SceneManager* manager, char* cmd_buffer)
 		if (strcmp(spec, "scene") == 0)
 			SceneManagerChangeScene(manager, args[0]);
 		else if (strcmp(spec, "layer") == 0)
-			SceneEditorChangeLayer(&manager->editor, atoi(args[0]), manager->scene->max_layer);
+		{
+			int layer;
+
+			if (strcmp(args[0], "up") == 0)
+				layer = manager->editor.layer + 1;
+			else if (strcmp(args[0], "down") == 0)
+				layer = manager->editor.layer - 1;
+			else
+				layer = atoi(args[0]);
+
+			SceneEditorChangeLayer(&manager->editor, layer, manager->scene->max_layer);
+		}
 		break;
 	}
 	case CONSOLE_CMD_CREATE:
@@ -125,13 +139,7 @@ void CommandExecute(Application* app, SceneManager* manager, char* cmd_buffer)
 		}
 		break;
 	}
-	case CONSOLE_CMD_REGISTER:
-		printf(" > register\n");
-		break;
-	case CONSOLE_CMD_REMOVE:
-		printf(" > remove\n");
-		break;
-	case CONSOLE_CMD_SHOW:
+	case CONSOLE_CMD_LIST:
 	{
 		char* spec = _CommandGetArgs(cmd_buffer, 4, NULL, 0);
 
@@ -164,6 +172,32 @@ void CommandExecute(Application* app, SceneManager* manager, char* cmd_buffer)
 				}
 			}
 		}
+		break;
+	}
+	case CONSOLE_CMD_REGISTER:
+		printf(" > register\n");
+		break;
+	case CONSOLE_CMD_REMOVE:
+		printf(" > remove\n");
+		break;
+	case CONSOLE_CMD_SAVE:
+	{
+		char* spec = _CommandGetArgs(cmd_buffer, 4, NULL, 0);
+
+		if (!spec) break;
+
+		if (strcmp(spec, "scene") == 0)
+		{
+			char* path = clib_strmap_get(&manager->scenes, manager->scene_name);
+			if (!path)
+			{
+				printf("Couldn't find path for %s\n", manager->scene_name);
+				break;
+			}
+
+			SceneManagerSaveScene(manager, manager->scene, path);
+		}
+
 		break;
 	}
 	default:

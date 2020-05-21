@@ -72,3 +72,18 @@ void ConsoleCharRemoveLast(Console* console)
 	if (console->cusor_pos < 0)
 		console->cusor_pos = 0;
 }
+
+void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj)
+{
+	Primitives2DStart(proj);
+
+	Primitives2DFillRect(x, y, w, -h, (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f });
+
+	Primitives2DFlush();
+
+	FontRendererStart(proj);
+
+	FontRendererRenderTextFormat(x + padding, y - padding, "> %.*s", console->cusor_pos, console->cmd_buffer);
+
+	FontRendererFlush();
+}

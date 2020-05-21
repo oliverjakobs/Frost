@@ -60,7 +60,7 @@ void OnEvent(Application* app, Event e)
 
 	if (e.type == EVENT_CONSOLE_EXEC)
 	{
-		CommandExecute(app, &scene_manager, e.console.cmd);
+		CommandExecute(&scene_manager, e.console.cmd);
 	}
 
 	if (e.type == EVENT_KEY_PRESSED)
@@ -111,21 +111,31 @@ void OnRenderDebug(Application* app)
 
 	/* fps */
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
-
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
+	FontRendererFlush();
 
 	if (console.focus)
-		FontRendererRenderTextFormat(8.0f, app->height - 8.0f, "> %.*s", console.cusor_pos, console.cmd_buffer);
-
-	FontRendererFlush();
+		ConsoleRender(&console, 0.0f, app->height, app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 
 void OnRenderGui(Application* app)
 {
 	gui_start();
 
+	/* Settings */
+	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
+	{
+		gui_text("F1: Toggle edit mode");
+		gui_text("F2: Open console");
+		gui_text("F5: Pause/Unpause");
+		gui_text("F6: Toggle Vsync");
+		gui_text("F7: Toggle debug mode");
+		gui_text("F8: Toggle Gui");
+	}
+	gui_end();
+
 	/* Debug */
-	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_BOTTOM, 250.0f, 105.0f, 8.0f, GUI_BG_FILL))
+	if (gui_begin(app->width - 470.0f, 0.0f, 250.0f, 128.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("Scene: %s", scene_manager.scene_name);
 		gui_text("Layer: %d", scene_manager.editor.layer);
@@ -140,29 +150,6 @@ void OnRenderGui(Application* app)
 		}
 	}
 	gui_end();
-
-	/* Settings */
-	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
-	{
-		gui_text("F1: Toggle edit mode");
-		gui_text("F2: Open console");
-		gui_text("F5: Pause/Unpause");
-		gui_text("F6: Toggle Vsync");
-		gui_text("F7: Toggle debug mode");
-		gui_text("F8: Toggle Gui");
-	}
-	gui_end();
-
-	/*
-	if (scene_manager.editmode)
-	{
-		if (gui_begin_align(GUI_HALIGN_LEFT, GUI_VALIGN_BOTTOM, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
-		{
-			gui_text("Hovered Entity: %s", scene_manager.editor.hover ? scene_manager.editor.hover->name : "null");
-		}
-		gui_end();
-	}
-	*/
 	
 	SceneManagerOnRenderGui(&scene_manager);
 

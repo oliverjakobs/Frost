@@ -3,6 +3,6 @@
 
 #include "SceneManager.h"
 
-void CommandExecute(Application* app, SceneManager* manager, char* cmd_buffer);
+void CommandExecute(SceneManager* manager, char* cmd_buffer);
 
 #endif /* COMMAND_H */

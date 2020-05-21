@@ -1,20 +1,20 @@
 {
-	"size": [ 2048.0, 800.0 ],
-	"background": [
-		[ "bg_layer_0", 0.0, 288.0, 1088.0, 600.0, 1.0],
-		[ "bg_layer_1", 0.0, 288.0, 1088.0, 600.0, 0.5],
-		[ "bg_layer_2", 0.0, 288.0, 1088.0, 600.0, 0.3],
-		[ "bg_layer_3", 0.0, 288.0, 1088.0, 600.0, 0.0]
-	],
-	"templates": [
-		[ "res/templates/entities/player.json", [ 120.0, 288.0 ], 1 ],
-		[ "res/templates/entities/floor.json", [ 128.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 384.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 640.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 896.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 1152.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 1408.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 1664.0, -96.0 ], 0 ],
-		[ "res/templates/entities/floor.json", [ 1920.0, -96.0 ], 0 ]
-	]
+    "size": [ 2048, 800 ],
+    "background": [
+        [ "bg_layer_0", 0, 288, 1088, 600, 1 ],
+        [ "bg_layer_1", 0, 288, 1088, 600, 0.5 ],
+        [ "bg_layer_2", 0, 288, 1088, 600, 0.3 ],
+        [ "bg_layer_3", 0, 288, 1088, 600, 0 ]
+    ],
+    "templates": [
+        [ "res/templates/entities/floor.json", [ 128, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 384, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 640, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 896, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 1152, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 1408, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 1664, -96 ], 0 ],
+        [ "res/templates/entities/floor.json", [ 1920, -96 ], 0 ],
+        [ "res/templates/entities/player.json", [ 120, 288 ], 1 ]
+    ]
 }

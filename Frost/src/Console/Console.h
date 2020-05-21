@@ -23,4 +23,6 @@ void ConsoleExecuteCmd(Console* console);
 void ConsoleCharTyped(Console* console, char c);
 void ConsoleCharRemoveLast(Console* console);
 
+void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj);
+
 #endif /* !CONSOLE_H */
