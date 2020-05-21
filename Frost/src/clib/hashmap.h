@@ -5,7 +5,8 @@
  * it under the terms of the MIT license. See LICENSE for details.
  */
 
-#pragma once
+#ifndef CLIB_HASHMAP_H
+#define CLIB_HASHMAP_H
 
 #ifdef __cplusplus
 extern "C"
@@ -280,7 +281,8 @@ double clib_hashmap_collisions_mean(const clib_hashmap* map);
 double clib_hashmap_collisions_variance(const clib_hashmap* map);
 #endif
 
-
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* !CLIB_HASHMAP_H */

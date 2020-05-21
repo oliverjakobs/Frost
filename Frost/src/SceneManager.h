@@ -12,6 +12,8 @@ extern "C"
 
 #include "Application/defines.h"
 
+#include "clib/strmap.h"
+
 #define SCENE_MANAGER_LAYER_COUNT	4
 
 typedef struct 

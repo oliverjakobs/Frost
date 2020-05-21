@@ -101,6 +101,7 @@
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Camera\Camera.h" />
+    <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\Components.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
+    <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />

@@ -241,6 +241,7 @@
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\Console\Command.h" />
+    <ClInclude Include="src\clib\strmap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -377,6 +378,7 @@
     <ClCompile Include="src\Application\Event.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\Console\Command.c" />
+    <ClCompile Include="src\clib\strmap.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

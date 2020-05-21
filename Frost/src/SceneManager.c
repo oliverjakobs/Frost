@@ -6,14 +6,6 @@
 #include "Application/Application.h"
 #include "Application/Debugger.h"
 
-typedef struct
-{
-	char key[APPLICATION_STR_LEN];
-	char value[APPLICATION_PATH_LEN];
-} _strkvp;
-
-CLIB_HASHMAP_DEFINE_FUNCS(str, char, _strkvp)
-
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
@@ -30,8 +22,8 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	}
 	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
 
-	clib_hashmap_init(&manager->scenes, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
-	clib_hashmap_init(&manager->templates, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
+	clib_strmap_init(&manager->scenes, 0);
+	clib_strmap_init(&manager->templates, 0);
 
 	return 1;
 }
@@ -42,8 +34,8 @@ void SceneManagerDelete(SceneManager* manager)
 		SceneQuit(manager->scene);
 
 	free(manager->scene);
-	clib_hashmap_destroy(&manager->scenes);
-	clib_hashmap_destroy(&manager->templates);
+	clib_strmap_destroy(&manager->scenes);
+	clib_strmap_destroy(&manager->templates);
 }
 
 void SceneManagerLoadRegister(SceneManager* manager, const char* json_path)
@@ -99,59 +91,17 @@ void SceneManagerLoadRegister(SceneManager* manager, const char* json_path)
 
 void SceneManagerRegisterScene(SceneManager* manager, const char* name, const char* path)
 {
-	if (strlen(name) > APPLICATION_STR_LEN)
+	if (!clib_strmap_put(&manager->scenes, name, path))
 	{
-		DEBUG_ERROR("[SceneManager] Scene name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
-		return;
-	}
-
-	if (strlen(path) > APPLICATION_PATH_LEN)
-	{
-		DEBUG_ERROR("[SceneManager] Scene path (%s) too long. Max. name length is %d\n", path, APPLICATION_PATH_LEN);
-		return;
-	}
-
-	_strkvp* kvp = (_strkvp*)malloc(sizeof(_strkvp));
-
-	if (kvp)
-	{
-		strcpy(kvp->key, name);
-		strcpy(kvp->value, path);
-
-		if (str_hashmap_put(&manager->scenes, kvp->key, kvp) != kvp)
-		{
-			DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
-			free(kvp);
-		}
+		DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
 	}
 }
 
 void SceneManagerRegisterTemplate(SceneManager* manager, const char* name, const char* path)
 {
-	if (strlen(name) > APPLICATION_STR_LEN)
+	if (!clib_strmap_put(&manager->templates, name, path))
 	{
-		DEBUG_ERROR("[SceneManager] Template name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
-		return;
-	}
-
-	if (strlen(path) > APPLICATION_PATH_LEN)
-	{
-		DEBUG_ERROR("[SceneManager] Template path (%s) too long. Max. name length is %d\n", path, APPLICATION_PATH_LEN);
-		return;
-	}
-
-	_strkvp* kvp = (_strkvp*)malloc(sizeof(_strkvp));
-
-	if (kvp)
-	{
-		strcpy(kvp->key, name);
-		strcpy(kvp->value, path);
-
-		if (str_hashmap_put(&manager->templates, kvp->key, kvp) != kvp)
-		{
-			DEBUG_ERROR("[SceneManager] Failed to add template: %s (%s)", name, path);
-			free(kvp);
-		}
+		DEBUG_ERROR("[SceneManager] Failed to add template: %s (%s)", name, path);
 	}
 }
 
@@ -160,18 +110,18 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 	if (strcmp(manager->scene_name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		_strkvp* kvp = str_hashmap_get(&manager->scenes, name);
-		if (!kvp)
+		char* templ = clib_strmap_get(&manager->scenes, name);
+		if (!templ)
 		{
 			DEBUG_ERROR("Couldn't find scene: %s\n", name);
 			return;
 		}
 		
-		char* json = ignisReadFile(kvp->value, NULL);
+		char* json = ignisReadFile(templ, NULL);
 
 		if (!json)
 		{
-			DEBUG_ERROR("Couldn't read scene template: %s\n", kvp->value);
+			DEBUG_ERROR("Couldn't read scene template: %s\n", templ);
 			return;
 		}
 
@@ -391,12 +341,12 @@ void SceneManagerOnRenderGui(SceneManager* manager)
 
 char* SceneManagerGetTemplate(SceneManager* manager, const char* name)
 {
-	_strkvp* kvp = str_hashmap_get(&manager->templates, name);
-	if (!kvp)
+	char* templ = clib_strmap_get(&manager->templates, name);
+	if (!templ)
 	{
 		DEBUG_ERROR("Couldn't find template: %s\n", name);
 		return NULL;
 	}
 
-	return kvp->value;
+	return templ;
 }
