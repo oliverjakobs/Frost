@@ -119,7 +119,7 @@
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
     <ClInclude Include="src\Graphics\ResourceManager.h" />
-    <ClInclude Include="src\Grid.h" />
+    <ClInclude Include="src\math\grid.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -136,9 +136,9 @@
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\Physics\Body.h" />
     <ClInclude Include="src\Physics\World.h" />
-    <ClInclude Include="src\Scene.h" />
-    <ClInclude Include="src\SceneEditor.h" />
-    <ClInclude Include="src\SceneManager.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\Scene\SceneEditor.h" />
+    <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\vector.h" />
@@ -178,7 +178,7 @@
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
     <ClCompile Include="src\Graphics\ResourceManager.c" />
-    <ClCompile Include="src\Grid.c" />
+    <ClCompile Include="src\math\grid.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
@@ -192,9 +192,9 @@
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\Physics\Body.c" />
     <ClCompile Include="src\Physics\World.c" />
-    <ClCompile Include="src\Scene.c" />
-    <ClCompile Include="src\SceneEditor.c" />
-    <ClCompile Include="src\SceneManager.c" />
+    <ClCompile Include="src\Scene\Scene.c" />
+    <ClCompile Include="src\Scene\SceneEditor.c" />
+    <ClCompile Include="src\Scene\SceneManager.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />
     <ClCompile Include="src\gui\gui.c" />

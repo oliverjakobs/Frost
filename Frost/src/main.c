@@ -1,13 +1,13 @@
 #include "Application/Application.h"
 
-#include "SceneManager.h"
+#include "Scene/SceneManager.h"
 
 #include "gui/gui.h"
 
 #include "Console/Console.h"
 
-SceneManager scene_manager;
 Camera camera;
+SceneManager scene_manager;
 
 Console console;
 
@@ -35,8 +35,6 @@ void OnInit(Application* app)
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerLoadRegister(&scene_manager, "res/templates/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");
-
-	SceneManagerSaveScene(&scene_manager, scene_manager.scene, "res/templates/scenes/save.json");
 
 	ConsoleInit(&console);
 }

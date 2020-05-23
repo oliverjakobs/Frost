@@ -192,12 +192,6 @@
     <ClInclude Include="src\Physics\World.h">
       <Filter>src\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SceneManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\clib\clib.h">
       <Filter>src\clib</Filter>
     </ClInclude>
@@ -236,12 +230,18 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
-    <ClInclude Include="src\SceneEditor.h" />
-    <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\clib\strmap.h" />
+    <ClInclude Include="src\Scene\Scene.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scene\SceneEditor.h" />
+    <ClInclude Include="src\Scene\SceneManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\grid.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -340,12 +340,6 @@
     <ClCompile Include="src\Physics\World.c">
       <Filter>src\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SceneManager.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\clib\hashmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
@@ -372,13 +366,19 @@
     </ClCompile>
     <ClCompile Include="src\Application\EventHandler.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
-    <ClCompile Include="src\SceneEditor.c" />
-    <ClCompile Include="src\Grid.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\Application\Event.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\clib\strmap.c" />
+    <ClCompile Include="src\Scene\Scene.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scene\SceneEditor.c" />
+    <ClCompile Include="src\Scene\SceneManager.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\math\grid.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
