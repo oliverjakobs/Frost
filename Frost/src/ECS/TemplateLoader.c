@@ -119,7 +119,7 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 		
 			AnimatorAddAnimation(animator, anim_name, animation);
 		}
-		AnimatorDebugPrint(animator);
+		/* AnimatorDebugPrint(animator); */
 		EcsEntityAddAnimation(entity, animator);
 	}
 

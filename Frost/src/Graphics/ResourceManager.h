@@ -7,12 +7,12 @@ extern "C"
 #endif
 
 #include "Ignis/Ignis.h"
-#include "clib/hashmap.h"
+#include "clib/dictionary.h"
 
 typedef struct
 {
-	clib_hashmap textures;	/* <str,IgnisTexture> */
-	clib_hashmap fonts;		/* <str,IgnisFont> */
+	clib_dict textures;	/* <str,IgnisTexture> */
+	clib_dict fonts;	/* <str,IgnisFont> */
 } ResourceManager;
 
 int ResourceManagerInit(ResourceManager* resources, const char* path);

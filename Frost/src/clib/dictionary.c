@@ -3,11 +3,12 @@
 static void* _clib_dict_key_alloc(const char* src)
 {
 	size_t size = strlen(src);
-	char* val = (char*)malloc(size);
+	char* val = (char*)malloc(size + 1);
 
 	if (!val) return NULL;
 
 	strcpy(val, src);
+	val[size] = '\0';
 
 	return (void*)val;
 }

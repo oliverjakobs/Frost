@@ -7,26 +7,13 @@
 #include "Application/Debugger.h"
 #include "Application/defines.h"
 
-typedef struct
-{
-	char key[APPLICATION_STR_LEN];
-	IgnisTexture2D* value;
-} _texkvp;
-
-typedef struct
-{
-	char key[APPLICATION_STR_LEN];
-	IgnisFont* value;
-} _fontkvp;
-
-/* Declare type-specific type_hashmap_* functions with this handy macro */
-CLIB_HASHMAP_DEFINE_FUNCS(tex, char, _texkvp)
-CLIB_HASHMAP_DEFINE_FUNCS(font, char, _fontkvp)
+CLIB_DICT_DEFINE_FUNCS(tex, IgnisTexture2D)
+CLIB_DICT_DEFINE_FUNCS(font, IgnisFont)
 
 int ResourceManagerInit(ResourceManager* resources, const char* path)
 {
-	clib_hashmap_init(&resources->textures, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
-	clib_hashmap_init(&resources->fonts, clib_hashmap_hash_string, clib_hashmap_compare_string, 0);
+	clib_dict_init(&resources->textures, 0);
+	clib_dict_init(&resources->fonts, 0);
 
 	char* json = ignisReadFile(path, NULL);
 
@@ -84,15 +71,15 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 
 void ResourceManagerDestroy(ResourceManager* manager)
 {
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->textures); iter; iter = clib_hashmap_iter_next(&manager->textures, iter))
-		ignisDeleteTexture2D(tex_hashmap_iter_get_value(iter)->value);
+	for (clib_dict_iter* iter = clib_dict_iterator(&manager->textures); iter; iter = clib_dict_iter_next(&manager->textures, iter))
+		ignisDeleteTexture2D(tex_dict_iter_get_value(iter));
 
-	clib_hashmap_destroy(&manager->textures);
+	clib_dict_destroy(&manager->textures);
 
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->fonts); iter; iter = clib_hashmap_iter_next(&manager->fonts, iter))
-		ignisDeleteFont(font_hashmap_iter_get_value(iter)->value);
+	for (clib_dict_iter* iter = clib_dict_iterator(&manager->fonts); iter; iter = clib_dict_iter_next(&manager->fonts, iter))
+		ignisDeleteFont(font_dict_iter_get_value(iter));
 
-	clib_hashmap_destroy(&manager->fonts);
+	clib_dict_destroy(&manager->fonts);
 }
 
 IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char* name, const char* path, int rows, int columns)
@@ -107,20 +94,11 @@ IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char
 
 	if (ignisCreateTexture2D(texture, path, rows, columns, 1, NULL))
 	{
-		_texkvp* kvp = (_texkvp*)malloc(sizeof(_texkvp));
-
-		if (kvp)
-		{
-			strcpy(kvp->key, name);
-			kvp->value = texture;
-
-			if (tex_hashmap_insert(&manager->textures, kvp->key, kvp) == kvp)
-				return texture;
-		}
+		if (tex_dict_insert(&manager->textures, name, texture) == texture)
+			return texture;
 
 		DEBUG_ERROR("[Resources] Failed to add texture: %s (%s)\n", name, path);
 		ignisDeleteTexture2D(texture);
-		free(kvp);
 	}
 	free(texture);
 	return NULL;
@@ -138,19 +116,11 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 	if (ignisCreateFont(font, path, size))
 	{
-		_fontkvp* kvp = (_fontkvp*)malloc(sizeof(_fontkvp));
+		if (font_dict_insert(&manager->fonts, name, font) == font)
+			return font;
 
-		if (kvp)
-		{
-			strcpy(kvp->key, name);
-			kvp->value = font;
-
-			if (font_hashmap_insert(&manager->fonts, kvp->key, kvp) == kvp)
-				return font;
-		}
 		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
 		ignisDeleteFont(font);
-		free(kvp);
 	}
 	free(font);
 	return NULL;
@@ -158,9 +128,9 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char* name)
 {
-	_texkvp* kvp = tex_hashmap_get(&manager->textures, name);
+	IgnisTexture2D* tex = tex_dict_get(&manager->textures, name);
 
-	if (kvp) return kvp->value;
+	if (tex) return tex;
 
 	DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 	return NULL;
@@ -168,9 +138,9 @@ IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char
 
 IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 {
-	_fontkvp* kvp = font_hashmap_get(&manager->fonts, name);
+	IgnisFont* font = font_dict_get(&manager->fonts, name);
 
-	if (kvp) return kvp->value;
+	if (font) return font;
 
 	DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 	return NULL;
@@ -178,10 +148,10 @@ IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 
 const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture)
 {
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->textures); iter; iter = clib_hashmap_iter_next(&resources->textures, iter))
+	for (clib_dict_iter* iter = clib_dict_iterator(&resources->textures); iter; iter = clib_dict_iter_next(&resources->textures, iter))
 	{
-		if (texture == tex_hashmap_iter_get_value(iter)->value)
-			return tex_hashmap_iter_get_key(iter);
+		if (texture == tex_dict_iter_get_value(iter))
+			return tex_dict_iter_get_key(iter);
 	}
 
 	return NULL;
