@@ -202,7 +202,7 @@ void tb_jwrite_object(tb_jwrite_control* jwc, char* key)
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '{');
-        _tb_jwrite_push(jwc, TB_JWRITE_OBJECT, 0);
+        _tb_jwrite_push(jwc, TB_JWRITE_OBJECT);
     }
 }
 
@@ -212,7 +212,7 @@ void tb_jwrite_array(tb_jwrite_control* jwc, char* key)
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '[');
-        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY, 0);
+        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY);
     }
 }
 
@@ -285,7 +285,7 @@ void tb_jwrite_array_array(tb_jwrite_control* jwc)
     if (_tb_jwrite_array(jwc) == TB_JWRITE_OK)
     {
         _tb_jwrite_put_ch(jwc, '[');
-        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY, 0);
+        _tb_jwrite_push(jwc, TB_JWRITE_ARRAY);
     }
 }
 

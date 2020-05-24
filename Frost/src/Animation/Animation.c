@@ -60,7 +60,7 @@ void AnimationAddTransition(Animation* animation, const char* name, const char* 
 		strcpy(kvp->name, name);
 		strcpy(kvp->next, next);
 
-		if (kvp && transition_hashmap_put(&animation->transitions, kvp->name, kvp) != kvp)
+		if (kvp && transition_hashmap_insert(&animation->transitions, kvp->name, kvp) != kvp)
 			free(kvp);
 	}
 }

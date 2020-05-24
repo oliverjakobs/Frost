@@ -65,7 +65,7 @@ void AnimatorInit(Animator* animator)
 
 void AnimatorDestroy(Animator* animator)
 {
-	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&animator->animations); iter; iter = clib_hashmap_iter_next(&animator->animations, iter))
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&animator->animations); iter; iter = clib_hashmap_iter_next(&animator->animations, iter))
 		AnimationDestroy(animation_hashmap_iter_get_value(iter)->animation);
 
 	clib_hashmap_destroy(&animator->animations);
@@ -76,7 +76,7 @@ void AnimatorRegisterConition(Animator* animator, const char* name, int (*condit
 {
 	_conditionkvp* kvp = _condition_kvp(name, condition);
 
-	if (kvp && condition_hashmap_put(&animator->conditions, kvp->key, kvp) != kvp)
+	if (kvp && condition_hashmap_insert(&animator->conditions, kvp->key, kvp) != kvp)
 		free(kvp);
 }
 
@@ -86,7 +86,7 @@ void AnimatorAddAnimation(Animator* animator, const char* name, Animation* anima
 
 	if (kvp)
 	{
-		if (animation_hashmap_put(&animator->animations, kvp->key, kvp) != kvp)
+		if (animation_hashmap_insert(&animator->animations, kvp->key, kvp) != kvp)
 		{
 			AnimationDestroy(animation);
 			free(animation);
@@ -108,7 +108,7 @@ void AnimatorTick(Animator* animator, EcsEntity* entity, float deltatime)
 	if (kvp)
 	{
 		AnimationTick(kvp->animation, deltatime);
-		for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&kvp->animation->transitions); iter; iter = clib_hashmap_iter_next(&kvp->animation->transitions, iter))
+		for (clib_hashmap_iter* iter = clib_hashmap_iterator(&kvp->animation->transitions); iter; iter = clib_hashmap_iter_next(&kvp->animation->transitions, iter))
 		{
 			_conditionkvp* cond = condition_hashmap_get(&animator->conditions, transition_hashmap_iter_get_key(iter));
 			if (cond && cond->condition(entity, 0))
@@ -143,16 +143,16 @@ int AnimatorGetFrame(Animator* animator)
 
 void AnimatorDebugPrint(Animator* animator)
 {
-	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&animator->conditions); iter; iter = clib_hashmap_iter_next(&animator->conditions, iter))
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&animator->conditions); iter; iter = clib_hashmap_iter_next(&animator->conditions, iter))
 		printf("Condition: %s\n", condition_hashmap_iter_get_value(iter)->key);
 
-	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&animator->animations); iter; iter = clib_hashmap_iter_next(&animator->animations, iter))
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&animator->animations); iter; iter = clib_hashmap_iter_next(&animator->animations, iter))
 	{
 		printf("Animation: %s\n", animation_hashmap_iter_get_value(iter)->key);
 
 		Animation* animation = animation_hashmap_iter_get_value(iter)->animation;
 
-		for (struct clib_hashmap_iter* a_iter = clib_hashmap_iter(&animation->transitions); a_iter; a_iter = clib_hashmap_iter_next(&animation->transitions, a_iter))
+		for (clib_hashmap_iter* a_iter = clib_hashmap_iterator(&animation->transitions); a_iter; a_iter = clib_hashmap_iter_next(&animation->transitions, a_iter))
 			printf("Transition: %s - %s\n", transition_hashmap_iter_get_value(a_iter)->name, transition_hashmap_iter_get_value(a_iter)->next);
 	}
 }

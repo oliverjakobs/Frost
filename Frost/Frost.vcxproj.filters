@@ -242,6 +242,7 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\math\grid.h" />
+    <ClInclude Include="src\clib\foreach.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -379,6 +380,7 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\math\grid.c" />
+    <ClCompile Include="src\clib\foreach.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

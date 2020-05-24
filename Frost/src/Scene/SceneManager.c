@@ -64,7 +64,7 @@ void SceneManagerLoadRegister(SceneManager* manager, const char* json_path)
 
 		path[scene.bytelen] = '\0';
 
-		if (!clib_strmap_put(&manager->scenes, name, path))
+		if (!clib_strmap_insert(&manager->scenes, name, path))
 		{
 			DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
 		}
@@ -86,7 +86,7 @@ void SceneManagerLoadRegister(SceneManager* manager, const char* json_path)
 
 		path[templ.bytelen] = '\0';
 
-		if (!clib_strmap_put(&manager->templates, name, path))
+		if (!clib_strmap_insert(&manager->templates, name, path))
 		{
 			DEBUG_ERROR("[SceneManager] Failed to add template: %s (%s)", name, path);
 		}
@@ -130,13 +130,13 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 {
-	float width = tb_json_float(json, "{'size'[0", NULL);
-	float height = tb_json_float(json, "{'size'[1", NULL);
+	float width = tb_json_float((char*)json, "{'size'[0", NULL);
+	float height = tb_json_float((char*)json, "{'size'[1", NULL);
 
 	SceneLoad(scene, manager->camera, width, height, SCENE_MANAGER_LAYER_COUNT);
 
 	tb_json_element background;
-	tb_json_read(json, &background, "{'background'");
+	tb_json_read((char*)json, &background, "{'background'");
 
 	if (background.error == TB_JSON_OK && background.data_type == TB_JSON_ARRAY)
 	{
@@ -164,7 +164,7 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 	}
 
 	tb_json_element templates;
-	tb_json_read(json, &templates, "{'templates'");
+	tb_json_read((char*)json, &templates, "{'templates'");
 
 	if (templates.error == TB_JSON_OK && templates.data_type == TB_JSON_ARRAY)
 	{

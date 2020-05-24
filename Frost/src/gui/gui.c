@@ -218,7 +218,7 @@ int gui_button(const char* text)
     float row_width = ignisFontGetTextWidth(_context.theme.font, text) + (2.0f * padding);
     float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL) + (2.0f * padding);
 
-    gui_row* row = gui_row_create_button(text, _current->padding, _current->row_y, row_width, row_height, padding);
+    gui_row* row = gui_row_create_button((char*)text, _current->padding, _current->row_y, row_width, row_height, padding);
 
     _gui_add_row(row);
 

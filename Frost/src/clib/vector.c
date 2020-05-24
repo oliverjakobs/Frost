@@ -56,7 +56,7 @@ void clib_vector_delete(clib_vector* v, size_t index)
 
     v->items[index] = NULL;
 
-    for (int i = index; i < v->size - 1; i++)
+    for (size_t i = index; i < v->size - 1; i++)
     {
         v->items[i] = v->items[i + 1];
         v->items[i + 1] = NULL;

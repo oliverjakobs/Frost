@@ -56,7 +56,7 @@ static char* _CommandGetArgs(char* buffer, int offset, char** args, int arg_coun
 
 static ConsoleCmd _CommandGetType(char* buffer)
 {
-	int length = strlen(buffer);
+	size_t length = strlen(buffer);
 
 	switch (buffer[0])
 	{
@@ -149,15 +149,11 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			struct clib_hashmap_iter* iter = clib_hashmap_iter(&manager->scenes);
-
-			while (iter)
+			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->scenes); iter; iter = clib_hashmap_iter_next(&manager->scenes, iter))
 			{
 				char* name = (char*)clib_hashmap_iter_get_key(iter);
 
 				printf(" - %s %s\n", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
-
-				iter = clib_hashmap_iter_next(&manager->scenes, iter);
 			}
 		}
 		else if (strcmp(spec, "entities") == 0)

@@ -34,7 +34,7 @@ void clib_strmap_destroy(clib_hashmap* map)
     clib_hashmap_destroy(map);
 }
 
-char* clib_strmap_put(clib_hashmap* map, const char* key, char* val)
+char* clib_strmap_insert(clib_hashmap* map, const char* key, char* val)
 {
     char* value = (char*)malloc(strlen(val));
 
@@ -42,7 +42,7 @@ char* clib_strmap_put(clib_hashmap* map, const char* key, char* val)
 
     strcpy(value, val);
 
-    if ((char*)clib_hashmap_put(map, (const void*)key, (void*)value) != value)
+    if ((char*)clib_hashmap_insert(map, (const void*)key, (void*)value) != value)
     {
         free(value);
         return NULL;

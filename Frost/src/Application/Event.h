@@ -51,7 +51,7 @@ typedef struct
 
 typedef struct
 {
-	char* cmd;
+	const char* cmd;
 } ConsoleEvent;
 
 typedef struct

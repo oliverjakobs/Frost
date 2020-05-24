@@ -84,12 +84,12 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 
 void ResourceManagerDestroy(ResourceManager* manager)
 {
-	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&manager->textures); iter; iter = clib_hashmap_iter_next(&manager->textures, iter))
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->textures); iter; iter = clib_hashmap_iter_next(&manager->textures, iter))
 		ignisDeleteTexture2D(tex_hashmap_iter_get_value(iter)->value);
 
 	clib_hashmap_destroy(&manager->textures);
 
-	for (struct clib_hashmap_iter* iter = clib_hashmap_iter(&manager->fonts); iter; iter = clib_hashmap_iter_next(&manager->fonts, iter))
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->fonts); iter; iter = clib_hashmap_iter_next(&manager->fonts, iter))
 		ignisDeleteFont(font_hashmap_iter_get_value(iter)->value);
 
 	clib_hashmap_destroy(&manager->fonts);
@@ -114,7 +114,7 @@ IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char
 			strcpy(kvp->key, name);
 			kvp->value = texture;
 
-			if (tex_hashmap_put(&manager->textures, kvp->key, kvp) == kvp)
+			if (tex_hashmap_insert(&manager->textures, kvp->key, kvp) == kvp)
 				return texture;
 		}
 
@@ -145,7 +145,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 			strcpy(kvp->key, name);
 			kvp->value = font;
 
-			if (font_hashmap_put(&manager->fonts, kvp->key, kvp) == kvp)
+			if (font_hashmap_insert(&manager->fonts, kvp->key, kvp) == kvp)
 				return font;
 		}
 		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
@@ -178,14 +178,10 @@ IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 
 const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture)
 {
-	struct clib_hashmap_iter* iter = clib_hashmap_iter(&resources->textures);
-
-	while (iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->textures); iter; iter = clib_hashmap_iter_next(&resources->textures, iter))
 	{
 		if (texture == tex_hashmap_iter_get_value(iter)->value)
 			return tex_hashmap_iter_get_key(iter);
-
-		iter = clib_hashmap_iter_next(&resources->textures, iter);
 	}
 
 	return NULL;

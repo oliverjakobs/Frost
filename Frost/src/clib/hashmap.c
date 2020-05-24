@@ -6,25 +6,20 @@
  */
 #include "hashmap.h"
 
-#ifndef CLIB_HASHMAP_NOASSERT
-#include <assert.h>
-#define CLIB_HASHMAP_ASSERT(expr)           assert(expr)
-#else
-#define CLIB_HASHMAP_ASSERT(expr)
-#endif
+#include "clib.h"
 
 /* Table sizes must be powers of 2 */
 #define CLIB_HASHMAP_SIZE_MIN               (1 << 5)    /* 32 */
 #define CLIB_HASHMAP_SIZE_DEFAULT           (1 << 8)    /* 256 */
-#define CLIB_HASHMAP_SIZE_MOD(map, val)     ((val) & ((map)->table_size - 1))
+#define CLIB_HASHMAP_SIZE_MOD(map, val)     ((val) & ((map)->capacity - 1))
 
 /* Limit for probing is 1/2 of table_size */
-#define CLIB_HASHMAP_PROBE_LEN(map)         ((map)->table_size >> 1)
+#define CLIB_HASHMAP_PROBE_LEN(map)         ((map)->capacity >> 1)
 /* Return the next linear probe index */
 #define CLIB_HASHMAP_PROBE_NEXT(map, index) CLIB_HASHMAP_SIZE_MOD(map, (index) + 1)
 
 /* Check if index b is less than or equal to index a */
-#define CLIB_HASHMAP_INDEX_LE(map, a, b)    ((a) == (b) || (((b) - (a)) & ((map)->table_size >> 1)) != 0)
+#define CLIB_HASHMAP_INDEX_LE(map, a, b)    ((a) == (b) || (((b) - (a)) & ((map)->capacity >> 1)) != 0)
 
 /*
  * Enforce a maximum 0.75 load factor.
@@ -64,7 +59,7 @@ static inline size_t clib_hashmap_calc_index(const clib_hashmap* map, const void
  */
 static clib_hashmap_entry* clib_hashmap_entry_get_populated(const clib_hashmap* map, clib_hashmap_entry* entry)
 {
-    for (; entry < &map->table[map->table_size]; ++entry) 
+    for (; entry < &map->table[map->capacity]; ++entry)
     {
         if (entry->key)
             return entry;
@@ -122,11 +117,11 @@ static void clib_hashmap_entry_remove(clib_hashmap* map, clib_hashmap_entry* rem
     if (map->key_free)
         map->key_free(removed_entry->key);
 
-    --map->num_entries;
+    --map->size;
 
     /* Fill the free slot in the chain */
     size_t index = CLIB_HASHMAP_PROBE_NEXT(map, removed_index);
-    for (size_t i = 1; i < map->table_size; ++i)
+    for (size_t i = 1; i < map->capacity; ++i)
     {
         clib_hashmap_entry* entry = &map->table[index];
         if (!entry->key)
@@ -155,21 +150,21 @@ static void clib_hashmap_entry_remove(clib_hashmap* map, clib_hashmap_entry* rem
  * new_size MUST be a power of 2.
  * Returns 0 on success and -errno on allocation or hash function failure.
  */
-static int clib_hashmap_rehash(clib_hashmap* map, size_t new_size)
+static int clib_hashmap_rehash(clib_hashmap* map, size_t new_cap)
 {
-    CLIB_HASHMAP_ASSERT(new_size >= CLIB_HASHMAP_SIZE_MIN);
-    CLIB_HASHMAP_ASSERT((new_size & (new_size - 1)) == 0);
+    CLIB_ASSERT(new_cap >= CLIB_HASHMAP_SIZE_MIN);
+    CLIB_ASSERT((new_cap & (new_cap - 1)) == 0);
 
-    clib_hashmap_entry* new_table = (clib_hashmap_entry*)calloc(new_size, sizeof(clib_hashmap_entry));
+    clib_hashmap_entry* new_table = (clib_hashmap_entry*)calloc(new_cap, sizeof(clib_hashmap_entry));
     if (!new_table) return -ENOMEM;
 
     /* Backup old elements in case of rehash failure */
-    size_t old_size = map->table_size;
+    size_t old_cap = map->capacity;
     clib_hashmap_entry* old_table = map->table;
-    map->table_size = new_size;
+    map->capacity = new_cap;
     map->table = new_table;
     /* Rehash */
-    for (clib_hashmap_entry* entry = old_table; entry < &old_table[old_size]; ++entry)
+    for (clib_hashmap_entry* entry = old_table; entry < &old_table[old_cap]; ++entry)
     {
         if (!entry->value) continue; /* Only copy entries with value */
 
@@ -180,7 +175,7 @@ static int clib_hashmap_rehash(clib_hashmap* map, size_t new_size)
              * The load factor is too high with the new table
              * size, or a poor hash function was used.
              */
-            map->table_size = old_size;
+            map->capacity = old_cap;
             map->table = old_table;
             free(new_table);
             return -EINVAL;
@@ -201,40 +196,22 @@ static void clib_hashmap_free_keys(clib_hashmap* map)
     if (!map->key_free)
         return;
 
-    for (struct clib_hashmap_iter* iter = clib_hashmap_iter(map); iter; iter = clib_hashmap_iter_next(map, iter))
-        map->key_free((void *)clib_hashmap_iter_get_key(iter));
+    for (clib_hashmap_iter* iter = clib_hashmap_iterator(map); iter; iter = clib_hashmap_iter_next(map, iter))
+        map->key_free((void*)clib_hashmap_iter_get_key(iter));
 }
 
-/*
- * Initialize an empty hashmap.
- *
- * hash_func should return an even distribution of numbers between 0
- * and SIZE_MAX varying on the key provided.  If set to NULL, the default
- * case-sensitive string hash function is used: hashmap_hash_string
- *
- * key_compare_func should return 0 if the keys match, and non-zero otherwise.
- * If set to NULL, the default case-sensitive string comparator function is
- * used: hashmap_compare_string
- *
- * initial_size is optional, and may be set to the max number of entries
- * expected to be put in the hash table.  This is used as a hint to
- * pre-allocate the hash table to the minimum size needed to avoid
- * gratuitous rehashes.  If initial_size is 0, a default size will be used.
- *
- * Returns 0 on success and -errno on failure.
- */
 int clib_hashmap_init(clib_hashmap* map, size_t (*hash_func)(const void*), int (*key_compare_func)(const void*, const void*), size_t initial_size)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!initial_size)
         initial_size = CLIB_HASHMAP_SIZE_DEFAULT;
     else
         initial_size = clib_hashmap_table_size_calc(initial_size); /* Convert init size to valid table size */
     
-    map->table_size_init = initial_size;
-    map->table_size = initial_size;
-    map->num_entries = 0;
+    map->capacity_init = initial_size;
+    map->capacity = initial_size;
+    map->size = 0;
     map->table = (clib_hashmap_entry*)calloc(initial_size, sizeof(clib_hashmap_entry));
 
     if (!map->table)
@@ -247,9 +224,6 @@ int clib_hashmap_init(clib_hashmap* map, size_t (*hash_func)(const void*), int (
     return 0;
 }
 
-/*
- * Free the hashmap and all associated memory.
- */
 void clib_hashmap_destroy(clib_hashmap* map)
 {
     if (!map)
@@ -260,32 +234,22 @@ void clib_hashmap_destroy(clib_hashmap* map)
     memset(map, 0, sizeof(*map));
 }
 
-/*
- * Enable internal memory management of hash keys.
- */
 void clib_hashmap_set_key_alloc_funcs(clib_hashmap* map, void* (*key_alloc_func)(const void*), void (*key_free_func)(void*))
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     map->key_alloc = key_alloc_func;
     map->key_free = key_free_func;
 }
 
-/*
- * Add an entry to the hashmap.  If an entry with a matching key already
- * exists and has a value pointer associated with it, the existing value
- * pointer is returned, instead of assigning the new value.  Compare
- * the return value with the value passed in to determine if a new entry was
- * created.  Returns NULL if memory allocation failed.
- */
-void* clib_hashmap_put(clib_hashmap* map, const void* key, void* value)
+void* clib_hashmap_insert(clib_hashmap* map, const void* key, void* value)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
-    CLIB_HASHMAP_ASSERT(key != NULL);
+    CLIB_ASSERT(map != NULL);
+    CLIB_ASSERT(key != NULL);
 
     /* Rehash with 2x capacity if load factor is approaching 0.75 */
-    if (map->table_size <= clib_hashmap_table_min_size_calc(map->num_entries))
-        clib_hashmap_rehash(map, map->table_size << 1);
+    if (map->capacity <= clib_hashmap_table_min_size_calc(map->size))
+        clib_hashmap_rehash(map, map->capacity << 1);
 
     clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, true);
     if (!entry)
@@ -295,7 +259,7 @@ void* clib_hashmap_put(clib_hashmap* map, const void* key, void* value)
          * a poor hash function.  Attempt to rehash once to reduce
          * chain length.
          */
-        if (clib_hashmap_rehash(map, map->table_size << 1) < 0)
+        if (clib_hashmap_rehash(map, map->capacity << 1) < 0)
             return NULL;
 
         entry = clib_hashmap_entry_find(map, key, true);
@@ -315,7 +279,7 @@ void* clib_hashmap_put(clib_hashmap* map, const void* key, void* value)
         {
             entry->key = (void *)key;
         }
-        ++map->num_entries;
+        ++map->size;
     }
     else if (entry->value)
     {
@@ -327,13 +291,10 @@ void* clib_hashmap_put(clib_hashmap* map, const void* key, void* value)
     return value;
 }
 
-/*
- * Return the value pointer, or NULL if no entry exists.
- */
 void* clib_hashmap_get(const clib_hashmap* map, const void* key)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
-    CLIB_HASHMAP_ASSERT(key != NULL);
+    CLIB_ASSERT(map != NULL);
+    CLIB_ASSERT(key != NULL);
 
     clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, false);
 
@@ -342,14 +303,10 @@ void* clib_hashmap_get(const clib_hashmap* map, const void* key)
     return entry->value;
 }
 
-/*
- * Remove an entry with the specified key from the map.
- * Returns the value pointer, or NULL, if no entry was found.
- */
 void* clib_hashmap_remove(clib_hashmap* map, const void *key)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
-    CLIB_HASHMAP_ASSERT(key != NULL);
+    CLIB_ASSERT(map != NULL);
+    CLIB_ASSERT(key != NULL);
 
     clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, false);
     if (!entry)
@@ -361,85 +318,55 @@ void* clib_hashmap_remove(clib_hashmap* map, const void *key)
     return value;
 }
 
-/*
- * Remove all entries.
- */
 void clib_hashmap_clear(clib_hashmap* map)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     clib_hashmap_free_keys(map);
-    map->num_entries = 0;
-    memset(map->table, 0, sizeof(clib_hashmap_entry) * map->table_size);
+    map->size = 0;
+    memset(map->table, 0, sizeof(clib_hashmap_entry) * map->capacity);
 }
 
-/*
- * Remove all entries and reset the hash table to its initial size.
- */
 void clib_hashmap_reset(clib_hashmap* map)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     clib_hashmap_clear(map);
-    if (map->table_size == map->table_size_init)
+    if (map->capacity == map->capacity_init)
         return;
 
-    clib_hashmap_entry* new_table = (clib_hashmap_entry*)realloc(map->table, sizeof(clib_hashmap_entry) * map->table_size_init);
+    clib_hashmap_entry* new_table = (clib_hashmap_entry*)realloc(map->table, sizeof(clib_hashmap_entry) * map->capacity_init);
     if (!new_table)
         return;
 
     map->table = new_table;
-    map->table_size = map->table_size_init;
+    map->capacity = map->capacity_init;
 }
 
-/*
- * Return the number of entries in the hash map.
- */
-size_t clib_hashmap_size(const clib_hashmap* map)
+clib_hashmap_iter* clib_hashmap_iterator(const clib_hashmap* map)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
-    return map->num_entries;
-}
-
-/*
- * Get a new hashmap iterator.  The iterator is an opaque
- * pointer that may be used with hashmap_iter_*() functions.
- * Hashmap iterators are INVALID after a put or remove operation is performed.
- * hashmap_iter_remove() allows safe removal during iteration.
- */
-struct clib_hashmap_iter* clib_hashmap_iter(const clib_hashmap* map)
-{
-    CLIB_HASHMAP_ASSERT(map != NULL);
-
-    if (!map->num_entries)
+    if (!map->size)
         return NULL;
 
-    return (struct clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, map->table);
+    return (clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, map->table);
 }
 
-/*
- * Return an iterator to the next hashmap entry.  Returns NULL if there are
- * no more entries.
- */
-struct clib_hashmap_iter* clib_hashmap_iter_next(const clib_hashmap* map, const struct clib_hashmap_iter* iter)
+clib_hashmap_iter* clib_hashmap_iter_next(const clib_hashmap* map, const clib_hashmap_iter* iter)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!iter) return NULL;
 
     clib_hashmap_entry* entry = (clib_hashmap_entry*)iter;
 
-    return (struct clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, entry + 1);
+    return (clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, entry + 1);
 }
 
-/*
- * Remove the hashmap entry pointed to by this iterator and return an
- * iterator to the next entry.  Returns NULL if there are no more entries.
- */
-struct clib_hashmap_iter* clib_hashmap_iter_remove(clib_hashmap* map, const struct clib_hashmap_iter* iter)
+clib_hashmap_iter* clib_hashmap_iter_remove(clib_hashmap* map, const clib_hashmap_iter* iter)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!iter)
         return NULL;
@@ -450,13 +377,10 @@ struct clib_hashmap_iter* clib_hashmap_iter_remove(clib_hashmap* map, const stru
         return clib_hashmap_iter_next(map, iter); /* Iterator is invalid, so just return the next valid entry */
 
     clib_hashmap_entry_remove(map, entry);
-    return (struct clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, entry);
+    return (clib_hashmap_iter*)clib_hashmap_entry_get_populated(map, entry);
 }
 
-/*
- * Return the key of the entry pointed to by the iterator.
- */
-const void* clib_hashmap_iter_get_key(const struct clib_hashmap_iter* iter)
+const void* clib_hashmap_iter_get_key(const clib_hashmap_iter* iter)
 {
     if (!iter)
         return NULL;
@@ -464,10 +388,7 @@ const void* clib_hashmap_iter_get_key(const struct clib_hashmap_iter* iter)
     return (const void*)((clib_hashmap_entry*)iter)->key;
 }
 
-/*
- * Return the value of the entry pointed to by the iterator.
- */
-void* clib_hashmap_iter_get_value(const struct clib_hashmap_iter* iter)
+void* clib_hashmap_iter_get_value(const clib_hashmap_iter* iter)
 {
     if (!iter)
         return NULL;
@@ -475,53 +396,12 @@ void* clib_hashmap_iter_get_value(const struct clib_hashmap_iter* iter)
     return ((clib_hashmap_entry*)iter)->value;
 }
 
-/*
- * Set the value pointer of the entry pointed to by the iterator.
- */
-void clib_hashmap_iter_set_value(const struct clib_hashmap_iter* iter, void* value)
+void clib_hashmap_iter_set_value(const clib_hashmap_iter* iter, void* value)
 {
     if (!iter)
         return;
 
     ((clib_hashmap_entry*)iter)->value = value;
-}
-
-/*
- * Invoke func for each entry in the hashmap.  Unlike the hashmap_iter_*()
- * interface, this function supports calls to hashmap_remove() during iteration.
- * However, it is an error to put or remove an entry other than the current one,
- * and doing so will immediately halt iteration and return an error.
- * Iteration is stopped if func returns non-zero. 
- * Returns func's return value if it is < 0, otherwise, 0.
- */
-int clib_hashmap_foreach(const clib_hashmap* map, int (*func)(const void*, void*, void*), void* arg)
-{
-    CLIB_HASHMAP_ASSERT(map != NULL);
-    CLIB_HASHMAP_ASSERT(func != NULL);
-
-    for (clib_hashmap_entry* entry = map->table; entry < &map->table[map->table_size]; ++entry)
-    {
-        if (!entry->key)
-            continue;
-
-        size_t num_entries = map->num_entries;
-        const void* key = entry->key;
-        int rc = func(entry->key, entry->value, arg);
-
-        if (rc < 0)
-            return rc;
-
-        if (rc > 0)
-            return 0;
-
-        /* Run this entry again if func() deleted it */
-        if (entry->key != key)
-            --entry;
-        else if (num_entries != map->num_entries)
-            return -1; /* Stop immediately if func put/removed another entry */
-    }
-
-    return 0;
 }
 
 /*
@@ -563,42 +443,13 @@ void* clib_hashmap_alloc_key_string(const void* key)
     return (void*)strdup((const char*)key);
 }
 
-/*
- * Case insensitive hash function for string keys.
- */
-size_t clib_hashmap_hash_string_i(const void *key)
-{
-    size_t hash = 0;
-
-    for (const char* key_str = (const char*)key; *key_str; ++key_str)
-    {
-        hash += tolower(*key_str);
-        hash += (hash << 10);
-        hash ^= (hash >> 6);
-    }
-
-    hash += (hash << 3);
-    hash ^= (hash >> 11);
-    hash += (hash << 15);
-    return hash;
-}
-
-/*
- * Case insensitive key comparator function for string keys.
- */
-int clib_hashmap_compare_string_i(const void* a, const void* b)
-{
-    return strcmp((const char*)a, (const char*)b);
-}
-
-
 #ifdef CLIB_HASHMAP_METRICS
 /*
  * Return the load factor.
  */
 double clib_hashmap_load_factor(const clib_hashmap* map)
 {
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!map->table_size)
         return 0;
@@ -614,7 +465,7 @@ double clib_hashmap_collisions_mean(const clib_hashmap *map)
     clib_hashmap_entry *entry;
     size_t total_collisions = 0;
 
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!map->num_entries)
         return 0;
@@ -641,7 +492,7 @@ double clib_hashmap_collisions_variance(const clib_hashmap *map)
     double variance;
     double total_variance = 0;
 
-    CLIB_HASHMAP_ASSERT(map != NULL);
+    CLIB_ASSERT(map != NULL);
 
     if (!map->num_entries)
         return 0;
