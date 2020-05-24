@@ -6,17 +6,10 @@ extern "C"
 {
 #endif
 
-#include "clib/hashmap.h"
+#include "clib/strmap.h"
 
 #define ANIMATION_STRLEN			32
 
-typedef struct
-{
-	char name[ANIMATION_STRLEN];
-	char next[ANIMATION_STRLEN];
-} AnimationTransition;
-
-CLIB_HASHMAP_DECLARE_FUNCS(transition, char, AnimationTransition)
 
 typedef struct
 {
@@ -28,7 +21,7 @@ typedef struct
 
 	int frame;
 
-	clib_hashmap transitions;	/* <str,str> */
+	clib_strmap transitions;	/* <str,str> */
 } Animation;
 
 void AnimationLoad(Animation* animation, int start, int length, float delay, size_t initial);
@@ -37,7 +30,7 @@ void AnimationDestroy(Animation* animation);
 void AnimationStart(Animation* animation);
 void AnimationTick(Animation* animation, float deltatime);
 
-void AnimationAddTransition(Animation* animation, const char* name, const char* next);
+void AnimationAddTransition(Animation* animation, char* name, char* next);
 
 #ifdef __cplusplus
 }

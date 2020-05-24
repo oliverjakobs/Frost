@@ -76,7 +76,7 @@ typedef struct clib_hashmap_iter_s clib_hashmap_iter;
 /*
  * The hashmap state structure.
  */
-typedef struct
+typedef struct clib_hashmap_s
 {
     size_t capacity_init;
     size_t capacity;
@@ -185,16 +185,6 @@ void* clib_hashmap_iter_get_value(const clib_hashmap_iter* iter);
 void clib_hashmap_iter_set_value(const clib_hashmap_iter* iter, void* value);
 
 /*
- * Invoke func for each entry in the hashmap.  Unlike the hashmap_iter_*()
- * interface, this function supports calls to hashmap_remove() during iteration.
- * However, it is an error to put or remove an entry other than the current one,
- * and doing so will immediately halt iteration and return an error.
- * Iteration is stopped if func returns non-zero.  Returns func's return
- * value if it is < 0, otherwise, 0.
- */
-int clib_hashmap_foreach(const clib_hashmap* map, int (*func)(const void*, void*, void*), void* arg);
-
-/*
  * Default hash function for string keys.
  * This is an implementation of the well-documented Jenkins one-at-a-time
  * hash function.
@@ -205,12 +195,6 @@ size_t clib_hashmap_hash_string(const void* key);
  * Default key comparator function for string keys.
  */
 int clib_hashmap_compare_string(const void* a, const void* b);
-
-/*
- * Default key allocation function for string keys.  Use free() for the
- * key_free_func.
- */
-void* clib_hashmap_alloc_key_string(const void* key);
 
 
 #ifdef CLIB_HASHMAP_METRICS

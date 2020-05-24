@@ -108,11 +108,12 @@ void AnimatorTick(Animator* animator, EcsEntity* entity, float deltatime)
 	if (kvp)
 	{
 		AnimationTick(kvp->animation, deltatime);
-		for (clib_hashmap_iter* iter = clib_hashmap_iterator(&kvp->animation->transitions); iter; iter = clib_hashmap_iter_next(&kvp->animation->transitions, iter))
+		clib_strmap* transitions = &kvp->animation->transitions;
+		for (clib_strmap_iter* iter = clib_strmap_iterator(transitions); iter; iter = clib_strmap_iter_next(transitions, iter))
 		{
-			_conditionkvp* cond = condition_hashmap_get(&animator->conditions, transition_hashmap_iter_get_key(iter));
+			_conditionkvp* cond = condition_hashmap_get(&animator->conditions, clib_strmap_iter_get_key(iter));
 			if (cond && cond->condition(entity, 0))
-				AnimatorPlay(animator, transition_hashmap_iter_get_value(iter)->next);
+				AnimatorPlay(animator, clib_strmap_iter_get_value(iter));
 		}
 	}
 }
@@ -153,6 +154,6 @@ void AnimatorDebugPrint(Animator* animator)
 		Animation* animation = animation_hashmap_iter_get_value(iter)->animation;
 
 		for (clib_hashmap_iter* a_iter = clib_hashmap_iterator(&animation->transitions); a_iter; a_iter = clib_hashmap_iter_next(&animation->transitions, a_iter))
-			printf("Transition: %s - %s\n", transition_hashmap_iter_get_value(a_iter)->name, transition_hashmap_iter_get_value(a_iter)->next);
+			printf("Transition: %s - %s\n", clib_strmap_iter_get_key(a_iter), clib_strmap_iter_get_value(a_iter));
 	}
 }

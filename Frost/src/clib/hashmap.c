@@ -431,16 +431,7 @@ size_t clib_hashmap_hash_string(const void* key)
  */
 int clib_hashmap_compare_string(const void *a, const void *b)
 {
-    return strcmp((const char *)a, (const char *)b);
-}
-
-/*
- * Default key allocation function for string keys.  Use free() for the
- * key_free_func.
- */
-void* clib_hashmap_alloc_key_string(const void* key)
-{
-    return (void*)strdup((const char*)key);
+    return strcmp((const char*)a, (const char*)b);
 }
 
 #ifdef CLIB_HASHMAP_METRICS
