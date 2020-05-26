@@ -72,24 +72,24 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 void ResourceManagerDestroy(ResourceManager* manager)
 {
 	for (clib_dict_iter* iter = clib_dict_iterator(&manager->textures); iter; iter = clib_dict_iter_next(&manager->textures, iter))
-		ignisDeleteTexture2D(tex_dict_iter_get_value(iter));
-
-	clib_dict_destroy(&manager->textures);
+	{
+		IgnisTexture2D* tex = tex_dict_iter_get_value(iter);
+		ignisDeleteTexture2D(tex);
+		free(tex);
+		clib_dict_iter_remove(&manager->textures, iter);
+	}
 
 	for (clib_dict_iter* iter = clib_dict_iterator(&manager->fonts); iter; iter = clib_dict_iter_next(&manager->fonts, iter))
-		ignisDeleteFont(font_dict_iter_get_value(iter));
-
-	clib_dict_destroy(&manager->fonts);
+	{
+		IgnisFont* font = font_dict_iter_get_value(iter);
+		ignisDeleteFont(font);
+		free(font);
+		clib_dict_iter_remove(&manager->fonts, iter);
+	}
 }
 
 IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char* name, const char* path, int rows, int columns)
 {
-	if (strlen(name) > APPLICATION_STR_LEN)
-	{
-		DEBUG_ERROR("[Resources] Texture name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
-		return NULL;
-	}
-
 	IgnisTexture2D* texture = (IgnisTexture2D*)malloc(sizeof(IgnisTexture2D));
 
 	if (ignisCreateTexture2D(texture, path, rows, columns, 1, NULL))
@@ -100,18 +100,13 @@ IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char
 		DEBUG_ERROR("[Resources] Failed to add texture: %s (%s)\n", name, path);
 		ignisDeleteTexture2D(texture);
 	}
+
 	free(texture);
 	return NULL;
 }
 
 IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, const char* path, float size)
 {
-	if (strlen(name) > APPLICATION_STR_LEN)
-	{
-		DEBUG_ERROR("[Resources] Font name (%s) too long. Max. name length is %d\n", name, APPLICATION_STR_LEN);
-		return NULL;
-	}
-
 	IgnisFont* font = (IgnisFont*)malloc(sizeof(IgnisFont));
 
 	if (ignisCreateFont(font, path, size))
@@ -130,20 +125,18 @@ IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char
 {
 	IgnisTexture2D* tex = tex_dict_get(&manager->textures, name);
 
-	if (tex) return tex;
+	if (!tex) DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 
-	DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
-	return NULL;
+	return tex;
 }
 
 IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 {
 	IgnisFont* font = font_dict_get(&manager->fonts, name);
 
-	if (font) return font;
+	if (!font) DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 
-	DEBUG_WARN("[Resources] Could not find font: %s\n", name);
-	return NULL;
+	return font;
 }
 
 const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture)
@@ -151,7 +144,18 @@ const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTex
 	for (clib_dict_iter* iter = clib_dict_iterator(&resources->textures); iter; iter = clib_dict_iter_next(&resources->textures, iter))
 	{
 		if (texture == tex_dict_iter_get_value(iter))
-			return tex_dict_iter_get_key(iter);
+			return clib_dict_iter_get_key(iter);
+	}
+
+	return NULL;
+}
+
+const char* ResourceManagerGetFontName(ResourceManager* resources, IgnisFont* font)
+{
+	for (clib_dict_iter* iter = clib_dict_iterator(&resources->fonts); iter; iter = clib_dict_iter_next(&resources->fonts, iter))
+	{
+		if (font == font_dict_iter_get_value(iter))
+			return clib_dict_iter_get_key(iter);
 	}
 
 	return NULL;

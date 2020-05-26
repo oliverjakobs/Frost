@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "ECS/TemplateLoader.h"
+
 typedef enum
 {
 	CONSOLE_CMD_NONE = -1,
@@ -99,7 +101,10 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 		if (!spec) break;
 
 		if (strcmp(spec, "scene") == 0)
+		{
 			SceneManagerChangeScene(manager, args[0]);
+			ConsoleOut(&manager->console, "Changed Scene to %s", args[0]);
+		}
 		else if (strcmp(spec, "layer") == 0)
 		{
 			int layer;
@@ -131,11 +136,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 			}
 
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-
-			char* templ = SceneManagerGetTemplate(manager, args[0]);
-
-			if (templ)
-				SceneAddEntityPos(manager->scene, EcsEntityLoadTemplate(templ, manager->resources), manager->editor.layer, pos);
+			SceneAddEntityPos(manager->scene, EcsEntityLoadTemplate(manager, args[0]), manager->editor.layer, pos);
 		}
 		break;
 	}
@@ -149,9 +150,9 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&manager->scenes); iter; iter = clib_hashmap_iter_next(&manager->scenes, iter))
+			for (clib_strmap_iter* iter = clib_strmap_iterator(&manager->scenes); iter; iter = clib_strmap_iter_next(&manager->scenes, iter))
 			{
-				char* name = (char*)clib_hashmap_iter_get_key(iter);
+				char* name = clib_strmap_iter_get_key(iter);
 
 				printf(" - %s %s\n", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
 			}
@@ -166,6 +167,30 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 
 					printf(" - %s (%d)\n", e->name, l);
 				}
+			}
+		}
+		else if (strcmp(spec, "templates") == 0)
+		{
+			for (clib_strmap_iter* iter = clib_strmap_iterator(&manager->templates); iter; iter = clib_strmap_iter_next(&manager->templates, iter))
+			{
+				char* name = clib_strmap_iter_get_key(iter);
+				char* templ = clib_strmap_iter_get_value(iter);
+
+				printf(" - %s: %s\n", name, templ);
+			}
+		}
+		else if (strcmp(spec, "res") == 0)
+		{
+			printf("[Console] Textures:\n");
+			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->textures); iter; iter = clib_dict_iter_next(&manager->resources->textures, iter))
+			{
+				printf(" - %s\n", clib_dict_iter_get_key(iter));
+			}
+
+			printf("[Console] Fonts:\n");
+			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->fonts); iter; iter = clib_dict_iter_next(&manager->resources->fonts, iter))
+			{
+				printf(" - %s\n", clib_dict_iter_get_key(iter));
 			}
 		}
 		break;
@@ -197,7 +222,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 		break;
 	}
 	default:
-		printf(" > unkown\n");
+		ConsoleOut(&manager->console, "Unkown command");
 		break;
 	}
 }

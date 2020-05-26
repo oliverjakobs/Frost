@@ -9,8 +9,6 @@
 Camera camera;
 SceneManager scene_manager;
 
-Console console;
-
 void OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
@@ -35,13 +33,13 @@ void OnInit(Application* app)
 	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
 	SceneManagerLoadRegister(&scene_manager, "res/templates/register.json");
 	SceneManagerChangeScene(&scene_manager, "scene");
-
-	ConsoleInit(&console);
 }
 
 void OnDestroy(Application* app)
 {
 	gui_free();
+
+	SceneManagerDestroy(&scene_manager);
 
 	FontRendererDestroy();
 	Primitives2DDestroy();
@@ -54,11 +52,7 @@ void OnEvent(Application* app, Event e)
 	if (e.type == EVENT_WINDOW_RESIZE)
 	{
 		ApplicationSetViewport(app, 0, 0, e.window.width, e.window.height);
-	}
-
-	if (e.type == EVENT_CONSOLE_EXEC)
-	{
-		CommandExecute(&scene_manager, e.console.cmd);
+		CameraSetProjectionOrtho(scene_manager.camera, (float)e.window.width, (float)e.window.height);
 	}
 
 	if (e.type == EVENT_KEY_PRESSED)
@@ -67,9 +61,6 @@ void OnEvent(Application* app, Event e)
 		{
 		case KEY_ESCAPE:
 			ApplicationClose(app);
-			break;
-		case KEY_F2:
-			ConsoleFocus(&console);
 			break;
 		case KEY_F5:
 			ApplicationPause(app);
@@ -86,15 +77,11 @@ void OnEvent(Application* app, Event e)
 		}
 	}
 
-	ConsoleOnEvent(&console, &e);
 	SceneManagerOnEvent(&scene_manager, e);
 }
 
 void OnUpdate(Application* app, float deltaTime)
 {
-	if (console.focus)
-		return;
-
 	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
@@ -112,8 +99,8 @@ void OnRenderDebug(Application* app)
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
 	FontRendererFlush();
 
-	if (console.focus)
-		ConsoleRender(&console, 0.0f, app->height, app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
+	if (scene_manager.console.focus)
+		ConsoleRender(&scene_manager.console, 0.0f, app->height, app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 
 void OnRenderGui(Application* app)

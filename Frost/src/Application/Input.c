@@ -13,7 +13,7 @@ static InputKeyState key_states[INPUT_NUM_KEYS];
 
 void InputUpdate(GLFWwindow* context)
 {
-	for (size_t i = KEY_SPACE; i < INPUT_NUM_KEYS; i++)
+	for (int i = KEY_SPACE; i < INPUT_NUM_KEYS; ++i)
 	{
 		key_states[i].prev = key_states[i].state;
 		key_states[i].state = (glfwGetKey(context, i) == GLFW_PRESS);

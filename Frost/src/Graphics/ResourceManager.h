@@ -25,6 +25,7 @@ IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* resources, const ch
 IgnisFont* ResourceManagerGetFont(ResourceManager* resources, const char* name);
 
 const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture);
+const char* ResourceManagerGetFontName(ResourceManager* resources, IgnisFont* font);
 
 #ifdef __cplusplus
 }

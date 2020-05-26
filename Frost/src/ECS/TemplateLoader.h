@@ -7,9 +7,9 @@ extern "C"
 #endif
 
 #include "ECS/Entity.h"
-#include "Graphics/ResourceManager.h"
+#include "Scene/SceneManager.h"
 
-EcsEntity* EcsEntityLoadTemplate(const char* path, ResourceManager* res);
+EcsEntity* EcsEntityLoadTemplate(SceneManager* manager, const char* templ);
 
 #ifdef __cplusplus
 }

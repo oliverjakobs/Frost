@@ -1,6 +1,10 @@
 #include "Console.h"
 
+#include "Graphics/FontRenderer.h"
+#include "Graphics/Primitives2D.h"
+
 #include "clib/clib.h"
+#include "Application/Input.h"
 
 void ConsoleInit(Console* console)
 {
@@ -12,6 +16,8 @@ void ConsoleInit(Console* console)
 void ConsoleFocus(Console* console)
 {
 	console->focus = !console->focus;
+
+	if (!console->focus) console->cusor_pos = 0;
 }
 
 void ConsoleOnEvent(Console* console, Event* e)
@@ -44,6 +50,10 @@ void ConsoleOnEvent(Console* console, Event* e)
 	key = EventKeyReleased(e);
 	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
+}
+
+void ConsoleOnUpdate(Console* console, float deltatime)
+{
 }
 
 void ConsoleExecuteCmd(Console* console)
@@ -86,4 +96,17 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 	FontRendererRenderTextFormat(x + padding, y - padding, "> %.*s", console->cusor_pos, console->cmd_buffer);
 
 	FontRendererFlush();
+}
+
+void ConsoleOut(Console* console, const char* fmt, ...)
+{
+	char row[CONSOLE_OUT_ROW_SIZE];
+	memset(row, '\0', CONSOLE_OUT_ROW_SIZE);
+
+	va_list ap;
+	va_start(ap, fmt);
+	vsprintf(row, fmt, ap);
+	va_end(ap);
+
+	printf("[OUT] %s\n", row);
 }

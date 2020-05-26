@@ -8,7 +8,7 @@ static void* _clib_dict_key_alloc(const char* src)
 	if (!val) return NULL;
 
 	strcpy(val, src);
-	val[size] = '\0';
+	val[size] = '\0'; /* make sure key is null-terminated */
 
 	return (void*)val;
 }

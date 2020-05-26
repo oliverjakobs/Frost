@@ -3,8 +3,11 @@
 #include "json/tb_json.h"
 #include "json/tb_jwrite.h"
 
-#include "Application/Application.h"
+#include "ECS/TemplateLoader.h"
 #include "Application/Debugger.h"
+#include "Application/Application.h"
+
+#include "Console/Command.h"
 
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
@@ -25,10 +28,12 @@ int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* 
 	clib_strmap_init(&manager->scenes, 0);
 	clib_strmap_init(&manager->templates, 0);
 
+	ConsoleInit(&manager->console);
+
 	return 1;
 }
 
-void SceneManagerDelete(SceneManager* manager)
+void SceneManagerDestroy(SceneManager* manager)
 {
 	if (manager->scene_name[0] != '\0')
 		SceneQuit(manager->scene);
@@ -103,7 +108,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 		char* templ = clib_strmap_get(&manager->scenes, name);
 		if (!templ)
 		{
-			DEBUG_ERROR("Couldn't find scene: %s\n", name);
+			DEBUG_ERROR("[SceneManager] Couldn't find scene: %s\n", name);
 			return;
 		}
 		
@@ -111,7 +116,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 		if (!json)
 		{
-			DEBUG_ERROR("Couldn't read scene template: %s\n", templ);
+			DEBUG_ERROR("[SceneManager] Couldn't read scene template: %s\n", templ);
 			return;
 		}
 
@@ -175,15 +180,16 @@ int SceneManagerLoadScene(SceneManager* manager, Scene* scene, const char* json)
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
 
-			char path[APPLICATION_PATH_LEN];
-			tb_json_string((char*)entity.value, "[0", path, APPLICATION_PATH_LEN, NULL);
+			char name[APPLICATION_STR_LEN];
+			tb_json_string((char*)entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
 
-			float x = tb_json_float((char*)entity.value, "[1[0", NULL);
-			float y = tb_json_float((char*)entity.value, "[1[1", NULL);
+			vec2 pos;
+			pos.x = tb_json_float((char*)entity.value, "[1[0", NULL);
+			pos.y = tb_json_float((char*)entity.value, "[1[1", NULL);
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntityPos(scene, EcsEntityLoadTemplate(path, manager->resources), layer, (vec2){ x, y });
+			SceneAddEntityPos(scene, EcsEntityLoadTemplate(manager, name), layer, pos);
 		}
 	}
 
@@ -196,10 +202,7 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 	char* temp_path = (char*)malloc(strlen(path) + strlen(temp_ext));
 
 	strcpy(temp_path, path);
-
 	strcat(temp_path, temp_ext);
-
-	printf("%s\n", temp_path);
 
 	tb_jwrite_control jwc;
 	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
@@ -296,10 +299,12 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 
 void SceneManagerOnEvent(SceneManager* manager, Event e)
 {
-	if (e.type == EVENT_WINDOW_RESIZE)
+	if (e.type == EVENT_CONSOLE_EXEC)
 	{
-		CameraSetProjectionOrtho(manager->camera, (float)e.window.width, (float)e.window.height);
+		CommandExecute(manager, e.console.cmd);
 	}
+
+	ConsoleOnEvent(&manager->console, &e);
 
 	if (e.type == EVENT_KEY_PRESSED)
 	{
@@ -307,6 +312,9 @@ void SceneManagerOnEvent(SceneManager* manager, Event e)
 		{
 		case KEY_F1:
 			manager->editmode = !manager->editmode;
+			break;
+		case KEY_F2:
+			ConsoleFocus(&manager->console);
 			break;
 		}
 	}
@@ -319,13 +327,17 @@ void SceneManagerOnEvent(SceneManager* manager, Event e)
 
 void SceneManagerOnUpdate(SceneManager* manager, float deltatime)
 {
-	if (!manager->editmode)
+	if (manager->console.focus)
 	{
-		SceneOnUpdate(manager->scene, deltatime);
+		ConsoleOnUpdate(&manager->console, deltatime);
+	}
+	else if (manager->editmode)
+	{
+		SceneEditorOnUpdate(&manager->editor, manager->scene, deltatime);
 	}
 	else
 	{
-		SceneEditorOnUpdate(&manager->editor, manager->scene, deltatime);
+		SceneOnUpdate(manager->scene, deltatime);
 	}
 }
 

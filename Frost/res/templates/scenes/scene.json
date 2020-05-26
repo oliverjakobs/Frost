@@ -7,15 +7,15 @@
         [ "bg_layer_3", 0, 288, 1088, 600, 0 ]
     ],
     "templates": [
-        [ "res/templates/entities/floor.json", [ 128, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 384, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 640, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 896, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 1152, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 1408, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 1664, -96 ], 0 ],
-        [ "res/templates/entities/floor.json", [ 1920, -96 ], 0 ],
-        [ "res/templates/entities/tree_1.json", [ 352, 288 ], 0 ],
-        [ "res/templates/entities/player.json", [ 683.148865, 288 ], 1 ]
+        [ "floor", [ 128, -96 ], 0 ],
+        [ "floor", [ 384, -96 ], 0 ],
+        [ "floor", [ 640, -96 ], 0 ],
+        [ "floor", [ 896, -96 ], 0 ],
+        [ "floor", [ 1152, -96 ], 0 ],
+        [ "floor", [ 1408, -96 ], 0 ],
+        [ "floor", [ 1664, -96 ], 0 ],
+        [ "floor", [ 1920, -96 ], 0 ],
+        [ "tree_1", [ 352, 288 ], 0 ],
+        [ "player", [ 683.148804, 288 ], 1 ]
     ]
 }

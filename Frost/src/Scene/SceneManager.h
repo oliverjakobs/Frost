@@ -8,9 +8,10 @@ extern "C"
 
 #include "Scene.h"
 #include "SceneEditor.h"
-#include "ECS/TemplateLoader.h"
 
-#include "Application/defines.h"
+#include "Console/Console.h"
+
+#include "Graphics/ResourceManager.h"
 
 #include "clib/strmap.h"
 
@@ -29,10 +30,12 @@ typedef struct
 
 	SceneEditor editor;
 	int editmode;
+
+	Console console;
 } SceneManager;
 
 int SceneManagerInit(SceneManager* manager, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
-void SceneManagerDelete(SceneManager* manager);
+void SceneManagerDestroy(SceneManager* manager);
 
 void SceneManagerLoadRegister(SceneManager* manager, const char* path);
 

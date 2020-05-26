@@ -7,13 +7,21 @@
 #define TEMPLATE_LOADER_STRLEN	32
 #define TEMPLATE_LOADER_PATHLEN	64
 
-EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
+EcsEntity* EcsEntityLoadTemplate(SceneManager* manager, const char* templ)
 {
-	char* json = ignisReadFile(json_path, NULL);
+	char* path = SceneManagerGetTemplate(manager, templ);
+
+	if (!path)
+	{
+		DEBUG_WARN("[Template] Couldn't find template for %s\n", templ);
+		return NULL;
+	}
+
+	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
 	{
-		DEBUG_WARN("Template not found (%s)", json_path);
+		DEBUG_WARN("[Template] Couldn't read template (%s)", path);
 		return NULL;
 	}
 
@@ -21,7 +29,7 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 	tb_json_string(json, "{'name'", name, TEMPLATE_LOADER_STRLEN, NULL);
 
 	EcsEntity* entity = (EcsEntity*)malloc(sizeof(EcsEntity));
-	EcsEntityLoad(entity, name, json_path);
+	EcsEntityLoad(entity, name, templ);
 
 	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");
@@ -70,7 +78,7 @@ EcsEntity* EcsEntityLoadTemplate(const char* json_path, ResourceManager* res)
 
 		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
 
-		IgnisTexture2D* texture = ResourceManagerGetTexture2D(res, tex_name);
+		IgnisTexture2D* texture = ResourceManagerGetTexture2D(manager->resources, tex_name);
 
 		if (texture)
 			EcsEntityAddTexture(entity, texture, width, height, frame);
