@@ -11,18 +11,19 @@ typedef enum
 	CONSOLE_CMD_CHANGE,
 	CONSOLE_CMD_CREATE,
 	CONSOLE_CMD_LIST,
-	CONSOLE_CMD_REGISTER,
 	CONSOLE_CMD_REMOVE,
 	CONSOLE_CMD_SAVE
 } ConsoleCmd;
 
 /* Check the rest of a potential cmd’s lexeme */
-static ConsoleCmd _CommandCheckKeyword(char* buffer, int s, int l, const char* r, ConsoleCmd cmd)
+static ConsoleCmd _CommandCheckKeyword(char* buffer, const char* r, ConsoleCmd cmd)
 {
-	if (buffer[s + l] != ' ' && buffer[s + l] != '\0')
+	size_t length = strlen(r);
+
+	if (buffer[length] != ' ' && buffer[length] != '\0')
 		return CONSOLE_CMD_NONE;
 
-	if (memcmp(buffer + s, r, l) == 0)
+	if (memcmp(buffer, r, length) == 0)
 		return cmd;
 
 	return CONSOLE_CMD_NONE;
@@ -66,22 +67,13 @@ static ConsoleCmd _CommandGetType(char* buffer)
 		if (length > 1)
 			switch (buffer[1])
 			{
-			case 'h': return _CommandCheckKeyword(buffer, 2, 4, "ange", CONSOLE_CMD_CHANGE);
-			case 'r': return _CommandCheckKeyword(buffer, 2, 4, "eate", CONSOLE_CMD_CREATE);
+			case 'h': return _CommandCheckKeyword(buffer, "change", CONSOLE_CMD_CHANGE);
+			case 'r': return _CommandCheckKeyword(buffer, "create", CONSOLE_CMD_CREATE);
 			}
 		break;
-	case 'l':
-		return _CommandCheckKeyword(buffer, 1, 3, "ist", CONSOLE_CMD_LIST);
-	case 'r':
-		if (length > 2 && buffer[1] == 'e')
-			switch (buffer[2])
-			{
-			case 'g': return _CommandCheckKeyword(buffer, 3, 5, "ister", CONSOLE_CMD_REGISTER);
-			case 'm': return _CommandCheckKeyword(buffer, 3, 3, "ove", CONSOLE_CMD_REMOVE);
-			}
-		break;
-	case 's':
-		return _CommandCheckKeyword(buffer, 1, 3, "ave", CONSOLE_CMD_SAVE);
+	case 'l': return _CommandCheckKeyword(buffer, "list", CONSOLE_CMD_LIST);
+	case 'r': return _CommandCheckKeyword(buffer, "remove", CONSOLE_CMD_REMOVE);
+	case 's': return _CommandCheckKeyword(buffer, "save", CONSOLE_CMD_SAVE);
 	}
 
 	return CONSOLE_CMD_NONE;
@@ -131,7 +123,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 		{
 			if (!manager->editmode)
 			{
-				printf("Editmode needs to be active to create an entity.\n");
+				ConsoleOut(&manager->console, "Editmode needs to be active to create an entity.");
 				break;
 			}
 
@@ -146,7 +138,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 
 		if (!spec) break;
 
-		printf("[Console] %s\n", cmd_buffer);
+		ConsoleOut(&manager->console, "[Console] %s", cmd_buffer);
 
 		if (strcmp(spec, "scenes") == 0)
 		{
@@ -154,7 +146,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 			{
 				char* name = clib_strmap_iter_get_key(iter);
 
-				printf(" - %s %s\n", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
+				ConsoleOut(&manager->console, " - %s %s", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
 			}
 		}
 		else if (strcmp(spec, "entities") == 0)
@@ -165,7 +157,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 				{
 					EcsEntity* e = layer_vector_get(&manager->scene->layers[l], i);
 
-					printf(" - %s (%d)\n", e->name, l);
+					ConsoleOut(&manager->console, " - %s (%d)", e->name, l);
 				}
 			}
 		}
@@ -176,30 +168,27 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 				char* name = clib_strmap_iter_get_key(iter);
 				char* templ = clib_strmap_iter_get_value(iter);
 
-				printf(" - %s: %s\n", name, templ);
+				ConsoleOut(&manager->console, " - %s: %s", name, templ);
 			}
 		}
 		else if (strcmp(spec, "res") == 0)
 		{
-			printf("[Console] Textures:\n");
+			ConsoleOut(&manager->console, "[Console] Textures:");
 			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->textures); iter; iter = clib_dict_iter_next(&manager->resources->textures, iter))
 			{
-				printf(" - %s\n", clib_dict_iter_get_key(iter));
+				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}
 
-			printf("[Console] Fonts:\n");
+			ConsoleOut(&manager->console, "[Console] Fonts:");
 			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->fonts); iter; iter = clib_dict_iter_next(&manager->resources->fonts, iter))
 			{
-				printf(" - %s\n", clib_dict_iter_get_key(iter));
+				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}
 		}
 		break;
 	}
-	case CONSOLE_CMD_REGISTER:
-		printf(" > register\n");
-		break;
 	case CONSOLE_CMD_REMOVE:
-		printf(" > remove\n");
+		ConsoleOut(&manager->console, " > remove");
 		break;
 	case CONSOLE_CMD_SAVE:
 	{
@@ -212,11 +201,12 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 			char* path = clib_strmap_get(&manager->scenes, manager->scene_name);
 			if (!path)
 			{
-				printf("Couldn't find path for %s\n", manager->scene_name);
+				ConsoleOut(&manager->console, "Couldn't find path for %s", manager->scene_name);
 				break;
 			}
 
 			SceneManagerSaveScene(manager, manager->scene, path);
+			ConsoleOut(&manager->console, "Saved scene (%s) to %s", manager->scene_name, path);
 		}
 
 		break;

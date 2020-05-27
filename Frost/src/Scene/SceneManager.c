@@ -206,6 +206,7 @@ int SceneManagerSaveScene(SceneManager* manager, Scene* scene, const char* path)
 
 	tb_jwrite_control jwc;
 	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
+	tb_jwrite_set_float_prec(&jwc, 2);
 
 	/* size */
 	tb_jwrite_array(&jwc, "size");

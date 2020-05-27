@@ -109,6 +109,7 @@ typedef struct
     tb_jwrite_node nodes[TB_JWRITE_STACK_DEPTH]; // stack of array/object nodes
     int stackpos;
     tb_jwrite_style style;
+    int float_prec;
 } tb_jwrite_control;
 
 
@@ -128,6 +129,7 @@ void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_t
 tb_jwrite_error tb_jwrite_close(tb_jwrite_control* jwc);
 
 void tb_jwrite_set_style(tb_jwrite_control* jwc, tb_jwrite_style style);
+void tb_jwrite_set_float_prec(tb_jwrite_control* jwc, int prec);
 
 // Object insertion functions
 // - used to insert "key":"value" pairs into an object

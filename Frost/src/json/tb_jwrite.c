@@ -88,6 +88,7 @@ void tb_jwrite_open(tb_jwrite_control* jwc, const char* target, tb_jwrite_node_t
     jwc->error = TB_JWRITE_OK;
     jwc->call = 1;
     jwc->style = style;
+    jwc->float_prec = 6;
 
     _tb_jwrite_put_ch(jwc, (root_type == TB_JWRITE_OBJECT) ? '{' : '[');
 }
@@ -121,6 +122,11 @@ tb_jwrite_error tb_jwrite_close(tb_jwrite_control* jwc)
 void tb_jwrite_set_style(tb_jwrite_control* jwc, tb_jwrite_style style)
 {
     jwc->style = style;
+}
+
+void tb_jwrite_set_float_prec(tb_jwrite_control* jwc, int prec)
+{
+    jwc->float_prec = prec;
 }
 
 //------------------------------------------
@@ -187,7 +193,7 @@ void tb_jwrite_int(tb_jwrite_control* jwc, char* key, int value)
 
 void tb_jwrite_float(tb_jwrite_control* jwc, char* key, float value)
 {
-    _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, 6);
+    _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, jwc->float_prec);
     tb_jwrite_object_raw(jwc, key, jwc->tmpbuf);
 }
 
@@ -262,7 +268,7 @@ void tb_jwrite_array_int(tb_jwrite_control* jwc, int value)
 
 void tb_jwrite_array_float(tb_jwrite_control* jwc, float value)
 {
-    _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, 6);
+    _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, jwc->float_prec);
     tb_jwrite_array_raw(jwc, jwc->tmpbuf);
 }
 
