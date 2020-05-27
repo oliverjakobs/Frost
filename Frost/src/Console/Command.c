@@ -142,7 +142,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			for (clib_strmap_iter* iter = clib_strmap_iterator(&manager->scenes); iter; iter = clib_strmap_iter_next(&manager->scenes, iter))
+			CLIB_STRMAP_ITERATE_FOR(&manager->scenes)
 			{
 				char* name = clib_strmap_iter_get_key(iter);
 
@@ -163,7 +163,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
-			for (clib_strmap_iter* iter = clib_strmap_iterator(&manager->templates); iter; iter = clib_strmap_iter_next(&manager->templates, iter))
+			CLIB_STRMAP_ITERATE_FOR(&manager->templates)
 			{
 				char* name = clib_strmap_iter_get_key(iter);
 				char* templ = clib_strmap_iter_get_value(iter);
@@ -173,14 +173,14 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "res") == 0)
 		{
-			ConsoleOut(&manager->console, "[Console] Textures:");
-			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->textures); iter; iter = clib_dict_iter_next(&manager->resources->textures, iter))
+			ConsoleOut(&manager->console, "Textures:");
+			CLIB_DICT_ITERATE_FOR(&manager->resources->textures)
 			{
 				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}
 
-			ConsoleOut(&manager->console, "[Console] Fonts:");
-			for (clib_dict_iter* iter = clib_dict_iterator(&manager->resources->fonts); iter; iter = clib_dict_iter_next(&manager->resources->fonts, iter))
+			ConsoleOut(&manager->console, "Fonts:");
+			CLIB_DICT_ITERATE_FOR(&manager->resources->fonts)
 			{
 				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}

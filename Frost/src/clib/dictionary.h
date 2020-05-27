@@ -33,6 +33,8 @@
         clib_dict_iter_set_value(iter, (void*)value);                       \
     }
 
+#define CLIB_DICT_ITERATE_FOR(dict) for (clib_dict_iter* iter = clib_dict_iterator(dict); iter; iter = clib_dict_iter_next(dict, iter))
+
 typedef struct clib_hashmap_s clib_dict;
 typedef struct clib_hashmap_iter_s clib_dict_iter;
 

@@ -3,6 +3,8 @@
 
 #include "dictionary.h"
 
+#define CLIB_STRMAP_ITERATE_FOR(map) for (clib_strmap_iter* iter = clib_strmap_iterator(map); iter; iter = clib_strmap_iter_next(map, iter))
+
 typedef struct clib_hashmap_s clib_strmap;
 typedef struct clib_hashmap_iter_s clib_strmap_iter;
 
