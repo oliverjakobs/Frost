@@ -140,6 +140,7 @@
     <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\SceneEditor.h" />
+    <ClInclude Include="src\Scene\SceneLoader.h" />
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Scene\Scene.c" />
     <ClCompile Include="src\Scene\SceneEditor.c" />
+    <ClCompile Include="src\Scene\SceneLoader.c" />
     <ClCompile Include="src\Scene\SceneManager.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\vector.c" />

@@ -69,9 +69,11 @@ typedef struct
 } Event;
 
 /* Utility */
+int EventMouseButton(Event* e);
 int EventMouseButtonPressed(Event* e);
 int EventMouseButtonReleased(Event* e);
 
+int EventKey(Event* e);
 int EventKeyPressed(Event* e);
 int EventKeyReleased(Event* e);
 

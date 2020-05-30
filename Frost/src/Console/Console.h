@@ -3,7 +3,7 @@
 
 #define CONSOLE_MAX_CMD_LENGTH	64
 
-#define CONSOLE_OUT_BUF_SIZE	8
+#define CONSOLE_OUT_BUF_SIZE	64
 #define CONSOLE_OUT_ROW_SIZE	64
 
 #include "Application/EventHandler.h"
@@ -14,10 +14,16 @@ typedef struct
 	char cmd_buffer[CONSOLE_MAX_CMD_LENGTH];
 	int cusor_pos;
 
+	float cursor_size;
+	float cursor_tick;
+
+	IgnisFont* font;
+
+	int show_cursor;
 	int focus;
 } Console;
 
-void ConsoleInit(Console* console);
+void ConsoleInit(Console* console, IgnisFont* font);
 void ConsoleFocus(Console* console);
 
 void ConsoleOnEvent(Console* console, Event* e);

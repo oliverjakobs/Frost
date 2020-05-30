@@ -6,11 +6,23 @@
 #include "clib/clib.h"
 #include "Application/Input.h"
 
-void ConsoleInit(Console* console)
+const float CONSOLE_CURSOR_ON = 1.0f;
+const float CONSOLE_CURSOR_CYCLE = 1.2f;
+
+const char* CONSOLE_PROMT = "> ";
+
+void ConsoleInit(Console* console, IgnisFont* font)
 {
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
 	console->cusor_pos = 0;
+
+	console->cursor_size = 2.0f;
+	console->cursor_tick = 0.0f;
+
+	console->font = font;
+
 	console->focus = 1;
+	console->show_cursor = 1;
 }
 
 void ConsoleFocus(Console* console)
@@ -44,16 +56,19 @@ void ConsoleOnEvent(Console* console, Event* e)
 	}
 
 	/* block key events */
-	int key = EventKeyPressed(e);
-	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
-		e->handled = 1;
-	key = EventKeyReleased(e);
+	int key = EventKey(e);
 	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 }
 
 void ConsoleOnUpdate(Console* console, float deltatime)
 {
+	console->cursor_tick += deltatime;
+
+	console->show_cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON);
+
+	if (console->cursor_tick > CONSOLE_CURSOR_CYCLE)
+		console->cursor_tick = 0.0f;
 }
 
 void ConsoleExecuteCmd(Console* console)
@@ -85,15 +100,30 @@ void ConsoleCharRemoveLast(Console* console)
 
 void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj)
 {
+	float text_x = x + padding;
+	float text_y = y - padding;
+	float cursor_x = text_x 
+		+ ignisFontGetTextWidth(console->font, console->cmd_buffer, console->cusor_pos) 
+		+ ignisFontGetTextWidth(console->font, CONSOLE_PROMT, strlen(CONSOLE_PROMT));
+	float cursor_y = y - (padding / 2.0f);
+	float cursor_w = console->cursor_size;
+	float cursor_h = -(h - (padding * 1.5f));
+
 	Primitives2DStart(proj);
 
 	Primitives2DFillRect(x, y, w, -h, (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f });
 
+	if (console->show_cursor)
+		Primitives2DFillRect(cursor_x, cursor_y, cursor_w, cursor_h, IGNIS_WHITE);
+
 	Primitives2DFlush();
+
+	if (console->font)
+		FontRendererBindFont(console->font, IGNIS_WHITE);
 
 	FontRendererStart(proj);
 
-	FontRendererRenderTextFormat(x + padding, y - padding, "> %.*s", console->cusor_pos, console->cmd_buffer);
+	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", CONSOLE_PROMT, console->cusor_pos, console->cmd_buffer);
 
 	FontRendererFlush();
 }

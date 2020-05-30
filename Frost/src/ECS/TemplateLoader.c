@@ -9,7 +9,7 @@
 
 EcsEntity* EcsEntityLoadTemplate(SceneManager* manager, const char* templ)
 {
-	char* path = SceneManagerGetTemplate(manager, templ);
+	char* path = SceneLoaderGetTemplate(manager, templ);
 
 	if (!path)
 	{

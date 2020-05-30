@@ -244,6 +244,7 @@
     <ClInclude Include="src\math\grid.h" />
     <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\dictionary.h" />
+    <ClInclude Include="src\Scene\SceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -383,6 +384,7 @@
     <ClCompile Include="src\math\grid.c" />
     <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\dictionary.c" />
+    <ClCompile Include="src\Scene\SceneLoader.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

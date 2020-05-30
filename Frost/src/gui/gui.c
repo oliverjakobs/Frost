@@ -190,8 +190,8 @@ void gui_text(const char* fmt, ...)
     vsnprintf(text, buffer_size + 1, fmt, args);
     va_end(args);
 
-    float row_width = ignisFontGetTextWidth(_context.theme.font, text);
-    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL);
+    float row_width = ignisFontGetTextWidth(_context.theme.font, text, strlen(text));
+    float row_height = ignisFontGetTextHeight(_context.theme.font, text, strlen(text), NULL);
 
     gui_row* row = gui_row_create_text(text, _current->padding, _current->row_y, row_width, row_height);
 
@@ -215,8 +215,8 @@ int gui_button(const char* text)
 {
     float padding = _current->padding;
 
-    float row_width = ignisFontGetTextWidth(_context.theme.font, text) + (2.0f * padding);
-    float row_height = ignisFontGetTextHeight(_context.theme.font, text, NULL) + (2.0f * padding);
+    float row_width = ignisFontGetTextWidth(_context.theme.font, text, strlen(text)) + (2.0f * padding);
+    float row_height = ignisFontGetTextHeight(_context.theme.font, text, strlen(text), NULL) + (2.0f * padding);
 
     gui_row* row = gui_row_create_button((char*)text, _current->padding, _current->row_y, row_width, row_height, padding);
 

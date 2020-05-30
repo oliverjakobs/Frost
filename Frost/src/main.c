@@ -30,8 +30,7 @@ void OnInit(Application* app)
 	ApplicationShowGui(app, 1);
 
 	CameraCreateOrtho(&camera, (vec3) { app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2) { (float)app->width, (float)app->height });
-	SceneManagerInit(&scene_manager, &app->resources, &camera, 32.0f, 4);
-	SceneManagerLoadRegister(&scene_manager, "res/templates/register.json");
+	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
 	SceneManagerChangeScene(&scene_manager, "scene");
 }
 

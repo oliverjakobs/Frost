@@ -63,6 +63,11 @@ void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color)
 	ignisSetUniform4fl(&_render_data.shader, _render_data.uniform_location_color, &_render_data.color.r);
 }
 
+IgnisFont* FontRendererGetFont()
+{
+	return _render_data.font;
+}
+
 void FontRendererStart(const float* mat_proj)
 {
 	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_proj, mat_proj);

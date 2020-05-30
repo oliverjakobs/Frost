@@ -1,5 +1,14 @@
 #include "Event.h"
 
+int EventMouseButton(Event* e)
+{
+	if (e->type == EVENT_MOUSE_BUTTON_PRESSED ||
+		e->type == EVENT_MOUSE_BUTTON_RELEASED)
+		return e->mousebutton.buttoncode;
+
+	return -1;
+}
+
 int EventMouseButtonPressed(Event* e)
 {
 	if (e->type == EVENT_MOUSE_BUTTON_PRESSED)
@@ -12,6 +21,16 @@ int EventMouseButtonReleased(Event* e)
 {
 	if (e->type == EVENT_MOUSE_BUTTON_RELEASED)
 		return e->mousebutton.buttoncode;
+
+	return -1;
+}
+
+int EventKey(Event* e)
+{
+	if (e->type == EVENT_KEY_PRESSED ||
+		e->type == EVENT_KEY_RELEASED ||
+		e->type == EVENT_KEY_TYPED)
+		return e->key.keycode;
 
 	return -1;
 }

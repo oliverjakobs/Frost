@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include "ECS/Entity.h"
-#include "Scene/SceneManager.h"
+#include "Scene/SceneLoader.h"
 
 EcsEntity* EcsEntityLoadTemplate(SceneManager* manager, const char* templ);
 

@@ -99,11 +99,11 @@ int ignisFontLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* ve
 	return 0;
 }
 
-float ignisFontGetTextWidth(IgnisFont* font, const char* text)
+float ignisFontGetTextWidth(IgnisFont* font, const char* text, size_t len)
 {
 	float x = 0.0f;
 	float y = 0.0f;
-	for (size_t i = 0; i < strlen(text); i++)
+	for (size_t i = 0; i < len; i++)
 	{
 		if (text[i] >= font->first_char && text[i] < font->first_char + font->num_chars)
 		{
@@ -114,14 +114,14 @@ float ignisFontGetTextWidth(IgnisFont* font, const char* text)
 	return x;
 }
 
-float ignisFontGetTextHeight(IgnisFont* font, const char* text, float* y_offset)
+float ignisFontGetTextHeight(IgnisFont* font, const char* text, size_t len, float* y_offset)
 {
 	float x = 0.0f;
 	float y = 0.0f;
 
 	float height = 0.0f;
 
-	for (size_t i = 0; i < strlen(text); i++)
+	for (size_t i = 0; i < len; i++)
 	{
 		if (text[i] >= font->first_char && text[i] < font->first_char + font->num_chars)
 		{

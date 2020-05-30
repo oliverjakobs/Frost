@@ -12,6 +12,7 @@ void FontRendererInit(const char* vert, const char* frag);
 void FontRendererDestroy();
 
 void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color);
+IgnisFont* FontRendererGetFont();
 
 void FontRendererStart(const float* mat_proj);
 void FontRendererFlush();
