@@ -55,17 +55,17 @@ void FontRendererDestroy()
 	ignisDeleteVertexArray(&_render_data.vao);
 }
 
-void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color)
+void FontRendererBindFont(IgnisFont* font)
+{
+	_render_data.font = font;
+}
+
+void FontRendererBindFontColor(IgnisFont* font, IgnisColorRGBA color)
 {
 	_render_data.font = font;
 	_render_data.color = color;
 
 	ignisSetUniform4fl(&_render_data.shader, _render_data.uniform_location_color, &_render_data.color.r);
-}
-
-IgnisFont* FontRendererGetFont()
-{
-	return _render_data.font;
 }
 
 void FontRendererStart(const float* mat_proj)

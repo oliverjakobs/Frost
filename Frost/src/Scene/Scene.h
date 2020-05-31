@@ -13,12 +13,12 @@ extern "C"
 #include "Application/EventHandler.h"
 #include "Graphics/Background.h"
 
-#include "clib/vector.h"
+#include "clib/dynamic_array.h"
 
 #define SCENE_INITIAL_LAYER_SIZE	8
 #define SCENE_INITIAL_ECS_SIZE		8
 
-CLIB_VECTOR_DECLARE_FUNCS(layer, EcsEntity)
+CLIB_DYNAMIC_ARRAY_DECLARE_FUNCS(layer, EcsEntity)
 
 typedef struct
 {
@@ -31,7 +31,7 @@ typedef struct
 
 	Ecs ecs;
 
-	clib_vector* layers;
+	clib_dynamic_array* layers;
 	size_t max_layer;
 
 	Background background;

@@ -11,8 +11,8 @@ extern "C"
 void FontRendererInit(const char* vert, const char* frag);
 void FontRendererDestroy();
 
-void FontRendererBindFont(IgnisFont* font, IgnisColorRGBA color);
-IgnisFont* FontRendererGetFont();
+void FontRendererBindFont(IgnisFont* font);
+void FontRendererBindFontColor(IgnisFont* font, IgnisColorRGBA color);
 
 void FontRendererStart(const float* mat_proj);
 void FontRendererFlush();

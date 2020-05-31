@@ -2,18 +2,18 @@
 
 #include "ECS/Systems.h"
 
-CLIB_VECTOR_DEFINE_FUNCS(layer, EcsEntity)
+CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(layer, EcsEntity)
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 {
-	scene->layers = (clib_vector*)malloc(sizeof(clib_vector) * max_layer);
+	scene->layers = (clib_dynamic_array*)malloc(sizeof(clib_dynamic_array) * max_layer);
 	if (!scene->layers)
 		return 0;
 
 	scene->max_layer = max_layer;
 
 	for (size_t i = 0; i < max_layer; i++)
-		clib_vector_init(&scene->layers[i], SCENE_INITIAL_LAYER_SIZE);
+		clib_dynamic_array_init(&scene->layers[i], SCENE_INITIAL_LAYER_SIZE);
 
 	scene->camera = camera;
 	scene->width = w;
@@ -65,7 +65,7 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, size_t layer)
 		entity->camera->scene_h = scene->height;
 	}
 
-	layer_vector_push(&scene->layers[layer], entity);
+	layer_dynamic_array_push(&scene->layers[layer], entity);
 }
 
 void SceneAddEntityPos(Scene* scene, EcsEntity* entity, size_t layer, vec2 position)
@@ -83,9 +83,9 @@ void SceneRemoveEntity(Scene* scene, const char* name, size_t layer)
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name, name) == 0)
+		if (strcmp(layer_dynamic_array_get(&scene->layers[layer], i)->name, name) == 0)
 		{
-			layer_vector_delete(&scene->layers[layer], i);
+			layer_dynamic_array_delete(&scene->layers[layer], i);
 			return;
 		}
 	}
@@ -96,8 +96,8 @@ void SceneClearEntities(Scene* scene)
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 	{
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
-			free(layer_vector_get(&scene->layers[layer], i));
-		clib_vector_free(&scene->layers[layer]);
+			free(layer_dynamic_array_get(&scene->layers[layer], i));
+		clib_dynamic_array_free(&scene->layers[layer]);
 	}
 }
 
@@ -112,7 +112,7 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
 		{
-			EcsUpdate(&scene->ecs, layer_vector_get(&scene->layers[layer], i), deltaTime);
+			EcsUpdate(&scene->ecs, layer_dynamic_array_get(&scene->layers[layer], i), deltaTime);
 		}
 
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
@@ -127,7 +127,7 @@ void SceneOnRender(Scene* scene)
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
 		{
-			EcsRender(&scene->ecs, layer_vector_get(&scene->layers[layer], i));
+			EcsRender(&scene->ecs, layer_dynamic_array_get(&scene->layers[layer], i));
 		}
 
 	BatchRenderer2DFlush();
@@ -141,7 +141,7 @@ void SceneOnRenderDebug(Scene* scene)
 	{
 		for (size_t i = 0; i < scene->layers[layer].size; i++)
 		{
-			vec2 pos = EcsEntityGetPosition(layer_vector_get(&scene->layers[layer], i));
+			vec2 pos = EcsEntityGetPosition(layer_dynamic_array_get(&scene->layers[layer], i));
 			Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 		}
 	}
@@ -165,8 +165,10 @@ EcsEntity* SceneGetEntity(Scene* scene, const char* name, size_t layer)
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		if (strcmp(layer_vector_get(&scene->layers[layer], i)->name, name) == 0)
-			return layer_vector_get(&scene->layers[layer], i);
+		EcsEntity* entity = layer_dynamic_array_get(&scene->layers[layer], i);
+
+		if (strcmp(entity->name, name) == 0)
+			return entity;
 	}
 
 	return NULL;
@@ -179,17 +181,17 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos, size_t layer)
 
 	for (size_t i = 0; i < scene->layers[layer].size; i++)
 	{
-		EcsTextureComponent* tex = layer_vector_get(&scene->layers[layer], i)->texture;
+		EcsTextureComponent* tex = layer_dynamic_array_get(&scene->layers[layer], i)->texture;
 
 		if (!tex) continue;
 
-		vec2 position = EcsEntityGetPosition(layer_vector_get(&scene->layers[layer], i));
+		vec2 position = EcsEntityGetPosition(layer_dynamic_array_get(&scene->layers[layer], i));
 
 		vec2 min = vec2_sub(position, (vec2){ tex->width / 2.0f, 0.0f });
 		vec2 max = vec2_add(min, (vec2){ tex->width, tex->height });
 
 		if (vec2_inside(pos, min, max))
-			return layer_vector_get(&scene->layers[layer], i);
+			return layer_dynamic_array_get(&scene->layers[layer], i);
 	}
 
 	return NULL;

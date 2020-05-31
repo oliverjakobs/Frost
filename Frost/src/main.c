@@ -20,7 +20,7 @@ void OnInit(Application* app)
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	FontRendererBindFont(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
+	FontRendererBindFontColor(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
 	gui_init((float)app->width, (float)app->height);
 	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);

@@ -5,12 +5,12 @@
 		[ "bg2_layer_1", 0.0, 0.0, 1024.0, 800.0, 0.7]
 	],
 	"templates": [
-		[ "res/templates/entities/player.json", [ 120.0, 128.0 ], 1 ],
-		[ "res/templates/entities/box.json", [ 128.0, 0.0 ], 0 ],
-		[ "res/templates/entities/box.json", [ 384.0, 0.0 ], 0 ],
-		[ "res/templates/entities/box.json", [ 640.0, 0.0 ], 0 ],
-		[ "res/templates/entities/box.json", [ 896.0, 0.0 ], 0 ],
-		[ "res/templates/entities/box.json", [ 256.0, 400.0 ], 0 ],
-		[ "res/templates/entities/box.json", [ 768.0, 400.0 ], 0 ]
+		[ "player", [ 120.0, 128.0 ], 1 ],
+		[ "box", [ 128.0, 0.0 ], 0 ],
+		[ "box", [ 384.0, 0.0 ], 0 ],
+		[ "box", [ 640.0, 0.0 ], 0 ],
+		[ "box", [ 896.0, 0.0 ], 0 ],
+		[ "box", [ 256.0, 400.0 ], 0 ],
+		[ "box", [ 768.0, 400.0 ], 0 ]
 	]
 }

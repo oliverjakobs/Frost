@@ -8,15 +8,15 @@ extern "C"
 
 #include "Body.h"
 
-#include "clib/vector.h"
+#include "clib/dynamic_array.h"
 
 #define WORLD_INITIAL_SIZE	8
 
-CLIB_VECTOR_DECLARE_FUNCS(body, Body)
+CLIB_DYNAMIC_ARRAY_DECLARE_FUNCS(body, Body)
 
 typedef struct World
 {
-	clib_vector bodies;
+	clib_dynamic_array bodies;
 	vec2 gravity;
 } World;
 

@@ -1,7 +1,7 @@
 #include "gui.h"
 
-CLIB_VECTOR_DEFINE_FUNCS(gui_row, gui_row)
-CLIB_VECTOR_DEFINE_FUNCS(gui_window, gui_window)
+CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(gui_row, gui_row)
+CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(gui_window, gui_window)
 
 static gui_context _context;
 static gui_window* _current;
@@ -20,7 +20,7 @@ static void _gui_load_theme(gui_theme* theme)
 
 void gui_init(float width, float height)
 {
-    clib_vector_init(&_context.windows, GUI_INITIAL_WINDOWS);
+    clib_dynamic_array_init(&_context.windows, GUI_INITIAL_WINDOWS);
 
     _gui_load_theme(&_context.theme);
     _context.width = width;
@@ -33,20 +33,20 @@ void gui_free()
 {
     for (size_t i = 0; i < _context.windows.size; i++)
     {
-        gui_window* window = gui_window_vector_get(&_context.windows, i);
+        gui_window* window = gui_window_dynamic_array_get(&_context.windows, i);
 
         for (size_t row_i = 0; row_i < window->rows.size; row_i++)
         {
-            gui_row* row = gui_row_vector_get(&window->rows, row_i);
+            gui_row* row = gui_row_dynamic_array_get(&window->rows, row_i);
             gui_row_free(row);
         }
 
-        gui_window_vector_delete(&_context.windows, i);
-        clib_vector_free(&window->rows);
+        gui_window_dynamic_array_delete(&_context.windows, i);
+        clib_dynamic_array_free(&window->rows);
         free(window);
     }
 
-    clib_vector_free(&_context.windows);
+    clib_dynamic_array_free(&_context.windows);
 }
 
 void gui_set_font(IgnisFont* font, IgnisColorRGBA color)
@@ -70,7 +70,7 @@ void gui_render(const float* proj_mat)
     Primitives2DStart(proj_mat);
     for (size_t i = 0; i < _context.windows.size; ++i)
     {
-        gui_window* window = gui_window_vector_get(&_context.windows, i);
+        gui_window* window = gui_window_dynamic_array_get(&_context.windows, i);
 
         if (window->bg_style != GUI_BG_NONE)
         {
@@ -80,7 +80,7 @@ void gui_render(const float* proj_mat)
 
         for (size_t row_i = 0; row_i < window->rows.size; ++row_i)
         {
-            gui_row* row = gui_row_vector_get(&window->rows, row_i);
+            gui_row* row = gui_row_dynamic_array_get(&window->rows, row_i);
             gui_row_render(window, row, _context.theme);
         }
     }
@@ -88,20 +88,20 @@ void gui_render(const float* proj_mat)
     glLineWidth(w);
 
     FontRendererStart(proj_mat);
-    FontRendererBindFont(_context.theme.font, _context.theme.font_color);
+    FontRendererBindFontColor(_context.theme.font, _context.theme.font_color);
     for (size_t i = 0; i < _context.windows.size; ++i)
     {
-        gui_window* window = gui_window_vector_get(&_context.windows, i);
+        gui_window* window = gui_window_dynamic_array_get(&_context.windows, i);
 
         for (size_t row_i = 0; row_i < window->rows.size; ++row_i)
         {
-            gui_row* row = gui_row_vector_get(&window->rows, row_i);
+            gui_row* row = gui_row_dynamic_array_get(&window->rows, row_i);
             gui_row_render_font(window, row, _context.theme);
             gui_row_free(row);
         }
 
-        gui_window_vector_delete(&_context.windows, i);
-        clib_vector_free(&window->rows);
+        gui_window_dynamic_array_delete(&_context.windows, i);
+        clib_dynamic_array_free(&window->rows);
         free(window);
     }
     FontRendererFlush();
@@ -126,7 +126,7 @@ int gui_begin(float x, float y, float w, float h, float padding, gui_bg_style bg
 
         window->padding = padding;
 
-        clib_vector_init(&window->rows, GUI_INITIAL_ROWS);
+        clib_dynamic_array_init(&window->rows, GUI_INITIAL_ROWS);
         window->row_y = padding;
 
         _current = window;
@@ -165,7 +165,7 @@ void gui_end()
 {
     if (!_current) return;
 
-    gui_window_vector_push(&_context.windows, _current);
+    gui_window_dynamic_array_push(&_context.windows, _current);
     _current = NULL;
 }
 
@@ -176,7 +176,7 @@ static void _gui_add_row(gui_row* row)
 
     _current->row_y += row->h + _current->padding;
 
-    gui_row_vector_push(&_current->rows, row);
+    gui_row_dynamic_array_push(&_current->rows, row);
 }
 
 void gui_text(const char* fmt, ...)

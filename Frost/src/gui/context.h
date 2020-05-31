@@ -2,7 +2,7 @@
 #define GUI_CONTEXT_H
 
 #include "clib/clib.h"
-#include "clib/vector.h"
+#include "clib/dynamic_array.h"
 
 #define GUI_INITIAL_WINDOWS		4
 #define GUI_INITIAL_ROWS		8
@@ -42,7 +42,7 @@ typedef struct
 
     float padding;
 
-    clib_vector rows;
+    clib_dynamic_array rows;
     float row_y;
 } gui_window;
 
@@ -60,7 +60,7 @@ typedef struct
 
 typedef struct
 {
-    clib_vector windows;
+    clib_dynamic_array windows;
 
     float width;
     float height;

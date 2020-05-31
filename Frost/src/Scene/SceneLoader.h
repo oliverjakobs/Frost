@@ -3,12 +3,12 @@
 
 #include "SceneManager.h"
 
-void SceneLoaderLoadRegister(SceneManager* manager, const char* path);
+int SceneLoaderLoadRegister(SceneManager* manager, const char* path);
 
-int SceneLoaderLoadScene(SceneManager* manager, Scene* scene, const char* json);
-int SceneLoaderSaveScene(SceneManager* manager, Scene* scene, const char* path);
+int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_strmap* templates);
+int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resources);
 
-char* SceneLoaderGetTemplate(SceneManager* manager, const char* name);
+EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, ResourceManager* resources);
 
 #endif /* !SCENE_LOADER_H */
 

@@ -113,7 +113,6 @@
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
-    <ClInclude Include="src\ECS\TemplateLoader.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -144,7 +143,7 @@
     <ClInclude Include="src\Scene\SceneManager.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\hashmap.h" />
-    <ClInclude Include="src\clib\vector.h" />
+    <ClInclude Include="src\clib\dynamic_array.h" />
     <ClInclude Include="src\gui\context.h" />
     <ClInclude Include="src\gui\gui.h" />
     <ClInclude Include="src\gui\row.h" />
@@ -174,7 +173,6 @@
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
-    <ClCompile Include="src\ECS\TemplateLoader.c" />
     <ClCompile Include="src\Application\Event.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
@@ -202,7 +200,7 @@
     <ClCompile Include="src\Scene\SceneLoader.c" />
     <ClCompile Include="src\Scene\SceneManager.c" />
     <ClCompile Include="src\clib\hashmap.c" />
-    <ClCompile Include="src\clib\vector.c" />
+    <ClCompile Include="src\clib\dynamic_array.c" />
     <ClCompile Include="src\gui\gui.c" />
     <ClCompile Include="src\gui\row.c" />
     <ClCompile Include="src\main.c" />

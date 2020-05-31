@@ -9,8 +9,6 @@
 const float CONSOLE_CURSOR_ON = 1.0f;
 const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
-const char* CONSOLE_PROMT = "> ";
-
 void ConsoleInit(Console* console, IgnisFont* font)
 {
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
@@ -20,6 +18,10 @@ void ConsoleInit(Console* console, IgnisFont* font)
 	console->cursor_tick = 0.0f;
 
 	console->font = font;
+	console->font_color = IGNIS_WHITE;
+	console->bg_color = (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f };
+
+	console->prompt = "> ";
 
 	console->focus = 1;
 	console->show_cursor = 1;
@@ -104,26 +106,26 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 	float text_y = y - padding;
 	float cursor_x = text_x 
 		+ ignisFontGetTextWidth(console->font, console->cmd_buffer, console->cusor_pos) 
-		+ ignisFontGetTextWidth(console->font, CONSOLE_PROMT, strlen(CONSOLE_PROMT));
+		+ ignisFontGetTextWidth(console->font, console->prompt, strlen(console->prompt));
 	float cursor_y = y - (padding / 2.0f);
 	float cursor_w = console->cursor_size;
 	float cursor_h = -(h - (padding * 1.5f));
 
 	Primitives2DStart(proj);
 
-	Primitives2DFillRect(x, y, w, -h, (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f });
+	Primitives2DFillRect(x, y, w, -h, console->bg_color);
 
 	if (console->show_cursor)
-		Primitives2DFillRect(cursor_x, cursor_y, cursor_w, cursor_h, IGNIS_WHITE);
+		Primitives2DFillRect(cursor_x, cursor_y, cursor_w, cursor_h, console->font_color);
 
 	Primitives2DFlush();
 
 	if (console->font)
-		FontRendererBindFont(console->font, IGNIS_WHITE);
+		FontRendererBindFontColor(console->font, console->font_color);
 
 	FontRendererStart(proj);
 
-	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", CONSOLE_PROMT, console->cusor_pos, console->cmd_buffer);
+	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", console->prompt, console->cusor_pos, console->cmd_buffer);
 
 	FontRendererFlush();
 }

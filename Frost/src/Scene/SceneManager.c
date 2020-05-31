@@ -3,7 +3,6 @@
 #include "json/tb_json.h"
 #include "json/tb_jwrite.h"
 
-#include "ECS/TemplateLoader.h"
 #include "Application/Debugger.h"
 #include "Application/Application.h"
 
@@ -52,18 +51,10 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 	if (strcmp(manager->scene_name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		char* templ = clib_strmap_get(&manager->scenes, name);
-		if (!templ)
+		char* path = clib_strmap_get(&manager->scenes, name);
+		if (!path)
 		{
 			DEBUG_ERROR("[SceneManager] Couldn't find scene: %s\n", name);
-			return;
-		}
-		
-		char* json = ignisReadFile(templ, NULL);
-
-		if (!json)
-		{
-			DEBUG_ERROR("[SceneManager] Couldn't read scene template: %s\n", templ);
 			return;
 		}
 
@@ -72,11 +63,9 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 			SceneQuit(manager->scene);
 
 		// Enter new scene
-		SceneLoaderLoadScene(manager, manager->scene, json);
+		SceneLoaderLoadScene(manager->scene, path, manager->camera, manager->resources, &manager->templates);
 		SceneEditorReset(&manager->editor);
 		strcpy(manager->scene_name, name);
-
-		free(json);
 	}
 }
 

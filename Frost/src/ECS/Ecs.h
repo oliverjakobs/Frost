@@ -6,7 +6,7 @@ extern "C"
 {
 #endif
 
-#include "clib/vector.h"
+#include "clib/dynamic_array.h"
 #include "ECS/Entity.h"
 
 typedef void (EcsUpdateSystem)(EcsEntity* entity, float deltatime);
@@ -14,8 +14,8 @@ typedef void (EcsRenderSystem)(EcsEntity* entity);
 
 typedef struct
 {
-	clib_vector systems_update;
-	clib_vector systems_render;
+	clib_dynamic_array systems_update;
+	clib_dynamic_array systems_render;
 } Ecs;
 
 void EcsInit(Ecs* ecs, size_t initial_size);

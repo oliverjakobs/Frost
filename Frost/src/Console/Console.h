@@ -18,6 +18,10 @@ typedef struct
 	float cursor_tick;
 
 	IgnisFont* font;
+	IgnisColorRGBA font_color;
+	IgnisColorRGBA bg_color;
+
+	char* prompt;
 
 	int show_cursor;
 	int focus;

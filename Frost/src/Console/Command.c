@@ -3,8 +3,6 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "ECS/TemplateLoader.h"
-
 typedef enum
 {
 	CONSOLE_CMD_NONE = -1,
@@ -128,7 +126,8 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 			}
 
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			SceneAddEntityPos(manager->scene, EcsEntityLoadTemplate(manager, args[0]), manager->editor.layer, pos);
+			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, manager->resources);
+			SceneAddEntityPos(manager->scene, entity, manager->editor.layer, pos);
 		}
 		break;
 	}
@@ -155,7 +154,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 			{
 				for (int i = 0; i < manager->scene->layers[l].size; ++i)
 				{
-					EcsEntity* e = layer_vector_get(&manager->scene->layers[l], i);
+					EcsEntity* e = layer_dynamic_array_get(&manager->scene->layers[l], i);
 
 					ConsoleOut(&manager->console, " - %s (%d)", e->name, l);
 				}
@@ -205,7 +204,7 @@ void CommandExecute(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			SceneLoaderSaveScene(manager, manager->scene, path);
+			SceneLoaderSaveScene(manager->scene, path, manager->resources);
 			ConsoleOut(&manager->console, "Saved scene (%s) to %s", manager->scene_name, path);
 		}
 

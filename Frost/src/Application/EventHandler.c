@@ -1,20 +1,20 @@
 #include "EventHandler.h"
 
-#include "clib/vector.h"
+#include "clib/dynamic_array.h"
 
-CLIB_VECTOR_DEFINE_FUNCS(event_queue, Event)
+CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(event, Event)
 
 typedef struct
 {
-	clib_vector queue;
-	void (*callback)(Application*, const Event);
+	clib_dynamic_array queue;
+	void (*callback)(Application*, Event);
 } EventHandler;
 
 static EventHandler event_handler;
 
 int EventHandlerInit()
 {
-	clib_vector_init(&event_handler.queue, EVENT_HANDLER_INITIAL_QUEUE_SIZE);
+	clib_dynamic_array_init(&event_handler.queue, EVENT_HANDLER_INITIAL_QUEUE_SIZE);
 
 	return 0;
 }
@@ -22,8 +22,8 @@ int EventHandlerInit()
 void EventHandlerDestroy()
 {
 	for (size_t i = 0; i < event_handler.queue.size; i++)
-		free(event_queue_vector_get(&event_handler.queue, i));
-	clib_vector_free(&event_handler.queue);
+		free(event_dynamic_array_get(&event_handler.queue, i));
+	clib_dynamic_array_free(&event_handler.queue);
 }
 
 void EventHandlerSetEventCallback(void (*callback)(Application*, const Event))
@@ -52,7 +52,7 @@ void EventHandlerThrowWindowEvent(EventType type, int width, int height)
 	{
 		e->window.width = width;
 		e->window.height = height;
-		event_queue_vector_push(&event_handler.queue, e);
+		event_dynamic_array_push(&event_handler.queue, e);
 	}
 }
 
@@ -64,7 +64,7 @@ void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount)
 	{
 		e->key.keycode = keycode;
 		e->key.repeatcount = repeatcount;
-		event_queue_vector_push(&event_handler.queue, e);
+		event_dynamic_array_push(&event_handler.queue, e);
 	}
 }
 
@@ -75,7 +75,7 @@ void EventHandlerThrowMouseButtonEvent(EventType type, int button)
 	if (e)
 	{
 		e->mousebutton.buttoncode = button;
-		event_queue_vector_push(&event_handler.queue, e);
+		event_dynamic_array_push(&event_handler.queue, e);
 	}
 }
 
@@ -87,7 +87,7 @@ void EventHandlerThrowMouseEvent(EventType type, float x, float y)
 	{
 		e->mouse.x = x;
 		e->mouse.y = y;
-		event_queue_vector_push(&event_handler.queue, e);
+		event_dynamic_array_push(&event_handler.queue, e);
 	}
 }
 
@@ -98,7 +98,7 @@ void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
 	if (e)
 	{
 		e->console.cmd = cmd;
-		event_queue_vector_push(&event_handler.queue, e);
+		event_dynamic_array_push(&event_handler.queue, e);
 	}
 }
 
@@ -106,11 +106,11 @@ void EventHandlerPoll(Application* app)
 {
 	while (event_handler.queue.size > 0)
 	{
-		Event* e = event_queue_vector_get(&event_handler.queue, 0);
+		Event* e = event_dynamic_array_get(&event_handler.queue, 0);
 
 		event_handler.callback(app, *e);
 
-		event_queue_vector_delete(&event_handler.queue, 0);
+		event_dynamic_array_delete(&event_handler.queue, 0);
 
 		free(e);
 	}

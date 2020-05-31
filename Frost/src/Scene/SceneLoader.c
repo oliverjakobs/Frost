@@ -3,17 +3,16 @@
 #include "json/tb_json.h"
 #include "json/tb_jwrite.h"
 
-#include "ECS/TemplateLoader.h"
 #include "Application/Debugger.h"
 
-void SceneLoaderLoadRegister(SceneManager* manager, const char* json_path)
+int SceneLoaderLoadRegister(SceneManager* manager, const char* path)
 {
-	char* json = ignisReadFile(json_path, NULL);
+	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
 	{
-		DEBUG_ERROR("[SceneManager] Failed to read register (%s)\n", json_path);
-		return;
+		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", path);
+		return 0;
 	}
 
 	tb_json_element scenes;
@@ -27,14 +26,14 @@ void SceneLoaderLoadRegister(SceneManager* manager, const char* json_path)
 		tb_json_element scene;
 		tb_json_read_format((char*)scenes.value, &scene, "{'%s'", name);
 
-		char path[APPLICATION_PATH_LEN];
-		strncpy(path, (char*)scene.value, scene.bytelen);
+		char scene_path[APPLICATION_PATH_LEN];
+		strncpy(scene_path, (char*)scene.value, scene.bytelen);
 
-		path[scene.bytelen] = '\0';
+		scene_path[scene.bytelen] = '\0';
 
-		if (!clib_strmap_insert(&manager->scenes, name, path))
+		if (!clib_strmap_insert(&manager->scenes, name, scene_path))
 		{
-			DEBUG_ERROR("[SceneManager] Failed to add scene: %s (%s)", name, path);
+			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
 		}
 	}
 
@@ -49,26 +48,41 @@ void SceneLoaderLoadRegister(SceneManager* manager, const char* json_path)
 		tb_json_element templ;
 		tb_json_read_format((char*)templates.value, &templ, "{'%s'", name);
 
-		char path[APPLICATION_PATH_LEN];
-		strncpy(path, (char*)templ.value, templ.bytelen);
+		char templ_path[APPLICATION_PATH_LEN];
+		strncpy(templ_path, (char*)templ.value, templ.bytelen);
 
-		path[templ.bytelen] = '\0';
+		templ_path[templ.bytelen] = '\0';
 
-		if (!clib_strmap_insert(&manager->templates, name, path))
+		if (!clib_strmap_insert(&manager->templates, name, templ_path))
 		{
-			DEBUG_ERROR("[SceneManager] Failed to add template: %s (%s)", name, path);
+			DEBUG_WARN("[Scenes] Failed to add template: %s (%s)", name, templ_path);
 		}
 	}
 
 	free(json);
+
+	return 1;
 }
 
-int SceneLoaderLoadScene(SceneManager* manager, Scene* scene, const char* json)
+int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_strmap* templates)
 {
+	char* json = ignisReadFile(path, NULL);
+
+	if (!json)
+	{
+		DEBUG_ERROR("[Scenes] Couldn't read scene template: %s\n", path);
+		return 0;
+	}
+
 	float width = tb_json_float((char*)json, "{'size'[0", NULL);
 	float height = tb_json_float((char*)json, "{'size'[1", NULL);
 
-	SceneLoad(scene, manager->camera, width, height, SCENE_MANAGER_LAYER_COUNT);
+	if (!SceneLoad(scene, camera, width, height, SCENE_MANAGER_LAYER_COUNT))
+	{
+		DEBUG_ERROR("[Scenes] Failed to load scene: %s", json);
+		free(json);
+		return 0;
+	}
 
 	tb_json_element background;
 	tb_json_read((char*)json, &background, "{'background'");
@@ -94,18 +108,18 @@ int SceneLoaderLoadScene(SceneManager* manager, Scene* scene, const char* json)
 
 			float parallax = tb_json_float((char*)entity.value, "[5", NULL);
 
-			BackgroundPushLayer(&scene->background, ResourceManagerGetTexture2D(manager->resources, name), x, y, w, h, parallax);
+			BackgroundPushLayer(&scene->background, ResourceManagerGetTexture2D(resources, name), x, y, w, h, parallax);
 		}
 	}
 
-	tb_json_element templates;
-	tb_json_read((char*)json, &templates, "{'templates'");
+	tb_json_element templs;
+	tb_json_read((char*)json, &templs, "{'templates'");
 
-	if (templates.error == TB_JSON_OK && templates.data_type == TB_JSON_ARRAY)
+	if (templs.error == TB_JSON_OK && templs.data_type == TB_JSON_ARRAY)
 	{
-		char* value = (char*)templates.value;
+		char* value = (char*)templs.value;
 
-		for (int i = 0; i < templates.elements; i++)
+		for (int i = 0; i < templs.elements; i++)
 		{
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
@@ -119,14 +133,15 @@ int SceneLoaderLoadScene(SceneManager* manager, Scene* scene, const char* json)
 
 			int layer = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntityPos(scene, EcsEntityLoadTemplate(manager, name), layer, pos);
+			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, templates, resources), layer, pos);
 		}
 	}
 
+	free(json);
 	return 1;
 }
 
-int SceneLoaderSaveScene(SceneManager* manager, Scene* scene, const char* path)
+int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resources)
 {
 	char* temp_ext = ".temp";
 	char* temp_path = (char*)malloc(strlen(path) + strlen(temp_ext));
@@ -156,7 +171,7 @@ int SceneLoaderSaveScene(SceneManager* manager, Scene* scene, const char* path)
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(manager->resources, bg->texture));
+		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(resources, bg->texture));
 
 		tb_jwrite_array_float(&jwc, bg->startpos);
 		tb_jwrite_array_float(&jwc, bg->pos_y);
@@ -177,7 +192,7 @@ int SceneLoaderSaveScene(SceneManager* manager, Scene* scene, const char* path)
 	{
 		for (int i = 0; i < scene->layers[l].size; ++i)
 		{
-			EcsEntity* e = layer_vector_get(&scene->layers[l], i);
+			EcsEntity* e = layer_dynamic_array_get(&scene->layers[l], i);
 
 			tb_jwrite_array_array(&jwc);
 
@@ -215,27 +230,161 @@ int SceneLoaderSaveScene(SceneManager* manager, Scene* scene, const char* path)
 
 	if (remove(path) != 0)
 	{
-		DEBUG_ERROR("[SceneManager] Failed to remove old save file (%s)\n", path);
+		DEBUG_ERROR("[Scenes] Failed to remove old save file (%s)\n", path);
 		return 0;
 	}
 
 	if (rename(temp_path, path) != 0)
 	{
-		DEBUG_ERROR("[SceneManager] Failed to rename temp save file (%s)\n", temp_path);
+		DEBUG_ERROR("[Scenes] Failed to rename temp save file (%s)\n", temp_path);
 		return 0;
 	}
 
 	return 1;
 }
 
-char* SceneLoaderGetTemplate(SceneManager* manager, const char* name)
+EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, ResourceManager* resources)
 {
-	char* templ = clib_strmap_get(&manager->templates, name);
-	if (!templ)
+	char* path = clib_strmap_get(templates, templ);
+
+	if (!path)
 	{
-		DEBUG_ERROR("[SceneManager] Couldn't find template: %s\n", name);
+		DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
 		return NULL;
 	}
 
-	return templ;
+	char* json = ignisReadFile(path, NULL);
+
+	if (!json)
+	{
+		DEBUG_WARN("[Scenes] Couldn't read template (%s)", path);
+		return NULL;
+	}
+
+	char name[APPLICATION_STR_LEN];
+	tb_json_string(json, "{'name'", name, APPLICATION_STR_LEN, NULL);
+
+	EcsEntity* entity = (EcsEntity*)malloc(sizeof(EcsEntity));
+	EcsEntityLoad(entity, name, templ);
+
+	tb_json_element element;
+	tb_json_read(json, &element, "{'position'");
+	if (element.error == TB_JSON_OK)
+	{
+		float x = tb_json_float((char*)element.value, "[0", NULL);
+		float y = tb_json_float((char*)element.value, "[1", NULL);
+
+		EcsEntityAddPosition(entity, x, y);
+	}
+
+	tb_json_read(json, &element, "{'physics'");
+	if (element.error == TB_JSON_OK)
+	{
+		tb_json_element body;
+		tb_json_read((char*)element.value, &body, "{'body'");
+
+		if (body.error == TB_JSON_OK)
+		{
+			BodyType type = (BodyType)tb_json_int((char*)body.value, "{'type'", NULL);
+
+			float x = tb_json_float((char*)body.value, "{'position'[0", NULL);
+			float y = tb_json_float((char*)body.value, "{'position'[1", NULL);
+
+			float w = tb_json_float((char*)body.value, "{'halfDimension'[0", NULL);
+			float h = tb_json_float((char*)body.value, "{'halfDimension'[1", NULL);
+
+			float offset_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
+			float offset_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
+
+			Body* body = (Body*)malloc(sizeof(Body));
+			BodyLoad(body, x, y, w, h, type);
+
+			EcsEntityAddPhysics(entity, body, offset_x, offset_y);
+		}
+	}
+
+	tb_json_read(json, &element, "{'texture'");
+	if (element.error == TB_JSON_OK)
+	{
+		char tex_name[APPLICATION_STR_LEN];
+		tb_json_string((char*)element.value, "{'name'", tex_name, APPLICATION_STR_LEN, NULL);
+
+		float width = tb_json_float((char*)element.value, "{'dimension'[0", NULL);
+		float height = tb_json_float((char*)element.value, "{'dimension'[1", NULL);
+
+		int frame = tb_json_int((char*)element.value, "{'frame'", NULL);
+
+		IgnisTexture2D* texture = ResourceManagerGetTexture2D(resources, tex_name);
+
+		if (texture)
+			EcsEntityAddTexture(entity, texture, width, height, frame);
+	}
+
+	tb_json_read(json, &element, "{'animation'");
+	if (element.error == TB_JSON_OK)
+	{
+		Animator* animator = (Animator*)malloc(sizeof(Animator));
+		AnimatorInit(animator);
+
+		for (int i = 0; i < element.elements; i++)
+		{
+			char anim_name[APPLICATION_STR_LEN];
+			tb_json_string((char*)element.value, "{*", anim_name, APPLICATION_STR_LEN, &i);
+
+			tb_json_element anim;
+			tb_json_read_format((char*)element.value, &anim, "{'%s'", anim_name);
+
+			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
+			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
+			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
+
+			tb_json_element transition_array;
+			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
+
+			Animation* animation = (Animation*)malloc(sizeof(Animation));
+			AnimationLoad(animation, start, length, delay, transition_array.elements);
+
+			char* value = (char*)transition_array.value;
+			tb_json_element transition_element;
+			for (int i = 0; i < transition_array.elements; i++)
+			{
+				value = tb_json_array_step(value, &transition_element);
+
+				if (transition_element.data_type == TB_JSON_ARRAY)
+				{
+					char condition[APPLICATION_STR_LEN];
+					tb_json_string((char*)transition_element.value, "[0", condition, APPLICATION_STR_LEN, NULL);
+					char next[APPLICATION_STR_LEN];
+					tb_json_string((char*)transition_element.value, "[1", next, APPLICATION_STR_LEN, NULL);
+
+					AnimationAddTransition(animation, condition, next);
+				}
+			}
+
+			AnimatorAddAnimation(animator, anim_name, animation);
+		}
+		/* AnimatorDebugPrint(animator); */
+		EcsEntityAddAnimation(entity, animator);
+	}
+
+	tb_json_read(json, &element, "{'movement'");
+	if (element.error == TB_JSON_OK)
+	{
+		float ms = tb_json_float((char*)element.value, "{'speed'", NULL);
+		float jp = tb_json_float((char*)element.value, "{'jumppower'", NULL);
+
+		EcsEntityAddMovement(entity, ms, jp);
+	}
+
+	tb_json_read(json, &element, "{'camera'");
+	if (element.error == TB_JSON_OK)
+	{
+		float smooth = tb_json_float((char*)element.value, "{'smooth'", NULL);
+
+		EcsEntityAddCamera(entity, smooth);
+	}
+
+	free(json);
+
+	return entity;
 }
