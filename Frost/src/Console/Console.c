@@ -22,23 +22,10 @@ void ConsoleInit(Console* console, IgnisFont* font)
 	console->bg_color = (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f };
 
 	console->prompt = "> ";
-
-	console->focus = 1;
-	console->show_cursor = 1;
-}
-
-void ConsoleFocus(Console* console)
-{
-	console->focus = !console->focus;
-
-	if (!console->focus) console->cusor_pos = 0;
 }
 
 void ConsoleOnEvent(Console* console, Event* e)
 {
-	if (!console->focus)
-		return;
-
 	if (e->type == EVENT_KEY_TYPED)
 	{
 		ConsoleCharTyped(console, (char)e->key.keycode);
@@ -67,10 +54,13 @@ void ConsoleOnUpdate(Console* console, float deltatime)
 {
 	console->cursor_tick += deltatime;
 
-	console->show_cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON);
-
 	if (console->cursor_tick > CONSOLE_CURSOR_CYCLE)
 		console->cursor_tick = 0.0f;
+}
+
+void ConsoleResetCursor(Console* console)
+{
+	console->cusor_pos = 0;
 }
 
 void ConsoleExecuteCmd(Console* console)
@@ -81,7 +71,7 @@ void ConsoleExecuteCmd(Console* console)
 	EventHandlerThrowConsoleEvent(EVENT_CONSOLE_EXEC, console->cmd_buffer);
 
 	/* reset cmd-buffer */
-	console->cusor_pos = 0;
+	ConsoleResetCursor(console);
 }
 
 void ConsoleCharTyped(Console* console, char c)
@@ -115,7 +105,7 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 
 	Primitives2DFillRect(x, y, w, -h, console->bg_color);
 
-	if (console->show_cursor)
+	if (console->cursor_tick <= CONSOLE_CURSOR_ON)
 		Primitives2DFillRect(cursor_x, cursor_y, cursor_w, cursor_h, console->font_color);
 
 	Primitives2DFlush();

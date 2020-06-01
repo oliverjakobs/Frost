@@ -1,6 +1,6 @@
 #include "Application/Application.h"
 
-#include "Scene/SceneManager.h"
+#include "Scenes/SceneManager.h"
 
 #include "gui/gui.h"
 
@@ -54,26 +54,23 @@ void OnEvent(Application* app, Event e)
 		CameraSetProjectionOrtho(scene_manager.camera, (float)e.window.width, (float)e.window.height);
 	}
 
-	if (e.type == EVENT_KEY_PRESSED)
+	switch (EventKeyPressed(&e))
 	{
-		switch (e.key.keycode)
-		{
-		case KEY_ESCAPE:
-			ApplicationClose(app);
-			break;
-		case KEY_F5:
-			ApplicationPause(app);
-			break;
-		case KEY_F6:
-			ApplicationToggleVsync(app);
-			break;
-		case KEY_F7:
-			ApplicationToggleDebugMode(app);
-			break;
-		case KEY_F8:
-			ApplicationToggleGui(app);
-			break;
-		}
+	case KEY_ESCAPE:
+		ApplicationClose(app);
+		break;
+	case KEY_F5:
+		ApplicationPause(app);
+		break;
+	case KEY_F6:
+		ApplicationToggleVsync(app);
+		break;
+	case KEY_F7:
+		ApplicationToggleDebugMode(app);
+		break;
+	case KEY_F8:
+		ApplicationToggleGui(app);
+		break;
 	}
 
 	SceneManagerOnEvent(&scene_manager, e);
@@ -98,7 +95,7 @@ void OnRenderDebug(Application* app)
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
 	FontRendererFlush();
 
-	if (scene_manager.console.focus)
+	if (scene_manager.console_focus)
 		ConsoleRender(&scene_manager.console, 0.0f, app->height, app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 

@@ -22,16 +22,14 @@ typedef struct
 	IgnisColorRGBA bg_color;
 
 	char* prompt;
-
-	int show_cursor;
-	int focus;
 } Console;
 
 void ConsoleInit(Console* console, IgnisFont* font);
-void ConsoleFocus(Console* console);
 
 void ConsoleOnEvent(Console* console, Event* e);
 void ConsoleOnUpdate(Console* console, float deltatime);
+
+void ConsoleResetCursor(Console* console);
 
 void ConsoleExecuteCmd(Console* console);
 

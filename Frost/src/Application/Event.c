@@ -2,6 +2,8 @@
 
 int EventMouseButton(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_MOUSE_BUTTON_PRESSED ||
 		e->type == EVENT_MOUSE_BUTTON_RELEASED)
 		return e->mousebutton.buttoncode;
@@ -11,6 +13,8 @@ int EventMouseButton(Event* e)
 
 int EventMouseButtonPressed(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_MOUSE_BUTTON_PRESSED)
 		return e->mousebutton.buttoncode;
 
@@ -19,6 +23,8 @@ int EventMouseButtonPressed(Event* e)
 
 int EventMouseButtonReleased(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_MOUSE_BUTTON_RELEASED)
 		return e->mousebutton.buttoncode;
 
@@ -27,6 +33,8 @@ int EventMouseButtonReleased(Event* e)
 
 int EventKey(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_KEY_PRESSED ||
 		e->type == EVENT_KEY_RELEASED ||
 		e->type == EVENT_KEY_TYPED)
@@ -37,6 +45,8 @@ int EventKey(Event* e)
 
 int EventKeyPressed(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_KEY_PRESSED)
 		return e->key.keycode;
 
@@ -45,6 +55,8 @@ int EventKeyPressed(Event* e)
 
 int EventKeyReleased(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_KEY_RELEASED)
 		return e->key.keycode;
 
@@ -53,6 +65,8 @@ int EventKeyReleased(Event* e)
 
 char EventKeyTyped(Event* e)
 {
+	if (e->handled) return -1;
+
 	if (e->type == EVENT_KEY_TYPED)
 		return (char)e->key.keycode;
 

@@ -3,18 +3,8 @@
 #include <string.h>
 #include <stdio.h>
 
-typedef enum
-{
-	CONSOLE_CMD_NONE = -1,
-	CONSOLE_CMD_CHANGE,
-	CONSOLE_CMD_CREATE,
-	CONSOLE_CMD_LIST,
-	CONSOLE_CMD_REMOVE,
-	CONSOLE_CMD_SAVE
-} ConsoleCmd;
-
 /* Check the rest of a potential cmd’s lexeme */
-static ConsoleCmd _CommandCheckKeyword(char* buffer, const char* r, ConsoleCmd cmd)
+static console_cmd _cmd_check_keyword(char* buffer, const char* r, console_cmd cmd)
 {
 	size_t length = strlen(r);
 
@@ -27,7 +17,7 @@ static ConsoleCmd _CommandCheckKeyword(char* buffer, const char* r, ConsoleCmd c
 	return CONSOLE_CMD_NONE;
 }
 
-static char* _CommandGetArgs(char* buffer, int offset, char** args, int arg_count)
+char* cmd_get_args(char* buffer, int offset, char** args, int arg_count)
 {
 	char* delimiter = " ";
 
@@ -55,7 +45,7 @@ static char* _CommandGetArgs(char* buffer, int offset, char** args, int arg_coun
 	return spec;
 }
 
-static ConsoleCmd _CommandGetType(char* buffer)
+console_cmd cmd_get_type(char* buffer)
 {
 	size_t length = strlen(buffer);
 
@@ -65,153 +55,14 @@ static ConsoleCmd _CommandGetType(char* buffer)
 		if (length > 1)
 			switch (buffer[1])
 			{
-			case 'h': return _CommandCheckKeyword(buffer, "change", CONSOLE_CMD_CHANGE);
-			case 'r': return _CommandCheckKeyword(buffer, "create", CONSOLE_CMD_CREATE);
+			case 'h': return _cmd_check_keyword(buffer, "change", CONSOLE_CMD_CHANGE);
+			case 'r': return _cmd_check_keyword(buffer, "create", CONSOLE_CMD_CREATE);
 			}
 		break;
-	case 'l': return _CommandCheckKeyword(buffer, "list", CONSOLE_CMD_LIST);
-	case 'r': return _CommandCheckKeyword(buffer, "remove", CONSOLE_CMD_REMOVE);
-	case 's': return _CommandCheckKeyword(buffer, "save", CONSOLE_CMD_SAVE);
+	case 'l': return _cmd_check_keyword(buffer, "list", CONSOLE_CMD_LIST);
+	case 'r': return _cmd_check_keyword(buffer, "remove", CONSOLE_CMD_REMOVE);
+	case 's': return _cmd_check_keyword(buffer, "save", CONSOLE_CMD_SAVE);
 	}
 
 	return CONSOLE_CMD_NONE;
-}
-
-void CommandExecute(SceneManager* manager, char* cmd_buffer)
-{
-	ConsoleCmd cmd = _CommandGetType(cmd_buffer);
-
-	switch (cmd)
-	{
-	case CONSOLE_CMD_CHANGE:
-	{
-		char* args[1];
-		char* spec = _CommandGetArgs(cmd_buffer, 6, args, 1);
-
-		if (!spec) break;
-
-		if (strcmp(spec, "scene") == 0)
-		{
-			SceneManagerChangeScene(manager, args[0]);
-			ConsoleOut(&manager->console, "Changed Scene to %s", args[0]);
-		}
-		else if (strcmp(spec, "layer") == 0)
-		{
-			int layer;
-
-			if (strcmp(args[0], "up") == 0)
-				layer = manager->editor.layer + 1;
-			else if (strcmp(args[0], "down") == 0)
-				layer = manager->editor.layer - 1;
-			else
-				layer = atoi(args[0]);
-
-			SceneEditorChangeLayer(&manager->editor, layer, manager->scene->max_layer);
-		}
-		break;
-	}
-	case CONSOLE_CMD_CREATE:
-	{
-		char* args[1];
-		char* spec = _CommandGetArgs(cmd_buffer, 6, args, 1);
-
-		if (!spec) break;
-
-		if (strcmp(spec, "entity") == 0)
-		{
-			if (!manager->editmode)
-			{
-				ConsoleOut(&manager->console, "Editmode needs to be active to create an entity.");
-				break;
-			}
-
-			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, manager->resources);
-			SceneAddEntityPos(manager->scene, entity, manager->editor.layer, pos);
-		}
-		break;
-	}
-	case CONSOLE_CMD_LIST:
-	{
-		char* spec = _CommandGetArgs(cmd_buffer, 4, NULL, 0);
-
-		if (!spec) break;
-
-		ConsoleOut(&manager->console, "[Console] %s", cmd_buffer);
-
-		if (strcmp(spec, "scenes") == 0)
-		{
-			CLIB_STRMAP_ITERATE_FOR(&manager->scenes)
-			{
-				char* name = clib_strmap_iter_get_key(iter);
-
-				ConsoleOut(&manager->console, " - %s %s", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
-			}
-		}
-		else if (strcmp(spec, "entities") == 0)
-		{
-			for (int l = 0; l < manager->scene->max_layer; ++l)
-			{
-				for (int i = 0; i < manager->scene->layers[l].size; ++i)
-				{
-					EcsEntity* e = layer_dynamic_array_get(&manager->scene->layers[l], i);
-
-					ConsoleOut(&manager->console, " - %s (%d)", e->name, l);
-				}
-			}
-		}
-		else if (strcmp(spec, "templates") == 0)
-		{
-			CLIB_STRMAP_ITERATE_FOR(&manager->templates)
-			{
-				char* name = clib_strmap_iter_get_key(iter);
-				char* templ = clib_strmap_iter_get_value(iter);
-
-				ConsoleOut(&manager->console, " - %s: %s", name, templ);
-			}
-		}
-		else if (strcmp(spec, "res") == 0)
-		{
-			ConsoleOut(&manager->console, "Textures:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->textures)
-			{
-				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
-			}
-
-			ConsoleOut(&manager->console, "Fonts:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->fonts)
-			{
-				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
-			}
-		}
-		break;
-	}
-	case CONSOLE_CMD_REMOVE:
-		ConsoleOut(&manager->console, " > remove");
-		break;
-	case CONSOLE_CMD_SAVE:
-	{
-		char* spec = _CommandGetArgs(cmd_buffer, 4, NULL, 0);
-
-		if (!spec) break;
-
-		if (strcmp(spec, "scene") == 0)
-		{
-			char* path = clib_strmap_get(&manager->scenes, manager->scene_name);
-			if (!path)
-			{
-				ConsoleOut(&manager->console, "Couldn't find path for %s", manager->scene_name);
-				break;
-			}
-
-			SceneLoaderSaveScene(manager->scene, path, manager->resources);
-			ConsoleOut(&manager->console, "Saved scene (%s) to %s", manager->scene_name, path);
-		}
-
-		break;
-	}
-	default:
-		ConsoleOut(&manager->console, "Unkown command");
-		break;
-	}
 }
