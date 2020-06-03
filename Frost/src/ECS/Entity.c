@@ -14,6 +14,7 @@ void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template)
 	entity->texture = NULL;
 	entity->animation = NULL;
 	entity->camera = NULL;
+	entity->interaction = NULL;
 }
 
 void EcsEntityDestroy(EcsEntity* entity)
@@ -27,6 +28,7 @@ void EcsEntityDestroy(EcsEntity* entity)
 	EcsEntityRemoveTexture(entity);
 	EcsEntityRemoveAnimation(entity);
 	EcsEntityRemoveCamera(entity);
+	EcsEntityRemoveInteraction(entity);
 }
 
 int EcsEntityAddPosition(EcsEntity* entity, float x, float y)
@@ -131,6 +133,21 @@ int EcsEntityAddCamera(EcsEntity* entity, float smooth)
 	return 0;
 }
 
+int EcsEntityAddInteraction(EcsEntity* entity, float radius)
+{
+	if (entity->interaction) return 0;
+
+	entity->interaction = (EcsInteractionComponent*)malloc(sizeof(EcsInteractionComponent));
+
+	if (entity->interaction)
+	{
+		entity->interaction->radius = radius;
+		return 1;
+	}
+
+	return 0;
+}
+
 void EcsEntityRemovePosition(EcsEntity* entity)
 {
 	if (entity->position)
@@ -185,6 +202,15 @@ void EcsEntityRemoveCamera(EcsEntity* entity)
 	{
 		free(entity->camera);
 		entity->camera = NULL;
+	}
+}
+
+void EcsEntityRemoveInteraction(EcsEntity* entity)
+{
+	if (entity->interaction)
+	{
+		free(entity->interaction);
+		entity->interaction = NULL;
 	}
 }
 

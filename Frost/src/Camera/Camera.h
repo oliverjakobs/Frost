@@ -18,8 +18,10 @@ typedef struct
 	vec2 size;
 } Camera;
 
-int CameraCreate(Camera* camera, vec3 pos, vec2 size);
-int CameraCreateOrtho(Camera* camera, vec3 center, vec2 size);
+void CameraCreate(Camera* camera, float x, float y, float z, float w, float h);
+void CameraCreateOrtho(Camera* camera, float x, float y, float z, float w, float h);
+void CameraCreateVec(Camera* camera, vec3 pos, vec2 size);
+void CameraCreateOrthoVec(Camera* camera, vec3 center, vec2 size);
 
 /*
  * Call after changing size or position

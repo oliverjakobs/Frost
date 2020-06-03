@@ -242,6 +242,7 @@
     <ClInclude Include="src\Scenes\SceneManager.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -379,6 +380,7 @@
     <ClCompile Include="src\Scenes\SceneManager.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -454,6 +456,7 @@
     <None Include="res\templates\register.json">
       <Filter>res\templates\scenes</Filter>
     </None>
+    <None Include="res\templates\entities\door.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">
@@ -486,5 +489,7 @@
     <Image Include="res\textures\trees.png">
       <Filter>res\textures</Filter>
     </Image>
+    <Image Include="res\textures\door.png" />
+    <Image Include="res\textures\machine.png" />
   </ItemGroup>
 </Project>

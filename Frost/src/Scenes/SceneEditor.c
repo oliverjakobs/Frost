@@ -141,7 +141,7 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 	Primitives2DFlush();
 }
 
-void SceneEditorChangeLayer(SceneEditor* editor, int layer, int max_layer)
+void SceneEditorChangeLayer(SceneEditor* editor, int layer, size_t max_layer)
 {
 	if (layer < 0)
 		editor->layer;

@@ -1,6 +1,11 @@
 #include "RenderSystem.h"
 #include "Graphics/Renderer.h"
 
+void EcsSystemRenderPre(const float* mat_view_proj)
+{
+	BatchRenderer2DStart(mat_view_proj);
+}
+
 void EcsSystemRender(EcsEntity* entity)
 {
 	if (!entity->texture) return;
@@ -31,4 +36,9 @@ void EcsSystemRender(EcsEntity* entity)
 		BatchRenderer2DRenderTextureFrame(entity->texture->texture, x, y, entity->texture->width, entity->texture->height, src_x + src_w, src_y + src_h, -src_w, -src_h);
 		break;
 	}
+}
+
+void EcsSystemRenderPost()
+{
+	BatchRenderer2DFlush();
 }

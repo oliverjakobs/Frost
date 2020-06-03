@@ -1,6 +1,25 @@
 #include "Camera.h"
 
-int CameraCreate(Camera* camera, vec3 pos, vec2 size)
+void CameraCreate(Camera* camera, float x, float y, float z, float w, float h)
+{
+	camera->view = mat4_indentity();
+	camera->projection = mat4_indentity();
+	camera->viewProjection = mat4_indentity();
+
+	camera->position.x = x;
+	camera->position.y = y;
+	camera->position.z = z;
+	camera->size.x = w;
+	camera->size.y = h;
+}
+
+void CameraCreateOrtho(Camera* camera, float x, float y, float z, float w, float h)
+{
+	CameraCreate(camera, x, y, z, w, h);
+	CameraSetProjectionOrtho(camera, w, h);
+}
+
+void CameraCreateVec(Camera* camera, vec3 pos, vec2 size)
 {
 	camera->view = mat4_indentity();
 	camera->projection = mat4_indentity();
@@ -8,16 +27,12 @@ int CameraCreate(Camera* camera, vec3 pos, vec2 size)
 
 	camera->position = pos;
 	camera->size = size;
-
-	return 1;
 }
 
-int CameraCreateOrtho(Camera* camera, vec3 center, vec2 size)
+void CameraCreateOrthoVec(Camera* camera, vec3 center, vec2 size)
 {
-	int result = CameraCreate(camera, center, size);
+	CameraCreateVec(camera, center, size);
 	CameraSetProjectionOrtho(camera, size.x, size.y);
-
-	return result;
 }
 
 void CameraUpdateViewOrtho(Camera* camera)

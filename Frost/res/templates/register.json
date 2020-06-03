@@ -5,6 +5,7 @@
 	},
 	"templates": {
 		"box": "res/templates/entities/box.json",
+		"door": "res/templates/entities/door.json",
 		"floor": "res/templates/entities/floor.json",
 		"player": "res/templates/entities/player.json",
 		"tree_1": "res/templates/entities/tree_1.json",

@@ -1,11 +1,6 @@
 #ifndef VEC3_H
 #define VEC3_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 typedef struct
 {
 	float x;
@@ -21,9 +16,5 @@ vec3 vec3_normalize(vec3 v);
 vec3 vec3_cross(vec3 left, vec3 right);
 
 float vec3_dot(vec3 left, vec3 right);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* !VEC3_H */

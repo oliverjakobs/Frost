@@ -26,6 +26,6 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e);
 void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime);
 void SceneEditorOnRender(SceneEditor* editor, Scene* active);
 
-void SceneEditorChangeLayer(SceneEditor* editor, int layer, int max_layer);
+void SceneEditorChangeLayer(SceneEditor* editor, int layer, size_t max_layer);
 
 #endif /* !SCENE_EDITOR_H */

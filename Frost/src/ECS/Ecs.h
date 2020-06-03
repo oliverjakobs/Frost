@@ -1,16 +1,17 @@
 #ifndef ECS_H
 #define ECS_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#include "clib/dynamic_array.h"
 #include "ECS/Entity.h"
+#include "clib/dynamic_array.h"
 
 typedef void (EcsUpdateSystem)(EcsEntity* entity, float deltatime);
-typedef void (EcsRenderSystem)(EcsEntity* entity);
+
+typedef struct
+{
+	void (*render)(EcsEntity* entity);
+	void (*pre)(const float* mat_view_proj);
+	void (*post)();
+} EcsRenderSystem;
 
 typedef struct
 {
@@ -22,13 +23,9 @@ void EcsInit(Ecs* ecs, size_t initial_size);
 void EcsDestroy(Ecs* ecs);
 
 void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateSystem system);
-void EcsAddRenderSystem(Ecs* ecs, EcsRenderSystem system);
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(EcsEntity* entity), void (*pre)(const float* mat_view_proj), void (*post)());
 
-void EcsUpdate(Ecs* ecs, EcsEntity* entity, float deltatime);
-void EcsRender(Ecs* ecs, EcsEntity* entity);
-
-#ifdef __cplusplus
-}
-#endif
+void EcsUpdate(Ecs* ecs, EcsEntity** entities, size_t count, float deltatime);
+void EcsRender(Ecs* ecs, EcsEntity** entities, size_t count, const float* mat_view_proj);
 
 #endif /* !ECS_H */

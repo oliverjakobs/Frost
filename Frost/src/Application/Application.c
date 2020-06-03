@@ -54,8 +54,7 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	glfwMakeContextCurrent(app->window);
 	glfwSetWindowUserPointer(app->window, app);
 
-	EventHandlerInit();
-	EventHandlerSetEventCallback(ApplicationEventCallback);
+	EventHandlerInit(EVENT_HANDLER_QUEUE_SIZE, ApplicationEventCallback);
 
 	/* Set GLFW callbacks */
 	glfwSetErrorCallback(ApplicationGLFWErrorCallback);

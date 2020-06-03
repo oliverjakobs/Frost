@@ -384,6 +384,14 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 		EcsEntityAddCamera(entity, smooth);
 	}
 
+	tb_json_read(json, &element, "{'interaction'");
+	if (element.error == TB_JSON_OK)
+	{
+		float radius = tb_json_float((char*)element.value, "{'radius'", NULL);
+
+		EcsEntityAddInteraction(entity, radius);
+	}
+
 	free(json);
 
 	return entity;

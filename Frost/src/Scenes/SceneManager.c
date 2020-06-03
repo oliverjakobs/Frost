@@ -31,7 +31,7 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 
 	SceneLoaderLoadRegister(manager, reg);
 
-	manager->console_focus = 1;
+	manager->console_focus = 0;
 	ConsoleInit(&manager->console, ResourceManagerGetFont(manager->resources, "gui"));
 
 	return 1;
@@ -219,6 +219,8 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		ConsoleOut(&manager->console, "Unkown command");
 		break;
 	}
+
+	SceneManagerFocusConsole(manager);
 }
 
 void SceneManagerOnEvent(SceneManager* manager, Event e)

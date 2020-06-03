@@ -1,0 +1,19 @@
+{
+  "name": "door",
+  "position": { },
+  "physics": {
+    "body": {
+      "type": 0,
+      "halfDimension": [ 8.0, 32.0 ]
+    },
+    "offset": [ 0.0, 32.0 ]
+  },
+  "texture": {
+    "name": "door",
+	"dimension": [ 16.0, 64.0 ],
+    "frame": 0
+  },
+  "interaction": {
+    "radius": 32.0
+  }
+}

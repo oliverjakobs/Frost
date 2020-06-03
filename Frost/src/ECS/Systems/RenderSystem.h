@@ -1,17 +1,10 @@
 #ifndef ECS_RENDER_SYSTEM_H
 #define ECS_RENDER_SYSTEM_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "../Entity.h"
 
+void EcsSystemRenderPre(const float* mat_view_proj);
 void EcsSystemRender(EcsEntity* entity);
-
-#ifdef __cplusplus
-}
-#endif
+void EcsSystemRenderPost();
 
 #endif /* !ECS_RENDER_SYSTEM_H */

@@ -1,19 +1,16 @@
 #include "Input.h"
 
-
-#define INPUT_NUM_KEYS  (KEY_LAST + 1)
-
 typedef struct
 {
 	int state;
 	int prev;
 } InputKeyState;
 
-static InputKeyState key_states[INPUT_NUM_KEYS];
+static InputKeyState key_states[KEY_LAST + 1];
 
 void InputUpdate(GLFWwindow* context)
 {
-	for (int i = KEY_SPACE; i < INPUT_NUM_KEYS; ++i)
+	for (int i = KEY_SPACE; i <= KEY_LAST; ++i)
 	{
 		key_states[i].prev = key_states[i].state;
 		key_states[i].state = (glfwGetKey(context, i) == GLFW_PRESS);

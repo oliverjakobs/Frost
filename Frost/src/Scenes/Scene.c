@@ -25,7 +25,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer)
 	EcsInit(&scene->ecs, SCENE_INITIAL_ECS_SIZE);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
 
 	scene->smooth_movement = 0.5f;
 
@@ -110,10 +111,7 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 	WorldTick(scene->world, deltaTime);
 
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
-		for (size_t i = 0; i < scene->layers[layer].size; i++)
-		{
-			EcsUpdate(&scene->ecs, layer_dynamic_array_get(&scene->layers[layer], i), deltaTime);
-		}
+		EcsUpdate(&scene->ecs, (EcsEntity**)scene->layers[layer].elements, scene->layers[layer].size, deltaTime);
 
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 }
@@ -122,15 +120,8 @@ void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	BatchRenderer2DStart(CameraGetViewProjectionPtr(scene->camera));
-
 	for (size_t layer = 0; layer < scene->max_layer; layer++)
-		for (size_t i = 0; i < scene->layers[layer].size; i++)
-		{
-			EcsRender(&scene->ecs, layer_dynamic_array_get(&scene->layers[layer], i));
-		}
-
-	BatchRenderer2DFlush();
+		EcsRender(&scene->ecs, (EcsEntity**)scene->layers[layer].elements, scene->layers[layer].size, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)

@@ -5,5 +5,6 @@
 #include "Systems/AnimationSystem.h"
 
 #include "Systems/RenderSystem.h"
+#include "Systems/DebugRenderSystem.h"
 
 #endif /* !SYSTEMS_H */

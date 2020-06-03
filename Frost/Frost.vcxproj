@@ -111,6 +111,7 @@
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
+    <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\Graphics\Background.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
+    <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\Application\Event.c" />
@@ -224,6 +226,7 @@
     <None Include="res\shaders\tile.frag" />
     <None Include="res\shaders\tile.vert" />
     <None Include="res\templates\entities\box.json" />
+    <None Include="res\templates\entities\door.json" />
     <None Include="res\templates\entities\floor.json" />
     <None Include="res\templates\entities\player.json" />
     <None Include="res\templates\entities\tree_1.json" />
@@ -243,7 +246,9 @@
     <Image Include="res\textures\background_2\0.png" />
     <Image Include="res\textures\background_2\1.png" />
     <Image Include="res\textures\box.png" />
+    <Image Include="res\textures\door.png" />
     <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\machine.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\trees.png" />
   </ItemGroup>

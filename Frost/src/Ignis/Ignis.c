@@ -134,6 +134,11 @@ IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha)
 	return color;
 }
 
+void ignisSetClearColor(IgnisColorRGBA color)
+{
+	glClearColor(color.r, color.g, color.b, color.a);
+}
+
 void ignisClearColorBuffer(IgnisColorRGBA color)
 {
 	glClearBufferfv(GL_COLOR, 0, &color.r);

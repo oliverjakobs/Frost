@@ -72,6 +72,11 @@ typedef struct
 	float scene_h;
 } EcsCameraComponent;
 
+typedef struct
+{
+	float radius;
+} EcsInteractionComponent;
+
 #ifdef __cplusplus
 }
 #endif

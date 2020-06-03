@@ -9,12 +9,8 @@ extern "C"
 #include "Event.h"
 #include "Application/Application.h"
 
-#define EVENT_HANDLER_INITIAL_QUEUE_SIZE	4
-
-int EventHandlerInit();
+int EventHandlerInit(size_t queue_size, void (*callback)(Application*, Event));
 void EventHandlerDestroy();
-
-void EventHandlerSetEventCallback(void (*callback)(Application*, const Event));
 
 void EventHandlerThrowWindowEvent(EventType type, int width, int height);
 void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount);

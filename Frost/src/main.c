@@ -13,7 +13,7 @@ void OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
 	ignisEnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	ignisSetClearColor((IgnisColorRGBA){ 0.2f, 0.2f, 0.2f, 1.0f });
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
 	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
@@ -29,7 +29,7 @@ void OnInit(Application* app)
 	ApplicationEnableVsync(app, 0);
 	ApplicationShowGui(app, 1);
 
-	CameraCreateOrtho(&camera, (vec3) { app->width / 2.0f, app->height / 2.0f, 0.0f }, (vec2) { (float)app->width, (float)app->height });
+	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
 	SceneManagerChangeScene(&scene_manager, "scene");
 }
@@ -59,7 +59,7 @@ void OnEvent(Application* app, Event e)
 	case KEY_ESCAPE:
 		ApplicationClose(app);
 		break;
-	case KEY_F5:
+	case KEY_F5: 
 		ApplicationPause(app);
 		break;
 	case KEY_F6:

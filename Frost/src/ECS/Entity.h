@@ -19,6 +19,7 @@ typedef struct ecs_entity
 	EcsTextureComponent* texture; 
 	EcsAnimationComponent* animation;
 	EcsCameraComponent* camera;
+	EcsInteractionComponent* interaction;
 } EcsEntity;
 
 void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template);
@@ -30,6 +31,7 @@ int EcsEntityAddMovement(EcsEntity* entity, float ms, float jp);
 int EcsEntityAddTexture(EcsEntity* entity, IgnisTexture2D* texture, float width, float height, size_t frame);
 int EcsEntityAddAnimation(EcsEntity* entity, Animator* animator);
 int EcsEntityAddCamera(EcsEntity* entity, float smooth);
+int EcsEntityAddInteraction(EcsEntity* entity, float radius);
 
 void EcsEntityRemovePosition(EcsEntity* entity);
 void EcsEntityRemovePhysics(EcsEntity* entity);
@@ -37,6 +39,7 @@ void EcsEntityRemoveMovement(EcsEntity* entity);
 void EcsEntityRemoveTexture(EcsEntity* entity);
 void EcsEntityRemoveAnimation(EcsEntity* entity);
 void EcsEntityRemoveCamera(EcsEntity* entity);
+void EcsEntityRemoveInteraction(EcsEntity* entity);
 
 /* Helper Functions */
 void EcsEntitySetPosition(EcsEntity* entity, vec2 pos);
