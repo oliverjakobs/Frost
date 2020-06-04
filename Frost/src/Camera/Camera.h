@@ -1,11 +1,6 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "math/math.h"
 
 typedef struct
@@ -36,9 +31,5 @@ const vec2 CameraGetMousePos(Camera* camera, vec2 mouse);
 const float* CameraGetViewPtr(Camera* camera);
 const float* CameraGetProjectionPtr(Camera* camera);
 const float* CameraGetViewProjectionPtr(Camera* camera);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* !CAMERA_H */

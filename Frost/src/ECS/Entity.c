@@ -8,6 +8,8 @@ void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template)
 	entity->template = (char*)malloc(strlen(template));
 	strcpy(entity->template, template);
 
+	entity->z_index = 0;
+
 	entity->position = NULL;
 	entity->physics = NULL;
 	entity->movement = NULL;
@@ -241,4 +243,14 @@ vec2 EcsEntityGetPosition(EcsEntity* entity)
 	}
 
 	return (vec2){ 0.0f, 0.0f };
+}
+
+vec2 EcsEntityGetCenter(EcsEntity* entity)
+{
+	if (entity->physics && entity->physics->body)
+	{
+		return entity->physics->body->position;
+	}
+
+	return EcsEntityGetPosition(entity);
 }

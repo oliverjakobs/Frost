@@ -15,7 +15,6 @@ void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, flo
 void SceneEditorReset(SceneEditor* editor)
 {
 	editor->showgrid = 1;
-	editor->layer = 0;
 	editor->clicked = 0;
 	editor->offset = (vec2){ 0.0f, 0.0f };
 	editor->hover = NULL;
@@ -23,19 +22,6 @@ void SceneEditorReset(SceneEditor* editor)
 
 void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 {
-	if (e.type == EVENT_KEY_PRESSED)
-	{
-		switch (e.key.keycode)
-		{
-		case KEY_UP:
-			SceneEditorChangeLayer(editor, editor->layer + 1, active->max_layer);
-			break;
-		case KEY_DOWN:
-			SceneEditorChangeLayer(editor, editor->layer - 1, active->max_layer);
-			break;
-		}
-	}
-
 	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
 	{
 		if (editor->hover)
@@ -74,7 +60,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	if (editor->clicked)
 		EcsEntitySetPosition(editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
-		editor->hover = SceneGetEntityAt(active, mouse, editor->layer);
+		editor->hover = SceneGetEntityAt(active, mouse);
 }
 
 void SceneEditorOnRender(SceneEditor* editor, Scene* active)
@@ -99,26 +85,21 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 			Primitives2DRenderLine(-padding, y, width + padding, y, color);
 	}
 
-	clib_dynamic_array* layer = &active->layers[editor->layer];
-
-	if (layer)
+	for (size_t i = 0; i < active->entities.size; ++i)
 	{
-		for (size_t i = 0; i < layer->size; i++)
+		IgnisColorRGBA color = IGNIS_WHITE;
+		ignisBlendColorRGBA(&color, 0.4f);
+
+		EcsTextureComponent* tex = entities_dynamic_array_get(&active->entities, i)->texture;
+
+		if (tex)
 		{
-			IgnisColorRGBA color = IGNIS_WHITE;
-			ignisBlendColorRGBA(&color, 0.4f);
+			vec2 position = EcsEntityGetPosition(entities_dynamic_array_get(&active->entities, i));
 
-			EcsTextureComponent* tex = layer_dynamic_array_get(layer, i)->texture;
+			vec2 min = vec2_sub(position, (vec2) { tex->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { tex->width, tex->height });
 
-			if (tex)
-			{
-				vec2 position = EcsEntityGetPosition(layer_dynamic_array_get(layer, i));
-
-				vec2 min = vec2_sub(position, (vec2) { tex->width / 2.0f, 0.0f });
-				vec2 max = vec2_add(min, (vec2) { tex->width, tex->height });
-
-				Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
-			}
+			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 		}
 	}
 
@@ -139,14 +120,4 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 	}
 
 	Primitives2DFlush();
-}
-
-void SceneEditorChangeLayer(SceneEditor* editor, int layer, size_t max_layer)
-{
-	if (layer < 0)
-		editor->layer;
-	else if (layer >= max_layer)
-		editor->layer = max_layer - 1;
-	else
-		editor->layer = layer;
 }

@@ -457,6 +457,7 @@
       <Filter>res\templates\scenes</Filter>
     </None>
     <None Include="res\templates\entities\door.json" />
+    <None Include="res\templates\entities\machine.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

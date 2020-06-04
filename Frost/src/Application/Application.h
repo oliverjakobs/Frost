@@ -1,11 +1,6 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "Timer.h"
 #include "Event.h"
 
@@ -78,9 +73,5 @@ void ApplicationToggleGui(Application* app);
 
 void ApplicationSetWindowTitle(Application* app, const char* title);
 void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* !APPLICATION_H */

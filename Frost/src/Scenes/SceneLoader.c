@@ -77,7 +77,7 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 	float width = tb_json_float((char*)json, "{'size'[0", NULL);
 	float height = tb_json_float((char*)json, "{'size'[1", NULL);
 
-	if (!SceneLoad(scene, camera, width, height, SCENE_MANAGER_LAYER_COUNT))
+	if (!SceneLoad(scene, camera, width, height))
 	{
 		DEBUG_ERROR("[Scenes] Failed to load scene: %s", json);
 		free(json);
@@ -131,9 +131,9 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 			pos.x = tb_json_float((char*)entity.value, "[1[0", NULL);
 			pos.y = tb_json_float((char*)entity.value, "[1[1", NULL);
 
-			int layer = tb_json_int((char*)entity.value, "[2", NULL);
+			int z_index = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, templates, resources), layer, pos);
+			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, templates, resources), z_index, pos);
 		}
 	}
 
@@ -188,34 +188,31 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (int l = 0; l < scene->max_layer; ++l)
+	for (int i = 0; i < scene->entities.size; ++i)
 	{
-		for (int i = 0; i < scene->layers[l].size; ++i)
-		{
-			EcsEntity* e = layer_dynamic_array_get(&scene->layers[l], i);
+		EcsEntity* e = entities_dynamic_array_get(&scene->entities, i);
 
-			tb_jwrite_array_array(&jwc);
+		tb_jwrite_array_array(&jwc);
 
-			tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
+		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
-			/* template-src */
-			tb_jwrite_array_string(&jwc, e->template);
+		/* template-src */
+		tb_jwrite_array_string(&jwc, e->template);
 
-			/* pos */
-			vec2 pos = EcsEntityGetPosition(e);
+		/* pos */
+		vec2 pos = EcsEntityGetPosition(e);
 
-			tb_jwrite_array_array(&jwc);
-			tb_jwrite_array_float(&jwc, pos.x);
-			tb_jwrite_array_float(&jwc, pos.y);
-			tb_jwrite_end(&jwc);
+		tb_jwrite_array_array(&jwc);
+		tb_jwrite_array_float(&jwc, pos.x);
+		tb_jwrite_array_float(&jwc, pos.y);
+		tb_jwrite_end(&jwc);
 
-			/* layer */
-			tb_jwrite_array_int(&jwc, l);
+		/* z_index */
+		tb_jwrite_array_int(&jwc, e->z_index);
 
-			tb_jwrite_end(&jwc);
+		tb_jwrite_end(&jwc);
 
-			tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-		}
+		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	}
 
 	tb_jwrite_end(&jwc);

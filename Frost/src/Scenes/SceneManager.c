@@ -100,25 +100,12 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 			SceneManagerChangeScene(manager, args[0]);
 			ConsoleOut(&manager->console, "Changed Scene to %s", args[0]);
 		}
-		else if (strcmp(spec, "layer") == 0)
-		{
-			int layer;
-
-			if (strcmp(args[0], "up") == 0)
-				layer = manager->editor.layer + 1;
-			else if (strcmp(args[0], "down") == 0)
-				layer = manager->editor.layer - 1;
-			else
-				layer = atoi(args[0]);
-
-			SceneEditorChangeLayer(&manager->editor, layer, manager->scene->max_layer);
-		}
 		break;
 	}
 	case CONSOLE_CMD_CREATE:
 	{
-		char* args[1];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 1);
+		char* args[2];
+		char* spec = cmd_get_args(cmd_buffer, 6, args, 2);
 
 		if (!spec) break;
 
@@ -132,7 +119,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
 			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, manager->resources);
-			SceneAddEntityPos(manager->scene, entity, manager->editor.layer, pos);
+			SceneAddEntityPos(manager->scene, entity, atoi(args[1]), pos);
 		}
 		break;
 	}
@@ -155,14 +142,11 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			for (int l = 0; l < manager->scene->max_layer; ++l)
+			for (int i = 0; i < manager->scene->entities.size; ++i)
 			{
-				for (int i = 0; i < manager->scene->layers[l].size; ++i)
-				{
-					EcsEntity* e = layer_dynamic_array_get(&manager->scene->layers[l], i);
+				EcsEntity* e = entities_dynamic_array_get(&manager->scene->entities, i);
 
-					ConsoleOut(&manager->console, " - %s (%d)", e->name, l);
-				}
+				ConsoleOut(&manager->console, " - %s (%d)", e->name, e->z_index);
 			}
 		}
 		else if (strcmp(spec, "templates") == 0)

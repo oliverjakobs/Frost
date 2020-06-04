@@ -71,7 +71,7 @@ static clib_hashmap_entry* clib_hashmap_entry_get_populated(const clib_hashmap* 
  * Find the hashmap entry with the specified key, or an empty slot.
  * Returns NULL if the entire table has been searched without finding a match.
  */
-static clib_hashmap_entry* clib_hashmap_entry_find(const clib_hashmap* map, const void* key, bool find_empty)
+clib_hashmap_entry* clib_hashmap_entry_find(const clib_hashmap* map, const void* key, int find_empty)
 {
     size_t probe_len = CLIB_HASHMAP_PROBE_LEN(map);
     size_t index = clib_hashmap_calc_index(map, key);
@@ -168,7 +168,7 @@ static int clib_hashmap_rehash(clib_hashmap* map, size_t new_cap)
     {
         if (!entry->value) continue; /* Only copy entries with value */
 
-        clib_hashmap_entry* new_entry = clib_hashmap_entry_find(map, entry->key, true);
+        clib_hashmap_entry* new_entry = clib_hashmap_entry_find(map, entry->key, 1);
         if (!new_entry)
         {
             /*
@@ -251,7 +251,7 @@ void* clib_hashmap_insert(clib_hashmap* map, const void* key, void* value)
     if (map->capacity <= clib_hashmap_table_min_size_calc(map->size))
         clib_hashmap_rehash(map, map->capacity << 1);
 
-    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, true);
+    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, 1);
     if (!entry)
     {
         /*
@@ -262,7 +262,7 @@ void* clib_hashmap_insert(clib_hashmap* map, const void* key, void* value)
         if (clib_hashmap_rehash(map, map->capacity << 1) < 0)
             return NULL;
 
-        entry = clib_hashmap_entry_find(map, key, true);
+        entry = clib_hashmap_entry_find(map, key, 1);
         if (!entry)
             return NULL;
     }
@@ -296,7 +296,7 @@ void* clib_hashmap_get(const clib_hashmap* map, const void* key)
     CLIB_ASSERT(map != NULL);
     CLIB_ASSERT(key != NULL);
 
-    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, false);
+    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, 0);
 
     if (!entry) return NULL;
 
@@ -308,7 +308,7 @@ void* clib_hashmap_remove(clib_hashmap* map, const void *key)
     CLIB_ASSERT(map != NULL);
     CLIB_ASSERT(key != NULL);
 
-    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, false);
+    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, 0);
     if (!entry)
         return NULL;
 

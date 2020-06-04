@@ -1,11 +1,6 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 // From glfw3.h
 #define KEY_UNKNOWN				-1
 
@@ -173,10 +168,5 @@ float InputMouseX();
 float InputMouseY();
 
 vec2 InputMousePositionVec2();
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif /* !INPUT_H */

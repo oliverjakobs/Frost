@@ -1,0 +1,8 @@
+{
+  "name": "machine",
+  "position": { },
+  "texture": {
+    "name": "machine",
+	"dimension": [ 180.0, 120.0 ]
+  }
+}

@@ -1,11 +1,6 @@
 #ifndef EVENT_H
 #define EVENT_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 typedef enum
 {
 	EVENT_UNKOWN = 0,
@@ -78,9 +73,5 @@ int EventKeyPressed(Event* e);
 int EventKeyReleased(Event* e);
 
 char EventKeyTyped(Event* e);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // !EVENT_H

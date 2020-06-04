@@ -11,7 +11,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
@@ -132,6 +131,12 @@ void* clib_hashmap_insert(clib_hashmap* map, const void* key, void* value);
  * Return the value pointer, or NULL if no entry exists.
  */
 void* clib_hashmap_get(const clib_hashmap* map, const void* key);
+
+/*
+ * Find the hashmap entry with the specified key, or an empty slot.
+ * Returns NULL if the entire table has been searched without finding a match.
+ */
+clib_hashmap_entry* clib_hashmap_entry_find(const clib_hashmap* map, const void* key, int find_empty);
 
 /*
  * Remove an entry with the specified key from the map.

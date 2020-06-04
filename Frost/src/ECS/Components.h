@@ -1,11 +1,6 @@
 #ifndef ECS_COMPONENTS_H
 #define ECS_COMPONENTS_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "Animation/Animator.h"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
@@ -76,9 +71,5 @@ typedef struct
 {
 	float radius;
 } EcsInteractionComponent;
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* !ECS_COMPONENTS_H */

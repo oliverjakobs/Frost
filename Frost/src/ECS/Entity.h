@@ -1,17 +1,14 @@
 #ifndef ECS_ENTITY_H
 #define ECS_ENTITY_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #include "Components.h"
 
 typedef struct ecs_entity
 {
 	char* name;
 	char* template;
+
+	int z_index;
 
 	EcsPositionComponent* position;
 	EcsPhysicsComponent* physics;
@@ -44,9 +41,6 @@ void EcsEntityRemoveInteraction(EcsEntity* entity);
 /* Helper Functions */
 void EcsEntitySetPosition(EcsEntity* entity, vec2 pos);
 vec2 EcsEntityGetPosition(EcsEntity* entity);
-
-#ifdef __cplusplus
-}
-#endif
+vec2 EcsEntityGetCenter(EcsEntity* entity);
 
 #endif /* !ECS_ENTITY_H */

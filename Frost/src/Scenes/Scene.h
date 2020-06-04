@@ -13,7 +13,7 @@
 #define SCENE_INITIAL_LAYER_SIZE	8
 #define SCENE_INITIAL_ECS_SIZE		8
 
-CLIB_DYNAMIC_ARRAY_DECLARE_FUNCS(layer, EcsEntity)
+CLIB_DYNAMIC_ARRAY_DECLARE_FUNCS(entities, EcsEntity)
 
 typedef struct
 {
@@ -26,20 +26,19 @@ typedef struct
 
 	Ecs ecs;
 
-	clib_dynamic_array* layers;
-	size_t max_layer;
+	clib_dynamic_array entities;
 
 	Background background;
 
 	float smooth_movement;
 } Scene;
 
-int SceneLoad(Scene* scene, Camera* camera, float w, float h, size_t max_layer);
+int SceneLoad(Scene* scene, Camera* camera, float w, float h);
 void SceneQuit(Scene* scene);
 
-void SceneAddEntity(Scene* scene, EcsEntity* entity, size_t layer);
-void SceneAddEntityPos(Scene* scene, EcsEntity* entity, size_t layer, vec2 position);
-void SceneRemoveEntity(Scene* scene, const char* name, size_t layer);
+void SceneAddEntity(Scene* scene, EcsEntity* entit, int z_indexy);
+void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 position);
+void SceneRemoveEntity(Scene* scene, const char* name);
 void SceneClearEntities(Scene* scene);
 
 void SceneOnEvent(Scene* scene, Event e);
@@ -47,7 +46,7 @@ void SceneOnUpdate(Scene* scene, float deltaTime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
 
-EcsEntity* SceneGetEntity(Scene* scene, const char* name, size_t layer);
-EcsEntity* SceneGetEntityAt(Scene* scene, vec2 position, size_t layer);
+EcsEntity* SceneGetEntity(Scene* scene, const char* name);
+EcsEntity* SceneGetEntityAt(Scene* scene, vec2 position);
 
 #endif /* !SCENE_H */

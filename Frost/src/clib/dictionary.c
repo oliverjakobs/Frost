@@ -1,5 +1,7 @@
 #include "dictionary.h"
 
+#include "clib.h"
+
 static void* _clib_dict_key_alloc(const char* src)
 {
 	size_t size = strlen(src);
@@ -43,6 +45,18 @@ void* clib_dict_insert(clib_dict* dict, const char* key, void* value)
 void* clib_dict_get(const clib_dict* dict, const char* key)
 {
 	return clib_hashmap_get(dict, (const void*)key);
+}
+
+const char* clib_dict_get_key_ptr(const clib_dict* dict, const char* key)
+{
+	CLIB_ASSERT(dict != NULL);
+	CLIB_ASSERT(key != NULL);
+
+	clib_hashmap_entry* entry = clib_hashmap_entry_find(dict, key, 0);
+
+	if (!entry) return NULL;
+
+	return (const char*)entry->key;
 }
 
 void* clib_dict_remove(clib_dict* dict, const char* key)

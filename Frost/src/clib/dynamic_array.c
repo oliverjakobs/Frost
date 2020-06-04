@@ -5,7 +5,7 @@
 
 int clib_dynamic_array_init(clib_dynamic_array* v, size_t initial_capacity)
 {
-    v->capacity = initial_capacity;
+    v->capacity = (initial_capacity <= 0) ? 1 : initial_capacity;
     v->size = 0;
     v->elements = malloc(sizeof(void*) * v->capacity);
 

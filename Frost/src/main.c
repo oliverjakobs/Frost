@@ -31,7 +31,7 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
-	SceneManagerChangeScene(&scene_manager, "scene");
+	SceneManagerChangeScene(&scene_manager, "scene2");
 }
 
 void OnDestroy(Application* app)
@@ -119,9 +119,8 @@ void OnRenderGui(Application* app)
 	if (gui_begin(app->width - 470.0f, 0.0f, 250.0f, 128.0f, 8.0f, GUI_BG_FILL))
 	{
 		gui_text("Scene: %s", scene_manager.scene_name);
-		gui_text("Layer: %d", scene_manager.editor.layer);
 		gui_separator();
-		EcsEntity* player = SceneGetEntity(scene_manager.scene, "player", 1);
+		EcsEntity* player = SceneGetEntity(scene_manager.scene, "player");
 		if (player)
 		{
 			gui_text("Name: %s", player->name);

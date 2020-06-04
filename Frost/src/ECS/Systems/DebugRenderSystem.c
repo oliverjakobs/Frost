@@ -8,7 +8,7 @@ void EcsSystemDebugRenderPre(const float* mat_view_proj)
 
 void EcsSystemDebugRender(EcsEntity* entity)
 {
-	vec2 pos = EcsEntityGetPosition(entity);
+	vec2 pos = EcsEntityGetCenter(entity);
 
 	if (entity->interaction)
 	{

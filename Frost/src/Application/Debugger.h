@@ -1,11 +1,6 @@
 #ifndef DEBUGGER_H
 #define DEBUGGER_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
 #if _DEBUG
 
 #define DEBUG_ENABLE_LOGGING
@@ -50,10 +45,6 @@ extern "C"
 
 #define DEBUG_ASSERT(x, ...)
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif // !DEBUGGER_H

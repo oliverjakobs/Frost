@@ -153,7 +153,7 @@ void ApplicationRun(Application* app)
 		if (!app->paused)
 			app->on_update(app, (float)app->timer.deltatime);
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT);
 
 		app->on_render(app);
 

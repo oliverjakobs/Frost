@@ -1,56 +1,63 @@
 #include "Ecs.h"
 
-CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(ecs_update, EcsUpdateSystem)
-CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(ecs_render, EcsRenderSystem)
-
-void EcsInit(Ecs* ecs, size_t initial_size)
+void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems)
 {
-	clib_dynamic_array_init(&ecs->systems_update, initial_size);
-	clib_dynamic_array_init(&ecs->systems_render, initial_size);
+	ecs->systems_update = (EcsUpdateSystem*)malloc(update_systems * sizeof(EcsUpdateSystem));
+	ecs->systems_update_count = update_systems;
+	ecs->systems_update_used = 0;
+
+	ecs->systems_render = (EcsRenderSystem*)malloc(render_systems * sizeof(EcsRenderSystem));
+	ecs->systems_render_count = render_systems;
+	ecs->systems_render_used = 0;
 }
 
 void EcsDestroy(Ecs* ecs)
 {
-	clib_dynamic_array_free(&ecs->systems_update);
+	free(ecs->systems_update);
+	ecs->systems_update_count = 0;
+	ecs->systems_update_used = 0;
 
-	for (size_t i = 0; i < ecs->systems_render.size; i++)
-		free(ecs_render_dynamic_array_get(&ecs->systems_render, i));
-	clib_dynamic_array_free(&ecs->systems_render);
+	free(ecs->systems_render);
+	ecs->systems_render_count = 0;
+	ecs->systems_render_used = 0;
 }
 
-void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateSystem system)
+void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltatime))
 {
-	ecs_update_dynamic_array_push(&ecs->systems_update, system);
+	if (update && ecs->systems_update_used < ecs->systems_update_count)
+	{
+		ecs->systems_update[ecs->systems_update_used].update = update;
+
+		ecs->systems_update_used++;
+	}
 }
 
 void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity* entity), void(*pre)(const float* mat_view_proj), void(*post)())
 {
-	EcsRenderSystem* system = (EcsRenderSystem*)malloc(sizeof(EcsRenderSystem));
-
-	if (system && render)
+	if (render && ecs->systems_render_used < ecs->systems_render_count)
 	{
-		system->render = render;
-		system->pre = pre;
-		system->post = post;
+		ecs->systems_render[ecs->systems_render_used].render = render;
+		ecs->systems_render[ecs->systems_render_used].pre = pre;
+		ecs->systems_render[ecs->systems_render_used].post = post;
 
-		ecs_render_dynamic_array_push(&ecs->systems_render, system);
+		ecs->systems_render_used++;
 	}
 }
 
 void EcsUpdate(Ecs* ecs, EcsEntity** entities, size_t count, float deltatime)
 {
-	for (size_t i = 0; i < ecs->systems_update.size; ++i)
+	for (size_t i = 0; i < ecs->systems_update_used; ++i)
 	{
 		for (size_t j = 0; j < count; ++j)
-			ecs_update_dynamic_array_get(&ecs->systems_update, i)(entities[j], deltatime);
+			ecs->systems_update[i].update(entities[j], deltatime);
 	}
 }
 
 void EcsRender(Ecs* ecs, EcsEntity** entities, size_t count, const float* mat_view_proj)
 {
-	for (size_t i = 0; i < ecs->systems_render.size; ++i)
+	for (size_t i = 0; i < ecs->systems_render_used; ++i)
 	{
-		EcsRenderSystem* system = ecs_render_dynamic_array_get(&ecs->systems_render, i);
+		EcsRenderSystem* system = &ecs->systems_render[i];
 
 		if (system->pre)
 			system->pre(mat_view_proj);

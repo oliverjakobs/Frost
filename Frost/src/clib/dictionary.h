@@ -43,6 +43,7 @@ void clib_dict_destroy(clib_dict* dict);
 
 void* clib_dict_insert(clib_dict* dict, const char* key, void* value);
 void* clib_dict_get(const clib_dict* dict, const char* key);
+const char* clib_dict_get_key_ptr(const clib_dict * dict, const char* key);
 void* clib_dict_remove(clib_dict* dict, const char* key);
 
 void clib_dict_clear(clib_dict* dict);
