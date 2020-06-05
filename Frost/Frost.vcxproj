@@ -112,6 +112,7 @@
     <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
+    <ClInclude Include="src\ECS\Systems\InteractionSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
     <ClInclude Include="src\Graphics\Background.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
+    <ClCompile Include="src\ECS\Systems\InteractionSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
     <ClCompile Include="src\Application\Event.c" />

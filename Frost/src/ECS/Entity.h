@@ -13,7 +13,7 @@ typedef struct ecs_entity
 	EcsPositionComponent* position;
 	EcsPhysicsComponent* physics;
 	EcsMovementComponent* movement;
-	EcsTextureComponent* texture; 
+	EcsTextureComponent* texture;
 	EcsAnimationComponent* animation;
 	EcsCameraComponent* camera;
 	EcsInteractionComponent* interaction;

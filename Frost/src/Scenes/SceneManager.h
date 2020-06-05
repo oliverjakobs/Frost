@@ -20,6 +20,8 @@ typedef struct
 	clib_strmap scenes;
 	clib_strmap templates;
 
+	Ecs ecs;
+
 	Scene* scene;
 	char scene_name[APPLICATION_STR_LEN];
 

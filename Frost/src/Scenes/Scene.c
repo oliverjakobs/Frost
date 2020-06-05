@@ -1,7 +1,5 @@
 #include "Scene.h"
 
-#include "ECS/Systems.h"
-
 CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(entities, EcsEntity)
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h)
@@ -15,12 +13,6 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	scene->world = (World*)malloc(sizeof(World));
 	WorldLoad(scene->world, (vec2){ 0.0f, -980.0f });
 
-	EcsInit(&scene->ecs, 2, 2);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
-
 	scene->smooth_movement = 0.5f;
 
 	return 1;
@@ -32,8 +24,6 @@ void SceneQuit(Scene* scene)
 
 	SceneClearEntities(scene);
 	clib_dynamic_array_free(&scene->entities);
-
-	EcsDestroy(&scene->ecs);
 
 	WorldDestroy(scene->world);
 	free(scene->world);
@@ -106,42 +96,25 @@ void SceneOnEvent(Scene* scene, Event e)
 {
 }
 
-void SceneOnUpdate(Scene* scene, float deltaTime)
+void SceneOnUpdate(Scene* scene, Ecs* ecs, float deltaTime)
 {
 	WorldTick(scene->world, deltaTime);
 
-	EcsUpdate(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, deltaTime);
-
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
+
+	EcsUpdate(ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, deltaTime);
 }
 
-void SceneOnRender(Scene* scene)
+void SceneOnRender(Scene* scene, Ecs* ecs)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	Primitives2DStart(CameraGetViewProjectionPtr(scene->camera));
 
-	for (size_t i = 0; i < scene->entities.size; i++)
-	{
-		vec2 pos = EcsEntityGetPosition(entities_dynamic_array_get(&scene->entities, i));
-		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
-	}
-
-	for (size_t i = 0; i < scene->world->bodies.size; i++)
-	{
-		Body* body = WorldGetBody(scene->world, i);
-
-		vec2 pos = vec2_sub(body->position, body->halfSize);
-		vec2 dim = vec2_mult(body->halfSize, 2.0f);
-		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == BODY_TYPE_DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
-	}
-
-	Primitives2DFlush();
 }
 
 EcsEntity* SceneGetEntity(Scene* scene, const char* name)
