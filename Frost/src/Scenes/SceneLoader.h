@@ -8,7 +8,7 @@ int SceneLoaderLoadRegister(SceneManager* manager, const char* path);
 int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_strmap* templates);
 int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resources);
 
-EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, ResourceManager* resources);
+EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, EcsComponentList* components, ResourceManager* resources);
 
 #endif /* !SCENE_LOADER_H */
 

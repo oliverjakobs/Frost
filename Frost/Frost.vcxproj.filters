@@ -244,6 +244,7 @@
     </ClInclude>
     <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\ECS\Systems\InteractionSystem.h" />
+    <ClInclude Include="src\ECS\ComponentList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -383,6 +384,7 @@
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\ECS\Systems\InteractionSystem.c" />
+    <ClCompile Include="src\ECS\ComponentList.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

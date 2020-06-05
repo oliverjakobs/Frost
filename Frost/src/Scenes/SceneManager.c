@@ -128,7 +128,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 			}
 
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, manager->resources);
+			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, &manager->scene->components, manager->resources);
 			SceneAddEntityPos(manager->scene, entity, atoi(args[1]), pos);
 		}
 		break;

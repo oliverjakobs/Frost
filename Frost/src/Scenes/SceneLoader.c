@@ -133,7 +133,7 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 
 			int z_index = tb_json_int((char*)entity.value, "[2", NULL);
 
-			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, templates, resources), z_index, pos);
+			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, templates, &scene->components, resources), z_index, pos);
 		}
 	}
 
@@ -240,7 +240,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	return 1;
 }
 
-EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, ResourceManager* resources)
+EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, EcsComponentList* components, ResourceManager* resources)
 {
 	char* path = clib_strmap_get(templates, templ);
 
@@ -271,7 +271,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 		float x = tb_json_float((char*)element.value, "[0", NULL);
 		float y = tb_json_float((char*)element.value, "[1", NULL);
 
-		EcsEntityAddPosition(entity, x, y);
+		entity->position = EcsComponentListGetNextPosition(components, x, y);
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -296,7 +296,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 			Body* body = (Body*)malloc(sizeof(Body));
 			BodyLoad(body, x, y, w, h, type);
 
-			EcsEntityAddPhysics(entity, body, offset_x, offset_y);
+			entity->physics = EcsComponentListGetNextPhysics(components, body, offset_x, offset_y);
 		}
 	}
 
@@ -314,7 +314,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 		IgnisTexture2D* texture = ResourceManagerGetTexture2D(resources, tex_name);
 
 		if (texture)
-			EcsEntityAddTexture(entity, texture, width, height, frame);
+			entity->texture = EcsComponentListGetNextTexture(components, texture, width, height, frame);
 	}
 
 	tb_json_read(json, &element, "{'animation'");
@@ -361,7 +361,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 			AnimatorAddAnimation(animator, anim_name, animation);
 		}
 		/* AnimatorDebugPrint(animator); */
-		EcsEntityAddAnimation(entity, animator);
+		entity->animation = EcsComponentListGetNextAnimation(components, animator);
 	}
 
 	tb_json_read(json, &element, "{'movement'");
@@ -370,7 +370,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 		float ms = tb_json_float((char*)element.value, "{'speed'", NULL);
 		float jp = tb_json_float((char*)element.value, "{'jumppower'", NULL);
 
-		EcsEntityAddMovement(entity, ms, jp);
+		entity->movement = EcsComponentListGetNextMovement(components, ms, jp);
 	}
 
 	tb_json_read(json, &element, "{'camera'");
@@ -378,7 +378,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 	{
 		float smooth = tb_json_float((char*)element.value, "{'smooth'", NULL);
 
-		EcsEntityAddCamera(entity, smooth);
+		entity->camera = EcsComponentListGetNextCamera(components, smooth);
 	}
 
 	tb_json_read(json, &element, "{'interaction'");
@@ -386,7 +386,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* templ, clib_strmap* templates, Re
 	{
 		float radius = tb_json_float((char*)element.value, "{'radius'", NULL);
 
-		EcsEntityAddInteraction(entity, radius);
+		entity->interaction = EcsComponentListGetNextInteraction(components, radius);
 	}
 
 	free(json);

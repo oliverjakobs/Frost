@@ -24,6 +24,7 @@ typedef struct
 
 	World* world;
 
+	EcsComponentList components;
 	clib_dynamic_array entities;
 
 	Background background;

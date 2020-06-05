@@ -15,6 +15,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 
 	scene->smooth_movement = 0.5f;
 
+	EcsComponentListInit(&scene->components, 16);
+
 	return 1;
 }
 
@@ -27,6 +29,8 @@ void SceneQuit(Scene* scene)
 
 	WorldDestroy(scene->world);
 	free(scene->world);
+
+	EcsComponentListDelete(&scene->components);
 }
 
 int _SceneEntityCmp(const EcsEntity** a, const EcsEntity** b)
