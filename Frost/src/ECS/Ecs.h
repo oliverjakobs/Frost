@@ -17,15 +17,8 @@ typedef struct
 
 typedef struct
 {
-	/* update systems */
-	EcsUpdateSystem* systems_update;
-	size_t systems_update_count;
-	size_t systems_update_used;
-
-	/* render systems */
-	EcsRenderSystem* systems_render;
-	size_t systems_render_count;
-	size_t systems_render_used;
+	clib_array systems_update;
+	clib_array systems_render;
 } Ecs;
 
 void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems);

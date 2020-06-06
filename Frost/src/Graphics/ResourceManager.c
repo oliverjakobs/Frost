@@ -7,9 +7,6 @@
 #include "Application/Debugger.h"
 #include "Application/defines.h"
 
-CLIB_DICT_DEFINE_FUNCS(tex, IgnisTexture2D)
-CLIB_DICT_DEFINE_FUNCS(font, IgnisFont)
-
 int ResourceManagerInit(ResourceManager* resources, const char* path)
 {
 	clib_dict_init(&resources->textures, 0);
@@ -69,32 +66,32 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 	return 1;
 }
 
-void ResourceManagerDestroy(ResourceManager* manager)
+void ResourceManagerDestroy(ResourceManager* resources)
 {
-	for (clib_dict_iter* iter = clib_dict_iterator(&manager->textures); iter; iter = clib_dict_iter_next(&manager->textures, iter))
+	CLIB_DICT_ITERATE_FOR(&resources->textures, iter)
 	{
-		IgnisTexture2D* tex = tex_dict_iter_get_value(iter);
+		IgnisTexture2D* tex = (IgnisTexture2D*)clib_dict_iter_get_value(iter);
 		ignisDeleteTexture2D(tex);
 		free(tex);
-		clib_dict_iter_remove(&manager->textures, iter);
+		clib_dict_iter_remove(&resources->textures, iter);
 	}
 
-	for (clib_dict_iter* iter = clib_dict_iterator(&manager->fonts); iter; iter = clib_dict_iter_next(&manager->fonts, iter))
+	CLIB_DICT_ITERATE_FOR(&resources->fonts, iter)
 	{
-		IgnisFont* font = font_dict_iter_get_value(iter);
+		IgnisFont* font = (IgnisFont*)clib_dict_iter_get_value(iter);
 		ignisDeleteFont(font);
 		free(font);
-		clib_dict_iter_remove(&manager->fonts, iter);
+		clib_dict_iter_remove(&resources->fonts, iter);
 	}
 }
 
-IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* manager, const char* name, const char* path, int rows, int columns)
+IgnisTexture2D* ResourceManagerAddTexture2D(ResourceManager* resources, const char* name, const char* path, int rows, int columns)
 {
 	IgnisTexture2D* texture = (IgnisTexture2D*)malloc(sizeof(IgnisTexture2D));
 
 	if (ignisCreateTexture2D(texture, path, rows, columns, 1, NULL))
 	{
-		if (tex_dict_insert(&manager->textures, name, texture) == texture)
+		if (clib_dict_insert(&resources->textures, name, texture) == texture)
 			return texture;
 
 		DEBUG_ERROR("[Resources] Failed to add texture: %s (%s)\n", name, path);
@@ -111,7 +108,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 	if (ignisCreateFont(font, path, size))
 	{
-		if (font_dict_insert(&manager->fonts, name, font) == font)
+		if (clib_dict_insert(&manager->fonts, name, font) == font)
 			return font;
 
 		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
@@ -123,7 +120,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char* name)
 {
-	IgnisTexture2D* tex = tex_dict_get(&manager->textures, name);
+	IgnisTexture2D* tex = (IgnisTexture2D*)clib_dict_get(&manager->textures, name);
 
 	if (!tex) DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 
@@ -132,7 +129,7 @@ IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char
 
 IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 {
-	IgnisFont* font = font_dict_get(&manager->fonts, name);
+	IgnisFont* font = (IgnisFont*)clib_dict_get(&manager->fonts, name);
 
 	if (!font) DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 
@@ -141,9 +138,9 @@ IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 
 const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTexture2D* texture)
 {
-	for (clib_dict_iter* iter = clib_dict_iterator(&resources->textures); iter; iter = clib_dict_iter_next(&resources->textures, iter))
+	CLIB_DICT_ITERATE_FOR(&resources->textures, iter)
 	{
-		if (texture == tex_dict_iter_get_value(iter))
+		if (texture == clib_dict_iter_get_value(iter))
 			return clib_dict_iter_get_key(iter);
 	}
 
@@ -152,9 +149,9 @@ const char* ResourceManagerGetTexture2DName(ResourceManager* resources, IgnisTex
 
 const char* ResourceManagerGetFontName(ResourceManager* resources, IgnisFont* font)
 {
-	for (clib_dict_iter* iter = clib_dict_iterator(&resources->fonts); iter; iter = clib_dict_iter_next(&resources->fonts, iter))
+	CLIB_DICT_ITERATE_FOR(&resources->fonts, iter)
 	{
-		if (font == font_dict_iter_get_value(iter))
+		if (font == clib_dict_iter_get_value(iter))
 			return clib_dict_iter_get_key(iter);
 	}
 

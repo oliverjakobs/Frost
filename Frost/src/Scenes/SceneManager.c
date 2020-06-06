@@ -172,13 +172,13 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		else if (strcmp(spec, "res") == 0)
 		{
 			ConsoleOut(&manager->console, "Textures:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->textures)
+			CLIB_DICT_ITERATE_FOR(&manager->resources->textures, iter)
 			{
 				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}
 
 			ConsoleOut(&manager->console, "Fonts:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->fonts)
+			CLIB_DICT_ITERATE_FOR(&manager->resources->fonts, iter)
 			{
 				ConsoleOut(&manager->console, " - %s", clib_dict_iter_get_key(iter));
 			}

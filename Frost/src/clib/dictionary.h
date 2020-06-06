@@ -3,37 +3,7 @@
 
 #include "hashmap.h"
 
-#define CLIB_DICT_DECLARE_FUNCS(name, type)                                     \
-    type* name##_dict_insert(clib_dict* dict, const char* key, type* value);    \
-    type* name##_dict_get(const clib_dict* dict, const char* key);              \
-    type* name##_dict_remove(clib_dict* dict, const char* key);                 \
-    type* name##_dict_iter_get_value(const clib_dict_iter* iter);               \
-    void name##_dict_iter_set_value(const clib_dict_iter* iter, type* value);
-
-
-#define CLIB_DICT_DEFINE_FUNCS(name, type)                                  \
-    type* name##_dict_insert(clib_dict* dict, const char* key, type* value) \
-    {                                                                       \
-        return (type*)clib_dict_insert(dict, key, (void*)value);            \
-    }                                                                       \
-    type* name##_dict_get(const clib_dict* dict, const char* key)           \
-    {                                                                       \
-        return (type*)clib_dict_get(dict, key);                             \
-    }                                                                       \
-    type* name##_dict_remove(clib_dict* dict, const char* key)              \
-    {                                                                       \
-        return (type*)clib_dict_remove(dict, key);                          \
-    }                                                                       \
-    type* name##_dict_iter_get_value(const clib_dict_iter* iter)            \
-    {                                                                       \
-        return (type*)clib_dict_iter_get_value(iter);                       \
-    }                                                                       \
-    void name##_dict_iter_set_value(const clib_dict_iter* iter, type* value)\
-    {                                                                       \
-        clib_dict_iter_set_value(iter, (void*)value);                       \
-    }
-
-#define CLIB_DICT_ITERATE_FOR(dict) for (clib_dict_iter* iter = clib_dict_iterator(dict); iter; iter = clib_dict_iter_next(dict, iter))
+#define CLIB_DICT_ITERATE_FOR(dict, iter) for (clib_dict_iter* iter = clib_dict_iterator(dict); iter; iter = clib_dict_iter_next(dict, iter))
 
 typedef struct clib_hashmap_s clib_dict;
 typedef struct clib_hashmap_iter_s clib_dict_iter;

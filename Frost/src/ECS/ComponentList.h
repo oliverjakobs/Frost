@@ -3,46 +3,23 @@
 
 #include "Components.h"
 
+#include "clib/array.h"
+
 typedef struct
 {
-	/* position */
-	EcsPositionComponent* position;
-	size_t position_used;
-	size_t position_capacity;
-
-	/* physics */
-	EcsPhysicsComponent* physics;
-	size_t physics_used;
-	size_t physics_capacity;
-
-	/* movement */
-	EcsMovementComponent* movement;
-	size_t movement_used;
-	size_t movement_capacity;
-
-	/* texture */
-	EcsTextureComponent* texture;
-	size_t texture_used;
-	size_t texture_capacity;
-
-	/* animataion */
-	EcsAnimationComponent* animation;
-	size_t animation_used;
-	size_t animation_capacity;
-
-	/* camera */
-	EcsCameraComponent* camera;
-	size_t camera_used;
-	size_t camera_capacity;
-
-	/* interaction */
-	EcsInteractionComponent* interaction;
-	size_t interaction_used;
-	size_t interaction_capacity;
+	clib_array position;
+	clib_array physics;
+	clib_array movement;
+	clib_array texture;
+	clib_array animation;
+	clib_array camera;
+	clib_array interaction;
 } EcsComponentList;
 
 int EcsComponentListInit(EcsComponentList* list, size_t max_size);
 void EcsComponentListDelete(EcsComponentList* list);
+
+void EcsComponentListClear(EcsComponentList* list);
 
 EcsPositionComponent* EcsComponentListGetNextPosition(EcsComponentList* list, float x, float y);
 EcsPhysicsComponent* EcsComponentListGetNextPhysics(EcsComponentList* list, Body* body, float x, float y);
