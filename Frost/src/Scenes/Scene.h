@@ -22,6 +22,7 @@ typedef struct
 	float width;
 	float height;
 
+	Ecs ecs;
 	World* world;
 
 	EcsComponentList components;
@@ -41,8 +42,8 @@ void SceneRemoveEntity(Scene* scene, const char* name);
 void SceneClearEntities(Scene* scene);
 
 void SceneOnEvent(Scene* scene, Event e);
-void SceneOnUpdate(Scene* scene, Ecs* ecs, float deltaTime);
-void SceneOnRender(Scene* scene, Ecs* ecs);
+void SceneOnUpdate(Scene* scene, float deltaTime);
+void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
 
 EcsEntity* SceneGetEntity(Scene* scene, const char* name);

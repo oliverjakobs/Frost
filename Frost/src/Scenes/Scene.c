@@ -1,11 +1,11 @@
 #include "Scene.h"
 
+#include "ECS/Systems.h"
+
 CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(entities, EcsEntity)
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 {
-	clib_dynamic_array_init(&scene->entities, 0);
-
 	scene->camera = camera;
 	scene->width = w;
 	scene->height = h;
@@ -15,6 +15,13 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 
 	scene->smooth_movement = 0.5f;
 
+	EcsInit(&scene->ecs, 2, 2);
+	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
+	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
+	
+	clib_dynamic_array_init(&scene->entities, 0);
 	EcsComponentListInit(&scene->components, 16);
 
 	return 1;
@@ -30,6 +37,7 @@ void SceneQuit(Scene* scene)
 	WorldDestroy(scene->world);
 	free(scene->world);
 
+	EcsDestroy(&scene->ecs);
 	EcsComponentListDelete(&scene->components);
 }
 
@@ -100,20 +108,20 @@ void SceneOnEvent(Scene* scene, Event e)
 {
 }
 
-void SceneOnUpdate(Scene* scene, Ecs* ecs, float deltaTime)
+void SceneOnUpdate(Scene* scene, float deltaTime)
 {
 	WorldTick(scene->world, deltaTime);
 
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 
-	EcsUpdate(ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, deltaTime);
+	EcsUpdate(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, deltaTime);
 }
 
-void SceneOnRender(Scene* scene, Ecs* ecs)
+void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)

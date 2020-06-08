@@ -10,8 +10,6 @@
 
 #include "SceneLoader.h"
 
-#include "ECS/Systems.h"
-
 int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
@@ -31,12 +29,6 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 	clib_strmap_init(&manager->scenes, 0);
 	clib_strmap_init(&manager->templates, 0);
 
-	EcsInit(&manager->ecs, 2, 2);
-	EcsAddUpdateSystem(&manager->ecs, EcsSystemPlayer);
-	EcsAddUpdateSystem(&manager->ecs, EcsSystemAnimation);
-	EcsAddRenderSystem(&manager->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
-	EcsAddRenderSystem(&manager->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
-
 	SceneLoaderLoadRegister(manager, reg);
 
 	manager->console_focus = 0;
@@ -53,8 +45,6 @@ void SceneManagerDestroy(SceneManager* manager)
 	free(manager->scene);
 	clib_strmap_destroy(&manager->scenes);
 	clib_strmap_destroy(&manager->templates);
-
-	EcsDestroy(&manager->ecs);
 }
 
 void SceneManagerFocusConsole(SceneManager* manager)
@@ -255,13 +245,13 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltatime)
 	}
 	else
 	{
-		SceneOnUpdate(manager->scene, &manager->ecs, deltatime);
+		SceneOnUpdate(manager->scene, deltatime);
 	}
 }
 
 void SceneManagerOnRender(SceneManager* manager)
 {
-	SceneOnRender(manager->scene, &manager->ecs);
+	SceneOnRender(manager->scene);
 
 	if (manager->editmode)
 	{
