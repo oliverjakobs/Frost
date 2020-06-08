@@ -188,9 +188,9 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (int i = 0; i < scene->entities.size; ++i)
+	for (int i = 0; i < scene->entities.used; ++i)
 	{
-		EcsEntity* e = entities_dynamic_array_get(&scene->entities, i);
+		EcsEntity* e = (EcsEntity*)clib_array_get(&scene->entities, i);
 
 		tb_jwrite_array_array(&jwc);
 

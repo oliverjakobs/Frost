@@ -8,12 +8,8 @@
 #include "Application/EventHandler.h"
 #include "Graphics/Background.h"
 
-#include "clib/dynamic_array.h"
-
 #define SCENE_INITIAL_LAYER_SIZE	8
 #define SCENE_INITIAL_ECS_SIZE		8
-
-CLIB_DYNAMIC_ARRAY_DECLARE_FUNCS(entities, EcsEntity)
 
 typedef struct
 {
@@ -26,7 +22,7 @@ typedef struct
 	World* world;
 
 	EcsComponentList components;
-	clib_dynamic_array entities;
+	clib_array entities;
 
 	Background background;
 

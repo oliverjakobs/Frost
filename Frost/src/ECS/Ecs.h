@@ -27,7 +27,7 @@ void EcsDestroy(Ecs* ecs);
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltatime));
 void EcsAddRenderSystem(Ecs* ecs, void (*render)(EcsEntity* entity), void (*pre)(const float* mat_view_proj), void (*post)());
 
-void EcsUpdate(Ecs* ecs, EcsEntity** entities, size_t count, float deltatime);
-void EcsRender(Ecs* ecs, EcsEntity** entities, size_t count, const float* mat_view_proj);
+void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, float deltatime);
+void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, const float* mat_view_proj);
 
 #endif /* !ECS_H */

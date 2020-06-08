@@ -34,16 +34,16 @@ void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity* entity), void(*pre)(c
 	}
 }
 
-void EcsUpdate(Ecs* ecs, EcsEntity** entities, size_t count, float deltatime)
+void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, float deltatime)
 {
 	for (size_t i = 0; i < ecs->systems_update.used; ++i)
 	{
 		for (size_t j = 0; j < count; ++j)
-			((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(entities[j], deltatime);
+			((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(&entities[j], deltatime);
 	}
 }
 
-void EcsRender(Ecs* ecs, EcsEntity** entities, size_t count, const float* mat_view_proj)
+void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render.used; ++i)
 	{
@@ -53,7 +53,7 @@ void EcsRender(Ecs* ecs, EcsEntity** entities, size_t count, const float* mat_vi
 			system->pre(mat_view_proj);
 
 		for (size_t j = 0; j < count; ++j)
-			system->render(entities[j]);
+			system->render(&entities[j]);
 
 		if (system->post)
 			system->post();

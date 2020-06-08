@@ -2,8 +2,6 @@
 
 #include "ECS/Systems.h"
 
-CLIB_DYNAMIC_ARRAY_DEFINE_FUNCS(entities, EcsEntity)
-
 int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 {
 	scene->camera = camera;
@@ -21,7 +19,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
 	
-	clib_dynamic_array_init(&scene->entities, 0);
+	clib_array_alloc(&scene->entities, 16, sizeof(EcsEntity));
 	EcsComponentListInit(&scene->components, 16);
 
 	return 1;
@@ -32,7 +30,7 @@ void SceneQuit(Scene* scene)
 	BackgroundClear(&scene->background);
 
 	SceneClearEntities(scene);
-	clib_dynamic_array_free(&scene->entities);
+	clib_array_free(&scene->entities);
 
 	WorldDestroy(scene->world);
 	free(scene->world);
@@ -41,9 +39,9 @@ void SceneQuit(Scene* scene)
 	EcsComponentListDelete(&scene->components);
 }
 
-int _SceneEntityCmp(const EcsEntity** a, const EcsEntity** b)
+int _SceneEntityCmp(const EcsEntity* a, const EcsEntity* b)
 {
-	return (*a)->z_index - (*b)->z_index;
+	return a->z_index - b->z_index;
 }
 
 void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
@@ -66,10 +64,10 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 	}
 
 	entity->z_index = z_index;
-	entities_dynamic_array_push(&scene->entities, entity);
+	clib_array_insert(&scene->entities, entity);
 
 	/* sort by z_index */
-	qsort((EcsEntity**)scene->entities.elements, scene->entities.size, sizeof(EcsEntity*), _SceneEntityCmp);
+	qsort((EcsEntity*)scene->entities.data, scene->entities.used, sizeof(EcsEntity), _SceneEntityCmp);
 }
 
 void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 position)
@@ -82,13 +80,13 @@ void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 positi
 
 void SceneRemoveEntity(Scene* scene, const char* name)
 {
-	for (size_t i = 0; i < scene->entities.size; i++)
+	for (size_t i = 0; i < scene->entities.used; i++)
 	{
-		if (strcmp(entities_dynamic_array_get(&scene->entities, i)->name, name) == 0)
+		EcsEntity* e = (EcsEntity*)clib_array_get(&scene->entities, i);
+		if (strcmp(e->name, name) == 0)
 		{
-			EcsEntity* e = entities_dynamic_array_get(&scene->entities, i);
-			entities_dynamic_array_delete(&scene->entities, i);
-			free(e);
+			/* todo: free components */
+			clib_array_remove(&scene->entities, i);
 			return;
 		}
 	}
@@ -96,12 +94,8 @@ void SceneRemoveEntity(Scene* scene, const char* name)
 
 void SceneClearEntities(Scene* scene)
 {
-	for (size_t i = 0; i < scene->entities.size; i++)
-	{
-		EcsEntity* e = entities_dynamic_array_get(&scene->entities, i);
-		entities_dynamic_array_delete(&scene->entities, i);
-		free(e);
-	}
+	EcsComponentListClear(&scene->components);
+	clib_array_clear(&scene->entities);
 }
 
 void SceneOnEvent(Scene* scene, Event e)
@@ -114,14 +108,14 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 
-	EcsUpdate(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, deltaTime);
+	EcsUpdate(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, (EcsEntity**)scene->entities.elements, scene->entities.size, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
@@ -131,10 +125,9 @@ void SceneOnRenderDebug(Scene* scene)
 
 EcsEntity* SceneGetEntity(Scene* scene, const char* name)
 {
-	for (size_t i = 0; i < scene->entities.size; ++i)
+	for (size_t i = 0; i < scene->entities.used; ++i)
 	{
-		EcsEntity* entity = entities_dynamic_array_get(&scene->entities, i);
-
+		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
 		if (strcmp(entity->name, name) == 0)
 			return entity;
 	}
@@ -144,19 +137,19 @@ EcsEntity* SceneGetEntity(Scene* scene, const char* name)
 
 EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
 {
-	for (size_t i = 0; i < scene->entities.size; ++i)
+	for (size_t i = 0; i < scene->entities.used; ++i)
 	{
-		EcsTextureComponent* tex = entities_dynamic_array_get(&scene->entities, i)->texture;
+		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
 
-		if (!tex) continue;
+		if (!entity->texture) continue;
 
-		vec2 position = EcsEntityGetPosition(entities_dynamic_array_get(&scene->entities, i));
+		vec2 position = EcsEntityGetPosition(entity);
 
-		vec2 min = vec2_sub(position, (vec2){ tex->width / 2.0f, 0.0f });
-		vec2 max = vec2_add(min, (vec2){ tex->width, tex->height });
+		vec2 min = vec2_sub(position, (vec2){ entity->texture->width / 2.0f, 0.0f });
+		vec2 max = vec2_add(min, (vec2){ entity->texture->width, entity->texture->height });
 
 		if (vec2_inside(pos, min, max))
-			return entities_dynamic_array_get(&scene->entities, i);
+			return entity;
 	}
 
 	return NULL;

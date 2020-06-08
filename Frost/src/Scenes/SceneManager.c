@@ -142,9 +142,9 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			for (int i = 0; i < manager->scene->entities.size; ++i)
+			for (int i = 0; i < manager->scene->entities.used; ++i)
 			{
-				EcsEntity* e = entities_dynamic_array_get(&manager->scene->entities, i);
+				EcsEntity* e = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
 
 				ConsoleOut(&manager->console, " - %s (%d)", e->name, e->z_index);
 			}

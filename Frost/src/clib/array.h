@@ -16,13 +16,17 @@ typedef struct
 } clib_array;
 
 void clib_array_alloc(clib_array* arr, size_t initial_size, size_t element_size);
-void clib_array_grow(clib_array* arr, size_t new_size);
+void clib_array_resize(clib_array* arr, size_t new_size);
+void clib_array_shrink_to_fit(clib_array* arr);
 
 void clib_array_free(clib_array* arr);
 
 void clib_array_clear(clib_array* arr);
 
-void* clib_array_get(clib_array* arr, size_t index);
+void* clib_array_insert(clib_array* arr, void* element);
+void clib_array_remove(clib_array* arr, size_t index);
+
+void* clib_array_get(clib_array* arr, size_t index); 
 void* clib_array_get_next(clib_array* arr);
 
 #endif /* !CLIB_ARRAY_H */

@@ -85,19 +85,19 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 			Primitives2DRenderLine(-padding, y, width + padding, y, color);
 	}
 
-	for (size_t i = 0; i < active->entities.size; ++i)
+	for (size_t i = 0; i < active->entities.used; ++i)
 	{
 		IgnisColorRGBA color = IGNIS_WHITE;
 		ignisBlendColorRGBA(&color, 0.4f);
 
-		EcsTextureComponent* tex = entities_dynamic_array_get(&active->entities, i)->texture;
+		EcsEntity* entity = (EcsEntity*)clib_array_get(&active->entities, i);
 
-		if (tex)
+		if (entity->texture)
 		{
-			vec2 position = EcsEntityGetPosition(entities_dynamic_array_get(&active->entities, i));
+			vec2 position = EcsEntityGetPosition(entity);
 
-			vec2 min = vec2_sub(position, (vec2) { tex->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { tex->width, tex->height });
+			vec2 min = vec2_sub(position, (vec2) { entity->texture->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { entity->texture->width, entity->texture->height });
 
 			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 		}
