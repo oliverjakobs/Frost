@@ -50,96 +50,74 @@ void EcsComponentListClear(EcsComponentList* list)
 
 EcsPositionComponent* EcsComponentListGetNextPosition(EcsComponentList* list, float x, float y)
 {
-	EcsPositionComponent* comp = (EcsPositionComponent*)clib_array_get_next(&list->position);
-
-	if (comp)
-	{
-		comp->x = x;
-		comp->y = y;
-	}
-
-	return comp;
+	EcsPositionComponent comp;
+	comp.x = x;
+	comp.y = y;
+	
+	return (EcsPositionComponent*)clib_array_push(&list->position, &comp);
 }
 
 EcsPhysicsComponent* EcsComponentListGetNextPhysics(EcsComponentList* list, Body* body, float x, float y)
 {
-	EcsPhysicsComponent* comp = (EcsPhysicsComponent*)clib_array_get_next(&list->physics);
+	EcsPhysicsComponent comp;
 
-	if (comp)
-	{
-		comp->body = body;
-		comp->body_x = x;
-		comp->body_y = y;
-	}
+	comp.body = body;
+	comp.body_x = x;
+	comp.body_y = y;
 
-	return comp;
+	return (EcsPhysicsComponent*)clib_array_push(&list->physics, &comp);
 }
 
 EcsMovementComponent* EcsComponentListGetNextMovement(EcsComponentList* list, float ms, float jp)
 {
-	EcsMovementComponent* comp = (EcsMovementComponent*)clib_array_get_next(&list->movement);
+	EcsMovementComponent comp;
 
-	if (comp)
-	{
-		comp->direction = DIRECTION_LEFT;
-		comp->speed = ms;
-		comp->jump_power = jp;
-	}
+	comp.direction = DIRECTION_LEFT;
+	comp.speed = ms;
+	comp.jump_power = jp;
 
-	return comp;
+	return (EcsMovementComponent*)clib_array_push(&list->movement, &comp);
 }
 
 EcsTextureComponent* EcsComponentListGetNextTexture(EcsComponentList* list, IgnisTexture2D* texture, float width, float height, size_t frame)
 {
-	EcsTextureComponent* comp = (EcsTextureComponent*)clib_array_get_next(&list->texture);
+	EcsTextureComponent comp;
 
-	if (comp)
-	{
-		comp->texture = texture;
-		comp->width = width;
-		comp->height = height;
-		comp->frame = frame;
-		comp->render_flip = RENDER_FLIP_NONE;
-	}
+	comp.texture = texture;
+	comp.width = width;
+	comp.height = height;
+	comp.frame = frame;
+	comp.render_flip = RENDER_FLIP_NONE;
 
-	return comp;
+	return (EcsTextureComponent*)clib_array_push(&list->texture, &comp);
 }
 
 EcsAnimationComponent* EcsComponentListGetNextAnimation(EcsComponentList* list, Animator* animator)
 {
-	EcsAnimationComponent* comp = (EcsAnimationComponent*)clib_array_get_next(&list->animation);
+	EcsAnimationComponent comp;
 
-	if (comp)
-	{
-		comp->animator = animator;
-	}
+	comp.animator = animator;
 
-	return comp;
+	return (EcsAnimationComponent*)clib_array_push(&list->animation, &comp);
 }
 
 EcsCameraComponent* EcsComponentListGetNextCamera(EcsComponentList* list, float smooth)
 {
-	EcsCameraComponent* comp = (EcsCameraComponent*)clib_array_get_next(&list->camera);
+	EcsCameraComponent comp;
 
-	if (comp)
-	{
-		comp->camera = NULL;
-		comp->smooth = smooth;
-		comp->scene_w = -1.0f;
-		comp->scene_h = -1.0f;
-	}
+	comp.camera = NULL;
+	comp.smooth = smooth;
+	comp.scene_w = -1.0f;
+	comp.scene_h = -1.0f;
 
-	return comp;
+	return (EcsCameraComponent*)clib_array_push(&list->camera, &comp);
 }
 
 EcsInteractionComponent* EcsComponentListGetNextInteraction(EcsComponentList* list, float radius)
 {
-	EcsInteractionComponent* comp = (EcsInteractionComponent*)clib_array_get_next(&list->interaction);
+	EcsInteractionComponent comp;
 
-	if (comp)
-	{
-		comp->radius = radius;
-	}
+	comp.radius = radius;
 
-	return comp;
+	return (EcsInteractionComponent*)clib_array_push(&list->interaction, &comp);
 }

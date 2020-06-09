@@ -29,9 +29,9 @@ void clib_array_shrink_to_fit(clib_array* arr)
 void clib_array_free(clib_array* arr)
 {
     free(arr->data);
-    clib_array_clear(arr);
-    arr->element_size = 0;
     arr->capacity = 0;
+    arr->used = 0;
+    arr->element_size = 0;
 }
 
 void clib_array_clear(clib_array* arr)
@@ -39,12 +39,46 @@ void clib_array_clear(clib_array* arr)
     arr->used = 0;
 }
 
-void* clib_array_insert(clib_array* arr, void* element)
+void* clib_array_push(clib_array* arr, void* element)
 {
+    return clib_array_insert(arr, element, arr->used);
+}
+
+void* clib_array_push_and_grow(clib_array* arr, void* element, float growth)
+{
+    if (arr->used >= arr->capacity)
+    {
+        size_t size = (arr->capacity > 0) ? arr->capacity : 1;
+        clib_array_resize(arr, (size_t)(size * growth));
+    }
+
+    return clib_array_push(arr, element);
+}
+
+void* clib_array_insert(clib_array* arr, void* element, size_t index)
+{
+    /* array is to small to insert */
     if (arr->used >= arr->capacity)
         return NULL;
 
-    size_t offset = arr->used++ * arr->element_size;
+    /* index is out of bounds (inserting would not result in a coherent array) */
+    if (index > arr->used)
+        return NULL;
+
+    /* move entries back to make space for new element if index is not at the end */
+    if (index < arr->used)
+    {
+        size_t size = (arr->used - index) * arr->element_size;
+        size_t dest_offset = (index + 1) * arr->element_size;
+        size_t src_offset = index * arr->element_size;
+
+        memcpy(arr->data + dest_offset, arr->data + src_offset, size);
+    }
+
+    arr->used++;
+
+    /* copy entry into the array */
+    size_t offset = index * arr->element_size;
     return memcpy(arr->data + offset, element, arr->element_size);
 }
 
@@ -70,10 +104,12 @@ void* clib_array_get(clib_array* arr, size_t index)
     return arr->data + index * arr->element_size;
 }
 
-void* clib_array_get_next(clib_array* arr)
+void* clib_array_last(clib_array* arr)
 {
-    if (arr->used >= arr->capacity)
-        return NULL;
+    return clib_array_get(arr, arr->used - 1);
+}
 
-    return arr->data + arr->used++ * arr->element_size;
+void clib_array_sort(clib_array* arr, int (*cmp)(const void*, const void*))
+{
+    qsort(arr->data, arr->used, arr->element_size, cmp);
 }

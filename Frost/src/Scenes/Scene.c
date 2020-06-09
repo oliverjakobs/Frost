@@ -64,10 +64,10 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 	}
 
 	entity->z_index = z_index;
-	clib_array_insert(&scene->entities, entity);
+	clib_array_push(&scene->entities, entity);
 
 	/* sort by z_index */
-	qsort((EcsEntity*)scene->entities.data, scene->entities.used, sizeof(EcsEntity), _SceneEntityCmp);
+	clib_array_sort(&scene->entities, _SceneEntityCmp);
 }
 
 void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 position)

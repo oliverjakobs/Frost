@@ -14,24 +14,22 @@ void EcsDestroy(Ecs* ecs)
 
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltatime))
 {
-	EcsUpdateSystem* system = (EcsUpdateSystem*)clib_array_get_next(&ecs->systems_update);
+	EcsUpdateSystem system;
 
-	if (system)
-	{
-		system->update = update;
-	}
+	system.update = update;
+
+	clib_array_push(&ecs->systems_update, &system);
 }
 
 void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity* entity), void(*pre)(const float* mat_view_proj), void(*post)())
 {
-	EcsRenderSystem* system = (EcsRenderSystem*)clib_array_get_next(&ecs->systems_render);
+	EcsRenderSystem system;
 
-	if (system)
-	{
-		system->render = render;
-		system->pre = pre;
-		system->post = post;
-	}
+	system.render = render;
+	system.pre = pre;
+	system.post = post;
+
+	clib_array_push(&ecs->systems_render, &system);
 }
 
 void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, float deltatime)
