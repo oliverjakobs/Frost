@@ -1,11 +1,13 @@
 #include "AnimationSystem.h"
 
-void EcsSystemAnimation(EcsEntity* entity, float deltatime)
+void EcsSystemAnimation(EcsEntity* entity, ComponentTable* components, float deltatime)
 {
-	if (!entity->animation) return;
-	if (!entity->texture) return;
+	EcsAnimationComponent* animation = (EcsAnimationComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_ANIMATION);
+	EcsTextureComponent* texture = (EcsTextureComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_TEXTURE);
 
-	AnimatorTick(entity->animation->animator, entity, deltatime);
+	if (!(animation && texture)) return;
 
-	entity->texture->frame = AnimatorGetFrame(entity->animation->animator);
+	AnimatorTick(animation->animator, entity, deltatime);
+
+	texture->frame = AnimatorGetFrame(animation->animator);
 }

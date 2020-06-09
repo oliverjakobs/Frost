@@ -246,6 +246,7 @@
     <ClInclude Include="src\ECS\Systems\InteractionSystem.h" />
     <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\clib\array.h" />
+    <ClInclude Include="src\ECS\ComponentTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -387,6 +388,7 @@
     <ClCompile Include="src\ECS\Systems\InteractionSystem.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\clib\array.c" />
+    <ClCompile Include="src\ECS\ComponentTable.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

@@ -124,7 +124,7 @@ void OnRenderGui(Application* app)
 		if (player)
 		{
 			gui_text("Name: %s", player->name);
-			vec2 position = EcsEntityGetPosition(player);
+			vec2 position = EcsEntityGetPosition(player, &scene_manager.scene->components);
 			gui_text("Position: %4.2f, %4.2f", position.x, position.y);
 			gui_text("Precise Y: %f", position.y);
 		}

@@ -2,16 +2,17 @@
 #define ECS_H
 
 #include "ECS/Entity.h"
+#include "clib/array.h"
 
 typedef struct
 {
-	void (*update)(EcsEntity* entity, float deltatime);
+	void (*update)(EcsEntity*, ComponentTable*, float);
 } EcsUpdateSystem;
 
 typedef struct
 {
-	void (*render)(EcsEntity* entity);
-	void (*pre)(const float* mat_view_proj);
+	void (*render)(EcsEntity*, ComponentTable*);
+	void (*pre)(const float*);
 	void (*post)();
 } EcsRenderSystem;
 
@@ -24,10 +25,10 @@ typedef struct
 void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems);
 void EcsDestroy(Ecs* ecs);
 
-void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltatime));
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(EcsEntity* entity), void (*pre)(const float* mat_view_proj), void (*post)());
+void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity*, ComponentTable*, float));
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(EcsEntity*, ComponentTable*), void (*pre)(const float*), void (*post)());
 
-void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, float deltatime);
-void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, const float* mat_view_proj);
+void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, ComponentTable* components, float deltatime);
+void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, ComponentTable* components, const float* mat_view_proj);
 
 #endif /* !ECS_H */

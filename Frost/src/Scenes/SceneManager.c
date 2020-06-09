@@ -104,8 +104,8 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 	}
 	case CONSOLE_CMD_CREATE:
 	{
-		char* args[2];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 2);
+		char* args[3];
+		char* spec = cmd_get_args(cmd_buffer, 6, args, 3);
 
 		if (!spec) break;
 
@@ -118,8 +118,8 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 			}
 
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], &manager->templates, &manager->scene->components, manager->resources);
-			SceneAddEntityPos(manager->scene, entity, atoi(args[1]), pos);
+			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], args[1], &manager->templates, &manager->scene->components, manager->resources);
+			SceneAddEntityPos(manager->scene, entity, atoi(args[2]), pos);
 		}
 		break;
 	}

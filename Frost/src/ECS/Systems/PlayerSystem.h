@@ -3,6 +3,6 @@
 
 #include "../Entity.h"
 
-void EcsSystemPlayer(EcsEntity* entity, float deltatime);
+void EcsSystemPlayer(EcsEntity* entity, ComponentTable* components, float deltatime);
 
 #endif /* !PLAYER_SYSTEM_H */

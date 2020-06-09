@@ -12,7 +12,7 @@ void EcsDestroy(Ecs* ecs)
 	clib_array_free(&ecs->systems_render);
 }
 
-void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltatime))
+void EcsAddUpdateSystem(Ecs* ecs, void(*update)(EcsEntity*, ComponentTable*, float))
 {
 	EcsUpdateSystem system;
 
@@ -21,7 +21,7 @@ void EcsAddUpdateSystem(Ecs* ecs, void (*update)(EcsEntity* entity, float deltat
 	clib_array_push(&ecs->systems_update, &system);
 }
 
-void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity* entity), void(*pre)(const float* mat_view_proj), void(*post)())
+void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity*, ComponentTable*), void(*pre)(const float*), void(*post)())
 {
 	EcsRenderSystem system;
 
@@ -32,16 +32,16 @@ void EcsAddRenderSystem(Ecs* ecs, void(*render)(EcsEntity* entity), void(*pre)(c
 	clib_array_push(&ecs->systems_render, &system);
 }
 
-void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, float deltatime)
+void EcsUpdate(Ecs* ecs, EcsEntity* entities, size_t count, ComponentTable* components, float deltatime)
 {
 	for (size_t i = 0; i < ecs->systems_update.used; ++i)
 	{
 		for (size_t j = 0; j < count; ++j)
-			((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(&entities[j], deltatime);
+			((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(&entities[j], components, deltatime);
 	}
 }
 
-void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, const float* mat_view_proj)
+void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, ComponentTable* components, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render.used; ++i)
 	{
@@ -51,7 +51,7 @@ void EcsRender(Ecs* ecs, EcsEntity* entities, size_t count, const float* mat_vie
 			system->pre(mat_view_proj);
 
 		for (size_t j = 0; j < count; ++j)
-			system->render(&entities[j]);
+			system->render(&entities[j], components);
 
 		if (system->post)
 			system->post();

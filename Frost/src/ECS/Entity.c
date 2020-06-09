@@ -9,14 +9,6 @@ void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template)
 	strcpy(entity->template, template);
 
 	entity->z_index = 0;
-
-	entity->position = NULL;
-	entity->physics = NULL;
-	entity->movement = NULL;
-	entity->texture = NULL;
-	entity->animation = NULL;
-	entity->camera = NULL;
-	entity->interaction = NULL;
 }
 
 void EcsEntityDestroy(EcsEntity* entity)
@@ -25,51 +17,52 @@ void EcsEntityDestroy(EcsEntity* entity)
 	free(entity->template);
 
 	entity->z_index = 0;
-
-	entity->position = NULL;
-	entity->physics = NULL;
-	entity->movement = NULL;
-	entity->texture = NULL;
-	entity->animation = NULL;
-	entity->camera = NULL;
-	entity->interaction = NULL;
 }
 
-void EcsEntitySetPosition(EcsEntity* entity, vec2 pos)
+void EcsEntitySetPosition(const char* entity, ComponentTable* table, vec2 pos)
 {
-	if (entity->physics && entity->physics->body)
+	EcsPhysicsComponent* physics = (EcsPhysicsComponent*)ComponentTableGetComponent(table, entity, COMPONENT_PHYSICS);
+
+	if (physics && physics->body)
 	{
-		entity->physics->body->position = vec2_add(pos, (vec2){ entity->physics->body_x, entity->physics->body_y });
+		physics->body->position = vec2_add(pos, (vec2) { physics->body_x, physics->body_y });
+		return;
 	}
 
-	if (entity->position)
+	EcsPositionComponent* position = (EcsPositionComponent*)ComponentTableGetComponent(table, entity, COMPONENT_POSITION);
+
+	if (position)
 	{
-		entity->position->x = pos.x;
-		entity->position->y = pos.y;
+		position->x = pos.x;
+		position->y = pos.y;
 	}
 }
 
-vec2 EcsEntityGetPosition(EcsEntity* entity)
+vec2 EcsEntityGetPosition(const char* entity, ComponentTable* table)
 {
-	if (entity->physics && entity->physics->body)
+	EcsPhysicsComponent* physics = (EcsPhysicsComponent*)ComponentTableGetComponent(table, entity, COMPONENT_PHYSICS);
+
+	if (physics && physics->body)
 	{
-		return vec2_sub(entity->physics->body->position, (vec2) { entity->physics->body_x, entity->physics->body_y });
+		return vec2_sub(physics->body->position, (vec2) { physics->body_x, physics->body_y });
 	}
 
-	if (entity->position)
+	EcsPositionComponent* position = (EcsPositionComponent*)ComponentTableGetComponent(table, entity, COMPONENT_POSITION);
+	if (position)
 	{
-		return (vec2){ entity->position->x, entity->position->y };
+		return (vec2) { position->x, position->y };
 	}
 
-	return (vec2){ 0.0f, 0.0f };
+	return (vec2) { 0.0f, 0.0f };
 }
 
-vec2 EcsEntityGetCenter(EcsEntity* entity)
+vec2 EcsEntityGetCenter(const char* entity, ComponentTable* table)
 {
-	if (entity->physics && entity->physics->body)
+	EcsPhysicsComponent* physics = (EcsPhysicsComponent*)ComponentTableGetComponent(table, entity, COMPONENT_PHYSICS);
+	if (physics && physics->body)
 	{
-		return entity->physics->body->position;
+		return physics->body->position;
 	}
 
-	return EcsEntityGetPosition(entity);
+	return EcsEntityGetPosition(entity, table);
 }

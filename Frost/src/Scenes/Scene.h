@@ -21,7 +21,7 @@ typedef struct
 	Ecs ecs;
 	World* world;
 
-	EcsComponentList components;
+	ComponentTable components;
 	clib_array entities;
 
 	Background background;

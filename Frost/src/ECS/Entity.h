@@ -1,7 +1,7 @@
 #ifndef ECS_ENTITY_H
 #define ECS_ENTITY_H
 
-#include "ComponentList.h"
+#include "ComponentTable.h"
 
 typedef struct ecs_entity
 {
@@ -9,22 +9,14 @@ typedef struct ecs_entity
 	char* template;
 
 	int z_index;
-
-	EcsPositionComponent* position;
-	EcsPhysicsComponent* physics;
-	EcsMovementComponent* movement;
-	EcsTextureComponent* texture;
-	EcsAnimationComponent* animation;
-	EcsCameraComponent* camera;
-	EcsInteractionComponent* interaction;
 } EcsEntity;
 
 void EcsEntityLoad(EcsEntity* entity, const char* name, const char* template);
 void EcsEntityDestroy(EcsEntity* entity);
 
 /* Helper Functions */
-void EcsEntitySetPosition(EcsEntity* entity, vec2 pos);
-vec2 EcsEntityGetPosition(EcsEntity* entity);
-vec2 EcsEntityGetCenter(EcsEntity* entity);
+void EcsEntitySetPosition(const char* entity, ComponentTable* table, vec2 pos);
+vec2 EcsEntityGetPosition(const char* entity, ComponentTable* table);
+vec2 EcsEntityGetCenter(const char* entity, ComponentTable* table);
 
 #endif /* !ECS_ENTITY_H */

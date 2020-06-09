@@ -109,6 +109,7 @@
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\ComponentTable.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\Systems.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\ComponentTable.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />

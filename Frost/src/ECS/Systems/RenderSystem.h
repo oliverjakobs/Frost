@@ -4,7 +4,7 @@
 #include "../Entity.h"
 
 void EcsSystemRenderPre(const float* mat_view_proj);
-void EcsSystemRender(EcsEntity* entity);
+void EcsSystemRender(EcsEntity* entity, ComponentTable* components);
 void EcsSystemRenderPost();
 
 #endif /* !ECS_RENDER_SYSTEM_H */

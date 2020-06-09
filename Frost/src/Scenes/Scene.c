@@ -20,7 +20,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
 	
 	clib_array_alloc(&scene->entities, 16, sizeof(EcsEntity));
-	EcsComponentListInit(&scene->components, 16);
+	ComponentTableInit(&scene->components, 16);
 
 	return 1;
 }
@@ -36,7 +36,7 @@ void SceneQuit(Scene* scene)
 	free(scene->world);
 
 	EcsDestroy(&scene->ecs);
-	EcsComponentListDelete(&scene->components);
+	ComponentTableFree(&scene->components);
 }
 
 int _SceneEntityCmp(const EcsEntity* a, const EcsEntity* b)
@@ -49,18 +49,18 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 	if (!entity)
 		return;
 
-	EcsPhysicsComponent* phys = entity->physics;
+	EcsPhysicsComponent* phys = (EcsPhysicsComponent*)ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_PHYSICS);
 	if (phys)
 	{
 		WorldAddBody(scene->world, phys->body);
 	}
 
-	EcsCameraComponent* cam = entity->camera;
+	EcsCameraComponent* cam = (EcsCameraComponent*)ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
 	if (cam)
 	{
-		entity->camera->camera = scene->camera;
-		entity->camera->scene_w = scene->width;
-		entity->camera->scene_h = scene->height;
+		cam->camera = scene->camera;
+		cam->scene_w = scene->width;
+		cam->scene_h = scene->height;
 	}
 
 	entity->z_index = z_index;
@@ -74,7 +74,7 @@ void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 positi
 {
 	if (!entity) return;
 
-	EcsEntitySetPosition(entity, position);
+	EcsEntitySetPosition(entity->name, &scene->components, position);
 	SceneAddEntity(scene, entity, z_index);
 }
 
@@ -94,7 +94,7 @@ void SceneRemoveEntity(Scene* scene, const char* name)
 
 void SceneClearEntities(Scene* scene)
 {
-	EcsComponentListClear(&scene->components);
+	ComponentTableClear(&scene->components);
 	clib_array_clear(&scene->entities);
 }
 
@@ -108,14 +108,14 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 
-	EcsUpdate(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, deltaTime);
+	EcsUpdate(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, &scene->components, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, &scene->components, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
@@ -141,7 +141,7 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
 	{
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
 
-		if (!entity->texture) continue;
+		/*if (!entity->texture) continue;
 
 		vec2 position = EcsEntityGetPosition(entity);
 
@@ -149,7 +149,7 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
 		vec2 max = vec2_add(min, (vec2){ entity->texture->width, entity->texture->height });
 
 		if (vec2_inside(pos, min, max))
-			return entity;
+			return entity;*/
 	}
 
 	return NULL;
