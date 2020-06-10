@@ -87,9 +87,6 @@
     <ClInclude Include="src\Animation\AnimationConditions.h">
       <Filter>src\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Animation\Animator.h">
-      <Filter>src\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\Application\Application.h">
       <Filter>src\Application</Filter>
     </ClInclude>
@@ -244,18 +241,15 @@
     </ClInclude>
     <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\ECS\Systems\InteractionSystem.h" />
-    <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\clib\array.h" />
     <ClInclude Include="src\ECS\ComponentTable.h" />
+    <ClInclude Include="src\ECS\Components\AnimationComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
       <Filter>src\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Animation\AnimationConditions.c">
-      <Filter>src\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation\Animator.c">
       <Filter>src\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Application.c">
@@ -386,9 +380,9 @@
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\ECS\Systems\InteractionSystem.c" />
-    <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\clib\array.c" />
     <ClCompile Include="src\ECS\ComponentTable.c" />
+    <ClCompile Include="src\ECS\Components\AnimationComponent.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

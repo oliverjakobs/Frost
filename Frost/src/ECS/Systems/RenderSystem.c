@@ -1,4 +1,5 @@
 #include "RenderSystem.h"
+
 #include "Graphics/Renderer.h"
 
 void EcsSystemRenderPre(const float* mat_view_proj)
@@ -6,13 +7,13 @@ void EcsSystemRenderPre(const float* mat_view_proj)
 	BatchRenderer2DStart(mat_view_proj);
 }
 
-void EcsSystemRender(EcsEntity* entity, ComponentTable* components)
+void EcsSystemRender(ComponentTable* components, const char* entity)
 {
-	EcsTextureComponent* texture = (EcsTextureComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_TEXTURE);
+	EcsTextureComponent* texture = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
 	
 	if (!texture) return;
 
-	vec2 pos = EcsEntityGetPosition(entity->name, components);
+	vec2 pos = ComponentTableGetEntityPosition(components, entity);
 
 	float x = pos.x - texture->width / 2.0f;
 	float y = pos.y;

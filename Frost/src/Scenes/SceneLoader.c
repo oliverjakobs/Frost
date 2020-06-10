@@ -121,21 +121,34 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 
 		for (int i = 0; i < templs.elements; i++)
 		{
-			tb_json_element entity;
-			value = tb_json_array_step(value, &entity);
+			tb_json_element entity_template;
+			value = tb_json_array_step(value, &entity_template);
 
 			char name[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
+			tb_json_string((char*)entity_template.value, "[0", name, APPLICATION_STR_LEN, NULL);
 			char temp[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity.value, "[1", temp, APPLICATION_STR_LEN, NULL);
+			tb_json_string((char*)entity_template.value, "[1", temp, APPLICATION_STR_LEN, NULL);
 
 			vec2 pos;
-			pos.x = tb_json_float((char*)entity.value, "[2[0", NULL);
-			pos.y = tb_json_float((char*)entity.value, "[2[1", NULL);
+			pos.x = tb_json_float((char*)entity_template.value, "[2[0", NULL);
+			pos.y = tb_json_float((char*)entity_template.value, "[2[1", NULL);
 
-			int z_index = tb_json_int((char*)entity.value, "[3", NULL);
+			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL);
 
-			SceneAddEntityPos(scene, SceneLoaderLoadTemplate(name, temp, templates, &scene->components, resources), z_index, pos);
+			char* path = clib_strmap_get(templates, temp);
+			if (!path)
+			{
+				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", temp);
+				continue;
+			}
+
+			if (SceneLoaderLoadTemplate(name, path, &scene->components, resources))
+			{
+				EcsEntity entity;
+				EcsEntityLoad(&entity, name, temp);
+
+				SceneAddEntityPos(scene, &entity, z_index, pos);
+			}
 		}
 	}
 
@@ -198,11 +211,14 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
+		/* name */
+		tb_jwrite_array_string(&jwc, e->name);
+
 		/* template-src */
 		tb_jwrite_array_string(&jwc, e->template);
 
 		/* pos */
-		vec2 pos = EcsEntityGetPosition(e, &scene->components);
+		vec2 pos = ComponentTableGetEntityPosition(&scene->components, e->name);
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -242,26 +258,15 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	return 1;
 }
 
-EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_strmap* templates, ComponentTable* components, ResourceManager* resources)
+int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable* components, ResourceManager* resources)
 {
-	char* path = clib_strmap_get(templates, templ);
-
-	if (!path)
-	{
-		DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
-		return NULL;
-	}
-
 	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
 	{
 		DEBUG_WARN("[Scenes] Couldn't read template (%s)", path);
-		return NULL;
+		return 0;
 	}
-
-	EcsEntity* entity = (EcsEntity*)malloc(sizeof(EcsEntity));
-	EcsEntityLoad(entity, name, templ);
 
 	tb_json_element element;
 	tb_json_read(json, &element, "{'position'");
@@ -271,7 +276,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 		comp.x = tb_json_float((char*)element.value, "[0", NULL);
 		comp.y = tb_json_float((char*)element.value, "[1", NULL);
 
-		ComponentTableAddComponent(components, name, COMPONENT_POSITION, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_POSITION, &comp);
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -294,10 +299,9 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 			comp.body_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
 			comp.body_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
 
-			comp.body = (Body*)malloc(sizeof(Body));
-			BodyLoad(comp.body, x, y, w, h, type);
+			BodyLoad(&comp.body, x, y, w, h, type);
 
-			ComponentTableAddComponent(components, name, COMPONENT_PHYSICS, &comp);
+			ComponentTableAddComponent(components, entity, COMPONENT_PHYSICS, &comp);
 		}
 	}
 
@@ -317,15 +321,14 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 		comp.texture = ResourceManagerGetTexture2D(resources, tex_name);
 
 		if (comp.texture)
-			ComponentTableAddComponent(components, name, COMPONENT_TEXTURE, &comp);
+			ComponentTableAddComponent(components, entity, COMPONENT_TEXTURE, &comp);
 	}
 
 	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
 		EcsAnimationComponent comp;
-		comp.animator = (Animator*)malloc(sizeof(Animator));
-		AnimatorInit(comp.animator);
+		AnimationComponentInit(&comp);
 
 		for (int i = 0; i < element.elements; i++)
 		{
@@ -362,10 +365,9 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 				}
 			}
 
-			AnimatorAddAnimation(comp.animator, anim_name, animation);
+			AnimationComponentAddAnimation(&comp, anim_name, animation);
 		}
-		/* AnimatorDebugPrint(animator); */
-		ComponentTableAddComponent(components, name, COMPONENT_ANIMATION, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_ANIMATION, &comp);
 	}
 
 	tb_json_read(json, &element, "{'movement'");
@@ -377,7 +379,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL);
 		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL);
 
-		ComponentTableAddComponent(components, name, COMPONENT_MOVEMENT, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_MOVEMENT, &comp);
 	}
 
 	tb_json_read(json, &element, "{'camera'");
@@ -389,7 +391,7 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 		comp.scene_w = -1.0f;
 		comp.scene_h = -1.0f;
 
-		ComponentTableAddComponent(components, name, COMPONENT_CAMERA, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_CAMERA, &comp);
 	}
 
 	tb_json_read(json, &element, "{'interaction'");
@@ -398,10 +400,10 @@ EcsEntity* SceneLoaderLoadTemplate(const char* name, const char* templ, clib_str
 		EcsInteractionComponent comp;
 		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL);
 
-		ComponentTableAddComponent(components, name, COMPONENT_INTERACTION, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTION, &comp);
 	}
 
 	free(json);
 
-	return entity;
+	return 1;
 }

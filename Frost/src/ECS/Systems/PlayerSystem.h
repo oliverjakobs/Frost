@@ -1,8 +1,8 @@
 #ifndef ECS_PLAYER_SYSTEM_H
 #define ECS_PLAYER_SYSTEM_H
 
-#include "../Entity.h"
+#include "../Components.h"
 
-void EcsSystemPlayer(EcsEntity* entity, ComponentTable* components, float deltatime);
+void EcsSystemPlayer(ComponentTable* components, const char* entity, float deltatime);
 
 #endif /* !PLAYER_SYSTEM_H */

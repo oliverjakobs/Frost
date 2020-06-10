@@ -1,7 +1,9 @@
 #ifndef ECS_COMPONENTS_H
 #define ECS_COMPONENTS_H
 
-#include "Animation/Animator.h"
+#include "ComponentTable.h"
+
+#include "Components/AnimationComponent.h"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
 #include "Camera/Camera.h"
@@ -15,7 +17,7 @@ typedef struct
 
 typedef struct
 {
-	Body* body;
+	Body body;
 	float body_x;
 	float body_y;
 } EcsPhysicsComponent;
@@ -53,11 +55,6 @@ typedef struct
 
 	RenderFlip render_flip;
 } EcsTextureComponent;
-
-typedef struct
-{
-	Animator* animator;
-} EcsAnimationComponent;
 
 typedef struct
 {

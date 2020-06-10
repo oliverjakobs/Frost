@@ -27,7 +27,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		if (editor->hover)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, EcsEntityGetPosition(editor->hover->name, &active->components));
+			editor->offset = vec2_sub(mouse, ComponentTableGetEntityPosition(&active->components, editor->hover->name));
 			editor->clicked = 1;
 		}
 	}
@@ -58,7 +58,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		EcsEntitySetPosition(editor->hover->name, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		ComponentTableSetEntityPosition(&active->components, editor->hover->name, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
 		editor->hover = SceneGetEntityAt(active, mouse);
 }
@@ -92,31 +92,32 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&active->entities, i);
 
-		/*if (entity->texture)
+		EcsTextureComponent* texture = ComponentTableGetComponent(&active->components, entity->name, COMPONENT_TEXTURE);
+		if (texture)
 		{
-			vec2 position = EcsEntityGetPosition(entity);
+			vec2 position = ComponentTableGetEntityPosition(&active->components, entity->name);
 
-			vec2 min = vec2_sub(position, (vec2) { entity->texture->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { entity->texture->width, entity->texture->height });
+			vec2 min = vec2_sub(position, (vec2) { texture->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { texture->width, texture->height });
 
 			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
-		}*/
+		}
 	}
 
 	if (editor->hover)
 	{
-		/*EcsTextureComponent* tex = editor->hover->texture;
+		EcsTextureComponent* texture = ComponentTableGetComponent(&active->components, editor->hover->name, COMPONENT_TEXTURE);
 
-		if (tex)
+		if (texture)
 		{
-			vec2 position = EcsEntityGetPosition(editor->hover);
+			vec2 position = ComponentTableGetEntityPosition(&active->components, editor->hover->name);
 
-			vec2 min = vec2_sub(position, (vec2) { tex->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { tex->width, tex->height });
+			vec2 min = vec2_sub(position, (vec2) { texture->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { texture->width, texture->height });
 
 			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
 			Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
-		}*/
+		}
 	}
 
 	Primitives2DFlush();

@@ -2,20 +2,20 @@
 
 #include "Application/Input.h"
 
-void EcsSystemPlayer(EcsEntity* entity, ComponentTable* components, float deltatime)
+void EcsSystemPlayer(ComponentTable* components, const char* entity, float deltatime)
 {
-	EcsPhysicsComponent* physics = (EcsPhysicsComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_PHYSICS);
-	EcsTextureComponent* texture = (EcsTextureComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_TEXTURE);
-	EcsMovementComponent* movement = (EcsMovementComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_MOVEMENT);
-	EcsCameraComponent* camera = (EcsCameraComponent*)ComponentTableGetComponent(components, entity->name, COMPONENT_CAMERA);
+	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+	EcsTextureComponent* texture = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
+	EcsMovementComponent* movement = ComponentTableGetComponent(components, entity, COMPONENT_MOVEMENT);
+	EcsCameraComponent* camera = ComponentTableGetComponent(components, entity, COMPONENT_CAMERA);
 
 	if (!(physics && texture && movement)) return;
 
 	vec2 velocity;
 	velocity.x = (-InputKeyPressed(KEY_A) + InputKeyPressed(KEY_D)) * movement->speed;
-	velocity.y = physics->body->velocity.y;
+	velocity.y = physics->body.velocity.y;
 
-	if (InputKeyPressed(KEY_SPACE) && physics->body->collidesBottom)
+	if (InputKeyPressed(KEY_SPACE) && physics->body.collidesBottom)
 		velocity.y = movement->jump_power;
 	else if (InputKeyReleased(KEY_SPACE) && (velocity.y > 0.0f))
 		velocity.y *= 0.5f;
@@ -32,12 +32,12 @@ void EcsSystemPlayer(EcsEntity* entity, ComponentTable* components, float deltat
 	}
 
 	// apply velocity
-	physics->body->velocity = velocity;
+	physics->body.velocity = velocity;
 
 	// set view
 	if (camera)
 	{
-		vec2 position = EcsEntityGetPosition(entity->name, components);
+		vec2 position = ComponentTableGetEntityPosition(components, entity);
 
 		float smooth_w = (camera->camera->size.x * 0.5f) * camera->smooth;
 		float smooth_h = (camera->camera->size.y * 0.5f) * camera->smooth;

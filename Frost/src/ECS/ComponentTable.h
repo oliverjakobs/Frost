@@ -2,7 +2,8 @@
 #define ECS_COMPONENT_TABLE_H
 
 #include "clib/dictionary.h"
-#include "Components.h"
+
+#include "math/vec2.h"
 
 typedef enum
 {
@@ -28,6 +29,11 @@ void ComponentTableClear(ComponentTable* table);
 
 void* ComponentTableAddComponent(ComponentTable* table, const char* entity, ComponentType type, void* component);
 void* ComponentTableGetComponent(ComponentTable* table, const char* entity, ComponentType type);
+
+/* Helper Functions */
+void ComponentTableSetEntityPosition(ComponentTable* table, const char* entity, vec2 pos);
+vec2 ComponentTableGetEntityPosition(ComponentTable* table, const char* entity);
+vec2 ComponentTableGetEntityCenter(ComponentTable* table, const char* entity);
 
 
 #endif /* !ECS_COMPONENT_TABLE_H */

@@ -117,9 +117,21 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			EcsEntity* entity = SceneLoaderLoadTemplate(args[0], args[1], &manager->templates, &manager->scene->components, manager->resources);
-			SceneAddEntityPos(manager->scene, entity, atoi(args[2]), pos);
+			char* path = clib_strmap_get(&manager->templates, args[1]);
+			if (!path)
+			{
+				ConsoleOut(&manager->console, "Couldn't find template for %s", args[1]);
+				break;
+			}
+
+			if (SceneLoaderLoadTemplate(args[0], path, &manager->scene->components, manager->resources))
+			{
+				EcsEntity entity;
+				EcsEntityLoad(&entity, args[0], args[1]);
+
+				vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
+				SceneAddEntityPos(manager->scene, &entity, atoi(args[2]), pos);
+			}
 		}
 		break;
 	}

@@ -1,41 +1,43 @@
 #include "AnimationConditions.h"
 
-int AnimationConditionJump(EcsEntity* e, int s)
-{
-	/*EcsPhysicsComponent* comp = e->physics;
+#include "ECS/Components.h"
 
-	if (comp)
-		return comp->body->velocity.y > 0.0f;*/
+int AnimationConditionJump(ComponentTable* components, const char* entity, int s)
+{
+	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+
+	if (physics)
+		return physics->body.velocity.y > 0.0f;
 
 	return 0;
 }
 
-int AnimationConditionFall(EcsEntity* e, int s)
+int AnimationConditionFall(ComponentTable* components, const char* entity, int s)
 {
-	/*EcsPhysicsComponent* comp = e->physics;
+	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
 
-	if (comp)
-		return !comp->body->collidesBottom && comp->body->velocity.y <= 0.0f;*/
+	if (physics)
+		return !physics->body.collidesBottom && physics->body.velocity.y <= 0.0f;
 
 	return 0;
 }
 
-int AnimationConditionWalk(EcsEntity* e, int s)
+int AnimationConditionWalk(ComponentTable* components, const char* entity, int s)
 {
-	/*EcsPhysicsComponent* comp = e->physics;
+	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
 
-	if (comp)
-		return comp->body->collidesBottom && comp->body->velocity.x != 0.0f;*/
+	if (physics)
+		return physics->body.collidesBottom && physics->body.velocity.x != 0.0f;
 
 	return 0;
 }
 
-int AnimationConditionIdle(EcsEntity* e, int s)
+int AnimationConditionIdle(ComponentTable* components, const char* entity, int s)
 {
-	/*EcsPhysicsComponent* comp = e->physics;
+	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
 
-	if (comp)
-		return comp->body->collidesBottom && comp->body->velocity.x == 0.0f;*/
+	if (physics)
+		return physics->body.collidesBottom && physics->body.velocity.x == 0.0f;
 
 	return 0;
 }

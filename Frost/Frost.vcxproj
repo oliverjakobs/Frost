@@ -91,7 +91,6 @@
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h" />
     <ClInclude Include="src\Animation\AnimationConditions.h" />
-    <ClInclude Include="src\Animation\Animator.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
@@ -107,8 +106,8 @@
     <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
-    <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\ECS\Components.h" />
+    <ClInclude Include="src\ECS\Components\AnimationComponent.h" />
     <ClInclude Include="src\ECS\ComponentTable.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
@@ -161,7 +160,6 @@
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c" />
     <ClCompile Include="src\Animation\AnimationConditions.c" />
-    <ClCompile Include="src\Animation\Animator.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Application\EventHandler.c" />
@@ -174,7 +172,7 @@
     <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
-    <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\Components\AnimationComponent.c" />
     <ClCompile Include="src\ECS\ComponentTable.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />

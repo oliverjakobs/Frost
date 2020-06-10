@@ -1,5 +1,5 @@
 #include "InteractionSystem.h"
 
-void EcsSystemInteraction(EcsEntity* entity, ComponentTable* components, float deltatime)
+void EcsSystemInteraction(ComponentTable* components, const char* entity, float deltatime)
 {
 }

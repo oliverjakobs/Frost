@@ -49,13 +49,13 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 	if (!entity)
 		return;
 
-	EcsPhysicsComponent* phys = (EcsPhysicsComponent*)ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_PHYSICS);
+	EcsPhysicsComponent* phys = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_PHYSICS);
 	if (phys)
 	{
-		WorldAddBody(scene->world, phys->body);
+		WorldAddBody(scene->world, &phys->body);
 	}
 
-	EcsCameraComponent* cam = (EcsCameraComponent*)ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
+	EcsCameraComponent* cam = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
 	if (cam)
 	{
 		cam->camera = scene->camera;
@@ -74,7 +74,7 @@ void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 positi
 {
 	if (!entity) return;
 
-	EcsEntitySetPosition(entity->name, &scene->components, position);
+	ComponentTableSetEntityPosition(&scene->components, entity->name, position);
 	SceneAddEntity(scene, entity, z_index);
 }
 
@@ -141,15 +141,17 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
 	{
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
 
-		/*if (!entity->texture) continue;
+		EcsTextureComponent* texture = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_TEXTURE);
 
-		vec2 position = EcsEntityGetPosition(entity);
+		if (!texture) continue;
 
-		vec2 min = vec2_sub(position, (vec2){ entity->texture->width / 2.0f, 0.0f });
-		vec2 max = vec2_add(min, (vec2){ entity->texture->width, entity->texture->height });
+		vec2 position = ComponentTableGetEntityPosition(&scene->components, entity->name);
+
+		vec2 min = vec2_sub(position, (vec2){ texture->width / 2.0f, 0.0f });
+		vec2 max = vec2_add(min, (vec2){ texture->width, texture->height });
 
 		if (vec2_inside(pos, min, max))
-			return entity;*/
+			return entity;
 	}
 
 	return NULL;
