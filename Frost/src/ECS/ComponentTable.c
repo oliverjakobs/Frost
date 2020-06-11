@@ -45,7 +45,8 @@ size_t GetComponentSize(ComponentType type)
 	case COMPONENT_TEXTURE:		return sizeof(EcsTextureComponent);
 	case COMPONENT_ANIMATION:	return sizeof(EcsAnimationComponent);
 	case COMPONENT_CAMERA:		return sizeof(EcsCameraComponent);
-	case COMPONENT_INTERACTION: return sizeof(EcsInteractionComponent);
+	case COMPONENT_INTERACTOR:	return sizeof(EcsInteractorComponent);
+	case COMPONENT_INTERACTION:	return sizeof(EcsInteractionComponent);
 	default: return 0;
 	}
 }

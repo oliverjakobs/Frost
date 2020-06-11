@@ -13,9 +13,10 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 
 	scene->smooth_movement = 0.5f;
 
-	EcsInit(&scene->ecs, 2, 2);
+	EcsInit(&scene->ecs, 3, 2);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
+	EcsAddUpdateSystem(&scene->ecs, EcsSystemInteraction);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
 	

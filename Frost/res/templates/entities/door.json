@@ -14,6 +14,7 @@
     "frame": 0
   },
   "interaction": {
-    "radius": 32.0
+    "radius": 32.0,
+    "type": 0
   }
 }

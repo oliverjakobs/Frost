@@ -4,7 +4,7 @@
 
 void clib_array_alloc(clib_array* arr, size_t initial_size, size_t element_size)
 {
-    arr->data = (clib_array_base_type*)malloc(initial_size * element_size);
+    arr->data = malloc(initial_size * element_size);
     arr->capacity = initial_size;
     arr->used = 0;
 
@@ -13,7 +13,7 @@ void clib_array_alloc(clib_array* arr, size_t initial_size, size_t element_size)
 
 void clib_array_resize(clib_array* arr, size_t new_size)
 {
-    clib_array_base_type* data = (clib_array_base_type*)realloc(arr->data, new_size * arr->element_size);
+    clib_array_base_type* data = realloc(arr->data, new_size * arr->element_size);
     if (data)
     {
         arr->data = data;

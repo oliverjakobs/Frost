@@ -1,5 +1,7 @@
 #include "vec2.h"
 
+#include <math.h>
+
 vec2 vec2_mult(vec2 vec, float f)
 {
 	vec2 v;
@@ -27,10 +29,23 @@ vec2 vec2_sub(vec2 a, vec2 b)
 	return v;
 }
 
+float vec2_dot(vec2 a, vec2 b)
+{
+	return a.x * b.x + a.y * b.y;
+}
+
 int vec2_inside(vec2 point, vec2 min, vec2 max)
 {
 	if (point.x < min.x || point.y < min.y) return 0;
 	if (point.x > max.x || point.y > max.y) return 0;
 
 	return 1;
+}
+
+float vec2_distance(vec2 a, vec2 b)
+{
+	vec2 dis_vec;
+	dis_vec.x = a.x - b.x;
+	dis_vec.y = a.y - b.y;
+	return sqrtf(vec2_dot(dis_vec, dis_vec));
 }

@@ -64,9 +64,21 @@ typedef struct
 	float scene_h;
 } EcsCameraComponent;
 
+
+typedef enum
+{
+	INTERACTION_SIMPLE
+} InteractionType;
+
+typedef struct
+{
+	InteractionType type;
+} EcsInteractorComponent;
+
 typedef struct
 {
 	float radius;
+	InteractionType type;
 } EcsInteractionComponent;
 
 #endif /* !ECS_COMPONENTS_H */

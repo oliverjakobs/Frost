@@ -399,8 +399,18 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	{
 		EcsInteractionComponent comp;
 		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL);
+		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL);
 
 		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTION, &comp);
+	}
+
+	tb_json_read(json, &element, "{'interactor'");
+	if (element.error == TB_JSON_OK)
+	{
+		EcsInteractorComponent comp;
+		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL);
+
+		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTOR, &comp);
 	}
 
 	free(json);

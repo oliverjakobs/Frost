@@ -31,7 +31,7 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
-	SceneManagerChangeScene(&scene_manager, "scene2");
+	SceneManagerChangeScene(&scene_manager, "scene");
 }
 
 void OnDestroy(Application* app)
