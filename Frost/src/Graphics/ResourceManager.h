@@ -11,8 +11,8 @@ extern "C"
 
 typedef struct
 {
-	clib_dict textures;	/* <str,IgnisTexture> */
-	clib_dict fonts;	/* <str,IgnisFont> */
+	clib_hashmap textures;	/* <str,IgnisTexture> */
+	clib_hashmap fonts;	/* <str,IgnisFont> */
 } ResourceManager;
 
 int ResourceManagerInit(ResourceManager* resources, const char* path);

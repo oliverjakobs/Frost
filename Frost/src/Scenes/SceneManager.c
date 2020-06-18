@@ -26,8 +26,8 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 	}
 	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
 
-	clib_strmap_init(&manager->scenes, 0);
-	clib_strmap_init(&manager->templates, 0);
+	clib_strmap_alloc(&manager->scenes, 0);
+	clib_strmap_alloc(&manager->templates, 0);
 
 	SceneLoaderLoadRegister(manager, reg);
 
@@ -43,8 +43,8 @@ void SceneManagerDestroy(SceneManager* manager)
 		SceneQuit(manager->scene);
 
 	free(manager->scene);
-	clib_strmap_destroy(&manager->scenes);
-	clib_strmap_destroy(&manager->templates);
+	clib_strmap_free(&manager->scenes);
+	clib_strmap_free(&manager->templates);
 }
 
 void SceneManagerFocusConsole(SceneManager* manager)
@@ -64,7 +64,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 	if (strcmp(manager->scene_name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		char* path = clib_strmap_get(&manager->scenes, name);
+		char* path = clib_strmap_find(&manager->scenes, name);
 		if (!path)
 		{
 			DEBUG_ERROR("[SceneManager] Couldn't find scene: %s\n", name);
@@ -117,7 +117,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			char* path = clib_strmap_get(&manager->templates, args[1]);
+			char* path = clib_strmap_find(&manager->templates, args[1]);
 			if (!path)
 			{
 				ConsoleOut(&manager->console, "Couldn't find template for %s", args[1]);
@@ -127,7 +127,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 			if (SceneLoaderLoadTemplate(args[0], path, &manager->scene->components, manager->resources))
 			{
 				EcsEntity entity;
-				EcsEntityLoad(&entity, args[0], args[1]);
+				EcsEntityLoad(&entity, args[0], args[1], &manager->scene->components);
 
 				vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
 				SceneAddEntityPos(manager->scene, &entity, atoi(args[2]), pos);
@@ -147,7 +147,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		{
 			CLIB_STRMAP_ITERATE_FOR(&manager->scenes)
 			{
-				char* name = clib_strmap_iter_get_key(iter);
+				const char* name = clib_strmap_iter_get_key(iter);
 
 				ConsoleOut(&manager->console, " - %s %s", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
 			}
@@ -158,14 +158,14 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 			{
 				EcsEntity* e = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
 
-				ConsoleOut(&manager->console, " - %s (%d)", e->name, e->z_index);
+				ConsoleOut(&manager->console, " - %s (%d)", e->name, ComponentTableGetZIndex(e->components, e->name));
 			}
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
 			CLIB_STRMAP_ITERATE_FOR(&manager->templates)
 			{
-				char* name = clib_strmap_iter_get_key(iter);
+				const char* name = clib_strmap_iter_get_key(iter);
 				char* templ = clib_strmap_iter_get_value(iter);
 
 				ConsoleOut(&manager->console, " - %s: %s", name, templ);
@@ -198,7 +198,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = clib_strmap_get(&manager->scenes, manager->scene_name);
+			char* path = clib_strmap_find(&manager->scenes, manager->scene_name);
 			if (!path)
 			{
 				ConsoleOut(&manager->console, "Couldn't find path for %s", manager->scene_name);

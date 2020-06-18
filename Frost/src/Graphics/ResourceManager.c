@@ -9,8 +9,8 @@
 
 int ResourceManagerInit(ResourceManager* resources, const char* path)
 {
-	clib_dict_init(&resources->textures, 0);
-	clib_dict_init(&resources->fonts, 0);
+	clib_dict_alloc(&resources->textures, 0);
+	clib_dict_alloc(&resources->fonts, 0);
 
 	char* json = ignisReadFile(path, NULL);
 
@@ -120,7 +120,7 @@ IgnisFont* ResourceManagerAddFont(ResourceManager* manager, const char* name, co
 
 IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char* name)
 {
-	IgnisTexture2D* tex = (IgnisTexture2D*)clib_dict_get(&manager->textures, name);
+	IgnisTexture2D* tex = clib_dict_find(&manager->textures, name);
 
 	if (!tex) DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 
@@ -129,7 +129,7 @@ IgnisTexture2D* ResourceManagerGetTexture2D(ResourceManager* manager, const char
 
 IgnisFont* ResourceManagerGetFont(ResourceManager* manager, const char* name)
 {
-	IgnisFont* font = (IgnisFont*)clib_dict_get(&manager->fonts, name);
+	IgnisFont* font = clib_dict_find(&manager->fonts, name);
 
 	if (!font) DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 

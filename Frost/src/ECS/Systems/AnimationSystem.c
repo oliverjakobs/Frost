@@ -1,41 +1,41 @@
 #include "AnimationSystem.h"
 
-static void PlayAnimation(EcsAnimationComponent* comp, const char* name)
+static void PlayAnimation(Animator* animator, const char* name)
 {
-	if (strcmp(comp->current, name) == 0)
+	if (strcmp(animator->current, name) == 0)
 		return;
 
-	Animation* animation = (Animation*)clib_dict_get(&comp->animations, name);
+	Animation* animation = clib_dict_find(&animator->animations, name);
 	if (animation)
 	{
 		AnimationStart(animation);
-		comp->current = clib_dict_get_key_ptr(&comp->animations, name);
+		animator->current = clib_dict_get_key_ptr(&animator->animations, name);
 	}
 }
 
 void EcsSystemAnimation(ComponentTable* components, const char* entity, float deltatime)
 {
-	EcsAnimationComponent* animation = ComponentTableGetComponent(components, entity, COMPONENT_ANIMATION);
+	Animator* animator = ComponentTableGetComponent(components, entity, COMPONENT_ANIMATION);
 	EcsTextureComponent* texture = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
 
-	if (!(animation && texture)) return;
+	if (!(animator && texture)) return;
 
-	if (!animation->current)
+	if (!animator->current)
 	{
 		texture->frame = 0;
 		return;
 	}
 
-	Animation* current = (Animation*)clib_dict_get(&animation->animations, animation->current);
+	Animation* current = clib_dict_find(&animator->animations, animator->current);
 	if (current)
 	{
 		AnimationTick(current, deltatime);
-		clib_strmap* transitions = &current->transitions;
-		for (clib_strmap_iter* iter = clib_strmap_iterator(transitions); iter; iter = clib_strmap_iter_next(transitions, iter))
+		clib_hashmap* transitions = &current->transitions;
+		for (clib_hashmap_iter* iter = clib_strmap_iterator(transitions); iter; iter = clib_strmap_iter_next(transitions, iter))
 		{
-			AnimationCondition* cond = (AnimationCondition*)clib_dict_get(&animation->conditions, clib_strmap_iter_get_key(iter));
+			AnimationCondition* cond = clib_dict_find(&animator->conditions, clib_strmap_iter_get_key(iter));
 			if (cond && cond->func(components, entity, 0))
-				PlayAnimation(animation, clib_strmap_iter_get_value(iter));
+				PlayAnimation(animator, clib_strmap_iter_get_value(iter));
 		}
 		texture->frame = current->frame;
 	}

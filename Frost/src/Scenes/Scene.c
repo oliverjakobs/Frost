@@ -42,7 +42,13 @@ void SceneQuit(Scene* scene)
 
 int _SceneEntityCmp(const EcsEntity* a, const EcsEntity* b)
 {
-	return a->z_index - b->z_index;
+	Transform* transform_a = ComponentTableGetComponent(a->components, a->name, COMPONENT_TRANSFORM);
+	Transform* transform_b = ComponentTableGetComponent(b->components, b->name, COMPONENT_TRANSFORM);
+
+	if (transform_a && transform_b)
+		return transform_a->z_index - transform_b->z_index;
+
+	return 0;
 }
 
 void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
@@ -64,7 +70,12 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 		cam->scene_h = scene->height;
 	}
 
-	entity->z_index = z_index;
+	Transform* trans = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_TRANSFORM);
+	if (trans)
+	{
+		trans->z_index = z_index;
+	}
+
 	clib_array_push(&scene->entities, entity);
 
 	/* sort by z_index */

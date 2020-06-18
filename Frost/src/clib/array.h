@@ -35,7 +35,7 @@ void* clib_array_insert(clib_array* arr, void* element, size_t index);
 
 void clib_array_remove(clib_array* arr, size_t index);
 
-void* clib_array_get(clib_array* arr, size_t index);
+void* clib_array_get(clib_array* arr, size_t index); 
 void* clib_array_last(clib_array* arr);
 
 /* sort array with qsort */

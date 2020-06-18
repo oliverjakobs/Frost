@@ -13,7 +13,7 @@ typedef struct
 
 	int frame;
 
-	clib_strmap transitions;
+	clib_hashmap transitions;
 } Animation;
 
 void AnimationLoad(Animation* animation, int start, int length, float delay, size_t initial);

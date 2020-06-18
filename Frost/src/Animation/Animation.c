@@ -11,12 +11,12 @@ void AnimationLoad(Animation* animation, int start, int length, float delay, siz
 	animation->clock = 0.0f;
 	animation->frame = 0;
 
-	clib_strmap_init(&animation->transitions, initial);
+	clib_strmap_alloc(&animation->transitions, initial);
 }
 
 void AnimationDestroy(Animation* animation)
 {
-	clib_strmap_destroy(&animation->transitions);
+	clib_strmap_free(&animation->transitions);
 }
 
 void AnimationStart(Animation* animation)

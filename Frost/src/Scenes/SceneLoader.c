@@ -64,7 +64,7 @@ int SceneLoaderLoadRegister(SceneManager* manager, const char* path)
 	return 1;
 }
 
-int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_strmap* templates)
+int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_hashmap* templates)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -135,7 +135,7 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 
 			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL);
 
-			char* path = clib_strmap_get(templates, temp);
+			char* path = clib_strmap_find(templates, temp);
 			if (!path)
 			{
 				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", temp);
@@ -145,7 +145,7 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 			if (SceneLoaderLoadTemplate(name, path, &scene->components, resources))
 			{
 				EcsEntity entity;
-				EcsEntityLoad(&entity, name, temp);
+				EcsEntityLoad(&entity, name, temp, &scene->components);
 
 				SceneAddEntityPos(scene, &entity, z_index, pos);
 			}
@@ -226,7 +226,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, e->z_index);
+		tb_jwrite_array_int(&jwc, ComponentTableGetZIndex(&scene->components, e->name));
 
 		tb_jwrite_end(&jwc);
 
@@ -272,11 +272,13 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'position'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsPositionComponent comp;
+		Transform comp;
 		comp.x = tb_json_float((char*)element.value, "[0", NULL);
 		comp.y = tb_json_float((char*)element.value, "[1", NULL);
 
-		ComponentTableAddComponent(components, entity, COMPONENT_POSITION, &comp);
+		comp.z_index = 0;
+
+		ComponentTableAddComponent(components, entity, COMPONENT_TRANSFORM, &comp);
 	}
 
 	tb_json_read(json, &element, "{'physics'");
@@ -327,8 +329,8 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsAnimationComponent comp;
-		AnimationComponentInit(&comp);
+		Animator animator;
+		AnimatorInit(&animator);
 
 		for (int i = 0; i < element.elements; i++)
 		{
@@ -365,9 +367,9 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 				}
 			}
 
-			AnimationComponentAddAnimation(&comp, anim_name, animation);
+			AnimatorAddAnimation(&animator, anim_name, animation);
 		}
-		ComponentTableAddComponent(components, entity, COMPONENT_ANIMATION, &comp);
+		ComponentTableAddComponent(components, entity, COMPONENT_ANIMATION, &animator);
 	}
 
 	tb_json_read(json, &element, "{'movement'");

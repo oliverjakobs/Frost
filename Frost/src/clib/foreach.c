@@ -12,7 +12,7 @@ int clib_hashmap_foreach(const clib_hashmap* map, int (*func)(const void*, void*
         if (!entry->key)
             continue;
 
-        size_t num_entries = map->size;
+        size_t num_entries = map->used;
         const void* key = entry->key;
         int rc = func(entry->key, entry->value, arg);
 
@@ -21,7 +21,7 @@ int clib_hashmap_foreach(const clib_hashmap* map, int (*func)(const void*, void*
         /* Run this entry again if func() deleted it */
         if (entry->key != key)
             --entry;
-        else if (num_entries != map->size)
+        else if (num_entries != map->used)
             return -1; /* Stop immediately if func put/removed another entry */
     }
 

@@ -17,8 +17,8 @@ typedef struct
 	Camera* camera;
 	ResourceManager* resources;
 
-	clib_strmap scenes;
-	clib_strmap templates;
+	clib_hashmap scenes;
+	clib_hashmap templates;
 
 	Scene* scene;
 	char scene_name[APPLICATION_STR_LEN];

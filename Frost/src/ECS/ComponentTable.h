@@ -7,7 +7,7 @@
 
 typedef enum
 {
-	COMPONENT_POSITION = 0,
+	COMPONENT_TRANSFORM = 0,
 	COMPONENT_PHYSICS,
 	COMPONENT_MOVEMENT,
 	COMPONENT_TEXTURE,
@@ -20,7 +20,7 @@ typedef enum
 
 typedef struct
 {
-	clib_dict components[NUM_COMPONENT_TYPES];
+	clib_hashmap components[NUM_COMPONENT_TYPES];
 } ComponentTable;
 
 void ComponentTableInit(ComponentTable* table, size_t initial_size);
@@ -35,6 +35,8 @@ void* ComponentTableGetComponent(ComponentTable* table, const char* entity, Comp
 void ComponentTableSetEntityPosition(ComponentTable* table, const char* entity, vec2 pos);
 vec2 ComponentTableGetEntityPosition(ComponentTable* table, const char* entity);
 vec2 ComponentTableGetEntityCenter(ComponentTable* table, const char* entity);
+
+int ComponentTableGetZIndex(ComponentTable* table, const char* entity);
 
 
 #endif /* !ECS_COMPONENT_TABLE_H */

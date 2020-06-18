@@ -27,7 +27,7 @@ void clib_array_shrink_to_fit(clib_array* arr)
 }
 
 void clib_array_free(clib_array* arr)
-{
+{ 
     free(arr->data);
     arr->capacity = 0;
     arr->used = 0;
@@ -84,9 +84,9 @@ void* clib_array_insert(clib_array* arr, void* element, size_t index)
 
 void clib_array_remove(clib_array* arr, size_t index)
 {
-    if (index >= arr->used)
+    if(index >= arr->used)
         return;
-
+    
     size_t size = (arr->used - (index + 1)) * arr->element_size;
     size_t dest_offset = index * arr->element_size;
     size_t src_offset = (index + 1) * arr->element_size;
@@ -111,5 +111,5 @@ void* clib_array_last(clib_array* arr)
 
 void clib_array_sort(clib_array* arr, int (*cmp)(const void*, const void*))
 {
-    qsort(arr->data, arr->used, arr->element_size, cmp);
+	qsort(arr->data, arr->used, arr->element_size, cmp);
 }

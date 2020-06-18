@@ -3,17 +3,12 @@
 
 #include "ComponentTable.h"
 
-#include "Components/AnimationComponent.h"
+#include "Components/Animator.h"
+#include "Components/Transform.h"
 #include "Ignis/Ignis.h"
 #include "Physics/World.h"
 #include "Camera/Camera.h"
 #include "math/math.h"
-
-typedef struct
-{
-	float x;
-	float y;
-} EcsPositionComponent;
 
 typedef struct
 {
