@@ -92,34 +92,19 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&active->entities, i);
 
-		/* TODO: entity rect */
-		Sprite* sprite = ComponentTableGetComponent(&active->components, entity->name, COMPONENT_TEXTURE);
-		if (sprite)
-		{
-			vec2 position = EntityGetPosition(entity->name, &active->components);
+		rect r = EntityGetRect(entity->name, &active->components);
 
-			vec2 min = vec2_sub(position, (vec2) { sprite->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { sprite->width, sprite->height });
-
-			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
-		}
+		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, color);
 	}
 
 	if (editor->hover)
 	{
-		Sprite* sprite = ComponentTableGetComponent(&active->components, editor->hover->name, COMPONENT_TEXTURE);
+		rect r = EntityGetRect(editor->hover->name, &active->components);
 
-		if (sprite)
-		{
-			/* TODO: entity rect */
-			vec2 position = EntityGetPosition(editor->hover->name, &active->components);
+		vec2 position = EntityGetPosition(editor->hover->name, &active->components);
 
-			vec2 min = vec2_sub(position, (vec2) { sprite->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { sprite->width, sprite->height });
-
-			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
-			Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
-		}
+		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
+		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
 	}
 
 	Primitives2DFlush();

@@ -3,8 +3,6 @@
 
 #include "../Entity.h"
 
-void EcsSystemDebugRenderPre(const float* mat_view_proj);
-void EcsSystemDebugRender(ComponentTable* components, const char* entity);
-void EcsSystemDebugRenderPost();
+void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj);
 
 #endif /* !ECS_DEBUG_RENDER_SYSTEM_H */

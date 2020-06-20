@@ -1,16 +1,12 @@
 #ifndef ECS_COMPONENTS_H
 #define ECS_COMPONENTS_H
 
-#include "ComponentTable.h"
-
 #include "Components/Animator.h"
 #include "Components/Transform.h"
 #include "Components/RigidBody.h"
 #include "Components/Sprite.h"
 
-#include "Ignis/Ignis.h"
 #include "Camera/Camera.h"
-#include "math/math.h"
 
 typedef enum
 {

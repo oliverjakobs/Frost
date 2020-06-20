@@ -3,6 +3,6 @@
 
 #include "../Entity.h"
 
-void EcsSystemPhysics(ComponentTable* components, const char* entity, float deltatime);
+void EcsSystemPhysics(ComponentTable* components, float deltatime);
 
 #endif /* !ECS_PHYSICS_SYSTEM_H */

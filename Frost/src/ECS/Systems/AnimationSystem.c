@@ -13,34 +13,32 @@ static void PlayAnimation(Animator* animator, const char* name)
 	}
 }
 
-void EcsSystemAnimation(ComponentTable* components, const char* entity, float deltatime)
+void EcsSystemAnimation(ComponentTable* components, float deltatime)
 {
-	Animator* animator = ComponentTableGetComponent(components, entity, COMPONENT_ANIMATION);
-	Sprite* sprite = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
-
-	if (!(animator && sprite)) return;
-
-	if (!animator->current)
+	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_ANIMATION], iter)
 	{
-		sprite->frame = 0;
-		return;
-	}
+		Animator* animator = clib_dict_iter_get_value(iter);
 
-	Animation* current = clib_dict_find(&animator->animations, animator->current);
-	if (current)
-	{
+		Sprite* sprite = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_SPRITE);
+
+		if (!sprite) continue;
+
+		Animation* current = clib_dict_find(&animator->animations, animator->current);
+		if (!current)
+		{
+			sprite->frame = 0;
+			continue;
+		}
+
 		AnimationTick(current, deltatime);
 		clib_hashmap* transitions = &current->transitions;
-		for (clib_hashmap_iter* iter = clib_strmap_iterator(transitions); iter; iter = clib_strmap_iter_next(transitions, iter))
+
+		CLIB_DICT_ITERATE_FOR(transitions, transition_iter)
 		{
-			AnimationCondition* cond = clib_dict_find(&animator->conditions, clib_strmap_iter_get_key(iter));
-			if (cond && cond->func(components, entity, 0))
-				PlayAnimation(animator, clib_strmap_iter_get_value(iter));
+			AnimationCondition* cond = clib_dict_find(&animator->conditions, clib_strmap_iter_get_key(transition_iter));
+			if (cond && cond->func(components, clib_dict_iter_get_key(iter), 0))
+				PlayAnimation(animator, clib_strmap_iter_get_value(transition_iter));
 		}
 		sprite->frame = current->frame;
-	}
-	else
-	{
-		sprite->frame = 0;
 	}
 }

@@ -1,24 +1,24 @@
 #include "InteractionSystem.h"
 
-void EcsSystemInteraction(ComponentTable* components, const char* entity, float deltatime)
+void EcsSystemInteraction(ComponentTable* components, float deltatime)
 {
-	EcsInteractorComponent* interactor = ComponentTableGetComponent(components, entity, COMPONENT_INTERACTOR);
-
-	if (!interactor) return;
-
-	vec2 interactor_center = EntityGetCenter(entity, components);
-
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
+	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTOR], interactor_iter)
 	{
-		EcsInteractionComponent* interaction = clib_dict_iter_get_value(iter);
+		EcsInteractorComponent* interactor = clib_dict_iter_get_value(interactor_iter);
+		vec2 interactor_center = EntityGetCenter(clib_dict_iter_get_key(interactor_iter), components);
 
-		if (interaction->type <= interactor->type)
+		CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
 		{
-			char* interaction_entity = clib_dict_iter_get_key(iter);
-			vec2 center = EntityGetCenter(interaction_entity, components);
+			EcsInteractionComponent* interaction = clib_dict_iter_get_value(iter);
 
-			if (vec2_distance(center, interactor_center) <= interaction->radius)
-				printf("Interaction with %s\n", interaction_entity);
+			if (interaction->type <= interactor->type)
+			{
+				char* interaction_entity = clib_dict_iter_get_key(iter);
+				vec2 center = EntityGetCenter(interaction_entity, components);
+
+				if (vec2_distance(center, interactor_center) <= interaction->radius)
+					printf("Interaction with %s\n", interaction_entity);
+			}
 		}
 	}
 }

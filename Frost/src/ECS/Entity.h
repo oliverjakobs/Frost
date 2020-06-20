@@ -23,4 +23,6 @@ vec2 EntityGetCenter(const char* entity, ComponentTable* components);
 void EntitySetZIndex(const char* entity, ComponentTable* components, int z_index);
 int EntityGetZIndex(const char* entity, ComponentTable* components);
 
+rect EntityGetRect(const char* entity, ComponentTable* components);
+
 #endif /* !ECS_ENTITY_H */

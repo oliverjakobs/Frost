@@ -11,14 +11,12 @@
 
 typedef struct
 {
-	void (*update)(ComponentTable*, const char*, float);
+	void (*update)(ComponentTable*, float);
 } EcsUpdateSystem;
 
 typedef struct
 {
-	void (*render)(ComponentTable*, const char*);
-	void (*pre)(const float*);
-	void (*post)();
+	void (*render)(ComponentTable*, const float*);
 } EcsRenderSystem;
 
 #endif /* !SYSTEMS_H */

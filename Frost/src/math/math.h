@@ -16,10 +16,8 @@
 
 typedef struct
 {
-	float x;
-	float y;
-	float w;
-	float h;
+	vec2 min;
+	vec2 max;
 } rect;
 
 typedef struct

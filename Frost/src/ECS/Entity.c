@@ -23,19 +23,16 @@ void EcsEntityDestroy(EcsEntity* entity)
 void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
-	if (transform)
-	{
-		transform->position = pos;
-	}
+	if (transform) transform->position = pos;
+
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	if (body) body->position = vec2_add(pos, body->offset);
 }
 
 vec2 EntityGetPosition(const char* entity, ComponentTable* components)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
-	if (transform)
-	{
-		return transform->position;
-	}
+	if (transform) return transform->position;
 
 	return vec2_zero();
 }
@@ -59,15 +56,30 @@ vec2 EntityGetCenter(const char* entity, ComponentTable* components)
 void EntitySetZIndex(const char* entity, ComponentTable* components, int z_index)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
-	if (transform)
-		transform->z_index = z_index;
+	if (transform) transform->z_index = z_index;
 }
 
 int EntityGetZIndex(const char* entity, ComponentTable* components)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
-	if (transform)
-		return transform->z_index;
+	if (transform) return transform->z_index;
 
 	return 0;
+}
+
+rect EntityGetRect(const char* entity, ComponentTable* components)
+{
+	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+
+	rect r;
+	r.min = vec2_zero();
+	r.max = vec2_zero();
+
+	if (transform)
+	{
+		r.min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
+		r.max = vec2_add(r.min, transform->size);
+	}
+
+	return r;
 }

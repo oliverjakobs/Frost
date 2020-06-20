@@ -15,8 +15,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemInteraction);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemRender, EcsSystemRenderPre, EcsSystemRenderPost);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender, EcsSystemDebugRenderPre, EcsSystemDebugRenderPost);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
+	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender);
 	
 	clib_array_alloc(&scene->entities, 16, sizeof(EcsEntity));
 	ComponentTableInit(&scene->components, 16);
@@ -130,17 +130,9 @@ EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
 	{
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
 
-		/* TODO: entity rect */
-		Sprite* sprite = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_TEXTURE);
+		rect r = EntityGetRect(entity->name, &scene->components);
 
-		if (!sprite) continue;
-
-		vec2 position = EntityGetPosition(entity->name, &scene->components);
-
-		vec2 min = vec2_sub(position, (vec2){ sprite->width / 2.0f, 0.0f });
-		vec2 max = vec2_add(min, (vec2){ sprite->width, sprite->height });
-
-		if (vec2_inside(pos, min, max))
+		if (vec2_inside(pos, r.min, r.max))
 			return entity;
 	}
 

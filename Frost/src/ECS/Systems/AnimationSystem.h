@@ -3,6 +3,6 @@
 
 #include "../Entity.h"
 
-void EcsSystemAnimation(ComponentTable* components, const char* entity, float deltatime);
+void EcsSystemAnimation(ComponentTable* components, float deltatime);
 
 #endif /* !ECS_ANIMATION_SYSTEM_H */

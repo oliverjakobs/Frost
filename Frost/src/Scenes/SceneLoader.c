@@ -332,7 +332,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		sprite.texture = ResourceManagerGetTexture2D(resources, texture);
 
 		if (sprite.texture)
-			ComponentTableAddComponent(components, entity, COMPONENT_TEXTURE, &sprite);
+			ComponentTableAddComponent(components, entity, COMPONENT_SPRITE, &sprite);
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 	}
