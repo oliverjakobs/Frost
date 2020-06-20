@@ -5,17 +5,12 @@
 
 #include "Components/Animator.h"
 #include "Components/Transform.h"
+#include "Components/RigidBody.h"
+#include "Components/Sprite.h"
+
 #include "Ignis/Ignis.h"
-#include "Physics/World.h"
 #include "Camera/Camera.h"
 #include "math/math.h"
-
-typedef struct
-{
-	Body body;
-	float body_x;
-	float body_y;
-} EcsPhysicsComponent;
 
 typedef enum
 {
@@ -32,25 +27,6 @@ typedef struct
 	float jump_power;
 } EcsMovementComponent;
 
-typedef enum
-{
-	RENDER_FLIP_NONE = 0,
-	RENDER_FLIP_HORIZONTAL,
-	RENDER_FLIP_VERTICAL,
-	RENDER_FLIP_BOTH
-} RenderFlip;
-
-typedef struct
-{
-	IgnisTexture2D* texture;
-	size_t frame;
-
-	float width;
-	float height;
-
-	RenderFlip render_flip;
-} EcsTextureComponent;
-
 typedef struct
 {
 	Camera* camera;
@@ -58,7 +34,6 @@ typedef struct
 	float scene_w;
 	float scene_h;
 } EcsCameraComponent;
-
 
 typedef enum
 {

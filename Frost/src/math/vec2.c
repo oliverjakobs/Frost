@@ -2,6 +2,11 @@
 
 #include <math.h>
 
+vec2 vec2_zero()
+{
+	return (vec2) {0.0f, 0.0f};
+}
+
 vec2 vec2_mult(vec2 vec, float f)
 {
 	vec2 v;

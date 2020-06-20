@@ -1,12 +1,12 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include "../ComponentTable.h"
+#include "math/math.h"
 
 typedef struct
 {
-	float x;
-	float y;
+	vec2 position;
+	vec2 size;
 
 	int z_index;
 } Transform;

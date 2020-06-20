@@ -115,11 +115,11 @@ int ApplicationLoadConfig(Application* app, const char* path)
 	char title[APPLICATION_STR_LEN];
 	tb_json_string((char*)element.value, "{'title'", title, APPLICATION_STR_LEN, NULL);
 
-	int width = tb_json_int((char*)element.value, "{'width'", NULL);
-	int height = tb_json_int((char*)element.value, "{'height'", NULL);
+	int width = tb_json_int((char*)element.value, "{'width'", NULL, 0);
+	int height = tb_json_int((char*)element.value, "{'height'", NULL, 0);
 
-	int major = tb_json_int((char*)element.value, "{'opengl'[0", NULL);
-	int minor = tb_json_int((char*)element.value, "{'opengl'[1", NULL);
+	int major = tb_json_int((char*)element.value, "{'opengl'[0", NULL, 0);
+	int minor = tb_json_int((char*)element.value, "{'opengl'[1", NULL, 0);
 
 	char index[APPLICATION_PATH_LEN];
 	tb_json_string(json, "{'resources'", index, APPLICATION_PATH_LEN, NULL);

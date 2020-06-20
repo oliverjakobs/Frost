@@ -5,11 +5,6 @@
 #include <stddef.h>
 #include <string.h>
 
-#define MAX(a,b) ((a) > (b) ? a : b)
-#define MIN(a,b) ((a) < (b) ? a : b)
-
-#define BETWEEN(start, end, value) (((value) >= (start)) && ((value) <= (end)))
-
 /*
  * Define CLIB_NOASSERT to compile out all assertions used internally.
  */

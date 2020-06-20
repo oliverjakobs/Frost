@@ -7,6 +7,8 @@ typedef struct
 	float y;
 } vec2;
 
+vec2 vec2_zero();
+
 vec2 vec2_mult(vec2 v, float f);
 vec2 vec2_add(vec2 a, vec2 b);
 vec2 vec2_sub(vec2 a, vec2 b);

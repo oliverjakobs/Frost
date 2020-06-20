@@ -2,7 +2,8 @@
 
 #define TB_JSON_IMPLEMENTATION
 #include "json/tb_json.h"
-#include "clib/clib.h"
+
+#include "math/math.h"
 
 #include "Application/Debugger.h"
 #include "Application/defines.h"
@@ -35,8 +36,8 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 		char texture_path[APPLICATION_PATH_LEN];
 		tb_json_string((char*)texture.value, "{'path'", texture_path, APPLICATION_PATH_LEN, NULL);
 
-		int rows = MAX(tb_json_int((char*)texture.value, "{'atlas'[0", NULL), 1);
-		int columns = MAX(tb_json_int((char*)texture.value, "{'atlas'[1", NULL), 1);
+		int rows = tb_json_int((char*)texture.value, "{'atlas'[0", NULL, 1);
+		int columns = tb_json_int((char*)texture.value, "{'atlas'[1", NULL, 1);
 
 		ResourceManagerAddTexture2D(resources, texture_name, texture_path, rows, columns);
 	}
@@ -56,7 +57,7 @@ int ResourceManagerInit(ResourceManager* resources, const char* path)
 		char font_path[APPLICATION_PATH_LEN];
 		tb_json_string((char*)font.value, "{'path'", font_path, APPLICATION_PATH_LEN, NULL);
 
-		float font_size = tb_json_float((char*)font.value, "{'size'", NULL);
+		float font_size = tb_json_float((char*)font.value, "{'size'", NULL, 0.0f);
 
 		ResourceManagerAddFont(resources, font_name, font_path, font_size);
 	}

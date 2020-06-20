@@ -4,18 +4,18 @@
 
 void EcsSystemPlayer(ComponentTable* components, const char* entity, float deltatime)
 {
-	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
-	EcsTextureComponent* texture = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	Sprite* sprite = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
 	EcsMovementComponent* movement = ComponentTableGetComponent(components, entity, COMPONENT_MOVEMENT);
 	EcsCameraComponent* camera = ComponentTableGetComponent(components, entity, COMPONENT_CAMERA);
 
-	if (!(physics && texture && movement)) return;
+	if (!(body && sprite && movement)) return;
 
 	vec2 velocity;
 	velocity.x = (-InputKeyPressed(KEY_A) + InputKeyPressed(KEY_D)) * movement->speed;
-	velocity.y = physics->body.velocity.y;
+	velocity.y = body->velocity.y;
 
-	if (InputKeyPressed(KEY_SPACE) && physics->body.collidesBottom)
+	if (InputKeyPressed(KEY_SPACE) && body->collides_bottom)
 		velocity.y = movement->jump_power;
 	else if (InputKeyReleased(KEY_SPACE) && (velocity.y > 0.0f))
 		velocity.y *= 0.5f;
@@ -23,21 +23,21 @@ void EcsSystemPlayer(ComponentTable* components, const char* entity, float delta
 	if (velocity.x > 0.0f)
 	{
 		movement->direction = DIRECTION_RIGHT;
-		texture->render_flip = RENDER_FLIP_NONE;
+		sprite->flip = SPRITE_FLIP_NONE;
 	}
 	else if (velocity.x < 0.0f)
 	{
 		movement->direction = DIRECTION_LEFT;
-		texture->render_flip = RENDER_FLIP_HORIZONTAL;
+		sprite->flip = SPRITE_FLIP_HORIZONTAL;
 	}
 
 	// apply velocity
-	physics->body.velocity = velocity;
+	body->velocity = velocity;
 
 	// set view
 	if (camera)
 	{
-		vec2 position = ComponentTableGetEntityPosition(components, entity);
+		vec2 position = EntityGetPosition(entity, components);
 
 		float smooth_w = (camera->camera->size.x * 0.5f) * camera->smooth;
 		float smooth_h = (camera->camera->size.y * 0.5f) * camera->smooth;

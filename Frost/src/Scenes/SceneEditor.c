@@ -16,7 +16,7 @@ void SceneEditorReset(SceneEditor* editor)
 {
 	editor->showgrid = 1;
 	editor->clicked = 0;
-	editor->offset = (vec2){ 0.0f, 0.0f };
+	editor->offset = vec2_zero();
 	editor->hover = NULL;
 }
 
@@ -27,14 +27,14 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		if (editor->hover)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, ComponentTableGetEntityPosition(&active->components, editor->hover->name));
+			editor->offset = vec2_sub(mouse, EntityGetPosition(editor->hover->name, &active->components));
 			editor->clicked = 1;
 		}
 	}
 
 	if (EventMouseButtonReleased(&e) == MOUSE_BUTTON_LEFT)
 	{
-		editor->offset = (vec2){ 0.0f,0.0f };
+		editor->offset = vec2_zero();
 		editor->clicked = 0;
 	}
 }
@@ -58,7 +58,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		ComponentTableSetEntityPosition(&active->components, editor->hover->name, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		EntitySetPosition(editor->hover->name, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
 		editor->hover = SceneGetEntityAt(active, mouse);
 }
@@ -92,13 +92,14 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 		EcsEntity* entity = (EcsEntity*)clib_array_get(&active->entities, i);
 
-		EcsTextureComponent* texture = ComponentTableGetComponent(&active->components, entity->name, COMPONENT_TEXTURE);
-		if (texture)
+		/* TODO: entity rect */
+		Sprite* sprite = ComponentTableGetComponent(&active->components, entity->name, COMPONENT_TEXTURE);
+		if (sprite)
 		{
-			vec2 position = ComponentTableGetEntityPosition(&active->components, entity->name);
+			vec2 position = EntityGetPosition(entity->name, &active->components);
 
-			vec2 min = vec2_sub(position, (vec2) { texture->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { texture->width, texture->height });
+			vec2 min = vec2_sub(position, (vec2) { sprite->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { sprite->width, sprite->height });
 
 			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, color);
 		}
@@ -106,14 +107,15 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 	if (editor->hover)
 	{
-		EcsTextureComponent* texture = ComponentTableGetComponent(&active->components, editor->hover->name, COMPONENT_TEXTURE);
+		Sprite* sprite = ComponentTableGetComponent(&active->components, editor->hover->name, COMPONENT_TEXTURE);
 
-		if (texture)
+		if (sprite)
 		{
-			vec2 position = ComponentTableGetEntityPosition(&active->components, editor->hover->name);
+			/* TODO: entity rect */
+			vec2 position = EntityGetPosition(editor->hover->name, &active->components);
 
-			vec2 min = vec2_sub(position, (vec2) { texture->width / 2.0f, 0.0f });
-			vec2 max = vec2_add(min, (vec2) { texture->width, texture->height });
+			vec2 min = vec2_sub(position, (vec2) { sprite->width / 2.0f, 0.0f });
+			vec2 max = vec2_add(min, (vec2) { sprite->width, sprite->height });
 
 			Primitives2DRenderRect(min.x, min.y, max.x - min.x, max.y - min.y, IGNIS_WHITE);
 			Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);

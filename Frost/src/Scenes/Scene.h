@@ -19,7 +19,6 @@ typedef struct
 	float height;
 
 	Ecs ecs;
-	World* world;
 
 	ComponentTable components;
 	clib_array entities;

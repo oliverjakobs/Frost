@@ -219,12 +219,6 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h">
       <Filter>src\Ignis\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Physics\Body.h">
-      <Filter>src\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Physics\World.h">
-      <Filter>src\Physics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scenes\Scene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
@@ -294,6 +288,8 @@
       <Filter>src\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Components\Transform.h" />
+    <ClInclude Include="src\ECS\Components\RigidBody.h" />
+    <ClInclude Include="src\ECS\Components\Sprite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -404,12 +400,6 @@
     <ClCompile Include="src\Ignis\glad\glad.c">
       <Filter>src\Ignis\glad</Filter>
     </ClCompile>
-    <ClCompile Include="src\Physics\Body.c">
-      <Filter>src\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Physics\World.c">
-      <Filter>src\Physics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scenes\Scene.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
@@ -469,6 +459,7 @@
     <ClCompile Include="src\ECS\Components\Animator.c">
       <Filter>src\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\Components\RigidBody.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

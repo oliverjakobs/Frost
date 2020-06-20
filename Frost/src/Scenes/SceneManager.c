@@ -156,9 +156,9 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		{
 			for (int i = 0; i < manager->scene->entities.used; ++i)
 			{
-				EcsEntity* e = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
+				EcsEntity* entity = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
 
-				ConsoleOut(&manager->console, " - %s (%d)", e->name, ComponentTableGetZIndex(e->components, e->name));
+				ConsoleOut(&manager->console, " - %s (%d)", entity->name, EntityGetZIndex(entity->name, &manager->scene->components));
 			}
 		}
 		else if (strcmp(spec, "templates") == 0)

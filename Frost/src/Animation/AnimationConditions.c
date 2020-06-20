@@ -4,40 +4,40 @@
 
 int AnimationConditionJump(ComponentTable* components, const char* entity, int s)
 {
-	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
-	if (physics)
-		return physics->body.velocity.y > 0.0f;
+	if (body)
+		return body->velocity.y > 0.0f;
 
 	return 0;
 }
 
 int AnimationConditionFall(ComponentTable* components, const char* entity, int s)
 {
-	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
-	if (physics)
-		return !physics->body.collidesBottom && physics->body.velocity.y <= 0.0f;
+	if (body)
+		return !body->collides_bottom && body->velocity.y <= 0.0f;
 
 	return 0;
 }
 
 int AnimationConditionWalk(ComponentTable* components, const char* entity, int s)
 {
-	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
-	if (physics)
-		return physics->body.collidesBottom && physics->body.velocity.x != 0.0f;
+	if (body)
+		return body->collides_bottom && body->velocity.x != 0.0f;
 
 	return 0;
 }
 
 int AnimationConditionIdle(ComponentTable* components, const char* entity, int s)
 {
-	EcsPhysicsComponent* physics = ComponentTableGetComponent(components, entity, COMPONENT_PHYSICS);
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
-	if (physics)
-		return physics->body.collidesBottom && physics->body.velocity.x == 0.0f;
+	if (body)
+		return body->collides_bottom && body->velocity.x == 0.0f;
 
 	return 0;
 }

@@ -6,7 +6,7 @@ void EcsSystemInteraction(ComponentTable* components, const char* entity, float 
 
 	if (!interactor) return;
 
-	vec2 interactor_center = ComponentTableGetEntityCenter(components, entity);
+	vec2 interactor_center = EntityGetCenter(entity, components);
 
 	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
 	{
@@ -15,7 +15,7 @@ void EcsSystemInteraction(ComponentTable* components, const char* entity, float 
 		if (interaction->type <= interactor->type)
 		{
 			char* interaction_entity = clib_dict_iter_get_key(iter);
-			vec2 center = ComponentTableGetEntityCenter(components, interaction_entity);
+			vec2 center = EntityGetCenter(interaction_entity, components);
 
 			if (vec2_distance(center, interactor_center) <= interaction->radius)
 				printf("Interaction with %s\n", interaction_entity);

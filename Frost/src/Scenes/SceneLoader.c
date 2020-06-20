@@ -74,8 +74,8 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 		return 0;
 	}
 
-	float width = tb_json_float((char*)json, "{'size'[0", NULL);
-	float height = tb_json_float((char*)json, "{'size'[1", NULL);
+	float width = tb_json_float((char*)json, "{'size'[0", NULL, 0.0f);
+	float height = tb_json_float((char*)json, "{'size'[1", NULL, 0.0f);
 
 	if (!SceneLoad(scene, camera, width, height))
 	{
@@ -100,13 +100,13 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 			char name[APPLICATION_STR_LEN];
 			tb_json_string((char*)entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
 
-			float x = tb_json_float((char*)entity.value, "[1", NULL);
-			float y = tb_json_float((char*)entity.value, "[2", NULL);
+			float x = tb_json_float((char*)entity.value, "[1", NULL, 0.0f);
+			float y = tb_json_float((char*)entity.value, "[2", NULL, 0.0f);
 
-			float w = tb_json_float((char*)entity.value, "[3", NULL);
-			float h = tb_json_float((char*)entity.value, "[4", NULL);
+			float w = tb_json_float((char*)entity.value, "[3", NULL, 0.0f);
+			float h = tb_json_float((char*)entity.value, "[4", NULL, 0.0f);
 
-			float parallax = tb_json_float((char*)entity.value, "[5", NULL);
+			float parallax = tb_json_float((char*)entity.value, "[5", NULL, 0.0f);
 
 			BackgroundPushLayer(&scene->background, ResourceManagerGetTexture2D(resources, name), x, y, w, h, parallax);
 		}
@@ -130,10 +130,10 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 			tb_json_string((char*)entity_template.value, "[1", temp, APPLICATION_STR_LEN, NULL);
 
 			vec2 pos;
-			pos.x = tb_json_float((char*)entity_template.value, "[2[0", NULL);
-			pos.y = tb_json_float((char*)entity_template.value, "[2[1", NULL);
+			pos.x = tb_json_float((char*)entity_template.value, "[2[0", NULL, 0.0f);
+			pos.y = tb_json_float((char*)entity_template.value, "[2[1", NULL, 0.0f);
 
-			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL);
+			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL, 0);
 
 			char* path = clib_strmap_find(templates, temp);
 			if (!path)
@@ -218,7 +218,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 		tb_jwrite_array_string(&jwc, e->template);
 
 		/* pos */
-		vec2 pos = ComponentTableGetEntityPosition(&scene->components, e->name);
+		vec2 pos = EntityGetPosition(e->name, &scene->components);
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -226,7 +226,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, ComponentTableGetZIndex(&scene->components, e->name));
+		tb_jwrite_array_int(&jwc, EntityGetZIndex(e->name, &scene->components));
 
 		tb_jwrite_end(&jwc);
 
@@ -269,63 +269,75 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	}
 
 	tb_json_element element;
-	tb_json_read(json, &element, "{'position'");
+
+	/* Components */
+	Transform transform;
+	RigidBody body;
+	Sprite sprite;
+
+	tb_json_read(json, &element, "{'transform'");
 	if (element.error == TB_JSON_OK)
 	{
-		Transform comp;
-		comp.x = tb_json_float((char*)element.value, "[0", NULL);
-		comp.y = tb_json_float((char*)element.value, "[1", NULL);
+		transform.position.x = tb_json_float((char*)element.value, "{'position'[0", NULL, 0.0f);
+		transform.position.y = tb_json_float((char*)element.value, "{'position'[1", NULL, 0.0f);
 
-		comp.z_index = 0;
+		transform.size.x = tb_json_float((char*)element.value, "{'size'[0", NULL, 0.0f);
+		transform.size.y = tb_json_float((char*)element.value, "{'size'[1", NULL, 0.0f);
 
-		ComponentTableAddComponent(components, entity, COMPONENT_TRANSFORM, &comp);
+		transform.z_index = 0;
+
+		ComponentTableAddComponent(components, entity, COMPONENT_TRANSFORM, &transform);
 	}
 
-	tb_json_read(json, &element, "{'physics'");
+	tb_json_read(json, &element, "{'rigidbody'");
 	if (element.error == TB_JSON_OK)
 	{
-		tb_json_element body;
-		tb_json_read((char*)element.value, &body, "{'body'");
+		body.type = (RigidBodyType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
-		if (body.error == TB_JSON_OK)
-		{
-			EcsPhysicsComponent comp;
-			BodyType type = (BodyType)tb_json_int((char*)body.value, "{'type'", NULL);
+		body.position.x = tb_json_float((char*)element.value, "{'position'[0", NULL, 0.0f);
+		body.position.y = tb_json_float((char*)element.value, "{'position'[1", NULL, 0.0f);
 
-			float x = tb_json_float((char*)body.value, "{'position'[0", NULL);
-			float y = tb_json_float((char*)body.value, "{'position'[1", NULL);
+		body.half_size.x = tb_json_float((char*)element.value, "{'halfsize'[0", NULL, 0.0f);
+		body.half_size.y = tb_json_float((char*)element.value, "{'halfsize'[1", NULL, 0.0f);
 
-			float w = tb_json_float((char*)body.value, "{'halfDimension'[0", NULL);
-			float h = tb_json_float((char*)body.value, "{'halfDimension'[1", NULL);
+		body.velocity.x = 0.0f;
+		body.velocity.y = 0.0f;
 
-			comp.body_x = tb_json_float((char*)element.value, "{'offset'[0", NULL);
-			comp.body_y = tb_json_float((char*)element.value, "{'offset'[1", NULL);
+		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
+		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
 
-			BodyLoad(&comp.body, x, y, w, h, type);
+		body.collides_bottom = 0;
+		body.collides_top = 0;
+		body.collides_left = 0;
+		body.collides_right = 0;
 
-			ComponentTableAddComponent(components, entity, COMPONENT_PHYSICS, &comp);
-		}
+		ComponentTableAddComponent(components, entity, COMPONENT_RIGID_BODY, &body);
 	}
 
-	tb_json_read(json, &element, "{'texture'");
+	tb_json_read(json, &element, "{'sprite'");
 	if (element.error == TB_JSON_OK)
 	{
-		char tex_name[APPLICATION_STR_LEN];
-		tb_json_string((char*)element.value, "{'name'", tex_name, APPLICATION_STR_LEN, NULL);
+		sprite.flip = SPRITE_FLIP_NONE;
+		sprite.width = tb_json_float((char*)element.value, "{'size'[0", NULL, -1.0f);
+		sprite.height = tb_json_float((char*)element.value, "{'size'[1", NULL, -1.0f);
 
-		EcsTextureComponent comp;
-		comp.render_flip = RENDER_FLIP_NONE;
-		comp.width = tb_json_float((char*)element.value, "{'dimension'[0", NULL);
-		comp.height = tb_json_float((char*)element.value, "{'dimension'[1", NULL);
+		if (sprite.width < 0.0f) sprite.width = transform.size.x;
+		if (sprite.height < 0.0f) sprite.height = transform.size.y;
 
-		comp.frame = tb_json_int((char*)element.value, "{'frame'", NULL);
+		sprite.frame = tb_json_int((char*)element.value, "{'frame'", NULL, 0);
 
-		comp.texture = ResourceManagerGetTexture2D(resources, tex_name);
+		char texture[APPLICATION_STR_LEN];
+		tb_json_string((char*)element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
 
-		if (comp.texture)
-			ComponentTableAddComponent(components, entity, COMPONENT_TEXTURE, &comp);
+		sprite.texture = ResourceManagerGetTexture2D(resources, texture);
+
+		if (sprite.texture)
+			ComponentTableAddComponent(components, entity, COMPONENT_TEXTURE, &sprite);
+		else
+			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 	}
 
+	/* ------------------------------------------------------------------ */
 	tb_json_read(json, &element, "{'animation'");
 	if (element.error == TB_JSON_OK)
 	{
@@ -340,9 +352,9 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 			tb_json_element anim;
 			tb_json_read_format((char*)element.value, &anim, "{'%s'", anim_name);
 
-			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL);
-			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL);
-			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL);
+			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL, 0);
+			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL, 0);
+			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL, 0.0f);
 
 			tb_json_element transition_array;
 			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
@@ -378,8 +390,8 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		EcsMovementComponent comp;
 
 		comp.direction = DIRECTION_LEFT;
-		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL);
-		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL);
+		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
+		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
 
 		ComponentTableAddComponent(components, entity, COMPONENT_MOVEMENT, &comp);
 	}
@@ -389,7 +401,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	{
 		EcsCameraComponent comp;
 		comp.camera = NULL;
-		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL);
+		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
 		comp.scene_w = -1.0f;
 		comp.scene_h = -1.0f;
 
@@ -400,8 +412,8 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	if (element.error == TB_JSON_OK)
 	{
 		EcsInteractionComponent comp;
-		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL);
-		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL);
+		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL, 0.0f);
+		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
 		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTION, &comp);
 	}
@@ -410,7 +422,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	if (element.error == TB_JSON_OK)
 	{
 		EcsInteractorComponent comp;
-		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL);
+		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
 		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTOR, &comp);
 	}

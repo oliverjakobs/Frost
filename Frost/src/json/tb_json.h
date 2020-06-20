@@ -227,9 +227,9 @@ char* tb_json_array_step(char* json_array, tb_json_element* result);
 // Helper Functions
 //--------------------------------------------------------------------
 
-long    tb_json_long(char* json, char* query, int* query_params);
-int     tb_json_int(char* json, char* query, int* query_params);
-float   tb_json_float(char* json, char* query, int* query_params);
+long    tb_json_long(char* json, char* query, int* query_params, long default_value);
+int     tb_json_int(char* json, char* query, int* query_params, int default_value);
+float   tb_json_float(char* json, char* query, int* query_params, float default_value);
 int     tb_json_string(char* json, char* query, char *dest, int destlen, int* query_params);
 
 char* tb_json_atoi(char* p, unsigned int* result);  // string to unsigned int
@@ -721,13 +721,13 @@ char* tb_json_array_step(char* json_array, tb_json_element* result)
 // - returns number from NUMBER or STRING elements (if possible)
 //   returns 1 or 0 from BOOL elements
 //   otherwise returns 0
-long tb_json_long(char* json, char* query, int* query_params)
+long tb_json_long(char* json, char* query, int* query_params, long default_value)
 {
     tb_json_element elem;
     long result;
     tb_json_read_param(json, &elem, query, query_params);
     if ((elem.data_type == TB_JSON_ERROR) || (elem.data_type == TB_JSON_NULL))
-        return 0;
+        return default_value;
     if (elem.data_type == TB_JSON_BOOL)
         return *((char *)elem.value)=='t' ? 1 : 0;
 
@@ -735,21 +735,21 @@ long tb_json_long(char* json, char* query, int* query_params)
     return result;
 }
 
-int tb_json_int(char* json, char* query, int* query_params)
+int tb_json_int(char* json, char* query, int* query_params, int default_value)
 {
-    return (int)tb_json_long(json, query, query_params);
+    return (int)tb_json_long(json, query, query_params, default_value);
 }
 
 // tb_json_float
 // - returns float from JSON
 // - returns number from NUMBER or STRING elements
 //   otherwise returns 0.0f
-float tb_json_float(char* json, char* query, int* query_params)
+float tb_json_float(char* json, char* query, int* query_params, float default_value)
 {
     tb_json_element element;
     tb_json_read_param(json, &element, query, query_params);
     if (element.data_type == TB_JSON_ERROR)
-        return 0.0f;
+        return default_value;
     
     float result;
     tb_json_atof((char*)element.value, &result);

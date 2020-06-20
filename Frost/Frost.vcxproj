@@ -103,6 +103,8 @@
     <ClInclude Include="src\clib\dynamic_array.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
+    <ClInclude Include="src\ECS\Components\RigidBody.h" />
+    <ClInclude Include="src\ECS\Components\Sprite.h" />
     <ClInclude Include="src\ECS\Components\Transform.h" />
     <ClInclude Include="src\ECS\ComponentTable.h" />
     <ClInclude Include="src\ECS\Components.h" />
@@ -136,8 +138,6 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
-    <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\World.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\Scenes\SceneLoader.h" />
@@ -173,6 +173,7 @@
     <ClCompile Include="src\clib\dynamic_array.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
+    <ClCompile Include="src\ECS\Components\RigidBody.c" />
     <ClCompile Include="src\ECS\ComponentTable.c" />
     <ClCompile Include="src\ECS\Components\Animator.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
@@ -200,8 +201,6 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
-    <ClCompile Include="src\Physics\Body.c" />
-    <ClCompile Include="src\Physics\World.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />

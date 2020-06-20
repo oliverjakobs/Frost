@@ -8,7 +8,7 @@
 typedef enum
 {
 	COMPONENT_TRANSFORM = 0,
-	COMPONENT_PHYSICS,
+	COMPONENT_RIGID_BODY,
 	COMPONENT_MOVEMENT,
 	COMPONENT_TEXTURE,
 	COMPONENT_ANIMATION,
@@ -30,13 +30,6 @@ void ComponentTableClear(ComponentTable* table);
 
 void* ComponentTableAddComponent(ComponentTable* table, const char* entity, ComponentType type, void* component);
 void* ComponentTableGetComponent(ComponentTable* table, const char* entity, ComponentType type);
-
-/* Helper Functions */
-void ComponentTableSetEntityPosition(ComponentTable* table, const char* entity, vec2 pos);
-vec2 ComponentTableGetEntityPosition(ComponentTable* table, const char* entity);
-vec2 ComponentTableGetEntityCenter(ComponentTable* table, const char* entity);
-
-int ComponentTableGetZIndex(ComponentTable* table, const char* entity);
 
 
 #endif /* !ECS_COMPONENT_TABLE_H */

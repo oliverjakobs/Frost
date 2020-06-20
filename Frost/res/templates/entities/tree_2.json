@@ -1,9 +1,10 @@
 {
   "name": "tree",
-  "position": { },
-  "texture": {
-    "name": "trees",
-	"dimension": [ 96.0, 256.0 ],
+  "transform": {
+    "size": [ 96.0, 256.0 ]
+  },
+  "sprite": {
+    "texture": "trees",
     "frame": 1
   }
 }

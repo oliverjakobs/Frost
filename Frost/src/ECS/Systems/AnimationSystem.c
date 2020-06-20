@@ -16,13 +16,13 @@ static void PlayAnimation(Animator* animator, const char* name)
 void EcsSystemAnimation(ComponentTable* components, const char* entity, float deltatime)
 {
 	Animator* animator = ComponentTableGetComponent(components, entity, COMPONENT_ANIMATION);
-	EcsTextureComponent* texture = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
+	Sprite* sprite = ComponentTableGetComponent(components, entity, COMPONENT_TEXTURE);
 
-	if (!(animator && texture)) return;
+	if (!(animator && sprite)) return;
 
 	if (!animator->current)
 	{
-		texture->frame = 0;
+		sprite->frame = 0;
 		return;
 	}
 
@@ -37,10 +37,10 @@ void EcsSystemAnimation(ComponentTable* components, const char* entity, float de
 			if (cond && cond->func(components, entity, 0))
 				PlayAnimation(animator, clib_strmap_iter_get_value(iter));
 		}
-		texture->frame = current->frame;
+		sprite->frame = current->frame;
 	}
 	else
 	{
-		texture->frame = 0;
+		sprite->frame = 0;
 	}
 }
