@@ -6,11 +6,11 @@ void EcsSystemPlayer(ComponentTable* components, float deltatime)
 {
 	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_MOVEMENT], iter)
 	{
-		EcsMovementComponent* movement = clib_dict_iter_get_value(iter);
+		Movement* movement = clib_dict_iter_get_value(iter);
 
 		RigidBody* body = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_RIGID_BODY);
 		Sprite* sprite = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_SPRITE);
-		EcsCameraComponent* camera = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_CAMERA);
+		CameraController* camera = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_CAMERA);
 
 		if (!(body && sprite)) continue;
 
@@ -25,12 +25,12 @@ void EcsSystemPlayer(ComponentTable* components, float deltatime)
 
 		if (velocity.x > 0.0f)
 		{
-			movement->direction = DIRECTION_RIGHT;
+			movement->direction = MOVEMENT_RIGHT;
 			sprite->flip = SPRITE_FLIP_NONE;
 		}
 		else if (velocity.x < 0.0f)
 		{
-			movement->direction = DIRECTION_LEFT;
+			movement->direction = MOVEMENT_LEFT;
 			sprite->flip = SPRITE_FLIP_HORIZONTAL;
 		}
 

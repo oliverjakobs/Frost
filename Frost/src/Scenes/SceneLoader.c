@@ -387,9 +387,9 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'movement'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsMovementComponent comp;
+		Movement comp;
 
-		comp.direction = DIRECTION_LEFT;
+		comp.direction = MOVEMENT_LEFT;
 		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
 		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
 
@@ -399,7 +399,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'camera'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsCameraComponent comp;
+		CameraController comp;
 		comp.camera = NULL;
 		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
 		comp.scene_w = -1.0f;
@@ -411,7 +411,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'interaction'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsInteractionComponent comp;
+		Interaction comp;
 		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL, 0.0f);
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
@@ -421,7 +421,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'interactor'");
 	if (element.error == TB_JSON_OK)
 	{
-		EcsInteractorComponent comp;
+		Interactor comp;
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
 		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTOR, &comp);

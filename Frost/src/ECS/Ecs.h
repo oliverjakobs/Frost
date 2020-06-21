@@ -2,7 +2,7 @@
 #define ECS_H
 
 #include "Systems.h"
-#include "Components.h"
+#include "ComponentTable.h"
 
 #include "Entity.h"
 

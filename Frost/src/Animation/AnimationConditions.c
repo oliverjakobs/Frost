@@ -1,7 +1,5 @@
 #include "AnimationConditions.h"
 
-#include "ECS/Components.h"
-
 int AnimationConditionJump(ComponentTable* components, const char* entity, int s)
 {
 	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);

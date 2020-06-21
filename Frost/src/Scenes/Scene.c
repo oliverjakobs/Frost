@@ -17,7 +17,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddUpdateSystem(&scene->ecs, EcsSystemInteraction);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
 	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender);
-	
+		
 	clib_array_alloc(&scene->entities, 16, sizeof(EcsEntity));
 	ComponentTableInit(&scene->components, 16);
 
@@ -45,12 +45,12 @@ void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
 	if (!entity)
 		return;
 
-	EcsCameraComponent* cam = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
-	if (cam)
+	CameraController* camera = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
+	if (camera)
 	{
-		cam->camera = scene->camera;
-		cam->scene_w = scene->width;
-		cam->scene_h = scene->height;
+		camera->camera = scene->camera;
+		camera->scene_w = scene->width;
+		camera->scene_h = scene->height;
 	}
 
 	EntitySetZIndex(entity->name, &scene->components, z_index);

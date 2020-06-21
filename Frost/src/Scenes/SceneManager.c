@@ -10,6 +10,8 @@
 
 #include "SceneLoader.h"
 
+#include "Animation/AnimationConditions.h"
+
 int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
@@ -31,6 +33,13 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 
 	SceneLoaderLoadRegister(manager, reg);
 
+	AnimationManagerInit();
+
+	AnimationManagerRegisterCondition("condition_jump", AnimationConditionJump);
+	AnimationManagerRegisterCondition("condition_fall", AnimationConditionFall);
+	AnimationManagerRegisterCondition("condition_walk", AnimationConditionWalk);
+	AnimationManagerRegisterCondition("condition_idle", AnimationConditionIdle);
+
 	manager->console_focus = 0;
 	ConsoleInit(&manager->console, ResourceManagerGetFont(manager->resources, "gui"));
 
@@ -41,6 +50,8 @@ void SceneManagerDestroy(SceneManager* manager)
 {
 	if (manager->scene_name[0] != '\0')
 		SceneQuit(manager->scene);
+
+	AnimationManagerDestroy();
 
 	free(manager->scene);
 	clib_strmap_free(&manager->scenes);

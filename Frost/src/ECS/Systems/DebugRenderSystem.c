@@ -16,7 +16,7 @@ void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj
 
 	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
 	{
-		EcsInteractionComponent* interaction = clib_dict_iter_get_value(iter);
+		Interaction* interaction = clib_dict_iter_get_value(iter);
 
 		vec2 cen = EntityGetCenter(clib_dict_iter_get_key(iter), components);
 		Primitives2DRenderCircle(cen.x, cen.y, interaction->radius, IGNIS_WHITE);

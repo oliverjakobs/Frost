@@ -1,7 +1,5 @@
 #include "ComponentTable.h"
 
-#include "Components.h"
-
 void ComponentTableInit(ComponentTable* table, size_t initial_size)
 {
 	for (size_t i = 0; i < NUM_COMPONENT_TYPES; ++i)
@@ -41,12 +39,12 @@ size_t GetComponentSize(ComponentType type)
 	{
 	case COMPONENT_TRANSFORM:	return sizeof(Transform);
 	case COMPONENT_RIGID_BODY:	return sizeof(RigidBody);
-	case COMPONENT_MOVEMENT:	return sizeof(EcsMovementComponent);
+	case COMPONENT_MOVEMENT:	return sizeof(Movement);
 	case COMPONENT_SPRITE:		return sizeof(Sprite);
 	case COMPONENT_ANIMATION:	return sizeof(Animator);
-	case COMPONENT_CAMERA:		return sizeof(EcsCameraComponent);
-	case COMPONENT_INTERACTOR:	return sizeof(EcsInteractorComponent);
-	case COMPONENT_INTERACTION:	return sizeof(EcsInteractionComponent);
+	case COMPONENT_CAMERA:		return sizeof(CameraController);
+	case COMPONENT_INTERACTOR:	return sizeof(Interactor);
+	case COMPONENT_INTERACTION:	return sizeof(Interaction);
 	default: return 0;
 	}
 }

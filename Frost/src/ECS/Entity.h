@@ -1,7 +1,7 @@
 #ifndef ECS_ENTITY_H
 #define ECS_ENTITY_H
 
-#include "Components.h"
+#include "ComponentTable.h"
 
 typedef struct
 {
