@@ -6,7 +6,7 @@ void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj
 {
 	Primitives2DStart(mat_view_proj);
 
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_TRANSFORM], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
 	{
 		Transform* transform = clib_dict_iter_get_value(iter);
 
@@ -14,7 +14,7 @@ void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj
 		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
 	{
 		Interaction* interaction = clib_dict_iter_get_value(iter);
 
@@ -23,7 +23,7 @@ void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj
 	}
 
 
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_RIGID_BODY], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
 	{
 		RigidBody* body = clib_dict_iter_get_value(iter);
 

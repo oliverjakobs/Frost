@@ -33,12 +33,12 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 
 	SceneLoaderLoadRegister(manager, reg);
 
-	AnimationManagerInit();
+	AnimationConditionsInit();
 
-	AnimationManagerRegisterCondition("condition_jump", AnimationConditionJump);
-	AnimationManagerRegisterCondition("condition_fall", AnimationConditionFall);
-	AnimationManagerRegisterCondition("condition_walk", AnimationConditionWalk);
-	AnimationManagerRegisterCondition("condition_idle", AnimationConditionIdle);
+	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
+	AnimationConditionsRegisterCondition("condition_fall", AnimationConditionFall);
+	AnimationConditionsRegisterCondition("condition_walk", AnimationConditionWalk);
+	AnimationConditionsRegisterCondition("condition_idle", AnimationConditionIdle);
 
 	manager->console_focus = 0;
 	ConsoleInit(&manager->console, ResourceManagerGetFont(manager->resources, "gui"));
@@ -51,7 +51,7 @@ void SceneManagerDestroy(SceneManager* manager)
 	if (manager->scene_name[0] != '\0')
 		SceneQuit(manager->scene);
 
-	AnimationManagerDestroy();
+	AnimationConditionsDestroy();
 
 	free(manager->scene);
 	clib_strmap_free(&manager->scenes);

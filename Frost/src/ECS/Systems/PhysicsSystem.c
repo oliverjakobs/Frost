@@ -2,7 +2,7 @@
 
 void EcsSystemPhysics(ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_RIGID_BODY], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
 	{
 		RigidBody* body = clib_dict_iter_get_value(iter);
 
@@ -18,7 +18,7 @@ void EcsSystemPhysics(ComponentTable* components, float deltatime)
 		vec2 old_position = body->position;
 		RigidBodyTick(body, gravity, deltatime);
 
-		CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_RIGID_BODY], other_iter)
+		CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], other_iter)
 		{
 			if (strcmp(clib_dict_iter_get_key(iter), clib_dict_iter_get_key(other_iter)) == 0)
 				continue;

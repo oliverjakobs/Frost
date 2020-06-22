@@ -26,7 +26,7 @@ typedef enum
 
 typedef struct
 {
-	clib_hashmap components[NUM_COMPONENT_TYPES];
+	clib_hashmap table[NUM_COMPONENT_TYPES];
 } ComponentTable;
 
 void ComponentTableInit(ComponentTable* table, size_t initial_size);

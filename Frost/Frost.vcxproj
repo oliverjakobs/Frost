@@ -91,7 +91,6 @@
   <ItemGroup>
     <ClInclude Include="src\Animation\Animation.h" />
     <ClInclude Include="src\Animation\AnimationConditions.h" />
-    <ClInclude Include="src\Animation\AnimationManager.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
@@ -166,7 +165,6 @@
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c" />
     <ClCompile Include="src\Animation\AnimationConditions.c" />
-    <ClCompile Include="src\Animation\AnimationManager.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Application\Event.c" />

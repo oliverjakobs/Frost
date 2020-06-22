@@ -1,6 +1,6 @@
 #include "AnimationSystem.h"
 
-#include "Animation/AnimationManager.h"
+#include "Animation/AnimationConditions.h"
 
 static void PlayAnimation(Animator* animator, const char* name)
 {
@@ -17,7 +17,7 @@ static void PlayAnimation(Animator* animator, const char* name)
 
 void EcsSystemAnimation(ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_ANIMATION], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_ANIMATION], iter)
 	{
 		Animator* animator = clib_dict_iter_get_value(iter);
 
@@ -37,7 +37,7 @@ void EcsSystemAnimation(ComponentTable* components, float deltatime)
 
 		CLIB_DICT_ITERATE_FOR(transitions, transition_iter)
 		{
-			AnimationCondition* cond = AnimationManagerGetCondition(clib_strmap_iter_get_key(transition_iter));
+			AnimationCondition* cond = AnimationConditionsGetCondition(clib_strmap_iter_get_key(transition_iter));
 			if (cond && cond->func(components, clib_dict_iter_get_key(iter), 0))
 				PlayAnimation(animator, clib_strmap_iter_get_value(transition_iter));
 		}

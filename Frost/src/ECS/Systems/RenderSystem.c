@@ -6,7 +6,7 @@ void EcsSystemRender(ComponentTable* components, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_SPRITE], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_SPRITE], iter)
 	{
 		Sprite* sprite = clib_dict_iter_get_value(iter);
 

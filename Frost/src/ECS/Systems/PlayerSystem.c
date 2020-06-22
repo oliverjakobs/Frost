@@ -4,7 +4,7 @@
 
 void EcsSystemPlayer(ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_MOVEMENT], iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_MOVEMENT], iter)
 	{
 		Movement* movement = clib_dict_iter_get_value(iter);
 

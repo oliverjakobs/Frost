@@ -2,12 +2,12 @@
 
 void EcsSystemInteraction(ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTOR], interactor_iter)
+	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_INTERACTOR], interactor_iter)
 	{
 		Interactor* interactor = clib_dict_iter_get_value(interactor_iter);
 		vec2 interactor_center = EntityGetCenter(clib_dict_iter_get_key(interactor_iter), components);
 
-		CLIB_DICT_ITERATE_FOR(&components->components[COMPONENT_INTERACTION], iter)
+		CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
 		{
 			Interaction* interaction = clib_dict_iter_get_value(iter);
 
