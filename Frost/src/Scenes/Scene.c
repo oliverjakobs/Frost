@@ -8,18 +8,17 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	scene->width = w;
 	scene->height = h;
 
-	scene->smooth_movement = 0.5f;
-
 	EcsInit(&scene->ecs, 4, 2);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemPhysics);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemPlayer);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemAnimation);
-	EcsAddUpdateSystem(&scene->ecs, EcsSystemInteraction);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemRender);
-	EcsAddRenderSystem(&scene->ecs, EcsSystemDebugRender);
+	EcsAddUpdateSystem(&scene->ecs, PhysicsSystem);
+	EcsAddUpdateSystem(&scene->ecs, PlayerSystem);
+	EcsAddUpdateSystem(&scene->ecs, AnimationSystem);
+	EcsAddUpdateSystem(&scene->ecs, InteractionSystem);
+	EcsAddRenderSystem(&scene->ecs, RenderSystem);
+	EcsAddRenderSystem(&scene->ecs, DebugRenderSystem);
 		
-	clib_array_alloc(&scene->entities, 16, sizeof(EcsEntity));
 	ComponentTableInit(&scene->components, 16);
+
+	clib_strmap_alloc(&scene->entity_templates, 16);
 
 	return 1;
 }
@@ -28,65 +27,15 @@ void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
 
-	SceneClearEntities(scene);
-	clib_array_free(&scene->entities);
+	clib_strmap_free(&scene->entity_templates);
 
 	EcsDestroy(&scene->ecs);
 	ComponentTableFree(&scene->components);
 }
 
-int _SceneEntityCmp(const EcsEntity* a, const EcsEntity* b)
+void SceneAddEntityTemplate(Scene* scene, const char* entity, const char* templ)
 {
-	return EntityGetZIndex(a->name, a->components) - EntityGetZIndex(b->name, b->components);
-}
-
-void SceneAddEntity(Scene* scene, EcsEntity* entity, int z_index)
-{
-	if (!entity)
-		return;
-
-	CameraController* camera = ComponentTableGetComponent(&scene->components, entity->name, COMPONENT_CAMERA);
-	if (camera)
-	{
-		camera->camera = scene->camera;
-		camera->scene_w = scene->width;
-		camera->scene_h = scene->height;
-	}
-
-	EntitySetZIndex(entity->name, &scene->components, z_index);
-
-	clib_array_push(&scene->entities, entity);
-
-	/* sort by z_index */
-	clib_array_sort(&scene->entities, _SceneEntityCmp);
-}
-
-void SceneAddEntityPos(Scene* scene, EcsEntity* entity, int z_index, vec2 position)
-{
-	if (!entity) return;
-
-	EntitySetPosition(entity->name, &scene->components, position);
-	SceneAddEntity(scene, entity, z_index);
-}
-
-void SceneRemoveEntity(Scene* scene, const char* name)
-{
-	for (size_t i = 0; i < scene->entities.used; i++)
-	{
-		EcsEntity* e = (EcsEntity*)clib_array_get(&scene->entities, i);
-		if (strcmp(e->name, name) == 0)
-		{
-			/* todo: free components */
-			clib_array_remove(&scene->entities, i);
-			return;
-		}
-	}
-}
-
-void SceneClearEntities(Scene* scene)
-{
-	ComponentTableClear(&scene->components);
-	clib_array_clear(&scene->entities);
+	clib_strmap_insert(&scene->entity_templates, entity, templ);
 }
 
 void SceneOnEvent(Scene* scene, Event e)
@@ -97,14 +46,14 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 {
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 
-	EcsUpdate(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, &scene->components, deltaTime);
+	EcsUpdate(&scene->ecs, &scene->components, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, (EcsEntity*)scene->entities.data, scene->entities.used, &scene->components, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(&scene->ecs, &scene->components, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
@@ -112,28 +61,17 @@ void SceneOnRenderDebug(Scene* scene)
 
 }
 
-EcsEntity* SceneGetEntity(Scene* scene, const char* name)
+const char* SceneGetEntityAt(Scene* scene, vec2 pos)
 {
-	for (size_t i = 0; i < scene->entities.used; ++i)
+	CLIB_DICT_ITERATE_FOR(&scene->components.table[COMPONENT_TRANSFORM], iter)
 	{
-		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
-		if (strcmp(entity->name, name) == 0)
-			return entity;
-	}
+		Transform* transform = clib_dict_iter_get_value(iter);
 
-	return NULL;
-}
+		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
+		vec2 max = vec2_add(min, transform->size);
 
-EcsEntity* SceneGetEntityAt(Scene* scene, vec2 pos)
-{
-	for (size_t i = 0; i < scene->entities.used; ++i)
-	{
-		EcsEntity* entity = (EcsEntity*)clib_array_get(&scene->entities, i);
-
-		rect r = EntityGetRect(entity->name, &scene->components);
-
-		if (vec2_inside(pos, r.min, r.max))
-			return entity;
+		if (vec2_inside(pos, min, max))
+			return clib_dict_iter_get_key(iter);
 	}
 
 	return NULL;

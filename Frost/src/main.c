@@ -96,7 +96,7 @@ void OnRenderDebug(Application* app)
 	FontRendererFlush();
 
 	if (scene_manager.console_focus)
-		ConsoleRender(&scene_manager.console, 0.0f, app->height, app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
+		ConsoleRender(&scene_manager.console, 0.0f, (float)app->height, (float)app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 
 void OnRenderGui(Application* app)
@@ -120,14 +120,12 @@ void OnRenderGui(Application* app)
 	{
 		gui_text("Scene: %s", scene_manager.scene_name);
 		gui_separator();
-		EcsEntity* player = SceneGetEntity(scene_manager.scene, "player");
-		if (player)
-		{
-			gui_text("Name: %s", player->name);
-			vec2 position = EntityGetPosition(player->name, &scene_manager.scene->components);
-			gui_text("Position: %4.2f, %4.2f", position.x, position.y);
-			gui_text("Precise Y: %f", position.y);
-		}
+
+		char* name = "player";
+		gui_text("Name: %s", name);
+		vec2 position = EntityGetPosition(name, &scene_manager.scene->components);
+		gui_text("Position: %4.2f, %4.2f", position.x, position.y);
+		gui_text("Precise Y: %f", position.y);
 	}
 	gui_end();
 	

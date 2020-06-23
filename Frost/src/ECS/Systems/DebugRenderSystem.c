@@ -2,7 +2,7 @@
 
 #include "Graphics/Renderer.h"
 
-void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj)
+void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_view_proj)
 {
 	Primitives2DStart(mat_view_proj);
 

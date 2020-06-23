@@ -2,7 +2,7 @@
 
 #include "Application/Input.h"
 
-void EcsSystemPlayer(ComponentTable* components, float deltatime)
+void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
 	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_MOVEMENT], iter)
 	{

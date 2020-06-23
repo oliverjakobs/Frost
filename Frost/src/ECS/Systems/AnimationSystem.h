@@ -1,8 +1,8 @@
 #ifndef ECS_ANIMATION_SYSTEM_H
 #define ECS_ANIMATION_SYSTEM_H
 
-#include "../Entity.h"
+#include "../Ecs.h"
 
-void EcsSystemAnimation(ComponentTable* components, float deltatime);
+void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime);
 
 #endif /* !ECS_ANIMATION_SYSTEM_H */

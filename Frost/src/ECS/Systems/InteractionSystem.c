@@ -1,6 +1,6 @@
 #include "InteractionSystem.h"
 
-void EcsSystemInteraction(ComponentTable* components, float deltatime)
+void InteractionSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
 	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_INTERACTOR], interactor_iter)
 	{

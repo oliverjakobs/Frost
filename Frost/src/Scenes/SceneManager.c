@@ -87,7 +87,7 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 			SceneQuit(manager->scene);
 
 		// Enter new scene
-		SceneLoaderLoadScene(manager->scene, path, manager->camera, manager->resources, &manager->templates);
+		SceneLoaderLoadScene(manager, path);
 		SceneEditorReset(&manager->editor);
 		strcpy(manager->scene_name, name);
 	}
@@ -135,13 +135,11 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			if (SceneLoaderLoadTemplate(args[0], path, &manager->scene->components, manager->resources))
+			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
+			if (SceneLoaderLoadTemplate(manager, args[0], path, pos, atoi(args[2])))
 			{
 				EcsEntity entity;
 				EcsEntityLoad(&entity, args[0], args[1], &manager->scene->components);
-
-				vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-				SceneAddEntityPos(manager->scene, &entity, atoi(args[2]), pos);
 			}
 		}
 		break;
@@ -165,12 +163,14 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
+			/*
 			for (int i = 0; i < manager->scene->entities.used; ++i)
 			{
 				EcsEntity* entity = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
 
 				ConsoleOut(&manager->console, " - %s (%d)", entity->name, EntityGetZIndex(entity->name, &manager->scene->components));
 			}
+			*/
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{

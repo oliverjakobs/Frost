@@ -64,7 +64,7 @@ int SceneLoaderLoadRegister(SceneManager* manager, const char* path)
 	return 1;
 }
 
-int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, ResourceManager* resources, clib_hashmap* templates)
+int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -77,22 +77,23 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 	float width = tb_json_float((char*)json, "{'size'[0", NULL, 0.0f);
 	float height = tb_json_float((char*)json, "{'size'[1", NULL, 0.0f);
 
-	if (!SceneLoad(scene, camera, width, height))
+	if (!SceneLoad(manager->scene, manager->camera, width, height))
 	{
 		DEBUG_ERROR("[Scenes] Failed to load scene: %s", json);
 		free(json);
 		return 0;
 	}
 
-	tb_json_element background;
-	tb_json_read((char*)json, &background, "{'background'");
+	tb_json_element element;
+	tb_json_read((char*)json, &element, "{'background'");
 
-	if (background.error == TB_JSON_OK && background.data_type == TB_JSON_ARRAY)
+	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
-		char* value = (char*)background.value;
+		char* value = (char*)element.value;
+		Background* background = &manager->scene->background;
 
-		BackgroundInit(&scene->background, background.elements);
-		for (int i = 0; i < background.elements; i++)
+		BackgroundInit(background, element.elements);
+		for (int i = 0; i < element.elements; i++)
 		{
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
@@ -108,18 +109,17 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 
 			float parallax = tb_json_float((char*)entity.value, "[5", NULL, 0.0f);
 
-			BackgroundPushLayer(&scene->background, ResourceManagerGetTexture2D(resources, name), x, y, w, h, parallax);
+			BackgroundPushLayer(background, ResourceManagerGetTexture2D(manager->resources, name), x, y, w, h, parallax);
 		}
 	}
 
-	tb_json_element templs;
-	tb_json_read((char*)json, &templs, "{'templates'");
+	tb_json_read((char*)json, &element, "{'templates'");
 
-	if (templs.error == TB_JSON_OK && templs.data_type == TB_JSON_ARRAY)
+	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
-		char* value = (char*)templs.value;
+		char* value = (char*)element.value;
 
-		for (int i = 0; i < templs.elements; i++)
+		for (int i = 0; i < element.elements; i++)
 		{
 			tb_json_element entity_template;
 			value = tb_json_array_step(value, &entity_template);
@@ -135,20 +135,16 @@ int SceneLoaderLoadScene(Scene* scene, const char* path, Camera* camera, Resourc
 
 			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL, 0);
 
-			char* path = clib_strmap_find(templates, temp);
+			char* path = clib_strmap_find(&manager->templates, temp);
 			if (!path)
 			{
 				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", temp);
 				continue;
 			}
 
-			if (SceneLoaderLoadTemplate(name, path, &scene->components, resources))
-			{
-				EcsEntity entity;
-				EcsEntityLoad(&entity, name, temp, &scene->components);
-
-				SceneAddEntityPos(scene, &entity, z_index, pos);
-			}
+			/* Load Template */
+			if (SceneLoaderLoadTemplate(manager, name, path, pos, z_index))
+				SceneAddEntityTemplate(manager->scene, name, temp);
 		}
 	}
 
@@ -203,22 +199,20 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (int i = 0; i < scene->entities.used; ++i)
+	CLIB_STRMAP_ITERATE_FOR(&scene->entity_templates)
 	{
-		EcsEntity* e = (EcsEntity*)clib_array_get(&scene->entities, i);
-
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
 		/* name */
-		tb_jwrite_array_string(&jwc, e->name);
+		tb_jwrite_array_string(&jwc, clib_strmap_iter_get_key(iter));
 
 		/* template-src */
-		tb_jwrite_array_string(&jwc, e->template);
+		tb_jwrite_array_string(&jwc, clib_strmap_iter_get_value(iter));
 
 		/* pos */
-		vec2 pos = EntityGetPosition(e->name, &scene->components);
+		vec2 pos = EntityGetPosition(clib_strmap_iter_get_key(iter), &scene->components);
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -226,7 +220,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(e->name, &scene->components));
+		tb_jwrite_array_int(&jwc, EcsGetEntityIndex(&scene->ecs, clib_strmap_iter_get_key(iter)));
 
 		tb_jwrite_end(&jwc);
 
@@ -258,7 +252,8 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	return 1;
 }
 
-int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable* components, ResourceManager* resources)
+
+int SceneLoaderLoadTemplate(SceneManager* manager, const char* entity, const char* path, vec2 pos, int z_index)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -278,24 +273,20 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 	tb_json_read(json, &element, "{'transform'");
 	if (element.error == TB_JSON_OK)
 	{
-		transform.position.x = tb_json_float((char*)element.value, "{'position'[0", NULL, 0.0f);
-		transform.position.y = tb_json_float((char*)element.value, "{'position'[1", NULL, 0.0f);
+		transform.position = pos;
 
 		transform.size.x = tb_json_float((char*)element.value, "{'size'[0", NULL, 0.0f);
 		transform.size.y = tb_json_float((char*)element.value, "{'size'[1", NULL, 0.0f);
 
-		transform.z_index = 0;
+		transform.z_index = z_index;
 
-		ComponentTableAddComponent(components, entity, COMPONENT_TRANSFORM, &transform);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_TRANSFORM, &transform);
 	}
 
 	tb_json_read(json, &element, "{'rigidbody'");
 	if (element.error == TB_JSON_OK)
 	{
 		body.type = (RigidBodyType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
-
-		body.position.x = tb_json_float((char*)element.value, "{'position'[0", NULL, 0.0f);
-		body.position.y = tb_json_float((char*)element.value, "{'position'[1", NULL, 0.0f);
 
 		body.half_size.x = tb_json_float((char*)element.value, "{'halfsize'[0", NULL, 0.0f);
 		body.half_size.y = tb_json_float((char*)element.value, "{'halfsize'[1", NULL, 0.0f);
@@ -306,12 +297,14 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
 		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
 
+		body.position = vec2_add(pos, body.offset);
+
 		body.collides_bottom = 0;
 		body.collides_top = 0;
 		body.collides_left = 0;
 		body.collides_right = 0;
 
-		ComponentTableAddComponent(components, entity, COMPONENT_RIGID_BODY, &body);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_RIGID_BODY, &body);
 	}
 
 	tb_json_read(json, &element, "{'sprite'");
@@ -329,12 +322,14 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		char texture[APPLICATION_STR_LEN];
 		tb_json_string((char*)element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
 
-		sprite.texture = ResourceManagerGetTexture2D(resources, texture);
+		sprite.texture = ResourceManagerGetTexture2D(manager->resources, texture);
 
 		if (sprite.texture)
-			ComponentTableAddComponent(components, entity, COMPONENT_SPRITE, &sprite);
+			ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_SPRITE, &sprite);
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
+
+		EcsAddIndexedEntity(&manager->scene->ecs, clib_dict_get_key_ptr(&manager->scene->components.table[COMPONENT_SPRITE], entity), z_index);
 	}
 
 	/* ------------------------------------------------------------------ */
@@ -381,7 +376,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 
 			AnimatorAddAnimation(&animator, anim_name, animation);
 		}
-		ComponentTableAddComponent(components, entity, COMPONENT_ANIMATION, &animator);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_ANIMATION, &animator);
 	}
 
 	tb_json_read(json, &element, "{'movement'");
@@ -393,19 +388,19 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
 		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
 
-		ComponentTableAddComponent(components, entity, COMPONENT_MOVEMENT, &comp);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_MOVEMENT, &comp);
 	}
 
 	tb_json_read(json, &element, "{'camera'");
 	if (element.error == TB_JSON_OK)
 	{
 		CameraController comp;
-		comp.camera = NULL;
+		comp.camera = manager->scene->camera;
 		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
-		comp.scene_w = -1.0f;
-		comp.scene_h = -1.0f;
+		comp.scene_w = manager->scene->width;
+		comp.scene_h = manager->scene->height;
 
-		ComponentTableAddComponent(components, entity, COMPONENT_CAMERA, &comp);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_CAMERA, &comp);
 	}
 
 	tb_json_read(json, &element, "{'interaction'");
@@ -415,7 +410,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL, 0.0f);
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
-		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTION, &comp);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_INTERACTION, &comp);
 	}
 
 	tb_json_read(json, &element, "{'interactor'");
@@ -424,7 +419,7 @@ int SceneLoaderLoadTemplate(const char* entity, const char* path, ComponentTable
 		Interactor comp;
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
-		ComponentTableAddComponent(components, entity, COMPONENT_INTERACTOR, &comp);
+		ComponentTableAddComponent(&manager->scene->components, entity, COMPONENT_INTERACTOR, &comp);
 	}
 
 	free(json);

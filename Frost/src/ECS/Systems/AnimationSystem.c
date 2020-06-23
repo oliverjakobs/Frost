@@ -15,7 +15,7 @@ static void PlayAnimation(Animator* animator, const char* name)
 	}
 }
 
-void EcsSystemAnimation(ComponentTable* components, float deltatime)
+void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
 	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_ANIMATION], iter)
 	{

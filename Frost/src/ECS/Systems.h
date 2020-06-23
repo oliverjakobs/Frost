@@ -9,14 +9,4 @@
 #include "Systems/RenderSystem.h"
 #include "Systems/DebugRenderSystem.h"
 
-typedef struct
-{
-	void (*update)(ComponentTable*, float);
-} EcsUpdateSystem;
-
-typedef struct
-{
-	void (*render)(ComponentTable*, const float*);
-} EcsRenderSystem;
-
 #endif /* !SYSTEMS_H */

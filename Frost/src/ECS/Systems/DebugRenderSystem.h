@@ -1,8 +1,8 @@
 #ifndef ECS_DEBUG_RENDER_SYSTEM_H
 #define ECS_DEBUG_RENDER_SYSTEM_H
 
-#include "../Entity.h"
+#include "../Ecs.h"
 
-void EcsSystemDebugRender(ComponentTable* components, const float* mat_view_proj);
+void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_view_proj);
 
 #endif /* !ECS_DEBUG_RENDER_SYSTEM_H */

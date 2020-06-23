@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
 
-void EcsSystemPhysics(ComponentTable* components, float deltatime)
+void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
 	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
 	{

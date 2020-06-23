@@ -27,7 +27,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		if (editor->hover)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, EntityGetPosition(editor->hover->name, &active->components));
+			editor->offset = vec2_sub(mouse, EntityGetPosition(editor->hover, &active->components));
 			editor->clicked = 1;
 		}
 	}
@@ -58,7 +58,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		EntitySetPosition(editor->hover->name, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		EntitySetPosition(editor->hover, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
 		editor->hover = SceneGetEntityAt(active, mouse);
 }
@@ -85,23 +85,11 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 			Primitives2DRenderLine(-padding, y, width + padding, y, color);
 	}
 
-	for (size_t i = 0; i < active->entities.used; ++i)
-	{
-		IgnisColorRGBA color = IGNIS_WHITE;
-		ignisBlendColorRGBA(&color, 0.4f);
-
-		EcsEntity* entity = (EcsEntity*)clib_array_get(&active->entities, i);
-
-		rect r = EntityGetRect(entity->name, &active->components);
-
-		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, color);
-	}
-
 	if (editor->hover)
 	{
-		rect r = EntityGetRect(editor->hover->name, &active->components);
+		rect r = EntityGetRect(editor->hover, &active->components);
 
-		vec2 position = EntityGetPosition(editor->hover->name, &active->components);
+		vec2 position = EntityGetPosition(editor->hover, &active->components);
 
 		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
 		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);

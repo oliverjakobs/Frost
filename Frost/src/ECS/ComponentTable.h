@@ -37,5 +37,8 @@ void ComponentTableClear(ComponentTable* table);
 void* ComponentTableAddComponent(ComponentTable* table, const char* entity, ComponentType type, void* component);
 void* ComponentTableGetComponent(ComponentTable* table, const char* entity, ComponentType type);
 
+void ComponentTableRemoveComponent(ComponentTable* table, const char* entity, ComponentType type);
+void ComponentTableRemoveEntity(ComponentTable* table, const char* entity);
+
 
 #endif /* !ECS_COMPONENT_TABLE_H */
