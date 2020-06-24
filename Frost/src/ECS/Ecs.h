@@ -3,8 +3,6 @@
 
 #include "ComponentTable.h"
 
-#include "Entity.h"
-
 #include "clib/array.h"
 
 typedef struct
@@ -22,7 +20,7 @@ typedef struct
 
 typedef struct
 {
-	void (*render)(Ecs*, ComponentTable*, const float*);
+	void (*render)(Ecs*,ComponentTable*,const float*);
 } EcsRenderSystem;
 
 void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems);
@@ -44,6 +42,15 @@ typedef struct
 } ZIndexedEntity;
 
 void EcsAddIndexedEntity(Ecs* ecs, const char* entity, int z_index);
+
+/* Helper Functions */
 int EcsGetEntityIndex(Ecs* ecs, const char* entity);
+
+void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos);
+
+vec2 EntityGetPosition(const char* entity, ComponentTable* components);
+vec2 EntityGetCenter(const char* entity, ComponentTable* components);
+
+rect EntityGetRect(const char* entity, ComponentTable* components);
 
 #endif /* !ECS_H */

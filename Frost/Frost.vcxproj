@@ -112,7 +112,6 @@
     <ClInclude Include="src\ECS\ComponentTable.h" />
     <ClInclude Include="src\ECS\Components\Animator.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
-    <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\ECS\Systems.h" />
     <ClInclude Include="src\ECS\Systems\AnimationSystem.h" />
     <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h" />
@@ -179,7 +178,6 @@
     <ClCompile Include="src\ECS\ComponentTable.c" />
     <ClCompile Include="src\ECS\Components\Animator.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
-    <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c" />
     <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\ECS\Systems\InteractionSystem.c" />

@@ -135,9 +135,6 @@
     <ClInclude Include="src\ECS\Ecs.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Entity.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Systems.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
@@ -329,9 +326,6 @@
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Ecs.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Entity.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Systems\AnimationSystem.c">

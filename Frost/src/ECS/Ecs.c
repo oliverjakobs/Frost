@@ -81,3 +81,53 @@ int EcsGetEntityIndex(Ecs* ecs, const char* entity)
 
 	return 0;
 }
+
+void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos)
+{
+	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	if (transform) transform->position = pos;
+
+	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	if (body) body->position = vec2_add(pos, body->offset);
+}
+
+vec2 EntityGetPosition(const char* entity, ComponentTable* components)
+{
+	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	if (transform) return transform->position;
+
+	return vec2_zero();
+}
+
+vec2 EntityGetCenter(const char* entity, ComponentTable* components)
+{
+	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+
+	if (transform)
+	{
+		vec2 center;
+		center.x = transform->position.x;
+		center.y = transform->position.y + (transform->size.y / 2.0f);
+
+		return center;
+	}
+
+	return vec2_zero();
+}
+
+rect EntityGetRect(const char* entity, ComponentTable* components)
+{
+	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+
+	rect r;
+	r.min = vec2_zero();
+	r.max = vec2_zero();
+
+	if (transform)
+	{
+		r.min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
+		r.max = vec2_add(r.min, transform->size);
+	}
+
+	return r;
+}
