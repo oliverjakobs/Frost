@@ -46,6 +46,8 @@ void EcsAddIndexedEntity(Ecs* ecs, const char* entity, int z_index);
 /* Helper Functions */
 int EcsGetEntityIndex(Ecs* ecs, const char* entity);
 
+const char* EcsGetEntityAt(ComponentTable* components, vec2 pos);
+
 void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos);
 
 vec2 EntityGetPosition(const char* entity, ComponentTable* components);

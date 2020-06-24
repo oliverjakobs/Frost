@@ -287,6 +287,7 @@
     <ClInclude Include="src\ECS\Components\Movement.h" />
     <ClInclude Include="src\ECS\Components\CameraController.h" />
     <ClInclude Include="src\ECS\Components\Interaction.h" />
+    <ClInclude Include="src\ECS\Components.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -454,6 +455,7 @@
       <Filter>src\ECS\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\RigidBody.c" />
+    <ClCompile Include="src\ECS\Components.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

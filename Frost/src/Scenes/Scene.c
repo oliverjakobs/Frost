@@ -60,19 +60,3 @@ void SceneOnRenderDebug(Scene* scene)
 {
 
 }
-
-const char* SceneGetEntityAt(Scene* scene, vec2 pos)
-{
-	CLIB_DICT_ITERATE_FOR(&scene->components.table[COMPONENT_TRANSFORM], iter)
-	{
-		Transform* transform = clib_dict_iter_get_value(iter);
-
-		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
-		vec2 max = vec2_add(min, transform->size);
-
-		if (vec2_inside(pos, min, max))
-			return clib_dict_iter_get_key(iter);
-	}
-
-	return NULL;
-}

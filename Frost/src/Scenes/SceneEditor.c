@@ -60,7 +60,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	if (editor->clicked)
 		EntitySetPosition(editor->hover, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
-		editor->hover = SceneGetEntityAt(active, mouse);
+		editor->hover = EcsGetEntityAt(&active->components, mouse);
 }
 
 void SceneEditorOnRender(SceneEditor* editor, Scene* active)

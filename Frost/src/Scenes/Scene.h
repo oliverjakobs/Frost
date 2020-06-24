@@ -37,6 +37,4 @@ void SceneOnUpdate(Scene* scene, float deltaTime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
 
-const char* SceneGetEntityAt(Scene* scene, vec2 position);
-
 #endif /* !SCENE_H */

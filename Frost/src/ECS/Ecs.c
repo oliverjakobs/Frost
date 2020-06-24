@@ -82,6 +82,22 @@ int EcsGetEntityIndex(Ecs* ecs, const char* entity)
 	return 0;
 }
 
+const char* EcsGetEntityAt(ComponentTable* components, vec2 pos)
+{
+	CLIB_HASHMAP_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
+	{
+		Transform* transform = clib_dict_iter_get_value(iter);
+
+		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
+		vec2 max = vec2_add(min, transform->size);
+
+		if (vec2_inside(pos, min, max))
+			return clib_dict_iter_get_key(iter);
+	}
+
+	return NULL;
+}
+
 void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);

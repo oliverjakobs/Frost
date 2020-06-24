@@ -5,6 +5,9 @@
 
 typedef struct _clib_hashmap_iter clib_hashmap_iter;
 
+#define CLIB_HASHMAP_ITERATE_FOR(dict, iter) \
+    for (clib_hashmap_iter* iter = clib_hashmap_iterator(dict); iter; iter = clib_hashmap_iter_next(dict, iter))
+
 typedef enum
 {
     CLIB_HASHMAP_OK = 0,
