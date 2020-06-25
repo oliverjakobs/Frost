@@ -17,15 +17,15 @@ static void PlayAnimation(Animator* animator, const char* name)
 
 void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_ANIMATION], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_ANIMATION], iter)
 	{
-		Animator* animator = clib_dict_iter_get_value(iter);
+		Animator* animator = clib_hashset_iter_get_value(iter);
 
-		Sprite* sprite = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_SPRITE);
+		Sprite* sprite = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 
-		Animation* current = clib_dict_find(&animator->animations, animator->current);
+		Animation* current = clib_hashmap_find(&animator->animations, animator->current);
 		if (!current)
 		{
 			sprite->frame = 0;
@@ -38,7 +38,7 @@ void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		CLIB_DICT_ITERATE_FOR(transitions, transition_iter)
 		{
 			AnimationCondition* cond = AnimationConditionsGetCondition(clib_strmap_iter_get_key(transition_iter));
-			if (cond && cond->func(components, clib_dict_iter_get_key(iter), 0))
+			if (cond && cond->func(components, clib_hashset_iter_get_key(iter), 0))
 				PlayAnimation(animator, clib_strmap_iter_get_value(transition_iter));
 		}
 		sprite->frame = current->frame;

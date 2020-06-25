@@ -6,26 +6,26 @@ void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_vi
 {
 	Primitives2DStart(mat_view_proj);
 
-	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
 	{
-		Transform* transform = clib_dict_iter_get_value(iter);
+		Transform* transform = clib_hashset_iter_get_value(iter);
 
-		vec2 pos = EntityGetPosition(clib_dict_iter_get_key(iter), components);
+		vec2 pos = EntityGetPosition(clib_hashset_iter_get_key(iter), components);
 		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
-	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
 	{
-		Interaction* interaction = clib_dict_iter_get_value(iter);
+		Interaction* interaction = clib_hashset_iter_get_value(iter);
 
-		vec2 cen = EntityGetCenter(clib_dict_iter_get_key(iter), components);
+		vec2 cen = EntityGetCenter(clib_hashset_iter_get_key(iter), components);
 		Primitives2DRenderCircle(cen.x, cen.y, interaction->radius, IGNIS_WHITE);
 	}
 
 
-	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
 	{
-		RigidBody* body = clib_dict_iter_get_value(iter);
+		RigidBody* body = clib_hashset_iter_get_value(iter);
 
 		vec2 pos = vec2_sub(body->position, body->half_size);
 		vec2 dim = vec2_mult(body->half_size, 2.0f);

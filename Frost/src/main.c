@@ -121,9 +121,9 @@ void OnRenderGui(Application* app)
 		gui_text("Scene: %s", scene_manager.scene_name);
 		gui_separator();
 
-		char* name = "player";
-		gui_text("Name: %s", name);
-		vec2 position = EntityGetPosition(name, &scene_manager.scene->components);
+		EntityID player = 0;
+		gui_text("Player ID: %d", player);
+		vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
 		gui_text("Position: %4.2f, %4.2f", position.x, position.y);
 		gui_text("Precise Y: %f", position.y);
 	}

@@ -119,32 +119,32 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	{
 		char* value = (char*)element.value;
 
-		for (int i = 0; i < element.elements; i++)
+		for (EntityID id = 0; id < element.elements; ++id)
 		{
 			tb_json_element entity_template;
 			value = tb_json_array_step(value, &entity_template);
 
-			char name[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity_template.value, "[0", name, APPLICATION_STR_LEN, NULL);
-			char temp[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity_template.value, "[1", temp, APPLICATION_STR_LEN, NULL);
+			char templ[APPLICATION_STR_LEN];
+			tb_json_string((char*)entity_template.value, "[0", templ, APPLICATION_STR_LEN, NULL);
 
 			vec2 pos;
-			pos.x = tb_json_float((char*)entity_template.value, "[2[0", NULL, 0.0f);
-			pos.y = tb_json_float((char*)entity_template.value, "[2[1", NULL, 0.0f);
+			pos.x = tb_json_float((char*)entity_template.value, "[1[0", NULL, 0.0f);
+			pos.y = tb_json_float((char*)entity_template.value, "[1[1", NULL, 0.0f);
 
-			int z_index = tb_json_int((char*)entity_template.value, "[3", NULL, 0);
+			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
 
-			char* path = clib_strmap_find(&manager->templates, temp);
+			char* path = clib_strmap_find(&manager->templates, templ);
 			if (!path)
 			{
-				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", temp);
+				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
 				continue;
 			}
 
 			/* Load Template */
-			if (SceneLoaderLoadTemplate(manager, name, path, pos, z_index))
-				SceneAddEntityTemplate(manager->scene, name, temp);
+			if (SceneLoaderLoadTemplate(manager, path, id, pos, z_index))
+			{
+				// SceneAddEntityTemplate(manager->scene, "", temp);
+			}
 		}
 	}
 
@@ -199,33 +199,34 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	CLIB_STRMAP_ITERATE_FOR(&scene->entity_templates)
-	{
-		tb_jwrite_array_array(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-
-		/* name */
-		tb_jwrite_array_string(&jwc, clib_strmap_iter_get_key(iter));
-
-		/* template-src */
-		tb_jwrite_array_string(&jwc, clib_strmap_iter_get_value(iter));
-
-		/* pos */
-		vec2 pos = EntityGetPosition(clib_strmap_iter_get_key(iter), &scene->components);
-
-		tb_jwrite_array_array(&jwc);
-		tb_jwrite_array_float(&jwc, pos.x);
-		tb_jwrite_array_float(&jwc, pos.y);
-		tb_jwrite_end(&jwc);
-
-		/* z_index */
-		tb_jwrite_array_int(&jwc, EcsGetEntityIndex(&scene->ecs, clib_strmap_iter_get_key(iter)));
-
-		tb_jwrite_end(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	}
+	/* TODO */
+	//CLIB_HASHMAP_ITERATE_FOR(&scene->entity_templates, iter)
+	//{
+	//	tb_jwrite_array_array(&jwc);
+	//
+	//	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
+	//
+	//	/* name */
+	//	tb_jwrite_array_string(&jwc, clib_strmap_iter_get_key(iter));
+	//
+	//	/* template-src */
+	//	tb_jwrite_array_string(&jwc, clib_strmap_iter_get_value(iter));
+	//
+	//	/* pos */
+	//	vec2 pos = EntityGetPosition(clib_strmap_iter_get_key(iter), &scene->components);
+	//
+	//	tb_jwrite_array_array(&jwc);
+	//	tb_jwrite_array_float(&jwc, pos.x);
+	//	tb_jwrite_array_float(&jwc, pos.y);
+	//	tb_jwrite_end(&jwc);
+	//
+	//	/* z_index */
+	//	tb_jwrite_array_int(&jwc, EcsGetEntityIndex(&scene->ecs, clib_strmap_iter_get_key(iter)));
+	//
+	//	tb_jwrite_end(&jwc);
+	//
+	//	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
+	//}
 
 	tb_jwrite_end(&jwc);
 
@@ -253,7 +254,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 }
 
 
-int SceneLoaderLoadTemplate(SceneManager* manager, const char* entity, const char* path, vec2 pos, int z_index)
+int SceneLoaderLoadTemplate(SceneManager* manager, const char* path, EntityID entity, vec2 pos, int z_index)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -329,7 +330,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* entity, const cha
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 
-		EcsAddIndexedEntity(&manager->scene->ecs, clib_dict_get_key_ptr(&manager->scene->components.table[COMPONENT_SPRITE], entity), z_index);
+		EcsAddIndexedEntity(&manager->scene->ecs, entity, z_index);
 	}
 
 	/* ------------------------------------------------------------------ */

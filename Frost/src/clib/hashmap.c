@@ -180,7 +180,6 @@ clib_hashmap_error clib_hashmap_rehash(clib_hashmap* map, size_t new_capacity)
 void* clib_hashmap_insert(clib_hashmap* map, const void* key, void* value)
 {
     CLIB_ASSERT(map != NULL);
-    CLIB_ASSERT(key != NULL);
 
     /* Rehash with 2x capacity if load factor is approaching 0.75 */
     if (map->capacity <= clib_hashmap_table_calc_min_size(map->used))
@@ -257,7 +256,6 @@ void clib_hashmap_clear(clib_hashmap* map)
 void* clib_hashmap_find(const clib_hashmap* map, const void* key)
 {
     CLIB_ASSERT(map != NULL);
-    CLIB_ASSERT(key != NULL);
 
     clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, 0);
 

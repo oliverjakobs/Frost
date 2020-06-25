@@ -4,13 +4,13 @@
 
 void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_DICT_ITERATE_FOR(&components->table[COMPONENT_MOVEMENT], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_MOVEMENT], iter)
 	{
-		Movement* movement = clib_dict_iter_get_value(iter);
+		Movement* movement = clib_hashset_iter_get_value(iter);
 
-		RigidBody* body = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_RIGID_BODY);
-		Sprite* sprite = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_SPRITE);
-		CameraController* camera = ComponentTableGetComponent(components, clib_dict_iter_get_key(iter), COMPONENT_CAMERA);
+		RigidBody* body = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_RIGID_BODY);
+		Sprite* sprite = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
+		CameraController* camera = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_CAMERA);
 
 		if (!(body && sprite)) continue;
 
@@ -40,7 +40,7 @@ void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		// set view
 		if (camera)
 		{
-			vec2 position = EntityGetPosition(clib_dict_iter_get_key(iter), components);
+			vec2 position = EntityGetPosition(clib_hashset_iter_get_key(iter), components);
 
 			float smooth_w = (camera->camera->size.x * 0.5f) * camera->smooth;
 			float smooth_h = (camera->camera->size.y * 0.5f) * camera->smooth;

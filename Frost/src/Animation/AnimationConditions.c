@@ -23,7 +23,7 @@ void AnimationConditionsDestroy()
 	}
 }
 
-int AnimationConditionsRegisterCondition(const char* name, int(*condition)(ComponentTable*, const char*, int))
+int AnimationConditionsRegisterCondition(const char* name, int(*condition)(ComponentTable*, EntityID, int))
 {
 	AnimationCondition* value = (AnimationCondition*)malloc(sizeof(AnimationCondition));
 
@@ -43,7 +43,7 @@ AnimationCondition* AnimationConditionsGetCondition(const char* name)
 	return clib_dict_find(&conditions.table, name);
 }
 
-int AnimationConditionJump(ComponentTable* components, const char* entity, int s)
+int AnimationConditionJump(ComponentTable* components, EntityID entity, int s)
 {
 	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
@@ -53,7 +53,7 @@ int AnimationConditionJump(ComponentTable* components, const char* entity, int s
 	return 0;
 }
 
-int AnimationConditionFall(ComponentTable* components, const char* entity, int s)
+int AnimationConditionFall(ComponentTable* components, EntityID entity, int s)
 {
 	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
@@ -63,7 +63,7 @@ int AnimationConditionFall(ComponentTable* components, const char* entity, int s
 	return 0;
 }
 
-int AnimationConditionWalk(ComponentTable* components, const char* entity, int s)
+int AnimationConditionWalk(ComponentTable* components, EntityID entity, int s)
 {
 	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 
@@ -73,7 +73,7 @@ int AnimationConditionWalk(ComponentTable* components, const char* entity, int s
 	return 0;
 }
 
-int AnimationConditionIdle(ComponentTable* components, const char* entity, int s)
+int AnimationConditionIdle(ComponentTable* components, EntityID entity, int s)
 {
 	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
 

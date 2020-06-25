@@ -59,7 +59,7 @@ static int _EcsIndexedEntityCmp(const ZIndexedEntity* a, const ZIndexedEntity* b
 	return a->z_index - b->z_index;
 }
 
-void EcsAddIndexedEntity(Ecs* ecs, const char* entity, int z_index)
+void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index)
 {
 	ZIndexedEntity indexed;
 	indexed.z_index = z_index;
@@ -69,36 +69,36 @@ void EcsAddIndexedEntity(Ecs* ecs, const char* entity, int z_index)
 	clib_array_sort(&ecs->indexed_entities, _EcsIndexedEntityCmp);
 }
 
-int EcsGetEntityIndex(Ecs* ecs, const char* entity)
+int EcsGetEntityIndex(Ecs* ecs, EntityID entity)
 {
 	for (size_t i = 0; i < ecs->indexed_entities.used; ++i)
 	{
 		ZIndexedEntity* indexed = clib_array_get(&ecs->indexed_entities, i);
 
-		if (strcmp(indexed->entity, entity) == 0)
+		if (indexed->entity == entity)
 			return indexed->z_index;
 	}
 
 	return 0;
 }
 
-const char* EcsGetEntityAt(ComponentTable* components, vec2 pos)
+EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos)
 {
-	CLIB_HASHMAP_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
+	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
 	{
-		Transform* transform = clib_dict_iter_get_value(iter);
+		Transform* transform = clib_hashset_iter_get_value(iter);
 
 		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
 		vec2 max = vec2_add(min, transform->size);
 
 		if (vec2_inside(pos, min, max))
-			return clib_dict_iter_get_key(iter);
+			return clib_hashset_iter_get_key(iter);
 	}
 
-	return NULL;
+	return NULL_ENTITY;
 }
 
-void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos)
+void EntitySetPosition(EntityID entity, ComponentTable* components, vec2 pos)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
 	if (transform) transform->position = pos;
@@ -107,7 +107,7 @@ void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos)
 	if (body) body->position = vec2_add(pos, body->offset);
 }
 
-vec2 EntityGetPosition(const char* entity, ComponentTable* components)
+vec2 EntityGetPosition(EntityID entity, ComponentTable* components)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
 	if (transform) return transform->position;
@@ -115,7 +115,7 @@ vec2 EntityGetPosition(const char* entity, ComponentTable* components)
 	return vec2_zero();
 }
 
-vec2 EntityGetCenter(const char* entity, ComponentTable* components)
+vec2 EntityGetCenter(EntityID entity, ComponentTable* components)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
 
@@ -131,7 +131,7 @@ vec2 EntityGetCenter(const char* entity, ComponentTable* components)
 	return vec2_zero();
 }
 
-rect EntityGetRect(const char* entity, ComponentTable* components)
+rect EntityGetRect(EntityID entity, ComponentTable* components)
 {
 	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
 

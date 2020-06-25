@@ -1,8 +1,6 @@
 #ifndef RIGID_BODY_H
 #define RIGID_BODY_H
 
-#include "../ComponentTable.h"
-
 #include "math/math.h"
 
 typedef enum

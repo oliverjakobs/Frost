@@ -35,7 +35,7 @@ void SceneQuit(Scene* scene)
 
 void SceneAddEntityTemplate(Scene* scene, const char* entity, const char* templ)
 {
-	clib_strmap_insert(&scene->entity_templates, entity, templ);
+	clib_hashmap_insert(&scene->entity_templates, entity, templ);
 }
 
 void SceneOnEvent(Scene* scene, Event e)

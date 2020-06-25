@@ -38,21 +38,21 @@ void EcsRender(Ecs* ecs, ComponentTable* components, const float* mat_view_proj)
 typedef struct
 {
 	int z_index;
-	const char* entity;
+	EntityID entity;
 } ZIndexedEntity;
 
-void EcsAddIndexedEntity(Ecs* ecs, const char* entity, int z_index);
+void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index);
 
 /* Helper Functions */
-int EcsGetEntityIndex(Ecs* ecs, const char* entity);
+int EcsGetEntityIndex(Ecs* ecs, EntityID entity);
 
-const char* EcsGetEntityAt(ComponentTable* components, vec2 pos);
+EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos);
 
-void EntitySetPosition(const char* entity, ComponentTable* components, vec2 pos);
+void EntitySetPosition(EntityID entity, ComponentTable* components, vec2 pos);
 
-vec2 EntityGetPosition(const char* entity, ComponentTable* components);
-vec2 EntityGetCenter(const char* entity, ComponentTable* components);
+vec2 EntityGetPosition(EntityID entity, ComponentTable* components);
+vec2 EntityGetCenter(EntityID entity, ComponentTable* components);
 
-rect EntityGetRect(const char* entity, ComponentTable* components);
+rect EntityGetRect(EntityID entity, ComponentTable* components);
 
 #endif /* !ECS_H */
