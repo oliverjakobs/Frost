@@ -100,7 +100,6 @@
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Camera\Camera.h" />
-    <ClInclude Include="src\clib\hashset.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\ComponentTable.h" />
@@ -151,6 +150,7 @@
     <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
+    <ClInclude Include="src\clib\hashset.h" />
     <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\gui\context.h" />
     <ClInclude Include="src\gui\gui.h" />
@@ -173,7 +173,6 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
-    <ClCompile Include="src\clib\hashset.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\ComponentTable.c" />
@@ -214,6 +213,7 @@
     <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
+    <ClCompile Include="src\clib\hashset.c" />
     <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\gui\gui.c" />
     <ClCompile Include="src\gui\row.c" />

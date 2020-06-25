@@ -2,16 +2,11 @@
 
 #include "clib/hash.h"
 
-static size_t _component_table_hash_key(int32_t key)
-{
-	return clib_hash_int32((uint32_t)key);
-}
-
 void ComponentTableInit(ComponentTable* components, size_t initial_size)
 {
 	for (size_t i = 0; i < NUM_COMPONENT_TYPES; ++i)
 	{
-		clib_hashset_alloc(&components->table[i], _component_table_hash_key, initial_size);
+		clib_hashset_alloc(&components->table[i], clib_hash_int32, initial_size);
 	}
 }
 

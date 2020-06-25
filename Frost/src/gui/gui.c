@@ -65,7 +65,7 @@ void gui_render(const float* proj_mat)
     float w = 1.0f;
     glGetFloatv(GL_LINE_WIDTH, &w);
 
-    glLineWidth(_context.theme.border_width);
+    // glLineWidth(_context.theme.border_width);
 
     Primitives2DStart(proj_mat);
     for (size_t i = 0; i < _context.windows.size; ++i)

@@ -1,6 +1,10 @@
 #include "Scene.h"
 
+#include "clib/hash.h"
+
 #include "ECS/Systems.h"
+
+#include "Application/Debugger.h"
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 {
@@ -18,7 +22,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 		
 	ComponentTableInit(&scene->components, 16);
 
-	clib_strmap_alloc(&scene->entity_templates, 16);
+	clib_hashset_alloc(&scene->entity_templates, clib_hash_int32, 16);
 
 	return 1;
 }
@@ -27,15 +31,40 @@ void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
 
-	clib_strmap_free(&scene->entity_templates);
+	clib_hashset_free(&scene->entity_templates);
 
 	EcsDestroy(&scene->ecs);
 	ComponentTableFree(&scene->components);
 }
 
-void SceneAddEntityTemplate(Scene* scene, const char* entity, const char* templ)
+void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ)
 {
-	clib_hashmap_insert(&scene->entity_templates, entity, templ);
+	size_t size = strlen(templ);
+	char* value = (char*)malloc(size + 1);
+
+	if (!value)
+	{
+		DEBUG_WARN("[Scene] Failed to allocate memory for entity template (%s)\n", templ);
+		return;
+	}
+
+	strcpy(value, templ);
+	value[size] = '\0'; /* make sure key is null-terminated */
+
+	if ((char*)clib_hashset_insert(&scene->entity_templates, entity, (void*)value) != value)
+	{
+		DEBUG_WARN("[Scene] Failed to add entity template (%s)\n", templ);
+		free(value);
+	}
+}
+
+void SceneClearEntityTemplates(Scene* scene)
+{
+	CLIB_HASHSET_ITERATE_FOR(&scene->entity_templates, iter)
+	{
+		free(clib_hashset_iter_get_value(iter));
+	}
+	clib_hashset_clear(&scene->entity_templates);
 }
 
 void SceneOnEvent(Scene* scene, Event e)

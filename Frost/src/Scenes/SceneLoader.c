@@ -143,7 +143,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 			/* Load Template */
 			if (SceneLoaderLoadTemplate(manager, path, id, pos, z_index))
 			{
-				// SceneAddEntityTemplate(manager->scene, "", temp);
+				SceneAddEntityTemplate(manager->scene, id, templ);
 			}
 		}
 	}
@@ -156,6 +156,12 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 {
 	char* temp_ext = ".temp";
 	char* temp_path = (char*)malloc(strlen(path) + strlen(temp_ext));
+
+	if (!temp_path)
+	{
+		DEBUG_ERROR("[Scenes] Failed to allocate memory for temp path\n");
+		return 0;
+	}
 
 	strcpy(temp_path, path);
 	strcat(temp_path, temp_ext);
