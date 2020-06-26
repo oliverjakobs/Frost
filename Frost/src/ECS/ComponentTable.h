@@ -1,14 +1,10 @@
 #ifndef COMPONENT_TABLE_H
 #define COMPONENT_TABLE_H
 
-#include <stdint.h>
-
 #include "clib/hashset.h"
 
+#include "Entity.h"
 #include "Components.h"
-
-typedef int32_t EntityID;
-#define NULL_ENTITY (-1)
 
 typedef struct
 {

@@ -24,18 +24,24 @@ typedef struct
 	Ecs ecs;
 	ComponentTable components;
 
-	clib_hashset entity_templates;
+	clib_array entity_templates;
 } Scene;
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h);
 void SceneQuit(Scene* scene);
 
-void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ);
-void SceneClearEntityTemplates(Scene* scene);
-
 void SceneOnEvent(Scene* scene, Event e);
 void SceneOnUpdate(Scene* scene, float deltaTime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
+
+typedef struct
+{
+	EntityID entity;
+	char* templ;
+} EntityTemplate;
+
+void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ);
+void SceneClearEntityTemplates(Scene* scene);
 
 #endif /* !SCENE_H */

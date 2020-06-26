@@ -306,6 +306,7 @@
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -485,6 +486,7 @@
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\Entity.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

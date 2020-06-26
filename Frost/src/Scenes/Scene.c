@@ -22,7 +22,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 		
 	ComponentTableInit(&scene->components, 16);
 
-	clib_hashset_alloc(&scene->entity_templates, clib_hash_int32, 16);
+	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
 
 	return 1;
 }
@@ -31,40 +31,10 @@ void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
 
-	clib_hashset_free(&scene->entity_templates);
+	clib_array_free(&scene->entity_templates);
 
 	EcsDestroy(&scene->ecs);
 	ComponentTableFree(&scene->components);
-}
-
-void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ)
-{
-	size_t size = strlen(templ);
-	char* value = (char*)malloc(size + 1);
-
-	if (!value)
-	{
-		DEBUG_WARN("[Scene] Failed to allocate memory for entity template (%s)\n", templ);
-		return;
-	}
-
-	strcpy(value, templ);
-	value[size] = '\0'; /* make sure key is null-terminated */
-
-	if ((char*)clib_hashset_insert(&scene->entity_templates, entity, (void*)value) != value)
-	{
-		DEBUG_WARN("[Scene] Failed to add entity template (%s)\n", templ);
-		free(value);
-	}
-}
-
-void SceneClearEntityTemplates(Scene* scene)
-{
-	CLIB_HASHSET_ITERATE_FOR(&scene->entity_templates, iter)
-	{
-		free(clib_hashset_iter_get_value(iter));
-	}
-	clib_hashset_clear(&scene->entity_templates);
 }
 
 void SceneOnEvent(Scene* scene, Event e)
@@ -88,4 +58,32 @@ void SceneOnRender(Scene* scene)
 void SceneOnRenderDebug(Scene* scene)
 {
 
+}
+
+void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ)
+{
+	EntityTemplate t;
+	t.entity = entity;
+
+	size_t size = strlen(templ);
+	t.templ = (char*)malloc(size);
+
+	if (!t.templ)
+	{
+		DEBUG_WARN("[Scene] Failed to allocate memory for entity template (%s)\n", templ);
+		return;
+	}
+
+	strcpy(t.templ, templ);
+
+	clib_array_push(&scene->entity_templates, &t);
+}
+
+void SceneClearEntityTemplates(Scene* scene)
+{
+	for (size_t i = 0; i < scene->entity_templates.used; ++i)
+	{
+		free(((EntityTemplate*)clib_array_get(&scene->entity_templates, i))->templ);
+	}
+	clib_array_free(&scene->entity_templates);
 }

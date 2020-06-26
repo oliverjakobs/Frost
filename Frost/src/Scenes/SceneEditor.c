@@ -17,14 +17,14 @@ void SceneEditorReset(SceneEditor* editor)
 	editor->showgrid = 1;
 	editor->clicked = 0;
 	editor->offset = vec2_zero();
-	editor->hover = NULL;
+	editor->hover = NULL_ENTITY;
 }
 
 void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 {
 	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
 	{
-		if (editor->hover)
+		if (editor->hover != NULL_ENTITY)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 			editor->offset = vec2_sub(mouse, EntityGetPosition(editor->hover, &active->components));
@@ -85,7 +85,7 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 			Primitives2DRenderLine(-padding, y, width + padding, y, color);
 	}
 
-	if (editor->hover)
+	if (editor->hover != NULL_ENTITY)
 	{
 		rect r = EntityGetRect(editor->hover, &active->components);
 

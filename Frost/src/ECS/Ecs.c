@@ -69,7 +69,7 @@ void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index)
 	clib_array_sort(&ecs->indexed_entities, _EcsIndexedEntityCmp);
 }
 
-int EcsGetEntityIndex(Ecs* ecs, EntityID entity)
+int EcsGetEntityZIndex(Ecs* ecs, EntityID entity)
 {
 	for (size_t i = 0; i < ecs->indexed_entities.used; ++i)
 	{

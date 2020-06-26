@@ -119,7 +119,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	{
 		char* value = (char*)element.value;
 
-		for (EntityID id = 0; id < element.elements; ++id)
+		for (size_t i = 0; i < element.elements; ++i)
 		{
 			tb_json_element entity_template;
 			value = tb_json_array_step(value, &entity_template);
@@ -141,11 +141,17 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 			}
 
 			/* Load Template */
+			EntityID id = EntityGetNextID();
 			if (SceneLoaderLoadTemplate(manager, path, id, pos, z_index))
 			{
 				SceneAddEntityTemplate(manager->scene, id, templ);
 			}
 		}
+	}
+
+	for (size_t i = 0; i < manager->scene->entity_templates.used; ++i)
+	{
+		printf("%s\n", ((EntityTemplate*)clib_array_get(&manager->scene->entity_templates, i))->templ);
 	}
 
 	free(json);

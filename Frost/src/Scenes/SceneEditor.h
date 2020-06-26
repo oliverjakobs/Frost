@@ -14,7 +14,7 @@ typedef struct
 	int clicked;
 
 	vec2 offset;
-	const char* hover;
+	EntityID hover;
 } SceneEditor;
 
 void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, float padding);

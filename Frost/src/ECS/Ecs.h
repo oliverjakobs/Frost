@@ -44,7 +44,7 @@ typedef struct
 void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index);
 
 /* Helper Functions */
-int EcsGetEntityIndex(Ecs* ecs, EntityID entity);
+int EcsGetEntityZIndex(Ecs* ecs, EntityID entity);
 
 EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos);
 
