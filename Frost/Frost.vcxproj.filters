@@ -102,12 +102,6 @@
     <ClInclude Include="src\Application\Debugger.h">
       <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\Event.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\EventHandler.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
     <ClInclude Include="src\Application\Input.h">
       <Filter>src\Application</Filter>
     </ClInclude>
@@ -307,6 +301,12 @@
       <Filter>src\math</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\Event\EventHandler.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -319,12 +319,6 @@
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\ApplicationCallback.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\Event.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\EventHandler.c">
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Input.c">
@@ -487,6 +481,12 @@
       <Filter>src\math</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\Event\EventHandler.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Event\Event.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

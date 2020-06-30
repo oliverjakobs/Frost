@@ -1,7 +1,5 @@
 #include "Application.h"
 
-#include "EventHandler.h"
-
 #include "ApplicationCallback.h"
 
 #include "json/tb_json.h"

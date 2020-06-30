@@ -6,7 +6,7 @@
 #define CONSOLE_OUT_BUF_SIZE	64
 #define CONSOLE_OUT_ROW_SIZE	64
 
-#include "Application/EventHandler.h"
+#include "Application/Application.h"
 #include "Application/defines.h"
 
 typedef struct

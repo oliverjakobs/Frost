@@ -1,5 +1,11 @@
 #include "Event.h"
 
+void EventReset(Event* e)
+{
+	e->type = EVENT_UNKOWN;
+	e->handled = 0;
+}
+
 int EventMouseButton(Event* e)
 {
 	if (e->handled) return -1;

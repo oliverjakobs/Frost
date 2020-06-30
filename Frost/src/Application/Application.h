@@ -2,7 +2,7 @@
 #define APPLICATION_H
 
 #include "Timer.h"
-#include "Event.h"
+#include "Event/EventHandler.h"
 
 /* Graphics */
 #include "Graphics/Renderer.h"

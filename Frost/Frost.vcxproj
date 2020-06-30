@@ -94,8 +94,8 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
-    <ClInclude Include="src\Application\Event.h" />
-    <ClInclude Include="src\Application\EventHandler.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
@@ -169,8 +169,8 @@
     <ClCompile Include="src\Animation\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
-    <ClCompile Include="src\Application\Event.c" />
-    <ClCompile Include="src\Application\EventHandler.c" />
+    <ClCompile Include="src\Event\Event.c" />
+    <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />

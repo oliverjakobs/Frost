@@ -1,6 +1,8 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+#include <stddef.h>
+
 typedef enum
 {
 	EVENT_UNKOWN = 0,
@@ -62,6 +64,8 @@ typedef struct
 	};
 	int handled;
 } Event;
+
+void EventReset(Event* e);
 
 /* Utility */
 int EventMouseButton(Event* e);

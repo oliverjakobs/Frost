@@ -1,8 +1,6 @@
 #include "ApplicationCallback.h"
 
-#include "Input.h"
-
-#include "EventHandler.h"
+#include "Application.h"
 
 void ApplicationEventCallback(Application* app, const Event e)
 {

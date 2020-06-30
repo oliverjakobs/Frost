@@ -6,7 +6,7 @@
 
 #include "Camera/Camera.h"
 
-#include "Application/EventHandler.h"
+#include "Application/Application.h"
 #include "Graphics/Background.h"
 
 #define SCENE_INITIAL_LAYER_SIZE	8

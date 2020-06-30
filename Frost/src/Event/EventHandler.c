@@ -1,21 +1,15 @@
  #include "EventHandler.h"
 
-#include "Debugger.h"
+#include <stdlib.h>
 
 typedef struct
 {
 	Event* queue;
 	size_t queue_size;
-	void (*callback)(Application*, Event);
+	void (*callback)(void*, Event);
 } EventHandler;
 
 static EventHandler event_handler;
-
-static void _EventHandlerResetEvent(Event* e)
-{
-	e->type = EVENT_UNKOWN;
-	e->handled = 0;
-}
 
 static Event* _EventHandlerGetNext()
 {
@@ -25,21 +19,16 @@ static Event* _EventHandlerGetNext()
 			return &event_handler.queue[i];
 	}
 
-	DEBUG_WARN("[EventHandler] Event queue overflow\n");
+	// DEBUG_WARN("[EventHandler] Event queue overflow\n");
 
 	return NULL;
 }
 
-int EventHandlerInit(size_t queue_size, void (*callback)(Application*, Event))
+int EventHandlerInit(size_t queue_size, void (*callback)(void*, Event))
 {
-	event_handler.queue = (Event*)malloc(queue_size * sizeof(Event));
+	event_handler.queue = calloc(queue_size, sizeof(Event));
 	event_handler.queue_size = queue_size;
 	event_handler.callback = callback;
-
-	for (size_t i = 0; i < queue_size; ++i)
-	{
-		_EventHandlerResetEvent(&event_handler.queue[i]);
-	}
 
 	return 0;
 }
@@ -107,14 +96,14 @@ void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
 	}
 }
 
-void EventHandlerPoll(Application* app)
+void EventHandlerPoll(void* context)
 {
 	for (size_t i = 0; i < event_handler.queue_size; ++i)
 	{
 		if (event_handler.queue[i].type != EVENT_UNKOWN)
 		{
-			event_handler.callback(app, event_handler.queue[i]);
-			_EventHandlerResetEvent(&event_handler.queue[i]);
+			event_handler.callback(context, event_handler.queue[i]);
+			EventReset(&event_handler.queue[i]);
 		}
 	}
 }
