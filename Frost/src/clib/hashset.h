@@ -28,7 +28,7 @@ typedef struct
     clib_hashset_entry* table;
     size_t capacity;
     size_t used;
-    size_t  (*hash)(int32_t);
+    uint32_t (*hash)(uint32_t);
     /* memory */
     void*   (*value_alloc)(const void*);
     void    (*value_free)(void*);
@@ -49,7 +49,7 @@ typedef struct
  *
  * Returns CLIB_HASHSET_OK on success and clib_hashset_error on failure.
  */
-clib_hashset_error clib_hashset_alloc(clib_hashset* set, size_t(*hash_func)(int32_t), size_t initial_capacity);
+clib_hashset_error clib_hashset_alloc(clib_hashset* set, uint32_t(*hash_func)(uint32_t), size_t initial_capacity);
 
 /*
  * Free the hashset and all associated memory.

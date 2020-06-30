@@ -8,18 +8,21 @@
 
 typedef struct
 {
-	clib_hashset table[NUM_COMPONENT_TYPES];
+	clib_hashset* table;
+	size_t count;
 } ComponentTable;
 
-void ComponentTableInit(ComponentTable* table, size_t initial_size);
-void ComponentTableFree(ComponentTable* table);
+int ComponentTableInit(ComponentTable* components, size_t component_count);
+void ComponentTableFree(ComponentTable* components);
 
-void ComponentTableClear(ComponentTable* table);
+int ComponentTableSetFreeFunc(ComponentTable* components, uint32_t type, void (*free_func)(void*));
 
-void* ComponentTableAddComponent(ComponentTable* table, EntityID entity, ComponentType type, void* component);
-void* ComponentTableGetComponent(ComponentTable* table, EntityID entity, ComponentType type);
+void ComponentTableClear(ComponentTable* components);
 
-void ComponentTableRemoveComponent(ComponentTable* table, EntityID entity, ComponentType type);
-void ComponentTableRemoveEntity(ComponentTable* table, EntityID entity);
+void* ComponentTableAddComponent(ComponentTable* components, EntityID entity, uint32_t type, void* component);
+void* ComponentTableGetComponent(ComponentTable* components, EntityID entity, uint32_t type);
+
+void ComponentTableRemoveComponent(ComponentTable* components, EntityID entity, uint32_t type);
+void ComponentTableRemoveEntity(ComponentTable* components, EntityID entity);
 
 #endif /* !COMPONENT_TABLE_H */

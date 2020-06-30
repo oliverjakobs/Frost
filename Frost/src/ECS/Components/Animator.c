@@ -2,20 +2,15 @@
 
 #include <stdlib.h>
 
-void AnimatorInit(Animator* animator)
+void AnimatorFree(void* block)
 {
-	clib_dict_alloc(&animator->animations, 0);
-
-	animator->current = NULL;
-}
-
-void AnimatorDestroy(Animator* animator)
-{
-	CLIB_DICT_ITERATE_FOR(&animator->animations, iter)
+	CLIB_DICT_ITERATE_FOR(&((Animator*)block)->animations, iter)
 	{
 		free(clib_dict_iter_get_value(iter));
-		clib_dict_iter_remove(&animator->animations, iter);
+		clib_dict_iter_remove(&((Animator*)block)->animations, iter);
 	}
+	clib_dict_free(&((Animator*)block)->animations);
+	free(block);
 }
 
 int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation)

@@ -20,7 +20,8 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, RenderSystem);
 	EcsAddRenderSystem(&scene->ecs, DebugRenderSystem);
 		
-	ComponentTableInit(&scene->components, 16);
+	ComponentTableInit(&scene->components, 8);
+	ComponentTableSetFreeFunc(&scene->components, COMPONENT_ANIMATION, AnimatorFree);
 
 	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
 

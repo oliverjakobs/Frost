@@ -17,7 +17,7 @@ size_t clib_hash_string(const char* str)
     return hash;
 }
 
-uint32_t clib_hash_int32(uint32_t i)
+uint32_t clib_hash_uint32(uint32_t i)
 {
     uint32_t hash = i;
     hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
@@ -26,7 +26,7 @@ uint32_t clib_hash_int32(uint32_t i)
     return hash;
 }
 
-uint64_t clib_hash_int64(uint64_t i)
+uint64_t clib_hash_uint64(uint64_t i)
 {
     uint64_t hash = i;
     hash = (hash ^ (hash >> 30)) * UINT64_C(0xbf58476d1ce4e5b9);

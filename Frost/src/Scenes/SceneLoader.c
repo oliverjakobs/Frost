@@ -133,25 +133,13 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 
 			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
 
-			char* path = clib_strmap_find(&manager->templates, templ);
-			if (!path)
-			{
-				DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
-				continue;
-			}
-
 			/* Load Template */
 			EntityID id = EntityGetNextID();
-			if (SceneLoaderLoadTemplate(manager, path, id, pos, z_index))
+			if (!SceneLoaderLoadTemplate(manager, templ, id, pos, z_index))
 			{
-				SceneAddEntityTemplate(manager->scene, id, templ);
+				DEBUG_ERROR("[Scenes] Failed to load template %s\n", templ);
 			}
 		}
-	}
-
-	for (size_t i = 0; i < manager->scene->entity_templates.used; ++i)
-	{
-		printf("%s\n", ((EntityTemplate*)clib_array_get(&manager->scene->entity_templates, i))->templ);
 	}
 
 	free(json);
@@ -266,8 +254,15 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 }
 
 
-int SceneLoaderLoadTemplate(SceneManager* manager, const char* path, EntityID entity, vec2 pos, int z_index)
+int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID entity, vec2 pos, int z_index)
 {
+	char* path = clib_strmap_find(&manager->templates, templ);
+	if (!path)
+	{
+		DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
+		return 0;
+	}
+
 	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
@@ -277,6 +272,8 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* path, EntityID en
 	}
 
 	tb_json_element element;
+
+	SceneAddEntityTemplate(manager->scene, entity, templ);
 
 	/* Components */
 	Transform transform;
@@ -350,8 +347,10 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* path, EntityID en
 	if (element.error == TB_JSON_OK)
 	{
 		Animator animator;
-		AnimatorInit(&animator);
 
+		animator.current = NULL;
+
+		clib_dict_alloc(&animator.animations, 0);
 		for (int i = 0; i < element.elements; i++)
 		{
 			char anim_name[APPLICATION_STR_LEN];

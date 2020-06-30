@@ -10,7 +10,7 @@ typedef struct
 } Animator;
 
 void AnimatorInit(Animator* animator);
-void AnimatorDestroy(Animator* animator);
+void AnimatorFree(void* block);
 
 int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation);
 

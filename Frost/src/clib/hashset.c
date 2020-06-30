@@ -74,7 +74,7 @@ static clib_hashset_entry* clib_entry_calloc(size_t count, size_t size)
     return table;
 }
 
-clib_hashset_error clib_hashset_alloc(clib_hashset* set, size_t(*hash_func)(int32_t), size_t initial_capacity)
+clib_hashset_error clib_hashset_alloc(clib_hashset* set, uint32_t(*hash_func)(uint32_t), size_t initial_capacity)
 {
     CLIB_ASSERT(set != NULL);
     CLIB_ASSERT(hash_func != NULL);
