@@ -90,9 +90,33 @@ void OnRenderDebug(Application* app)
 {
 	SceneManagerOnRenderDebug(&scene_manager);
 
-	/* fps */
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
+	
+	/* fps */
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
+
+	/* Settings */
+	FontRendererTextFieldBegin(app->width - 220.0f, 0.0f, 24.0f);
+
+	FontRendererTextFieldLine("F1: Toggle edit mode");
+	FontRendererTextFieldLine("F2: Open console");
+	FontRendererTextFieldLine("F5: Pause/Unpause");
+	FontRendererTextFieldLine("F6: Toggle Vsync");
+	FontRendererTextFieldLine("F7: Toggle debug mode");
+	FontRendererTextFieldLine("F8: Toggle Gui");
+
+	/* Debug */
+	FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
+
+	FontRendererTextFieldLine("Scene: %s", scene_manager.scene_name);
+	FontRendererTextFieldLine("------------------------");
+
+	EntityID player = 0;
+	FontRendererTextFieldLine("Player ID: %d", player);
+	vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
+	FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
+	FontRendererTextFieldLine("Precise Y: %f", position.y);
+
 	FontRendererFlush();
 
 	if (scene_manager.console_focus)
@@ -101,37 +125,7 @@ void OnRenderDebug(Application* app)
 
 void OnRenderGui(Application* app)
 {
-	gui_start();
-
-	/* Settings */
-	if (gui_begin_align(GUI_HALIGN_RIGHT, GUI_VALIGN_TOP, 220.0f, 140.0f, 8.0f, GUI_BG_FILL))
-	{
-		gui_text("F1: Toggle edit mode");
-		gui_text("F2: Open console");
-		gui_text("F5: Pause/Unpause");
-		gui_text("F6: Toggle Vsync");
-		gui_text("F7: Toggle debug mode");
-		gui_text("F8: Toggle Gui");
-	}
-	gui_end();
-
-	/* Debug */
-	if (gui_begin(app->width - 470.0f, 0.0f, 250.0f, 128.0f, 8.0f, GUI_BG_FILL))
-	{
-		gui_text("Scene: %s", scene_manager.scene_name);
-		gui_separator();
-
-		EntityID player = 0;
-		gui_text("Player ID: %d", player);
-		vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
-		gui_text("Position: %4.2f, %4.2f", position.x, position.y);
-		gui_text("Precise Y: %f", position.y);
-	}
-	gui_end();
-	
 	SceneManagerOnRenderGui(&scene_manager);
-
-	gui_render(ApplicationGetScreenProjPtr(app));
 }
 
 int main()

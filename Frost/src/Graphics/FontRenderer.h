@@ -18,7 +18,10 @@ void FontRendererStart(const float* mat_proj);
 void FontRendererFlush();
 
 void FontRendererRenderText(float x, float y, const char* text);
-void FontRendererRenderTextFormat(float x, float y, const char* text, ...);
+void FontRendererRenderTextFormat(float x, float y, const char* fmt, ...);
+
+void FontRendererTextFieldBegin(float x, float y, float line_height);
+void FontRendererTextFieldLine(const char* fmt, ...);
 
 #ifdef __cplusplus
 }

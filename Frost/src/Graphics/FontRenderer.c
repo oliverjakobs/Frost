@@ -15,6 +15,8 @@ typedef struct
 
 	size_t quad_count;
 
+	char line_buffer[FONTRENDERER_MAX_LINE_LENGTH];
+
 	GLint uniform_location_proj;
 	GLint uniform_location_color;
 } _FontRendererStorage;
@@ -111,16 +113,44 @@ void FontRendererRenderText(float x, float y, const char* text)
 	}
 }
 
+static void FontRendererRenderTextVA(float x, float y, const char* fmt, va_list args)
+{
+	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
+	vsnprintf(_render_data.line_buffer, buffer_size + 1, fmt, args);
+
+	FontRendererRenderText(x, y, _render_data.line_buffer);
+}
+
 void FontRendererRenderTextFormat(float x, float y, const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
-	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = (char*)malloc(buffer_size + 1);
-	vsnprintf(buffer, buffer_size + 1, fmt, args);
+	FontRendererRenderTextVA(x, y, fmt, args);
 	va_end(args);
+}
 
-	FontRendererRenderText(x, y, buffer);
+typedef struct 
+{
+	float x;
+	float y;
+	float line_height;
+} TextField;
 
-	free(buffer);
+static TextField s_textField;
+
+void FontRendererTextFieldBegin(float x, float y, float line_height)
+{
+	s_textField.x = x;
+	s_textField.y = y;
+	s_textField.line_height = line_height;
+}
+
+void FontRendererTextFieldLine(const char* fmt, ...)
+{
+	s_textField.y += s_textField.line_height;
+
+	va_list args;
+	va_start(args, fmt);
+	FontRendererRenderTextVA(s_textField.x, s_textField.y, fmt, args);
+	va_end(args);
 }
