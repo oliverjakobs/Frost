@@ -26,8 +26,6 @@ typedef struct Application
 	int debug;
 	int vsync;
 
-	int show_gui;
-
 	Timer timer;
 	ResourceManager resources;
 
@@ -57,7 +55,6 @@ void ApplicationSetOnEventCallback(Application* app, void (*callback)(Applicatio
 void ApplicationSetOnUpdateCallback(Application* app, void (*callback)(Application*, float));
 void ApplicationSetOnRenderCallback(Application* app, void (*callback)(Application*));
 void ApplicationSetOnRenderDebugCallback(Application* app, void (*callback)(Application*));
-void ApplicationSetOnRenderGuiCallback(Application* app, void (*callback)(Application*));
 
 void ApplicationSetViewport(Application* app, int x, int y, int w, int h);
 const float* ApplicationGetScreenProjPtr(Application* app);
@@ -65,11 +62,9 @@ const float* ApplicationGetScreenProjPtr(Application* app);
 /* --------------------------| Settings |-------------------------------- */
 void ApplicationEnableDebugMode(Application* app, int b);
 void ApplicationEnableVsync(Application* app, int b);
-void ApplicationShowGui(Application* app, int b);
 
 void ApplicationToggleDebugMode(Application* app);
 void ApplicationToggleVsync(Application* app);
-void ApplicationToggleGui(Application* app);
 
 void ApplicationSetWindowTitle(Application* app, const char* title);
 void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...);

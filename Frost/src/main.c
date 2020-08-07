@@ -9,6 +9,8 @@
 Camera camera;
 SceneManager scene_manager;
 
+int show_overlay;
+
 void OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
@@ -27,7 +29,8 @@ void OnInit(Application* app)
 
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
-	ApplicationShowGui(app, 1);
+
+	show_overlay = 1;
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
@@ -69,7 +72,7 @@ void OnEvent(Application* app, Event e)
 		ApplicationToggleDebugMode(app);
 		break;
 	case KEY_F8:
-		ApplicationToggleGui(app);
+		show_overlay = !show_overlay;
 		break;
 	}
 
@@ -95,27 +98,30 @@ void OnRenderDebug(Application* app)
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
 
-	/* Settings */
-	FontRendererTextFieldBegin(app->width - 220.0f, 0.0f, 24.0f);
+	if (show_overlay)
+	{
+		/* Settings */
+		FontRendererTextFieldBegin(app->width - 220.0f, 0.0f, 24.0f);
 
-	FontRendererTextFieldLine("F1: Toggle edit mode");
-	FontRendererTextFieldLine("F2: Open console");
-	FontRendererTextFieldLine("F5: Pause/Unpause");
-	FontRendererTextFieldLine("F6: Toggle Vsync");
-	FontRendererTextFieldLine("F7: Toggle debug mode");
-	FontRendererTextFieldLine("F8: Toggle Gui");
+		FontRendererTextFieldLine("F1: Toggle edit mode");
+		FontRendererTextFieldLine("F2: Open console");
+		FontRendererTextFieldLine("F5: Pause/Unpause");
+		FontRendererTextFieldLine("F6: Toggle Vsync");
+		FontRendererTextFieldLine("F7: Toggle debug mode");
+		FontRendererTextFieldLine("F8: Toggle overlay");
 
-	/* Debug */
-	FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
+		/* Debug */
+		FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
 
-	FontRendererTextFieldLine("Scene: %s", scene_manager.scene_name);
-	FontRendererTextFieldLine("------------------------");
+		FontRendererTextFieldLine("Scene: %s", scene_manager.scene_name);
+		FontRendererTextFieldLine("------------------------");
 
-	EntityID player = 0;
-	FontRendererTextFieldLine("Player ID: %d", player);
-	vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
-	FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
-	FontRendererTextFieldLine("Precise Y: %f", position.y);
+		EntityID player = 0;
+		FontRendererTextFieldLine("Player ID: %d", player);
+		vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
+		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
+		FontRendererTextFieldLine("Precise Y: %f", position.y);
+	}
 
 	FontRendererFlush();
 
@@ -138,7 +144,6 @@ int main()
 	ApplicationSetOnUpdateCallback(&app, OnUpdate);
 	ApplicationSetOnRenderCallback(&app, OnRender);
 	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
-	ApplicationSetOnRenderGuiCallback(&app, OnRenderGui);
 
 	ApplicationLoadConfig(&app, "config.json");
 

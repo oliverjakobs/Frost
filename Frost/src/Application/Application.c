@@ -18,8 +18,6 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	app->debug = 0;
 	app->paused = 0;
 
-	app->show_gui = 0;
-
 	app->running = 0;
 
 	/* GLFW initialization */
@@ -158,9 +156,6 @@ void ApplicationRun(Application* app)
 		if (app->debug)
 			app->on_render_debug(app);
 
-		if (app->show_gui)
-			app->on_render_gui(app);
-
 		glfwPollEvents();
 		EventHandlerPoll(app);
 		glfwSwapBuffers(app->window);
@@ -229,11 +224,9 @@ const float* ApplicationGetScreenProjPtr(Application* app)
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }
 void ApplicationEnableVsync(Application* app, int b) { glfwSwapInterval(b); app->vsync = b; }
-void ApplicationShowGui(Application* app, int b) { app->show_gui = b; }
 
 void ApplicationToggleDebugMode(Application* app) { ApplicationEnableDebugMode(app, !app->debug); }
 void ApplicationToggleVsync(Application* app) { ApplicationEnableVsync(app, !app->vsync); }
-void ApplicationToggleGui(Application* app) { ApplicationShowGui(app, !app->show_gui); }
 
 void ApplicationSetWindowTitle(Application* app, const char* title) 
 { 
