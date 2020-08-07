@@ -4,13 +4,13 @@
 
 void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_MOVEMENT], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_MOVEMENT), iter)
 	{
 		Movement* movement = clib_hashset_iter_get_value(iter);
 
-		RigidBody* body = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_RIGID_BODY);
-		Sprite* sprite = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
-		CameraController* camera = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_CAMERA);
+		RigidBody* body = ComponentTableGetDataComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_RIGID_BODY);
+		Sprite* sprite = ComponentTableGetDataComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
+		CameraController* camera = ComponentTableGetDataComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_CAMERA);
 
 		if (!(body && sprite)) continue;
 

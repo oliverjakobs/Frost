@@ -6,7 +6,7 @@ void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_vi
 {
 	Primitives2DStart(mat_view_proj);
 
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_TRANSFORM), iter)
 	{
 		Transform* transform = clib_hashset_iter_get_value(iter);
 
@@ -14,7 +14,7 @@ void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_vi
 		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_INTERACTION), iter)
 	{
 		Interaction* interaction = clib_hashset_iter_get_value(iter);
 
@@ -23,7 +23,7 @@ void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_vi
 	}
 
 
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_RIGID_BODY), iter)
 	{
 		RigidBody* body = clib_hashset_iter_get_value(iter);
 

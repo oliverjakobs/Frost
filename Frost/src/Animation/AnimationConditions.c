@@ -45,7 +45,7 @@ AnimationCondition* AnimationConditionsGetCondition(const char* name)
 
 int AnimationConditionJump(ComponentTable* components, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->velocity.y > 0.0f;
@@ -55,7 +55,7 @@ int AnimationConditionJump(ComponentTable* components, EntityID entity, int s)
 
 int AnimationConditionFall(ComponentTable* components, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return !body->collides_bottom && body->velocity.y <= 0.0f;
@@ -65,7 +65,7 @@ int AnimationConditionFall(ComponentTable* components, EntityID entity, int s)
 
 int AnimationConditionWalk(ComponentTable* components, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->collides_bottom && body->velocity.x != 0.0f;
@@ -75,7 +75,7 @@ int AnimationConditionWalk(ComponentTable* components, EntityID entity, int s)
 
 int AnimationConditionIdle(ComponentTable* components, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->collides_bottom && body->velocity.x == 0.0f;

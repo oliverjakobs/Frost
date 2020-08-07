@@ -2,27 +2,29 @@
 #define COMPONENT_TABLE_H
 
 #include "clib/hashset.h"
+#include "clib/array.h"
 
 #include "Entity.h"
 #include "Components.h"
 
+typedef uint32_t ComponentType;
+
 typedef struct
 {
-	clib_hashset* table;
-	size_t count;
+	clib_array table;
 } ComponentTable;
 
 int ComponentTableInit(ComponentTable* components, size_t component_count);
 void ComponentTableFree(ComponentTable* components);
 
-int ComponentTableSetFreeFunc(ComponentTable* components, uint32_t type, void (*free_func)(void*));
-
 void ComponentTableClear(ComponentTable* components);
 
-void* ComponentTableAddComponent(ComponentTable* components, EntityID entity, uint32_t type, void* component);
-void* ComponentTableGetComponent(ComponentTable* components, EntityID entity, uint32_t type);
+ComponentType ComponentTableRegisterDataComponent(ComponentTable* components, size_t element_size, size_t initial_count, void (*free_func)(void*));
 
-void ComponentTableRemoveComponent(ComponentTable* components, EntityID entity, uint32_t type);
+void* ComponentTableAddDataComponent(ComponentTable* components, EntityID entity, ComponentType type, void* component);
+void* ComponentTableGetDataComponent(ComponentTable* components, EntityID entity, ComponentType type);
+
+void ComponentTableRemoveDataComponent(ComponentTable* components, EntityID entity, ComponentType type);
 void ComponentTableRemoveEntity(ComponentTable* components, EntityID entity);
 
 #endif /* !COMPONENT_TABLE_H */

@@ -84,7 +84,7 @@ int EcsGetEntityZIndex(Ecs* ecs, EntityID entity)
 
 EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos)
 {
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_TRANSFORM], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_TRANSFORM), iter)
 	{
 		Transform* transform = clib_hashset_iter_get_value(iter);
 
@@ -100,16 +100,16 @@ EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos)
 
 void EntitySetPosition(EntityID entity, ComponentTable* components, vec2 pos)
 {
-	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	Transform* transform = ComponentTableGetDataComponent(components, entity, COMPONENT_TRANSFORM);
 	if (transform) transform->position = pos;
 
-	RigidBody* body = ComponentTableGetComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
 	if (body) body->position = vec2_add(pos, body->offset);
 }
 
 vec2 EntityGetPosition(EntityID entity, ComponentTable* components)
 {
-	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	Transform* transform = ComponentTableGetDataComponent(components, entity, COMPONENT_TRANSFORM);
 	if (transform) return transform->position;
 
 	return vec2_zero();
@@ -117,7 +117,7 @@ vec2 EntityGetPosition(EntityID entity, ComponentTable* components)
 
 vec2 EntityGetCenter(EntityID entity, ComponentTable* components)
 {
-	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	Transform* transform = ComponentTableGetDataComponent(components, entity, COMPONENT_TRANSFORM);
 
 	if (transform)
 	{
@@ -133,7 +133,7 @@ vec2 EntityGetCenter(EntityID entity, ComponentTable* components)
 
 rect EntityGetRect(EntityID entity, ComponentTable* components)
 {
-	Transform* transform = ComponentTableGetComponent(components, entity, COMPONENT_TRANSFORM);
+	Transform* transform = ComponentTableGetDataComponent(components, entity, COMPONENT_TRANSFORM);
 
 	rect r;
 	r.min = vec2_zero();

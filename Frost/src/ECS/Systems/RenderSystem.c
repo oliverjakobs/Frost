@@ -9,7 +9,7 @@ void RenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_view_pr
 	for (size_t i = 0; i < ecs->indexed_entities.used; ++i)
 	{
 		ZIndexedEntity* indexed = clib_array_get(&ecs->indexed_entities, i);
-		Sprite* sprite = ComponentTableGetComponent(components, indexed->entity, COMPONENT_SPRITE);
+		Sprite* sprite = ComponentTableGetDataComponent(components, indexed->entity, COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 

@@ -21,7 +21,14 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, DebugRenderSystem);
 		
 	ComponentTableInit(&scene->components, 8);
-	ComponentTableSetFreeFunc(&scene->components, COMPONENT_ANIMATION, AnimatorFree);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Transform), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(RigidBody), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Movement), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Sprite), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Animator), 8, AnimatorFree);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(CameraController), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Interaction), 8, NULL);
+	ComponentTableRegisterDataComponent(&scene->components, sizeof(Interactor), 8, NULL);
 
 	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
 

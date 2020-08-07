@@ -17,11 +17,11 @@ static void PlayAnimation(Animator* animator, const char* name)
 
 void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_ANIMATION], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_ANIMATION), iter)
 	{
 		Animator* animator = clib_hashset_iter_get_value(iter);
 
-		Sprite* sprite = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
+		Sprite* sprite = ComponentTableGetDataComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 

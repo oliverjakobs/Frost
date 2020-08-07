@@ -9,18 +9,7 @@ void ComponentFree(void* block)
 
 int ComponentTableInit(ComponentTable* components, size_t component_count)
 {
-	components->table = malloc(component_count * sizeof(clib_hashset));
-
-	if (!components->table) return 0;
-
-	components->count = component_count;
-	for (size_t i = 0; i < component_count; ++i)
-	{
-		if (clib_hashset_alloc(&components->table[i], clib_hash_uint32, 0) == CLIB_HASHMAP_OK)
-		{
-			clib_hashset_set_value_alloc_funcs(&components->table[i], NULL, ComponentFree);
-		}
-	}
+	clib_array_alloc(&components->table, component_count, sizeof(clib_hashset));
 
 	return 1;
 }
@@ -28,59 +17,62 @@ int ComponentTableInit(ComponentTable* components, size_t component_count)
 void ComponentTableFree(ComponentTable* components)
 {
 	ComponentTableClear(components);
-	for (size_t i = 0; i < components->count; ++i)
+	for (size_t i = 0; i < components->table.used; ++i)
 	{
-		clib_hashset_free(&components->table[i]);
+		clib_hashset_free(clib_array_get(&components->table, i));
 	}
-	free(components->table);
-	components->count = 0;
-}
-
-int ComponentTableSetFreeFunc(ComponentTable* components, uint32_t type, void(*free_func)(void*))
-{
-	if (type >= components->count) return 0;
-
-	clib_hashset_set_value_alloc_funcs(&components->table[type], NULL, ComponentFree);
-
-	return 1;
+	clib_array_free(&components->table);
 }
 
 void ComponentTableClear(ComponentTable* components)
 {
-	for (size_t i = 0; i < components->count; ++i)
+	for (size_t i = 0; i < components->table.used; ++i)
 	{
-		clib_hashset_clear(&components->table[i]);
+		clib_hashset_clear(clib_array_get(&components->table, i));
 	}
 }
 
-void* ComponentTableAddComponent(ComponentTable* components, EntityID entity, uint32_t type, void* component)
+ComponentType ComponentTableRegisterDataComponent(ComponentTable* components, size_t element_size, size_t initial_count, void(*free_func)(void*))
+{
+	clib_hashset comp;
+	if (clib_hashset_alloc(&comp, clib_hash_uint32, 0) == CLIB_HASHSET_OK)
+	{
+		clib_hashset_set_value_alloc_funcs(&comp, NULL, free_func ? free_func : ComponentFree);
+
+		if (clib_array_push(&components->table, &comp))
+			return components->table.used - 1;
+	}
+	return 0;
+}
+
+void* ComponentTableAddDataComponent(ComponentTable* components, EntityID entity, ComponentType type, void* component)
 {
 	size_t size = ComponentsGetTypeSize(type);
 
 	void* data = malloc(size);
 	memcpy(data, component, size);
 
-	return clib_hashset_insert(&components->table[type], entity, data);
+	return clib_hashset_insert(clib_array_get(&components->table, type), entity, data);
 }
 
-void* ComponentTableGetComponent(ComponentTable* components, EntityID entity, uint32_t type)
+void* ComponentTableGetDataComponent(ComponentTable* components, EntityID entity, ComponentType type)
 {
-	if (type >= components->count) return NULL;
+	if (type >= components->table.used) return NULL;
 
-	return clib_hashset_find(&components->table[type], entity);
+	return clib_hashset_find(clib_array_get(&components->table, type), entity);
 }
 
-void ComponentTableRemoveComponent(ComponentTable* components, EntityID entity, uint32_t type)
+void ComponentTableRemoveDataComponent(ComponentTable* components, EntityID entity, ComponentType type)
 {
-	if (type >= components->count) return;
+	if (type >= components->table.used) return;
 
-	clib_hashset_remove(&components->table[type], entity);
+	clib_hashset_remove(clib_array_get(&components->table, type), entity);
 }
 
 void ComponentTableRemoveEntity(ComponentTable* components, EntityID entity)
 {
-	for (uint32_t i = 0; i < components->count; ++i)
+	for (uint32_t i = 0; i < components->table.used; ++i)
 	{
-		ComponentTableRemoveComponent(components, entity, i);
+		ComponentTableRemoveDataComponent(components, entity, i);
 	}
 }

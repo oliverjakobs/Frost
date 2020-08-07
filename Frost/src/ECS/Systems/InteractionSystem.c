@@ -2,12 +2,12 @@
 
 void InteractionSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_INTERACTOR], interactor_iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_INTERACTOR), interactor_iter)
 	{
 		Interactor* interactor = clib_hashset_iter_get_value(interactor_iter);
 		vec2 interactor_center = EntityGetCenter(clib_hashset_iter_get_key(interactor_iter), components);
 
-		CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_INTERACTION], iter)
+		CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_INTERACTION), iter)
 		{
 			Interaction* interaction = clib_hashset_iter_get_value(iter);
 

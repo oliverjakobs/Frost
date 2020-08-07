@@ -25,12 +25,13 @@ void clib_array_free(clib_array* arr);
 
 void clib_array_clear(clib_array* arr);
 
-/* Inserts an element at the end of the array if there is enough capaxity */
+/* Inserts an element at the end of the array if there is enough capacity */
 void* clib_array_push(clib_array* arr, void* element);
 
-/* Inserts an element at the end of the array and resizes the array if necessary */
+/* Inserts an element at the end of the array and grows the array if necessary */
 void* clib_array_push_and_grow(clib_array* arr, void* element, float growth);
 
+/* Inserts an element at the end of the array and grows the array if necessary */
 void* clib_array_insert(clib_array* arr, void* element, size_t index);
 
 void clib_array_remove(clib_array* arr, size_t index);
@@ -40,5 +41,11 @@ void* clib_array_last(clib_array* arr);
 
 /* sort array with qsort */
 void clib_array_sort(clib_array* arr, int (*cmp)(const void*, const void*));
+
+/* 
+ * Searches the array with bsearch 
+ * Returns the index of found element or arr->used if it wasn't
+ */
+size_t clib_array_search(clib_array* arr, const void* element, int (*cmp)(const void*, const void*));
 
 #endif /* !CLIB_ARRAY_H */

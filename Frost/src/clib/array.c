@@ -111,5 +111,14 @@ void* clib_array_last(clib_array* arr)
 
 void clib_array_sort(clib_array* arr, int (*cmp)(const void*, const void*))
 {
-	qsort(arr->data, arr->used, arr->element_size, cmp);
+    qsort(arr->data, arr->used, arr->element_size, cmp);
+}
+
+size_t clib_array_search(clib_array* arr, const void* element, int (*cmp)(const void*, const void*))
+{
+    clib_array_base_type* found = bsearch(element, arr->data, arr->used, arr->element_size, cmp);
+
+    if (!found) return arr->used;
+
+    return (found - arr->data) / arr->element_size;
 }

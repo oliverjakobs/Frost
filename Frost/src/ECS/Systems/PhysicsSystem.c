@@ -2,11 +2,11 @@
 
 void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 {
-	CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], iter)
+	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_RIGID_BODY), iter)
 	{
 		RigidBody* body = clib_hashset_iter_get_value(iter);
 
-		Transform* transform = ComponentTableGetComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_TRANSFORM);
+		Transform* transform = ComponentTableGetDataComponent(components, clib_hashset_iter_get_key(iter), COMPONENT_TRANSFORM);
 		if (!transform) continue;
 
 		body->position = vec2_add(transform->position, body->offset);
@@ -18,7 +18,7 @@ void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		vec2 old_position = body->position;
 		RigidBodyTick(body, gravity, deltatime);
 
-		CLIB_HASHSET_ITERATE_FOR(&components->table[COMPONENT_RIGID_BODY], other_iter)
+		CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_RIGID_BODY), other_iter)
 		{
 			if (clib_hashset_iter_get_key(iter) == clib_hashset_iter_get_key(other_iter))
 				continue;
