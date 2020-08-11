@@ -84,15 +84,15 @@ int EcsGetEntityZIndex(Ecs* ecs, EntityID entity)
 
 EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos)
 {
-	CLIB_HASHSET_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_TRANSFORM), iter)
+	CLIB_HASHMAP_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_TRANSFORM), iter)
 	{
-		Transform* transform = clib_hashset_iter_get_value(iter);
+		Transform* transform = clib_hashmap_iter_get_value(iter);
 
 		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
 		vec2 max = vec2_add(min, transform->size);
 
 		if (vec2_inside(pos, min, max))
-			return clib_hashset_iter_get_key(iter);
+			return *(EntityID*)clib_hashmap_iter_get_key(iter);
 	}
 
 	return NULL_ENTITY;

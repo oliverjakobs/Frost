@@ -1,10 +1,9 @@
 #ifndef COMPONENT_TABLE_H
 #define COMPONENT_TABLE_H
 
-#include "clib/hashset.h"
 #include "clib/array.h"
 
-#include "Entity.h"
+#include "ComponentMap.h"
 #include "Components.h"
 
 typedef uint32_t ComponentType;

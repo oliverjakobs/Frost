@@ -94,6 +94,7 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
+    <ClInclude Include="src\ECS\ComponentMap.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
@@ -151,7 +152,6 @@
     <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
-    <ClInclude Include="src\clib\hashset.h" />
     <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\gui\context.h" />
     <ClInclude Include="src\gui\gui.h" />
@@ -169,6 +169,7 @@
     <ClCompile Include="src\Animation\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
+    <ClCompile Include="src\ECS\ComponentMap.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Application\Input.c" />
@@ -215,7 +216,6 @@
     <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
-    <ClCompile Include="src\clib\hashset.c" />
     <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\gui\gui.c" />
     <ClCompile Include="src\gui\row.c" />

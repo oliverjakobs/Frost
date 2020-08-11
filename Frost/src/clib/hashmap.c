@@ -2,6 +2,8 @@
 
 #include "clib.h"
 
+#include "hash.h"
+
 /* Table sizes must be powers of 2 */
 #define CLIB_HASHMAP_SIZE_MIN               (1 << 5)    /* 32 */
 #define CLIB_HASHMAP_SIZE_DEFAULT           (1 << 8)    /* 256 */

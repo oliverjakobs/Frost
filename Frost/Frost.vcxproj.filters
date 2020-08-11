@@ -264,9 +264,6 @@
     <ClInclude Include="src\clib\hashmap.h">
       <Filter>src\clib</Filter>
     </ClInclude>
-    <ClInclude Include="src\clib\hashset.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
     <ClInclude Include="src\clib\strmap.h">
       <Filter>src\clib</Filter>
     </ClInclude>
@@ -307,6 +304,7 @@
     <ClInclude Include="src\Event\Event.h">
       <Filter>src\Application</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\ComponentMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -450,9 +448,6 @@
     <ClCompile Include="src\clib\hashmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
-    <ClCompile Include="src\clib\hashset.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
     <ClCompile Include="src\clib\strmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
@@ -487,6 +482,7 @@
     <ClCompile Include="src\Event\Event.c">
       <Filter>src\Application</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\ComponentMap.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
