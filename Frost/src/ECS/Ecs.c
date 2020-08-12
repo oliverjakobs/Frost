@@ -5,9 +5,8 @@ void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t comp
 	clib_array_alloc(&ecs->systems_update, update_systems, sizeof(EcsUpdateSystem));
 	clib_array_alloc(&ecs->systems_render, render_systems, sizeof(EcsRenderSystem));
 
-	clib_array_alloc(&ecs->indexed_entities, 16, sizeof(ZIndexedEntity));
-
 	clib_array_alloc(&ecs->table, component_count, sizeof(ComponentMap));
+	clib_array_alloc(&ecs->order_components, component_count, sizeof(ComponentList));
 }
 
 void EcsDestroy(Ecs* ecs)
@@ -15,19 +14,18 @@ void EcsDestroy(Ecs* ecs)
 	clib_array_free(&ecs->systems_update);
 	clib_array_free(&ecs->systems_render);
 
-	clib_array_free(&ecs->indexed_entities);
-
 	EcsClearComponents(ecs);
 	for (size_t i = 0; i < ecs->table.used; ++i)
 	{
 		ComponentMapFree(clib_array_get(&ecs->table, i));
 	}
 	clib_array_free(&ecs->table);
-}
 
-void EcsClearEntities(Ecs* ecs)
-{
-	clib_array_clear(&ecs->indexed_entities);
+	for (size_t i = 0; i < ecs->order_components.used; ++i)
+	{
+		ComponentListFree(clib_array_get(&ecs->order_components, i));
+	}
+	clib_array_free(&ecs->order_components);
 }
 
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
@@ -68,6 +66,11 @@ ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type)
 	return clib_array_get(&ecs->table, type);
 }
 
+ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type)
+{
+	return clib_array_get(&ecs->order_components, type);
+}
+
 void EcsClearComponents(Ecs* ecs)
 {
 	for (size_t i = 0; i < ecs->table.used; ++i)
@@ -76,7 +79,7 @@ void EcsClearComponents(Ecs* ecs)
 	}
 }
 
-ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, size_t initial_count, void (*free_func)(void*))
+ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
 {
 	ComponentMap comp;
 	if (ComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree) == 0)
@@ -90,6 +93,8 @@ ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, size_t ini
 void* EcsAddDataComponent(Ecs* ecs, EntityID entity, ComponentType type, void* component)
 {
 	ComponentMap* map = EcsGetComponentMap(ecs, type);
+
+	if (!map) return NULL;
 
 	void* data = malloc(map->element_size);
 	memcpy(data, component, map->element_size);
@@ -111,40 +116,46 @@ void EcsRemoveDataComponent(Ecs* ecs, EntityID entity, ComponentType type)
 	ComponentMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
+ComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const void*, const void*))
+{
+	ComponentList comp;
+	if (ComponentListAlloc(&comp, element_size, cmp) == 0)
+	{
+		if (clib_array_push(&ecs->order_components, &comp))
+			return ecs->order_components.used - 1;
+	}
+	return 0;
+}
+
+void* EcsAddOrderComponent(Ecs* ecs, ComponentType type, void* component)
+{
+	ComponentList* list = EcsGetComponentList(ecs, type);
+
+	if (!list) return NULL;
+
+	return ComponentListInsert(list, component);
+}
+
+void* EcsGetOrderComponent(Ecs* ecs, size_t index, ComponentType type)
+{
+	if (type >= ecs->order_components.used) return NULL;
+
+	return ComponentListAt(EcsGetComponentList(ecs, type), index);
+}
+
+void EcsRemoveOrderComponent(Ecs* ecs, EntityID entity, ComponentType type)
+{
+	if (type >= ecs->order_components.used) return;
+
+	ComponentListRemove(EcsGetComponentList(ecs, type), entity);
+}
+
 void EcsRemoveEntity(Ecs* ecs, EntityID entity)
 {
 	for (uint32_t i = 0; i < ecs->table.used; ++i)
 	{
 		EcsRemoveDataComponent(ecs, entity, i);
 	}
-}
-
-static int _EcsIndexedEntityCmp(const ZIndexedEntity* a, const ZIndexedEntity* b)
-{
-	return a->z_index - b->z_index;
-}
-
-void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index)
-{
-	ZIndexedEntity indexed;
-	indexed.z_index = z_index;
-	indexed.entity = entity;
-
-	clib_array_push(&ecs->indexed_entities, &indexed);
-	clib_array_sort(&ecs->indexed_entities, _EcsIndexedEntityCmp);
-}
-
-int EcsGetEntityZIndex(Ecs* ecs, EntityID entity)
-{
-	for (size_t i = 0; i < ecs->indexed_entities.used; ++i)
-	{
-		ZIndexedEntity* indexed = clib_array_get(&ecs->indexed_entities, i);
-
-		if (indexed->entity == entity)
-			return indexed->z_index;
-	}
-
-	return 0;
 }
 
 EntityID EcsGetEntityAt(Ecs* ecs, vec2 pos)

@@ -275,6 +275,13 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 
 	SceneAddEntityTemplate(manager->scene, entity, templ);
 
+	Template t;
+	t.entity = entity;
+	t.templ = malloc(strlen(templ));
+	strcpy(t.templ, templ);
+	EcsAddOrderComponent(&manager->scene->ecs, COMPONENT_TEMPLATE, &t);
+	/* TODO: Free template */
+
 	/* Components */
 	Transform transform;
 	RigidBody body;
@@ -339,7 +346,10 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 
-		EcsAddIndexedEntity(&manager->scene->ecs, entity, z_index);
+		ZIndex index;
+		index.entity = entity;
+		index.z_index = z_index;
+		EcsAddOrderComponent(&manager->scene->ecs, COMPONENT_Z_INDEX, &index);
 	}
 
 	/* ------------------------------------------------------------------ */

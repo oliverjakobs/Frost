@@ -19,7 +19,15 @@ typedef enum
 	COMPONENT_CAMERA,
 	COMPONENT_INTERACTION,
 	COMPONENT_INTERACTOR
-} ComponentType;
+} DataComponentType;
+
+#include "Components/Order.h"
+
+typedef enum
+{
+	COMPONENT_TEMPLATE = 0,
+	COMPONENT_Z_INDEX
+} OrderComponentType;
 
 
 #endif /* !COMPONENTS_H */

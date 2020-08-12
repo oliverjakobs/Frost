@@ -20,14 +20,17 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, RenderSystem);
 	EcsAddRenderSystem(&scene->ecs, DebugRenderSystem);
 		
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Transform), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(RigidBody), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Movement), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Sprite), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Animator), 8, AnimatorFree);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(CameraController), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Interaction), 8, NULL);
-	EcsRegisterDataComponent(&scene->ecs, sizeof(Interactor), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Transform), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(RigidBody), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Movement), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Sprite), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Animator), AnimatorFree);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Interaction), NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Interactor), NULL);
+
+	EcsRegisterOrderComponent(&scene->ecs, sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(&scene->ecs, sizeof(ZIndex), ZIndexCmp);
 
 	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
 

@@ -2,28 +2,18 @@
 
 #include <string.h>
 
-void clib_array_alloc(clib_array* arr, size_t initial_size, size_t element_size)
+clib_array_error clib_array_alloc(clib_array* arr, size_t initial_size, size_t element_size)
 {
     arr->data = malloc(initial_size * element_size);
+
+    if (!arr->data) return CLIB_ARRAY_ALLOC_ERROR;
+
     arr->capacity = initial_size;
     arr->used = 0;
 
     arr->element_size = element_size;
-}
 
-void clib_array_resize(clib_array* arr, size_t new_size)
-{
-    clib_array_base_type* data = realloc(arr->data, new_size * arr->element_size);
-    if (data)
-    {
-        arr->data = data;
-        arr->capacity = new_size;
-    }
-}
-
-void clib_array_shrink_to_fit(clib_array* arr)
-{
-    clib_array_resize(arr, arr->used);
+    return CLIB_ARRAY_OK;
 }
 
 void clib_array_free(clib_array* arr)
@@ -32,6 +22,22 @@ void clib_array_free(clib_array* arr)
     arr->capacity = 0;
     arr->used = 0;
     arr->element_size = 0;
+}
+
+clib_array_error clib_array_resize(clib_array* arr, size_t new_size)
+{
+    clib_array_base_type* data = realloc(arr->data, new_size * arr->element_size);
+    
+    if (!data) return CLIB_ARRAY_ALLOC_ERROR;
+    
+    arr->data = data;
+    arr->capacity = new_size;
+    return CLIB_ARRAY_OK;
+}
+
+clib_array_error clib_array_shrink_to_fit(clib_array* arr)
+{
+    return clib_array_resize(arr, arr->used);
 }
 
 void clib_array_clear(clib_array* arr)
@@ -98,10 +104,14 @@ void clib_array_remove(clib_array* arr, size_t index)
 
 void* clib_array_get(clib_array* arr, size_t index)
 {
-    if (index >= arr->used)
-        return NULL;
+    if (index >= arr->used) return NULL;
 
     return arr->data + index * arr->element_size;
+}
+
+void* clib_array_first(clib_array* arr)
+{
+    return clib_array_get(arr, 0);
 }
 
 void* clib_array_last(clib_array* arr)

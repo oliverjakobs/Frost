@@ -94,7 +94,10 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
+    <ClInclude Include="src\clib\list.h" />
     <ClInclude Include="src\ECS\ComponentMap.h" />
+    <ClInclude Include="src\ECS\ComponentList.h" />
+    <ClInclude Include="src\ECS\Components\Order.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
@@ -168,7 +171,10 @@
     <ClCompile Include="src\Animation\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
+    <ClCompile Include="src\clib\list.c" />
     <ClCompile Include="src\ECS\ComponentMap.c" />
+    <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\Components\Order.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Application\Input.c" />

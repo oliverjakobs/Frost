@@ -302,6 +302,9 @@
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\ComponentMap.h" />
+    <ClInclude Include="src\clib\list.h" />
+    <ClInclude Include="src\ECS\ComponentList.h" />
+    <ClInclude Include="src\ECS\Components\Order.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -474,6 +477,9 @@
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\ComponentMap.c" />
+    <ClCompile Include="src\clib\list.c" />
+    <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\Components\Order.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
