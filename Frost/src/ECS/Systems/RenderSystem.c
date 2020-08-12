@@ -8,8 +8,6 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 
 	for (size_t i = 0; i < EcsGetComponentList(ecs, COMPONENT_Z_INDEX)->list.used; ++i)
 	{
-		ComponentList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
-
 		ZIndex* indexed = EcsGetOrderComponent(ecs, i, COMPONENT_Z_INDEX);
 		Sprite* sprite = EcsGetDataComponent(ecs, indexed->entity, COMPONENT_SPRITE);
 

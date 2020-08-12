@@ -199,34 +199,33 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	/* TODO */
-	//CLIB_HASHMAP_ITERATE_FOR(&scene->entity_templates, iter)
-	//{
-	//	tb_jwrite_array_array(&jwc);
-	//
-	//	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-	//
-	//	/* name */
-	//	tb_jwrite_array_string(&jwc, clib_strmap_iter_get_key(iter));
-	//
-	//	/* template-src */
-	//	tb_jwrite_array_string(&jwc, clib_strmap_iter_get_value(iter));
-	//
-	//	/* pos */
-	//	vec2 pos = EntityGetPosition(clib_strmap_iter_get_key(iter), &scene->components);
-	//
-	//	tb_jwrite_array_array(&jwc);
-	//	tb_jwrite_array_float(&jwc, pos.x);
-	//	tb_jwrite_array_float(&jwc, pos.y);
-	//	tb_jwrite_end(&jwc);
-	//
-	//	/* z_index */
-	//	tb_jwrite_array_int(&jwc, EcsGetEntityIndex(&scene->ecs, clib_strmap_iter_get_key(iter)));
-	//
-	//	tb_jwrite_end(&jwc);
-	//
-	//	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	//}
+	for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+	{
+		tb_jwrite_array_array(&jwc);
+	
+		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
+
+		Template* templ = EcsGetOrderComponent(&scene->ecs, i, COMPONENT_TEMPLATE);
+	
+		/* template */
+		tb_jwrite_array_string(&jwc, templ->templ);
+	
+		/* pos */
+		vec2 pos = EcsGetEntityPosition(&scene->ecs, templ->entity);
+	
+		tb_jwrite_array_array(&jwc);
+		tb_jwrite_array_float(&jwc, pos.x);
+		tb_jwrite_array_float(&jwc, pos.y);
+		tb_jwrite_end(&jwc);
+	
+		/* z_index */
+		ZIndex* indexed = ComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), templ->entity);
+		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
+	
+		tb_jwrite_end(&jwc);
+	
+		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
+	}
 
 	tb_jwrite_end(&jwc);
 
@@ -273,14 +272,12 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 
 	tb_json_element element;
 
-	SceneAddEntityTemplate(manager->scene, entity, templ);
-
 	Template t;
 	t.entity = entity;
 	t.templ = malloc(strlen(templ));
 	strcpy(t.templ, templ);
 	EcsAddOrderComponent(&manager->scene->ecs, COMPONENT_TEMPLATE, &t);
-	/* TODO: Free template */
+	/* TODO: Free template? */
 
 	/* Components */
 	Transform transform;

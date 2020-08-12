@@ -115,8 +115,8 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 	}
 	case CONSOLE_CMD_CREATE:
 	{
-		char* args[3];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 3);
+		char* args[2];
+		char* spec = cmd_get_args(cmd_buffer, 6, args, 2);
 
 		if (!spec) break;
 
@@ -128,17 +128,10 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			char* path = clib_strmap_find(&manager->templates, args[1]);
-			if (!path)
-			{
-				ConsoleOut(&manager->console, "Couldn't find template for %s", args[1]);
-				break;
-			}
-
 			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
-			/* TODO */
-			//if (SceneLoaderLoadTemplate(manager, args[0], path, pos, atoi(args[2])))
-			//	SceneAddEntityTemplate(manager->scene, args[0], args[1]);
+
+			if (SceneLoaderLoadTemplate(manager, args[0], EntityGetNextID(), pos, args[1]))
+				ConsoleOut(&manager->console, "Created entity with template %s", args[0]);
 		}
 		break;
 	}
@@ -148,7 +141,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 
 		if (!spec) break;
 
-		ConsoleOut(&manager->console, "[Console] %s", cmd_buffer);
+		ConsoleOut(&manager->console, "%s", cmd_buffer);
 
 		if (strcmp(spec, "scenes") == 0)
 		{
@@ -161,14 +154,13 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			/*
-			for (int i = 0; i < manager->scene->entities.used; ++i)
+			for (size_t i = 0; i < EcsGetComponentList(&manager->scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
 			{
-				EcsEntity* entity = (EcsEntity*)clib_array_get(&manager->scene->entities, i);
+				Template* templ = EcsGetOrderComponent(&manager->scene->ecs, i, COMPONENT_TEMPLATE);
 
-				ConsoleOut(&manager->console, " - %s (%d)", entity->name, EntityGetZIndex(entity->name, &manager->scene->components));
+				if (templ)
+					ConsoleOut(&manager->console, " - %d \t | %s", *(EntityID*)templ, templ->templ);
 			}
-			*/
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{

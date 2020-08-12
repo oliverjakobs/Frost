@@ -22,8 +22,6 @@ typedef struct
 	Background background;
 
 	Ecs ecs;
-
-	clib_array entity_templates;
 } Scene;
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h);
@@ -33,14 +31,5 @@ void SceneOnEvent(Scene* scene, Event e);
 void SceneOnUpdate(Scene* scene, float deltaTime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
-
-typedef struct
-{
-	EntityID entity;
-	char* templ;
-} EntityTemplate;
-
-void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ);
-void SceneClearEntityTemplates(Scene* scene);
 
 #endif /* !SCENE_H */

@@ -2,6 +2,7 @@
 #define COMPONENT_LIST_H
 
 #include "clib/list.h"
+#include "Entity.h"
 
 typedef struct
 {
@@ -16,6 +17,7 @@ void ComponentListClear(ComponentList* list);
 void* ComponentListInsert(ComponentList* list, void* component);
 void ComponentListRemove(ComponentList* list, size_t index);
 
+void* ComponentListFind(ComponentList* list, EntityID entity);
 void* ComponentListAt(ComponentList* list, size_t index);
 
 #endif /* !COMPONENT_SET_H */

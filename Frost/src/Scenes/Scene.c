@@ -32,16 +32,12 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsRegisterOrderComponent(&scene->ecs, sizeof(Template), TemplateCmp);
 	EcsRegisterOrderComponent(&scene->ecs, sizeof(ZIndex), ZIndexCmp);
 
-	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
-
 	return 1;
 }
 
 void SceneQuit(Scene* scene)
 {
 	BackgroundClear(&scene->background);
-
-	clib_array_free(&scene->entity_templates);
 
 	EcsDestroy(&scene->ecs);
 }
@@ -67,32 +63,4 @@ void SceneOnRender(Scene* scene)
 void SceneOnRenderDebug(Scene* scene)
 {
 
-}
-
-void SceneAddEntityTemplate(Scene* scene, EntityID entity, const char* templ)
-{
-	EntityTemplate t;
-	t.entity = entity;
-
-	size_t size = strlen(templ);
-	t.templ = (char*)malloc(size);
-
-	if (!t.templ)
-	{
-		DEBUG_WARN("[Scene] Failed to allocate memory for entity template (%s)\n", templ);
-		return;
-	}
-
-	strcpy(t.templ, templ);
-
-	clib_array_push(&scene->entity_templates, &t);
-}
-
-void SceneClearEntityTemplates(Scene* scene)
-{
-	for (size_t i = 0; i < scene->entity_templates.used; ++i)
-	{
-		free(((EntityTemplate*)clib_array_get(&scene->entity_templates, i))->templ);
-	}
-	clib_array_free(&scene->entity_templates);
 }

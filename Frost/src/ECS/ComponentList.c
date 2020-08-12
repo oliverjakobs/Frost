@@ -25,6 +25,17 @@ void ComponentListRemove(ComponentList* list, size_t index)
 	clib_list_remove_at(&list->list, index);
 }
 
+void* ComponentListFind(ComponentList* list, EntityID entity)
+{
+	for (size_t i = 0; i < list->list.used; ++i)
+	{
+		void* component = clib_list_get(&list->list, i);
+		if (entity == *(EntityID*)component)
+			return component;
+	}
+	return NULL;
+}
+
 void* ComponentListAt(ComponentList* list, size_t index)
 {
 	return clib_list_get(&list->list, index);
