@@ -3,6 +3,6 @@
 
 #include "../Ecs.h"
 
-void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime);
+void PhysicsSystem(Ecs* ecs, float deltatime);
 
 #endif /* !ECS_PHYSICS_SYSTEM_H */

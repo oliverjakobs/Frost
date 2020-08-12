@@ -3,6 +3,6 @@
 
 #include "../Ecs.h"
 
-void InteractionSystem(Ecs* ecs, ComponentTable* components, float deltatime);
+void InteractionSystem(Ecs* ecs, float deltatime);
 
 #endif /* !INTERACTION_SYSTEM_H */

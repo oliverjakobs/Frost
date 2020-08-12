@@ -31,10 +31,12 @@ static size_t ComponentMapHash(const void* key)
 	return clib_hash_uint32(*(uint32_t*)key);
 }
 
-int ComponentMapAlloc(ComponentMap* map, void (*free_func)(void*))
+int ComponentMapAlloc(ComponentMap* map, size_t element_size, void (*free_func)(void*))
 {
 	if (clib_hashmap_alloc(&map->map, ComponentMapHash, ComponentMapCmp, 0) != CLIB_HASHMAP_OK)
 		return 1;
+
+	map->element_size = element_size;
 
 	clib_hashmap_set_key_alloc_funcs(&map->map, ComponentMapKeyAlloc, ComponentMapKeyFree);
 	clib_hashmap_set_value_alloc_funcs(&map->map, NULL, free_func);

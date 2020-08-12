@@ -27,7 +27,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 		if (editor->hover != NULL_ENTITY)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, EntityGetPosition(editor->hover, &active->components));
+			editor->offset = vec2_sub(mouse, EcsGetEntityPosition(&active->ecs, editor->hover));
 			editor->clicked = 1;
 		}
 	}
@@ -58,9 +58,9 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		EntitySetPosition(editor->hover, &active->components, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		EcsSetEntityPosition(&active->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
-		editor->hover = EcsGetEntityAt(&active->components, mouse);
+		editor->hover = EcsGetEntityAt(&active->ecs, mouse);
 }
 
 void SceneEditorOnRender(SceneEditor* editor, Scene* active)
@@ -87,9 +87,9 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 	if (editor->hover != NULL_ENTITY)
 	{
-		rect r = EntityGetRect(editor->hover, &active->components);
+		rect r = EcsGetEntityRect(&active->ecs, editor->hover);
 
-		vec2 position = EntityGetPosition(editor->hover, &active->components);
+		vec2 position = EcsGetEntityPosition(&active->ecs, editor->hover);
 
 		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
 		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);

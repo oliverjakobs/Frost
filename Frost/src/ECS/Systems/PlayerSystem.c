@@ -2,15 +2,15 @@
 
 #include "Application/Input.h"
 
-void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
+void PlayerSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_MOVEMENT), iter)
+	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_MOVEMENT), iter)
 	{
 		Movement* movement = ComponentMapIterValue(iter);
 
-		RigidBody* body = ComponentTableGetDataComponent(components, ComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
-		Sprite* sprite = ComponentTableGetDataComponent(components, ComponentMapIterKey(iter), COMPONENT_SPRITE);
-		CameraController* camera = ComponentTableGetDataComponent(components, ComponentMapIterKey(iter), COMPONENT_CAMERA);
+		RigidBody* body = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
+		Sprite* sprite = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_SPRITE);
+		CameraController* camera = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_CAMERA);
 
 		if (!(body && sprite)) continue;
 
@@ -40,7 +40,7 @@ void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		// set view
 		if (camera)
 		{
-			vec2 position = EntityGetPosition(ComponentMapIterKey(iter), components);
+			vec2 position = EcsGetEntityPosition(ecs, ComponentMapIterKey(iter));
 
 			float smooth_w = (camera->camera->size.x * 0.5f) * camera->smooth;
 			float smooth_h = (camera->camera->size.y * 0.5f) * camera->smooth;

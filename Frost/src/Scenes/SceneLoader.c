@@ -290,7 +290,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 
 		transform.z_index = z_index;
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_TRANSFORM, &transform);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
 	}
 
 	tb_json_read(json, &element, "{'rigidbody'");
@@ -314,7 +314,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		body.collides_left = 0;
 		body.collides_right = 0;
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_RIGID_BODY, &body);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
 	}
 
 	tb_json_read(json, &element, "{'sprite'");
@@ -335,7 +335,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		sprite.texture = ResourceManagerGetTexture2D(manager->resources, texture);
 
 		if (sprite.texture)
-			ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_SPRITE, &sprite);
+			EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_SPRITE, &sprite);
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 
@@ -388,7 +388,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 
 			AnimatorAddAnimation(&animator, anim_name, animation);
 		}
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_ANIMATION, &animator);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_ANIMATION, &animator);
 	}
 
 	tb_json_read(json, &element, "{'movement'");
@@ -400,7 +400,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
 		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_MOVEMENT, &comp);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_MOVEMENT, &comp);
 	}
 
 	tb_json_read(json, &element, "{'camera'");
@@ -412,7 +412,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		comp.scene_w = manager->scene->width;
 		comp.scene_h = manager->scene->height;
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_CAMERA, &comp);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_CAMERA, &comp);
 	}
 
 	tb_json_read(json, &element, "{'interaction'");
@@ -422,7 +422,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL, 0.0f);
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_INTERACTION, &comp);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_INTERACTION, &comp);
 	}
 
 	tb_json_read(json, &element, "{'interactor'");
@@ -431,7 +431,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		Interactor comp;
 		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
 
-		ComponentTableAddDataComponent(&manager->scene->components, entity, COMPONENT_INTERACTOR, &comp);
+		EcsAddDataComponent(&manager->scene->ecs, entity, COMPONENT_INTERACTOR, &comp);
 	}
 
 	free(json);

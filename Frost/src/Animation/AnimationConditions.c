@@ -23,7 +23,7 @@ void AnimationConditionsDestroy()
 	}
 }
 
-int AnimationConditionsRegisterCondition(const char* name, int(*condition)(ComponentTable*, EntityID, int))
+int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EntityID, int))
 {
 	AnimationCondition* value = (AnimationCondition*)malloc(sizeof(AnimationCondition));
 
@@ -43,9 +43,9 @@ AnimationCondition* AnimationConditionsGetCondition(const char* name)
 	return clib_dict_find(&conditions.table, name);
 }
 
-int AnimationConditionJump(ComponentTable* components, EntityID entity, int s)
+int AnimationConditionJump(Ecs* ecs, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->velocity.y > 0.0f;
@@ -53,9 +53,9 @@ int AnimationConditionJump(ComponentTable* components, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionFall(ComponentTable* components, EntityID entity, int s)
+int AnimationConditionFall(Ecs* ecs, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return !body->collides_bottom && body->velocity.y <= 0.0f;
@@ -63,9 +63,9 @@ int AnimationConditionFall(ComponentTable* components, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionWalk(ComponentTable* components, EntityID entity, int s)
+int AnimationConditionWalk(Ecs* ecs, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->collides_bottom && body->velocity.x != 0.0f;
@@ -73,9 +73,9 @@ int AnimationConditionWalk(ComponentTable* components, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionIdle(ComponentTable* components, EntityID entity, int s)
+int AnimationConditionIdle(Ecs* ecs, EntityID entity, int s)
 {
-	RigidBody* body = ComponentTableGetDataComponent(components, entity, COMPONENT_RIGID_BODY);
+	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
 	if (body)
 		return body->collides_bottom && body->velocity.x == 0.0f;

@@ -1,22 +1,22 @@
 #ifndef ANIMATION_CONDITIONS_H
 #define ANIMATION_CONDITIONS_H
 
-#include "ECS/ComponentTable.h"
+#include "ECS/Ecs.h"
 
 typedef struct
 {
-	int (*func)(ComponentTable*, EntityID, int);
+	int (*func)(Ecs*, EntityID, int);
 } AnimationCondition;
 
 void AnimationConditionsInit();
 void AnimationConditionsDestroy();
 
-int AnimationConditionsRegisterCondition(const char* name, int (*condition)(ComponentTable*,EntityID,int));
+int AnimationConditionsRegisterCondition(const char* name, int (*condition)(Ecs*,EntityID,int));
 AnimationCondition* AnimationConditionsGetCondition(const char* name);
 
-int AnimationConditionJump(ComponentTable* components, EntityID e, int s);
-int AnimationConditionFall(ComponentTable* components, EntityID e, int s);
-int AnimationConditionWalk(ComponentTable* components, EntityID e, int s);
-int AnimationConditionIdle(ComponentTable* components, EntityID e, int s);
+int AnimationConditionJump(Ecs* ecs, EntityID e, int s);
+int AnimationConditionFall(Ecs* ecs, EntityID e, int s);
+int AnimationConditionWalk(Ecs* ecs, EntityID e, int s);
+int AnimationConditionIdle(Ecs* ecs, EntityID e, int s);
 
 #endif /* !ANIMATION_CONDITIONS_H */

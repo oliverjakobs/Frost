@@ -103,7 +103,6 @@
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
-    <ClInclude Include="src\ECS\ComponentTable.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Components\Animator.h" />
     <ClInclude Include="src\ECS\Components\CameraController.h" />
@@ -177,8 +176,6 @@
     <ClCompile Include="src\Camera\Camera.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
-    <ClCompile Include="src\ECS\ComponentTable.c" />
-    <ClCompile Include="src\ECS\Components.c" />
     <ClCompile Include="src\ECS\Components\Animator.c" />
     <ClCompile Include="src\ECS\Components\RigidBody.c" />
     <ClCompile Include="src\ECS\Ecs.c" />

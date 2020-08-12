@@ -3,6 +3,6 @@
 
 #include "../Ecs.h"
 
-void PlayerSystem(Ecs* ecs, ComponentTable* components, float deltatime);
+void PlayerSystem(Ecs* ecs, float deltatime);
 
 #endif /* !PLAYER_SYSTEM_H */

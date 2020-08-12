@@ -22,7 +22,6 @@ typedef struct
 	Background background;
 
 	Ecs ecs;
-	ComponentTable components;
 
 	clib_array entity_templates;
 } Scene;

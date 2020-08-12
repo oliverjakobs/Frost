@@ -120,9 +120,6 @@
     <ClInclude Include="src\Console\Console.h">
       <Filter>src\Console</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\ComponentTable.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Components.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
@@ -333,12 +330,6 @@
     </ClCompile>
     <ClCompile Include="src\Console\Console.c">
       <Filter>src\Console</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ComponentTable.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Components.c">
-      <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Components\Animator.c">
       <Filter>src\ECS\Components</Filter>

@@ -118,7 +118,7 @@ void OnRenderDebug(Application* app)
 
 		EntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
-		vec2 position = EntityGetPosition(player, &scene_manager.scene->components);
+		vec2 position = EcsGetEntityPosition(&scene_manager.scene->ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
 	}

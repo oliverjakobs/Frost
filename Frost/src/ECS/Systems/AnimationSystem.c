@@ -15,13 +15,13 @@ static void PlayAnimation(Animator* animator, const char* name)
 	}
 }
 
-void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
+void AnimationSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_ANIMATION), iter)
+	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_ANIMATION), iter)
 	{
 		Animator* animator = ComponentMapIterValue(iter);
 
-		Sprite* sprite = ComponentTableGetDataComponent(components, ComponentMapIterKey(iter), COMPONENT_SPRITE);
+		Sprite* sprite = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 
@@ -38,7 +38,7 @@ void AnimationSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		CLIB_DICT_ITERATE_FOR(transitions, transition_iter)
 		{
 			AnimationCondition* cond = AnimationConditionsGetCondition(clib_strmap_iter_get_key(transition_iter));
-			if (cond && cond->func(components, *(EntityID*)clib_hashmap_iter_get_key(iter), 0))
+			if (cond && cond->func(ecs, ComponentMapIterKey(iter), 0))
 				PlayAnimation(animator, clib_strmap_iter_get_value(transition_iter));
 		}
 		sprite->frame = current->frame;

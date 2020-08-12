@@ -8,9 +8,10 @@
 typedef struct
 {
 	clib_hashmap map;
+	size_t element_size;
 } ComponentMap;
 
-int ComponentMapAlloc(ComponentMap* map, void (*free_func)(void*));
+int ComponentMapAlloc(ComponentMap* map, size_t element_size, void (*free_func)(void*));
 void ComponentMapFree(ComponentMap* map);
 
 void ComponentMapClear(ComponentMap* map);

@@ -2,18 +2,18 @@
 
 #include "Graphics/Renderer.h"
 
-void RenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_view_proj)
+void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
 	for (size_t i = 0; i < ecs->indexed_entities.used; ++i)
 	{
 		ZIndexedEntity* indexed = clib_array_get(&ecs->indexed_entities, i);
-		Sprite* sprite = ComponentTableGetDataComponent(components, indexed->entity, COMPONENT_SPRITE);
+		Sprite* sprite = EcsGetDataComponent(ecs, indexed->entity, COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 
-		vec2 pos = EntityGetPosition(indexed->entity, components);
+		vec2 pos = EcsGetEntityPosition(ecs, indexed->entity);
 
 		float x = pos.x - sprite->width / 2.0f;
 		float y = pos.y;

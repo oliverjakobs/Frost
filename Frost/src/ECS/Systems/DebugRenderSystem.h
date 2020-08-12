@@ -3,6 +3,6 @@
 
 #include "../Ecs.h"
 
-void DebugRenderSystem(Ecs* ecs, ComponentTable* components, const float* mat_view_proj);
+void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj);
 
 #endif /* !ECS_DEBUG_RENDER_SYSTEM_H */

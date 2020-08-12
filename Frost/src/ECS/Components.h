@@ -18,10 +18,8 @@ typedef enum
 	COMPONENT_ANIMATION,
 	COMPONENT_CAMERA,
 	COMPONENT_INTERACTION,
-	COMPONENT_INTERACTOR,
-	NUM_COMPONENT_TYPES
+	COMPONENT_INTERACTOR
 } ComponentType;
 
-size_t ComponentsGetTypeSize(ComponentType type);
 
 #endif /* !COMPONENTS_H */

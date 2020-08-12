@@ -1,39 +1,55 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include "ComponentTable.h"
-
 #include "clib/array.h"
+
+#include "ComponentMap.h"
+#include "Components.h"
+
+typedef uint32_t ComponentType;
 
 typedef struct
 {
 	clib_array systems_update;
 	clib_array systems_render;
 
+	clib_array table;
+
 	clib_array indexed_entities;
 } Ecs;
 
 typedef struct
 {
-	void (*update)(Ecs*,ComponentTable*,float);
+	void (*update)(Ecs*,float);
 } EcsUpdateSystem;
 
 typedef struct
 {
-	void (*render)(Ecs*,ComponentTable*,const float*);
+	void (*render)(Ecs*,const float*);
 } EcsRenderSystem;
 
-void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems);
+void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t component_count);
 void EcsDestroy(Ecs* ecs);
 
-void EcsRemoveEntity(Ecs* ecs, const char* entity);
 void EcsClearEntities(Ecs* ecs);
 
-void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,ComponentTable*,float));
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,ComponentTable*,const float*));
+void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*));
 
-void EcsUpdate(Ecs* ecs, ComponentTable* components, float deltatime);
-void EcsRender(Ecs* ecs, ComponentTable* components, const float* mat_view_proj);
+void EcsUpdate(Ecs* ecs, float deltatime);
+void EcsRender(Ecs* ecs, const float* mat_view_proj);
+
+ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type);
+
+void EcsClearComponents(Ecs* ecs);
+
+ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, size_t initial_count, void (*free_func)(void*));
+
+void* EcsAddDataComponent(Ecs* ecs, EntityID entity, ComponentType type, void* component);
+void* EcsGetDataComponent(Ecs* ecs, EntityID entity, ComponentType type);
+
+void EcsRemoveDataComponent(Ecs* ecs, EntityID entity, ComponentType type);
+void EcsRemoveEntity(Ecs* ecs, EntityID entity);
 
 typedef struct
 {
@@ -46,13 +62,13 @@ void EcsAddIndexedEntity(Ecs* ecs, EntityID entity, int z_index);
 /* Helper Functions */
 int EcsGetEntityZIndex(Ecs* ecs, EntityID entity);
 
-EntityID EcsGetEntityAt(ComponentTable* components, vec2 pos);
+EntityID EcsGetEntityAt(Ecs* ecs, vec2 pos);
 
-void EntitySetPosition(EntityID entity, ComponentTable* components, vec2 pos);
+void EcsSetEntityPosition(Ecs* ecs, EntityID entity, vec2 pos);
 
-vec2 EntityGetPosition(EntityID entity, ComponentTable* components);
-vec2 EntityGetCenter(EntityID entity, ComponentTable* components);
+vec2 EcsGetEntityPosition(Ecs* ecs, EntityID entity);
+vec2 EcsGetEntityCenter(Ecs* ecs, EntityID entity);
 
-rect EntityGetRect(EntityID entity, ComponentTable* components);
+rect EcsGetEntityRect(Ecs* ecs, EntityID entity);
 
 #endif /* !ECS_H */

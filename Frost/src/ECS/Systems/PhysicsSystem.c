@@ -1,12 +1,12 @@
 #include "PhysicsSystem.h"
 
-void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime)
+void PhysicsSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_RIGID_BODY), iter)
+	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
 	{
 		RigidBody* body = ComponentMapIterValue(iter);
 
-		Transform* transform = ComponentTableGetDataComponent(components, ComponentMapIterKey(iter), COMPONENT_TRANSFORM);
+		Transform* transform = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_TRANSFORM);
 		if (!transform) continue;
 
 		body->position = vec2_add(transform->position, body->offset);
@@ -18,7 +18,7 @@ void PhysicsSystem(Ecs* ecs, ComponentTable* components, float deltatime)
 		vec2 old_position = body->position;
 		RigidBodyTick(body, gravity, deltatime);
 
-		COMPONENT_MAP_ITERATE_FOR(clib_array_get(&components->table, COMPONENT_RIGID_BODY), other_iter)
+		COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), other_iter)
 		{
 			if (ComponentMapIterKey(iter) == ComponentMapIterKey(other_iter))
 				continue;

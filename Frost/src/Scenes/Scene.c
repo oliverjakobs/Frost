@@ -12,7 +12,7 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	scene->width = w;
 	scene->height = h;
 
-	EcsInit(&scene->ecs, 4, 2);
+	EcsInit(&scene->ecs, 4, 2, 8);
 	EcsAddUpdateSystem(&scene->ecs, PhysicsSystem);
 	EcsAddUpdateSystem(&scene->ecs, PlayerSystem);
 	EcsAddUpdateSystem(&scene->ecs, AnimationSystem);
@@ -20,15 +20,14 @@ int SceneLoad(Scene* scene, Camera* camera, float w, float h)
 	EcsAddRenderSystem(&scene->ecs, RenderSystem);
 	EcsAddRenderSystem(&scene->ecs, DebugRenderSystem);
 		
-	ComponentTableInit(&scene->components, 8);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Transform), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(RigidBody), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Movement), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Sprite), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Animator), 8, AnimatorFree);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(CameraController), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Interaction), 8, NULL);
-	ComponentTableRegisterDataComponent(&scene->components, sizeof(Interactor), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Transform), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(RigidBody), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Movement), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Sprite), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Animator), 8, AnimatorFree);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(CameraController), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Interaction), 8, NULL);
+	EcsRegisterDataComponent(&scene->ecs, sizeof(Interactor), 8, NULL);
 
 	clib_array_alloc(&scene->entity_templates, 16, sizeof(EntityTemplate));
 
@@ -42,7 +41,6 @@ void SceneQuit(Scene* scene)
 	clib_array_free(&scene->entity_templates);
 
 	EcsDestroy(&scene->ecs);
-	ComponentTableFree(&scene->components);
 }
 
 void SceneOnEvent(Scene* scene, Event e)
@@ -53,14 +51,14 @@ void SceneOnUpdate(Scene* scene, float deltaTime)
 {
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltaTime);
 
-	EcsUpdate(&scene->ecs, &scene->components, deltaTime);
+	EcsUpdate(&scene->ecs, deltaTime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, &scene->components, CameraGetViewProjectionPtr(scene->camera));
+	EcsRender(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
