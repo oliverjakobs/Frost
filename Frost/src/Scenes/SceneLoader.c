@@ -146,7 +146,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	return 1;
 }
 
-int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resources)
+int SceneLoaderSaveScene(SceneManager* manager, const char* path)
 {
 	char* temp_ext = ".temp";
 	char* temp_path = (char*)malloc(strlen(path) + strlen(temp_ext));
@@ -167,22 +167,22 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* size */
 	tb_jwrite_array(&jwc, "size");
 	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-	tb_jwrite_array_float(&jwc, scene->width);
-	tb_jwrite_array_float(&jwc, scene->height);
+	tb_jwrite_array_float(&jwc, manager->scene->width);
+	tb_jwrite_array_float(&jwc, manager->scene->height);
 	tb_jwrite_end(&jwc);
 
 	/* background */
 	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	tb_jwrite_array(&jwc, "background");
 
-	for (int i = 0; i < scene->background.size; ++i)
+	for (int i = 0; i < manager->scene->background.size; ++i)
 	{
-		BackgroundLayer* bg = &scene->background.layers[i];
+		BackgroundLayer* bg = &manager->scene->background.layers[i];
 
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(resources, bg->texture));
+		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(manager->resources, bg->texture));
 
 		tb_jwrite_array_float(&jwc, bg->startpos);
 		tb_jwrite_array_float(&jwc, bg->pos_y);
@@ -199,19 +199,19 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+	for (size_t i = 0; i < EcsGetComponentList(&manager->scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
 	{
 		tb_jwrite_array_array(&jwc);
 	
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
-		Template* templ = EcsGetOrderComponent(&scene->ecs, i, COMPONENT_TEMPLATE);
+		Template* templ = EcsGetOrderComponent(&manager->scene->ecs, i, COMPONENT_TEMPLATE);
 	
 		/* template */
 		tb_jwrite_array_string(&jwc, templ->templ);
 	
 		/* pos */
-		vec2 pos = EcsGetEntityPosition(&scene->ecs, templ->entity);
+		vec2 pos = EcsGetEntityPosition(&manager->scene->ecs, templ->entity);
 	
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -219,7 +219,7 @@ int SceneLoaderSaveScene(Scene* scene, const char* path, ResourceManager* resour
 		tb_jwrite_end(&jwc);
 	
 		/* z_index */
-		ZIndex* indexed = ComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), templ->entity);
+		ZIndex* indexed = ComponentListFind(EcsGetComponentList(&manager->scene->ecs, COMPONENT_Z_INDEX), templ->entity);
 		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
 	
 		tb_jwrite_end(&jwc);

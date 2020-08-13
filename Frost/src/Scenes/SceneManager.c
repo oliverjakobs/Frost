@@ -206,7 +206,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 				break;
 			}
 
-			SceneLoaderSaveScene(manager->scene, path, manager->resources);
+			SceneLoaderSaveScene(manager, path);
 			ConsoleOut(&manager->console, "Saved scene (%s) to %s", manager->scene_name, path);
 		}
 
