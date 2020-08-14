@@ -9,7 +9,6 @@ typedef struct
 	char* current;
 } Animator;
 
-void AnimatorInit(Animator* animator);
 void AnimatorFree(void* block);
 
 int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation);

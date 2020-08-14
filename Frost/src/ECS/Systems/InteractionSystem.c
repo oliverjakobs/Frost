@@ -2,12 +2,12 @@
 
 void InteractionSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_INTERACTOR), interactor_iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_INTERACTOR), interactor_iter)
 	{
 		Interactor* interactor = ComponentMapIterValue(interactor_iter);
 		vec2 interactor_center = EcsGetEntityCenter(ecs, ComponentMapIterKey(interactor_iter));
 
-		COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_INTERACTION), iter)
+		COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_INTERACTION), iter)
 		{
 			Interaction* interaction = ComponentMapIterValue(iter);
 

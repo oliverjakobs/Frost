@@ -2,7 +2,7 @@
 
 void PhysicsSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
 	{
 		RigidBody* body = ComponentMapIterValue(iter);
 
@@ -18,7 +18,7 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 		vec2 old_position = body->position;
 		RigidBodyTick(body, gravity, deltatime);
 
-		COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), other_iter)
+		COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), other_iter)
 		{
 			if (ComponentMapIterKey(iter) == ComponentMapIterKey(other_iter))
 				continue;

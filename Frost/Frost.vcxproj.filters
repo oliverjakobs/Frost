@@ -264,15 +264,6 @@
     <ClInclude Include="src\clib\strmap.h">
       <Filter>src\clib</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\context.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\gui.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\row.h">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\json\tb_json.h">
       <Filter>src\json</Filter>
     </ClInclude>
@@ -445,12 +436,6 @@
     <ClCompile Include="src\clib\strmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\gui.c">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\row.c">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\json\tb_jwrite.c">
       <Filter>src\json</Filter>
     </ClCompile>
@@ -480,6 +465,7 @@
     <ClCompile Include="src\clib\list.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\ECS\Components\Order.c" />
+    <ClCompile Include="src\ECS\Components.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

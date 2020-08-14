@@ -1,6 +1,8 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
+#include "Ecs.h"
+
 #include "Components/Animator.h"
 #include "Components/Transform.h"
 #include "Components/RigidBody.h"
@@ -28,6 +30,17 @@ typedef enum
 	COMPONENT_TEMPLATE = 0,
 	COMPONENT_Z_INDEX
 } OrderComponentType;
+
+
+/* Helper Functions */
+EntityID EcsGetEntityAt(Ecs* ecs, vec2 pos);
+
+void EcsSetEntityPosition(Ecs* ecs, EntityID entity, vec2 pos);
+
+vec2 EcsGetEntityPosition(Ecs* ecs, EntityID entity);
+vec2 EcsGetEntityCenter(Ecs* ecs, EntityID entity);
+
+rect EcsGetEntityRect(Ecs* ecs, EntityID entity);
 
 
 #endif /* !COMPONENTS_H */

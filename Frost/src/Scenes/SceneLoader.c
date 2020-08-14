@@ -134,8 +134,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
 
 			/* Load Template */
-			EntityID id = EntityGetNextID();
-			if (!SceneLoaderLoadTemplate(manager, templ, id, pos, z_index))
+			if (!SceneLoaderLoadTemplate(manager, templ, EntityGetNextID(), pos, z_index))
 			{
 				DEBUG_ERROR("[Scenes] Failed to load template %s\n", templ);
 			}

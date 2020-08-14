@@ -155,9 +155,6 @@
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\strmap.h" />
-    <ClInclude Include="src\gui\context.h" />
-    <ClInclude Include="src\gui\gui.h" />
-    <ClInclude Include="src\gui\row.h" />
     <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\math\grid.h" />
@@ -174,6 +171,7 @@
     <ClCompile Include="src\clib\list.c" />
     <ClCompile Include="src\ECS\ComponentMap.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\Components.c" />
     <ClCompile Include="src\ECS\Components\Order.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
@@ -220,8 +218,6 @@
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\strmap.c" />
-    <ClCompile Include="src\gui\gui.c" />
-    <ClCompile Include="src\gui\row.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\grid.c" />

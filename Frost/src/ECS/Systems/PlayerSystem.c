@@ -4,7 +4,7 @@
 
 void PlayerSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_MOVEMENT), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_MOVEMENT), iter)
 	{
 		Movement* movement = ComponentMapIterValue(iter);
 

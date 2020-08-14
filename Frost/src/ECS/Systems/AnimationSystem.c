@@ -17,7 +17,7 @@ static void PlayAnimation(Animator* animator, const char* name)
 
 void AnimationSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_ANIMATION), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_ANIMATION), iter)
 	{
 		Animator* animator = ComponentMapIterValue(iter);
 

@@ -1,7 +1,7 @@
 #ifndef ECS_PLAYER_SYSTEM_H
 #define ECS_PLAYER_SYSTEM_H
 
-#include "../Ecs.h"
+#include "../Components.h"
 
 void PlayerSystem(Ecs* ecs, float deltatime);
 

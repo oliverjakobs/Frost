@@ -1,7 +1,7 @@
 #ifndef ECS_ANIMATION_SYSTEM_H
 #define ECS_ANIMATION_SYSTEM_H
 
-#include "../Ecs.h"
+#include "../Components.h"
 
 void AnimationSystem(Ecs* ecs, float deltatime);
 

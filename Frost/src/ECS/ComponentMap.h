@@ -24,7 +24,7 @@ void* ComponentMapFind(const ComponentMap* map, EntityID entity);
 struct ComponentMapIter;
 typedef struct ComponentMapIter ComponentMapIter;
 
-#define COMPONENT_MAP_ITERATE_FOR(map, iter) \
+#define COMPONENT_MAP_ITERATE(map, iter) \
 	for (ComponentMapIter* iter = ComponentMapIterator(map); iter; iter = ComponentMapIterNext(map, iter))
 
 ComponentMapIter* ComponentMapIterator(const ComponentMap* map);

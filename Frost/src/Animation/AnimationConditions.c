@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 
+#include "ECS/Components.h"
+
 typedef struct
 {
 	clib_hashmap table;	/* <str, (int (*condition)(const char*, int))> */

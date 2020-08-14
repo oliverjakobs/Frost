@@ -1,7 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "ECS/Ecs.h"
 #include "ECS/Systems.h"
 
 #include "Camera/Camera.h"

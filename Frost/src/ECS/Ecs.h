@@ -5,7 +5,6 @@
 
 #include "ComponentMap.h"
 #include "ComponentList.h"
-#include "Components.h"
 
 typedef uint32_t ComponentType;
 
@@ -57,16 +56,5 @@ void* EcsGetOrderComponent(Ecs* ecs, size_t index, ComponentType type);
 void EcsRemoveOrderComponent(Ecs* ecs, EntityID entity, ComponentType type);
 
 void EcsRemoveEntity(Ecs* ecs, EntityID entity);
-
-/* Helper Functions */
-
-EntityID EcsGetEntityAt(Ecs* ecs, vec2 pos);
-
-void EcsSetEntityPosition(Ecs* ecs, EntityID entity, vec2 pos);
-
-vec2 EcsGetEntityPosition(Ecs* ecs, EntityID entity);
-vec2 EcsGetEntityCenter(Ecs* ecs, EntityID entity);
-
-rect EcsGetEntityRect(Ecs* ecs, EntityID entity);
 
 #endif /* !ECS_H */

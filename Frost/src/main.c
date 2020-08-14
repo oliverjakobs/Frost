@@ -2,10 +2,6 @@
 
 #include "Scenes/SceneManager.h"
 
-#include "gui/gui.h"
-
-#include "Console/Console.h"
-
 Camera camera;
 SceneManager scene_manager;
 
@@ -24,9 +20,6 @@ void OnInit(Application* app)
 
 	FontRendererBindFontColor(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
-	gui_init((float)app->width, (float)app->height);
-	gui_set_font(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
-
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
@@ -39,8 +32,6 @@ void OnInit(Application* app)
 
 void OnDestroy(Application* app)
 {
-	gui_free();
-
 	SceneManagerDestroy(&scene_manager);
 
 	FontRendererDestroy();

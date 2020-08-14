@@ -6,7 +6,7 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
 	Primitives2DStart(mat_view_proj);
 
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_TRANSFORM), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_TRANSFORM), iter)
 	{
 		Transform* transform = ComponentMapIterValue(iter);
 
@@ -14,7 +14,7 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_INTERACTION), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_INTERACTION), iter)
 	{
 		Interaction* interaction = ComponentMapIterValue(iter);
 
@@ -23,7 +23,7 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	}
 
 
-	COMPONENT_MAP_ITERATE_FOR(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
+	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
 	{
 		RigidBody* body = ComponentMapIterValue(iter);
 
