@@ -16,4 +16,9 @@
 #define CLIB_ASSERT(expr)
 #endif
 
+void clib_swap(void** a, void** b);
+void clib_swapi(int* a, int* b);
+void clib_swapf(float* a, float* b);
+void clib_swapstr(char** a, char** b);
+
 #endif /* !CLIB_H */

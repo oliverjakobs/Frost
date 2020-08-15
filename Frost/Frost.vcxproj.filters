@@ -296,6 +296,7 @@
     <ClInclude Include="src\clib\list.h" />
     <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\ECS\Components\Order.h" />
+    <ClInclude Include="src\physics\collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -466,6 +467,8 @@
     <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\ECS\Components\Order.c" />
     <ClCompile Include="src\ECS\Components.c" />
+    <ClCompile Include="src\clib\clib.c" />
+    <ClCompile Include="src\physics\collision.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

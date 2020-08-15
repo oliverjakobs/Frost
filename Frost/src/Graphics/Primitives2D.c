@@ -275,4 +275,31 @@ void Primitives2DFillPolygon(float* vertices, size_t count, IgnisColorRGBA color
 
 void Primitives2DFillCircle(float x, float y, float radius, IgnisColorRGBA color)
 {
+	float sinInc = sinf(PRIMITIVES2D_K_INCREMENT);
+	float cosInc = cosf(PRIMITIVES2D_K_INCREMENT);
+
+	float r1x = 1.0f;
+	float r1y = 0.0f;
+
+	float v1x = x + radius * r1x;
+	float v1y = y + radius * r1y;
+
+	for (int i = 0; i < PRIMITIVES2D_K_SEGMENTS; ++i)
+	{
+		/* Perform rotation to avoid additional trigonometry. */
+		float r2x = cosInc * r1x - sinInc * r1y;
+		float r2y = sinInc * r1x + cosInc * r1y;
+
+		float v2x = x + radius * r2x;
+		float v2y = y + radius * r2y;
+
+		_Primitives2DTrianglesVertex(_lines, x, y, color);
+		_Primitives2DTrianglesVertex(_lines, v1x, v1y, color);
+		_Primitives2DTrianglesVertex(_lines, v2x, v2y, color);
+
+		r1x = r2x;
+		r1y = r2y;
+		v1x = v2x;
+		v1y = v2y;
+	}
 }
