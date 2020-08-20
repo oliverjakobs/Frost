@@ -293,9 +293,9 @@ void Primitives2DFillCircle(float x, float y, float radius, IgnisColorRGBA color
 		float v2x = x + radius * r2x;
 		float v2y = y + radius * r2y;
 
-		_Primitives2DTrianglesVertex(_lines, x, y, color);
-		_Primitives2DTrianglesVertex(_lines, v1x, v1y, color);
-		_Primitives2DTrianglesVertex(_lines, v2x, v2y, color);
+		_Primitives2DTrianglesVertex(_triangles, x, y, color);
+		_Primitives2DTrianglesVertex(_triangles, v1x, v1y, color);
+		_Primitives2DTrianglesVertex(_triangles, v2x, v2y, color);
 
 		r1x = r2x;
 		r1y = r2y;

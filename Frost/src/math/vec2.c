@@ -16,6 +16,15 @@ vec2 vec2_mult(vec2 vec, float f)
 	return v;
 }
 
+vec2 vec2_div(vec2 vec, float f)
+{
+	vec2 v;
+	v.x = vec.x / f;
+	v.y = vec.y / f;
+
+	return v;
+}
+
 vec2 vec2_add(vec2 a, vec2 b)
 {
 	vec2 v;
@@ -30,6 +39,17 @@ vec2 vec2_sub(vec2 a, vec2 b)
 	vec2 v;
 	v.x = a.x - b.x;
 	v.y = a.y - b.y;
+
+	return v;
+}
+
+vec2 vec2_normalize(vec2 v)
+{
+	vec2 result;
+
+	float l = sqrtf(v.x * v.x + v.y * v.y);
+	result.x = v.x / l;
+	result.y = v.y / l;
 
 	return v;
 }

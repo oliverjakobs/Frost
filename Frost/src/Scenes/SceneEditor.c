@@ -9,25 +9,34 @@ void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, flo
 	editor->gridsize = gridsize;
 	editor->padding = padding;
 
+	editor->showgrid = 1;
+	editor->active = 0;
+
 	SceneEditorReset(editor);
 }
 
 void SceneEditorReset(SceneEditor* editor)
 {
-	editor->showgrid = 1;
 	editor->clicked = 0;
 	editor->offset = vec2_zero();
 	editor->hover = NULL_ENTITY;
 }
 
-void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
+void SceneEditorToggleActive(SceneEditor* editor)
 {
+	editor->active = !editor->active;
+}
+
+void SceneEditorOnEvent(SceneEditor* editor, Ecs* ecs, Scene* active, Event e)
+{
+	if (!editor->active) return;
+
 	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
 	{
 		if (editor->hover != NULL_ENTITY)
 		{
 			vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, EcsGetEntityPosition(&active->ecs, editor->hover));
+			editor->offset = vec2_sub(mouse, EcsGetEntityPosition(ecs, editor->hover));
 			editor->clicked = 1;
 		}
 	}
@@ -39,8 +48,10 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e)
 	}
 }
 
-void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
+void SceneEditorOnUpdate(SceneEditor* editor, Ecs* ecs, Scene* active, float deltatime)
 {
+	if (!editor->active) return;
+
 	vec3 position = active->camera->position;
 
 	if (InputKeyPressed(KEY_A))
@@ -58,13 +69,15 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime)
 	vec2 mouse = CameraGetMousePos(active->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
-		EcsSetEntityPosition(&active->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		EcsSetEntityPosition(ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
 	else
-		editor->hover = EcsGetEntityAt(&active->ecs, mouse);
+		editor->hover = EcsGetEntityAt(ecs, mouse);
 }
 
-void SceneEditorOnRender(SceneEditor* editor, Scene* active)
+void SceneEditorOnRender(SceneEditor* editor, Ecs* ecs, Scene* active)
 {
+	if (!editor->active) return;
+
 	Primitives2DStart(CameraGetViewProjectionPtr(active->camera));
 
 	/* render grid */
@@ -87,9 +100,9 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* active)
 
 	if (editor->hover != NULL_ENTITY)
 	{
-		rect r = EcsGetEntityRect(&active->ecs, editor->hover);
+		rect r = EcsGetEntityRect(ecs, editor->hover);
 
-		vec2 position = EcsGetEntityPosition(&active->ecs, editor->hover);
+		vec2 position = EcsGetEntityPosition(ecs, editor->hover);
 
 		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
 		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);

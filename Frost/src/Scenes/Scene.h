@@ -8,9 +8,6 @@
 #include "Application/Application.h"
 #include "Graphics/Background.h"
 
-#define SCENE_INITIAL_LAYER_SIZE	8
-#define SCENE_INITIAL_ECS_SIZE		8
-
 typedef struct
 {
 	Camera* camera;
@@ -19,16 +16,14 @@ typedef struct
 	float height;
 
 	Background background;
-
-	Ecs ecs;
 } Scene;
 
 int SceneLoad(Scene* scene, Camera* camera, float w, float h);
 void SceneQuit(Scene* scene);
 
-void SceneOnEvent(Scene* scene, Event e);
-void SceneOnUpdate(Scene* scene, float deltaTime);
-void SceneOnRender(Scene* scene);
-void SceneOnRenderDebug(Scene* scene);
+void SceneOnEvent(Scene* scene, Ecs* ecs, Event e);
+void SceneOnUpdate(Scene* scene, Ecs* ecs, float deltaTime);
+void SceneOnRender(Scene* scene, Ecs* ecs);
+void SceneOnRenderDebug(Scene* scene, Ecs* ecs);
 
 #endif /* !SCENE_H */

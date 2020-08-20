@@ -6,6 +6,7 @@
 typedef struct
 {
 	int showgrid;
+	int active;
 
 	float cameraspeed;
 	float gridsize;
@@ -21,8 +22,10 @@ void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, flo
 
 void SceneEditorReset(SceneEditor* editor);
 
-void SceneEditorOnEvent(SceneEditor* editor, Scene* active, Event e);
-void SceneEditorOnUpdate(SceneEditor* editor, Scene* active, float deltatime);
-void SceneEditorOnRender(SceneEditor* editor, Scene* active);
+void SceneEditorToggleActive(SceneEditor* editor);
+
+void SceneEditorOnEvent(SceneEditor* editor, Ecs* ecs, Scene* active, Event e);
+void SceneEditorOnUpdate(SceneEditor* editor, Ecs* ecs, Scene* active, float deltatime);
+void SceneEditorOnRender(SceneEditor* editor, Ecs* ecs, Scene* active);
 
 #endif /* !SCENE_EDITOR_H */

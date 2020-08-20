@@ -30,6 +30,8 @@ typedef struct
 void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t component_count);
 void EcsDestroy(Ecs* ecs);
 
+void EcsClear(Ecs* ecs);
+
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
 void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*));
 
@@ -38,8 +40,6 @@ void EcsRender(Ecs* ecs, const float* mat_view_proj);
 
 ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type);
 ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type);
-
-void EcsClearComponents(Ecs* ecs);
 
 ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
 

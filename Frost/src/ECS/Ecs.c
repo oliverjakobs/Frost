@@ -14,7 +14,7 @@ void EcsDestroy(Ecs* ecs)
 	clib_array_free(&ecs->systems_update);
 	clib_array_free(&ecs->systems_render);
 
-	EcsClearComponents(ecs);
+	EcsClear(ecs);
 	for (size_t i = 0; i < ecs->table.used; ++i)
 	{
 		ComponentMapFree(clib_array_get(&ecs->table, i));
@@ -26,6 +26,19 @@ void EcsDestroy(Ecs* ecs)
 		ComponentListFree(clib_array_get(&ecs->order_components, i));
 	}
 	clib_array_free(&ecs->order_components);
+}
+
+void EcsClear(Ecs* ecs)
+{
+	for (size_t i = 0; i < ecs->table.used; ++i)
+	{
+		ComponentMapClear(clib_array_get(&ecs->table, i));
+	}
+	for (size_t i = 0; i < ecs->order_components.used; ++i)
+	{
+		ComponentListClear(clib_array_get(&ecs->order_components, i));
+	}
+	EntityResetIDCounter();
 }
 
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
@@ -69,14 +82,6 @@ ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type)
 ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type)
 {
 	return clib_array_get(&ecs->order_components, type);
-}
-
-void EcsClearComponents(Ecs* ecs)
-{
-	for (size_t i = 0; i < ecs->table.used; ++i)
-	{
-		ComponentMapClear(clib_array_get(&ecs->table, i));
-	}
 }
 
 ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))

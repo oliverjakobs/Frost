@@ -6,6 +6,8 @@
 typedef int32_t EntityID;
 #define NULL_ENTITY (-1)
 
+void EntityResetIDCounter();
 EntityID EntityGetNextID();
+
 
 #endif /* !ENTITY_H */

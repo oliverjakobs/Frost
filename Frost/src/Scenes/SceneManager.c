@@ -17,8 +17,8 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 	manager->resources = resources;
 	manager->camera = camera;
 
-	manager->editmode = 1;
 	SceneEditorInit(&manager->editor, 400.0f, gridsize, gridsize * padding);
+	manager->editor.active = 1;
 
 	manager->scene = (Scene*)malloc(sizeof(Scene));
 	if (!manager->scene)
@@ -43,6 +43,27 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 	manager->console_focus = 0;
 	ConsoleInit(&manager->console, ResourceManagerGetFont(manager->resources, "gui"));
 
+	/* ecs */
+	EcsInit(&manager->ecs, 4, 2, 8);
+	EcsAddUpdateSystem(&manager->ecs, PhysicsSystem);
+	EcsAddUpdateSystem(&manager->ecs, PlayerSystem);
+	EcsAddUpdateSystem(&manager->ecs, AnimationSystem);
+	EcsAddUpdateSystem(&manager->ecs, InteractionSystem);
+	EcsAddRenderSystem(&manager->ecs, RenderSystem);
+	EcsAddRenderSystem(&manager->ecs, DebugRenderSystem);
+
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Transform), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(RigidBody), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Movement), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Sprite), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Animator), AnimatorFree);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Interaction), NULL);
+	EcsRegisterDataComponent(&manager->ecs, sizeof(Interactor), NULL);
+
+	EcsRegisterOrderComponent(&manager->ecs, sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(&manager->ecs, sizeof(ZIndex), ZIndexCmp);
+
 	return 1;
 }
 
@@ -56,6 +77,8 @@ void SceneManagerDestroy(SceneManager* manager)
 	free(manager->scene);
 	clib_strmap_free(&manager->scenes);
 	clib_strmap_free(&manager->templates);
+
+	EcsDestroy(&manager->ecs);
 }
 
 void SceneManagerFocusConsole(SceneManager* manager)
@@ -63,11 +86,6 @@ void SceneManagerFocusConsole(SceneManager* manager)
 	manager->console_focus = !manager->console_focus;
 
 	if (!manager->console_focus) ConsoleResetCursor(&manager->console);
-}
-
-void SceneManagerToggleEditmode(SceneManager* manager)
-{
-	manager->editmode = !manager->editmode;
 }
 
 void SceneManagerChangeScene(SceneManager* manager, const char* name)
@@ -84,7 +102,10 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 
 		// Exit old Scene
 		if (manager->scene_name[0] != '\0')
+		{
 			SceneQuit(manager->scene);
+			EcsClear(&manager->ecs);
+		}
 
 		// Enter new scene
 		SceneLoaderLoadScene(manager, path);
@@ -122,7 +143,7 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 
 		if (strcmp(spec, "entity") == 0)
 		{
-			if (!manager->editmode)
+			if (!manager->editor.active)
 			{
 				ConsoleOut(&manager->console, "Editmode needs to be active to create an entity.");
 				break;
@@ -154,9 +175,9 @@ void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer)
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			for (size_t i = 0; i < EcsGetComponentList(&manager->scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+			for (size_t i = 0; i < EcsGetComponentList(&manager->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
 			{
-				Template* templ = EcsGetOrderComponent(&manager->scene->ecs, i, COMPONENT_TEMPLATE);
+				Template* templ = EcsGetOrderComponent(&manager->ecs, i, COMPONENT_TEMPLATE);
 
 				if (templ)
 					ConsoleOut(&manager->console, " - %d \t | %s", *(EntityID*)templ, templ->templ);
@@ -230,20 +251,9 @@ void SceneManagerOnEvent(SceneManager* manager, Event e)
 	if (manager->console_focus)
 		ConsoleOnEvent(&manager->console, &e);
 
-	switch (EventKeyPressed(&e))
-	{
-	case KEY_F1:
-		SceneManagerToggleEditmode(manager);
-		break;
-	case KEY_F2:
-		SceneManagerFocusConsole(manager);
-		break;
-	}
+	SceneEditorOnEvent(&manager->editor, &manager->ecs, manager->scene, e);
 
-	if (manager->editmode)
-		SceneEditorOnEvent(&manager->editor, manager->scene, e);
-
-	SceneOnEvent(manager->scene, e);
+	SceneOnEvent(manager->scene, &manager->ecs, e);
 }
 
 void SceneManagerOnUpdate(SceneManager* manager, float deltatime)
@@ -252,30 +262,24 @@ void SceneManagerOnUpdate(SceneManager* manager, float deltatime)
 	{
 		ConsoleOnUpdate(&manager->console, deltatime);
 	}
-	else if (manager->editmode)
+	else if (!manager->editor.active)
 	{
-		SceneEditorOnUpdate(&manager->editor, manager->scene, deltatime);
+		SceneOnUpdate(manager->scene, &manager->ecs, deltatime);
 	}
-	else
-	{
-		SceneOnUpdate(manager->scene, deltatime);
-	}
+	SceneEditorOnUpdate(&manager->editor, &manager->ecs, manager->scene, deltatime);
 }
 
 void SceneManagerOnRender(SceneManager* manager)
 {
-	SceneOnRender(manager->scene);
+	SceneOnRender(manager->scene, &manager->ecs);
 
-	if (manager->editmode)
-	{
-		SceneEditorOnRender(&manager->editor, manager->scene);
-	}
+	SceneEditorOnRender(&manager->editor, &manager->ecs, manager->scene);
 }
 
 void SceneManagerOnRenderDebug(SceneManager* manager)
 {
-	if (!manager->editmode)
-		SceneOnRenderDebug(manager->scene);
+	if (!manager->editor.active)
+		SceneOnRenderDebug(manager->scene, &manager->ecs);
 }
 
 void SceneManagerOnRenderGui(SceneManager* manager)

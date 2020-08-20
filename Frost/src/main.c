@@ -2,38 +2,14 @@
 
 #include "Scenes/SceneManager.h"
 
-#include "physics/collision.h"
+#include "Inventory/Inventory.h"
 
 Camera camera;
 SceneManager scene_manager;
 
 int show_overlay;
 
-vec2 mouse;
-
-aabb rects[] =
-{
-	{ {340.0f, 140.0f}, {32.0f, 64.0f} },
-
-	{ {300.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {340.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {380.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {420.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {460.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {500.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {540.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {580.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {620.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {660.0f, 100.0f}, {40.0f, 40.0f} },
-	{ {700.0f, 100.0f}, {40.0f, 40.0f} },
-
-	{ {280.0f, 100.0f}, {20.0f, 120.0f} },
-	{ {740.0f, 100.0f}, {20.0f, 120.0f} },
-
-	{ {300.0f, 320.0f}, {4.0f, 4.0f} },
-	{ {300.0f, 360.0f}, {160.0f, 40.0f} },
-	{ {360.0f, 300.0f}, {40.0f, 160.0f} }
-};
+Inventory inv;
 
 void OnInit(Application* app)
 {
@@ -51,11 +27,15 @@ void OnInit(Application* app)
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
-	show_overlay = 0;
+	show_overlay = 1;
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
 	SceneManagerChangeScene(&scene_manager, "scene");
+
+	inv.cell_size = 32.0f;
+	inv.padding = 8.0f;
+	inv.size = (vec2i){ 3, 2 };
 }
 
 void OnDestroy(Application* app)
@@ -81,6 +61,12 @@ void OnEvent(Application* app, Event e)
 	case KEY_ESCAPE:
 		ApplicationClose(app);
 		break;
+	case KEY_F1:
+		SceneEditorToggleActive(&scene_manager.editor);
+		break;
+	case KEY_F2:
+		SceneManagerFocusConsole(&scene_manager);
+		break;
 	case KEY_F5: 
 		ApplicationPause(app);
 		break;
@@ -100,35 +86,14 @@ void OnEvent(Application* app, Event e)
 
 void OnUpdate(Application* app, float deltaTime)
 {
-	// SceneManagerOnUpdate(&scene_manager, deltaTime);
-
-	mouse = CameraGetMousePos(&camera, InputMousePositionVec2());
+	SceneManagerOnUpdate(&scene_manager, deltaTime);
 }
 
 void OnRender(Application* app)
 {
-	// SceneManagerOnRender(&scene_manager);
+	SceneManagerOnRender(&scene_manager);
 
-	rect r = { { 500.0f, 200.0f}, { 700.0f, 440.0f} };
-
-	vec2 ray_point = { 100.0f, 600.0f };
-	vec2 ray_direction = vec2_sub(mouse, ray_point);
-
-	vec2 contact_point;
-	vec2 contact_normal;
-	float t;
-
-	Primitives2DStart(CameraGetViewProjectionPtr(&camera));
-
-	for (int i = 0; i < sizeof(rects) / sizeof(rects[0]); ++i)
-	{
-		aabb r = rects[i];
-		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x, r.max.y, IGNIS_WHITE);
-		// Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
-	}
-
-
-	Primitives2DFlush();
+	RenderInventory(&inv, vec2_add(EcsGetEntityPosition(&scene_manager.ecs, 0), (vec2) { 100.0f, 100.0f }), camera.viewProjection);
 }
 
 void OnRenderDebug(Application* app)
@@ -160,7 +125,7 @@ void OnRenderDebug(Application* app)
 
 		EntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
-		vec2 position = EcsGetEntityPosition(&scene_manager.scene->ecs, player);
+		vec2 position = EcsGetEntityPosition(&scene_manager.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
 	}

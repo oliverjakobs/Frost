@@ -143,6 +143,7 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
+    <ClInclude Include="src\Inventory\Inventory.h" />
     <ClInclude Include="src\physics\collision.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\Inventory\Inventory.c" />
     <ClCompile Include="src\physics\collision.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
