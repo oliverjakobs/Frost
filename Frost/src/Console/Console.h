@@ -7,10 +7,11 @@
 #define CONSOLE_OUT_ROW_SIZE	64
 
 #include "Application/Application.h"
-#include "Application/defines.h"
 
 typedef struct
 {
+	int focus;
+
 	char cmd_buffer[CONSOLE_MAX_CMD_LENGTH];
 	int cusor_pos;
 
@@ -29,6 +30,7 @@ void ConsoleInit(Console* console, IgnisFont* font);
 void ConsoleOnEvent(Console* console, Event* e);
 void ConsoleOnUpdate(Console* console, float deltatime);
 
+void ConsoleToggleFocus(Console* console);
 void ConsoleResetCursor(Console* console);
 
 void ConsoleExecuteCmd(Console* console);

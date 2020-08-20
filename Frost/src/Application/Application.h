@@ -11,6 +11,8 @@
 #include "Input.h"
 #include <GLFW/glfw3.h>
 
+#include "defines.h"
+
 typedef struct Application
 {
 	GLFWwindow* window;

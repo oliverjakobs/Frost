@@ -77,7 +77,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	float width = tb_json_float((char*)json, "{'size'[0", NULL, 0.0f);
 	float height = tb_json_float((char*)json, "{'size'[1", NULL, 0.0f);
 
-	if (!SceneLoad(manager->scene, manager->camera, width, height))
+	if (!SceneManagerLoadScene(manager, width, height))
 	{
 		DEBUG_ERROR("[Scenes] Failed to load scene: %s", json);
 		free(json);
@@ -90,7 +90,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
 		char* value = (char*)element.value;
-		Background* background = &manager->scene->background;
+		Background* background = &manager->background;
 
 		BackgroundInit(background, element.elements);
 		for (int i = 0; i < element.elements; i++)
@@ -166,17 +166,17 @@ int SceneLoaderSaveScene(SceneManager* manager, const char* path)
 	/* size */
 	tb_jwrite_array(&jwc, "size");
 	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-	tb_jwrite_array_float(&jwc, manager->scene->width);
-	tb_jwrite_array_float(&jwc, manager->scene->height);
+	tb_jwrite_array_float(&jwc, manager->width);
+	tb_jwrite_array_float(&jwc, manager->height);
 	tb_jwrite_end(&jwc);
 
 	/* background */
 	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	tb_jwrite_array(&jwc, "background");
 
-	for (int i = 0; i < manager->scene->background.size; ++i)
+	for (int i = 0; i < manager->background.size; ++i)
 	{
-		BackgroundLayer* bg = &manager->scene->background.layers[i];
+		BackgroundLayer* bg = &manager->background.layers[i];
 
 		tb_jwrite_array_array(&jwc);
 
@@ -413,10 +413,10 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 	if (element.error == TB_JSON_OK)
 	{
 		CameraController comp;
-		comp.camera = manager->scene->camera;
+		comp.camera = manager->camera;
 		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
-		comp.scene_w = manager->scene->width;
-		comp.scene_h = manager->scene->height;
+		comp.scene_w = manager->width;
+		comp.scene_h = manager->height;
 
 		EcsAddDataComponent(&manager->ecs, entity, COMPONENT_CAMERA, &comp);
 	}

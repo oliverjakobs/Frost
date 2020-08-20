@@ -14,6 +14,8 @@ void ConsoleInit(Console* console, IgnisFont* font)
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
 	console->cusor_pos = 0;
 
+	console->focus = 0;
+
 	console->cursor_size = 2.0f;
 	console->cursor_tick = 0.0f;
 
@@ -26,6 +28,8 @@ void ConsoleInit(Console* console, IgnisFont* font)
 
 void ConsoleOnEvent(Console* console, Event* e)
 {
+	if (!console->focus) return;
+
 	if (e->type == EVENT_KEY_TYPED)
 	{
 		ConsoleCharTyped(console, (char)e->key.keycode);
@@ -52,10 +56,19 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 void ConsoleOnUpdate(Console* console, float deltatime)
 {
+	if (!console->focus) return;
+
 	console->cursor_tick += deltatime;
 
 	if (console->cursor_tick > CONSOLE_CURSOR_CYCLE)
 		console->cursor_tick = 0.0f;
+}
+
+void ConsoleToggleFocus(Console* console)
+{
+	console->focus = !console->focus;
+
+	if (!console->focus) ConsoleResetCursor(console);
 }
 
 void ConsoleResetCursor(Console* console)
@@ -92,6 +105,8 @@ void ConsoleCharRemoveLast(Console* console)
 
 void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj)
 {
+	if (!console->focus) return;
+
 	float text_x = x + padding;
 	float text_y = y - padding;
 	float cursor_x = text_x 

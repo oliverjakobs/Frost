@@ -1,12 +1,10 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
-#include "SceneEditor.h"
+#include "ECS/Systems.h"
+#include "Application/Application.h"
 
-#include "Console/Console.h"
-
-#include "Graphics/ResourceManager.h"
-
+#include "Graphics/Background.h"
 #include "clib/strmap.h"
 
 typedef struct 
@@ -17,30 +15,26 @@ typedef struct
 	clib_hashmap scenes;
 	clib_hashmap templates;
 
-	Scene* scene;
 	char scene_name[APPLICATION_STR_LEN];
+	float width;
+	float height;
+
+	Background background;
 
 	Ecs ecs;
-
-	SceneEditor editor;
-
-	Console console;
-	int console_focus;
 } SceneManager;
 
 int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
 void SceneManagerDestroy(SceneManager* manager);
 
-void SceneManagerFocusConsole(SceneManager* manager);
-
 void SceneManagerChangeScene(SceneManager* manager, const char* name);
 
-void SceneManagerExecuteCommand(SceneManager* manager, char* cmd_buffer);
+int SceneManagerLoadScene(SceneManager* manager, float w, float h);
+void SceneManagerQuitScene(SceneManager* manager);
 
 void SceneManagerOnEvent(SceneManager* manager, Event e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltatime);
 void SceneManagerOnRender(SceneManager* manager);
 void SceneManagerOnRenderDebug(SceneManager* manager);
-void SceneManagerOnRenderGui(SceneManager* manager);
 
 #endif /* !SCENE_MANAGER_H */
