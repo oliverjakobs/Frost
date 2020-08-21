@@ -49,9 +49,10 @@ void OnInit(Application* app)
 
 	ConsoleInit(&console, ResourceManagerGetFont(scene_manager.resources, "gui"));
 
-	inv.cell_size = 32.0f;
+	inv.cell_size = 64.0f;
 	inv.padding = 8.0f;
 	inv.size = (vec2i){ 3, 2 };
+	inv.offset = (vec2){ 40.0f, 100.0f };
 }
 
 void OnDestroy(Application* app)
@@ -98,9 +99,7 @@ void OnEvent(Application* app, Event e)
 	}
 
 	if (e.type == EVENT_CONSOLE_EXEC)
-	{
 		FrostExecuteConsoleCommand(&console, &scene_manager, &editor, e.console.cmd);
-	}
 
 	ConsoleOnEvent(&console, &e);
 
@@ -124,7 +123,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&editor, &scene_manager);
 
-	RenderInventory(&inv, vec2_add(EcsGetEntityPosition(&scene_manager.ecs, 0), (vec2) { 100.0f, 100.0f }), camera.viewProjection);
+	RenderInventory(&inv, EcsGetEntityPosition(&scene_manager.ecs, 0), camera.viewProjection);
 }
 
 void OnRenderDebug(Application* app)
