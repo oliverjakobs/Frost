@@ -41,18 +41,13 @@ void OnInit(Application* app)
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
 	SceneManagerChangeScene(&scene_manager, "scene");
 
-	float camera_speed = 400.0f;
-	float gridsize = 32.0f;
-	float padding = 4;
-	SceneEditorInit(&editor, camera_speed, gridsize, gridsize* padding);
+	SceneEditorInit(&editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&editor);
 
 	ConsoleInit(&console, ResourceManagerGetFont(scene_manager.resources, "gui"));
 
-	inv.cell_size = 64.0f;
-	inv.padding = 8.0f;
-	inv.size = (vec2i){ 3, 2 };
-	inv.offset = (vec2){ 40.0f, 100.0f };
+	InventoryInit(&inv, (vec2) { 0.0f, -camera.size.y / 2.0f }, 2, 9, 64.0f, 8.0f);
+	inv.pos.x -= inv.size.x / 2.0f;
 }
 
 void OnDestroy(Application* app)
@@ -70,7 +65,7 @@ void OnEvent(Application* app, Event e)
 	if (e.type == EVENT_WINDOW_RESIZE)
 	{
 		ApplicationSetViewport(app, 0, 0, e.window.width, e.window.height);
-		CameraSetProjectionOrtho(scene_manager.camera, (float)e.window.width, (float)e.window.height);
+		CameraSetProjectionOrtho(&camera, (float)e.window.width, (float)e.window.height);
 	}
 
 	switch (EventKeyPressed(&e))
@@ -115,6 +110,8 @@ void OnUpdate(Application* app, float deltatime)
 
 	ConsoleOnUpdate(&console, deltatime);
 	SceneEditorOnUpdate(&editor, &scene_manager, deltatime);
+
+	InventoryUpdate(&inv, &camera, deltatime);
 }
 
 void OnRender(Application* app)
@@ -123,7 +120,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&editor, &scene_manager);
 
-	RenderInventory(&inv, EcsGetEntityPosition(&scene_manager.ecs, 0), camera.viewProjection);
+	InventoryRender(&inv, vec2_zero(), camera.projection);
 }
 
 void OnRenderDebug(Application* app)
@@ -202,7 +199,7 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 				break;
 			}
 
-			vec2 pos = CameraGetMousePos(manager->camera, InputMousePositionVec2());
+			vec2 pos = CameraGetMousePosView(manager->camera, InputMousePositionVec2());
 
 			if (SceneLoaderLoadTemplate(manager, args[0], EntityGetNextID(), pos, atoi(args[1])))
 				ConsoleOut(console, "Created entity with template %s", args[0]);

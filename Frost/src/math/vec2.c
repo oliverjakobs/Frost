@@ -74,3 +74,8 @@ float vec2_distance(vec2 a, vec2 b)
 	dis_vec.y = a.y - b.y;
 	return sqrtf(vec2_dot(dis_vec, dis_vec));
 }
+
+vec2i vec2i_zero()
+{
+	return (vec2i){0,0};
+}

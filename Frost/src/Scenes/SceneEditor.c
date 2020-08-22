@@ -3,11 +3,11 @@
 #include "Application/Debugger.h"
 #include "math/grid.h"
 
-void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, float padding)
+void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int padding)
 {
 	editor->cameraspeed = cameraspeed;
 	editor->gridsize = gridsize;
-	editor->padding = padding;
+	editor->padding = gridsize * padding;
 
 	editor->showgrid = 1;
 	editor->active = 0;
@@ -35,7 +35,7 @@ void SceneEditorOnEvent(SceneEditor* editor, SceneManager* scene, Event e)
 	{
 		if (editor->hover != NULL_ENTITY)
 		{
-			vec2 mouse = CameraGetMousePos(scene->camera, InputMousePositionVec2());
+			vec2 mouse = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
 			editor->offset = vec2_sub(mouse, EcsGetEntityPosition(&scene->ecs, editor->hover));
 			editor->clicked = 1;
 		}
@@ -66,7 +66,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, SceneManager* scene, float deltati
 	scene->camera->position = position;
 	CameraUpdateViewOrtho(scene->camera);
 
-	vec2 mouse = CameraGetMousePos(scene->camera, InputMousePositionVec2());
+	vec2 mouse = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
 		EcsSetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));

@@ -26,10 +26,11 @@ void CameraUpdateViewOrtho(Camera* camera);
 void CameraSetProjectionOrtho(Camera* camera, float w, float h);
 void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size);
 
-const vec2 CameraGetMousePos(Camera* camera, vec2 mouse);
+vec2 CameraGetMousePos(const Camera* camera, vec2 mouse);
+vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse);
 
-const float* CameraGetViewPtr(Camera* camera);
-const float* CameraGetProjectionPtr(Camera* camera);
-const float* CameraGetViewProjectionPtr(Camera* camera);
+const float* CameraGetViewPtr(const Camera* camera);
+const float* CameraGetProjectionPtr(const Camera* camera);
+const float* CameraGetViewProjectionPtr(const Camera* camera);
 
 #endif /* !CAMERA_H */

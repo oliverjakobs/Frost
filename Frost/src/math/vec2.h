@@ -28,4 +28,6 @@ typedef struct
 	int y;
 } vec2i;
 
+vec2i vec2i_zero();
+
 #endif /* !VEC2_H */

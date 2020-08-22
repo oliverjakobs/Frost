@@ -56,7 +56,15 @@ void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size)
 	CameraSetProjectionOrtho(camera, size.x, size.y);
 }
 
-const vec2 CameraGetMousePos(Camera* camera, vec2 mouse)
+vec2 CameraGetMousePos(const Camera* camera, vec2 mouse)
+{
+	float x = mouse.x  - (camera->size.x / 2.0f);
+	float y = (camera->size.y - mouse.y) - (camera->size.y / 2.0f);
+
+	return (vec2) { x, y };
+}
+
+vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse)
 {
 	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
 	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
@@ -64,17 +72,17 @@ const vec2 CameraGetMousePos(Camera* camera, vec2 mouse)
 	return (vec2){ x, y };
 }
 
-const float* CameraGetViewPtr(Camera* camera)
+const float* CameraGetViewPtr(const Camera* camera)
 {
 	return camera->view.v;
 }
 
-const float* CameraGetProjectionPtr(Camera* camera)
+const float* CameraGetProjectionPtr(const Camera* camera)
 {
 	return camera->projection.v;
 }
 
-const float* CameraGetViewProjectionPtr(Camera* camera)
+const float* CameraGetViewProjectionPtr(const Camera* camera)
 {
 	return camera->viewProjection.v;
 }

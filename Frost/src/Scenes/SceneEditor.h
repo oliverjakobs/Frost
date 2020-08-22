@@ -18,7 +18,7 @@ typedef struct
 	EntityID hover;
 } SceneEditor;
 
-void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, float padding);
+void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int padding);
 
 void SceneEditorReset(SceneEditor* editor);
 
