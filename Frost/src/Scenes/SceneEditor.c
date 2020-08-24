@@ -27,6 +27,11 @@ void SceneEditorToggleActive(SceneEditor* editor)
 	editor->active = !editor->active;
 }
 
+void SceneEditorToggleGrid(SceneEditor* editor)
+{
+	editor->showgrid = !editor->showgrid;
+}
+
 void SceneEditorOnEvent(SceneEditor* editor, SceneManager* scene, Event e)
 {
 	if (!editor->active) return;

@@ -89,6 +89,9 @@ void OnEvent(Application* app, Event e)
 		ApplicationToggleDebugMode(app);
 		break;
 	case KEY_F8:
+		SceneEditorToggleGrid(&editor);
+		break;
+	case KEY_F9:
 		show_overlay = !show_overlay;
 		break;
 	}
@@ -143,7 +146,8 @@ void OnRenderDebug(Application* app)
 		FontRendererTextFieldLine("F5: Pause/Unpause");
 		FontRendererTextFieldLine("F6: Toggle Vsync");
 		FontRendererTextFieldLine("F7: Toggle debug mode");
-		FontRendererTextFieldLine("F8: Toggle overlay");
+		FontRendererTextFieldLine("F8: Toggle editor grid");
+		FontRendererTextFieldLine("F9: Toggle overlay");
 
 		/* Debug */
 		FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
@@ -156,6 +160,13 @@ void OnRenderDebug(Application* app)
 		vec2 position = EcsGetEntityPosition(&scene_manager.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
+
+		FontRendererTextFieldLine("");
+		
+		FontRendererTextFieldLine("Camera:");
+		FontRendererTextFieldLine("------------------------");
+		FontRendererTextFieldLine("Position: %4.2f, %4.2f", camera.position.x, camera.position.y);
+
 	}
 
 	FontRendererFlush();

@@ -6,6 +6,13 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
 	Primitives2DStart(mat_view_proj);
 
+	/*
+	CameraController* camController = ComponentMapIterValue(ComponentMapIterator(EcsGetComponentMap(ecs, COMPONENT_CAMERA)));
+
+	if (camController)
+		Primitives2DRenderCircle(camController->camera->position.x, camController->camera->position.y, 10.0f, IGNIS_WHITE);
+	*/
+
 	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_TRANSFORM), iter)
 	{
 		Transform* transform = ComponentMapIterValue(iter);

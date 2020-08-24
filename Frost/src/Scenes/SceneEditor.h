@@ -23,6 +23,7 @@ void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int
 void SceneEditorReset(SceneEditor* editor);
 
 void SceneEditorToggleActive(SceneEditor* editor);
+void SceneEditorToggleGrid(SceneEditor* editor);
 
 void SceneEditorOnEvent(SceneEditor* editor, SceneManager* scene, Event e);
 void SceneEditorOnUpdate(SceneEditor* editor, SceneManager* scene, float deltatime);
