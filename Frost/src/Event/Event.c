@@ -1,80 +1,69 @@
 #include "Event.h"
 
+#include "Application/Input.h"
+
 void EventReset(Event* e)
 {
 	e->type = EVENT_UNKOWN;
 	e->handled = 0;
 }
 
-int EventMouseButton(Event* e)
+int EventCheckType(const Event* e, EventType type)
 {
-	if (e->handled) return -1;
+	return !e->handled && e->type == type;
+}
 
-	if (e->type == EVENT_MOUSE_BUTTON_PRESSED ||
-		e->type == EVENT_MOUSE_BUTTON_RELEASED)
+int EventMouseButton(const Event* e)
+{
+	if (e->handled) return MOUSE_BUTTON_UNKNOWN;
+
+	if (e->type == EVENT_MOUSE_BUTTON_PRESSED || e->type == EVENT_MOUSE_BUTTON_RELEASED)
 		return e->mousebutton.buttoncode;
 
-	return -1;
+	return MOUSE_BUTTON_UNKNOWN;
 }
 
-int EventMouseButtonPressed(Event* e)
+int EventMouseButtonPressed(const Event* e)
 {
-	if (e->handled) return -1;
+	if (EventCheckType(e, EVENT_MOUSE_BUTTON_PRESSED)) return e->mousebutton.buttoncode;
 
-	if (e->type == EVENT_MOUSE_BUTTON_PRESSED)
-		return e->mousebutton.buttoncode;
-
-	return -1;
+	return MOUSE_BUTTON_UNKNOWN;
 }
 
-int EventMouseButtonReleased(Event* e)
+int EventMouseButtonReleased(const Event* e)
 {
-	if (e->handled) return -1;
+	if (EventCheckType(e, EVENT_MOUSE_BUTTON_RELEASED)) return e->mousebutton.buttoncode;
 
-	if (e->type == EVENT_MOUSE_BUTTON_RELEASED)
-		return e->mousebutton.buttoncode;
-
-	return -1;
+	return MOUSE_BUTTON_UNKNOWN;
 }
 
-int EventKey(Event* e)
+int EventKey(const Event* e)
 {
-	if (e->handled) return -1;
+	if (e->handled) return KEY_UNKNOWN;
 
-	if (e->type == EVENT_KEY_PRESSED ||
-		e->type == EVENT_KEY_RELEASED ||
-		e->type == EVENT_KEY_TYPED)
+	if (e->type == EVENT_KEY_PRESSED || e->type == EVENT_KEY_RELEASED || e->type == EVENT_KEY_TYPED)
 		return e->key.keycode;
 
-	return -1;
+	return KEY_UNKNOWN;
 }
 
-int EventKeyPressed(Event* e)
+int EventKeyPressed(const Event* e)
 {
-	if (e->handled) return -1;
+	if (EventCheckType(e, EVENT_KEY_PRESSED)) return e->key.keycode;
 
-	if (e->type == EVENT_KEY_PRESSED)
-		return e->key.keycode;
-
-	return -1;
+	return KEY_UNKNOWN;
 }
 
-int EventKeyReleased(Event* e)
+int EventKeyReleased(const Event* e)
 {
-	if (e->handled) return -1;
+	if (EventCheckType(e, EVENT_KEY_RELEASED)) return e->key.keycode;
 
-	if (e->type == EVENT_KEY_RELEASED)
-		return e->key.keycode;
-
-	return -1;
+	return KEY_UNKNOWN;
 }
 
-char EventKeyTyped(Event* e)
+char EventKeyTyped(const Event* e)
 {
-	if (e->handled) return -1;
-
-	if (e->type == EVENT_KEY_TYPED)
-		return (char)e->key.keycode;
+	if (EventCheckType(e, EVENT_KEY_TYPED)) return (char)e->key.keycode;
 
 	return '\0';
 }

@@ -68,14 +68,16 @@ typedef struct
 void EventReset(Event* e);
 
 /* Utility */
-int EventMouseButton(Event* e);
-int EventMouseButtonPressed(Event* e);
-int EventMouseButtonReleased(Event* e);
+int EventCheckType(const Event* e, EventType type);
 
-int EventKey(Event* e);
-int EventKeyPressed(Event* e);
-int EventKeyReleased(Event* e);
+int EventMouseButton(const Event* e);
+int EventMouseButtonPressed(const Event* e);
+int EventMouseButtonReleased(const Event* e);
 
-char EventKeyTyped(Event* e);
+int EventKey(const Event* e);
+int EventKeyPressed(const Event* e);
+int EventKeyReleased(const Event* e);
+
+char EventKeyTyped(const Event* e);
 
 #endif // !EVENT_H

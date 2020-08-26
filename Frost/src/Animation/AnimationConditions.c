@@ -27,13 +27,11 @@ int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*,
 	if (!value) return 0;
 
 	value->func = condition;
-	if (clib_dict_insert(&condition_table, name, value) != value)
-	{
-		free(value);
-		return 0;
-	}
+	if (clib_dict_insert(&condition_table, name, value) == value)
+		return 1;
 
-	return 1;
+	free(value);
+	return 0;
 }
 
 AnimationCondition* AnimationConditionsGetCondition(const char* name)

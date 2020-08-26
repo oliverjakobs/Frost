@@ -5,7 +5,7 @@ void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t comp
 	clib_array_alloc(&ecs->systems_update, update_systems, sizeof(EcsUpdateSystem));
 	clib_array_alloc(&ecs->systems_render, render_systems, sizeof(EcsRenderSystem));
 
-	clib_array_alloc(&ecs->table, component_count, sizeof(ComponentMap));
+	clib_array_alloc(&ecs->data_components, component_count, sizeof(ComponentMap));
 	clib_array_alloc(&ecs->order_components, component_count, sizeof(ComponentList));
 }
 
@@ -15,11 +15,11 @@ void EcsDestroy(Ecs* ecs)
 	clib_array_free(&ecs->systems_render);
 
 	EcsClear(ecs);
-	for (size_t i = 0; i < ecs->table.used; ++i)
+	for (size_t i = 0; i < ecs->data_components.used; ++i)
 	{
-		ComponentMapFree(clib_array_get(&ecs->table, i));
+		ComponentMapFree(clib_array_get(&ecs->data_components, i));
 	}
-	clib_array_free(&ecs->table);
+	clib_array_free(&ecs->data_components);
 
 	for (size_t i = 0; i < ecs->order_components.used; ++i)
 	{
@@ -30,9 +30,9 @@ void EcsDestroy(Ecs* ecs)
 
 void EcsClear(Ecs* ecs)
 {
-	for (size_t i = 0; i < ecs->table.used; ++i)
+	for (size_t i = 0; i < ecs->data_components.used; ++i)
 	{
-		ComponentMapClear(clib_array_get(&ecs->table, i));
+		ComponentMapClear(clib_array_get(&ecs->data_components, i));
 	}
 	for (size_t i = 0; i < ecs->order_components.used; ++i)
 	{
@@ -76,7 +76,7 @@ static void EcsComponentFree(void* block)
 
 ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type)
 {
-	return clib_array_get(&ecs->table, type);
+	return clib_array_get(&ecs->data_components, type);
 }
 
 ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type)
@@ -89,8 +89,8 @@ ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*fre
 	ComponentMap comp;
 	if (ComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree) == 0)
 	{
-		if (clib_array_push(&ecs->table, &comp))
-			return ecs->table.used - 1;
+		if (clib_array_push(&ecs->data_components, &comp))
+			return ecs->data_components.used - 1;
 	}
 	return 0;
 }
@@ -109,14 +109,14 @@ void* EcsAddDataComponent(Ecs* ecs, EntityID entity, ComponentType type, void* c
 
 void* EcsGetDataComponent(Ecs* ecs, EntityID entity, ComponentType type)
 {
-	if (type >= ecs->table.used) return NULL;
+	if (type >= ecs->data_components.used) return NULL;
 
 	return ComponentMapFind(EcsGetComponentMap(ecs, type), entity);
 }
 
 void EcsRemoveDataComponent(Ecs* ecs, EntityID entity, ComponentType type)
 {
-	if (type >= ecs->table.used) return;
+	if (type >= ecs->data_components.used) return;
 
 	ComponentMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
@@ -157,7 +157,7 @@ void EcsRemoveOrderComponent(Ecs* ecs, EntityID entity, ComponentType type)
 
 void EcsRemoveEntity(Ecs* ecs, EntityID entity)
 {
-	for (uint32_t i = 0; i < ecs->table.used; ++i)
+	for (uint32_t i = 0; i < ecs->data_components.used; ++i)
 	{
 		EcsRemoveDataComponent(ecs, entity, i);
 	}

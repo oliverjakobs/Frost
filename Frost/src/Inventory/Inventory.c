@@ -3,8 +3,12 @@
 #include "Graphics/Renderer.h"
 #include "Application/Input.h"
 
-void InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding)
+int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding)
 {
+	inv->cells = malloc(sizeof(InventoryCell) * rows * columns);
+
+	if (!inv->cells) return 0;
+
 	inv->pos = pos;
 	inv->size.x = columns * (cell_size + padding) + padding;
 	inv->size.y = rows * (cell_size + padding) + padding;
@@ -16,16 +20,39 @@ void InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_s
 	inv->padding = padding;
 
 	inv->hover = -1;
+
+	for (int row = 0; row < rows; ++row)
+		for (int col = 0; col < columns; ++col)
+		{
+			int index = InventoryGetCellIndex(inv, row, col);
+
+			inv->cells[index].itemID = -1;
+			inv->cells[index].pos.x = col * (cell_size + padding) + padding;
+			inv->cells[index].pos.y = row * (cell_size + padding) + padding;
+		}
+
+	return 1;
 }
 
-int InventoryGetCellIndex(Inventory* inv, vec2i pos)
+void InventoryFree(Inventory* inv)
 {
-	return pos.y * inv->columns + pos.x;
+	if (inv->cells) free(inv->cells);
+	inv->cells = NULL;
+
+	inv->pos = vec2_zero();
+	inv->size = vec2_zero();
+
+	inv->columns = inv->rows = 0;
+
+	inv->cell_size = 0.0f;
+	inv->padding = 0.0f;
+
+	inv->hover = -1;
 }
 
-vec2i InventoryGetCellPos(Inventory* inv, int index)
+int InventoryGetCellIndex(Inventory* inv, int row, int column)
 {
-	return vec2i_zero();
+	return row * inv->columns + column;
 }
 
 int InventoryGetCellAt(Inventory* inv, vec2 pos)
@@ -48,7 +75,17 @@ int InventoryGetCellAt(Inventory* inv, vec2 pos)
 	if (rel_pos.y < row * (inv->cell_size + inv->padding) + inv->padding)
 		return -1;
 
-	return InventoryGetCellIndex(inv, (vec2i) {col, row});
+	return InventoryGetCellIndex(inv, row, col);
+}
+
+void InventorySetCellContent(Inventory* inv, int index, int itemID)
+{
+	inv->cells[index].itemID = itemID;
+}
+
+int InventoryGetCellContent(Inventory* inv, int index)
+{
+	return inv->cells[index].itemID;
 }
 
 void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime)
@@ -56,7 +93,12 @@ void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime)
 	vec2 mouse = CameraGetMousePos(camera, InputMousePositionVec2());
 
 	if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)))
+	{
 		inv->hover = InventoryGetCellAt(inv, mouse);
+
+		if (InputMousePressed(MOUSE_BUTTON_LEFT))
+			InventorySetCellContent(inv, inv->hover, 1);
+	}
 }
 
 void InventoryRender(Inventory* inv, vec2 offset, mat4 view_proj)
@@ -73,17 +115,22 @@ void InventoryRender(Inventory* inv, vec2 offset, mat4 view_proj)
 	Primitives2DFillRect(x, y, width, height, bg);
 	Primitives2DRenderRect(x, y, width, height, IGNIS_WHITE);
 
-	int index = 0;
-	for (float cell_y = inv->padding; cell_y < height; cell_y += inv->padding + inv->cell_size)
-		for (float cell_x = inv->padding; cell_x < width; cell_x += inv->padding + inv->cell_size)
-		{
-			Primitives2DRenderRect(x + cell_x, y + cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+	for (int i = 0; i < (inv->rows * inv->columns); ++i)
+	{
+		float cell_x = x + inv->cells[i].pos.x;
+		float cell_y = y + inv->cells[i].pos.y;
 
-			if (index++ == inv->hover)
-			{
-				Primitives2DFillRect(x + cell_x, y + cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
-			}
-		}
+		Primitives2DRenderRect(cell_x, cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+
+		if (i == inv->hover)
+			Primitives2DFillRect(cell_x, cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+
+		if (inv->cells[i].itemID > 0)
+			Primitives2DFillRect(cell_x, cell_y, inv->cell_size, inv->cell_size, IGNIS_RED);
+
+	}
 
 	Primitives2DFlush();
+
+	/* render inventory content */
 }

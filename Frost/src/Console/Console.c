@@ -30,7 +30,7 @@ void ConsoleOnEvent(Console* console, Event* e)
 {
 	if (!console->focus) return;
 
-	if (e->type == EVENT_KEY_TYPED)
+	if (EventCheckType(e, EVENT_KEY_TYPED))
 	{
 		ConsoleCharTyped(console, (char)e->key.keycode);
 		e->handled = 1;

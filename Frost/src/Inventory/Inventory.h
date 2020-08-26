@@ -5,6 +5,12 @@
 
 typedef struct
 {
+	int itemID;
+	vec2 pos;
+} InventoryCell;
+
+typedef struct
+{
 	vec2 pos;
 	vec2 size;
 
@@ -14,15 +20,20 @@ typedef struct
 	float cell_size;
 	float padding;
 
+	InventoryCell* cells;
+
 	int hover;
 } Inventory;
 
-void InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding);
+int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding);
+void InventoryFree(Inventory* inv);
 
-int InventoryGetCellIndex(Inventory* inv, vec2i pos);
-vec2i InventoryGetCellPos(Inventory* inv, int index);
+int InventoryGetCellIndex(Inventory* inv, int row, int column);
 
 int InventoryGetCellAt(Inventory* inv, vec2 pos);
+
+void InventorySetCellContent(Inventory* inv, int index, int itemID);
+int InventoryGetCellContent(Inventory* inv, int index);
 
 void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime);
 void InventoryRender(Inventory* inv, vec2 offset, mat4 view_proj);

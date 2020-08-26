@@ -13,7 +13,7 @@ typedef struct
 	clib_array systems_update;
 	clib_array systems_render;
 
-	clib_array table;
+	clib_array data_components;
 	clib_array order_components;
 } Ecs;
 

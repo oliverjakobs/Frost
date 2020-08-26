@@ -94,23 +94,20 @@
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
-    <ClInclude Include="src\clib\list.h" />
-    <ClInclude Include="src\ECS\ComponentMap.h" />
-    <ClInclude Include="src\ECS\ComponentList.h" />
-    <ClInclude Include="src\ECS\Components\Order.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
     <ClInclude Include="src\Application\Timer.h" />
     <ClInclude Include="src\Application\defines.h" />
     <ClInclude Include="src\Camera\Camera.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
+    <ClInclude Include="src\ECS\ComponentList.h" />
+    <ClInclude Include="src\ECS\ComponentMap.h" />
     <ClInclude Include="src\ECS\Components.h" />
     <ClInclude Include="src\ECS\Components\Animator.h" />
     <ClInclude Include="src\ECS\Components\CameraController.h" />
     <ClInclude Include="src\ECS\Components\Interaction.h" />
     <ClInclude Include="src\ECS\Components\Movement.h" />
+    <ClInclude Include="src\ECS\Components\Order.h" />
     <ClInclude Include="src\ECS\Components\RigidBody.h" />
     <ClInclude Include="src\ECS\Components\Sprite.h" />
     <ClInclude Include="src\ECS\Components\Transform.h" />
@@ -123,6 +120,9 @@
     <ClInclude Include="src\ECS\Systems\PhysicsSystem.h" />
     <ClInclude Include="src\ECS\Systems\PlayerSystem.h" />
     <ClInclude Include="src\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Frost.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -144,8 +144,6 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Inventory\Inventory.h" />
-    <ClInclude Include="src\physics\collision.h" />
-    <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\Scenes\SceneLoader.h" />
     <ClInclude Include="src\Scenes\SceneManager.h" />
@@ -156,6 +154,7 @@
     <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
+    <ClInclude Include="src\clib\list.h" />
     <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
@@ -164,26 +163,23 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
+    <ClInclude Include="src\physics\collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c" />
     <ClCompile Include="src\Animation\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
-    <ClCompile Include="src\clib\clib.c" />
-    <ClCompile Include="src\clib\list.c" />
-    <ClCompile Include="src\ECS\ComponentMap.c" />
-    <ClCompile Include="src\ECS\ComponentList.c" />
-    <ClCompile Include="src\ECS\Components.c" />
-    <ClCompile Include="src\ECS\Components\Order.c" />
-    <ClCompile Include="src\Event\Event.c" />
-    <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Timer.c" />
     <ClCompile Include="src\Camera\Camera.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
+    <ClCompile Include="src\ECS\ComponentList.c" />
+    <ClCompile Include="src\ECS\ComponentMap.c" />
+    <ClCompile Include="src\ECS\Components.c" />
     <ClCompile Include="src\ECS\Components\Animator.c" />
+    <ClCompile Include="src\ECS\Components\Order.c" />
     <ClCompile Include="src\ECS\Components\RigidBody.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
@@ -193,6 +189,9 @@
     <ClCompile Include="src\ECS\Systems\PhysicsSystem.c" />
     <ClCompile Include="src\ECS\Systems\PlayerSystem.c" />
     <ClCompile Include="src\ECS\Systems\RenderSystem.c" />
+    <ClCompile Include="src\Event\Event.c" />
+    <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Frost.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
@@ -211,17 +210,17 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Inventory\Inventory.c" />
-    <ClCompile Include="src\physics\collision.c" />
-    <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />
     <ClCompile Include="src\Scenes\SceneManager.c" />
     <ClCompile Include="src\clib\array.c" />
+    <ClCompile Include="src\clib\clib.c" />
     <ClCompile Include="src\clib\dictionary.c" />
     <ClCompile Include="src\clib\dynamic_array.c" />
     <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
+    <ClCompile Include="src\clib\list.c" />
     <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\main.c" />
@@ -229,10 +228,10 @@
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
+    <ClCompile Include="src\physics\collision.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\fonts\JetBrainsMono-Regular.ttf" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
     <None Include="res\shaders\batchrenderer.frag" />

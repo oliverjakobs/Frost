@@ -2,7 +2,7 @@
 
 EntityID EcsGetEntityAt(Ecs* ecs, vec2 pos)
 {
-	CLIB_HASHMAP_ITERATE_FOR(clib_array_get(&ecs->table, COMPONENT_TRANSFORM), iter)
+	CLIB_HASHMAP_ITERATE_FOR(clib_array_get(&ecs->data_components, COMPONENT_TRANSFORM), iter)
 	{
 		Transform* transform = clib_hashmap_iter_get_value(iter);
 
