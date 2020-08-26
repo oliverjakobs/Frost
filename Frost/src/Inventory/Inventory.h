@@ -3,6 +3,8 @@
 
 #include "Camera/Camera.h"
 
+#define NULL_ITEM (-1)
+
 typedef struct
 {
 	int itemID;

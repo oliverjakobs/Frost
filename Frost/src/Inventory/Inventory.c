@@ -26,7 +26,7 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_si
 		{
 			int index = InventoryGetCellIndex(inv, row, col);
 
-			inv->cells[index].itemID = -1;
+			inv->cells[index].itemID = NULL_ITEM;
 			inv->cells[index].pos.x = col * (cell_size + padding) + padding;
 			inv->cells[index].pos.y = row * (cell_size + padding) + padding;
 		}
@@ -80,11 +80,15 @@ int InventoryGetCellAt(Inventory* inv, vec2 pos)
 
 void InventorySetCellContent(Inventory* inv, int index, int itemID)
 {
+	if (index < 0 || index >= (inv->rows * inv->columns)) return;
+
 	inv->cells[index].itemID = itemID;
 }
 
 int InventoryGetCellContent(Inventory* inv, int index)
 {
+	if (index < 0 || index >= (inv->rows * inv->columns)) return NULL_ITEM;
+
 	return inv->cells[index].itemID;
 }
 
