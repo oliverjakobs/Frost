@@ -21,6 +21,7 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_si
 
 	inv->hover = -1;
 
+	/* initialize cells */
 	for (int row = 0; row < rows; ++row)
 		for (int col = 0; col < columns; ++col)
 		{
@@ -57,22 +58,22 @@ int InventoryGetCellIndex(Inventory* inv, int row, int column)
 
 int InventoryGetCellAt(Inventory* inv, vec2 pos)
 {
-	vec2 rel_pos = vec2_sub(pos, inv->pos);
+	vec2 cell_offset = vec2_sub(pos, inv->pos);
 
-	if (rel_pos.x < inv->padding || rel_pos.y < inv->padding) return -1;
+	/* filter first padding (left or under first cells) */
+	if (cell_offset.x < inv->padding || cell_offset.y < inv->padding) return -1;
 
-	if (rel_pos.x >= (inv->size.x - inv->padding)) return -1;
+	/* prevent falsely jumping to next row */
+	if (cell_offset.x >= (inv->size.x - inv->padding)) return -1;
 
-	int col = rel_pos.x / (inv->cell_size + inv->padding);
-	int row = rel_pos.y / (inv->cell_size + inv->padding);
+	int col = cell_offset.x / (inv->cell_size + inv->padding);
+	int row = cell_offset.y / (inv->cell_size + inv->padding);
 
 	if (row >= inv->rows || col >= inv->columns) return -1;
 
 	/* filter padding between cells */
-	if (rel_pos.x < col * (inv->cell_size + inv->padding) + inv->padding)
-		return -1;
-
-	if (rel_pos.y < row * (inv->cell_size + inv->padding) + inv->padding)
+	if ((cell_offset.x < col * (inv->cell_size + inv->padding) + inv->padding) ||
+		(cell_offset.y < row * (inv->cell_size + inv->padding) + inv->padding))
 		return -1;
 
 	return InventoryGetCellIndex(inv, row, col);
