@@ -16,3 +16,17 @@ void GenerateIndices(GLuint* indices, size_t max, size_t step)
 		offset += 4;
 	}
 }
+
+void GetTexture2DSrcRect(const IgnisTexture2D* texture, size_t frame, float* src_x, float* src_y, float* src_w, float* src_h)
+{
+	float w = 1.0f / texture->columns;
+	float h = 1.0f / texture->rows;
+
+	float x = (frame % texture->columns) * w;
+	float y = 1 - h - ((frame / texture->columns) * h);
+
+	*src_x = x;
+	*src_y = y;
+	*src_w = w;
+	*src_h = h;
+}

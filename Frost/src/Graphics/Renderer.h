@@ -70,6 +70,7 @@ extern "C"
 
 
 void GenerateIndices(GLuint* indices, size_t max, size_t step);
+void GetTexture2DSrcRect(const IgnisTexture2D* texture, size_t frame, float* src_x, float* src_y, float* src_w, float* src_h);
 
 #ifdef __cplusplus
 }

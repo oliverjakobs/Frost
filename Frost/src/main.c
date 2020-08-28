@@ -124,7 +124,8 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&editor, &scene_manager);
 
-	InventoryRender(&inv, vec2_zero(), camera.projection);
+	InventoryRender(&inv, camera.projection);
+	InventoryRenderContent(&inv, items, camera.projection);
 }
 
 void OnRenderDebug(Application* app)

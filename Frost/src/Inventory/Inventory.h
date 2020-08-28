@@ -2,6 +2,7 @@
 #define INVENTORY_H
 
 #include "Camera/Camera.h"
+#include "Graphics/Renderer.h"
 
 #define NULL_ITEM (-1)
 
@@ -38,6 +39,7 @@ void InventorySetCellContent(Inventory* inv, int index, int itemID);
 int InventoryGetCellContent(Inventory* inv, int index);
 
 void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime);
-void InventoryRender(Inventory* inv, vec2 offset, mat4 view_proj);
+void InventoryRender(Inventory* inv, mat4 view_proj);
+void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 view_proj);
 
 #endif /* !INVENTORY_H */

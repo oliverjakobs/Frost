@@ -18,11 +18,8 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 		float x = pos.x - sprite->width / 2.0f;
 		float y = pos.y;
 
-		float src_w = 1.0f / sprite->texture->columns;
-		float src_h = 1.0f / sprite->texture->rows;
-
-		float src_x = (sprite->frame % sprite->texture->columns) * src_w;
-		float src_y = 1 - src_h - ((sprite->frame / sprite->texture->columns) * src_h);
+		float src_x, src_y, src_w, src_h;
+		GetTexture2DSrcRect(sprite->texture, sprite->frame, &src_x, &src_y, &src_w, &src_h);
 
 		switch (sprite->flip)
 		{
