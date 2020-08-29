@@ -7,9 +7,7 @@
 
 #include "SceneLoader.h"
 
-#include "Animation/AnimationConditions.h"
-
-int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding)
+int SceneManagerInit(SceneManager* manager, const char* reg, Resources* resources, Camera* camera, float gridsize, uint16_t padding)
 {
 	manager->resources = resources;
 	manager->camera = camera;
@@ -21,35 +19,10 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 	clib_strmap_alloc(&manager->scenes, 0);
 	clib_strmap_alloc(&manager->templates, 0);
 
-	SceneLoaderLoadRegister(manager, reg);
+	ScenesLoadRegister(manager, reg);
 
 	AnimationConditionsInit();
-
-	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
-	AnimationConditionsRegisterCondition("condition_fall", AnimationConditionFall);
-	AnimationConditionsRegisterCondition("condition_walk", AnimationConditionWalk);
-	AnimationConditionsRegisterCondition("condition_idle", AnimationConditionIdle);
-
-	/* ecs */
-	EcsInit(&manager->ecs, 4, 2, 8);
-	EcsAddUpdateSystem(&manager->ecs, PhysicsSystem);
-	EcsAddUpdateSystem(&manager->ecs, PlayerSystem);
-	EcsAddUpdateSystem(&manager->ecs, AnimationSystem);
-	EcsAddUpdateSystem(&manager->ecs, InteractionSystem);
-	EcsAddRenderSystem(&manager->ecs, RenderSystem);
-	EcsAddRenderSystem(&manager->ecs, DebugRenderSystem);
-
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Transform), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(RigidBody), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Movement), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Sprite), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Animator), AnimatorFree);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(CameraController), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Interaction), NULL);
-	EcsRegisterDataComponent(&manager->ecs, sizeof(Interactor), NULL);
-
-	EcsRegisterOrderComponent(&manager->ecs, sizeof(Template), TemplateCmp);
-	EcsRegisterOrderComponent(&manager->ecs, sizeof(ZIndex), ZIndexCmp);
+	EcsInit(&manager->ecs);
 
 	return 1;
 }
@@ -57,7 +30,7 @@ int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* re
 void SceneManagerDestroy(SceneManager* manager)
 {
 	if (manager->scene_name[0] != '\0')
-		SceneManagerQuitScene(manager);
+		SceneManagerClearActive(manager);
 
 	AnimationConditionsDestroy();
 
@@ -67,7 +40,7 @@ void SceneManagerDestroy(SceneManager* manager)
 	EcsDestroy(&manager->ecs);
 }
 
-void SceneManagerChangeScene(SceneManager* manager, const char* name)
+void SceneManagerChangeActive(SceneManager* manager, const char* name)
 {
 	if (strcmp(manager->scene_name, name) != 0)
 	{
@@ -79,32 +52,24 @@ void SceneManagerChangeScene(SceneManager* manager, const char* name)
 			return;
 		}
 
-		// Exit old Scene
+		/* Clear old Scene */
 		if (manager->scene_name[0] != '\0')
-		{
-			SceneManagerQuitScene(manager);
-		}
+			SceneManagerClearActive(manager);
 
-		// Enter new scene
-		SceneLoaderLoadScene(manager, path);
+		/* Enter new scene */
+		ScenesLoadScene(manager, path);
 		strcpy(manager->scene_name, name);
 	}
 }
 
-int SceneManagerLoadScene(SceneManager* manager, float w, float h)
-{
-	if (!(manager && w > 0.0f && h > 0.0f)) return 0;
-
-	manager->width = w;
-	manager->height = h;
-
-	return 1;
-}
-
-void SceneManagerQuitScene(SceneManager* manager)
+void SceneManagerClearActive(SceneManager* manager)
 {
 	BackgroundClear(&manager->background);
 	EcsClear(&manager->ecs);
+
+	memset(manager->scene_name, '\0', APPLICATION_STR_LEN);
+	manager->width = 0;
+	manager->height = 0;
 }
 
 void SceneManagerOnEvent(SceneManager* manager, Event e)

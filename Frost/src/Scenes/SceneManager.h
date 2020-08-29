@@ -1,7 +1,7 @@
 #ifndef SCENE_MANAGER_H
 #define SCENE_MANAGER_H
 
-#include "ECS/Systems.h"
+#include "Frost/FrostEcs.h"
 #include "Application/Application.h"
 
 #include "Graphics/Background.h"
@@ -10,27 +10,28 @@
 typedef struct 
 {
 	Camera* camera;
-	ResourceManager* resources;
+	Resources* resources;
 
 	clib_hashmap scenes;
 	clib_hashmap templates;
 
+	Ecs ecs;
+
+	/* active scene specific data */
 	char scene_name[APPLICATION_STR_LEN];
 	float width;
 	float height;
 
 	Background background;
 
-	Ecs ecs;
 } SceneManager;
 
-int SceneManagerInit(SceneManager* manager, const char* reg, ResourceManager* resources, Camera* camera, float gridsize, uint16_t padding);
+int SceneManagerInit(SceneManager* manager, const char* reg, Resources* resources, Camera* camera, float gridsize, uint16_t padding);
 void SceneManagerDestroy(SceneManager* manager);
 
-void SceneManagerChangeScene(SceneManager* manager, const char* name);
+void SceneManagerChangeActive(SceneManager* manager, const char* name);
 
-int SceneManagerLoadScene(SceneManager* manager, float w, float h);
-void SceneManagerQuitScene(SceneManager* manager);
+void SceneManagerClearActive(SceneManager* manager);
 
 void SceneManagerOnEvent(SceneManager* manager, Event e);
 void SceneManagerOnUpdate(SceneManager* manager, float deltatime);

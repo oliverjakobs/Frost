@@ -66,9 +66,10 @@ int InventoryGetCellAt(Inventory* inv, vec2 pos)
 	/* prevent falsely jumping to next row */
 	if (cell_offset.x >= (inv->size.x - inv->padding)) return -1;
 
-	int col = cell_offset.x / (inv->cell_size + inv->padding);
-	int row = cell_offset.y / (inv->cell_size + inv->padding);
+	int col = (int)(cell_offset.x / (inv->cell_size + inv->padding));
+	int row = (int)(cell_offset.y / (inv->cell_size + inv->padding));
 
+	/* filter cells that would be out of bounds */
 	if (row >= inv->rows || col >= inv->columns) return -1;
 
 	/* filter padding between cells */
@@ -101,8 +102,10 @@ void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime)
 	{
 		inv->hover = InventoryGetCellAt(inv, mouse);
 
+		/*
 		if (InputMousePressed(MOUSE_BUTTON_LEFT))
 			InventorySetCellContent(inv, inv->hover, 1);
+		*/
 	}
 }
 
@@ -117,18 +120,15 @@ void InventoryRender(Inventory* inv, mat4 view_proj)
 
 	for (int i = 0; i < (inv->rows * inv->columns); ++i)
 	{
-		float cell_x = inv->pos.x + inv->cells[i].pos.x;
-		float cell_y = inv->pos.y + inv->cells[i].pos.y;
+		vec2 cell_pos = vec2_add(inv->pos, inv->cells[i].pos);
 
-		Primitives2DRenderRect(cell_x, cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+		Primitives2DRenderRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
 
 		if (i == inv->hover)
-			Primitives2DFillRect(cell_x, cell_y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+			Primitives2DFillRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
 	}
 
 	Primitives2DFlush();
-
-	/* render inventory content */
 }
 
 void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 view_proj)
@@ -137,16 +137,17 @@ void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 vie
 
 	for (int i = 0; i < (inv->rows * inv->columns); ++i)
 	{
-		float cell_x = inv->pos.x + inv->cells[i].pos.x;
-		float cell_y = inv->pos.y + inv->cells[i].pos.y;
+		vec2 cell_pos = vec2_add(inv->pos, inv->cells[i].pos);
 
 		if (inv->cells[i].itemID <= 0) continue;
 
 		float src_x, src_y, src_w, src_h;
 		GetTexture2DSrcRect(item_atlas, inv->cells[i].itemID, &src_x, &src_y, &src_w, &src_h);
 
-		BatchRenderer2DRenderTextureFrame(item_atlas, cell_x, cell_y, inv->cell_size, inv->cell_size, src_x, src_y, src_w, src_h);
+		BatchRenderer2DRenderTextureFrame(item_atlas, cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, src_x, src_y, src_w, src_h);
 	}
+
+	/* render dragged item */
 
 	BatchRenderer2DFlush();
 }

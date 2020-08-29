@@ -96,9 +96,6 @@
     <ClInclude Include="src\Animation\Animation.h">
       <Filter>src\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Animation\AnimationConditions.h">
-      <Filter>src\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="src\Application\Application.h">
       <Filter>src\Application</Filter>
     </ClInclude>
@@ -132,68 +129,17 @@
     <ClInclude Include="src\ECS\ComponentMap.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Components.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Animator.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\CameraController.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Interaction.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Movement.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Order.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\RigidBody.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Sprite.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Components\Transform.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Ecs.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\ECS\Entity.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\Systems.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\AnimationSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\DebugRenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\InteractionSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\PhysicsSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\PlayerSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Systems\RenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\Event\Event.h">
       <Filter>src\Event</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\EventHandler.h">
       <Filter>src\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Background.h">
       <Filter>src\Graphics</Filter>
@@ -211,9 +157,6 @@
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Renderer2D.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\ResourceManager.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\ComputeShader.h">
@@ -318,12 +261,63 @@
     <ClInclude Include="src\physics\collision.h">
       <Filter>src\physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\Components\Animator.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\CameraController.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Interaction.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Movement.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Order.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\RigidBody.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Sprite.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Transform.h">
+      <Filter>src\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\InteractionSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\PhysicsSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\PlayerSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\RenderSystem.h">
+      <Filter>src\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Frost.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\FrostEcs.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\AnimationConditions.h">
+      <Filter>src\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Resources.h">
+      <Filter>src\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
-      <Filter>src\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Animation\AnimationConditions.c">
       <Filter>src\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Application.c">
@@ -353,50 +347,17 @@
     <ClCompile Include="src\ECS\ComponentMap.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\Components.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Components\Animator.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Components\Order.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Components\RigidBody.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
     <ClCompile Include="src\ECS\Ecs.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\ECS\Entity.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\Systems\AnimationSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\DebugRenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\InteractionSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\PhysicsSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\PlayerSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Systems\RenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
     <ClCompile Include="src\Event\Event.c">
       <Filter>src\Event</Filter>
     </ClCompile>
     <ClCompile Include="src\Event\EventHandler.c">
       <Filter>src\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost.c">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Background.c">
       <Filter>src\Graphics</Filter>
@@ -414,9 +375,6 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Renderer2D.c">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\ResourceManager.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\ComputeShader.c">
@@ -508,6 +466,45 @@
     </ClCompile>
     <ClCompile Include="src\physics\collision.c">
       <Filter>src\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Animator.c">
+      <Filter>src\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Order.c">
+      <Filter>src\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\RigidBody.c">
+      <Filter>src\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\InteractionSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\PhysicsSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\PlayerSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\RenderSystem.c">
+      <Filter>src\ECS\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Frost.c">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostEcs.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\AnimationConditions.c">
+      <Filter>src\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Resources.c">
+      <Filter>src\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

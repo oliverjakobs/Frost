@@ -24,4 +24,18 @@ void AnimationTick(Animation* animation, float deltatime);
 
 void AnimationAddTransition(Animation* animation, char* name, char* next);
 
+/* Animation Conditions */
+#include "ECS/Ecs.h"
+
+typedef struct
+{
+	int (*func)(Ecs*, EntityID, int);
+} AnimationCondition;
+
+void AnimationConditionsInit();
+void AnimationConditionsDestroy();
+
+int AnimationConditionsRegisterCondition(const char* name, int (*condition)(Ecs*, EntityID, int));
+AnimationCondition* AnimationConditionsGetCondition(const char* name);
+
 #endif /* !ANIMATION_H */

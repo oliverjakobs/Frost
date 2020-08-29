@@ -6,6 +6,13 @@
 #include "ComponentMap.h"
 #include "ComponentList.h"
 
+#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT		4
+#define ECS_DEFAULT_RENDER_SYSTEM_COUNT		2
+#define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
+#define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
+
+#define ECS_ARRAY_GROWTH_FACTOR		1.2f
+
 typedef uint32_t ComponentType;
 
 typedef struct
@@ -27,7 +34,7 @@ typedef struct
 	void (*render)(Ecs*,const float*);
 } EcsRenderSystem;
 
-void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t component_count);
+void EcsInit(Ecs* ecs);
 void EcsDestroy(Ecs* ecs);
 
 void EcsClear(Ecs* ecs);

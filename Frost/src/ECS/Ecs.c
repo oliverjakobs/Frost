@@ -1,12 +1,12 @@
 #include "Ecs.h"
 
-void EcsInit(Ecs* ecs, size_t update_systems, size_t render_systems, size_t component_count)
+void EcsInit(Ecs* ecs)
 {
-	clib_array_alloc(&ecs->systems_update, update_systems, sizeof(EcsUpdateSystem));
-	clib_array_alloc(&ecs->systems_render, render_systems, sizeof(EcsRenderSystem));
+	clib_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem));
+	clib_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem));
 
-	clib_array_alloc(&ecs->data_components, component_count, sizeof(ComponentMap));
-	clib_array_alloc(&ecs->order_components, component_count, sizeof(ComponentList));
+	clib_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(ComponentMap));
+	clib_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(ComponentList));
 }
 
 void EcsDestroy(Ecs* ecs)
@@ -46,7 +46,7 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	EcsUpdateSystem system;
 	system.update = update;
 
-	clib_array_push(&ecs->systems_update, &system);
+	clib_array_push_and_grow(&ecs->systems_update, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
 void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
@@ -54,7 +54,7 @@ void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
 	EcsRenderSystem system;
 	system.render = render;
 
-	clib_array_push(&ecs->systems_render, &system);
+	clib_array_push_and_grow(&ecs->systems_render, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
 void EcsUpdate(Ecs* ecs, float deltatime)
@@ -89,7 +89,7 @@ ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*fre
 	ComponentMap comp;
 	if (ComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree) == 0)
 	{
-		if (clib_array_push(&ecs->data_components, &comp))
+		if (clib_array_push_and_grow(&ecs->data_components, &comp, ECS_ARRAY_GROWTH_FACTOR))
 			return ecs->data_components.used - 1;
 	}
 	return 0;
@@ -126,7 +126,7 @@ ComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp
 	ComponentList comp;
 	if (ComponentListAlloc(&comp, element_size, cmp) == 0)
 	{
-		if (clib_array_push(&ecs->order_components, &comp))
+		if (clib_array_push_and_grow(&ecs->order_components, &comp, ECS_ARRAY_GROWTH_FACTOR))
 			return ecs->order_components.used - 1;
 	}
 	return 0;

@@ -5,7 +5,7 @@
 
 #include "Application/Debugger.h"
 
-int SceneLoaderLoadRegister(SceneManager* manager, const char* path)
+int ScenesLoadRegister(SceneManager* manager, const char* path)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -64,7 +64,7 @@ int SceneLoaderLoadRegister(SceneManager* manager, const char* path)
 	return 1;
 }
 
-int SceneLoaderLoadScene(SceneManager* manager, const char* path)
+int ScenesLoadScene(SceneManager* manager, const char* path)
 {
 	char* json = ignisReadFile(path, NULL);
 
@@ -77,12 +77,16 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	float width = tb_json_float((char*)json, "{'size'[0", NULL, 0.0f);
 	float height = tb_json_float((char*)json, "{'size'[1", NULL, 0.0f);
 
-	if (!SceneManagerLoadScene(manager, width, height))
+	if (!(manager && width > 0.0f && height > 0.0f))
 	{
 		DEBUG_ERROR("[Scenes] Failed to load scene: %s", json);
 		free(json);
 		return 0;
 	}
+
+	/* set scene data */
+	manager->width = width;
+	manager->height = height;
 
 	tb_json_element element;
 	tb_json_read((char*)json, &element, "{'background'");
@@ -109,7 +113,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 
 			float parallax = tb_json_float((char*)entity.value, "[5", NULL, 0.0f);
 
-			BackgroundPushLayer(background, ResourceManagerGetTexture2D(manager->resources, name), x, y, w, h, parallax);
+			BackgroundPushLayer(background, ResourcesGetTexture2D(manager->resources, name), x, y, w, h, parallax);
 		}
 	}
 
@@ -134,7 +138,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
 
 			/* Load Template */
-			if (!SceneLoaderLoadTemplate(manager, templ, EntityGetNextID(), pos, z_index))
+			if (!ScenesLoadTemplate(manager, templ, EntityGetNextID(), pos, z_index))
 			{
 				DEBUG_ERROR("[Scenes] Failed to load template %s\n", templ);
 			}
@@ -145,7 +149,7 @@ int SceneLoaderLoadScene(SceneManager* manager, const char* path)
 	return 1;
 }
 
-int SceneLoaderSaveScene(SceneManager* manager, const char* path)
+int ScenesSaveScene(SceneManager* manager, const char* path)
 {
 	char* temp_ext = ".temp";
 	char* temp_path = (char*)malloc(strlen(path) + strlen(temp_ext));
@@ -181,7 +185,7 @@ int SceneLoaderSaveScene(SceneManager* manager, const char* path)
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, ResourceManagerGetTexture2DName(manager->resources, bg->texture));
+		tb_jwrite_array_string(&jwc, ResourcesGetTexture2DName(manager->resources, bg->texture));
 
 		tb_jwrite_array_float(&jwc, bg->startpos);
 		tb_jwrite_array_float(&jwc, bg->pos_y);
@@ -210,7 +214,7 @@ int SceneLoaderSaveScene(SceneManager* manager, const char* path)
 		tb_jwrite_array_string(&jwc, templ->templ);
 	
 		/* pos */
-		vec2 pos = EcsGetEntityPosition(&manager->ecs, templ->entity);
+		vec2 pos = GetEntityPosition(&manager->ecs, templ->entity);
 	
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -252,7 +256,7 @@ int SceneLoaderSaveScene(SceneManager* manager, const char* path)
 }
 
 
-int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID entity, vec2 pos, int z_index)
+int ScenesLoadTemplate(SceneManager* manager, const char* templ, EntityID entity, vec2 pos, int z_index)
 {
 	char* path = clib_strmap_find(&manager->templates, templ);
 	if (!path)
@@ -335,7 +339,7 @@ int SceneLoaderLoadTemplate(SceneManager* manager, const char* templ, EntityID e
 		char texture[APPLICATION_STR_LEN];
 		tb_json_string((char*)element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
 
-		sprite.texture = ResourceManagerGetTexture2D(manager->resources, texture);
+		sprite.texture = ResourcesGetTexture2D(manager->resources, texture);
 
 		if (sprite.texture)
 			EcsAddDataComponent(&manager->ecs, entity, COMPONENT_SPRITE, &sprite);

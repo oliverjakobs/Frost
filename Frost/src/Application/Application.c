@@ -87,7 +87,7 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	TimerReset(&app->timer);
 
 	if (res)
-		app->running = ResourceManagerInit(&app->resources, res);
+		app->running = ResourcesInit(&app->resources, res);
 
 	if (app->on_init)
 		app->on_init(app);
@@ -130,7 +130,7 @@ void ApplicationDestroy(Application* app)
 	if (app->on_destroy)
 		app->on_destroy(app);
 
-	ResourceManagerDestroy(&app->resources);
+	ResourcesDestroy(&app->resources);
 
 	EventHandlerDestroy();
 

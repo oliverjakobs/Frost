@@ -6,7 +6,7 @@
 
 /* Graphics */
 #include "Graphics/Renderer.h"
-#include "Graphics/ResourceManager.h"
+#include "Graphics/Resources.h"
 
 #include "Input.h"
 #include <GLFW/glfw3.h>
@@ -29,7 +29,7 @@ typedef struct Application
 	int vsync;
 
 	Timer timer;
-	ResourceManager resources;
+	Resources resources;
 
 	mat4 screen_projection;
 

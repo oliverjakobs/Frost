@@ -1,4 +1,6 @@
-#include "Frost.h"
+#include "Frost/Frost.h"
+#include "Frost/FrostEcs.h"
+#include "Frost/AnimationConditions.h"
 
 #include "Inventory/Inventory.h"
 
@@ -10,7 +12,6 @@ Console console;
 int show_overlay;
 
 Inventory inv;
-
 IgnisTexture2D* items;
 
 void OnInit(Application* app)
@@ -24,7 +25,7 @@ void OnInit(Application* app)
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	FontRendererBindFontColor(ResourceManagerGetFont(&app->resources, "gui"), IGNIS_WHITE);
+	FontRendererBindFontColor(ResourcesGetFont(&app->resources, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
@@ -34,17 +35,47 @@ void OnInit(Application* app)
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
 	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
-	SceneManagerChangeScene(&scene_manager, "scene");
-
 	SceneEditorInit(&editor, 400.0f, 32.0f, 4);
-	SceneEditorToggleActive(&editor);
+	ConsoleInit(&console, ResourcesGetFont(scene_manager.resources, "gui"));
 
-	ConsoleInit(&console, ResourceManagerGetFont(scene_manager.resources, "gui"));
+	/* animation conditions */
+	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
+	AnimationConditionsRegisterCondition("condition_fall", AnimationConditionFall);
+	AnimationConditionsRegisterCondition("condition_walk", AnimationConditionWalk);
+	AnimationConditionsRegisterCondition("condition_idle", AnimationConditionIdle);
+
+	/* ecs */
+	EcsAddUpdateSystem(&scene_manager.ecs, PhysicsSystem);
+	EcsAddUpdateSystem(&scene_manager.ecs, PlayerSystem);
+	EcsAddUpdateSystem(&scene_manager.ecs, AnimationSystem);
+	EcsAddUpdateSystem(&scene_manager.ecs, InteractionSystem);
+	EcsAddRenderSystem(&scene_manager.ecs, RenderSystem);
+	EcsAddRenderSystem(&scene_manager.ecs, DebugRenderSystem);
+
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Transform), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(RigidBody), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Movement), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Sprite), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Animator), AnimatorFree);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Interaction), NULL);
+	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Interactor), NULL);
+
+	EcsRegisterOrderComponent(&scene_manager.ecs, sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(&scene_manager.ecs, sizeof(ZIndex), ZIndexCmp);
+
+	/* setup starting state */
+	SceneManagerChangeActive(&scene_manager, "scene");
+	SceneEditorToggleActive(&editor);
 
 	InventoryInit(&inv, (vec2) { 0.0f, -camera.size.y / 2.0f }, 2, 9, 64.0f, 8.0f);
 	inv.pos.x -= inv.size.x / 2.0f;
+	InventorySetCellContent(&inv, 3, 3);
+	InventorySetCellContent(&inv, 4, 1);
+	InventorySetCellContent(&inv, 9, 2);
+	InventorySetCellContent(&inv, 17, 3);
 
-	items = ResourceManagerGetTexture2D(scene_manager.resources, "items");
+	items = ResourcesGetTexture2D(scene_manager.resources, "items");
 }
 
 void OnDestroy(Application* app)
@@ -159,7 +190,7 @@ void OnRenderDebug(Application* app)
 
 		EntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
-		vec2 position = EcsGetEntityPosition(&scene_manager.ecs, player);
+		vec2 position = GetEntityPosition(&scene_manager.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
 
