@@ -32,7 +32,7 @@ void SceneEditorToggleGrid(SceneEditor* editor)
 	editor->showgrid = !editor->showgrid;
 }
 
-void SceneEditorOnEvent(SceneEditor* editor, SceneManager* scene, Event e)
+void SceneEditorOnEvent(SceneEditor* editor, Scenes* scene, Event e)
 {
 	if (!editor->active) return;
 
@@ -53,7 +53,7 @@ void SceneEditorOnEvent(SceneEditor* editor, SceneManager* scene, Event e)
 	}
 }
 
-void SceneEditorOnUpdate(SceneEditor* editor, SceneManager* scene, float deltatime)
+void SceneEditorOnUpdate(SceneEditor* editor, Scenes* scene, float deltatime)
 {
 	if (!editor->active) return;
 
@@ -79,7 +79,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, SceneManager* scene, float deltati
 		editor->hover = GetEntityAt(&scene->ecs, mouse);
 }
 
-void SceneEditorOnRender(SceneEditor* editor, SceneManager* scene)
+void SceneEditorOnRender(SceneEditor* editor, Scenes* scene)
 {
 	if (!editor->active) return;
 

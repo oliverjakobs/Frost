@@ -5,8 +5,11 @@
 #include "Inventory/Inventory.h"
 
 Camera camera;
-SceneManager scene_manager;
-SceneEditor editor;
+
+Scenes scene;
+SceneRegister scene_register;
+SceneEditor scene_editor;
+
 Console console;
 
 int show_overlay;
@@ -34,9 +37,11 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
-	SceneManagerInit(&scene_manager, "res/templates/register.json", &app->resources, &camera, 32.0f, 4);
-	SceneEditorInit(&editor, 400.0f, 32.0f, 4);
-	ConsoleInit(&console, ResourcesGetFont(scene_manager.resources, "gui"));
+	ScenesInit(&scene, &camera);
+	SceneRegisterInit(&scene_register, "res/templates/register.json", &app->resources);
+	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
+
+	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
 
 	/* animation conditions */
 	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
@@ -45,28 +50,28 @@ void OnInit(Application* app)
 	AnimationConditionsRegisterCondition("condition_idle", AnimationConditionIdle);
 
 	/* ecs */
-	EcsAddUpdateSystem(&scene_manager.ecs, PhysicsSystem);
-	EcsAddUpdateSystem(&scene_manager.ecs, PlayerSystem);
-	EcsAddUpdateSystem(&scene_manager.ecs, AnimationSystem);
-	EcsAddUpdateSystem(&scene_manager.ecs, InteractionSystem);
-	EcsAddRenderSystem(&scene_manager.ecs, RenderSystem);
-	EcsAddRenderSystem(&scene_manager.ecs, DebugRenderSystem);
+	EcsAddUpdateSystem(&scene.ecs, PhysicsSystem);
+	EcsAddUpdateSystem(&scene.ecs, PlayerSystem);
+	EcsAddUpdateSystem(&scene.ecs, AnimationSystem);
+	EcsAddUpdateSystem(&scene.ecs, InteractionSystem);
+	EcsAddRenderSystem(&scene.ecs, RenderSystem);
+	EcsAddRenderSystem(&scene.ecs, DebugRenderSystem);
 
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Transform), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(RigidBody), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Movement), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Sprite), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Animator), AnimatorFree);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(CameraController), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Interaction), NULL);
-	EcsRegisterDataComponent(&scene_manager.ecs, sizeof(Interactor), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Transform), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(RigidBody), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Movement), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Sprite), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Animator), AnimatorFree);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Interaction), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Interactor), NULL);
 
-	EcsRegisterOrderComponent(&scene_manager.ecs, sizeof(Template), TemplateCmp);
-	EcsRegisterOrderComponent(&scene_manager.ecs, sizeof(ZIndex), ZIndexCmp);
+	EcsRegisterOrderComponent(&scene.ecs, sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(&scene.ecs, sizeof(ZIndex), ZIndexCmp);
 
 	/* setup starting state */
-	SceneManagerChangeActive(&scene_manager, "scene");
-	SceneEditorToggleActive(&editor);
+	ScenesChangeActive(&scene_register, &scene, "scene");
+	SceneEditorToggleActive(&scene_editor);
 
 	InventoryInit(&inv, (vec2) { 0.0f, -camera.size.y / 2.0f }, 2, 9, 64.0f, 8.0f);
 	inv.pos.x -= inv.size.x / 2.0f;
@@ -75,14 +80,15 @@ void OnInit(Application* app)
 	InventorySetCellContent(&inv, 9, 2);
 	InventorySetCellContent(&inv, 17, 3);
 
-	items = ResourcesGetTexture2D(scene_manager.resources, "items");
+	items = ResourcesGetTexture2D(&app->resources, "items");
 }
 
 void OnDestroy(Application* app)
 {
 	InventoryFree(&inv);
 
-	SceneManagerDestroy(&scene_manager);
+	ScenesDestroy(&scene);
+	SceneRegisterDestroy(&scene_register);
 
 	FontRendererDestroy();
 	Primitives2DDestroy();
@@ -104,7 +110,7 @@ void OnEvent(Application* app, Event e)
 		ApplicationClose(app);
 		break;
 	case KEY_F1:
-		SceneEditorToggleActive(&editor);
+		SceneEditorToggleActive(&scene_editor);
 		break;
 	case KEY_F2:
 		ConsoleToggleFocus(&console);
@@ -119,7 +125,7 @@ void OnEvent(Application* app, Event e)
 		ApplicationToggleDebugMode(app);
 		break;
 	case KEY_F8:
-		SceneEditorToggleGrid(&editor);
+		SceneEditorToggleGrid(&scene_editor);
 		break;
 	case KEY_F9:
 		show_overlay = !show_overlay;
@@ -127,13 +133,13 @@ void OnEvent(Application* app, Event e)
 	}
 
 	if (EventCheckType(&e, EVENT_CONSOLE_EXEC))
-		FrostExecuteConsoleCommand(&console, &scene_manager, &editor, e.console.cmd);
+		FrostExecuteConsoleCommand(&console, &scene, &scene_register, &scene_editor, e.console.cmd);
 
 	ConsoleOnEvent(&console, &e);
 
-	SceneManagerOnEvent(&scene_manager, e);
+	ScenesOnEvent(&scene, e);
 
-	SceneEditorOnEvent(&editor, &scene_manager, e);
+	SceneEditorOnEvent(&scene_editor, &scene, e);
 }
 
 void OnUpdate(Application* app, float deltatime)
@@ -141,19 +147,19 @@ void OnUpdate(Application* app, float deltatime)
 	ConsoleOnUpdate(&console, deltatime);
 
 	if (!console.focus)
-		SceneEditorOnUpdate(&editor, &scene_manager, deltatime);
+		SceneEditorOnUpdate(&scene_editor, &scene, deltatime);
 
-	if (!(editor.active || console.focus))
-		SceneManagerOnUpdate(&scene_manager, deltatime);
+	if (!(scene_editor.active || console.focus))
+		ScenesOnUpdate(&scene, deltatime);
 
 	InventoryUpdate(&inv, &camera, deltatime);
 }
 
 void OnRender(Application* app)
 {
-	SceneManagerOnRender(&scene_manager);
+	ScenesOnRender(&scene);
 
-	SceneEditorOnRender(&editor, &scene_manager);
+	SceneEditorOnRender(&scene_editor, &scene);
 
 	InventoryRender(&inv, camera.projection);
 	InventoryRenderContent(&inv, items, camera.projection);
@@ -161,8 +167,8 @@ void OnRender(Application* app)
 
 void OnRenderDebug(Application* app)
 {
-	if (!editor.active)
-		SceneManagerOnRenderDebug(&scene_manager);
+	if (!scene_editor.active)
+		ScenesOnRenderDebug(&scene);
 
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 	
@@ -185,12 +191,12 @@ void OnRenderDebug(Application* app)
 		/* Debug */
 		FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
 
-		FontRendererTextFieldLine("Scene: %s", scene_manager.scene_name);
+		FontRendererTextFieldLine("Scene: %s", scene.name);
 		FontRendererTextFieldLine("------------------------");
 
 		EntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
-		vec2 position = GetEntityPosition(&scene_manager.ecs, player);
+		vec2 position = GetEntityPosition(&scene.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
 

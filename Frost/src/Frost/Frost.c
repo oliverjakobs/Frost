@@ -35,7 +35,7 @@ static ConsoleCmd _CmdGetType(const char* buffer)
 	return cmd;
 }
 
-void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEditor* editor, const char* cmd_buffer)
+void FrostExecuteConsoleCommand(Console* console, Scenes* scenes, SceneRegister* reg, SceneEditor* editor, const char* cmd_buffer)
 {
 	ConsoleCmd cmd = _CmdGetType(cmd_buffer);
 
@@ -50,7 +50,7 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			SceneManagerChangeActive(manager, args[0]);
+			ScenesChangeActive(reg, scenes, args[0]);
 			SceneEditorReset(editor);
 			ConsoleOut(console, "Changed Scene to %s", args[0]);
 		}
@@ -71,9 +71,9 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 				break;
 			}
 
-			vec2 pos = CameraGetMousePosView(manager->camera, InputMousePositionVec2());
+			vec2 pos = CameraGetMousePosView(scenes->camera, InputMousePositionVec2());
 
-			if (ScenesLoadTemplate(manager, args[0], EntityGetNextID(), pos, atoi(args[1])))
+			if (ScenesLoadTemplate(reg, scenes, args[0], EntityGetNextID(), pos, atoi(args[1])))
 				ConsoleOut(console, "Created entity with template %s", args[0]);
 		}
 		break;
@@ -88,18 +88,18 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			CLIB_STRMAP_ITERATE_FOR(&manager->scenes)
+			CLIB_STRMAP_ITERATE_FOR(&reg->scenes)
 			{
 				const char* name = clib_strmap_iter_get_key(iter);
 
-				ConsoleOut(console, " - %s %s", name, (strcmp(name, manager->scene_name) == 0) ? "(active)" : "");
+				ConsoleOut(console, " - %s %s", name, (strcmp(name, scenes->name) == 0) ? "(active)" : "");
 			}
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			for (size_t i = 0; i < EcsGetComponentList(&manager->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+			for (size_t i = 0; i < EcsGetComponentList(&scenes->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
 			{
-				Template* templ = EcsGetOrderComponent(&manager->ecs, i, COMPONENT_TEMPLATE);
+				Template* templ = EcsGetOrderComponent(&scenes->ecs, i, COMPONENT_TEMPLATE);
 
 				if (templ)
 					ConsoleOut(console, " - %d \t | %s", *(EntityID*)templ, templ->templ);
@@ -107,7 +107,7 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
-			CLIB_STRMAP_ITERATE_FOR(&manager->templates)
+			CLIB_STRMAP_ITERATE_FOR(&reg->templates)
 			{
 				const char* name = clib_strmap_iter_get_key(iter);
 				char* templ = clib_strmap_iter_get_value(iter);
@@ -118,13 +118,13 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 		else if (strcmp(spec, "res") == 0)
 		{
 			ConsoleOut(console, "Textures:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->textures, iter)
+			CLIB_DICT_ITERATE_FOR(&reg->resources->textures, iter)
 			{
 				ConsoleOut(console, " - %s", clib_dict_iter_get_key(iter));
 			}
 
 			ConsoleOut(console, "Fonts:");
-			CLIB_DICT_ITERATE_FOR(&manager->resources->fonts, iter)
+			CLIB_DICT_ITERATE_FOR(&reg->resources->fonts, iter)
 			{
 				ConsoleOut(console, " - %s", clib_dict_iter_get_key(iter));
 			}
@@ -142,17 +142,16 @@ void FrostExecuteConsoleCommand(Console* console, SceneManager* manager, SceneEd
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = clib_strmap_find(&manager->scenes, manager->scene_name);
+			char* path = clib_strmap_find(&reg->scenes, scenes->name);
 			if (!path)
 			{
-				ConsoleOut(console, "Couldn't find path for %s", manager->scene_name);
+				ConsoleOut(console, "Couldn't find path for %s", scenes->name);
 				break;
 			}
 
-			ScenesSaveScene(manager, path);
-			ConsoleOut(console, "Saved scene (%s) to %s", manager->scene_name, path);
+			ScenesSaveScene(reg, scenes, path);
+			ConsoleOut(console, "Saved scene (%s) to %s", scenes->name, path);
 		}
-
 		break;
 	}
 	default:
