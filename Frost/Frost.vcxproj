@@ -144,8 +144,7 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Inventory\Inventory.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
-    <ClInclude Include="src\Scenes\SceneRegister.h" />
-    <ClInclude Include="src\Scenes\Scenes.h" />
+    <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\clib\array.h" />
     <ClInclude Include="src\clib\clib.h" />
     <ClInclude Include="src\clib\dictionary.h" />
@@ -210,8 +209,7 @@
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Inventory\Inventory.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
-    <ClCompile Include="src\Scenes\SceneRegister.c" />
-    <ClCompile Include="src\Scenes\Scenes.c" />
+    <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\clib\array.c" />
     <ClCompile Include="src\clib\clib.c" />
     <ClCompile Include="src\clib\dictionary.c" />

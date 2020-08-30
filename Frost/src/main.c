@@ -6,8 +6,7 @@
 
 Camera camera;
 
-Scenes scene;
-SceneRegister scene_register;
+Scene scene;
 SceneEditor scene_editor;
 
 Console console;
@@ -37,8 +36,7 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
-	ScenesInit(&scene, &camera);
-	SceneRegisterInit(&scene_register, "res/templates/register.json", &app->resources);
+	SceneInit(&scene, &camera, "res/templates/register.json", &app->resources);
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
@@ -70,7 +68,7 @@ void OnInit(Application* app)
 	EcsRegisterOrderComponent(&scene.ecs, sizeof(ZIndex), ZIndexCmp);
 
 	/* setup starting state */
-	ScenesChangeActive(&scene_register, &scene, "scene");
+	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
 
 	InventoryInit(&inv, (vec2) { 0.0f, -camera.size.y / 2.0f }, 2, 9, 64.0f, 8.0f);
@@ -87,8 +85,7 @@ void OnDestroy(Application* app)
 {
 	InventoryFree(&inv);
 
-	ScenesDestroy(&scene);
-	SceneRegisterDestroy(&scene_register);
+	SceneDestroy(&scene);
 
 	FontRendererDestroy();
 	Primitives2DDestroy();
@@ -133,11 +130,11 @@ void OnEvent(Application* app, Event e)
 	}
 
 	if (EventCheckType(&e, EVENT_CONSOLE_EXEC))
-		FrostExecuteConsoleCommand(&console, &scene, &scene_register, &scene_editor, e.console.cmd);
+		FrostExecuteConsoleCommand(&console, &scene, &scene_editor, e.console.cmd);
 
 	ConsoleOnEvent(&console, &e);
 
-	ScenesOnEvent(&scene, e);
+	SceneOnEvent(&scene, e);
 
 	SceneEditorOnEvent(&scene_editor, &scene, e);
 }
@@ -150,14 +147,14 @@ void OnUpdate(Application* app, float deltatime)
 		SceneEditorOnUpdate(&scene_editor, &scene, deltatime);
 
 	if (!(scene_editor.active || console.focus))
-		ScenesOnUpdate(&scene, deltatime);
+		SceneOnUpdate(&scene, deltatime);
 
 	InventoryUpdate(&inv, &camera, deltatime);
 }
 
 void OnRender(Application* app)
 {
-	ScenesOnRender(&scene);
+	SceneOnRender(&scene);
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
@@ -168,7 +165,7 @@ void OnRender(Application* app)
 void OnRenderDebug(Application* app)
 {
 	if (!scene_editor.active)
-		ScenesOnRenderDebug(&scene);
+		SceneOnRenderDebug(&scene);
 
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 	

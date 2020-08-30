@@ -1,7 +1,7 @@
 #ifndef SCENE_EDITOR_H
 #define SCENE_EDITOR_H
 
-#include "Scenes.h"
+#include "Scene.h"
 
 typedef struct
 {
@@ -25,8 +25,8 @@ void SceneEditorReset(SceneEditor* editor);
 void SceneEditorToggleActive(SceneEditor* editor);
 void SceneEditorToggleGrid(SceneEditor* editor);
 
-void SceneEditorOnEvent(SceneEditor* editor, Scenes* scene, Event e);
-void SceneEditorOnUpdate(SceneEditor* editor, Scenes* scene, float deltatime);
-void SceneEditorOnRender(SceneEditor* editor, Scenes* scene);
+void SceneEditorOnEvent(SceneEditor* editor, Scene* scene, Event e);
+void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime);
+void SceneEditorOnRender(SceneEditor* editor, Scene* scene);
 
 #endif /* !SCENE_EDITOR_H */

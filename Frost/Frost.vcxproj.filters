@@ -309,10 +309,9 @@
     <ClInclude Include="src\Graphics\Resources.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scenes\Scenes.h">
+    <ClInclude Include="src\Scenes\Scene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scenes\SceneRegister.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Animation\Animation.c">
@@ -498,10 +497,9 @@
     <ClCompile Include="src\Graphics\Resources.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scenes\Scenes.c">
+    <ClCompile Include="src\Scenes\Scene.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scenes\SceneRegister.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
