@@ -12,6 +12,8 @@ typedef struct
 	vec2 pos;
 } InventoryCell;
 
+#define NULL_CELL (-1)
+
 typedef struct
 {
 	vec2 pos;
@@ -25,6 +27,7 @@ typedef struct
 
 	InventoryCell* cells;
 
+	int drag;
 	int hover;
 } Inventory;
 
@@ -39,7 +42,7 @@ void InventorySetCellContent(Inventory* inv, int index, int itemID);
 int InventoryGetCellContent(Inventory* inv, int index);
 
 void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime);
-void InventoryRender(Inventory* inv, mat4 view_proj);
-void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 view_proj);
+void InventoryRender(Inventory* inv, Camera* camera);
+void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, Camera* camera);
 
 #endif /* !INVENTORY_H */

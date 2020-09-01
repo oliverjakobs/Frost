@@ -19,7 +19,8 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_si
 	inv->cell_size = cell_size;
 	inv->padding = padding;
 
-	inv->hover = -1;
+	inv->drag = NULL_CELL;
+	inv->hover = NULL_CELL;
 
 	/* initialize cells */
 	for (int row = 0; row < rows; ++row)
@@ -48,7 +49,8 @@ void InventoryFree(Inventory* inv)
 	inv->cell_size = 0.0f;
 	inv->padding = 0.0f;
 
-	inv->hover = -1;
+	inv->drag = NULL_CELL;
+	inv->hover = NULL_CELL;
 }
 
 int InventoryGetCellIndex(Inventory* inv, int row, int column)
@@ -99,19 +101,29 @@ void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime)
 	vec2 mouse = CameraGetMousePos(camera, InputMousePositionVec2());
 
 	if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)))
-	{
 		inv->hover = InventoryGetCellAt(inv, mouse);
 
-		/*
-		if (InputMousePressed(MOUSE_BUTTON_LEFT))
-			InventorySetCellContent(inv, inv->hover, 1);
-		*/
+	if (InputMousePressed(MOUSE_BUTTON_LEFT) && inv->drag <= NULL_CELL)
+		inv->drag = inv->hover;
+
+	if (InputMouseReleased(MOUSE_BUTTON_LEFT) && inv->drag > NULL_CELL)
+	{
+		if (inv->hover >= 0 && inv->hover < (inv->rows * inv->columns))
+		{
+			if (inv->cells[inv->hover].itemID == NULL_ITEM)
+			{
+				InventorySetCellContent(inv, inv->hover, InventoryGetCellContent(inv, inv->drag));
+				InventorySetCellContent(inv, inv->drag, NULL_ITEM);
+			}
+		}
+
+		inv->drag = -1;
 	}
 }
 
-void InventoryRender(Inventory* inv, mat4 view_proj)
+void InventoryRender(Inventory* inv, Camera* camera)
 {
-	Primitives2DStart(view_proj.v);
+	Primitives2DStart(CameraGetProjectionPtr(camera));
 
 	IgnisColorRGBA bg = IGNIS_WHITE;
 	ignisBlendColorRGBA(&bg, 0.4f);
@@ -131,15 +143,15 @@ void InventoryRender(Inventory* inv, mat4 view_proj)
 	Primitives2DFlush();
 }
 
-void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 view_proj)
+void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, Camera* camera)
 {
-	BatchRenderer2DStart(view_proj.v);
+	BatchRenderer2DStart(CameraGetProjectionPtr(camera));
 
 	for (int i = 0; i < (inv->rows * inv->columns); ++i)
 	{
-		vec2 cell_pos = vec2_add(inv->pos, inv->cells[i].pos);
+		if (inv->cells[i].itemID <= NULL_ITEM || i == inv->drag) continue;
 
-		if (inv->cells[i].itemID <= 0) continue;
+		vec2 cell_pos = vec2_add(inv->pos, inv->cells[i].pos);
 
 		float src_x, src_y, src_w, src_h;
 		GetTexture2DSrcRect(item_atlas, inv->cells[i].itemID, &src_x, &src_y, &src_w, &src_h);
@@ -148,6 +160,17 @@ void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, mat4 vie
 	}
 
 	/* render dragged item */
+	if (inv->drag > NULL_CELL && inv->cells[inv->drag].itemID)
+	{
+		vec2 mouse_pos = CameraGetMousePos(camera, InputMousePositionVec2());
+		float cell_x = mouse_pos.x - (inv->cell_size / 2.0f);
+		float cell_y = mouse_pos.y - (inv->cell_size / 2.0f);
+
+		float src_x, src_y, src_w, src_h;
+		GetTexture2DSrcRect(item_atlas, inv->cells[inv->drag].itemID, &src_x, &src_y, &src_w, &src_h);
+
+		BatchRenderer2DRenderTextureFrame(item_atlas, cell_x, cell_y, inv->cell_size, inv->cell_size, src_x, src_y, src_w, src_h);
+	}
 
 	BatchRenderer2DFlush();
 }

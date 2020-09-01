@@ -158,8 +158,8 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	InventoryRender(&inv, camera.projection);
-	InventoryRenderContent(&inv, items, camera.projection);
+	InventoryRender(&inv, &camera);
+	InventoryRenderContent(&inv, items, &camera);
 }
 
 void OnRenderDebug(Application* app)
