@@ -36,7 +36,7 @@ void OnInit(Application* app)
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
-	SceneInit(&scene, &camera, "res/templates/register.json", &app->resources);
+	SceneInit(&scene, &camera, "res/register.json", &app->resources);
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
@@ -53,7 +53,7 @@ void OnInit(Application* app)
 	EcsAddUpdateSystem(&scene.ecs, AnimationSystem);
 	EcsAddUpdateSystem(&scene.ecs, InteractionSystem);
 	EcsAddRenderSystem(&scene.ecs, RenderSystem);
-	EcsAddRenderSystem(&scene.ecs, DebugRenderSystem);
+	EcsAddRenderDebugSystem(&scene.ecs, DebugRenderSystem);
 
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Transform), NULL);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(RigidBody), NULL);

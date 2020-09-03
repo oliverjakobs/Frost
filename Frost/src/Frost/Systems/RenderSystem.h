@@ -3,6 +3,6 @@
 
 #include "Ecs/Ecs.h"
 
-void RenderSystem(Ecs* ecs, const float* mat_view_proj);
+void RenderSystem(Ecs* ecs, const Camera* camera);
 
 #endif /* !RENDER_SYSTEM_H */

@@ -1,9 +1,14 @@
 #include "Ecs.h"
 
+#include <string.h>
+
 void EcsInit(Ecs* ecs)
 {
+	clib_array_alloc(&ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT, sizeof(EcsEventSystem));
 	clib_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem));
 	clib_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem));
+	clib_array_alloc(&ecs->systems_render_debug, ECS_DEFAULT_RENDER_DEBUG_SYSTEM_COUNT, sizeof(EcsRenderSystem));
+	clib_array_alloc(&ecs->systems_render_ui, ECS_DEFAULT_RENDER_UI_SYSTEM_COUNT, sizeof(EcsRenderSystem));
 
 	clib_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(ComponentMap));
 	clib_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(ComponentList));
@@ -11,8 +16,11 @@ void EcsInit(Ecs* ecs)
 
 void EcsDestroy(Ecs* ecs)
 {
+	clib_array_free(&ecs->systems_event);
 	clib_array_free(&ecs->systems_update);
 	clib_array_free(&ecs->systems_render);
+	clib_array_free(&ecs->systems_render_debug);
+	clib_array_free(&ecs->systems_render_ui);
 
 	EcsClear(ecs);
 	for (size_t i = 0; i < ecs->data_components.used; ++i)
@@ -41,6 +49,14 @@ void EcsClear(Ecs* ecs)
 	EntityResetIDCounter();
 }
 
+void EcsAddEventSystem(Ecs* ecs, void(*handle)(Ecs*, Event))
+{
+	EcsEventSystem system;
+	system.handle = handle;
+
+	clib_array_push_and_grow(&ecs->systems_event, &system, ECS_ARRAY_GROWTH_FACTOR);
+}
+
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 {
 	EcsUpdateSystem system;
@@ -49,7 +65,7 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	clib_array_push_and_grow(&ecs->systems_update, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const Camera*))
 {
 	EcsRenderSystem system;
 	system.render = render;
@@ -57,16 +73,50 @@ void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
 	clib_array_push_and_grow(&ecs->systems_render, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsUpdate(Ecs* ecs, float deltatime)
+void EcsAddRenderDebugSystem(Ecs* ecs, void(*render)(Ecs*, const Camera*))
+{
+	EcsRenderSystem system;
+	system.render = render;
+
+	clib_array_push_and_grow(&ecs->systems_render_debug, &system, ECS_ARRAY_GROWTH_FACTOR);
+}
+
+void EcsAddRenderUISystem(Ecs* ecs, void(*render)(Ecs*, const Camera*))
+{
+	EcsRenderSystem system;
+	system.render = render;
+
+	clib_array_push_and_grow(&ecs->systems_render_ui, &system, ECS_ARRAY_GROWTH_FACTOR);
+}
+
+void EcsOnEvent(Ecs* ecs, Event e)
+{
+	for (size_t i = 0; i < ecs->systems_event.used; ++i)
+		((EcsEventSystem*)clib_array_get(&ecs->systems_event, i))->handle(ecs, e);
+}
+
+void EcsOnUpdate(Ecs* ecs, float deltatime)
 {
 	for (size_t i = 0; i < ecs->systems_update.used; ++i)
 		((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(ecs, deltatime);
 }
 
-void EcsRender(Ecs* ecs, const float* mat_view_proj)
+void EcsOnRender(Ecs* ecs, const Camera* camera)
 {
 	for (size_t i = 0; i < ecs->systems_render.used; ++i)
-		((EcsRenderSystem*)clib_array_get(&ecs->systems_render, i))->render(ecs, mat_view_proj);
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render, i))->render(ecs, camera);
+}
+
+void EcsOnRenderDebug(Ecs* ecs, const Camera* camera)
+{
+	for (size_t i = 0; i < ecs->systems_render_debug.used; ++i)
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_debug, i))->render(ecs, camera);
+}
+
+void EcsOnRenderUI(Ecs* ecs, const Camera* camera)
+{
+	for (size_t i = 0; i < ecs->systems_render_ui.used; ++i)
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_ui, i))->render(ecs, camera);
 }
 
 static void EcsComponentFree(void* block)

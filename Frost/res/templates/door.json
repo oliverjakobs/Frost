@@ -1,0 +1,19 @@
+{
+  "name": "door",
+  "transform": {
+    "size": [ 16.0, 64.0 ]
+  },
+  "rigidbody": {
+    "type": 0,
+    "halfsize": [ 8.0, 32.0 ],
+    "offset": [ 0.0, 32.0 ]
+  },
+  "sprite": {
+    "texture": "door",
+    "frame": 0
+  },
+  "interaction": {
+    "radius": 32.0,
+    "type": 0
+  }
+}

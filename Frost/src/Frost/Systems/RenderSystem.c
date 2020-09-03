@@ -3,9 +3,9 @@
 #include "Frost/FrostEcs.h"
 #include "Graphics/Renderer.h"
 
-void RenderSystem(Ecs* ecs, const float* mat_view_proj)
+void RenderSystem(Ecs* ecs, const Camera* camera)
 {
-	BatchRenderer2DStart(mat_view_proj);
+	BatchRenderer2DStart(CameraGetViewProjectionPtr(camera));
 
 	COMPONENT_LIST_ITERATE(EcsGetComponentList(ecs, COMPONENT_Z_INDEX), i)
 	{

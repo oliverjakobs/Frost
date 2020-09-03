@@ -113,26 +113,26 @@ void SceneClearActive(Scene* scene)
 
 void SceneOnEvent(Scene* scene, Event e)
 {
-
+	EcsOnEvent(&scene->ecs, e);
 }
 
 void SceneOnUpdate(Scene* scene, float deltatime)
 {
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltatime);
 
-	EcsUpdate(&scene->ecs, deltatime);
+	EcsOnUpdate(&scene->ecs, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsRender(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, scene->camera);
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-
+	EcsOnRenderDebug(&scene->ecs, scene->camera);
 }
 
 int SceneLoad(Scene* scene, const char* path)

@@ -241,19 +241,19 @@
     <None Include="res\shaders\renderer2D.vert" />
     <None Include="res\shaders\tile.frag" />
     <None Include="res\shaders\tile.vert" />
-    <None Include="res\templates\entities\box.json" />
-    <None Include="res\templates\entities\door.json" />
-    <None Include="res\templates\entities\floor.json" />
-    <None Include="res\templates\entities\machine.json" />
-    <None Include="res\templates\entities\player.json" />
-    <None Include="res\templates\entities\tree_1.json" />
-    <None Include="res\templates\entities\tree_2.json" />
-    <None Include="res\templates\entities\tree_3.json" />
-    <None Include="res\templates\entities\tree_4.json" />
-    <None Include="res\templates\entities\tree_5.json" />
-    <None Include="res\templates\register.json" />
-    <None Include="res\templates\scenes\scene.json" />
-    <None Include="res\templates\scenes\scene2.json" />
+    <None Include="res\templates\box.json" />
+    <None Include="res\templates\door.json" />
+    <None Include="res\templates\floor.json" />
+    <None Include="res\templates\machine.json" />
+    <None Include="res\templates\player.json" />
+    <None Include="res\templates\tree_1.json" />
+    <None Include="res\templates\tree_2.json" />
+    <None Include="res\templates\tree_3.json" />
+    <None Include="res\templates\tree_4.json" />
+    <None Include="res\templates\tree_5.json" />
+    <None Include="res\register.json" />
+    <None Include="res\scenes\scene.json" />
+    <None Include="res\scenes\scene2.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png" />

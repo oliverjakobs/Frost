@@ -1,0 +1,9 @@
+{
+  "name": "machine",
+  "transform": {
+    "size": [ 180.0, 120.0 ]
+  },
+  "sprite": {
+    "texture": "machine"
+  }
+}

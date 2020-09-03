@@ -6,8 +6,15 @@
 #include "ComponentMap.h"
 #include "ComponentList.h"
 
-#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT		4
-#define ECS_DEFAULT_RENDER_SYSTEM_COUNT		2
+#include "Event/Event.h"
+#include "Camera/Camera.h"
+
+#define ECS_DEFAULT_EVENT_SYSTEM_COUNT			4
+#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT			4
+#define ECS_DEFAULT_RENDER_SYSTEM_COUNT			1
+#define ECS_DEFAULT_RENDER_DEBUG_SYSTEM_COUNT	1
+#define ECS_DEFAULT_RENDER_UI_SYSTEM_COUNT		1
+
 #define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
 #define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
 
@@ -17,12 +24,20 @@ typedef uint32_t ComponentType;
 
 typedef struct
 {
+	clib_array systems_event;
 	clib_array systems_update;
 	clib_array systems_render;
+	clib_array systems_render_debug;
+	clib_array systems_render_ui;
 
 	clib_array data_components;
 	clib_array order_components;
 } Ecs;
+
+typedef struct
+{
+	void (*handle)(Ecs*,Event);
+} EcsEventSystem;
 
 typedef struct
 {
@@ -31,7 +46,7 @@ typedef struct
 
 typedef struct
 {
-	void (*render)(Ecs*,const float*);
+	void (*render)(Ecs*,const Camera*);
 } EcsRenderSystem;
 
 void EcsInit(Ecs* ecs);
@@ -39,11 +54,17 @@ void EcsDestroy(Ecs* ecs);
 
 void EcsClear(Ecs* ecs);
 
+void EcsAddEventSystem(Ecs* ecs, void (*handle)(Ecs*, Event));
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*));
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*, const Camera*));
+void EcsAddRenderDebugSystem(Ecs* ecs, void (*render)(Ecs*, const Camera*));
+void EcsAddRenderUISystem(Ecs* ecs, void (*render)(Ecs*,const Camera*));
 
-void EcsUpdate(Ecs* ecs, float deltatime);
-void EcsRender(Ecs* ecs, const float* mat_view_proj);
+void EcsOnEvent(Ecs* ecs, Event e);
+void EcsOnUpdate(Ecs* ecs, float deltatime);
+void EcsOnRender(Ecs* ecs, const Camera* camera);
+void EcsOnRenderDebug(Ecs* ecs, const Camera* camera);
+void EcsOnRenderUI(Ecs* ecs, const Camera* camera);
 
 ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type);
 ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type);

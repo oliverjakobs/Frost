@@ -539,44 +539,44 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
-    <None Include="res\templates\entities\box.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\door.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\floor.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\machine.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\player.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_1.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_2.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_3.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_4.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\entities\tree_5.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
-    <None Include="res\templates\register.json">
+    <None Include="res\register.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="res\templates\scenes\scene.json">
+    <None Include="res\scenes\scene.json">
       <Filter>res\templates\scenes</Filter>
     </None>
-    <None Include="res\templates\scenes\scene2.json">
+    <None Include="res\scenes\scene2.json">
       <Filter>res\templates\scenes</Filter>
+    </None>
+    <None Include="res\templates\box.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\door.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\floor.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\machine.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\player.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\tree_1.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\tree_2.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\tree_3.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\tree_4.json">
+      <Filter>res\templates\entities</Filter>
+    </None>
+    <None Include="res\templates\tree_5.json">
+      <Filter>res\templates\entities</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

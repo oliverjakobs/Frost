@@ -1,0 +1,18 @@
+{
+	"scenes": {
+		"scene": "res/scenes/scene.json",
+		"scene2": "res/scenes/scene2.json"
+	},
+	"templates": {
+		"box": "res/templates/box.json",
+		"door": "res/templates/door.json",
+		"floor": "res/templates/floor.json",
+		"machine": "res/templates/machine.json",
+		"player": "res/templates/player.json",
+		"tree_1": "res/templates/tree_1.json",
+		"tree_2": "res/templates/tree_2.json",
+		"tree_3": "res/templates/tree_3.json",
+		"tree_4": "res/templates/tree_4.json",
+		"tree_5": "res/templates/tree_5.json"
+	}
+}
