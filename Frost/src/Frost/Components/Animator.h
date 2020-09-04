@@ -3,6 +3,8 @@
 
 #include "Animation/Animation.h"
 
+#include "Scenes/Scene.h"
+
 typedef struct
 {
 	clib_hashmap animations;	/* <str, Animation*> */
@@ -11,6 +13,6 @@ typedef struct
 
 void AnimatorFree(void* block);
 
-int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation);
+void AnimatorLoad(Scene* scene, EntityID entity, char* json);
 
 #endif /* !ANIMATOR_H */

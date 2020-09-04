@@ -500,6 +500,10 @@
     <ClCompile Include="src\Scenes\Scene.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Components\Movement.c" />
+    <ClCompile Include="src\Frost\Components\CameraController.c" />
+    <ClCompile Include="src\Frost\Components\Interaction.c" />
+    <ClCompile Include="src\Frost\Components\Sprite.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

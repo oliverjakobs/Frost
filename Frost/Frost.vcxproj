@@ -175,6 +175,10 @@
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\ECS\ComponentMap.c" />
+    <ClCompile Include="src\Frost\Components\CameraController.c" />
+    <ClCompile Include="src\Frost\Components\Interaction.c" />
+    <ClCompile Include="src\Frost\Components\Movement.c" />
+    <ClCompile Include="src\Frost\Components\Sprite.c" />
     <ClCompile Include="src\Frost\FrostEcs.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />

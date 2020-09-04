@@ -7,8 +7,6 @@ typedef struct
 {
 	vec2 position;
 	vec2 size;
-
-	int z_index;
 } Transform;
 
 #endif /* !TRANSFORM_H */

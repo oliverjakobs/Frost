@@ -1,5 +1,5 @@
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#ifndef FROST_ECS_H
+#define FROST_ECS_H
 
 #include "Ecs/Ecs.h"
 
@@ -51,4 +51,4 @@ vec2 GetEntityCenter(Ecs* ecs, EntityID entity);
 
 rect GetEntityRect(Ecs* ecs, EntityID entity);
 
-#endif /* !COMPONENTS_H */
+#endif /* !FROST_ECS_H */

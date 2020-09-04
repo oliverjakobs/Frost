@@ -1,5 +1,7 @@
 #include "Frost.h"
 
+#include "FrostEcs.h"
+
 #include "Console/Command.h"
 
 typedef enum

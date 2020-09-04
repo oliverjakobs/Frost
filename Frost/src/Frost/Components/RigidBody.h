@@ -3,6 +3,8 @@
 
 #include "math/math.h"
 
+#include "Scenes/Scene.h"
+
 typedef enum
 {
 	RIGID_BODY_STATIC,
@@ -26,6 +28,8 @@ typedef struct
 	int collides_left;
 	int collides_right;
 } RigidBody;
+
+void RigidBodyLoad(Scene* scene, EntityID entity, char* json);
 
 void RigidBodyTick(RigidBody* body, vec2 gravity, float deltatime);
 void RigidBodyResolveCollision(RigidBody* body, const RigidBody* other, vec2 oldpos);

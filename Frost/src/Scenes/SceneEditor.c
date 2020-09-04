@@ -1,5 +1,7 @@
 #include "SceneEditor.h"
 
+#include "Frost/FrostEcs.h"
+
 #include "Application/Debugger.h"
 #include "math/grid.h"
 

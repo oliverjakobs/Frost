@@ -3,6 +3,8 @@
 
 #include "Ignis/Ignis.h"
 
+#include "Scenes/Scene.h"
+
 typedef enum
 {
 	SPRITE_FLIP_NONE = 0,
@@ -21,5 +23,7 @@ typedef struct
 
 	SpriteFlip flip;
 } Sprite;
+
+void SpriteLoad(Scene* scene, EntityID entity, char* json);
 
 #endif /* !SPRITE_H */

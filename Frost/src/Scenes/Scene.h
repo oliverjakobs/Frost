@@ -4,7 +4,7 @@
 #include "Application/Application.h"
 #include "Graphics/Background.h"
 
-#include "Frost/FrostEcs.h"
+#include "ECS/Ecs.h"
 
 #include "clib/strmap.h"
 

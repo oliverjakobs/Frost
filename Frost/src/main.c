@@ -13,7 +13,7 @@ Console console;
 
 int show_overlay;
 
-Inventory inv;
+Inventory invs[2];
 IgnisTexture2D* items;
 
 void OnInit(Application* app)
@@ -71,19 +71,22 @@ void OnInit(Application* app)
 	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
 
-	InventoryInit(&inv, (vec2) { 0.0f, -camera.size.y / 2.0f }, 2, 9, 64.0f, 8.0f);
-	inv.pos.x -= inv.size.x / 2.0f;
-	InventorySetCellContent(&inv, 3, 3);
-	InventorySetCellContent(&inv, 4, 1);
-	InventorySetCellContent(&inv, 9, 2);
-	InventorySetCellContent(&inv, 17, 3);
+	InventoryInit(&invs[0], (vec2) { 0.0f, -camera.size.y / 2.0f }, 1, 4, 64.0f, 8.0f);
+	invs[0].pos.x -= invs[0].size.x / 2.0f;
+	InventorySetCellContent(&invs[0], 3, 3);
+	InventorySetCellContent(&invs[0], 4, 1);
+	InventorySetCellContent(&invs[0], 9, 2);
+	InventorySetCellContent(&invs[0], 17, 3);
+
+	InventoryInit(&invs[1], (vec2) { -camera.size.x / 2.0f, 0.0f }, 3, 2, 64.0f, 8.0f);
 
 	items = ResourcesGetTexture2D(&app->resources, "items");
 }
 
 void OnDestroy(Application* app)
 {
-	InventoryFree(&inv);
+	InventoryFree(&invs[0]);
+	InventoryFree(&invs[1]);
 
 	SceneDestroy(&scene);
 
@@ -149,7 +152,7 @@ void OnUpdate(Application* app, float deltatime)
 	if (!(scene_editor.active || console.focus))
 		SceneOnUpdate(&scene, deltatime);
 
-	InventoryUpdate(&inv, &camera, deltatime);
+	InventoryUpdateSystem(invs, 2, &camera, deltatime);
 }
 
 void OnRender(Application* app)
@@ -158,8 +161,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	InventoryRender(&inv, &camera);
-	InventoryRenderContent(&inv, items, &camera);
+	InventoryRenderSystem(invs, 2, items, &camera);
 }
 
 void OnRenderDebug(Application* app)

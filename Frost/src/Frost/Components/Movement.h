@@ -1,6 +1,8 @@
 #ifndef MOVEMENT_H
 #define MOVEMENT_H
 
+#include "Scenes/Scene.h"
+
 typedef enum
 {
 	MOVEMENT_RIGHT = 0,
@@ -15,5 +17,7 @@ typedef struct
 	float speed;
 	float jump_power;
 } Movement;
+
+void MovementLoad(Scene* scene, EntityID entity, char* json);
 
 #endif /* !MOVEMENT_H */

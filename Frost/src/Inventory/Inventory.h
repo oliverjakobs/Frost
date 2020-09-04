@@ -12,8 +12,6 @@ typedef struct
 	vec2 pos;
 } InventoryCell;
 
-#define NULL_CELL (-1)
-
 typedef struct
 {
 	vec2 pos;
@@ -26,23 +24,20 @@ typedef struct
 	float padding;
 
 	InventoryCell* cells;
-
-	int drag;
-	int hover;
 } Inventory;
 
 int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding);
 void InventoryFree(Inventory* inv);
 
 int InventoryGetCellIndex(Inventory* inv, int row, int column);
-
 int InventoryGetCellAt(Inventory* inv, vec2 pos);
 
 void InventorySetCellContent(Inventory* inv, int index, int itemID);
 int InventoryGetCellContent(Inventory* inv, int index);
 
-void InventoryUpdate(Inventory* inv, Camera* camera, float deltatime);
-void InventoryRender(Inventory* inv, Camera* camera);
-void InventoryRenderContent(Inventory* inv, IgnisTexture2D* item_atlas, Camera* camera);
+void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_inv, int src_cell);
+
+void InventoryUpdateSystem(Inventory* invs, size_t count, Camera* camera, float deltatime);
+void InventoryRenderSystem(Inventory* invs, size_t count, IgnisTexture2D* item_atlas, Camera* camera);
 
 #endif /* !INVENTORY_H */

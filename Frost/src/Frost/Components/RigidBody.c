@@ -1,5 +1,40 @@
 #include "RigidBody.h"
 
+#include "Frost/FrostEcs.h"
+
+#include "json/tb_json.h"
+
+void RigidBodyLoad(Scene* scene, EntityID entity, char* json)
+{
+	tb_json_element element;
+	tb_json_read(json, &element, "{'rigidbody'");
+	if (element.error == TB_JSON_OK)
+	{
+		RigidBody body;
+		body.type = (RigidBodyType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
+
+		body.half_size.x = tb_json_float((char*)element.value, "{'halfsize'[0", NULL, 0.0f);
+		body.half_size.y = tb_json_float((char*)element.value, "{'halfsize'[1", NULL, 0.0f);
+
+		body.velocity.x = 0.0f;
+		body.velocity.y = 0.0f;
+
+		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
+		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
+
+		Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
+
+		body.position = vec2_add(transform ? transform->position : vec2_zero(), body.offset);
+
+		body.collides_bottom = 0;
+		body.collides_top = 0;
+		body.collides_left = 0;
+		body.collides_right = 0;
+
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
+	}
+}
+
 void RigidBodyTick(RigidBody* body, vec2 gravity, float deltatime)
 {
 	body->velocity = vec2_add(body->velocity, vec2_mult(gravity, deltatime));

@@ -5,6 +5,8 @@
 
 #include "Application/Debugger.h"
 
+#include "Frost/FrostEcs.h"
+
 int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources)
 {
 	if (clib_strmap_alloc(&scene->scene_register, 0) != CLIB_HASHMAP_OK) return 0;
@@ -354,167 +356,33 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EntityID entity, vec2 pos
 	EcsAddOrderComponent(&scene->ecs, COMPONENT_TEMPLATE, &t);
 	/* TODO: Free template? */
 
-	/* Components */
-	Transform transform;
-	RigidBody body;
-	Sprite sprite;
+	ZIndex index;
+	index.entity = entity;
+	index.z_index = z_index;
+	EcsAddOrderComponent(&scene->ecs, COMPONENT_Z_INDEX, &index);
+	/* TODO: ZIndex only for entities with sprite component */
 
+	/* Components */
 	tb_json_read(json, &element, "{'transform'");
 	if (element.error == TB_JSON_OK)
 	{
+		Transform transform;
 		transform.position = pos;
 
 		transform.size.x = tb_json_float((char*)element.value, "{'size'[0", NULL, 0.0f);
 		transform.size.y = tb_json_float((char*)element.value, "{'size'[1", NULL, 0.0f);
 
-		transform.z_index = z_index;
-
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
 	}
 
-	tb_json_read(json, &element, "{'rigidbody'");
-	if (element.error == TB_JSON_OK)
-	{
-		body.type = (RigidBodyType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
-
-		body.half_size.x = tb_json_float((char*)element.value, "{'halfsize'[0", NULL, 0.0f);
-		body.half_size.y = tb_json_float((char*)element.value, "{'halfsize'[1", NULL, 0.0f);
-
-		body.velocity.x = 0.0f;
-		body.velocity.y = 0.0f;
-
-		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
-		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
-
-		body.position = vec2_add(pos, body.offset);
-
-		body.collides_bottom = 0;
-		body.collides_top = 0;
-		body.collides_left = 0;
-		body.collides_right = 0;
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
-	}
-
-	tb_json_read(json, &element, "{'sprite'");
-	if (element.error == TB_JSON_OK)
-	{
-		sprite.flip = SPRITE_FLIP_NONE;
-		sprite.width = tb_json_float((char*)element.value, "{'size'[0", NULL, -1.0f);
-		sprite.height = tb_json_float((char*)element.value, "{'size'[1", NULL, -1.0f);
-
-		if (sprite.width < 0.0f) sprite.width = transform.size.x;
-		if (sprite.height < 0.0f) sprite.height = transform.size.y;
-
-		sprite.frame = tb_json_int((char*)element.value, "{'frame'", NULL, 0);
-
-		char texture[APPLICATION_STR_LEN];
-		tb_json_string((char*)element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
-
-		sprite.texture = ResourcesGetTexture2D(scene->resources, texture);
-
-		if (sprite.texture)
-			EcsAddDataComponent(&scene->ecs, entity, COMPONENT_SPRITE, &sprite);
-		else
-			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
-
-		ZIndex index;
-		index.entity = entity;
-		index.z_index = z_index;
-		EcsAddOrderComponent(&scene->ecs, COMPONENT_Z_INDEX, &index);
-	}
-
 	/* ------------------------------------------------------------------ */
-	tb_json_read(json, &element, "{'animation'");
-	if (element.error == TB_JSON_OK)
-	{
-		Animator animator;
-
-		animator.current = NULL;
-
-		clib_dict_alloc(&animator.animations, 0);
-		for (int i = 0; i < element.elements; i++)
-		{
-			char anim_name[APPLICATION_STR_LEN];
-			tb_json_string((char*)element.value, "{*", anim_name, APPLICATION_STR_LEN, &i);
-
-			tb_json_element anim;
-			tb_json_read_format((char*)element.value, &anim, "{'%s'", anim_name);
-
-			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL, 0);
-			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL, 0);
-			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL, 0.0f);
-
-			tb_json_element transition_array;
-			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
-
-			Animation* animation = (Animation*)malloc(sizeof(Animation));
-			AnimationLoad(animation, start, length, delay, transition_array.elements);
-
-			char* value = (char*)transition_array.value;
-			tb_json_element transition_element;
-			for (int i = 0; i < transition_array.elements; i++)
-			{
-				value = tb_json_array_step(value, &transition_element);
-
-				if (transition_element.data_type == TB_JSON_ARRAY)
-				{
-					char condition[APPLICATION_STR_LEN];
-					tb_json_string((char*)transition_element.value, "[0", condition, APPLICATION_STR_LEN, NULL);
-					char next[APPLICATION_STR_LEN];
-					tb_json_string((char*)transition_element.value, "[1", next, APPLICATION_STR_LEN, NULL);
-
-					AnimationAddTransition(animation, condition, next);
-				}
-			}
-
-			AnimatorAddAnimation(&animator, anim_name, animation);
-		}
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATION, &animator);
-	}
-
-	tb_json_read(json, &element, "{'movement'");
-	if (element.error == TB_JSON_OK)
-	{
-		Movement comp;
-
-		comp.direction = MOVEMENT_LEFT;
-		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
-		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_MOVEMENT, &comp);
-	}
-
-	tb_json_read(json, &element, "{'camera'");
-	if (element.error == TB_JSON_OK)
-	{
-		CameraController comp;
-		comp.camera = scene->camera;
-		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
-		comp.scene_w = scene->width;
-		comp.scene_h = scene->height;
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
-	}
-
-	tb_json_read(json, &element, "{'interaction'");
-	if (element.error == TB_JSON_OK)
-	{
-		Interaction comp;
-		comp.radius = tb_json_float((char*)element.value, "{'radius'", NULL, 0.0f);
-		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INTERACTION, &comp);
-	}
-
-	tb_json_read(json, &element, "{'interactor'");
-	if (element.error == TB_JSON_OK)
-	{
-		Interactor comp;
-		comp.type = (InteractionType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INTERACTOR, &comp);
-	}
+	RigidBodyLoad(scene, entity, json);
+	SpriteLoad(scene, entity, json);
+	AnimatorLoad(scene, entity, json);
+	MovementLoad(scene, entity, json);
+	CameraControllerLoad(scene, entity, json);
+	InteractorLoad(scene, entity, json);
+	InteractionLoad(scene, entity, json);
 
 	free(json);
 
