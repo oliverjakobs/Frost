@@ -11,10 +11,10 @@ SceneEditor scene_editor;
 
 Console console;
 
-int show_overlay;
+int show_debug_info;
 
+InventoryTheme theme;
 Inventory invs[2];
-IgnisTexture2D* items;
 
 void OnInit(Application* app)
 {
@@ -32,7 +32,7 @@ void OnInit(Application* app)
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
-	show_overlay = 1;
+	show_debug_info = 1;
 
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
@@ -71,16 +71,14 @@ void OnInit(Application* app)
 	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
 
-	InventoryInit(&invs[0], (vec2) { 0.0f, -camera.size.y / 2.0f }, 1, 4, 64.0f, 8.0f);
-	invs[0].pos.x -= invs[0].size.x / 2.0f;
+	InventoryThemeLoad(&theme, ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
+	InventoryInitAligned(&invs[0], INV_HALIGN_CENTER, INV_VALIGN_BOTTOM, 1, 4, &theme);
+	InventoryInitAligned(&invs[1], INV_HALIGN_LEFT, INV_VALIGN_CENTER, 3, 2, &theme);
+
 	InventorySetCellContent(&invs[0], 0, 3);
 	InventorySetCellContent(&invs[0], 1, 1);
 	InventorySetCellContent(&invs[0], 2, 2);
 	InventorySetCellContent(&invs[0], 3, 3);
-
-	InventoryInit(&invs[1], (vec2) { -camera.size.x / 2.0f, 0.0f }, 3, 2, 64.0f, 8.0f);
-
-	items = ResourcesGetTexture2D(&app->resources, "items");
 }
 
 void OnDestroy(Application* app)
@@ -128,7 +126,7 @@ void OnEvent(Application* app, Event e)
 		SceneEditorToggleGrid(&scene_editor);
 		break;
 	case KEY_F9:
-		show_overlay = !show_overlay;
+		show_debug_info = !show_debug_info;
 		break;
 	}
 
@@ -152,7 +150,7 @@ void OnUpdate(Application* app, float deltatime)
 	if (!(scene_editor.active || console.focus))
 		SceneOnUpdate(&scene, deltatime);
 
-	InventoryUpdateSystem(invs, 2, &camera, deltatime);
+	InventoryUpdateSystem(invs, 2, &theme, deltatime);
 }
 
 void OnRender(Application* app)
@@ -161,7 +159,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	InventoryRenderSystem(invs, 2, items, &camera);
+	InventoryRenderSystem(invs, 2, &theme, &camera);
 }
 
 void OnRenderDebug(Application* app)
@@ -174,7 +172,7 @@ void OnRenderDebug(Application* app)
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
 
-	if (show_overlay)
+	if (show_debug_info)
 	{
 		/* Settings */
 		FontRendererTextFieldBegin(app->width - 220.0f, 0.0f, 24.0f);

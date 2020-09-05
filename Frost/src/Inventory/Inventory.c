@@ -3,21 +3,40 @@
 #include "Graphics/Renderer.h"
 #include "Application/Input.h"
 
-int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_size, float padding)
+void InventoryThemeLoad(InventoryTheme* theme, IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding)
+{
+	theme->screen_size = screen_size;
+	theme->item_atlas = item_atlas;
+	theme->cell_size = cell_size;
+	theme->padding = padding;
+}
+
+static vec2 InventoryThemeGetMousePos(InventoryTheme* theme, vec2 mouse)
+{
+	vec2 pos;
+	pos.x = mouse.x - (theme->screen_size.x / 2.0f);
+	pos.y = (theme->screen_size.y - mouse.y) - (theme->screen_size.y / 2.0f);
+
+	return pos;
+}
+
+static float InventoryThemeGetCellOffset(InventoryTheme* theme, int index)
+{
+	return index * (theme->cell_size + theme->padding) + theme->padding;;
+}
+
+int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, InventoryTheme* theme)
 {
 	inv->cells = malloc(sizeof(InventoryCell) * rows * columns);
 
 	if (!inv->cells) return 0;
 
 	inv->pos = pos;
-	inv->size.x = columns * (cell_size + padding) + padding;
-	inv->size.y = rows * (cell_size + padding) + padding;
+	inv->size.x = InventoryThemeGetCellOffset(theme, columns);
+	inv->size.y = InventoryThemeGetCellOffset(theme, rows);
 
 	inv->columns = columns;
 	inv->rows = rows;
-
-	inv->cell_size = cell_size;
-	inv->padding = padding;
 
 	/* initialize cells */
 	for (int row = 0; row < rows; ++row)
@@ -26,11 +45,34 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns, float cell_si
 			int index = InventoryGetCellIndex(inv, row, col);
 
 			inv->cells[index].itemID = NULL_ITEM;
-			inv->cells[index].pos.x = col * (cell_size + padding) + padding;
-			inv->cells[index].pos.y = row * (cell_size + padding) + padding;
+			inv->cells[index].pos.x = InventoryThemeGetCellOffset(theme, col);
+			inv->cells[index].pos.y = InventoryThemeGetCellOffset(theme, row);
 		}
 
 	return 1;
+}
+
+int InventoryInitAligned(Inventory* inv, InventoryHorizontalAlign h_align, InventoryVerticalAlign v_align, int rows, int columns, InventoryTheme* theme)
+{
+	vec2 pos = vec2_zero();
+	float w = InventoryThemeGetCellOffset(theme, columns);
+	float h = InventoryThemeGetCellOffset(theme, rows);
+
+	switch (h_align)
+	{
+	case INV_HALIGN_LEFT: pos.x = -theme->screen_size.x * 0.5f; break;
+	case INV_HALIGN_CENTER: pos.x = -w * 0.5f; break;
+	case INV_HALIGN_RIGHT: pos.x = (theme->screen_size.x * 0.5f) - w; break;
+	}
+
+	switch (v_align)
+	{
+	case INV_VALIGN_TOP: pos.y = (theme->screen_size.y * 0.5f) - h; break;
+	case INV_VALIGN_CENTER: pos.y = -h * 0.5f; break;
+	case INV_VALIGN_BOTTOM: pos.y = -theme->screen_size.y * 0.5f; break;
+	}
+
+	return InventoryInit(inv, pos, rows, columns, theme);
 }
 
 void InventoryFree(Inventory* inv)
@@ -42,38 +84,11 @@ void InventoryFree(Inventory* inv)
 	inv->size = vec2_zero();
 
 	inv->columns = inv->rows = 0;
-
-	inv->cell_size = 0.0f;
-	inv->padding = 0.0f;
 }
 
 int InventoryGetCellIndex(Inventory* inv, int row, int column)
 {
 	return row * inv->columns + column;
-}
-
-int InventoryGetCellAt(Inventory* inv, vec2 pos)
-{
-	vec2 cell_offset = vec2_sub(pos, inv->pos);
-
-	/* filter first padding (left or under first cells) */
-	if (cell_offset.x < inv->padding || cell_offset.y < inv->padding) return -1;
-
-	/* prevent falsely jumping to next row */
-	if (cell_offset.x >= (inv->size.x - inv->padding)) return -1;
-
-	int col = (int)(cell_offset.x / (inv->cell_size + inv->padding));
-	int row = (int)(cell_offset.y / (inv->cell_size + inv->padding));
-
-	/* filter cells that would be out of bounds */
-	if (row >= inv->rows || col >= inv->columns) return -1;
-
-	/* filter padding between cells */
-	if ((cell_offset.x < col * (inv->cell_size + inv->padding) + inv->padding) ||
-		(cell_offset.y < row * (inv->cell_size + inv->padding) + inv->padding))
-		return -1;
-
-	return InventoryGetCellIndex(inv, row, col);
 }
 
 void InventorySetCellContent(Inventory* inv, int index, int itemID)
@@ -117,18 +132,42 @@ static void InventoryCellIDReset(InventoryCellID* id)
 static InventoryCellID dragged;
 static InventoryCellID hover;
 
-void InventoryUpdateSystem(Inventory* invs, size_t count, Camera* camera, float deltatime)
+static int InventoryGetCellAt(Inventory* inv, vec2 pos, InventoryTheme* theme)
+{
+	vec2 cell_offset = vec2_sub(pos, inv->pos);
+
+	/* filter first padding (left or under first cells) */
+	if (cell_offset.x < theme->padding || cell_offset.y < theme->padding) return -1;
+
+	/* prevent falsely jumping to next row */
+	if (cell_offset.x >= (inv->size.x - theme->padding)) return -1;
+
+	int col = (int)(cell_offset.x / (theme->cell_size + theme->padding));
+	int row = (int)(cell_offset.y / (theme->cell_size + theme->padding));
+
+	/* filter cells that would be out of bounds */
+	if (row >= inv->rows || col >= inv->columns) return -1;
+
+	/* filter padding between cells */
+	if ((cell_offset.x < InventoryThemeGetCellOffset(theme, col)) ||
+		(cell_offset.y < InventoryThemeGetCellOffset(theme, row)))
+		return -1;
+
+	return InventoryGetCellIndex(inv, row, col);
+}
+
+void InventoryUpdateSystem(Inventory* invs, size_t count, InventoryTheme* theme, float deltatime)
 {
 	InventoryCellIDReset(&hover);
 
-	vec2 mouse = CameraGetMousePos(camera, InputMousePositionVec2());
+	vec2 mouse = InventoryThemeGetMousePos(theme, InputMousePositionVec2());
 
 	for (int i = 0; i < count; ++i)
 	{
 		Inventory* inv = &invs[i];
 
 		if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)))
-			InventoryCellIDSet(&hover, i, InventoryGetCellAt(inv, mouse));
+			InventoryCellIDSet(&hover, i, InventoryGetCellAt(inv, mouse, theme));
 	}
 
 	if (InputMousePressed(MOUSE_BUTTON_LEFT) && dragged.cell_index < 0)
@@ -145,7 +184,7 @@ void InventoryUpdateSystem(Inventory* invs, size_t count, Camera* camera, float 
 	}
 }
 
-void InventoryRenderSystem(Inventory* invs, size_t count, IgnisTexture2D* item_atlas, Camera* camera)
+void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme, Camera* camera)
 {
 	/* render inventory backgrounds */
 	Primitives2DStart(CameraGetProjectionPtr(camera));
@@ -164,15 +203,14 @@ void InventoryRenderSystem(Inventory* invs, size_t count, IgnisTexture2D* item_a
 		{
 			vec2 cell_pos = vec2_add(inv->pos, inv->cells[cell_index].pos);
 
-			Primitives2DRenderRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+			Primitives2DRenderRect(cell_pos.x, cell_pos.y, theme->cell_size, theme->cell_size, IGNIS_WHITE);
 
 			if (inv_index == hover.inv_index && cell_index == hover.cell_index)
-				Primitives2DFillRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+				Primitives2DFillRect(cell_pos.x, cell_pos.y, theme->cell_size, theme->cell_size, IGNIS_WHITE);
 		}
 	}
 
 	Primitives2DFlush();
-
 
 	/* render inventory contents */
 	BatchRenderer2DStart(CameraGetProjectionPtr(camera));
@@ -188,9 +226,9 @@ void InventoryRenderSystem(Inventory* invs, size_t count, IgnisTexture2D* item_a
 			vec2 cell_pos = vec2_add(inv->pos, inv->cells[cell_index].pos);
 
 			float src_x, src_y, src_w, src_h;
-			GetTexture2DSrcRect(item_atlas, inv->cells[cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
+			GetTexture2DSrcRect(theme->item_atlas, inv->cells[cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
 
-			BatchRenderer2DRenderTextureFrame(item_atlas, cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, src_x, src_y, src_w, src_h);
+			BatchRenderer2DRenderTextureFrame(theme->item_atlas, cell_pos.x, cell_pos.y, theme->cell_size, theme->cell_size, src_x, src_y, src_w, src_h);
 		}
 	}
 
@@ -199,14 +237,14 @@ void InventoryRenderSystem(Inventory* invs, size_t count, IgnisTexture2D* item_a
 	{
 		Inventory* inv = &invs[dragged.inv_index];
 
-		vec2 mouse_pos = CameraGetMousePos(camera, InputMousePositionVec2());
-		float cell_x = mouse_pos.x - (inv->cell_size / 2.0f);
-		float cell_y = mouse_pos.y - (inv->cell_size / 2.0f);
+		vec2 mouse_pos = InventoryThemeGetMousePos(theme, InputMousePositionVec2());
+		float cell_x = mouse_pos.x - (theme->cell_size / 2.0f);
+		float cell_y = mouse_pos.y - (theme->cell_size / 2.0f);
 
 		float src_x, src_y, src_w, src_h;
-		GetTexture2DSrcRect(item_atlas, inv->cells[dragged.cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
+		GetTexture2DSrcRect(theme->item_atlas, inv->cells[dragged.cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
 
-		BatchRenderer2DRenderTextureFrame(item_atlas, cell_x, cell_y, inv->cell_size, inv->cell_size, src_x, src_y, src_w, src_h);
+		BatchRenderer2DRenderTextureFrame(theme->item_atlas, cell_x, cell_y, theme->cell_size, theme->cell_size, src_x, src_y, src_w, src_h);
 	}
 
 	BatchRenderer2DFlush();

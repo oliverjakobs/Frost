@@ -58,18 +58,20 @@ void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size)
 
 vec2 CameraGetMousePos(const Camera* camera, vec2 mouse)
 {
-	float x = mouse.x  - (camera->size.x / 2.0f);
-	float y = (camera->size.y - mouse.y) - (camera->size.y / 2.0f);
+	vec2 pos;
+	pos.x = mouse.x  - (camera->size.x / 2.0f);
+	pos.y = (camera->size.y - mouse.y) - (camera->size.y / 2.0f);
 
-	return (vec2) { x, y };
+	return pos;
 }
 
 vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse)
 {
-	float x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
-	float y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
+	vec2 pos;
+	pos.x = mouse.x + (camera->position.x - (camera->size.x / 2.0f));
+	pos.y = (camera->size.y - mouse.y) + (camera->position.y - (camera->size.y / 2.0f));
 
-	return (vec2){ x, y };
+	return pos;
 }
 
 const float* CameraGetViewPtr(const Camera* camera)
