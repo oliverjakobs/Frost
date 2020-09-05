@@ -7,15 +7,23 @@
 
 #include "Frost/FrostEcs.h"
 
+
 int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources)
 {
-	if (clib_strmap_alloc(&scene->scene_register, 0) != CLIB_HASHMAP_OK) return 0;
-	if (clib_strmap_alloc(&scene->templates, 0) != CLIB_HASHMAP_OK) return 0;
+	if (clib_hashmap_alloc(&scene->scene_register, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK) return 0;
+	if (clib_hashmap_alloc(&scene->templates, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK) return 0;
+
+	clib_hashmap_set_key_alloc_funcs(&scene->scene_register, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	clib_hashmap_set_value_alloc_funcs(&scene->scene_register, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	clib_hashmap_set_key_alloc_funcs(&scene->templates, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	clib_hashmap_set_value_alloc_funcs(&scene->templates, clib_hashmap_str_alloc, clib_hashmap_str_free);
 
 	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
 	{
+		clib_hashmap_free(&scene->scene_register);
+		clib_hashmap_free(&scene->templates);
 		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", path);
 		return 0;
 	}
@@ -35,7 +43,7 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 
 		scene_path[scene_element.bytelen] = '\0';
 
-		if (!clib_strmap_insert(&scene->scene_register, name, scene_path))
+		if (!clib_hashmap_insert(&scene->scene_register, name, scene_path))
 			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
 	}
 
@@ -53,7 +61,7 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 
 		templ_path[template_element.bytelen] = '\0';
 
-		if (!clib_strmap_insert(&scene->templates, name, templ_path))
+		if (!clib_hashmap_insert(&scene->templates, name, templ_path))
 			DEBUG_WARN("[Scenes] Failed to add template: %s (%s)", name, templ_path);
 	}
 
@@ -77,8 +85,8 @@ void SceneDestroy(Scene* scene)
 	AnimationConditionsDestroy();
 	EcsDestroy(&scene->ecs);
 
-	clib_strmap_free(&scene->scene_register);
-	clib_strmap_free(&scene->templates);
+	clib_hashmap_free(&scene->scene_register);
+	clib_hashmap_free(&scene->templates);
 }
 
 void SceneChangeActive(Scene* scene, const char* name)
@@ -86,7 +94,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 	if (strcmp(scene->name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		char* path = clib_strmap_find(&scene->scene_register, name);
+		char* path = clib_hashmap_find(&scene->scene_register, name);
 		if (!path)
 		{
 			DEBUG_ERROR("[Scenes] Couldn't find scene: %s\n", name);
@@ -332,7 +340,7 @@ int SceneSave(Scene* scene, const char* path)
 
 int SceneLoadTemplate(Scene* scene, const char* templ, EntityID entity, vec2 pos, int z_index)
 {
-	char* path = clib_strmap_find(&scene->templates, templ);
+	char* path = clib_hashmap_find(&scene->templates, templ);
 	if (!path)
 	{
 		DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);

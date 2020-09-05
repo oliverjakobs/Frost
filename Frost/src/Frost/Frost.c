@@ -90,9 +90,9 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			CLIB_STRMAP_ITERATE_FOR(&scene->scene_register)
+			CLIB_HASHMAP_ITERATE_FOR(&scene->scene_register, iter)
 			{
-				const char* name = clib_strmap_iter_get_key(iter);
+				const char* name = clib_hashmap_iter_get_key(iter);
 
 				ConsoleOut(console, " - %s %s", name, (strcmp(name, scene->name) == 0) ? "(active)" : "");
 			}
@@ -109,10 +109,10 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
-			CLIB_STRMAP_ITERATE_FOR(&scene->templates)
+			CLIB_HASHMAP_ITERATE_FOR(&scene->templates, iter)
 			{
-				const char* name = clib_strmap_iter_get_key(iter);
-				char* templ = clib_strmap_iter_get_value(iter);
+				const char* name = clib_hashmap_iter_get_key(iter);
+				char* templ = clib_hashmap_iter_get_value(iter);
 
 				ConsoleOut(console, " - %s: %s", name, templ);
 			}
@@ -120,15 +120,15 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		else if (strcmp(spec, "res") == 0)
 		{
 			ConsoleOut(console, "Textures:");
-			CLIB_DICT_ITERATE_FOR(&scene->resources->textures, iter)
+			CLIB_HASHMAP_ITERATE_FOR(&scene->resources->textures, iter)
 			{
-				ConsoleOut(console, " - %s", clib_dict_iter_get_key(iter));
+				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
 			}
 
 			ConsoleOut(console, "Fonts:");
-			CLIB_DICT_ITERATE_FOR(&scene->resources->fonts, iter)
+			CLIB_HASHMAP_ITERATE_FOR(&scene->resources->fonts, iter)
 			{
-				ConsoleOut(console, " - %s", clib_dict_iter_get_key(iter));
+				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
 			}
 		}
 		break;
@@ -144,7 +144,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = clib_strmap_find(&scene->scene_register, scene->name);
+			char* path = clib_hashmap_find(&scene->scene_register, scene->name);
 			if (!path)
 			{
 				ConsoleOut(console, "Couldn't find path for %s", scene->name);

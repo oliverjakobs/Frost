@@ -2,6 +2,7 @@
 #define CLIB_HASHMAP_H
 
 #include <stddef.h>
+#include "clib/hash.h"
 
 typedef struct _clib_hashmap_iter clib_hashmap_iter;
 
@@ -94,10 +95,16 @@ void clib_hashmap_clear(clib_hashmap* map);
 void* clib_hashmap_find(const clib_hashmap* map, const void* key);
 
 /*
+ * Return the key pointer, or NULL if no entry was found.
+ */
+const void* clib_hashmap_get_key_ptr(const clib_hashmap* map, const void* key);
+
+/*
  * Find the hashmap entry with the specified key, or an empty slot.
  * Returns NULL if the entire table has been searched without finding a match.
  */
 clib_hashmap_entry* clib_hashmap_entry_find(const clib_hashmap* map, const void* key, int find_empty);
+
 
 /*
  * Removes the specified entry and processes the proceeding entries to reduce
@@ -137,5 +144,12 @@ const void* clib_hashmap_iter_get_key(const clib_hashmap_iter* iter);
  * Return the value of the entry pointed to by the iterator.
  */
 void* clib_hashmap_iter_get_value(const clib_hashmap_iter* iter);
+
+/*
+ * Default functions for strings
+ */
+int clib_hashmap_str_cmp(const void* a, const void* b);
+void* clib_hashmap_str_alloc(const void* src);
+void clib_hashmap_str_free(void* block);
 
 #endif /* !CLIB_HASHMAP_H */

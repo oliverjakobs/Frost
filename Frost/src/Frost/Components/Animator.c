@@ -4,22 +4,24 @@
 
 #include "json/tb_json.h"
 
+#include "Application/Debugger.h"
+
 #include <stdlib.h>
 
 void AnimatorFree(void* block)
 {
-	CLIB_DICT_ITERATE_FOR(&((Animator*)block)->animations, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&((Animator*)block)->animations, iter)
 	{
-		free(clib_dict_iter_get_value(iter));
-		clib_dict_iter_remove(&((Animator*)block)->animations, iter);
+		free(clib_hashmap_iter_get_value(iter));
+		clib_hashmap_iter_remove(&((Animator*)block)->animations, iter);
 	}
-	clib_dict_free(&((Animator*)block)->animations);
+	clib_hashmap_free(&((Animator*)block)->animations);
 	free(block);
 }
 
 static int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation)
 {
-	if (clib_dict_insert(&animator->animations, name, animation) != animation)
+	if (clib_hashmap_insert(&animator->animations, name, animation) != animation)
 	{
 		AnimationDestroy(animation);
 		free(animation);
@@ -27,7 +29,7 @@ static int AnimatorAddAnimation(Animator* animator, const char* name, Animation*
 	}
 
 	if (animator->current == NULL)
-		animator->current = (char*)clib_dict_get_key_ptr(&animator->animations, name);
+		animator->current = clib_hashmap_get_key_ptr(&animator->animations, name);
 
 	return 1;
 }
@@ -42,7 +44,13 @@ void AnimatorLoad(Scene* scene, EntityID entity, char* json)
 
 		animator.current = NULL;
 
-		clib_dict_alloc(&animator.animations, 0);
+		if (clib_hashmap_alloc(&animator.animations, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK)
+		{
+			DEBUG_WARN("[Animator] Failed to allocate animation map");
+			return;
+		}
+
+		clib_hashmap_set_key_alloc_funcs(&animator.animations, clib_hashmap_str_alloc, clib_hashmap_str_free);
 		for (int i = 0; i < element.elements; i++)
 		{
 			char anim_name[APPLICATION_STR_LEN];
@@ -74,7 +82,7 @@ void AnimatorLoad(Scene* scene, EntityID entity, char* json)
 					char next[APPLICATION_STR_LEN];
 					tb_json_string((char*)transition_element.value, "[1", next, APPLICATION_STR_LEN, NULL);
 
-					AnimationAddTransition(animation, condition, next);
+					clib_hashmap_insert(&animation->transitions, condition, next);
 				}
 			}
 

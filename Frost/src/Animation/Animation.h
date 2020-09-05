@@ -1,7 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include "clib/strmap.h"
+#include "clib/hashmap.h"
 
 typedef struct
 {
@@ -21,8 +21,6 @@ void AnimationDestroy(Animation* animation);
 
 void AnimationStart(Animation* animation);
 void AnimationTick(Animation* animation, float deltatime);
-
-void AnimationAddTransition(Animation* animation, char* name, char* next);
 
 /* Animation Conditions */
 #include "ECS/Ecs.h"

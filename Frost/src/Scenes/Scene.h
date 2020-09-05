@@ -6,26 +6,22 @@
 
 #include "ECS/Ecs.h"
 
-#include "clib/strmap.h"
-
 typedef struct 
 {
 	/* register */
 	clib_hashmap scene_register;
 	clib_hashmap templates;
 
+	Camera* camera;
 	Resources* resources;
 
 	Ecs ecs;
-
-	Camera* camera;
+	Background background;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
 	float width;
 	float height;
-
-	Background background;
 } Scene;
 
 int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources);

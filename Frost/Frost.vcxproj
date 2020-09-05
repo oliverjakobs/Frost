@@ -147,13 +147,11 @@
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\clib\array.h" />
     <ClInclude Include="src\clib\clib.h" />
-    <ClInclude Include="src\clib\dictionary.h" />
     <ClInclude Include="src\clib\dynamic_array.h" />
     <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\list.h" />
-    <ClInclude Include="src\clib\strmap.h" />
     <ClInclude Include="src\json\tb_json.h" />
     <ClInclude Include="src\json\tb_jwrite.h" />
     <ClInclude Include="src\math\grid.h" />
@@ -216,13 +214,11 @@
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\clib\array.c" />
     <ClCompile Include="src\clib\clib.c" />
-    <ClCompile Include="src\clib\dictionary.c" />
     <ClCompile Include="src\clib\dynamic_array.c" />
     <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\list.c" />
-    <ClCompile Include="src\clib\strmap.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\grid.c" />

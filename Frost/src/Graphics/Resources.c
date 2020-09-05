@@ -10,8 +10,11 @@
 
 int ResourcesInit(Resources* resources, const char* path)
 {
-	clib_dict_alloc(&resources->textures, 0);
-	clib_dict_alloc(&resources->fonts, 0);
+	if (clib_hashmap_alloc(&resources->textures, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK) return 0;
+	if (clib_hashmap_alloc(&resources->fonts, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK) return 0;
+
+	clib_hashmap_set_key_alloc_funcs(&resources->textures, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	clib_hashmap_set_key_alloc_funcs(&resources->fonts, clib_hashmap_str_alloc, clib_hashmap_str_free);
 
 	char* json = ignisReadFile(path, NULL);
 
@@ -69,30 +72,30 @@ int ResourcesInit(Resources* resources, const char* path)
 
 void ResourcesDestroy(Resources* resources)
 {
-	CLIB_DICT_ITERATE_FOR(&resources->textures, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&resources->textures, iter)
 	{
-		IgnisTexture2D* tex = (IgnisTexture2D*)clib_dict_iter_get_value(iter);
+		IgnisTexture2D* tex = clib_hashmap_iter_get_value(iter);
 		ignisDeleteTexture2D(tex);
 		free(tex);
-		clib_dict_iter_remove(&resources->textures, iter);
+		clib_hashmap_iter_remove(&resources->textures, iter);
 	}
 
-	CLIB_DICT_ITERATE_FOR(&resources->fonts, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&resources->fonts, iter)
 	{
-		IgnisFont* font = (IgnisFont*)clib_dict_iter_get_value(iter);
+		IgnisFont* font = clib_hashmap_iter_get_value(iter);
 		ignisDeleteFont(font);
 		free(font);
-		clib_dict_iter_remove(&resources->fonts, iter);
+		clib_hashmap_iter_remove(&resources->fonts, iter);
 	}
 }
 
 IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, const char* path, int rows, int columns)
 {
-	IgnisTexture2D* texture = (IgnisTexture2D*)malloc(sizeof(IgnisTexture2D));
+	IgnisTexture2D* texture = malloc(sizeof(IgnisTexture2D));
 
 	if (ignisCreateTexture2D(texture, path, rows, columns, 1, NULL))
 	{
-		if (clib_dict_insert(&resources->textures, name, texture) == texture)
+		if (clib_hashmap_insert(&resources->textures, name, texture) == texture)
 			return texture;
 
 		DEBUG_ERROR("[Resources] Failed to add texture: %s (%s)\n", name, path);
@@ -105,11 +108,11 @@ IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, co
 
 IgnisFont* ResourcesAddFont(Resources* manager, const char* name, const char* path, float size)
 {
-	IgnisFont* font = (IgnisFont*)malloc(sizeof(IgnisFont));
+	IgnisFont* font = malloc(sizeof(IgnisFont));
 
 	if (ignisCreateFont(font, path, size))
 	{
-		if (clib_dict_insert(&manager->fonts, name, font) == font)
+		if (clib_hashmap_insert(&manager->fonts, name, font) == font)
 			return font;
 
 		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
@@ -121,7 +124,7 @@ IgnisFont* ResourcesAddFont(Resources* manager, const char* name, const char* pa
 
 IgnisTexture2D* ResourcesGetTexture2D(Resources* manager, const char* name)
 {
-	IgnisTexture2D* tex = clib_dict_find(&manager->textures, name);
+	IgnisTexture2D* tex = clib_hashmap_find(&manager->textures, name);
 
 	if (!tex) DEBUG_WARN("[Resources] Could not find texture: %s\n", name);
 
@@ -130,7 +133,7 @@ IgnisTexture2D* ResourcesGetTexture2D(Resources* manager, const char* name)
 
 IgnisFont* ResourcesGetFont(Resources* manager, const char* name)
 {
-	IgnisFont* font = clib_dict_find(&manager->fonts, name);
+	IgnisFont* font = clib_hashmap_find(&manager->fonts, name);
 
 	if (!font) DEBUG_WARN("[Resources] Could not find font: %s\n", name);
 
@@ -139,10 +142,10 @@ IgnisFont* ResourcesGetFont(Resources* manager, const char* name)
 
 const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* texture)
 {
-	CLIB_DICT_ITERATE_FOR(&resources->textures, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&resources->textures, iter)
 	{
-		if (texture == clib_dict_iter_get_value(iter))
-			return clib_dict_iter_get_key(iter);
+		if (texture == clib_hashmap_iter_get_value(iter))
+			return clib_hashmap_iter_get_key(iter);
 	}
 
 	return NULL;
@@ -150,10 +153,10 @@ const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* text
 
 const char* ResourcesGetFontName(Resources* resources, IgnisFont* font)
 {
-	CLIB_DICT_ITERATE_FOR(&resources->fonts, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&resources->fonts, iter)
 	{
-		if (font == clib_dict_iter_get_value(iter))
-			return clib_dict_iter_get_key(iter);
+		if (font == clib_hashmap_iter_get_value(iter))
+			return clib_hashmap_iter_get_key(iter);
 	}
 
 	return NULL;

@@ -8,11 +8,11 @@ static void PlayAnimation(Animator* animator, const char* name)
 	if (strcmp(animator->current, name) == 0)
 		return;
 
-	Animation* animation = clib_dict_find(&animator->animations, name);
+	Animation* animation = clib_hashmap_find(&animator->animations, name);
 	if (animation)
 	{
 		AnimationStart(animation);
-		animator->current = clib_dict_get_key_ptr(&animator->animations, name);
+		animator->current = clib_hashmap_get_key_ptr(&animator->animations, name);
 	}
 }
 
@@ -36,11 +36,11 @@ void AnimationSystem(Ecs* ecs, float deltatime)
 		AnimationTick(current, deltatime);
 		clib_hashmap* transitions = &current->transitions;
 
-		CLIB_DICT_ITERATE_FOR(transitions, transition_iter)
+		CLIB_HASHMAP_ITERATE_FOR(transitions, transition_iter)
 		{
-			AnimationCondition* cond = AnimationConditionsGetCondition(clib_strmap_iter_get_key(transition_iter));
+			AnimationCondition* cond = AnimationConditionsGetCondition(clib_hashmap_iter_get_key(transition_iter));
 			if (cond && cond->func(ecs, ComponentMapIterKey(iter), 0))
-				PlayAnimation(animator, clib_strmap_iter_get_value(transition_iter));
+				PlayAnimation(animator, clib_hashmap_iter_get_value(transition_iter));
 		}
 		sprite->frame = current->frame;
 	}

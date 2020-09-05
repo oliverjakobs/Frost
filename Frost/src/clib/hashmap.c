@@ -266,6 +266,18 @@ void* clib_hashmap_find(const clib_hashmap* map, const void* key)
     return entry->value;
 }
 
+const void* clib_hashmap_get_key_ptr(const clib_hashmap* map, const void* key)
+{
+    CLIB_ASSERT(map != NULL);
+    CLIB_ASSERT(key != NULL);
+
+    clib_hashmap_entry* entry = clib_hashmap_entry_find(map, key, 0);
+
+    if (!entry) return NULL;
+
+    return entry->key;
+}
+
 clib_hashmap_entry* clib_hashmap_entry_find(const clib_hashmap* map, const void* key, int find_empty)
 {
     size_t probe_len = CLIB_HASHMAP_PROBE_LEN(map);
@@ -376,4 +388,28 @@ void* clib_hashmap_iter_get_value(const clib_hashmap_iter* iter)
         return NULL;
 
     return ((clib_hashmap_entry*)iter)->value;
+}
+
+int clib_hashmap_str_cmp(const void* a, const void* b)
+{
+    return strcmp((const char*)a, (const char*)b);
+}
+
+void* clib_hashmap_str_alloc(const void* src)
+{
+    size_t size = strlen(src);
+    char* dst = malloc(size + 1);
+
+    if (!dst) return NULL;
+
+    strcpy(dst, src);
+    /* make sure string is null-terminated */
+    dst[size] = '\0';
+
+    return (void*)dst;
+}
+
+void clib_hashmap_str_free(void* block)
+{
+    free(block);
 }

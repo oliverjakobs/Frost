@@ -73,10 +73,10 @@ void OnInit(Application* app)
 
 	InventoryInit(&invs[0], (vec2) { 0.0f, -camera.size.y / 2.0f }, 1, 4, 64.0f, 8.0f);
 	invs[0].pos.x -= invs[0].size.x / 2.0f;
+	InventorySetCellContent(&invs[0], 0, 3);
+	InventorySetCellContent(&invs[0], 1, 1);
+	InventorySetCellContent(&invs[0], 2, 2);
 	InventorySetCellContent(&invs[0], 3, 3);
-	InventorySetCellContent(&invs[0], 4, 1);
-	InventorySetCellContent(&invs[0], 9, 2);
-	InventorySetCellContent(&invs[0], 17, 3);
 
 	InventoryInit(&invs[1], (vec2) { -camera.size.x / 2.0f, 0.0f }, 3, 2, 64.0f, 8.0f);
 

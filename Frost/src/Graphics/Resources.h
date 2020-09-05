@@ -7,7 +7,7 @@ extern "C"
 #endif
 
 #include "Ignis/Ignis.h"
-#include "clib/dictionary.h"
+#include "clib/hashmap.h"
 
 typedef struct
 {

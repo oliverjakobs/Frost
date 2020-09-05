@@ -11,12 +11,16 @@ void AnimationLoad(Animation* animation, int start, int length, float delay, siz
 	animation->clock = 0.0f;
 	animation->frame = 0;
 
-	clib_strmap_alloc(&animation->transitions, initial);
+	if (clib_hashmap_alloc(&animation->transitions, clib_hash_string, clib_hashmap_str_cmp, initial) == CLIB_HASHMAP_OK)
+	{
+		clib_hashmap_set_key_alloc_funcs(&animation->transitions, clib_hashmap_str_alloc, clib_hashmap_str_free);
+		clib_hashmap_set_value_alloc_funcs(&animation->transitions, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	}
 }
 
 void AnimationDestroy(Animation* animation)
 {
-	clib_strmap_free(&animation->transitions);
+	clib_hashmap_free(&animation->transitions);
 }
 
 void AnimationStart(Animation* animation)
@@ -44,26 +48,22 @@ void AnimationTick(Animation* animation, float deltatime)
 	}
 }
 
-void AnimationAddTransition(Animation* animation, char* name, char* next)
-{
-	clib_strmap_insert(&animation->transitions, name, next);
-}
-
-
 static clib_hashmap condition_table; /* <str, AnimationCondition> */
 
 void AnimationConditionsInit()
 {
-	clib_dict_alloc(&condition_table, 0);
+	if (clib_hashmap_alloc(&condition_table, clib_hash_string, clib_hashmap_str_cmp, 0) == CLIB_HASHMAP_OK)
+		clib_hashmap_set_key_alloc_funcs(&condition_table, clib_hashmap_str_alloc, clib_hashmap_str_free);
 }
 
 void AnimationConditionsDestroy()
 {
-	CLIB_DICT_ITERATE_FOR(&condition_table, iter)
+	CLIB_HASHMAP_ITERATE_FOR(&condition_table, iter)
 	{
-		free(clib_dict_iter_get_value(iter));
-		clib_dict_iter_remove(&condition_table, iter);
+		free(clib_hashmap_iter_get_value(iter));
+		clib_hashmap_iter_remove(&condition_table, iter);
 	}
+	clib_hashmap_free(&condition_table);
 }
 
 int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EntityID, int))
@@ -73,7 +73,7 @@ int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*,
 	if (!value) return 0;
 
 	value->func = condition;
-	if (clib_dict_insert(&condition_table, name, value) == value)
+	if (clib_hashmap_insert(&condition_table, name, value) == value)
 		return 1;
 
 	free(value);
@@ -82,5 +82,5 @@ int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*,
 
 AnimationCondition* AnimationConditionsGetCondition(const char* name)
 {
-	return clib_dict_find(&condition_table, name);
+	return clib_hashmap_find(&condition_table, name);
 }

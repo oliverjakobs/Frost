@@ -210,9 +210,6 @@
     <ClInclude Include="src\clib\clib.h">
       <Filter>src\clib</Filter>
     </ClInclude>
-    <ClInclude Include="src\clib\dictionary.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
     <ClInclude Include="src\clib\dynamic_array.h">
       <Filter>src\clib</Filter>
     </ClInclude>
@@ -226,9 +223,6 @@
       <Filter>src\clib</Filter>
     </ClInclude>
     <ClInclude Include="src\clib\list.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clib\strmap.h">
       <Filter>src\clib</Filter>
     </ClInclude>
     <ClInclude Include="src\json\tb_json.h">
@@ -416,9 +410,6 @@
     <ClCompile Include="src\clib\clib.c">
       <Filter>src\clib</Filter>
     </ClCompile>
-    <ClCompile Include="src\clib\dictionary.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
     <ClCompile Include="src\clib\dynamic_array.c">
       <Filter>src\clib</Filter>
     </ClCompile>
@@ -432,9 +423,6 @@
       <Filter>src\clib</Filter>
     </ClCompile>
     <ClCompile Include="src\clib\list.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clib\strmap.c">
       <Filter>src\clib</Filter>
     </ClCompile>
     <ClCompile Include="src\json\tb_jwrite.c">

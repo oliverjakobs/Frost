@@ -8,7 +8,7 @@
 typedef struct
 {
 	clib_hashmap animations;	/* <str, Animation*> */
-	char* current;
+	const char* current;
 } Animator;
 
 void AnimatorFree(void* block);
