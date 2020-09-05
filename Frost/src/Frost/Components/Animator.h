@@ -1,10 +1,41 @@
 #ifndef ANIMATOR_H
 #define ANIMATOR_H
 
-#include "Animation/Animation.h"
-
 #include "Scenes/Scene.h"
 
+/* ---------------------------------| Animation |----------------------------------- */
+typedef struct
+{
+	int start;
+	int length;
+
+	float delay;
+	float clock;
+
+	int frame;
+
+	clib_hashmap transitions;
+} Animation;
+
+void AnimationLoad(Animation* animation, int start, int length, float delay, size_t initial);
+void AnimationDestroy(Animation* animation);
+
+void AnimationStart(Animation* animation);
+void AnimationTick(Animation* animation, float deltatime);
+
+/* ---------------------------------| AnimationCondition |-------------------------- */
+typedef struct
+{
+	int (*func)(Ecs*, EntityID, int);
+} AnimationCondition;
+
+void AnimationConditionsInit();
+void AnimationConditionsDestroy();
+
+int AnimationConditionsRegisterCondition(const char* name, int (*condition)(Ecs*, EntityID, int));
+AnimationCondition* AnimationConditionsGetCondition(const char* name);
+
+/* ---------------------------------| Animator |------------------------------------ */
 typedef struct
 {
 	clib_hashmap animations;	/* <str, Animation*> */

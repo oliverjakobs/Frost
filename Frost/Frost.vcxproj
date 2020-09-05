@@ -89,7 +89,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Animation\Animation.h" />
     <ClInclude Include="src\Frost\AnimationConditions.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
@@ -147,8 +146,6 @@
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\clib\array.h" />
     <ClInclude Include="src\clib\clib.h" />
-    <ClInclude Include="src\clib\dynamic_array.h" />
-    <ClInclude Include="src\clib\foreach.h" />
     <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\list.h" />
@@ -159,10 +156,8 @@
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
-    <ClInclude Include="src\physics\collision.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Animation\Animation.c" />
     <ClCompile Include="src\Frost\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
@@ -214,8 +209,6 @@
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\clib\array.c" />
     <ClCompile Include="src\clib\clib.c" />
-    <ClCompile Include="src\clib\dynamic_array.c" />
-    <ClCompile Include="src\clib\foreach.c" />
     <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\list.c" />
@@ -225,7 +218,6 @@
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
-    <ClCompile Include="src\physics\collision.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

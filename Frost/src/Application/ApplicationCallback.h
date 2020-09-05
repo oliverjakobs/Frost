@@ -3,13 +3,17 @@
 
 #include "Application.h"
 
-// gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
-// and passes the rest to OnEvent, which is implemented in the game class
-void ApplicationEventCallback(Application* app, const Event e);
+/*
+ * Gets called when an event is processed, handles some (e.g. WindowCloseEvents) 
+ * and passes the rest to the on_event callback of app
+ */
+void ApplicationEventCallback(Application* app, Event e);
 
 void ApplicationIgnisErrorCallback(ignisErrorLevel level, const char* desc);
 
-/* GLFW */
+/* 
+ * Translates GLFW events to application events
+ */
 void ApplicationGLFWErrorCallback(int error, const char* desc);
 void ApplicationGLFWWindowSizeCallback(GLFWwindow* window, int width, int height);
 void ApplicationGLFWWindowCloseCallback(GLFWwindow* window);

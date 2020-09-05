@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-void ApplicationEventCallback(Application* app, const Event e)
+void ApplicationEventCallback(Application* app, Event e)
 {
 	switch (e.type)
 	{
