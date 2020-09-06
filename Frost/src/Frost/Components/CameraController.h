@@ -11,6 +11,6 @@ typedef struct
 	float scene_h;
 } CameraController;
 
-void CameraControllerLoad(Scene* scene, EntityID entity, char* json);
+void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json);
 
 #endif /* !CAMERA_CONTROLLER_H */

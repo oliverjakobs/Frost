@@ -7,9 +7,10 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	COMPONENT_LIST_ITERATE(EcsGetComponentList(ecs, COMPONENT_Z_INDEX), i)
+	EcsComponentList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
+	for (size_t index = 0; index < EcsComponentListLength(list); ++index)
 	{
-		ZIndex* indexed = EcsGetOrderComponent(ecs, i, COMPONENT_Z_INDEX);
+		ZIndex* indexed = EcsComponentListAt(list, index);
 		Sprite* sprite = EcsGetDataComponent(ecs, indexed->entity, COMPONENT_SPRITE);
 
 		if (!sprite) continue;

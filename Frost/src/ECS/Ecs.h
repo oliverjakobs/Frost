@@ -19,7 +19,7 @@
 
 #define ECS_ARRAY_GROWTH_FACTOR		1.2f
 
-typedef uint32_t ComponentType;
+typedef uint32_t EcsComponentType;
 
 typedef struct
 {
@@ -65,23 +65,23 @@ void EcsOnRender(Ecs* ecs, const float* mat_view_proj);
 void EcsOnRenderDebug(Ecs* ecs, const float* mat_view_proj);
 void EcsOnRenderUI(Ecs* ecs, const float* mat_view_proj);
 
-ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type);
-ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type);
+EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
+EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);
 
-ComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
+EcsComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
 
-void* EcsAddDataComponent(Ecs* ecs, EntityID entity, ComponentType type, void* component);
-void* EcsGetDataComponent(Ecs* ecs, EntityID entity, ComponentType type);
+void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
+void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
-void EcsRemoveDataComponent(Ecs* ecs, EntityID entity, ComponentType type);
+void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
-ComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
+EcsComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
 
-void* EcsAddOrderComponent(Ecs* ecs, ComponentType type, void* component);
-void* EcsGetOrderComponent(Ecs* ecs, size_t index, ComponentType type);
+void* EcsAddOrderComponent(Ecs* ecs, EcsComponentType type, void* component);
+void* EcsGetOrderComponent(Ecs* ecs, size_t index, EcsComponentType type);
 
-void EcsRemoveOrderComponent(Ecs* ecs, EntityID entity, ComponentType type);
+void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
-void EcsRemoveEntity(Ecs* ecs, EntityID entity);
+void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);
 
 #endif /* !ECS_H */

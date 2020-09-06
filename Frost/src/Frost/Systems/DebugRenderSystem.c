@@ -7,33 +7,28 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
 	Primitives2DStart(mat_view_proj);
 
-	/*
-	CameraController* camController = ComponentMapIterValue(ComponentMapIterator(EcsGetComponentMap(ecs, COMPONENT_CAMERA)));
-
-	if (camController)
-		Primitives2DRenderCircle(camController->camera->position.x, camController->camera->position.y, 10.0f, IGNIS_WHITE);
-	*/
-
-	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_TRANSFORM), iter)
+	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
+	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		Transform* transform = ComponentMapIterValue(iter);
+		Transform* transform = EcsComponentMapIterValue(iter);
 
-		vec2 pos = GetEntityPosition(ecs, ComponentMapIterKey(iter));
+		vec2 pos = GetEntityPosition(ecs, EcsComponentMapIterKey(iter));
 		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
 	}
 
-	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_INTERACTION), iter)
+	map = EcsGetComponentMap(ecs, COMPONENT_INTERACTION);
+	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		Interaction* interaction = ComponentMapIterValue(iter);
+		Interaction* interaction = EcsComponentMapIterValue(iter);
 
-		vec2 cen = GetEntityCenter(ecs, ComponentMapIterKey(iter));
+		vec2 cen = GetEntityCenter(ecs, EcsComponentMapIterKey(iter));
 		Primitives2DRenderCircle(cen.x, cen.y, interaction->radius, IGNIS_WHITE);
 	}
 
-
-	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
+	map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
+	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		RigidBody* body = ComponentMapIterValue(iter);
+		RigidBody* body = EcsComponentMapIterValue(iter);
 
 		vec2 pos = vec2_sub(body->position, body->half_size);
 		vec2 dim = vec2_mult(body->half_size, 2.0f);

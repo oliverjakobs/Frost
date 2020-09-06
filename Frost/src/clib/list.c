@@ -84,7 +84,7 @@ void* clib_list_insert_and_grow(clib_list* list, void* element, float growth)
     if (list->used >= list->capacity)
     {
         size_t size = (list->capacity > 0) ? list->capacity : 1;
-        if (clib_list_resize(list, (size_t)(size * growth)) != CLIB_LIST_OK)
+        if (clib_list_resize(list, (size_t)(size * (double)growth)) != CLIB_LIST_OK)
             return NULL;
     }
 
@@ -109,12 +109,12 @@ void clib_list_remove_at(clib_list* list, size_t index)
     list->used--;
 }
 
-void* clib_list_find(clib_list* list, const void* element)
+void* clib_list_find(const clib_list* list, const void* element)
 {
     return bsearch(element, list->data, list->used, list->element_size, list->cmp_func);
 }
 
-size_t clib_list_find_index(clib_list* list, const void* element)
+size_t clib_list_find_index(const clib_list* list, const void* element)
 {
     clib_list_base_type* found = clib_list_find(list, element);
 
@@ -123,28 +123,19 @@ size_t clib_list_find_index(clib_list* list, const void* element)
     return (found - list->data) / list->element_size;
 }
 
-void* clib_list_get(clib_list* list, size_t index)
+void* clib_list_get(const clib_list* list, size_t index)
 {
     if (index >= list->used) return NULL;
 
     return list->data + index * list->element_size;
 }
 
-void* clib_list_first(clib_list* list)
+void* clib_list_first(const clib_list* list)
 {
     return clib_list_get(list, 0);
 }
 
-void* clib_list_last(clib_list* list)
+void* clib_list_last(const clib_list* list)
 {
     return clib_list_get(list, list->used - 1);
-}
-
-size_t clib_list_search(clib_list* list, const void* element)
-{
-    clib_list_base_type* found = bsearch(element, list->data, list->used, list->element_size, list->cmp_func);
-
-    if (!found) return list->used;
-
-    return (found - list->data) / list->element_size;
 }

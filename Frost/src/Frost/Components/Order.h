@@ -5,7 +5,7 @@
 
 typedef struct
 {
-	EntityID entity;
+	EcsEntityID entity;
 	char* templ;
 } Template;
 
@@ -13,7 +13,7 @@ int TemplateCmp(const Template* left, const Template* right);
 
 typedef struct
 {
-	EntityID entity;
+	EcsEntityID entity;
 	int z_index;
 } ZIndex;
 

@@ -24,6 +24,6 @@ typedef struct
 	SpriteFlip flip;
 } Sprite;
 
-void SpriteLoad(Scene* scene, EntityID entity, char* json);
+void SpriteLoad(Scene* scene, EcsEntityID entity, char* json);
 
 #endif /* !SPRITE_H */

@@ -4,7 +4,7 @@
 
 #include "json/tb_json.h"
 
-void MovementLoad(Scene* scene, EntityID entity, char* json)
+void MovementLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'movement'");

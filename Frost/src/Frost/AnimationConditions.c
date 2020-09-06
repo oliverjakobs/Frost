@@ -2,7 +2,7 @@
 
 #include "Frost/FrostEcs.h"
 
-int AnimationConditionJump(Ecs* ecs, EntityID entity, int s)
+int AnimationConditionJump(Ecs* ecs, EcsEntityID entity, int s)
 {
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
@@ -11,7 +11,7 @@ int AnimationConditionJump(Ecs* ecs, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionFall(Ecs* ecs, EntityID entity, int s)
+int AnimationConditionFall(Ecs* ecs, EcsEntityID entity, int s)
 {
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
@@ -20,7 +20,7 @@ int AnimationConditionFall(Ecs* ecs, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionWalk(Ecs* ecs, EntityID entity, int s)
+int AnimationConditionWalk(Ecs* ecs, EcsEntityID entity, int s)
 {
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 
@@ -29,7 +29,7 @@ int AnimationConditionWalk(Ecs* ecs, EntityID entity, int s)
 	return 0;
 }
 
-int AnimationConditionIdle(Ecs* ecs, EntityID entity, int s)
+int AnimationConditionIdle(Ecs* ecs, EcsEntityID entity, int s)
 {
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 

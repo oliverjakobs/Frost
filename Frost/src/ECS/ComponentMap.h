@@ -1,5 +1,5 @@
-#ifndef COMPONENT_MAP_H
-#define COMPONENT_MAP_H
+#ifndef ECS_COMPONENT_MAP_H
+#define ECS_COMPONENT_MAP_H
 
 #include "clib/hashmap.h"
 
@@ -9,29 +9,26 @@ typedef struct
 {
 	clib_hashmap map;
 	size_t element_size;
-} ComponentMap;
+} EcsComponentMap;
 
-int ComponentMapAlloc(ComponentMap* map, size_t element_size, void (*free_func)(void*));
-void ComponentMapFree(ComponentMap* map);
+int EcsComponentMapAlloc(EcsComponentMap* map, size_t element_size, void (*free_func)(void*));
+void EcsComponentMapFree(EcsComponentMap* map);
 
-void ComponentMapClear(ComponentMap* map);
+void EcsComponentMapClear(EcsComponentMap* map);
 
-void* ComponentMapInsert(ComponentMap* map, EntityID entity, void* component);
-void ComponentMapRemove(ComponentMap* map, EntityID entity);
+void* EcsComponentMapInsert(EcsComponentMap* map, EcsEntityID entity, void* component);
+void EcsComponentMapRemove(EcsComponentMap* map, EcsEntityID entity);
 
-void* ComponentMapFind(const ComponentMap* map, EntityID entity);
+void* EcsComponentMapFind(const EcsComponentMap* map, EcsEntityID entity);
 
-struct ComponentMapIter;
-typedef struct ComponentMapIter ComponentMapIter;
+struct EcsComponentMapIter;
+typedef struct EcsComponentMapIter EcsComponentMapIter;
 
-#define COMPONENT_MAP_ITERATE(map, iter) \
-	for (ComponentMapIter* iter = ComponentMapIterator(map); iter; iter = ComponentMapIterNext(map, iter))
+EcsComponentMapIter* EcsComponentMapIterator(const EcsComponentMap* map);
+EcsComponentMapIter* EcsComponentMapIterNext(const EcsComponentMap* map, const EcsComponentMapIter* iter);
 
-ComponentMapIter* ComponentMapIterator(const ComponentMap* map);
-ComponentMapIter* ComponentMapIterNext(const ComponentMap* map, const ComponentMapIter* iter);
+EcsEntityID EcsComponentMapIterKey(const EcsComponentMapIter* iter);
+void* EcsComponentMapIterValue(const EcsComponentMapIter* iter);
 
-EntityID ComponentMapIterKey(const ComponentMapIter* iter);
-void* ComponentMapIterValue(const ComponentMapIter* iter);
-
-#endif /* !COMPONENT_MAP_H */
+#endif /* !ECS_COMPONENT_MAP_H */
 

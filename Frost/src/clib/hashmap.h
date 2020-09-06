@@ -2,12 +2,9 @@
 #define CLIB_HASHMAP_H
 
 #include <stddef.h>
-#include "clib/hash.h"
+#include <stdint.h>
 
 typedef struct _clib_hashmap_iter clib_hashmap_iter;
-
-#define CLIB_HASHMAP_ITERATE_FOR(dict, iter) \
-    for (clib_hashmap_iter* iter = clib_hashmap_iterator(dict); iter; iter = clib_hashmap_iter_next(dict, iter))
 
 typedef enum
 {
@@ -151,5 +148,13 @@ void* clib_hashmap_iter_get_value(const clib_hashmap_iter* iter);
 int clib_hashmap_str_cmp(const void* a, const void* b);
 void* clib_hashmap_str_alloc(const void* src);
 void clib_hashmap_str_free(void* block);
+
+/* 
+ * Hash functions
+ */
+size_t clib_hash_string(const char* str);
+
+uint32_t clib_hash_uint32(uint32_t i);
+uint64_t clib_hash_uint64(uint64_t i);
 
 #endif /* !CLIB_HASHMAP_H */

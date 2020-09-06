@@ -49,8 +49,8 @@ void ConsoleOnEvent(Console* console, Event* e)
 	}
 
 	/* block key events */
-	int key = EventKey(e);
-	if (BETWEEN(KEY_SPACE, KEY_WORLD_2, key))
+	int32_t key = EventKey(e);
+	if (clib_between_i32(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 }
 

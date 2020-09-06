@@ -58,6 +58,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -73,6 +74,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -89,7 +91,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Frost\AnimationConditions.h" />
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
     <ClInclude Include="src\Application\Debugger.h" />
@@ -101,7 +102,11 @@
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\ComponentList.h" />
     <ClInclude Include="src\ECS\ComponentMap.h" />
-    <ClInclude Include="src\Frost\FrostEcs.h" />
+    <ClInclude Include="src\ECS\Ecs.h" />
+    <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Frost\AnimationConditions.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
     <ClInclude Include="src\Frost\Components\CameraController.h" />
     <ClInclude Include="src\Frost\Components\Interaction.h" />
@@ -110,17 +115,14 @@
     <ClInclude Include="src\Frost\Components\RigidBody.h" />
     <ClInclude Include="src\Frost\Components\Sprite.h" />
     <ClInclude Include="src\Frost\Components\Transform.h" />
-    <ClInclude Include="src\ECS\Ecs.h" />
-    <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\Frost\Frost.h" />
+    <ClInclude Include="src\Frost\FrostEcs.h" />
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
     <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h" />
     <ClInclude Include="src\Frost\Systems\PhysicsSystem.h" />
     <ClInclude Include="src\Frost\Systems\PlayerSystem.h" />
     <ClInclude Include="src\Frost\Systems\RenderSystem.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Frost\Frost.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
@@ -142,11 +144,10 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Inventory\Inventory.h" />
-    <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
+    <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\clib\array.h" />
     <ClInclude Include="src\clib\clib.h" />
-    <ClInclude Include="src\clib\hash.h" />
     <ClInclude Include="src\clib\hashmap.h" />
     <ClInclude Include="src\clib\list.h" />
     <ClInclude Include="src\json\tb_json.h" />
@@ -158,7 +159,6 @@
     <ClInclude Include="src\math\vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Frost\AnimationConditions.c" />
     <ClCompile Include="src\Application\Application.c" />
     <ClCompile Include="src\Application\ApplicationCallback.c" />
     <ClCompile Include="src\Application\Input.c" />
@@ -168,25 +168,26 @@
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\ComponentList.c" />
     <ClCompile Include="src\ECS\ComponentMap.c" />
+    <ClCompile Include="src\ECS\Ecs.c" />
+    <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\Event\Event.c" />
+    <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Frost\AnimationConditions.c" />
+    <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\CameraController.c" />
     <ClCompile Include="src\Frost\Components\Interaction.c" />
     <ClCompile Include="src\Frost\Components\Movement.c" />
-    <ClCompile Include="src\Frost\Components\Sprite.c" />
-    <ClCompile Include="src\Frost\FrostEcs.c" />
-    <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />
     <ClCompile Include="src\Frost\Components\RigidBody.c" />
-    <ClCompile Include="src\ECS\Ecs.c" />
-    <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\Frost\Components\Sprite.c" />
+    <ClCompile Include="src\Frost\Frost.c" />
+    <ClCompile Include="src\Frost\FrostEcs.c" />
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
     <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c" />
     <ClCompile Include="src\Frost\Systems\PhysicsSystem.c" />
     <ClCompile Include="src\Frost\Systems\PlayerSystem.c" />
     <ClCompile Include="src\Frost\Systems\RenderSystem.c" />
-    <ClCompile Include="src\Event\Event.c" />
-    <ClCompile Include="src\Event\EventHandler.c" />
-    <ClCompile Include="src\Frost\Frost.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
@@ -205,11 +206,10 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Inventory\Inventory.c" />
-    <ClCompile Include="src\Scenes\SceneEditor.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
+    <ClCompile Include="src\Scenes\SceneEditor.c" />
     <ClCompile Include="src\clib\array.c" />
     <ClCompile Include="src\clib\clib.c" />
-    <ClCompile Include="src\clib\hash.c" />
     <ClCompile Include="src\clib\hashmap.c" />
     <ClCompile Include="src\clib\list.c" />
     <ClCompile Include="src\json\tb_jwrite.c" />
@@ -243,9 +243,6 @@
     <None Include="res\templates\tree_3.json" />
     <None Include="res\templates\tree_4.json" />
     <None Include="res\templates\tree_5.json" />
-    <None Include="res\register.json" />
-    <None Include="res\scenes\scene.json" />
-    <None Include="res\scenes\scene2.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png" />
@@ -257,6 +254,7 @@
     <Image Include="res\textures\box.png" />
     <Image Include="res\textures\door.png" />
     <Image Include="res\textures\floor.png" />
+    <Image Include="res\textures\items.png" />
     <Image Include="res\textures\machine.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\trees.png" />

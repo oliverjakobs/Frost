@@ -50,18 +50,18 @@ void clib_list_remove(clib_list* list, const void* element);
 void clib_list_remove_at(clib_list* list, size_t index);
 
 /* Searches the list with bsearch and returns the element if found or NULL else */
-void* clib_list_find(clib_list* list, const void* element);
+void* clib_list_find(const clib_list* list, const void* element);
 
 /* Searches the list with bsearch and returns the index of the element if found or list->used else */
-size_t clib_list_find_index(clib_list* list, const void* element);
+size_t clib_list_find_index(const clib_list* list, const void* element);
 
 /* Returns the element at the given index */
-void* clib_list_get(clib_list* list, size_t index); 
+void* clib_list_get(const clib_list* list, size_t index); 
 
 /* Returns the first element */
-void* clib_list_first(clib_list* list);
+void* clib_list_first(const clib_list* list);
 
 /* Returns the last element */
-void* clib_list_last(clib_list* list);
+void* clib_list_last(const clib_list* list);
 
 #endif /* CLIB_LIST_H */

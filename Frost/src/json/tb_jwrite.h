@@ -57,6 +57,7 @@ extern "C"
 #endif
 
 #include <stdio.h>
+#include <stdint.h>
 
 // -----------------------------------------------------------------------------
 // ----| Version |--------------------------------------------------------------
@@ -133,17 +134,17 @@ void tb_jwrite_set_float_prec(tb_jwrite_control* jwc, int prec);
 
 // Object insertion functions
 // - used to insert "key":"value" pairs into an object
-void tb_jwrite_string(tb_jwrite_control* jwc, char* key, char* value);
-void tb_jwrite_int(tb_jwrite_control* jwc, char* key, int value);
-void tb_jwrite_float(tb_jwrite_control* jwc, char* key, float value);
-void tb_jwrite_null(tb_jwrite_control* jwc, char* key);
-void tb_jwrite_object(tb_jwrite_control* jwc, char* key);
-void tb_jwrite_array(tb_jwrite_control* jwc, char* key);
+void tb_jwrite_string(tb_jwrite_control* jwc, const char* key, const char* value);
+void tb_jwrite_int(tb_jwrite_control* jwc, const char* key, int32_t value);
+void tb_jwrite_float(tb_jwrite_control* jwc, const char* key, float value);
+void tb_jwrite_null(tb_jwrite_control* jwc, const char* key);
+void tb_jwrite_object(tb_jwrite_control* jwc, const char* key);
+void tb_jwrite_array(tb_jwrite_control* jwc, const char* key);
 
 // Array insertion functions
 // - used to insert "value" elements into an array
-void tb_jwrite_array_string(tb_jwrite_control* jwc, char* value);
-void tb_jwrite_array_int(tb_jwrite_control* jwc, int value);
+void tb_jwrite_array_string(tb_jwrite_control* jwc, const char* value);
+void tb_jwrite_array_int(tb_jwrite_control* jwc, int32_t value);
 void tb_jwrite_array_float(tb_jwrite_control* jwc, float value);
 void tb_jwrite_array_null(tb_jwrite_control* jwc);
 void tb_jwrite_array_object(tb_jwrite_control* jwc);
@@ -156,8 +157,8 @@ tb_jwrite_error tb_jwrite_end(tb_jwrite_control* jwc);
 // these 'raw' routines write the JSON value as the contents of rawtext
 // i.e. enclosing quotes are not added
 // - use if your app. supplies its own value->string functions
-void tb_jwrite_object_raw(tb_jwrite_control* jwc, char* key, char* rawtext);
-void tb_jwrite_array_raw(tb_jwrite_control* jwc, char* rawtext);
+void tb_jwrite_object_raw(tb_jwrite_control* jwc, const char* key, const char* rawtext);
+void tb_jwrite_array_raw(tb_jwrite_control* jwc, const char* rawtext);
 
 // tb_jwrite_error_pos
 // - if tb_jwrite_close returned an error, this function returns the number of the jWrite function call

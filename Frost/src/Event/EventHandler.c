@@ -19,18 +19,20 @@ static Event* _EventHandlerGetNext()
 			return &event_handler.queue[i];
 	}
 
-	// DEBUG_WARN("[EventHandler] Event queue overflow\n");
-
+	/* Event queue overflow */
 	return NULL;
 }
 
-int EventHandlerInit(size_t queue_size, void (*callback)(void*, Event))
+uint8_t EventHandlerInit(size_t queue_size, void (*callback)(void*, Event))
 {
 	event_handler.queue = calloc(queue_size, sizeof(Event));
+
+	if (!event_handler.queue) return 0;
+
 	event_handler.queue_size = queue_size;
 	event_handler.callback = callback;
 
-	return 0;
+	return 1;
 }
 
 void EventHandlerDestroy()
@@ -38,62 +40,52 @@ void EventHandlerDestroy()
 	free(event_handler.queue);
 }
 
-void EventHandlerThrowWindowEvent(EventType type, int width, int height)
+void EventHandlerThrowWindowEvent(EventType type, uint32_t width, uint32_t height)
 {
 	Event* e = _EventHandlerGetNext();
+	if (!e) return;
 
-	if (e)
-	{
-		e->type = type;
-		e->window.width = width;
-		e->window.height = height;
-	}
+	e->type = type;
+	e->window.width = width;
+	e->window.height = height;
 }
 
-void EventHandlerThrowKeyEvent(EventType type, int keycode, int repeatcount)
+void EventHandlerThrowKeyEvent(EventType type, int32_t keycode, uint32_t repeatcount)
 {
 	Event* e = _EventHandlerGetNext();
+	if (!e) return;
 
-	if (e)
-	{
-		e->type = type;
-		e->key.keycode = keycode;
-		e->key.repeatcount = repeatcount;
-	}
+	e->type = type;
+	e->key.keycode = keycode;
+	e->key.repeatcount = repeatcount;
 }
 
-void EventHandlerThrowMouseButtonEvent(EventType type, int button)
+void EventHandlerThrowMouseButtonEvent(EventType type, int32_t button)
 {
 	Event* e = _EventHandlerGetNext();
+	if (!e) return;
 
-	if (e)
-	{
-		e->type = type;
-		e->mousebutton.buttoncode = button;
-	}
+	e->type = type;
+	e->mousebutton.buttoncode = button;
 }
 
 void EventHandlerThrowMouseEvent(EventType type, float x, float y)
 {
 	Event* e = _EventHandlerGetNext();
+	if (!e) return;
 
-	if (e)
-	{
-		e->type = type;
-		e->mouse.x = x;
-		e->mouse.y = y;
-	}
+	e->type = type;
+	e->mouse.x = x;
+	e->mouse.y = y;
 }
 
 void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
 {
 	Event* e = _EventHandlerGetNext();
+	if (!e) return;
 
-	if (e)
-	{
-		e->type = type;
-		e->console.cmd = cmd;
-	}
+	e->type = type;
+	e->console.cmd = cmd;
 }
 
 void EventHandlerPoll(void* context)

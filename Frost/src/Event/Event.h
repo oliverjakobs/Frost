@@ -2,6 +2,7 @@
 #define EVENT_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 typedef enum
 {
@@ -27,8 +28,8 @@ typedef enum
 
 typedef struct
 {
-	int keycode;
-	int repeatcount;
+	int32_t keycode;
+	uint32_t repeatcount;
 } KeyEvent;
 
 typedef struct
@@ -38,12 +39,12 @@ typedef struct
 
 typedef struct
 {
-	int buttoncode;
+	int32_t buttoncode;
 } MouseButtonEvent;
 
 typedef struct
 {
-	unsigned int width, height;
+	uint32_t width, height;
 } WindowEvent;
 
 typedef struct
@@ -62,21 +63,21 @@ typedef struct
 		WindowEvent window;
 		ConsoleEvent console;
 	};
-	int handled;
+	uint8_t handled;
 } Event;
 
 void EventReset(Event* e);
 
 /* Utility */
-int EventCheckType(const Event* e, EventType type);
+uint8_t EventCheckType(const Event* e, EventType type);
 
-int EventMouseButton(const Event* e);
-int EventMouseButtonPressed(const Event* e);
-int EventMouseButtonReleased(const Event* e);
+int32_t EventMouseButton(const Event* e);
+int32_t EventMouseButtonPressed(const Event* e);
+int32_t EventMouseButtonReleased(const Event* e);
 
-int EventKey(const Event* e);
-int EventKeyPressed(const Event* e);
-int EventKeyReleased(const Event* e);
+int32_t EventKey(const Event* e);
+int32_t EventKeyPressed(const Event* e);
+int32_t EventKeyReleased(const Event* e);
 
 char EventKeyTyped(const Event* e);
 

@@ -6,7 +6,7 @@
 
 #include "Application/Debugger.h"
 
-void SpriteLoad(Scene* scene, EntityID entity, char* json)
+void SpriteLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'sprite'");

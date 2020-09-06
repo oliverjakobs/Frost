@@ -75,7 +75,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 			vec2 pos = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
 
-			if (SceneLoadTemplate(scene, args[0], EntityGetNextID(), pos, atoi(args[1])))
+			if (SceneLoadTemplate(scene, args[0], EcsEntityGetNextID(), pos, atoi(args[1])))
 				ConsoleOut(console, "Created entity with template %s", args[0]);
 		}
 		break;
@@ -90,7 +90,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			CLIB_HASHMAP_ITERATE_FOR(&scene->scene_register, iter)
+			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->scene_register); iter; iter = clib_hashmap_iter_next(&scene->scene_register, iter))
 			{
 				const char* name = clib_hashmap_iter_get_key(iter);
 
@@ -104,12 +104,12 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 				Template* templ = EcsGetOrderComponent(&scene->ecs, i, COMPONENT_TEMPLATE);
 
 				if (templ)
-					ConsoleOut(console, " - %d \t | %s", *(EntityID*)templ, templ->templ);
+					ConsoleOut(console, " - %d \t | %s", *(EcsEntityID*)templ, templ->templ);
 			}
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
-			CLIB_HASHMAP_ITERATE_FOR(&scene->templates, iter)
+			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->templates); iter; iter = clib_hashmap_iter_next(&scene->templates, iter))
 			{
 				const char* name = clib_hashmap_iter_get_key(iter);
 				char* templ = clib_hashmap_iter_get_value(iter);
@@ -120,13 +120,13 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		else if (strcmp(spec, "res") == 0)
 		{
 			ConsoleOut(console, "Textures:");
-			CLIB_HASHMAP_ITERATE_FOR(&scene->resources->textures, iter)
+			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->resources->textures); iter; iter = clib_hashmap_iter_next(&scene->resources->textures, iter))
 			{
 				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
 			}
 
 			ConsoleOut(console, "Fonts:");
-			CLIB_HASHMAP_ITERATE_FOR(&scene->resources->fonts, iter)
+			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->resources->fonts); iter; iter = clib_hashmap_iter_next(&scene->resources->fonts, iter))
 			{
 				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
 			}

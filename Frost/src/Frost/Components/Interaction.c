@@ -4,7 +4,7 @@
 
 #include "json/tb_json.h"
 
-void InteractorLoad(Scene* scene, EntityID entity, char* json)
+void InteractorLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'interactor'");
@@ -17,7 +17,7 @@ void InteractorLoad(Scene* scene, EntityID entity, char* json)
 	}
 }
 
-void InteractionLoad(Scene* scene, EntityID entity, char* json)
+void InteractionLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'interaction'");

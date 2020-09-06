@@ -221,7 +221,7 @@ int SceneLoad(Scene* scene, const char* path)
 			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
 
 			/* Load Template */
-			if (!SceneLoadTemplate(scene, templ, EntityGetNextID(), pos, z_index))
+			if (!SceneLoadTemplate(scene, templ, EcsEntityGetNextID(), pos, z_index))
 			{
 				DEBUG_ERROR("[Scenes] Failed to load template %s\n", templ);
 			}
@@ -305,7 +305,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		ZIndex* indexed = ComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), templ->entity);
+		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), templ->entity);
 		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
 
 		tb_jwrite_end(&jwc);
@@ -338,7 +338,7 @@ int SceneSave(Scene* scene, const char* path)
 	return 1;
 }
 
-int SceneLoadTemplate(Scene* scene, const char* templ, EntityID entity, vec2 pos, int z_index)
+int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index)
 {
 	char* path = clib_hashmap_find(&scene->templates, templ);
 	if (!path)

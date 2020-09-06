@@ -2,7 +2,7 @@
 
 #include "Ignis.h"
 
-int ignisCreateQuad(IgnisQuad* quad, GLfloat* vertices, size_t vertex_count, GLenum usage, IgnisBufferElement* layout, size_t layout_size, GLuint* indices, size_t element_count)
+int ignisCreateQuad(IgnisQuad* quad, GLfloat* vertices, size_t vertex_count, GLenum usage, IgnisBufferElement* layout, size_t layout_size, GLuint* indices, GLsizei element_count)
 {
 	if (ignisGenerateVertexArray(&quad->vao) == IGNIS_SUCCESS)
 	{

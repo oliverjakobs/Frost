@@ -1,10 +1,11 @@
 #include "RigidBody.h"
 
 #include "Frost/FrostEcs.h"
+#include "clib/clib.h"
 
 #include "json/tb_json.h"
 
-void RigidBodyLoad(Scene* scene, EntityID entity, char* json)
+void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'rigidbody'");
@@ -55,21 +56,21 @@ void RigidBodyResolveCollision(RigidBody* body, const RigidBody* other, vec2 old
 	float y0 = (oldpos.y + body->half_size.y) - (other->position.y - other->half_size.y);
 	float y1 = (other->position.y + other->half_size.y) - (oldpos.y - body->half_size.y);
 
-	float overlap_x = MIN(x0, x1);
-	float overlap_y = MIN(y0, y1);
+	float overlap_x = clib_min_f(x0, x1);
+	float overlap_y = clib_min_f(y0, y1);
 
 	// horizontal resolve
 	if (overlap_x > 0.0f && overlap_y > 0.0f)
 	{
 		if (body->velocity.x < 0.0f)
 		{
-			body->position.x += MAX(overlap_x, 0.0f);
+			body->position.x += clib_max_f(overlap_x, 0.0f);
 			body->velocity.x = 0.0f;
 			body->collides_left = 1;
 		}
 		else if (body->velocity.x > 0.0f)
 		{
-			body->position.x -= MAX(overlap_x, 0.0f);
+			body->position.x -= clib_max_f(overlap_x, 0.0f);
 			body->velocity.x = 0.0f;
 			body->collides_right = 1;
 		}
@@ -81,21 +82,21 @@ void RigidBodyResolveCollision(RigidBody* body, const RigidBody* other, vec2 old
 	y0 = (body->position.y + body->half_size.y) - (other->position.y - other->half_size.y);
 	y1 = (other->position.y + other->half_size.y) - (body->position.y - body->half_size.y);
 
-	overlap_x = MIN(x0, x1);
-	overlap_y = MIN(y0, y1);
+	overlap_x = clib_min_f(x0, x1);
+	overlap_y = clib_min_f(y0, y1);
 
 	// vertical resolve
 	if (overlap_x > 0.0f && overlap_y > 0.0f)
 	{
 		if (body->velocity.y < 0.0f)
 		{
-			body->position.y += MAX(overlap_y, 0.0f);
+			body->position.y += clib_max_f(overlap_y, 0.0f);
 			body->velocity.y = 0.0f;
 			body->collides_bottom = 1;
 		}
 		else if (body->velocity.y > 0.0f)
 		{
-			body->position.y -= MAX(overlap_y, 0.0f);
+			body->position.y -= clib_max_f(overlap_y, 0.0f);
 			body->velocity.y = 0.0f;
 			body->collides_top = 1;
 		}

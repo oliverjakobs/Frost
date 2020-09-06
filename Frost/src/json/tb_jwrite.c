@@ -22,14 +22,14 @@ static void _tb_jwrite_put_ch(tb_jwrite_control* jwc, char c)
 }
 
 /* put string enclosed in quotes */
-static void _tb_jwrite_put_str(tb_jwrite_control* jwc, char* str)
+static void _tb_jwrite_put_str(tb_jwrite_control* jwc, const char* str)
 {
     if (fprintf(jwc->file, "\"%s\"", str) < 0)
         jwc->error = TB_JWRITE_WRITE_ERROR;
 }
 
 /* put raw string */
-static void _tb_jwrite_put_raw(tb_jwrite_control* jwc, char* str)
+static void _tb_jwrite_put_raw(tb_jwrite_control* jwc, const char* str)
 {
     if (fprintf(jwc->file, "%s", str) < 0)
         jwc->error = TB_JWRITE_WRITE_ERROR;
@@ -153,7 +153,7 @@ tb_jwrite_error tb_jwrite_end(tb_jwrite_control* jwc)
 // - checks current node is OBJECT
 // - adds comma if reqd
 // - adds "key" :
-tb_jwrite_error _tb_jwrite_object(tb_jwrite_control* jwc, char* key)
+static tb_jwrite_error _tb_jwrite_object(tb_jwrite_control* jwc, const char* key)
 {
     if (jwc->error == TB_JWRITE_OK)
     {
@@ -172,38 +172,38 @@ tb_jwrite_error _tb_jwrite_object(tb_jwrite_control* jwc, char* key)
 }
 
 // put raw string to object (i.e. contents of rawtext without quotes)
-void tb_jwrite_object_raw(tb_jwrite_control* jwc, char* key, char* rawtext)
+void tb_jwrite_object_raw(tb_jwrite_control* jwc, const char* key, const char* rawtext)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
         _tb_jwrite_put_raw(jwc, rawtext);
 }
 
 // put "quoted" string to object
-void tb_jwrite_string(tb_jwrite_control* jwc, char* key, char* value)
+void tb_jwrite_string(tb_jwrite_control* jwc, const char* key, const char* value)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
         _tb_jwrite_put_str(jwc, value);
 }
 
-void tb_jwrite_int(tb_jwrite_control* jwc, char* key, int value)
+void tb_jwrite_int(tb_jwrite_control* jwc, const char* key, int32_t value)
 {
     _tb_jwrite_modp_itoa10(value, jwc->tmpbuf);
     tb_jwrite_object_raw(jwc, key, jwc->tmpbuf);
 }
 
-void tb_jwrite_float(tb_jwrite_control* jwc, char* key, float value)
+void tb_jwrite_float(tb_jwrite_control* jwc, const char* key, float value)
 {
     _tb_jwrite_modp_ftoa2(value, jwc->tmpbuf, jwc->float_prec);
     tb_jwrite_object_raw(jwc, key, jwc->tmpbuf);
 }
 
-void tb_jwrite_null(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_null(tb_jwrite_control* jwc, const char* key)
 {
     tb_jwrite_object_raw(jwc, key, "null");
 }
 
 // put Object in Object
-void tb_jwrite_object(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_object(tb_jwrite_control* jwc, const char* key)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
@@ -213,7 +213,7 @@ void tb_jwrite_object(tb_jwrite_control* jwc, char* key)
 }
 
 // put Array in Object
-void tb_jwrite_array(tb_jwrite_control* jwc, char* key)
+void tb_jwrite_array(tb_jwrite_control* jwc, const char* key)
 {
     if (_tb_jwrite_object(jwc, key) == TB_JWRITE_OK)
     {
@@ -246,7 +246,7 @@ tb_jwrite_error _tb_jwrite_array(tb_jwrite_control* jwc)
 
 // put raw string to array (i.e. contents of rawtext without quotes)
 //
-void tb_jwrite_array_raw(tb_jwrite_control* jwc, char* rawtext)
+void tb_jwrite_array_raw(tb_jwrite_control* jwc, const char* rawtext)
 {
     if (_tb_jwrite_array(jwc) == TB_JWRITE_OK)
         _tb_jwrite_put_raw(jwc, rawtext);
@@ -254,7 +254,7 @@ void tb_jwrite_array_raw(tb_jwrite_control* jwc, char* rawtext)
 
 // put "quoted" string to array
 //
-void tb_jwrite_array_string(tb_jwrite_control* jwc, char* value)
+void tb_jwrite_array_string(tb_jwrite_control* jwc, const char* value)
 {
     if (_tb_jwrite_array(jwc) == TB_JWRITE_OK)
         _tb_jwrite_put_str(jwc, value);
@@ -346,7 +346,7 @@ static void _tb_jwrite_strreverse(char* begin, char* end)
         aux = *end, * end-- = *begin, * begin++ = aux;
 }
 
-/** \brief convert an signed integer to char buffer
+/* \brief convert an signed integer to char buffer
  *
  * \param[in] value
  * \param[out] buf the output buffer.  Should be 16 chars or more.
@@ -365,14 +365,14 @@ void _tb_jwrite_modp_itoa10(int32_t value, char* str)
     _tb_jwrite_strreverse(str, wstr - 1);
 }
 
-/**
+/*
  * Powers of 10
  * 10^0 to 10^9
  */
 static const double pow10[] = { 1, 10, 100, 1000, 10000, 100000, 1000000,
                                10000000, 100000000, 1000000000 };
 
-/** \brief convert a floating point number to char buffer with a
+/* \brief convert a floating point number to char buffer with a
  *         variable-precision format, and no trailing zeros
  *
  * This is similar to "%.[0-9]f" in the printf style, except it will
@@ -399,104 +399,117 @@ void _tb_jwrite_modp_ftoa2(float value, char* str, int prec)
     double tmp;
     uint32_t frac;
 
-    /* Hacky test for NaN
+    /* 
+     * Hacky test for NaN
      * under -fast-math this won't work, but then you also won't
      * have correct nan values anyways.  The alternative is
      * to link with libmath (bad) or hack IEEE double bits (bad)
      */
-    if (!(value == value)) {
+    if (!(value == value))
+    {
         str[0] = 'n'; str[1] = 'a'; str[2] = 'n'; str[3] = '\0';
         return;
     }
 
-    if (prec < 0) {
+    if (prec < 0)
         prec = 0;
-    }
-    else if (prec > 9) {
-        /* precision of >= 10 can lead to overflow errors */
+    else if (prec > 9) /* precision of >= 10 can lead to overflow errors */
         prec = 9;
-    }
 
-    /* we'll work in positive values and deal with the
-       negative sign issue later */
+    /* 
+     * we'll work in positive values and deal with the
+     * negative sign issue later 
+     */
     if (value < 0) {
         neg = 1;
         value = -value;
     }
 
     whole = (int)value;
-    tmp = (value - whole) * pow10[prec];
+    tmp = ((double)value - whole) * pow10[prec];
     frac = (uint32_t)(tmp);
     diff = tmp - frac;
 
-    if (diff > 0.5) {
+    if (diff > 0.5)
+    {
         ++frac;
         /* handle rollover, e.g.  case 0.99 with prec 1 is 1.0  */
-        if (frac >= pow10[prec]) {
+        if (frac >= pow10[prec])
+        {
             frac = 0;
             ++whole;
         }
     }
-    else if (diff == 0.5 && ((frac == 0) || (frac & 1))) {
-        /* if halfway, round up if odd, OR
-           if last digit is 0.  That last part is strange */
+    else if (diff == 0.5 && ((frac == 0) || (frac & 1)))
+    {
+        /* if halfway, round up if odd, OR if last digit is 0.  That last part is strange */
         ++frac;
     }
 
-    /* for very large numbers switch back to native sprintf for exponentials.
-       anyone want to write code to replace this? */
-       /*
-         normal printf behavior is to print EVERY whole number digit
-         which can be 100s of characters overflowing your buffers == bad
-       */
-    if (value > thres_max) {
+    /*
+     * for very large numbers switch back to native sprintf for exponentials.
+     * anyone want to write code to replace this?
+     * normal printf behavior is to print EVERY whole number digit
+     * which can be 100s of characters overflowing your buffers == bad
+     */
+    if (value > thres_max)
+    {
         sprintf(str, "%e", neg ? -value : value);
         return;
     }
 
-    if (prec == 0) {
-        diff = value - whole;
-        if (diff > 0.5) {
+    if (prec == 0)
+    {
+        diff = (double)value - whole;
+        if (diff > 0.5)
+        {
             /* greater than 0.5, round up, e.g. 1.6 -> 2 */
             ++whole;
         }
-        else if (diff == 0.5 && (whole & 1)) {
+        else if (diff == 0.5 && (whole & 1))
+        {
             /* exactly 0.5 and ODD, then round up */
             /* 1.5 -> 2, but 2.5 -> 2 */
             ++whole;
         }
 
-        //vvvvvvvvvvvvvvvvvvv  Diff from modp_dto2
+        /* vvvvvvvvvvvvvvvvvvv  Diff from modp_dto2 */
     }
-    else if (frac) {
+    else if (frac)
+    {
         count = prec;
-        // now do fractional part, as an unsigned number
-        // we know it is not 0 but we can have leading zeros, these
-        // should be removed
-        while (!(frac % 10)) {
+        /*
+         * now do fractional part, as an unsigned number
+         * we know it is not 0 but we can have leading zeros, these
+         * should be removed
+         */
+        while (!(frac % 10))
+        {
             --count;
             frac /= 10;
         }
-        //^^^^^^^^^^^^^^^^^^^  Diff from modp_dto2
+        /* ^^^^^^^^^^^^^^^^^^^  Diff from modp_dto2 */
 
-        // now do fractional part, as an unsigned number
+        /* now do fractional part, as an unsigned number */
         do {
             --count;
             *wstr++ = (char)(48 + (frac % 10));
         } while (frac /= 10);
-        // add extra 0s
+        /* add extra 0s */
         while (count-- > 0) *wstr++ = '0';
-        // add decimal
+        /* add decimal */
         *wstr++ = '.';
     }
 
-    // do whole part
-    // Take care of sign
-    // Conversion. Number is reversed.
+    /*
+     * do whole part
+     * Take care of sign
+     * Conversion. Number is reversed.
+     */
     do *wstr++ = (char)(48 + (whole % 10)); while (whole /= 10);
-    if (neg) {
-        *wstr++ = '-';
-    }
+
+    if (neg) *wstr++ = '-';
+
     *wstr = '\0';
     _tb_jwrite_strreverse(str, wstr - 1);
 }

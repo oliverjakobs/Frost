@@ -1,5 +1,5 @@
-#ifndef COMPONENT_LIST_H
-#define COMPONENT_LIST_H
+#ifndef ECS_COMPONENT_LIST_H
+#define ECS_COMPONENT_LIST_H
 
 #include "clib/list.h"
 
@@ -8,20 +8,19 @@
 typedef struct
 {
 	clib_list list;
-} ComponentList;
+} EcsComponentList;
 
-int ComponentListAlloc(ComponentList* list, size_t element_size, int (*cmp)(const void*, const void*));
-void ComponentListFree(ComponentList* list);
+int EcsComponentListAlloc(EcsComponentList* list, size_t element_size, int (*cmp)(const void*, const void*));
+void EcsComponentListFree(EcsComponentList* list);
 
-void ComponentListClear(ComponentList* list);
+void EcsComponentListClear(EcsComponentList* list);
 
-void* ComponentListInsert(ComponentList* list, void* component);
-void ComponentListRemove(ComponentList* list, size_t index);
+size_t EcsComponentListLength(const EcsComponentList* list);
 
-void* ComponentListFind(ComponentList* list, EntityID entity);
-void* ComponentListAt(ComponentList* list, size_t index);
+void* EcsComponentListInsert(EcsComponentList* list, void* component);
+void EcsComponentListRemove(EcsComponentList* list, size_t index);
 
-#define COMPONENT_LIST_ITERATE(component_list, index) \
-	for (size_t index = 0; index < component_list->list.used; ++index)
+void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity);
+void* EcsComponentListAt(const EcsComponentList* list, size_t index);
 
-#endif /* !COMPONENT_SET_H */
+#endif /* !ECS_COMPONENT_LIST_H */

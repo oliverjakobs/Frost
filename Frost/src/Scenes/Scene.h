@@ -40,6 +40,6 @@ void SceneOnRenderDebug(Scene* scene);
 int SceneLoad(Scene* scene, const char* path);
 int SceneSave(Scene* scene, const char* path);
 
-int SceneLoadTemplate(Scene* scene, const char* templ, EntityID entity, vec2 pos, int z_index);
+int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index);
 
 #endif /* !SCENE_MANAGER_H */

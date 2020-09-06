@@ -4,11 +4,12 @@
 
 void PhysicsSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), iter)
+	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
+	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		RigidBody* body = ComponentMapIterValue(iter);
+		RigidBody* body = EcsComponentMapIterValue(iter);
 
-		Transform* transform = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_TRANSFORM);
+		Transform* transform = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_TRANSFORM);
 		if (!transform) continue;
 
 		body->position = vec2_add(transform->position, body->offset);
@@ -20,12 +21,11 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 		vec2 old_position = body->position;
 		RigidBodyTick(body, gravity, deltatime);
 
-		COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY), other_iter)
+		for (EcsComponentMapIter* other_iter = EcsComponentMapIterator(map); other_iter; other_iter = EcsComponentMapIterNext(map, other_iter))
 		{
-			if (ComponentMapIterKey(iter) == ComponentMapIterKey(other_iter))
-				continue;
+			if (EcsComponentMapIterKey(iter) == EcsComponentMapIterKey(other_iter)) continue;
 
-			RigidBody* other = ComponentMapIterValue(other_iter);
+			RigidBody* other = EcsComponentMapIterValue(other_iter);
 			RigidBodyResolveCollision(body, other, old_position);
 		}
 

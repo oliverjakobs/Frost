@@ -72,21 +72,23 @@ int ResourcesInit(Resources* resources, const char* path)
 
 void ResourcesDestroy(Resources* resources)
 {
-	CLIB_HASHMAP_ITERATE_FOR(&resources->textures, iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->textures); iter; iter = clib_hashmap_iter_next(&resources->textures, iter))
 	{
 		IgnisTexture2D* tex = clib_hashmap_iter_get_value(iter);
 		ignisDeleteTexture2D(tex);
 		free(tex);
 		clib_hashmap_iter_remove(&resources->textures, iter);
 	}
+	clib_hashmap_free(&resources->textures);
 
-	CLIB_HASHMAP_ITERATE_FOR(&resources->fonts, iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->fonts); iter; iter = clib_hashmap_iter_next(&resources->fonts, iter))
 	{
 		IgnisFont* font = clib_hashmap_iter_get_value(iter);
 		ignisDeleteFont(font);
 		free(font);
 		clib_hashmap_iter_remove(&resources->fonts, iter);
 	}
+	clib_hashmap_free(&resources->fonts);
 }
 
 IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, const char* path, int rows, int columns)
@@ -142,7 +144,7 @@ IgnisFont* ResourcesGetFont(Resources* manager, const char* name)
 
 const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* texture)
 {
-	CLIB_HASHMAP_ITERATE_FOR(&resources->textures, iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->textures); iter; iter = clib_hashmap_iter_next(&resources->textures, iter))
 	{
 		if (texture == clib_hashmap_iter_get_value(iter))
 			return clib_hashmap_iter_get_key(iter);
@@ -153,7 +155,7 @@ const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* text
 
 const char* ResourcesGetFontName(Resources* resources, IgnisFont* font)
 {
-	CLIB_HASHMAP_ITERATE_FOR(&resources->fonts, iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&resources->fonts); iter; iter = clib_hashmap_iter_next(&resources->fonts, iter))
 	{
 		if (font == clib_hashmap_iter_get_value(iter))
 			return clib_hashmap_iter_get_key(iter);

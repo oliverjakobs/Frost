@@ -1,8 +1,9 @@
 #include "FrostEcs.h"
 
-EntityID GetEntityAt(Ecs* ecs, vec2 pos)
+EcsEntityID GetEntityAt(Ecs* ecs, vec2 pos)
 {
-	CLIB_HASHMAP_ITERATE_FOR(clib_array_get(&ecs->data_components, COMPONENT_TRANSFORM), iter)
+	clib_hashmap* map = clib_array_get(&ecs->data_components, COMPONENT_TRANSFORM);
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(map); iter; iter = clib_hashmap_iter_next(map, iter))
 	{
 		Transform* transform = clib_hashmap_iter_get_value(iter);
 
@@ -10,13 +11,13 @@ EntityID GetEntityAt(Ecs* ecs, vec2 pos)
 		vec2 max = vec2_add(min, transform->size);
 
 		if (vec2_inside(pos, min, max))
-			return *(EntityID*)clib_hashmap_iter_get_key(iter);
+			return *(EcsEntityID*)clib_hashmap_iter_get_key(iter);
 	}
 
-	return NULL_ENTITY;
+	return ECS_NULL_ENTITY;
 }
 
-void SetEntityPosition(Ecs* ecs, EntityID entity, vec2 pos)
+void SetEntityPosition(Ecs* ecs, EcsEntityID entity, vec2 pos)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (transform) transform->position = pos;
@@ -25,7 +26,7 @@ void SetEntityPosition(Ecs* ecs, EntityID entity, vec2 pos)
 	if (body) body->position = vec2_add(pos, body->offset);
 }
 
-vec2 GetEntityPosition(Ecs* ecs, EntityID entity)
+vec2 GetEntityPosition(Ecs* ecs, EcsEntityID entity)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (transform) return transform->position;
@@ -33,7 +34,7 @@ vec2 GetEntityPosition(Ecs* ecs, EntityID entity)
 	return vec2_zero();
 }
 
-vec2 GetEntityCenter(Ecs* ecs, EntityID entity)
+vec2 GetEntityCenter(Ecs* ecs, EcsEntityID entity)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 
@@ -49,7 +50,7 @@ vec2 GetEntityCenter(Ecs* ecs, EntityID entity)
 	return vec2_zero();
 }
 
-rect GetEntityRect(Ecs* ecs, EntityID entity)
+rect GetEntityRect(Ecs* ecs, EcsEntityID entity)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 

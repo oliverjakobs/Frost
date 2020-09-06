@@ -65,7 +65,7 @@ void AnimationConditionsInit()
 
 void AnimationConditionsDestroy()
 {
-	CLIB_HASHMAP_ITERATE_FOR(&condition_table, iter)
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&condition_table); iter; iter = clib_hashmap_iter_next(&condition_table, iter))
 	{
 		free(clib_hashmap_iter_get_value(iter));
 		clib_hashmap_iter_remove(&condition_table, iter);
@@ -73,7 +73,7 @@ void AnimationConditionsDestroy()
 	clib_hashmap_free(&condition_table);
 }
 
-int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EntityID, int))
+int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EcsEntityID, int))
 {
 	AnimationCondition* value = malloc(sizeof(AnimationCondition));
 
@@ -95,12 +95,13 @@ AnimationCondition* AnimationConditionsGetCondition(const char* name)
 /* ---------------------------------| Animator |------------------------------------ */
 void AnimatorFree(void* block)
 {
-	CLIB_HASHMAP_ITERATE_FOR(&((Animator*)block)->animations, iter)
+	clib_hashmap* map = &((Animator*)block)->animations;
+	for (clib_hashmap_iter* iter = clib_hashmap_iterator(map); iter; iter = clib_hashmap_iter_next(map, iter))
 	{
 		free(clib_hashmap_iter_get_value(iter));
-		clib_hashmap_iter_remove(&((Animator*)block)->animations, iter);
+		clib_hashmap_iter_remove(map, iter);
 	}
-	clib_hashmap_free(&((Animator*)block)->animations);
+	clib_hashmap_free(map);
 	free(block);
 }
 
@@ -119,7 +120,7 @@ static int AnimatorAddAnimation(Animator* animator, const char* name, Animation*
 	return 1;
 }
 
-void AnimatorLoad(Scene* scene, EntityID entity, char* json)
+void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'animation'");

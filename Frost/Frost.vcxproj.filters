@@ -13,12 +13,6 @@
     <Filter Include="res\templates">
       <UniqueIdentifier>{0DD1EA8D-7991-66C4-42CC-AF41AE4BABA0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\templates\entities">
-      <UniqueIdentifier>{8104CB6C-6DFE-F3BE-566B-8ACF42045A2B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="res\templates\scenes">
-      <UniqueIdentifier>{BDA53876-A934-C23F-5253-D63A3EC1D2E5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\textures">
       <UniqueIdentifier>{227C1C83-0EDF-AB27-B764-E4DDA3A677AA}</UniqueIdentifier>
     </Filter>
@@ -30,9 +24,6 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Animation">
-      <UniqueIdentifier>{5C00BBE1-C8C0-3618-91FB-7F95FD7A7BF4}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Application">
       <UniqueIdentifier>{701253C7-DC9D-C08B-E5AE-438051B91C8C}</UniqueIdentifier>
@@ -46,14 +37,17 @@
     <Filter Include="src\ECS">
       <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\ECS\Components">
-      <UniqueIdentifier>{AC4A8D64-982E-4EBA-018F-480DED91383C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\ECS\Systems">
-      <UniqueIdentifier>{FECA3740-6A56-A504-7367-28F9DF710105}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Event">
       <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Frost">
+      <UniqueIdentifier>{6A2CEFB2-D696-A329-1FD5-54CF8B7E817E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Frost\Components">
+      <UniqueIdentifier>{3F3B8D15-2BCA-16DF-D4E8-2ADAC0562785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Frost\Systems">
+      <UniqueIdentifier>{714CBC48-DD62-BADE-26DA-4500922F8B66}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
@@ -87,9 +81,6 @@
     </Filter>
     <Filter Include="src\math">
       <UniqueIdentifier>{46A033CF-326D-8EDA-5B86-7C8247B2C368}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\physics">
-      <UniqueIdentifier>{BF23DBB5-2BD9-53AB-B4CD-4D8220824AAF}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +129,57 @@
     <ClInclude Include="src\Event\EventHandler.h">
       <Filter>src\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\AnimationConditions.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Animator.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\CameraController.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Interaction.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Movement.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Order.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\RigidBody.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Sprite.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Transform.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Frost.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\FrostEcs.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\InteractionSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\PhysicsSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\PlayerSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\RenderSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\Graphics\Background.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
@@ -154,6 +196,9 @@
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Renderer2D.h">
+      <Filter>src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\Resources.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Ignis\ComputeShader.h">
@@ -198,6 +243,9 @@
     <ClInclude Include="src\Inventory\Inventory.h">
       <Filter>src\Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scenes\Scene.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scenes\SceneEditor.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
@@ -205,9 +253,6 @@
       <Filter>src\clib</Filter>
     </ClInclude>
     <ClInclude Include="src\clib\clib.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clib\hash.h">
       <Filter>src\clib</Filter>
     </ClInclude>
     <ClInclude Include="src\clib\hashmap.h">
@@ -236,63 +281,6 @@
     </ClInclude>
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Animator.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\CameraController.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Interaction.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Movement.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Order.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\RigidBody.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Sprite.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Components\Transform.h">
-      <Filter>src\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\InteractionSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\PhysicsSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\PlayerSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Systems\RenderSystem.h">
-      <Filter>src\ECS\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\Frost.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\FrostEcs.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\AnimationConditions.h">
-      <Filter>src\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Graphics\Resources.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scenes\Scene.h">
-      <Filter>src\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -335,6 +323,54 @@
     <ClCompile Include="src\Event\EventHandler.c">
       <Filter>src\Event</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\AnimationConditions.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Animator.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\CameraController.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Interaction.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Movement.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Order.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\RigidBody.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Sprite.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Frost.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostEcs.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\InteractionSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\PhysicsSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\PlayerSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\RenderSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="src\Graphics\Background.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
@@ -351,6 +387,9 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Renderer2D.c">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\Resources.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\ComputeShader.c">
@@ -386,6 +425,9 @@
     <ClCompile Include="src\Inventory\Inventory.c">
       <Filter>src\Inventory</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scenes\Scene.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scenes\SceneEditor.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
@@ -393,9 +435,6 @@
       <Filter>src\clib</Filter>
     </ClCompile>
     <ClCompile Include="src\clib\clib.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clib\hash.c">
       <Filter>src\clib</Filter>
     </ClCompile>
     <ClCompile Include="src\clib\hashmap.c">
@@ -422,52 +461,6 @@
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Frost\Components\Animator.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Components\Order.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Components\RigidBody.c">
-      <Filter>src\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\InteractionSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\PhysicsSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\PlayerSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\RenderSystem.c">
-      <Filter>src\ECS\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Frost.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\FrostEcs.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\AnimationConditions.c">
-      <Filter>src\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Resources.c">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scenes\Scene.c">
-      <Filter>src\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Components\Movement.c" />
-    <ClCompile Include="src\Frost\Components\CameraController.c" />
-    <ClCompile Include="src\Frost\Components\Interaction.c" />
-    <ClCompile Include="src\Frost\Components\Sprite.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -507,44 +500,35 @@
     <None Include="res\shaders\tile.vert">
       <Filter>res\shaders</Filter>
     </None>
-    <None Include="res\register.json">
+    <None Include="res\templates\box.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="res\scenes\scene.json">
-      <Filter>res\templates\scenes</Filter>
-    </None>
-    <None Include="res\scenes\scene2.json">
-      <Filter>res\templates\scenes</Filter>
-    </None>
-    <None Include="res\templates\box.json">
-      <Filter>res\templates\entities</Filter>
-    </None>
     <None Include="res\templates\door.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\floor.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\machine.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\player.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\tree_1.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\tree_2.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\tree_3.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\tree_4.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\tree_5.json">
-      <Filter>res\templates\entities</Filter>
+      <Filter>res\templates</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -573,6 +557,9 @@
       <Filter>res\textures</Filter>
     </Image>
     <Image Include="res\textures\floor.png">
+      <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\items.png">
       <Filter>res\textures</Filter>
     </Image>
     <Image Include="res\textures\machine.png">

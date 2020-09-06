@@ -18,11 +18,12 @@ static void PlayAnimation(Animator* animator, const char* name)
 
 void AnimationSystem(Ecs* ecs, float deltatime)
 {
-	COMPONENT_MAP_ITERATE(EcsGetComponentMap(ecs, COMPONENT_ANIMATION), iter)
+	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_ANIMATION);
+	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		Animator* animator = ComponentMapIterValue(iter);
+		Animator* animator = EcsComponentMapIterValue(iter);
 
-		Sprite* sprite = EcsGetDataComponent(ecs, ComponentMapIterKey(iter), COMPONENT_SPRITE);
+		Sprite* sprite = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 
@@ -35,12 +36,11 @@ void AnimationSystem(Ecs* ecs, float deltatime)
 
 		AnimationTick(current, deltatime);
 		clib_hashmap* transitions = &current->transitions;
-
-		CLIB_HASHMAP_ITERATE_FOR(transitions, transition_iter)
+		for (clib_hashmap_iter* t_iter = clib_hashmap_iterator(transitions); t_iter; t_iter = clib_hashmap_iter_next(transitions, t_iter))
 		{
-			AnimationCondition* cond = AnimationConditionsGetCondition(clib_hashmap_iter_get_key(transition_iter));
-			if (cond && cond->func(ecs, ComponentMapIterKey(iter), 0))
-				PlayAnimation(animator, clib_hashmap_iter_get_value(transition_iter));
+			AnimationCondition* cond = AnimationConditionsGetCondition(clib_hashmap_iter_get_key(t_iter));
+			if (cond && cond->func(ecs, EcsComponentMapIterKey(iter), 0))
+				PlayAnimation(animator, clib_hashmap_iter_get_value(t_iter));
 		}
 		sprite->frame = current->frame;
 	}

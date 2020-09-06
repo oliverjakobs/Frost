@@ -1,13 +1,13 @@
 #include "Entity.h"
 
-static EntityID _entity_counter = 0;
+static EcsEntityID _entity_counter = 0;
 
-void EntityResetIDCounter()
+void EcsEntityResetIDCounter()
 {
 	_entity_counter = 0;
 }
 
-EntityID EntityGetNextID()
+EcsEntityID EcsEntityGetNextID()
 {
 	return _entity_counter++;
 }
