@@ -137,12 +137,12 @@ void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsOnRender(&scene->ecs, scene->camera);
+	EcsOnRender(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRenderDebug(&scene->ecs, scene->camera);
+	EcsOnRenderDebug(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
 }
 
 int SceneLoad(Scene* scene, const char* path)

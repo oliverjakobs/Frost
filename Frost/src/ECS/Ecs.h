@@ -7,7 +7,6 @@
 #include "ComponentList.h"
 
 #include "Event/Event.h"
-#include "Camera/Camera.h"
 
 #define ECS_DEFAULT_EVENT_SYSTEM_COUNT			4
 #define ECS_DEFAULT_UPDATE_SYSTEM_COUNT			4
@@ -46,7 +45,7 @@ typedef struct
 
 typedef struct
 {
-	void (*render)(Ecs*,const Camera*);
+	void (*render)(Ecs*,const float*);
 } EcsRenderSystem;
 
 void EcsInit(Ecs* ecs);
@@ -56,15 +55,15 @@ void EcsClear(Ecs* ecs);
 
 void EcsAddEventSystem(Ecs* ecs, void (*handle)(Ecs*, Event));
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*, const Camera*));
-void EcsAddRenderDebugSystem(Ecs* ecs, void (*render)(Ecs*, const Camera*));
-void EcsAddRenderUISystem(Ecs* ecs, void (*render)(Ecs*,const Camera*));
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*, const float*));
+void EcsAddRenderDebugSystem(Ecs* ecs, void (*render)(Ecs*, const float*));
+void EcsAddRenderUISystem(Ecs* ecs, void (*render)(Ecs*,const float*));
 
 void EcsOnEvent(Ecs* ecs, Event e);
 void EcsOnUpdate(Ecs* ecs, float deltatime);
-void EcsOnRender(Ecs* ecs, const Camera* camera);
-void EcsOnRenderDebug(Ecs* ecs, const Camera* camera);
-void EcsOnRenderUI(Ecs* ecs, const Camera* camera);
+void EcsOnRender(Ecs* ecs, const float* mat_view_proj);
+void EcsOnRenderDebug(Ecs* ecs, const float* mat_view_proj);
+void EcsOnRenderUI(Ecs* ecs, const float* mat_view_proj);
 
 ComponentMap* EcsGetComponentMap(Ecs* ecs, ComponentType type);
 ComponentList* EcsGetComponentList(Ecs* ecs, ComponentType type);

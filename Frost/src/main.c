@@ -159,7 +159,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	InventoryRenderSystem(invs, 2, &theme, &camera);
+	InventoryRenderSystem(invs, 2, &theme, CameraGetProjectionPtr(&camera));
 }
 
 void OnRenderDebug(Application* app)

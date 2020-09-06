@@ -62,6 +62,6 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 
 /* system */
 void InventoryUpdateSystem(Inventory* invs, size_t count, InventoryTheme* theme, float deltatime);
-void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme, Camera* camera);
+void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme, const float* mat_view_proj);
 
 #endif /* !INVENTORY_H */

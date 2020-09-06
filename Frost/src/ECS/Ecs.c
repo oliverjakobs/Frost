@@ -65,7 +65,7 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	clib_array_push_and_grow(&ecs->systems_update, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const Camera*))
+void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
 {
 	EcsRenderSystem system;
 	system.render = render;
@@ -73,7 +73,7 @@ void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const Camera*))
 	clib_array_push_and_grow(&ecs->systems_render, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsAddRenderDebugSystem(Ecs* ecs, void(*render)(Ecs*, const Camera*))
+void EcsAddRenderDebugSystem(Ecs* ecs, void(*render)(Ecs*, const float*))
 {
 	EcsRenderSystem system;
 	system.render = render;
@@ -81,7 +81,7 @@ void EcsAddRenderDebugSystem(Ecs* ecs, void(*render)(Ecs*, const Camera*))
 	clib_array_push_and_grow(&ecs->systems_render_debug, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsAddRenderUISystem(Ecs* ecs, void(*render)(Ecs*, const Camera*))
+void EcsAddRenderUISystem(Ecs* ecs, void(*render)(Ecs*, const float*))
 {
 	EcsRenderSystem system;
 	system.render = render;
@@ -101,22 +101,22 @@ void EcsOnUpdate(Ecs* ecs, float deltatime)
 		((EcsUpdateSystem*)clib_array_get(&ecs->systems_update, i))->update(ecs, deltatime);
 }
 
-void EcsOnRender(Ecs* ecs, const Camera* camera)
+void EcsOnRender(Ecs* ecs, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render.used; ++i)
-		((EcsRenderSystem*)clib_array_get(&ecs->systems_render, i))->render(ecs, camera);
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render, i))->render(ecs, mat_view_proj);
 }
 
-void EcsOnRenderDebug(Ecs* ecs, const Camera* camera)
+void EcsOnRenderDebug(Ecs* ecs, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render_debug.used; ++i)
-		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_debug, i))->render(ecs, camera);
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_debug, i))->render(ecs, mat_view_proj);
 }
 
-void EcsOnRenderUI(Ecs* ecs, const Camera* camera)
+void EcsOnRenderUI(Ecs* ecs, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render_ui.used; ++i)
-		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_ui, i))->render(ecs, camera);
+		((EcsRenderSystem*)clib_array_get(&ecs->systems_render_ui, i))->render(ecs, mat_view_proj);
 }
 
 static void EcsComponentFree(void* block)

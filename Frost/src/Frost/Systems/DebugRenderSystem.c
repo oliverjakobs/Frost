@@ -3,9 +3,9 @@
 #include "Graphics/Renderer.h"
 #include "Frost/FrostEcs.h"
 
-void DebugRenderSystem(Ecs* ecs, const Camera* camera)
+void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
-	Primitives2DStart(CameraGetViewProjectionPtr(camera));
+	Primitives2DStart(mat_view_proj);
 
 	/*
 	CameraController* camController = ComponentMapIterValue(ComponentMapIterator(EcsGetComponentMap(ecs, COMPONENT_CAMERA)));

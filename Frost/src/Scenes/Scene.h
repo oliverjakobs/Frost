@@ -4,6 +4,8 @@
 #include "Application/Application.h"
 #include "Graphics/Background.h"
 
+#include "Camera/Camera.h"
+
 #include "ECS/Ecs.h"
 
 typedef struct 

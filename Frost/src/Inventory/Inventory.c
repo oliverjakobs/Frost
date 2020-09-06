@@ -184,10 +184,10 @@ void InventoryUpdateSystem(Inventory* invs, size_t count, InventoryTheme* theme,
 	}
 }
 
-void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme, Camera* camera)
+void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme, const float* mat_view_proj)
 {
 	/* render inventory backgrounds */
-	Primitives2DStart(CameraGetProjectionPtr(camera));
+	Primitives2DStart(mat_view_proj);
 
 	IgnisColorRGBA bg = IGNIS_WHITE;
 	ignisBlendColorRGBA(&bg, 0.4f);
@@ -213,7 +213,7 @@ void InventoryRenderSystem(Inventory* invs, size_t count, InventoryTheme* theme,
 	Primitives2DFlush();
 
 	/* render inventory contents */
-	BatchRenderer2DStart(CameraGetProjectionPtr(camera));
+	BatchRenderer2DStart(mat_view_proj);
 
 	for (int inv_index = 0; inv_index < count; ++inv_index)
 	{
