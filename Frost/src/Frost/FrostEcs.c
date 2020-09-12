@@ -2,16 +2,16 @@
 
 EcsEntityID GetEntityAt(Ecs* ecs, vec2 pos)
 {
-	clib_hashmap* map = clib_array_get(&ecs->data_components, COMPONENT_TRANSFORM);
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(map); iter; iter = clib_hashmap_iter_next(map, iter))
+	tb_hashmap* map = tb_array_get(&ecs->data_components, COMPONENT_TRANSFORM);
+	for (tb_hashmap_iter* iter = tb_hashmap_iterator(map); iter; iter = tb_hashmap_iter_next(map, iter))
 	{
-		Transform* transform = clib_hashmap_iter_get_value(iter);
+		Transform* transform = tb_hashmap_iter_get_value(iter);
 
 		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
 		vec2 max = vec2_add(min, transform->size);
 
 		if (vec2_inside(pos, min, max))
-			return *(EcsEntityID*)clib_hashmap_iter_get_key(iter);
+			return *(EcsEntityID*)tb_hashmap_iter_get_key(iter);
 	}
 
 	return ECS_NULL_ENTITY;

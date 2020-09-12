@@ -1,13 +1,13 @@
 #ifndef ECS_COMPONENT_LIST_H
 #define ECS_COMPONENT_LIST_H
 
-#include "clib/list.h"
+#include "toolbox/tb_list.h"
 
 #include "Entity.h"
 
 typedef struct
 {
-	clib_list list;
+	tb_list list;
 } EcsComponentList;
 
 int EcsComponentListAlloc(EcsComponentList* list, size_t element_size, int (*cmp)(const void*, const void*));

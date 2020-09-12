@@ -3,7 +3,7 @@
 #include "Graphics/FontRenderer.h"
 #include "Graphics/Primitives2D.h"
 
-#include "clib/clib.h"
+#include "toolbox/toolbox.h"
 #include "Application/Input.h"
 
 const float CONSOLE_CURSOR_ON = 1.0f;
@@ -50,7 +50,7 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 	/* block key events */
 	int32_t key = EventKey(e);
-	if (clib_between_i32(KEY_SPACE, KEY_WORLD_2, key))
+	if (tb_between_i32(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 }
 

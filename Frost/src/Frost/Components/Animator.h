@@ -14,7 +14,7 @@ typedef struct
 
 	int frame;
 
-	clib_hashmap transitions;
+	tb_hashmap transitions;
 } Animation;
 
 void AnimationLoad(Animation* animation, int start, int length, float delay, size_t initial);
@@ -38,7 +38,7 @@ AnimationCondition* AnimationConditionsGetCondition(const char* name);
 /* ---------------------------------| Animator |------------------------------------ */
 typedef struct
 {
-	clib_hashmap animations;	/* <str, Animation*> */
+	tb_hashmap animations;	/* <str, Animation*> */
 	const char* current;
 } Animator;
 

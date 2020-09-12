@@ -11,8 +11,8 @@
 typedef struct 
 {
 	/* register */
-	clib_hashmap scene_register;
-	clib_hashmap templates;
+	tb_hashmap scene_register;
+	tb_hashmap templates;
 
 	Camera* camera;
 	Resources* resources;

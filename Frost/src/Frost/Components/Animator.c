@@ -2,7 +2,7 @@
 
 #include "Frost/FrostEcs.h"
 
-#include "json/tb_json.h"
+#include "toolbox/tb_json.h"
 
 #include "Application/Debugger.h"
 
@@ -17,16 +17,16 @@ void AnimationLoad(Animation* animation, int start, int length, float delay, siz
 	animation->clock = 0.0f;
 	animation->frame = 0;
 
-	if (clib_hashmap_alloc(&animation->transitions, clib_hash_string, clib_hashmap_str_cmp, initial) == CLIB_HASHMAP_OK)
+	if (tb_hashmap_alloc(&animation->transitions, tb_hash_string, tb_hashmap_str_cmp, initial) == TB_HASHMAP_OK)
 	{
-		clib_hashmap_set_key_alloc_funcs(&animation->transitions, clib_hashmap_str_alloc, clib_hashmap_str_free);
-		clib_hashmap_set_value_alloc_funcs(&animation->transitions, clib_hashmap_str_alloc, clib_hashmap_str_free);
+		tb_hashmap_set_key_alloc_funcs(&animation->transitions, tb_hashmap_str_alloc, tb_hashmap_str_free);
+		tb_hashmap_set_value_alloc_funcs(&animation->transitions, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	}
 }
 
 void AnimationDestroy(Animation* animation)
 {
-	clib_hashmap_free(&animation->transitions);
+	tb_hashmap_free(&animation->transitions);
 }
 
 void AnimationStart(Animation* animation)
@@ -55,22 +55,22 @@ void AnimationTick(Animation* animation, float deltatime)
 }
 
 /* ---------------------------------| AnimationCondition |-------------------------- */
-static clib_hashmap condition_table; /* <str, AnimationCondition> */
+static tb_hashmap condition_table; /* <str, AnimationCondition> */
 
 void AnimationConditionsInit()
 {
-	if (clib_hashmap_alloc(&condition_table, clib_hash_string, clib_hashmap_str_cmp, 0) == CLIB_HASHMAP_OK)
-		clib_hashmap_set_key_alloc_funcs(&condition_table, clib_hashmap_str_alloc, clib_hashmap_str_free);
+	if (tb_hashmap_alloc(&condition_table, tb_hash_string, tb_hashmap_str_cmp, 0) == TB_HASHMAP_OK)
+		tb_hashmap_set_key_alloc_funcs(&condition_table, tb_hashmap_str_alloc, tb_hashmap_str_free);
 }
 
 void AnimationConditionsDestroy()
 {
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(&condition_table); iter; iter = clib_hashmap_iter_next(&condition_table, iter))
+	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&condition_table); iter; iter = tb_hashmap_iter_next(&condition_table, iter))
 	{
-		free(clib_hashmap_iter_get_value(iter));
-		clib_hashmap_iter_remove(&condition_table, iter);
+		free(tb_hashmap_iter_get_value(iter));
+		tb_hashmap_iter_remove(&condition_table, iter);
 	}
-	clib_hashmap_free(&condition_table);
+	tb_hashmap_free(&condition_table);
 }
 
 int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EcsEntityID, int))
@@ -80,7 +80,7 @@ int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*,
 	if (!value) return 0;
 
 	value->func = condition;
-	if (clib_hashmap_insert(&condition_table, name, value) == value)
+	if (tb_hashmap_insert(&condition_table, name, value) == value)
 		return 1;
 
 	free(value);
@@ -89,25 +89,25 @@ int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*,
 
 AnimationCondition* AnimationConditionsGetCondition(const char* name)
 {
-	return clib_hashmap_find(&condition_table, name);
+	return tb_hashmap_find(&condition_table, name);
 }
 
 /* ---------------------------------| Animator |------------------------------------ */
 void AnimatorFree(void* block)
 {
-	clib_hashmap* map = &((Animator*)block)->animations;
-	for (clib_hashmap_iter* iter = clib_hashmap_iterator(map); iter; iter = clib_hashmap_iter_next(map, iter))
+	tb_hashmap* map = &((Animator*)block)->animations;
+	for (tb_hashmap_iter* iter = tb_hashmap_iterator(map); iter; iter = tb_hashmap_iter_next(map, iter))
 	{
-		free(clib_hashmap_iter_get_value(iter));
-		clib_hashmap_iter_remove(map, iter);
+		free(tb_hashmap_iter_get_value(iter));
+		tb_hashmap_iter_remove(map, iter);
 	}
-	clib_hashmap_free(map);
+	tb_hashmap_free(map);
 	free(block);
 }
 
 static int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation)
 {
-	if (clib_hashmap_insert(&animator->animations, name, animation) != animation)
+	if (tb_hashmap_insert(&animator->animations, name, animation) != animation)
 	{
 		AnimationDestroy(animation);
 		free(animation);
@@ -115,7 +115,7 @@ static int AnimatorAddAnimation(Animator* animator, const char* name, Animation*
 	}
 
 	if (animator->current == NULL)
-		animator->current = clib_hashmap_get_key_ptr(&animator->animations, name);
+		animator->current = tb_hashmap_get_key_ptr(&animator->animations, name);
 
 	return 1;
 }
@@ -130,13 +130,13 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 
 		animator.current = NULL;
 
-		if (clib_hashmap_alloc(&animator.animations, clib_hash_string, clib_hashmap_str_cmp, 0) != CLIB_HASHMAP_OK)
+		if (tb_hashmap_alloc(&animator.animations, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
 		{
 			DEBUG_WARN("[Animator] Failed to allocate animation map");
 			return;
 		}
 
-		clib_hashmap_set_key_alloc_funcs(&animator.animations, clib_hashmap_str_alloc, clib_hashmap_str_free);
+		tb_hashmap_set_key_alloc_funcs(&animator.animations, tb_hashmap_str_alloc, tb_hashmap_str_free);
 		for (int i = 0; i < element.elements; i++)
 		{
 			char anim_name[APPLICATION_STR_LEN];
@@ -168,7 +168,7 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 					char next[APPLICATION_STR_LEN];
 					tb_json_string((char*)transition_element.value, "[1", next, APPLICATION_STR_LEN, NULL);
 
-					clib_hashmap_insert(&animation->transitions, condition, next);
+					tb_hashmap_insert(&animation->transitions, condition, next);
 				}
 			}
 

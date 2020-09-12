@@ -90,9 +90,9 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->scene_register); iter; iter = clib_hashmap_iter_next(&scene->scene_register, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->scene_register); iter; iter = tb_hashmap_iter_next(&scene->scene_register, iter))
 			{
-				const char* name = clib_hashmap_iter_get_key(iter);
+				const char* name = tb_hashmap_iter_get_key(iter);
 
 				ConsoleOut(console, " - %s %s", name, (strcmp(name, scene->name) == 0) ? "(active)" : "");
 			}
@@ -109,10 +109,10 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		}
 		else if (strcmp(spec, "templates") == 0)
 		{
-			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->templates); iter; iter = clib_hashmap_iter_next(&scene->templates, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->templates); iter; iter = tb_hashmap_iter_next(&scene->templates, iter))
 			{
-				const char* name = clib_hashmap_iter_get_key(iter);
-				char* templ = clib_hashmap_iter_get_value(iter);
+				const char* name = tb_hashmap_iter_get_key(iter);
+				char* templ = tb_hashmap_iter_get_value(iter);
 
 				ConsoleOut(console, " - %s: %s", name, templ);
 			}
@@ -120,15 +120,15 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		else if (strcmp(spec, "res") == 0)
 		{
 			ConsoleOut(console, "Textures:");
-			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->resources->textures); iter; iter = clib_hashmap_iter_next(&scene->resources->textures, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->textures); iter; iter = tb_hashmap_iter_next(&scene->resources->textures, iter))
 			{
-				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
+				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
 			}
 
 			ConsoleOut(console, "Fonts:");
-			for (clib_hashmap_iter* iter = clib_hashmap_iterator(&scene->resources->fonts); iter; iter = clib_hashmap_iter_next(&scene->resources->fonts, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->fonts); iter; iter = tb_hashmap_iter_next(&scene->resources->fonts, iter))
 			{
-				ConsoleOut(console, " - %s", clib_hashmap_iter_get_key(iter));
+				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
 			}
 		}
 		break;
@@ -144,7 +144,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = clib_hashmap_find(&scene->scene_register, scene->name);
+			char* path = tb_hashmap_find(&scene->scene_register, scene->name);
 			if (!path)
 			{
 				ConsoleOut(console, "Couldn't find path for %s", scene->name);

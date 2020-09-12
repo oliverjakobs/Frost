@@ -2,7 +2,7 @@
 
 #include "Frost/FrostEcs.h"
 
-#include "json/tb_json.h"
+#include "toolbox/tb_json.h"
 
 void InteractorLoad(Scene* scene, EcsEntityID entity, char* json)
 {

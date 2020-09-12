@@ -249,24 +249,6 @@
     <ClInclude Include="src\Scenes\SceneEditor.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\clib\array.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clib\clib.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clib\hashmap.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\clib\list.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\json\tb_json.h">
-      <Filter>src\json</Filter>
-    </ClInclude>
-    <ClInclude Include="src\json\tb_jwrite.h">
-      <Filter>src\json</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\grid.h">
       <Filter>src\math</Filter>
     </ClInclude>
@@ -281,6 +263,24 @@
     </ClInclude>
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_array.h">
+      <Filter>src\clib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_list.h">
+      <Filter>src\clib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_hashmap.h">
+      <Filter>src\clib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\toolbox.h">
+      <Filter>src\clib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_jwrite.h">
+      <Filter>src\json</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_json.h">
+      <Filter>src\json</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -431,21 +431,6 @@
     <ClCompile Include="src\Scenes\SceneEditor.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="src\clib\array.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clib\clib.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clib\hashmap.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\clib\list.c">
-      <Filter>src\clib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\json\tb_jwrite.c">
-      <Filter>src\json</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.c">
       <Filter>src</Filter>
     </ClCompile>
@@ -460,6 +445,22 @@
     </ClCompile>
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_array.c">
+      <Filter>src\clib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_list.c">
+      <Filter>src\clib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_hashmap.c">
+      <Filter>src\clib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\toolbox.c">
+      <Filter>src\clib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_json.c" />
+    <ClCompile Include="src\toolbox\tb_jwrite.c">
+      <Filter>src\json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

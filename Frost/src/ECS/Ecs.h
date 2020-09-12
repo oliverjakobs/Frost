@@ -1,7 +1,7 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include "clib/array.h"
+#include "toolbox/tb_array.h"
 
 #include "ComponentMap.h"
 #include "ComponentList.h"
@@ -23,14 +23,14 @@ typedef uint32_t EcsComponentType;
 
 typedef struct
 {
-	clib_array systems_event;
-	clib_array systems_update;
-	clib_array systems_render;
-	clib_array systems_render_debug;
-	clib_array systems_render_ui;
+	tb_array systems_event;
+	tb_array systems_update;
+	tb_array systems_render;
+	tb_array systems_render_debug;
+	tb_array systems_render_ui;
 
-	clib_array data_components;
-	clib_array order_components;
+	tb_array data_components;
+	tb_array order_components;
 } Ecs;
 
 typedef struct

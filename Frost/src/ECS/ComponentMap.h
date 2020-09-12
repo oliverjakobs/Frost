@@ -1,13 +1,13 @@
 #ifndef ECS_COMPONENT_MAP_H
 #define ECS_COMPONENT_MAP_H
 
-#include "clib/hashmap.h"
+#include "toolbox/tb_hashmap.h"
 
 #include "Entity.h"
 
 typedef struct
 {
-	clib_hashmap map;
+	tb_hashmap map;
 	size_t element_size;
 } EcsComponentMap;
 
