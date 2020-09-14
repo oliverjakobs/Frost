@@ -3,15 +3,6 @@
 
 #include "Ecs/Ecs.h"
 
-/* ----------------------| SYSTEMS |------------------------------ */
-#include "Systems/PhysicsSystem.h"
-#include "Systems/PlayerSystem.h"
-#include "Systems/AnimationSystem.h"
-#include "Systems/InteractionSystem.h"
-
-#include "Systems/RenderSystem.h"
-#include "Systems/DebugRenderSystem.h"
-
 /* ----------------------| COMPONENTS |--------------------------- */
 #include "Components/Animator.h"
 #include "Components/Transform.h"
@@ -19,7 +10,19 @@
 #include "Components/Sprite.h"
 #include "Components/Movement.h"
 #include "Components/CameraController.h"
+#include "Components/Inventory.h"
 #include "Components/Interaction.h"
+
+/* ----------------------| SYSTEMS |------------------------------ */
+#include "Systems/PhysicsSystem.h"
+#include "Systems/PlayerSystem.h"
+#include "Systems/AnimationSystem.h"
+#include "Systems/InventorySystem.h"
+#include "Systems/InteractionSystem.h"
+
+#include "Systems/RenderSystem.h"
+#include "Systems/DebugRenderSystem.h"
+
 
 typedef enum
 {
@@ -29,6 +32,7 @@ typedef enum
 	COMPONENT_SPRITE,
 	COMPONENT_ANIMATION,
 	COMPONENT_CAMERA,
+	COMPONENT_INVENTORY,
 	COMPONENT_INTERACTION,
 	COMPONENT_INTERACTOR
 } DataComponentType;

@@ -110,6 +110,7 @@
     <ClInclude Include="src\Frost\Components\Animator.h" />
     <ClInclude Include="src\Frost\Components\CameraController.h" />
     <ClInclude Include="src\Frost\Components\Interaction.h" />
+    <ClInclude Include="src\Frost\Components\Inventory.h" />
     <ClInclude Include="src\Frost\Components\Movement.h" />
     <ClInclude Include="src\Frost\Components\Order.h" />
     <ClInclude Include="src\Frost\Components\RigidBody.h" />
@@ -120,6 +121,7 @@
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
     <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h" />
+    <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
     <ClInclude Include="src\Frost\Systems\PhysicsSystem.h" />
     <ClInclude Include="src\Frost\Systems\PlayerSystem.h" />
     <ClInclude Include="src\Frost\Systems\RenderSystem.h" />
@@ -143,7 +145,6 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
-    <ClInclude Include="src\Inventory\Inventory.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\toolbox\tb_array.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\CameraController.c" />
     <ClCompile Include="src\Frost\Components\Interaction.c" />
+    <ClCompile Include="src\Frost\Components\Inventory.c" />
     <ClCompile Include="src\Frost\Components\Movement.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />
     <ClCompile Include="src\Frost\Components\RigidBody.c" />
@@ -185,6 +187,7 @@
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
     <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c" />
+    <ClCompile Include="src\Frost\Systems\InventorySystem.c" />
     <ClCompile Include="src\Frost\Systems\PhysicsSystem.c" />
     <ClCompile Include="src\Frost\Systems\PlayerSystem.c" />
     <ClCompile Include="src\Frost\Systems\RenderSystem.c" />
@@ -205,7 +208,6 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
-    <ClCompile Include="src\Inventory\Inventory.c" />
     <ClCompile Include="src\toolbox\tb_json.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />

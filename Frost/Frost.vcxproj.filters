@@ -240,9 +240,6 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h">
       <Filter>src\Ignis\stb</Filter>
     </ClInclude>
-    <ClInclude Include="src\Inventory\Inventory.h">
-      <Filter>src\Inventory</Filter>
-    </ClInclude>
     <ClInclude Include="src\Scenes\Scene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
@@ -282,6 +279,8 @@
     <ClInclude Include="src\toolbox\tb_json.h">
       <Filter>src\json</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
+    <ClInclude Include="src\Frost\Components\Inventory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -422,9 +421,6 @@
     <ClCompile Include="src\Ignis\glad\glad.c">
       <Filter>src\Ignis\glad</Filter>
     </ClCompile>
-    <ClCompile Include="src\Inventory\Inventory.c">
-      <Filter>src\Inventory</Filter>
-    </ClCompile>
     <ClCompile Include="src\Scenes\Scene.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
@@ -462,6 +458,8 @@
     <ClCompile Include="src\toolbox\tb_jwrite.c">
       <Filter>src\json</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Systems\InventorySystem.c" />
+    <ClCompile Include="src\Frost\Components\Inventory.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

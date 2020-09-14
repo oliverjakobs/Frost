@@ -2,8 +2,6 @@
 #include "Frost/FrostEcs.h"
 #include "Frost/AnimationConditions.h"
 
-#include "Inventory/Inventory.h"
-
 Camera camera;
 
 Scene scene;
@@ -12,9 +10,6 @@ SceneEditor scene_editor;
 Console console;
 
 int show_debug_info;
-
-InventoryTheme theme;
-Inventory invs[2];
 
 void OnInit(Application* app)
 {
@@ -51,9 +46,11 @@ void OnInit(Application* app)
 	EcsAddUpdateSystem(&scene.ecs, PhysicsSystem);
 	EcsAddUpdateSystem(&scene.ecs, PlayerSystem);
 	EcsAddUpdateSystem(&scene.ecs, AnimationSystem);
+	EcsAddUpdateSystem(&scene.ecs, InventoryUpdateSystem);
 	EcsAddUpdateSystem(&scene.ecs, InteractionSystem);
 	EcsAddRenderSystem(&scene.ecs, RenderSystem);
 	EcsAddRenderDebugSystem(&scene.ecs, DebugRenderSystem);
+	EcsAddRenderUISystem(&scene.ecs, InventoryRenderSystem);
 
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Transform), NULL);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(RigidBody), NULL);
@@ -61,6 +58,7 @@ void OnInit(Application* app)
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Sprite), NULL);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Animator), AnimatorFree);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(&scene.ecs, sizeof(Inventory), InventoryFree);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Interaction), NULL);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Interactor), NULL);
 
@@ -71,21 +69,25 @@ void OnInit(Application* app)
 	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
 
-	InventoryThemeLoad(&theme, ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
-	InventoryInitAligned(&invs[0], INV_HALIGN_CENTER, INV_VALIGN_BOTTOM, 1, 4, &theme);
-	InventoryInitAligned(&invs[1], INV_HALIGN_LEFT, INV_VALIGN_CENTER, 3, 2, &theme);
+	InventorySystemLoad(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
 
-	InventorySetCellContent(&invs[0], 0, 3);
-	InventorySetCellContent(&invs[0], 1, 1);
-	InventorySetCellContent(&invs[0], 2, 2);
-	InventorySetCellContent(&invs[0], 3, 3);
+	Inventory inv;
+	InventoryInitAligned(&inv, INV_HALIGN_CENTER, INV_VALIGN_BOTTOM, 1, 4);
+
+	InventorySetCellContent(&inv, 0, 3);
+	InventorySetCellContent(&inv, 1, 1);
+	InventorySetCellContent(&inv, 2, 2);
+	InventorySetCellContent(&inv, 3, 3);
+
+	EcsAddDataComponent(&scene.ecs, 0, COMPONENT_INVENTORY, &inv);
+
+	InventoryInitAligned(&inv, INV_HALIGN_LEFT, INV_VALIGN_CENTER, 3, 2);
+
+	EcsAddDataComponent(&scene.ecs, 1, COMPONENT_INVENTORY, &inv);
 }
 
 void OnDestroy(Application* app)
 {
-	InventoryFree(&invs[0]);
-	InventoryFree(&invs[1]);
-
 	SceneDestroy(&scene);
 
 	FontRendererDestroy();
@@ -149,8 +151,6 @@ void OnUpdate(Application* app, float deltatime)
 
 	if (!(scene_editor.active || console.focus))
 		SceneOnUpdate(&scene, deltatime);
-
-	InventoryUpdateSystem(invs, 2, &theme, deltatime);
 }
 
 void OnRender(Application* app)
@@ -159,7 +159,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	InventoryRenderSystem(invs, 2, &theme, CameraGetProjectionPtr(&camera));
+	EcsOnRenderUI(&scene.ecs, CameraGetProjectionPtr(&camera));
 }
 
 void OnRenderDebug(Application* app)
