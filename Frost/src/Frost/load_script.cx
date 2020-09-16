@@ -7,15 +7,15 @@
 #include "Components/Inventory.h"
 #include "Components/Interaction.h"
 
-DataComponentType(EcsRegisterDataComponent) -> RegisterDataComponents
+DataComponentType[EcsRegisterDataComponent(&scene.ecs, ?, ?)]: RegisterDataComponents
 {
-    COMPONENT_TRANSFORM, &scene.ecs, sizeof(Transform), NULL;
-    COMPONENT_RIGID_BODY, &scene.ecs, sizeof(RigidBody), NULL;
-    COMPONENT_MOVEMENT, &scene.ecs, sizeof(Movement), NULL;
-    COMPONENT_SPRITE, &scene.ecs, sizeof(Sprite), NULL;
-    COMPONENT_ANIMATOR, &scene.ecs, sizeof(Animator), AnimatorFree;
-    COMPONENT_CAMERA, &scene.ecs, sizeof(CameraController), NULL;
-    COMPONENT_INVENTORY, &scene.ecs, sizeof(Inventory), InventoryFree;
-    COMPONENT_INTERACTION, &scene.ecs, sizeof(Interaction), NULL;
-    COMPONENT_INTERACTOR, &scene.ecs, sizeof(Interactor), NULL;
+    COMPONENT_TRANSFORM,    sizeof(Transform),          NULL;
+    COMPONENT_RIGID_BODY,   sizeof(RigidBody),          NULL;
+    COMPONENT_MOVEMENT,     sizeof(Movement),           NULL;
+    COMPONENT_SPRITE,       sizeof(Sprite),             NULL;
+    COMPONENT_ANIMATOR,     sizeof(Animator),           AnimatorFree;
+    COMPONENT_CAMERA,       sizeof(CameraController),   NULL;
+    COMPONENT_INVENTORY,    sizeof(Inventory),          InventoryFree;
+    COMPONENT_INTERACTION,  sizeof(Interaction),        NULL;
+    COMPONENT_INTERACTOR,   sizeof(Interactor),         NULL;
 }
