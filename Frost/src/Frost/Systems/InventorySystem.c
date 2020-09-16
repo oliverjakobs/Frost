@@ -4,18 +4,6 @@
 
 typedef struct
 {
-	vec2 screen_size;
-
-	float cell_size;
-	float padding;
-
-	IgnisTexture2D* item_atlas;
-} InventorySystemData;
-
-static InventorySystemData inventory_data;
-
-typedef struct
-{
 	EcsEntityID entity;
 	int cell_index;
 } InventoryCellID;
@@ -32,8 +20,20 @@ static void InventoryCellIDReset(InventoryCellID* id)
 	id->cell_index = -1;
 }
 
-static InventoryCellID dragged;
-static InventoryCellID hover;
+typedef struct
+{
+	vec2 screen_size;
+
+	float cell_size;
+	float padding;
+
+	IgnisTexture2D* item_atlas;
+
+	InventoryCellID dragged;
+	InventoryCellID hover;
+} InventorySystemData;
+
+static InventorySystemData inventory_data;
 
 void InventorySystemLoad(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding)
 {
@@ -42,8 +42,36 @@ void InventorySystemLoad(IgnisTexture2D* item_atlas, vec2 screen_size, float cel
 	inventory_data.cell_size = cell_size;
 	inventory_data.padding = padding;
 
-	InventoryCellIDReset(&dragged);
-	InventoryCellIDReset(&hover);
+	InventoryCellIDReset(&inventory_data.dragged);
+	InventoryCellIDReset(&inventory_data.hover);
+}
+
+InventoryHAlign InventorySystemGetHAlign(const char* str)
+{
+	if (strcmp(str, "left") == 0)
+		return INV_HALIGN_LEFT;
+
+	if (strcmp(str, "center") == 0)
+		return INV_HALIGN_CENTER;
+
+	if (strcmp(str, "right") == 0)
+		return INV_HALIGN_RIGHT;
+
+	return INV_HALIGN_LEFT;
+}
+
+InventoryVAlign InventorySystemGetVAlign(const char* str)
+{
+	if (strcmp(str, "top") == 0)
+		return INV_VALIGN_TOP;
+
+	if (strcmp(str, "center") == 0)
+		return INV_VALIGN_CENTER;
+
+	if (strcmp(str, "bottom") == 0)
+		return INV_VALIGN_BOTTOM;
+
+	return INV_VALIGN_TOP;
 }
 
 static vec2 InventorySystemGetMousePos(vec2 mouse)
@@ -87,7 +115,7 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns)
 	return 1;
 }
 
-int InventoryInitAligned(Inventory* inv, InventoryHorizontalAlign h_align, InventoryVerticalAlign v_align, int rows, int columns)
+int InventoryInitAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlign v_align, int rows, int columns)
 {
 	vec2 pos = vec2_zero();
 	float w = InventorySystemGetCellOffset(columns);
@@ -136,7 +164,7 @@ static int InventoryGetCellAt(Inventory* inv, vec2 pos)
 
 void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 {
-	InventoryCellIDReset(&hover);
+	InventoryCellIDReset(&inventory_data.hover);
 
 	vec2 mouse = InventorySystemGetMousePos(InputMousePositionVec2());
 
@@ -146,22 +174,22 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 		Inventory* inv = EcsComponentMapIterValue(iter);
 
 		if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)))
-			InventoryCellIDSet(&hover, EcsComponentMapIterKey(iter), InventoryGetCellAt(inv, mouse));
+			InventoryCellIDSet(&inventory_data.hover, EcsComponentMapIterKey(iter), InventoryGetCellAt(inv, mouse));
 	}
 
-	if (InputMousePressed(MOUSE_BUTTON_LEFT) && dragged.cell_index < 0)
-		InventoryCellIDSet(&dragged, hover.entity, hover.cell_index);
+	if (InputMousePressed(MOUSE_BUTTON_LEFT) && inventory_data.dragged.cell_index < 0)
+		InventoryCellIDSet(&inventory_data.dragged, inventory_data.hover.entity, inventory_data.hover.cell_index);
 
-	if (InputMouseReleased(MOUSE_BUTTON_LEFT) && dragged.cell_index >= 0)
+	if (InputMouseReleased(MOUSE_BUTTON_LEFT) && inventory_data.dragged.cell_index >= 0)
 	{
-		Inventory* inv_hover = EcsGetDataComponent(ecs, hover.entity, COMPONENT_INVENTORY);
-		Inventory* inv_dragged = EcsGetDataComponent(ecs, dragged.entity, COMPONENT_INVENTORY);
+		Inventory* inv_hover = EcsGetDataComponent(ecs, inventory_data.hover.entity, COMPONENT_INVENTORY);
+		Inventory* inv_dragged = EcsGetDataComponent(ecs, inventory_data.dragged.entity, COMPONENT_INVENTORY);
 
-		if (hover.cell_index >= 0 && hover.cell_index < (inv_hover->rows * inv_hover->columns)
-			&& inv_hover->cells[hover.cell_index].itemID == NULL_ITEM)
-			InventoryMoveCellContent(inv_hover, hover.cell_index, inv_dragged, dragged.cell_index);
+		if (inventory_data.hover.cell_index >= 0 && inventory_data.hover.cell_index < (inv_hover->rows * inv_hover->columns)
+			&& inv_hover->cells[inventory_data.hover.cell_index].itemID == NULL_ITEM)
+			InventoryMoveCellContent(inv_hover, inventory_data.hover.cell_index, inv_dragged, inventory_data.dragged.cell_index);
 
-		InventoryCellIDReset(&dragged);
+		InventoryCellIDReset(&inventory_data.dragged);
 	}
 }
 
@@ -187,7 +215,7 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 
 			Primitives2DRenderRect(cell_pos.x, cell_pos.y, inventory_data.cell_size, inventory_data.cell_size, IGNIS_WHITE);
 
-			if (EcsComponentMapIterKey(iter) == hover.entity && cell_index == hover.cell_index)
+			if (EcsComponentMapIterKey(iter) == inventory_data.hover.entity && cell_index == inventory_data.hover.cell_index)
 				Primitives2DFillRect(cell_pos.x, cell_pos.y, inventory_data.cell_size, inventory_data.cell_size, IGNIS_WHITE);
 		}
 	}
@@ -204,7 +232,8 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 		for (int cell_index = 0; cell_index < (inv->rows * inv->columns); ++cell_index)
 		{
 			if (inv->cells[cell_index].itemID <= NULL_ITEM 
-				|| (EcsComponentMapIterKey(iter) == dragged.entity && cell_index == dragged.cell_index))
+				|| (EcsComponentMapIterKey(iter) == inventory_data.dragged.entity 
+				&& cell_index == inventory_data.dragged.cell_index))
 				continue;
 
 			vec2 cell_pos = vec2_add(inv->pos, inv->cells[cell_index].pos);
@@ -217,16 +246,16 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	}
 
 	/* render dragged item */
-	if (dragged.cell_index >= 0)
+	if (inventory_data.dragged.cell_index >= 0)
 	{
-		Inventory* inv = EcsGetDataComponent(ecs, dragged.entity, COMPONENT_INVENTORY);
+		Inventory* inv = EcsGetDataComponent(ecs, inventory_data.dragged.entity, COMPONENT_INVENTORY);
 
 		vec2 mouse_pos = InventorySystemGetMousePos(InputMousePositionVec2());
 		float cell_x = mouse_pos.x - (inventory_data.cell_size / 2.0f);
 		float cell_y = mouse_pos.y - (inventory_data.cell_size / 2.0f);
 
 		float src_x, src_y, src_w, src_h;
-		GetTexture2DSrcRect(inventory_data.item_atlas, inv->cells[dragged.cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
+		GetTexture2DSrcRect(inventory_data.item_atlas, inv->cells[inventory_data.dragged.cell_index].itemID, &src_x, &src_y, &src_w, &src_h);
 
 		BatchRenderer2DRenderTextureFrame(inventory_data.item_atlas, cell_x, cell_y, inventory_data.cell_size, inventory_data.cell_size, src_x, src_y, src_w, src_h);
 	}

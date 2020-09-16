@@ -1,7 +1,7 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 
-#include "math/vec2.h"
+#include "Scenes/Scene.h"
 
 #define NULL_ITEM (-1)
 
@@ -21,6 +21,9 @@ typedef struct
 
 	InventoryCell* cells;
 } Inventory;
+
+
+void InventoryLoad(Scene* scene, EcsEntityID entity, char* json);
 
 void InventoryFree(Inventory* inv);
 

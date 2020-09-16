@@ -389,6 +389,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	AnimatorLoad(scene, entity, json);
 	MovementLoad(scene, entity, json);
 	CameraControllerLoad(scene, entity, json);
+	InventoryLoad(scene, entity, json);
 	InteractorLoad(scene, entity, json);
 	InteractionLoad(scene, entity, json);
 

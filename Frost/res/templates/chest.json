@@ -1,0 +1,15 @@
+{
+  "name": "chest",
+  "transform": {
+    "size": [ 64.0, 44.0 ]
+  },
+  "sprite": {
+    "texture": "door",
+    "frame": 0
+  },
+  "inventory": {
+    "rows": 3,
+    "columns": 2,
+    "align": ["left", "center"]
+  }
+}

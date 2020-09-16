@@ -36,6 +36,8 @@ void OnInit(Application* app)
 
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
 
+	InventorySystemLoad(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
+
 	/* animation conditions */
 	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
 	AnimationConditionsRegisterCondition("condition_fall", AnimationConditionFall);
@@ -69,21 +71,6 @@ void OnInit(Application* app)
 	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
 
-	InventorySystemLoad(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
-
-	Inventory inv;
-	InventoryInitAligned(&inv, INV_HALIGN_CENTER, INV_VALIGN_BOTTOM, 1, 4);
-
-	InventorySetCellContent(&inv, 0, 3);
-	InventorySetCellContent(&inv, 1, 1);
-	InventorySetCellContent(&inv, 2, 2);
-	InventorySetCellContent(&inv, 3, 3);
-
-	EcsAddDataComponent(&scene.ecs, 0, COMPONENT_INVENTORY, &inv);
-
-	InventoryInitAligned(&inv, INV_HALIGN_LEFT, INV_VALIGN_CENTER, 3, 2);
-
-	EcsAddDataComponent(&scene.ecs, 1, COMPONENT_INVENTORY, &inv);
 }
 
 void OnDestroy(Application* app)

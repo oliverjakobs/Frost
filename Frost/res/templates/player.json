@@ -60,6 +60,12 @@
   "camera": {
     "smooth": 0.5
   },
+  "inventory": {
+    "rows": 1,
+    "columns": 4,
+    "align": ["center", "bottom"],
+    "save": "res/save/player_inv.json"
+  },
   "interactor": {
     "type": 0
   }

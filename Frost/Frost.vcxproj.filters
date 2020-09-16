@@ -529,6 +529,8 @@
     <None Include="res\templates\tree_5.json">
       <Filter>res\templates</Filter>
     </None>
+    <None Include="res\save\player_inv.json" />
+    <None Include="res\templates\chest.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

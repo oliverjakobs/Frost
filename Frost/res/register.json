@@ -5,6 +5,7 @@
 	},
 	"templates": {
 		"box": "res/templates/box.json",
+		"chest": "res/templates/chest.json",
 		"door": "res/templates/door.json",
 		"floor": "res/templates/floor.json",
 		"machine": "res/templates/machine.json",
