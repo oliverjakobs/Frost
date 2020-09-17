@@ -1,52 +1,54 @@
 #ifndef SCANNER_H
 #define SCANNER_H
 
-typedef struct
-{
-    const char* start;
-    const char* current;
-    
-    int line;
-} Scanner;
+#include <stdlib.h>
 
 typedef enum
 {
-    // Single-character tokens.
-    TOKEN_LEFT_PAREN,
-    TOKEN_RIGHT_PAREN,
-    TOKEN_LEFT_BRACE,
-    TOKEN_RIGHT_BRACE,
-    TOKEN_LEFT_BRACKET,
-    TOKEN_RIGHT_BRACKET,
+    TOKEN_IDENTIFIER,
+    TOKEN_STRING,
 
-    TOKEN_COMMA,
-    TOKEN_SEMICOLON,
+    TOKEN_ARRAY,
+    TOKEN_ARRAY_ELEMENT,
+
     TOKEN_COLON,
-    
+    TOKEN_COMMA,
     TOKEN_ASTERISK,
 
-    // One or two character tokens.
-    TOKEN_MINUS, TOKEN_ARROW,
+    TOKEN_ARROW,
 
-    // Literals.
-    TOKEN_IDENTIFIER, TOKEN_STRING,
-
-    // Keywords.
-    TOKEN_INCLUDE,
-    TOKEN_GENERATE,
+    TOKEN_OPEN_PAREN,
+    TOKEN_CLOSE_PAREN,
+    TOKEN_OPEN_BLOCK,
+    TOKEN_CLOSE_BLOCK,
 
     TOKEN_ERROR,
-    TOKEN_EOF
+    TOKEN_END_OF_STREAM
 } TokenType;
 
 typedef struct
 {
-    
+    TokenType type;
+
+    size_t len;
+    char* text;
 } Token;
 
+size_t token_array_len(Token arr);
+Token token_array_at(Token arr, int index);
 
-void scanner_init(Scanner* scanner, const char* src);
+int token_cmp(Token token, const char* str);
 
+typedef struct
+{
+    char* cursor;
+} Scanner;
 
+Token scanner_get_next(Scanner* scanner);
+Token scanner_skip_till(Scanner* scanner, TokenType type);
+
+int scanner_require(Scanner* scanner, TokenType type);
+
+void print_token(Token token);
 
 #endif /* !SCANNER_H */

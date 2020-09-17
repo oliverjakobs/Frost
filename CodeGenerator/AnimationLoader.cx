@@ -1,0 +1,15 @@
+
+define "ANIMATION_LOADER_H"
+
+include
+{
+    "Frost/AnimationConditions.h"
+}
+
+generate RegisterAnimationCondition(): AnimationCondition -> AnimationConditionsRegisterCondition()
+{
+    [ CONDITION_JUMP, AnimationConditionJump ],
+    [ CONDITION_FALL, AnimationConditionFall ],
+    [ CONDITION_WALK, AnimationConditionWalk ],
+    [ CONDITION_IDLE, AnimationConditionIdle ]
+}

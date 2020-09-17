@@ -1,3 +1,6 @@
+#ifndef ECS_LOADER_H
+#define ECS_LOADER_H
+
 #include "Ecs/Ecs.h"
 
 #include "Components/Animator.h"
@@ -62,3 +65,4 @@ typedef enum
 
 void AddRenderSystems(Ecs* ecs);
 
+#endif /* !ECS_LOADER_H */

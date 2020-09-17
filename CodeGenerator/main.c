@@ -5,276 +5,18 @@
 
 #include <string.h>
 
-typedef struct
-{
-    char* cursor;
-} Tokenizer;
-
-typedef enum
-{
-    TOKEN_IDENTIFIER,
-    TOKEN_STRING,
-
-    TOKEN_ARRAY,
-    TOKEN_ARRAY_ELEMENT,
-
-    TOKEN_COLON,
-    TOKEN_COMMA,
-    TOKEN_ASTERISK,
-
-    TOKEN_ARROW,
-
-    TOKEN_OPEN_PAREN,
-    TOKEN_CLOSE_PAREN,
-    TOKEN_OPEN_BLOCK,
-    TOKEN_CLOSE_BLOCK,
-
-    TOKEN_ERROR,
-    TOKEN_END_OF_STREAM
-} TokenType;
-
-typedef struct
-{
-    TokenType type;
-
-    size_t len;
-    char* text;
-} Token;
-
-static inline int token_cmp(Token token, const char* str)
-{
-    return strncmp(token.text, str, token.len);
-}
-
-static void token_print(Token token)
-{
-    if (token.type == TOKEN_OPEN_BLOCK)
-        printf("%2d: {}: %d\n", token.type, token.len);
-    else
-        printf("%2d: %.*s\n", token.type, token.len, token.text, token.len);
-}
-
-static inline int is_end_of_line(char c)
-{
-    return (c == '\n') || (c == '\r');
-}
-
-static inline int is_whitespace(char c)
-{
-    return (c == ' ') || (c == '\t') || is_end_of_line(c);
-}
-
-static char* skip_whitespaces(char* cursor)
-{
-    while (1)
-    {
-        if (is_whitespace(cursor[0]))
-        {
-            ++cursor;
-        }
-        else if (cursor[0] == '#') /* Comments */
-        {
-            cursor++;
-            while (cursor[0] && !is_end_of_line(cursor[0]))
-                cursor++;
-        }
-        else
-        {
-            return cursor;
-        }
-    }
-}
-
-static inline int is_alpha(char c)
-{
-    return ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z'));
-}
-
-static inline int is_number(char c)
-{
-    return (c >= '0') && (c <= '9');
-}
-
-static int is_identifier_symbol(char c)
-{
-    return is_alpha(c) || is_number(c) || (c == '_');
-}
-
-static Token get_token(Tokenizer* tokenizer)
-{
-    tokenizer->cursor = skip_whitespaces(tokenizer->cursor);
-
-    Token token;
-    token.type = TOKEN_ERROR;
-    token.text = tokenizer->cursor;
-    token.len = 1;
-
-    char c = tokenizer->cursor[0];
-    switch (c)
-    {
-    case '\0': token.type = TOKEN_END_OF_STREAM; tokenizer->cursor++; break;
-
-    case ':': token.type = TOKEN_COLON; tokenizer->cursor++; break;
-    case ',': token.type = TOKEN_COMMA; tokenizer->cursor++; break;
-    case '*': token.type = TOKEN_ASTERISK; tokenizer->cursor++; break;
-
-    case '(': token.type = TOKEN_OPEN_PAREN; tokenizer->cursor++; break;
-    case ')': token.type = TOKEN_CLOSE_PAREN; tokenizer->cursor++; break;
-
-    case '{': 
-        token.type = TOKEN_OPEN_BLOCK;
-
-        char* reset = ++tokenizer->cursor;
-        /* count tokens till first TOKEN_CLOSE_BLOCK */
-        Token next = get_token(tokenizer);
-        token.len = 0;
-        while (next.type != TOKEN_CLOSE_BLOCK)
-        {
-            if (token.type == TOKEN_END_OF_STREAM)
-                break;
-
-            token.len++;
-
-            next = get_token(tokenizer);
-        }
-        tokenizer->cursor = reset;
-
-        break;
-
-    case '}': token.type = TOKEN_CLOSE_BLOCK; tokenizer->cursor++; break;
-
-    case '-':
-        tokenizer->cursor++;
-        if (tokenizer->cursor[0] == '>')
-        {
-            token.type = TOKEN_ARROW;
-            token.len = 2;
-            ++tokenizer->cursor;
-        }
-        break;
-
-    case '[':
-        token.type = TOKEN_ARRAY;
-        token.text = tokenizer->cursor;
-
-        while (tokenizer->cursor[0] && tokenizer->cursor[0] != ']')
-            ++tokenizer->cursor;
-        
-        if (tokenizer->cursor[0] == ']')
-            ++tokenizer->cursor;
-
-        token.len = tokenizer->cursor - token.text;
-        break;
-
-    case '"':
-        tokenizer->cursor++;
-        token.type = TOKEN_STRING;
-        token.text = tokenizer->cursor;
-
-        while (tokenizer->cursor[0] && tokenizer->cursor[0] != '"')
-        {
-            if (tokenizer->cursor[0] == '\\' && tokenizer->cursor[1])
-                ++tokenizer->cursor;
-            ++tokenizer->cursor;
-        }
-        
-        token.len = tokenizer->cursor - token.text;
-
-        if (tokenizer->cursor[0] == '"')
-            ++tokenizer->cursor;
-
-        break;
-    default:
-        tokenizer->cursor++;
-        if (is_alpha(c))
-        {
-            token.type = TOKEN_IDENTIFIER;
-
-            while (is_identifier_symbol(tokenizer->cursor[0]))
-                ++tokenizer->cursor;
-            
-            token.len = tokenizer->cursor - token.text;
-        }
-        break;
-    }
-
-    return token;
-}
-
-static size_t get_array_len(Token arr)
-{
-    if (arr.type != TOKEN_ARRAY) return 0;
-
-    int count = 1;
-    for (size_t i = 0; i < arr.len; ++i)
-    {
-        if (arr.text[i] == ',')
-            count++;
-    }
-
-    return count;
-}
-
-static Token get_array_element(Token arr, int index)
-{
-    Token token;
-    token.text = arr.text;
-    token.type = TOKEN_ERROR;
-    token.len = arr.len;
-
-    size_t arr_len = get_array_len(arr);
-
-    if (arr.type != TOKEN_ARRAY || index >= arr_len) return token;
-
-    char* cursor = skip_whitespaces(++arr.text);
-    for (int i = 0; i <= index; ++i)
-    {
-        token.text = cursor;
-
-        if (i == arr_len - 1)
-            cursor = strpbrk(token.text, " ]");
-        else
-            cursor = memchr(token.text, ',', arr.len);
-
-        if (!cursor) return token;
-
-        token.len = cursor - token.text;
-        cursor = skip_whitespaces(++cursor);
-    }
-
-    token.type = TOKEN_ARRAY_ELEMENT;
-    return token;
-}
-
-static int require_token(Tokenizer* tokenizer, TokenType type)
-{
-    return get_token(tokenizer).type == type;
-}
-
-static Token skip_till(Tokenizer* tokenizer, TokenType type)
-{
-    Token token = get_token(tokenizer);
-    while (token.type != type)
-    {
-        if (token.type == TOKEN_END_OF_STREAM)
-            break;
-
-        token = get_token(tokenizer);
-    }
-
-    return token;
-}
+#include "scanner.h"
 
 /* ---------------------------------------------------------------------------------------- */
 static FILE* out_h;
 static FILE* out_c;
 
-static void parse_include(Tokenizer* tokenizer)
+static void parse_include(Scanner* scanner)
 {
-    Token block = skip_till(tokenizer, TOKEN_OPEN_BLOCK);
+    Token block = scanner_skip_till(scanner, TOKEN_OPEN_BLOCK);
     for (size_t i = 0; i < block.len; ++i)
     {
-        Token token = get_token(tokenizer);
+        Token token = scanner_get_next(scanner);
         if (token.type == TOKEN_STRING)
             fprintf(out_h, "#include \"%.*s\"\n", token.len, token.text);
     }
@@ -282,22 +24,22 @@ static void parse_include(Tokenizer* tokenizer)
     fprintf(out_h, "\n");
 }
 
-static void parse_enum(Tokenizer* tokenizer)
+static void parse_enum(Scanner* scanner)
 {
-    skip_till(tokenizer, TOKEN_COLON);
-    Token token_name = get_token(tokenizer);
+    scanner_skip_till(scanner, TOKEN_COLON);
+    Token token_name = scanner_get_next(scanner);
 
     if (token_name.type != TOKEN_IDENTIFIER) return;
 
     fprintf(out_h, "typedef enum\n{\n");
 
-    Token block = skip_till(tokenizer, TOKEN_OPEN_BLOCK);
+    Token block = scanner_skip_till(scanner, TOKEN_OPEN_BLOCK);
     for (size_t i = 0; i < block.len; ++i)
     {
-        Token token = get_token(tokenizer);
+        Token token = scanner_get_next(scanner);
         if (token.type == TOKEN_ARRAY)
         {
-            Token element = get_array_element(token, 0);
+            Token element = token_array_at(token, 0);
             fprintf(out_h, "\t%.*s", element.len, element.text);
 
             if (i < block.len - 1)
@@ -308,18 +50,18 @@ static void parse_enum(Tokenizer* tokenizer)
     fprintf(out_h, "\n} %.*s;\n\n", token_name.len, token_name.text);
 }
 
-static void parse_func(Tokenizer* tokenizer)
+static void parse_func(Scanner* scanner)
 {
-    Token token = get_token(tokenizer);
+    Token token = scanner_get_next(scanner);
     if (token.type != TOKEN_IDENTIFIER) return;
 
-    if (!require_token(tokenizer, TOKEN_OPEN_PAREN)) return;
+    if (!scanner_require(scanner, TOKEN_OPEN_PAREN)) return;
 
     fprintf(out_h, "void %.*s(", token.len, token.text);
     fprintf(out_c, "void %.*s(", token.len, token.text);
 
     /* parse parameter */
-    token = get_token(tokenizer);
+    token = scanner_get_next(scanner);
     while (token.type != TOKEN_CLOSE_PAREN)
     {
         if (token.type == TOKEN_END_OF_STREAM)
@@ -331,7 +73,7 @@ static void parse_func(Tokenizer* tokenizer)
         fprintf(out_h, "%.*s", token.len, token.text);
         fprintf(out_c, "%.*s", token.len, token.text);
 
-        token = get_token(tokenizer);
+        token = scanner_get_next(scanner);
         if (token.type == TOKEN_IDENTIFIER)
         {
             fprintf(out_h, " ");
@@ -343,35 +85,35 @@ static void parse_func(Tokenizer* tokenizer)
     fprintf(out_c, ")\n");
 }
 
-static void parse_func_body(Tokenizer* tokenizer)
+static void parse_func_body(Scanner* scanner)
 {
-    Token block = skip_till(tokenizer, TOKEN_OPEN_BLOCK);
-    char* block_cursor = tokenizer->cursor;
-
     /* get function to call */
-    skip_till(tokenizer, TOKEN_ARROW);
-    char* func_def = tokenizer->cursor;
+    scanner_skip_till(scanner, TOKEN_ARROW);
+    char* func_def = scanner->cursor;
+
+    /* get block */
+    Token block = scanner_skip_till(scanner, TOKEN_OPEN_BLOCK);
+    char* block_cursor = scanner->cursor;
 
     for (size_t i = 0; i < block.len; ++i)
     {
-
-        tokenizer->cursor = block_cursor;
-        Token arr = get_token(tokenizer);
-        block_cursor = tokenizer->cursor;
+        scanner->cursor = block_cursor;
+        Token arr = scanner_get_next(scanner);
+        block_cursor = scanner->cursor;
 
         if (arr.type != TOKEN_ARRAY) continue;
 
-        tokenizer->cursor = func_def;
+        scanner->cursor = func_def;
 
-        Token token = get_token(tokenizer);
-        if (!require_token(tokenizer, TOKEN_OPEN_PAREN)) return;
+        Token token = scanner_get_next(scanner);
+        if (!scanner_require(scanner, TOKEN_OPEN_PAREN)) return;
 
         fprintf(out_c, "\t%.*s(", token.len, token.text);
 
         int has_args = 0;
 
         /* parse arguments */
-        token = get_token(tokenizer);
+        token = scanner_get_next(scanner);
         while (token.type != TOKEN_CLOSE_PAREN)
         {
             if (token.type == TOKEN_END_OF_STREAM)
@@ -383,13 +125,13 @@ static void parse_func_body(Tokenizer* tokenizer)
             fprintf(out_c, "%.*s", token.len, token.text);
             has_args = 1;
 
-            token = get_token(tokenizer);
+            token = scanner_get_next(scanner);
         }
 
-        size_t len = get_array_len(arr);
+        size_t len = token_array_len(arr);
         for (int i = 1; i < len; ++i)
         {
-            Token element = get_array_element(arr, i);
+            Token element = token_array_at(arr, i);
 
             if (!has_args)
             {
@@ -405,29 +147,43 @@ static void parse_func_body(Tokenizer* tokenizer)
     }
 }
 
-static void parse_generate(Tokenizer* tokenizer)
+static void parse_generate(Scanner* scanner)
 {
-    char* reset = tokenizer->cursor;
+    char* reset = scanner->cursor;
 
     /* fist pass: enum */
-    parse_enum(tokenizer);
+    parse_enum(scanner);
 
-    tokenizer->cursor = reset;
+    scanner->cursor = reset;
 
     /* second pass: function */
-    parse_func(tokenizer);
+    parse_func(scanner);
 
-
-    /* parse funtion body */
     fprintf(out_c, "{\n");
-    parse_func_body(tokenizer);
+    parse_func_body(scanner);
     fprintf(out_c, "}\n\n");
+}
+
+static Token define;
+
+static void parse_define(Scanner* scanner)
+{
+    define = scanner_get_next(scanner);
+
+    if (define.type != TOKEN_STRING)
+    {
+        printf("Expected string after define\n");
+        return;
+    }
+
+    fprintf(out_h, "#ifndef %.*s\n", define.len, define.text);
+    fprintf(out_h, "#define %.*s\n\n", define.len, define.text);
 }
 
 int main(int argc, char** args)
 {
     tb_file_error error;
-    char* buffer = tb_file_read("EcsLoader.cx", "rb", &error);
+    char* buffer = tb_file_read("AnimationLoader.cx", "rb", &error);
 
     if (error != TB_FILE_OK)
     {
@@ -435,8 +191,8 @@ int main(int argc, char** args)
         return 1;
     }
 
-    out_h = fopen("EcsLoader.h", "w");
-    out_c = fopen("EcsLoader.c", "w");
+    out_h = fopen("AnimationLoader.h", "w");
+    out_c = fopen("AnimationLoader.c", "w");
 
     if (!(out_c && out_h))
     {
@@ -444,34 +200,40 @@ int main(int argc, char** args)
         return 1;
     }
 
-    fprintf(out_c, "#include \"%s\"\n\n", "EcsLoader.h");
+    fprintf(out_c, "#include \"%s\"\n\n", "AnimationLoader.h");
 
-    Tokenizer tokenizer;
-    tokenizer.cursor = buffer;
+    Scanner scanner;
+    scanner.cursor = buffer;
 
     int parsing = 1;
     while (parsing)
     {
-        Token token = get_token(&tokenizer);
+        Token token = scanner_get_next(&scanner);
         switch (token.type)
         {
         case TOKEN_END_OF_STREAM: parsing = 0; break;
         case TOKEN_ERROR: break;
         case TOKEN_IDENTIFIER:
+            if (token_cmp(token, "define") == 0)
+                parse_define(&scanner);
             if (token_cmp(token, "include") == 0)
-                parse_include(&tokenizer);
-
+                parse_include(&scanner);
             if (token_cmp(token, "generate") == 0)
-                parse_generate(&tokenizer);
+                parse_generate(&scanner);
             
             break;
         default:
             break;
         }
     }
+    
+    if (define.type == TOKEN_STRING)
+        fprintf(out_h, "#endif /* !%.*s */\n", define.len, define.text);
 
     fclose(out_h);
     fclose(out_c);
+
+    printf("Done\n");
 
     return 0;
 }
