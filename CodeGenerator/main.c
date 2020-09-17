@@ -403,57 +403,6 @@ static void parse_func_body(Tokenizer* tokenizer)
 
         fprintf(out_c, ");\n");
     }
-
-    return ;
-    while(1)
-    {
-        Token token = get_token(tokenizer);
-        if (!require_token(tokenizer, TOKEN_OPEN_PAREN)) return;
-
-        fprintf(out_c, "%.*s(", token.len, token.text);
-
-        /* parse arguments */
-        token = get_token(tokenizer);
-        while (token.type != TOKEN_CLOSE_PAREN)
-        {
-            if (token.type == TOKEN_END_OF_STREAM)
-            {
-                printf("Reached end of stream\n");
-                return;
-            }
-
-            fprintf(out_c, "%.*s", token.len, token.text);
-
-            token = get_token(tokenizer);
-        }
-
-        token = get_token(tokenizer);
-        token_print(token);
-        return;
-        while(token.type != TOKEN_ARRAY)
-        {
-            if (token.type == TOKEN_END_OF_STREAM)
-            {
-                printf("Reached end of stream\n");
-                return;
-            }
-            if (token.type == TOKEN_CLOSE_BLOCK)
-            {
-                return;
-            }
-
-            token = get_token(tokenizer);
-        }
-
-        size_t len = get_array_len(token);
-        for (int i = 1; i < len; ++i)
-        {
-            Token element = get_array_element(token, i);
-            fprintf(out_c, ", %.*s", element.len, element.text);
-        }
-
-        fprintf(out_c, ");\n");
-    }
 }
 
 static void parse_generate(Tokenizer* tokenizer)
