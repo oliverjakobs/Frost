@@ -531,6 +531,7 @@
     </None>
     <None Include="res\save\player_inv.json" />
     <None Include="res\templates\chest.json" />
+    <None Include="src\Frost\load_script.cx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

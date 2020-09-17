@@ -248,6 +248,7 @@
     <None Include="res\templates\tree_3.json" />
     <None Include="res\templates\tree_4.json" />
     <None Include="res\templates\tree_5.json" />
+    <None Include="src\Frost\load_script.cx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png" />
