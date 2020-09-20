@@ -50,9 +50,10 @@ void OnInit(Application* app)
 	EcsAddUpdateSystem(&scene.ecs, AnimationSystem);
 	EcsAddUpdateSystem(&scene.ecs, InventoryUpdateSystem);
 	EcsAddUpdateSystem(&scene.ecs, InteractionSystem);
-	EcsAddRenderSystem(&scene.ecs, RenderSystem);
-	EcsAddRenderDebugSystem(&scene.ecs, DebugRenderSystem);
-	EcsAddRenderUISystem(&scene.ecs, InventoryRenderSystem);
+
+	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_PRIMARY, RenderSystem);
+	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_DEBUG, DebugRenderSystem);
+	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_UI, InventoryRenderSystem);
 
 	EcsRegisterDataComponent(&scene.ecs, sizeof(Transform), NULL);
 	EcsRegisterDataComponent(&scene.ecs, sizeof(RigidBody), NULL);
@@ -146,7 +147,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	EcsOnRenderUI(&scene.ecs, CameraGetProjectionPtr(&camera));
+	EcsOnRender(&scene.ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(&camera));
 }
 
 void OnRenderDebug(Application* app)

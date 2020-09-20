@@ -63,7 +63,7 @@ generate AddUpdateSystems(Ecs* ecs): UpdateSystemType -> EcsAddUpdateSystem(ecs)
 
 generate AddRenderSystems(Ecs* ecs): RenderSystemType -> EcsAddRenderSystem(ecs)
 {
-    [ RENDER_SPRITE,    ECS_RENDER_STAGE_SPRITE,    RenderSystem ],
+    [ RENDER_SPRITE,    ECS_RENDER_STAGE_PRIMARY    RenderSystem ],
     [ RENDER_DEBUG,     ECS_RENDER_STAGE_DEBUG,     DebugRenderSystem ],
     [ RENDER_INVENTORY, ECS_RENDER_STAGE_UI,        InventoryRenderSystem ]
 }

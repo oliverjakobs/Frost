@@ -4,12 +4,9 @@
 
 void EcsInit(Ecs* ecs)
 {
-	
 	tb_array_alloc(&ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT, sizeof(EcsEventSystem));
 	tb_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem));
 	tb_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem));
-	tb_array_alloc(&ecs->systems_render_debug, ECS_DEFAULT_RENDER_DEBUG_SYSTEM_COUNT, sizeof(EcsRenderSystem));
-	tb_array_alloc(&ecs->systems_render_ui, ECS_DEFAULT_RENDER_UI_SYSTEM_COUNT, sizeof(EcsRenderSystem));
 
 	tb_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(EcsComponentMap));
 	tb_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(EcsComponentList));
@@ -20,8 +17,6 @@ void EcsDestroy(Ecs* ecs)
 	tb_array_free(&ecs->systems_event);
 	tb_array_free(&ecs->systems_update);
 	tb_array_free(&ecs->systems_render);
-	tb_array_free(&ecs->systems_render_debug);
-	tb_array_free(&ecs->systems_render_ui);
 
 	EcsClear(ecs);
 	for (size_t i = 0; i < ecs->data_components.used; ++i)
@@ -60,28 +55,13 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	tb_array_push_and_grow(&ecs->systems_update, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*,const float*))
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,const float*))
 {
 	EcsRenderSystem system;
 	system.render = render;
+	system.stage = stage;
 
 	tb_array_push_and_grow(&ecs->systems_render, &system, ECS_ARRAY_GROWTH_FACTOR);
-}
-
-void EcsAddRenderDebugSystem(Ecs* ecs, void(*render)(Ecs*, const float*))
-{
-	EcsRenderSystem system;
-	system.render = render;
-
-	tb_array_push_and_grow(&ecs->systems_render_debug, &system, ECS_ARRAY_GROWTH_FACTOR);
-}
-
-void EcsAddRenderUISystem(Ecs* ecs, void(*render)(Ecs*, const float*))
-{
-	EcsRenderSystem system;
-	system.render = render;
-
-	tb_array_push_and_grow(&ecs->systems_render_ui, &system, ECS_ARRAY_GROWTH_FACTOR);
 }
 
 void EcsOnEvent(Ecs* ecs, Event e)
@@ -96,22 +76,15 @@ void EcsOnUpdate(Ecs* ecs, float deltatime)
 		((EcsUpdateSystem*)tb_array_get(&ecs->systems_update, i))->update(ecs, deltatime);
 }
 
-void EcsOnRender(Ecs* ecs, const float* mat_view_proj)
+void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
 {
 	for (size_t i = 0; i < ecs->systems_render.used; ++i)
-		((EcsRenderSystem*)tb_array_get(&ecs->systems_render, i))->render(ecs, mat_view_proj);
-}
+	{
+		EcsRenderSystem* system = tb_array_get(&ecs->systems_render, i);
 
-void EcsOnRenderDebug(Ecs* ecs, const float* mat_view_proj)
-{
-	for (size_t i = 0; i < ecs->systems_render_debug.used; ++i)
-		((EcsRenderSystem*)tb_array_get(&ecs->systems_render_debug, i))->render(ecs, mat_view_proj);
-}
-
-void EcsOnRenderUI(Ecs* ecs, const float* mat_view_proj)
-{
-	for (size_t i = 0; i < ecs->systems_render_ui.used; ++i)
-		((EcsRenderSystem*)tb_array_get(&ecs->systems_render_ui, i))->render(ecs, mat_view_proj);
+		if (system->stage == stage)
+			system->render(ecs, mat_view_proj);
+	}
 }
 
 static void EcsComponentFree(void* block)

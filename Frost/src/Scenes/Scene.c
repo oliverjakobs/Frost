@@ -137,12 +137,12 @@ void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsOnRender(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRenderDebug(&scene->ecs, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
 }
 
 int SceneLoad(Scene* scene, const char* path)
@@ -384,6 +384,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	}
 
 	/* ------------------------------------------------------------------ */
+	/* TODO to code generation */
 	RigidBodyLoad(scene, entity, json);
 	SpriteLoad(scene, entity, json);
 	AnimatorLoad(scene, entity, json);

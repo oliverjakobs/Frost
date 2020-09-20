@@ -10,9 +10,7 @@
 
 #define ECS_DEFAULT_EVENT_SYSTEM_COUNT			4
 #define ECS_DEFAULT_UPDATE_SYSTEM_COUNT			4
-#define ECS_DEFAULT_RENDER_SYSTEM_COUNT			1
-#define ECS_DEFAULT_RENDER_DEBUG_SYSTEM_COUNT	1
-#define ECS_DEFAULT_RENDER_UI_SYSTEM_COUNT		1
+#define ECS_DEFAULT_RENDER_SYSTEM_COUNT			3
 
 #define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
 #define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
@@ -26,8 +24,6 @@ typedef struct
 	tb_array systems_event;
 	tb_array systems_update;
 	tb_array systems_render;
-	tb_array systems_render_debug;
-	tb_array systems_render_ui;
 
 	tb_array data_components;
 	tb_array order_components;
@@ -43,9 +39,17 @@ typedef struct
 	void (*update)(Ecs*,float);
 } EcsUpdateSystem;
 
+typedef enum
+{
+	ECS_RENDER_STAGE_PRIMARY,
+	ECS_RENDER_STAGE_DEBUG,
+	ECS_RENDER_STAGE_UI
+} EcsRenderStage;
+
 typedef struct
 {
 	void (*render)(Ecs*,const float*);
+	EcsRenderStage stage;
 } EcsRenderSystem;
 
 void EcsInit(Ecs* ecs);
@@ -55,15 +59,11 @@ void EcsClear(Ecs* ecs);
 
 void EcsAddEventSystem(Ecs* ecs, void (*handle)(Ecs*, Event));
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
-void EcsAddRenderSystem(Ecs* ecs, void (*render)(Ecs*, const float*));
-void EcsAddRenderDebugSystem(Ecs* ecs, void (*render)(Ecs*, const float*));
-void EcsAddRenderUISystem(Ecs* ecs, void (*render)(Ecs*,const float*));
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*, const float*));
 
 void EcsOnEvent(Ecs* ecs, Event e);
 void EcsOnUpdate(Ecs* ecs, float deltatime);
-void EcsOnRender(Ecs* ecs, const float* mat_view_proj);
-void EcsOnRenderDebug(Ecs* ecs, const float* mat_view_proj);
-void EcsOnRenderUI(Ecs* ecs, const float* mat_view_proj);
+void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
 
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);

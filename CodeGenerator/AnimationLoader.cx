@@ -1,4 +1,3 @@
-
 define "ANIMATION_LOADER_H"
 
 include
@@ -6,10 +5,25 @@ include
     "Frost/AnimationConditions.h"
 }
 
-generate RegisterAnimationCondition(): AnimationCondition -> AnimationConditionsRegisterCondition()
+enum Animations
+{
+    [ ANIMATION_IDLE ],
+    [ ANIMATION_FALL ],
+    [ ANIMATION_WALK ],
+    [ ANIMATION_JUMP ]
+}
+
+generate strings: Animations
+
+enum AnimationCondition
 {
     [ CONDITION_JUMP, AnimationConditionJump ],
     [ CONDITION_FALL, AnimationConditionFall ],
     [ CONDITION_WALK, AnimationConditionWalk ],
     [ CONDITION_IDLE, AnimationConditionIdle ]
 }
+
+generate RegisterAnimationCondition(): 
+    AnimationCondition -> AnimationConditionsRegisterCondition()
+
+generate strings: AnimationCondition
