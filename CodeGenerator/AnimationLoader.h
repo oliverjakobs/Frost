@@ -1,7 +1,12 @@
-#ifndef ANIMATION_LOADER_H
-#define ANIMATION_LOADER_H
-
 #include "Frost/AnimationConditions.h"
+
+typedef enum
+{
+	ANIMATION_IDLE,
+	ANIMATION_FALL,
+	ANIMATION_WALK,
+	ANIMATION_JUMP
+} Animations;
 
 typedef enum
 {
@@ -11,6 +16,3 @@ typedef enum
 	CONDITION_IDLE
 } AnimationCondition;
 
-void RegisterAnimationCondition();
-
-#endif /* !ANIMATION_LOADER_H */
