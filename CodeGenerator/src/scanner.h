@@ -56,6 +56,8 @@ void scanner_init(Scanner* scanner, const char* source);
 Token scanner_get_next(Scanner* scanner);
 tb_array scanner_get_tokens(Scanner* scanner, size_t* count_ptr);
 
+int token_cmp(Token* token, const char* str);
+
 void print_token(Token* token);
 
 #endif /* !SCANNER_H */

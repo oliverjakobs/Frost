@@ -30,13 +30,12 @@ typedef struct
 int generator_create_tokens(Generator* generator, const char* path);
 void generator_free(Generator* generator);
 
+void generator_error(Generator* generator, const char* msg);
+int generator_expect(Generator* generator, TokenType type, const char* msg);
+
 int generator_prime(Generator* generator, const char* header, const char* source);
 
-/* generate functions */
-int generate_include(Generator* generator, size_t offset);
-int generate_func(Generator* generator, size_t offset);
-int generate_enum(Generator* generator, size_t offset);
-int generate_define_start(Generator* generator);
-int generate_define_end(Generator* generator);
+GeneratorEnum* generator_get_enum(Generator* generator, Token* token);
+
 
 #endif /* !GENERATOR_H */

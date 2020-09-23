@@ -169,6 +169,11 @@ Token scanner_get_next(Scanner* scanner)
     return make_token_error(scanner, "Unexpected character.");
 }
 
+int token_cmp(Token* token, const char* str)
+{
+    return strncmp(token->start, str, token->len);
+}
+
 void print_token(Token* token)
 {
     printf("%2d: %.*s\n", token->type, token->len, token->start);

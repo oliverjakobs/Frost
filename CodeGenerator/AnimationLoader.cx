@@ -1,4 +1,4 @@
-define "ANIMATION_LOADER_H"
+define ANIMATION_LOADER_H
 
 include
 {
@@ -17,10 +17,10 @@ generate strings: Animations
 
 enum AnimationCondition
 {
-    [ CONDITION_JUMP, AnimationConditionJump ],
+    [ CONDITION_IDLE, AnimationConditionIdle ],
     [ CONDITION_FALL, AnimationConditionFall ],
     [ CONDITION_WALK, AnimationConditionWalk ],
-    [ CONDITION_IDLE, AnimationConditionIdle ]
+    [ CONDITION_JUMP, AnimationConditionJump ]
 }
 
 generate RegisterAnimationCondition(): 

@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "generator.h"
+#include "generate.h"
 
+/* TODO: source file */
+/* TODO: error testing */
 
-/* ---------------------------------------------------------------------------------------- */
 int main(int argc, char** args)
 {
     Generator gen;
@@ -20,6 +21,8 @@ int main(int argc, char** args)
         return 1;
     }
 
+    generate_define_start(&gen);
+
     for (size_t i = 0; i < gen.tokens.used; ++i)
     {
         Token* token = tb_array_get(&gen.tokens, i);
@@ -30,6 +33,8 @@ int main(int argc, char** args)
         case TOKEN_ENUM:        generate_enum(&gen, i); break;
         }
     }
+
+    generate_define_end(&gen);
 
     generator_free(&gen);
 
