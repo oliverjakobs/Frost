@@ -124,6 +124,8 @@ static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, si
         if (!count_enum_elements(generator))
             return 0;
 
+        /* TODO: check for comma */
+
         gen_enum->elements++;
         generator->current++;
     }
