@@ -82,15 +82,22 @@ int generator_expect(Generator* generator, TokenType type, const char* msg)
     return 1;
 }
 
-int generator_check(Generator* generator, TokenType type)
+int generator_match(Generator* generator, TokenType type)
 {
     return generator->current->type == type;
 }
 
-int generator_check_next(Generator* generator, TokenType type)
+int generator_match_next(Generator* generator, TokenType type)
 {
     Token* next = generator->current + 1;
     return next->type == type;
+}
+
+int generator_prevent(Generator* generator, TokenType type)
+{
+    return (generator->current->type != TOKEN_EOF
+            && generator->current->type != TOKEN_ERROR
+            && generator->current->type != type);
 }
 
 static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, size_t offset)
@@ -100,7 +107,6 @@ static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, si
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
-    gen_enum->token = generator->current;
     gen_enum->offset = generator_get_offset(generator, generator->current);
     gen_enum->elements = 0;
     
@@ -114,20 +120,19 @@ static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, si
 
         while (!generator_expect(generator, TOKEN_RIGHT_BRACKET, NULL))
         {
-            if (generator->current->type == TOKEN_EOF 
-                || generator->current->type == TOKEN_ERROR
-                || generator->current->type == TOKEN_LEFT_BRACKET)
+            if (!generator_prevent(generator, TOKEN_LEFT_BRACKET))
             {
                 generator_error(generator, "Unterminated enum element.");
                 return 0;
             }
         }
 
-        if (!(generator_check_next(generator, TOKEN_COMMA) || generator_check_next(generator, TOKEN_RIGHT_BRACE)))
+        if (!(generator_match_next(generator, TOKEN_COMMA) || generator_match_next(generator, TOKEN_RIGHT_BRACE)))
         {
             generator_error(generator, "Missing ',' after enum element.");
             return 0;
         }
+
         generator->current++;
         gen_enum->elements++;
     }
@@ -185,16 +190,39 @@ int generator_prime(Generator* generator, const char* header, const char* source
     return 1;
 }
 
+Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_num)
+{
+    Token* t = tb_array_get(&generator->tokens, gen_num->offset);
+}
+
+void generator_enum_next(Generator* generator, GeneratorEnum* gen_num)
+{
+    /* TODO: enum element size */
+    while (generator->current->type != TOKEN_RIGHT_BRACKET)
+            generator->current++;
+
+    generator->current += 3;
+}
+
 GeneratorEnum* generator_get_enum(Generator* generator, Token* token)
 {
     for (size_t i = 0; i < generator->enums.used; ++i)
     {
         GeneratorEnum* e = tb_array_get(&generator->enums, i);
-        if (e->token->len == token->len && memcmp(e->token->start, token->start, token->len) == 0)
+        Token* t = generator_enum_token(generator, e);
+        if (t->len == token->len && memcmp(t->start, token->start, t->len) == 0)
             return e;
     }
 
     return NULL;
+}
+
+void generator_get_next_enum_elem(Generator* generator)
+{
+    while (generator->current->type != TOKEN_RIGHT_BRACKET)
+            generator->current++;
+
+    generator->current += 3;
 }
 
 void generator_set_current(Generator* generator, size_t offset)

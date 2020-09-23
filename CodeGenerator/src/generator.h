@@ -7,8 +7,6 @@
 
 typedef struct
 {
-    Token* token;
-
     size_t offset;
     size_t elements;
 } GeneratorEnum;
@@ -31,10 +29,15 @@ void generator_free(Generator* generator);
 void generator_error(Generator* generator, const char* msg);
 int generator_expect(Generator* generator, TokenType type, const char* msg);
 
-int generator_check(Generator* generator, TokenType type);
-int generator_check_next(Generator* generator, TokenType type);
+int generator_match(Generator* generator, TokenType type);
+int generator_match_next(Generator* generator, TokenType type);
+
+int generator_prevent(Generator* generator, TokenType type);
 
 int generator_prime(Generator* generator, const char* header, const char* source);
+
+Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_num);
+void generator_enum_next(Generator* generator, GeneratorEnum* gen_num);
 
 GeneratorEnum* generator_get_enum(Generator* generator, Token* token);
 

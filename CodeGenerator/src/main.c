@@ -22,6 +22,7 @@ int main(int argc, char** args)
     }
 
     generate_define_start(&gen);
+    generate_source_include(&gen);
 
     for (size_t i = 0; i < gen.tokens.used; ++i)
     {
