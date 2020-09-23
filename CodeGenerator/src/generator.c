@@ -75,59 +75,61 @@ int generator_expect(Generator* generator, TokenType type, const char* msg)
     generator->current++;
     if (generator->current->type != type)
     {
-        generator_error(generator, msg);
+        if (msg) generator_error(generator, msg);
         return 0;
     }
 
     return 1;
 }
 
-static int count_enum_elements(Generator* generator)
+int generator_check(Generator* generator, TokenType type)
 {
-    if (!generator_expect(generator, TOKEN_LEFT_BRACKET, "Enum elements must start with '['."))
-        return 0;
+    return generator->current->type == type;
+}
 
-    while (generator->current->type != TOKEN_RIGHT_BRACKET)
-    {
-        generator->current++;
-
-        if (generator->current->type == TOKEN_EOF 
-            || generator->current->type == TOKEN_ERROR
-            || generator->current->type == TOKEN_LEFT_BRACKET)
-        {
-            generator_error(generator, "Unterminated enum element.");
-            return 0;
-        }
-    }
-
-    return 1;
+int generator_check_next(Generator* generator, TokenType type)
+{
+    Token* next = generator->current + 1;
+    return next->type == type;
 }
 
 static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, size_t offset)
 {
-    generator->current = tb_array_get(&generator->tokens, offset);
+    generator_set_current(generator, offset);
 
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
-    gen_enum->name = generator->current->start;
-    gen_enum->name_len = generator->current->len;
-
+    gen_enum->token = generator->current;
+    gen_enum->offset = generator_get_offset(generator, generator->current);
+    gen_enum->elements = 0;
+    
     if (!generator_expect(generator, TOKEN_LEFT_BRACE, "Missing '{' after enum."))
         return 0;
 
-    gen_enum->offset = generator->current - (Token*)tb_array_first(&generator->tokens);
-    gen_enum->elements = 0;
-
     while (generator->current->type != TOKEN_RIGHT_BRACE)
     {
-        if (!count_enum_elements(generator))
+        if (!generator_expect(generator, TOKEN_LEFT_BRACKET, "Enum elements must start with '['."))
             return 0;
 
-        /* TODO: check for comma */
+        while (!generator_expect(generator, TOKEN_RIGHT_BRACKET, NULL))
+        {
+            if (generator->current->type == TOKEN_EOF 
+                || generator->current->type == TOKEN_ERROR
+                || generator->current->type == TOKEN_LEFT_BRACKET)
+            {
+                generator_error(generator, "Unterminated enum element.");
+                return 0;
+            }
+        }
 
-        gen_enum->elements++;
+        if (!(generator_check_next(generator, TOKEN_COMMA) || generator_check_next(generator, TOKEN_RIGHT_BRACE)))
+        {
+            generator_error(generator, "Missing ',' after enum element.");
+            return 0;
+        }
         generator->current++;
+        gen_enum->elements++;
     }
 
     return 1;
@@ -185,14 +187,28 @@ int generator_prime(Generator* generator, const char* header, const char* source
 
 GeneratorEnum* generator_get_enum(Generator* generator, Token* token)
 {
-    if (!token) token = generator->current;
-
     for (size_t i = 0; i < generator->enums.used; ++i)
     {
         GeneratorEnum* e = tb_array_get(&generator->enums, i);
-        if (e->name_len == token->len && memcmp(e->name, token->start, e->name_len) == 0)
+        if (e->token->len == token->len && memcmp(e->token->start, token->start, token->len) == 0)
             return e;
     }
 
     return NULL;
+}
+
+void generator_set_current(Generator* generator, size_t offset)
+{
+    if (offset >= generator->tokens.used)
+    {
+        printf("Offset out of range.\n");
+        return;
+    }
+
+    generator->current = tb_array_get(&generator->tokens, offset);
+}
+
+size_t generator_get_offset(Generator* generator, Token* token)
+{
+    return token - (Token*)tb_array_first(&generator->tokens);
 }

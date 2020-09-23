@@ -2,7 +2,7 @@
 
 int generate_include(Generator* generator, size_t offset)
 {
-    generator->current = tb_array_get(&generator->tokens, offset);
+    generator_set_current(generator, offset);
 
     if (!generator_expect(generator, TOKEN_LEFT_BRACE, "Expected an '{'."))
         return 0;
@@ -39,12 +39,12 @@ int generate_include(Generator* generator, size_t offset)
 
 int generate_enum(Generator* generator, size_t offset)
 {
-    generator->current = tb_array_get(&generator->tokens, offset);
+    generator_set_current(generator, offset);
 
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
-    GeneratorEnum* gen_enum = generator_get_enum(generator, NULL);
+    GeneratorEnum* gen_enum = generator_get_enum(generator, generator->current);
 
     if (!gen_enum) return 0;
 
@@ -80,12 +80,12 @@ int generate_enum(Generator* generator, size_t offset)
         generator->current++;
     }
 
-    fprintf(generator->out_header, "\n} %.*s;\n\n", gen_enum->name_len, gen_enum->name);
+    fprintf(generator->out_header, "\n} %.*s;\n\n", gen_enum->token->len, gen_enum->token->start);
 }
 
 int generate_define_start(Generator* generator)
 {
-    generator->current = tb_array_get(&generator->tokens, 0);
+    generator_set_current(generator, 0);
     
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
@@ -99,7 +99,7 @@ int generate_define_start(Generator* generator)
 
 int generate_define_end(Generator* generator)
 {
-    generator->current = tb_array_get(&generator->tokens, 0);
+    generator_set_current(generator, 0);
     
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
@@ -108,7 +108,7 @@ int generate_define_end(Generator* generator)
     return 1;
 }
 
-static int generate_strings(Generator* generator, size_t offset)
+static int generate_strings(Generator* generator)
 {
     if (!generator_expect(generator, TOKEN_COLON, "Expected ':'."))
         return 0;
@@ -116,20 +116,22 @@ static int generate_strings(Generator* generator, size_t offset)
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an identifier."))
         return 0;
 
-    GeneratorEnum* gen_enum = generator_get_enum(generator, NULL);
+    GeneratorEnum* gen_enum = generator_get_enum(generator, generator->current);
     if (!gen_enum)
     {
         generator_error(generator, "Unknown enum.");
         return 0;
     }
 
+    Token* token = gen_enum->token;
+
     /* write string func declarations */
     fprintf(generator->out_header, "const char* ");
-    fprintf(generator->out_header, "%.*sToString", gen_enum->name_len, gen_enum->name);
-    fprintf(generator->out_header, "(%.*s value);\n", gen_enum->name_len, gen_enum->name);
+    fprintf(generator->out_header, "%.*sToString", token->len, token->start);
+    fprintf(generator->out_header, "(%.*s value);\n", token->len, token->start);
 
-    fprintf(generator->out_header, "%.*s ", gen_enum->name_len, gen_enum->name);
-    fprintf(generator->out_header, "%.*sFromString", gen_enum->name_len, gen_enum->name);
+    fprintf(generator->out_header, "%.*s ", token->len, token->start);
+    fprintf(generator->out_header, "%.*sFromString", token->len, token->start);
     fprintf(generator->out_header, "(const char* str);\n");
 
     fprintf(generator->out_header, "\n");
@@ -141,11 +143,12 @@ static int generate_strings(Generator* generator, size_t offset)
 
 int generate_func(Generator* generator, size_t offset)
 {
-    generator->current = tb_array_get(&generator->tokens, offset);
-    generator->current++;
+    generator_set_current(generator, offset);
 
+    /* get function type */
+    generator->current++;
     if (token_cmp(generator->current, "strings") == 0)
-        return generate_strings(generator, offset);
+        return generate_strings(generator);
 
     /* write func declaration */
     fprintf(generator->out_header, "void %.*s", generator->current->len, generator->current->start);
@@ -161,7 +164,7 @@ int generate_func(Generator* generator, size_t offset)
     }
     fprintf(generator->out_header, ");\n");
 
+
     fprintf(generator->out_header, "\n");
-    
     return 1;
 }
