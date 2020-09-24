@@ -6,9 +6,9 @@
 typedef enum
 {
 	ANIMATION_IDLE,
-	ANIMATION_IDLE,
-	ANIMATION_IDLE,
-	ANIMATION_IDLE
+	ANIMATION_FALL,
+	ANIMATION_WALK,
+	ANIMATION_JUMP
 } Animations;
 
 const char* AnimationsToString(Animations value);
@@ -17,9 +17,9 @@ Animations AnimationsFromString(const char* str);
 typedef enum
 {
 	CONDITION_IDLE,
-	CONDITION_IDLE,
-	CONDITION_IDLE,
-	CONDITION_IDLE
+	CONDITION_FALL,
+	CONDITION_WALK,
+	CONDITION_JUMP
 } AnimationCondition;
 
 void RegisterAnimationCondition();

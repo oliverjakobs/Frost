@@ -3,21 +3,17 @@
 
 #include "generate.h"
 
-/* TODO: source file */
 /* TODO: error testing */
 
 int main(int argc, char** args)
 {
+    char* script = "AnimationLoader.cx";
+    /*
     char* script = "EcsLoader.cx";
-
-    
+    */
 
     Generator gen;
-
-    /* 
-    if (!generator_start(&gen, "AnimationLoader.cx", "AnimationLoader.h", "AnimationLoader.c"))
-    */
-    if (!generator_start(&gen, "EcsLoader.cx", "EcsLoader.h", "EcsLoader.c"))
+    if (!generator_start(&gen, script))
     {
         printf("Failed to setup generator.\n");
         return 1;

@@ -24,7 +24,7 @@ typedef struct
     FILE* out_source;
 } Generator;
 
-int generator_start(Generator* generator, const char* script, const char* header, const char* source);
+int generator_start(Generator* generator, const char* script);
 void generator_finish(Generator* generator);
 
 int generator_match(Generator* generator, TokenType type);
