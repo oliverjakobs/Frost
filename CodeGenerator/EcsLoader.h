@@ -25,7 +25,7 @@ typedef enum
 	COMPONENT_INTERACTOR
 } DataComponentType;
 
-void RegisterDataComponents();
+void RegisterDataComponents(Ecs* ecs);
 
 #include "Components/Order.h"
 
@@ -35,7 +35,7 @@ typedef enum
 	COMPONENT_Z_INDEX
 } OrderComponentType;
 
-void RegisterOrderComponents();
+void RegisterOrderComponents(Ecs* ecs);
 
 #include "Systems/PhysicsSystem.h"
 #include "Systems/PlayerSystem.h"
@@ -61,8 +61,8 @@ typedef enum
 	RENDER_INVENTORY
 } RenderSystemType;
 
-void AddUpdateSystems();
+void AddUpdateSystems(Ecs* ecs);
 
-void AddRenderSystems();
+void AddRenderSystems(Ecs* ecs);
 
 #endif /* !define */

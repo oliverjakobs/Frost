@@ -1,7 +1,7 @@
 #ifndef GENERATE_H
 #define GENERATE_H
 
-#include "generator.h"
+#include "generator_enum.h"
 
 int generate_include(Generator* generator, size_t offset);
 int generate_enum(Generator* generator, size_t offset);

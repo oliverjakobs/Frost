@@ -3,14 +3,9 @@
 
 #include "scanner.h"
 
-#include <stdio.h>
+#include "tb_array.h"
 
-typedef struct
-{
-    size_t offset;
-    size_t elements;
-    size_t element_size;
-} GeneratorEnum;
+#include <stdio.h>
 
 typedef struct
 {
@@ -35,15 +30,10 @@ void generator_error(Generator* generator, const char* msg);
 int generator_expect(Generator* generator, TokenType type, const char* msg);
 int generator_prevent(Generator* generator, TokenType type, const char* msg);
 
-Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_enum);
-int generator_enum_element(Generator* generator, GeneratorEnum* gen_enum, size_t index);
-
-GeneratorEnum* generator_get_enum(Generator* generator, Token* token);
-
 void generator_advance(Generator* generator);
 void generator_set_current(Generator* generator, size_t offset);
-size_t generator_get_offset(Generator* generator, Token* token);
-
+size_t generator_offset(Generator* generator, Token* token);
+Token* generator_at(Generator* generator, size_t index);
 
 
 #endif /* !GENERATOR_H */

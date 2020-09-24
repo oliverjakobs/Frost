@@ -7,9 +7,9 @@
 
 int main(int argc, char** args)
 {
-    char* script = "AnimationLoader.cx";
-    /*
     char* script = "EcsLoader.cx";
+    /*
+    char* script = "AnimationLoader.cx";
     */
 
     Generator gen;
@@ -21,7 +21,7 @@ int main(int argc, char** args)
 
     for (size_t i = 0; i < gen.tokens.used; ++i)
     {
-        Token* token = tb_array_get(&gen.tokens, i);
+        Token* token = generator_at(&gen, i);
         switch (token->type)
         {
         case TOKEN_INCLUDE:     generate_include(&gen, i); break;
