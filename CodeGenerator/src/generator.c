@@ -3,6 +3,8 @@
 #define TB_FILE_IMPLEMENTATION
 #include "tb_file.h"
 
+#include <errno.h>
+
 static int generator_load_tokens(Generator* generator, Scanner* scanner)
 {
     if (tb_array_alloc(&generator->tokens, 32, sizeof(Token), 1.2f) != TB_ARRAY_OK)
@@ -34,33 +36,36 @@ static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, si
 {
     generator_set_current(generator, offset);
 
+    generator_advance(generator);
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
-    gen_enum->offset = generator_get_offset(generator, generator->current);
-    gen_enum->elements = 0;
-    gen_enum->element_size = 0;
-    
+    generator_advance(generator);
     if (!generator_expect(generator, TOKEN_LEFT_BRACE, "Missing '{' after enum."))
         return 0;
 
+    gen_enum->offset = offset + 1;
+    gen_enum->elements = 0;
+    gen_enum->element_size = 0;
+
     while (generator->current->type != TOKEN_RIGHT_BRACE)
     {
+        generator_advance(generator);
         if (!generator_expect(generator, TOKEN_LEFT_BRACKET, "Enum elements must start with '['."))
             return 0;
 
         /* TODO: check comments after args */
         size_t size = 0;
-        while (!generator_expect(generator, TOKEN_RIGHT_BRACKET, NULL))
+        
+        generator_advance(generator);
+        while (generator->current->type != TOKEN_RIGHT_BRACKET)
         {
-            if (!generator_prevent(generator, TOKEN_LEFT_BRACKET))
-            {
-                generator_error(generator, "Unterminated enum element.");
+            if (!generator_prevent(generator, TOKEN_LEFT_BRACKET, "Unterminated enum element."))
                 return 0;
-            }
 
-            if (!generator_match_next(generator, TOKEN_COMMA))
-                size++;
+            size++;
+
+            generator_advance(generator);
         }
 
         if (size == 0)
@@ -85,7 +90,7 @@ static int generator_load_enum(Generator* generator, GeneratorEnum* gen_enum, si
             return 0;
         }
 
-        generator->current++;
+        generator_advance(generator);
         gen_enum->elements++;
     }
 
@@ -99,7 +104,7 @@ int generator_start(Generator* generator, const char* script, const char* header
 
     if (error != TB_FILE_OK)
     {
-        printf("%s\n", tb_file_error_to_string(error));
+        printf("%s: %s\n", tb_file_error_to_string(error), strerror(errno));
         return 0;
     }
 
@@ -110,7 +115,7 @@ int generator_start(Generator* generator, const char* script, const char* header
     {
         free(generator->file_buffer);
         return 0;
-    } 
+    }
 
     generator->current = tb_array_first(&generator->tokens);
 
@@ -120,7 +125,7 @@ int generator_start(Generator* generator, const char* script, const char* header
 
     if (!(generator->out_header && generator->out_source))
     {
-        printf("Failed to open output files.\n");
+        printf("Failed to open output files: %s\n",strerror(errno));
         return 0;
     }
 
@@ -130,7 +135,8 @@ int generator_start(Generator* generator, const char* script, const char* header
         generator_error(generator, "Missing define at start of file.");
         return 0;
     }
-
+    
+    generator_advance(generator);
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
@@ -161,7 +167,10 @@ int generator_start(Generator* generator, const char* script, const char* header
 
     /* start include guard */
     generator_set_current(generator, 0);
+    if (!generator_expect(generator, TOKEN_DEFINE, "Expected define at beginning of script."))
+        return 0;
     
+    generator_advance(generator);
     if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
         return 0;
 
@@ -195,34 +204,6 @@ void generator_finish(Generator* generator)
     free(generator->file_buffer);
 }
 
-void generator_error(Generator* generator, const char* msg)
-{
-    printf("%s (%d)\n", msg, generator->current->line);
-}
-
-int generator_expect(Generator* generator, TokenType type, const char* msg)
-{
-    generator->current++;
-    if (generator->current->type != type)
-    {
-        if (msg) generator_error(generator, msg);
-        return 0;
-    }
-
-    return 1;
-}
-
-int generator_skip(Generator* generator, TokenType type, const char* msg)
-{
-    if (generator->current->type != type)
-    {
-        if (msg) generator_error(generator, msg);
-        return 0;
-    }
-    generator->current++;
-    return 1;
-}
-
 int generator_match(Generator* generator, TokenType type)
 {
     return generator->current->type == type;
@@ -234,11 +215,32 @@ int generator_match_next(Generator* generator, TokenType type)
     return next->type == type;
 }
 
-int generator_prevent(Generator* generator, TokenType type)
+void generator_error(Generator* generator, const char* msg)
 {
-    return (generator->current->type != TOKEN_EOF
-            && generator->current->type != TOKEN_ERROR
-            && generator->current->type != type);
+    printf("%s (%d)\n", msg, generator->current->line);
+}
+
+int generator_expect(Generator* generator, TokenType type, const char* msg)
+{
+    if (!generator_match(generator, type))
+    {
+        generator_error(generator, msg);
+        return 0;
+    }
+    
+    return 1;
+}
+
+int generator_prevent(Generator* generator, TokenType type, const char* msg)
+{
+    if (generator_match(generator, TOKEN_EOF) || generator_match(generator, TOKEN_ERROR)
+    || generator_match(generator, type))
+    {
+        generator_error(generator, msg);
+        return 0;
+    }
+    
+    return 1;
 }
 
 Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_enum)
@@ -248,14 +250,17 @@ Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_enum)
     return tb_array_get(&generator->tokens, gen_enum->offset);
 }
 
-void generator_enum_next(Generator* generator, GeneratorEnum* gen_enum)
+int generator_enum_element(Generator* generator, GeneratorEnum* gen_enum, size_t index)
 {
-    /* TODO: enum element size? */
-    while (generator->current->type != TOKEN_RIGHT_BRACKET)
-            generator->current++;
+    if (index >= gen_enum->elements)
+        return 0;
 
-    generator->current += 3;
+    size_t offset = gen_enum->offset + 3 + (index * (gen_enum->element_size + 3));
+    generator_set_current(generator, offset);
+
+    return 1;
 }
+
 
 GeneratorEnum* generator_get_enum(Generator* generator, Token* token)
 {
@@ -270,12 +275,9 @@ GeneratorEnum* generator_get_enum(Generator* generator, Token* token)
     return NULL;
 }
 
-void generator_get_next_enum_elem(Generator* generator)
+void generator_advance(Generator* generator)
 {
-    while (generator->current->type != TOKEN_RIGHT_BRACKET)
-            generator->current++;
-
-    generator->current += 3;
+    generator->current++;
 }
 
 void generator_set_current(Generator* generator, size_t offset)

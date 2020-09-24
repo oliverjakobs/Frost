@@ -8,10 +8,14 @@
 
 int main(int argc, char** args)
 {
+    char* script = "EcsLoader.cx";
+
+    
+
     Generator gen;
 
     /* 
-     if (!generator_start(&gen, "AnimationLoader.cx", "AnimationLoader.h", "AnimationLoader.c"))
+    if (!generator_start(&gen, "AnimationLoader.cx", "AnimationLoader.h", "AnimationLoader.c"))
     */
     if (!generator_start(&gen, "EcsLoader.cx", "EcsLoader.h", "EcsLoader.c"))
     {
