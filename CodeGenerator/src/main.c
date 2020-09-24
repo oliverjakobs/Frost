@@ -9,20 +9,15 @@
 int main(int argc, char** args)
 {
     Generator gen;
-    if (!generator_create_tokens(&gen, "AnimationLoader.cx"))
+
+    /* 
+     if (!generator_start(&gen, "AnimationLoader.cx", "AnimationLoader.h", "AnimationLoader.c"))
+    */
+    if (!generator_start(&gen, "EcsLoader.cx", "EcsLoader.h", "EcsLoader.c"))
     {
-        printf("Failed to create tokens\n");
+        printf("Failed to setup generator.\n");
         return 1;
     }
-
-    if (!generator_prime(&gen, "AnimationLoader.h", "AnimationLoader.c"))
-    {
-        printf("Failed to prime generator.\n");
-        return 1;
-    }
-
-    generate_define_start(&gen);
-    generate_source_include(&gen);
 
     for (size_t i = 0; i < gen.tokens.used; ++i)
     {
@@ -35,9 +30,7 @@ int main(int argc, char** args)
         }
     }
 
-    generate_define_end(&gen);
-
-    generator_free(&gen);
+    generator_finish(&gen);
 
     return 0;
 }

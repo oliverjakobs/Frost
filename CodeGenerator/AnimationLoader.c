@@ -19,6 +19,14 @@ Animations AnimationsFromString(const char* str)
 	return NULL;
 }
 
+void RegisterAnimationCondition()
+{
+	AnimationConditionsRegisterCondition(AnimationConditionIdle);
+	AnimationConditionsRegisterCondition(AnimationConditionFall);
+	AnimationConditionsRegisterCondition(AnimationConditionWalk);
+	AnimationConditionsRegisterCondition(AnimationConditionJump);
+}
+
 const char* AnimationConditionToString(AnimationCondition value)
 {
 	if (value == CONDITION_IDLE) return "CONDITION_IDLE";

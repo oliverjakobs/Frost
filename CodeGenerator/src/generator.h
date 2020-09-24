@@ -9,6 +9,7 @@ typedef struct
 {
     size_t offset;
     size_t elements;
+    size_t element_size;
 } GeneratorEnum;
 
 typedef struct
@@ -23,21 +24,23 @@ typedef struct
     FILE* out_source;
 } Generator;
 
-int generator_create_tokens(Generator* generator, const char* path);
-void generator_free(Generator* generator);
+int generator_start(Generator* generator, const char* script, const char* header, const char* source);
+void generator_finish(Generator* generator);
 
 void generator_error(Generator* generator, const char* msg);
+/* TODO: remove NULL for msg */
 int generator_expect(Generator* generator, TokenType type, const char* msg);
+
+int generator_skip(Generator* generator, TokenType type, const char* msg);
 
 int generator_match(Generator* generator, TokenType type);
 int generator_match_next(Generator* generator, TokenType type);
 
+/* TODO: find better name and add msg */
 int generator_prevent(Generator* generator, TokenType type);
 
-int generator_prime(Generator* generator, const char* header, const char* source);
-
-Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_num);
-void generator_enum_next(Generator* generator, GeneratorEnum* gen_num);
+Token* generator_enum_token(Generator* generator, GeneratorEnum* gen_enum);
+void generator_enum_next(Generator* generator, GeneratorEnum* gen_enum);
 
 GeneratorEnum* generator_get_enum(Generator* generator, Token* token);
 

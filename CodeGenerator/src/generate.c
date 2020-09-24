@@ -59,41 +59,7 @@ int generate_enum(Generator* generator, size_t offset)
 
     Token* token = generator_enum_token(generator, gen_enum);
     fprintf(generator->out_header, "\n} %.*s;\n\n", token->len, token->start);
-}
 
-int generate_source_include(Generator* generator)
-{
-    /* TODO: out of here */
-    char* file = "AnimationLoader.h";
-
-    fprintf(generator->out_source, "#include \"%s\"\n", file);
-
-    fprintf(generator->out_source, "#include <%s>\n", "string.h");
-    fprintf(generator->out_source, "\n");
-}
-
-int generate_define_start(Generator* generator)
-{
-    generator_set_current(generator, 0);
-    
-    if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
-        return 0;
-
-    fprintf(generator->out_header, "#ifndef %.*s\n", generator->current->len, generator->current->start);
-    fprintf(generator->out_header, "#define %.*s\n", generator->current->len, generator->current->start);
-
-    fprintf(generator->out_header, "\n");
-    return 1;
-}
-
-int generate_define_end(Generator* generator)
-{
-    generator_set_current(generator, 0);
-    
-    if (!generator_expect(generator, TOKEN_IDENTIFIER, "Expected an indentifier."))
-        return 0;
-
-    fprintf(generator->out_header, "#endif /* !%.*s */\n", generator->current->len, generator->current->start);
     return 1;
 }
 
@@ -106,13 +72,13 @@ static int generate_strings(Generator* generator)
         return 0;
 
     GeneratorEnum* gen_enum = generator_get_enum(generator, generator->current);
-    if (!gen_enum)
+    Token* token = generator_enum_token(generator, gen_enum);
+
+    if (!(gen_enum && token))
     {
         generator_error(generator, "Unknown enum.");
         return 0;
     }
-
-    Token* token = generator_enum_token(generator, gen_enum);
 
     /* write to_string declaration */
     fprintf(generator->out_header, "const char* ");
@@ -156,10 +122,8 @@ static int generate_strings(Generator* generator)
     }
 
     fprintf(generator->out_source, "\treturn NULL;\n");
-
     fprintf(generator->out_source, "}\n\n");
 
-    
     fprintf(generator->out_header, "\n");
     return 1;
 }
@@ -175,19 +139,70 @@ int generate_func(Generator* generator, size_t offset)
 
     /* write func declaration */
     fprintf(generator->out_header, "void %.*s", generator->current->len, generator->current->start);
+    fprintf(generator->out_source, "void %.*s", generator->current->len, generator->current->start);
 
     if (!generator_expect(generator, TOKEN_LEFT_PAREN, "Expected '('."))
         return 0;
 
     fprintf(generator->out_header, "(");
+    fprintf(generator->out_source, "(");
     while (generator->current->type != TOKEN_RIGHT_PAREN)
     {
         /* TODO: generate parameter */
         generator->current++;
     }
-    fprintf(generator->out_header, ");\n");
+    fprintf(generator->out_header, ");\n\n");
+    fprintf(generator->out_source, ")\n{\n");
 
+    if (!generator_skip(generator, TOKEN_RIGHT_PAREN, "Expected ')'."))
+        return 0;
 
-    fprintf(generator->out_header, "\n");
+    if (!generator_skip(generator, TOKEN_COLON, "Expected ':'."))
+        return 0;
+
+    GeneratorEnum* gen_enum = generator_get_enum(generator, generator->current);
+    Token* token = generator_enum_token(generator, gen_enum);
+
+    if (!(gen_enum && token))
+    {
+        generator_error(generator, "Unknown enum.");
+        return 0;
+    }
+
+    /* Get function to call */
+    if (!generator_expect(generator, TOKEN_ARROW, "Expected '->'."))
+        return 0;
+
+    Token* func = ++generator->current;
+
+    /* write func body */
+    generator_set_current(generator, gen_enum->offset + 3);
+    for (size_t i = 0; i < gen_enum->elements; ++i)
+    {
+        fprintf(generator->out_source, "\t%.*s(", func->len, func->start);
+        generator->current++;
+        for (size_t arg = 0; arg < gen_enum->element_size;)
+        {
+            /* TODO: generate parameter */
+            generator->current++;
+
+            if (generator_match(generator, TOKEN_RIGHT_BRACKET))
+                break;
+
+            if (generator_match(generator, TOKEN_COMMA))
+                fprintf(generator->out_source, ", ");
+            else
+            {
+                fprintf(generator->out_source, "%.*s", generator->current->len, generator->current->start);
+                arg++;
+            }
+        }
+        fprintf(generator->out_source, ");\n");
+
+        generator_enum_next(generator, gen_enum);
+    }
+
+    fprintf(generator->out_source, "}\n\n");
+
     return 1;
 }

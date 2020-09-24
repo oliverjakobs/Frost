@@ -25,7 +25,7 @@ typedef enum
 	COMPONENT_INTERACTOR
 } DataComponentType;
 
-void RegisterDataComponents(Ecs* ecs);
+void RegisterDataComponents();
 
 #include "Components/Order.h"
 
@@ -35,7 +35,7 @@ typedef enum
 	COMPONENT_Z_INDEX
 } OrderComponentType;
 
-void RegisterOrderComponents(Ecs* ecs);
+void RegisterOrderComponents();
 
 #include "Systems/PhysicsSystem.h"
 #include "Systems/PlayerSystem.h"
@@ -54,8 +54,6 @@ typedef enum
 	UPDATE_INTERACTION
 } UpdateSystemType;
 
-void AddUpdateSystems(Ecs* ecs);
-
 typedef enum
 {
 	RENDER_SPRITE,
@@ -63,6 +61,8 @@ typedef enum
 	RENDER_INVENTORY
 } RenderSystemType;
 
-void AddRenderSystems(Ecs* ecs);
+void AddUpdateSystems();
 
-#endif /* !ECS_LOADER_H */
+void AddRenderSystems();
+
+#endif /* !define */

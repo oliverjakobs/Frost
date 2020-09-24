@@ -1,37 +1,38 @@
 #include "EcsLoader.h"
+#include <string.h>
 
-void RegisterDataComponents(Ecs* ecs)
+void RegisterDataComponents()
 {
-	EcsRegisterDataComponent(ecs, sizeof(Transform), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(RigidBody), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Movement), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Sprite), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Animator), AnimatorFree);
-	EcsRegisterDataComponent(ecs, sizeof(CameraController), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Inventory), InventoryFree);
-	EcsRegisterDataComponent(ecs, sizeof(Interaction), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Interactor), NULL);
+	EcsRegisterDataComponent(sizeof(Transform), NULL);
+	EcsRegisterDataComponent(sizeof(RigidBody), NULL);
+	EcsRegisterDataComponent(sizeof(Movement), NULL);
+	EcsRegisterDataComponent(sizeof(Sprite), NULL);
+	EcsRegisterDataComponent(sizeof(Animator), AnimatorFree);
+	EcsRegisterDataComponent(sizeof(CameraController), NULL);
+	EcsRegisterDataComponent(sizeof(Inventory), InventoryFree);
+	EcsRegisterDataComponent(sizeof(Interaction), NULL);
+	EcsRegisterDataComponent(sizeof(Interactor), NULL);
 }
 
-void RegisterOrderComponents(Ecs* ecs)
+void RegisterOrderComponents()
 {
-	EcsRegisterOrderComponent(ecs, sizeof(Template), TemplateCmp);
-	EcsRegisterOrderComponent(ecs, sizeof(ZIndex), ZIndexCmp);
+	EcsRegisterOrderComponent(sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(sizeof(ZIndex), ZIndexCmp);
 }
 
-void AddUpdateSystems(Ecs* ecs)
+void AddUpdateSystems()
 {
-	EcsAddUpdateSystem(ecs, PhysicsSystem);
-	EcsAddUpdateSystem(ecs, PlayerSystem);
-	EcsAddUpdateSystem(ecs, AnimationSystem);
-	EcsAddUpdateSystem(ecs, InventoryUpdateSystem);
-	EcsAddUpdateSystem(ecs, InteractionSystem);
+	EcsAddUpdateSystem(PhysicsSystem);
+	EcsAddUpdateSystem(PlayerSystem);
+	EcsAddUpdateSystem(AnimationSystem);
+	EcsAddUpdateSystem(InventoryUpdateSystem);
+	EcsAddUpdateSystem(InteractionSystem);
 }
 
-void AddRenderSystems(Ecs* ecs)
+void AddRenderSystems()
 {
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_SPRITE, RenderSystem);
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_DEBUG, DebugRenderSystem);
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_UI, InventoryRenderSystem);
+	EcsAddRenderSystem(ECS_RENDER_STAGE_PRIMARY, RenderSystem);
+	EcsAddRenderSystem(ECS_RENDER_STAGE_DEBUG, DebugRenderSystem);
+	EcsAddRenderSystem(ECS_RENDER_STAGE_UI, InventoryRenderSystem);
 }
 

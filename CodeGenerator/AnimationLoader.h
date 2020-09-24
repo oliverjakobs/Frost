@@ -27,4 +27,4 @@ void RegisterAnimationCondition();
 const char* AnimationConditionToString(AnimationCondition value);
 AnimationCondition AnimationConditionFromString(const char* str);
 
-#endif /* !ANIMATION_LOADER_H */
+#endif /* !define */
