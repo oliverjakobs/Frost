@@ -54,44 +54,6 @@ void AnimationTick(Animation* animation, float deltatime)
 	}
 }
 
-/* ---------------------------------| AnimationCondition |-------------------------- */
-static tb_hashmap condition_table; /* <str, AnimationCondition> */
-
-void AnimationConditionsInit()
-{
-	if (tb_hashmap_alloc(&condition_table, tb_hash_string, tb_hashmap_str_cmp, 0) == TB_HASHMAP_OK)
-		tb_hashmap_set_key_alloc_funcs(&condition_table, tb_hashmap_str_alloc, tb_hashmap_str_free);
-}
-
-void AnimationConditionsDestroy()
-{
-	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&condition_table); iter; iter = tb_hashmap_iter_next(&condition_table, iter))
-	{
-		free(tb_hashmap_iter_get_value(iter));
-		tb_hashmap_iter_remove(&condition_table, iter);
-	}
-	tb_hashmap_free(&condition_table);
-}
-
-int AnimationConditionsRegisterCondition(const char* name, int(*condition)(Ecs*, EcsEntityID, int))
-{
-	AnimationCondition* value = malloc(sizeof(AnimationCondition));
-
-	if (!value) return 0;
-
-	value->func = condition;
-	if (tb_hashmap_insert(&condition_table, name, value) == value)
-		return 1;
-
-	free(value);
-	return 0;
-}
-
-AnimationCondition* AnimationConditionsGetCondition(const char* name)
-{
-	return tb_hashmap_find(&condition_table, name);
-}
-
 /* ---------------------------------| Animator |------------------------------------ */
 void AnimatorFree(void* block)
 {
@@ -174,6 +136,6 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 
 			AnimatorAddAnimation(&animator, anim_name, animation);
 		}
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATION, &animator);
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
 	}
 }

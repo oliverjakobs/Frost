@@ -6,7 +6,7 @@
 #include "Graphics/Resources.h"
 #include "../Components/Inventory.h"
 
-void InventorySystemLoad(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding);
+int InventorySystemInit(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding);
 
 typedef enum
 {
@@ -26,8 +26,8 @@ typedef enum
 
 InventoryVAlign InventorySystemGetVAlign(const char* str);
 
-int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns);
-int InventoryInitAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlign v_align, int rows, int columns);
+int InventoryCreate(Inventory* inv, vec2 pos, int rows, int columns);
+int InventoryCreateAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlign v_align, int rows, int columns);
 
 void InventoryUpdateSystem(Ecs* ecs, float deltatime);
 void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj);

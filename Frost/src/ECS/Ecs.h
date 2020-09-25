@@ -68,14 +68,14 @@ void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);
 
-EcsComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
+int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
 void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
-EcsComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
+int EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsComponentType type, void* component);
 void* EcsGetOrderComponent(Ecs* ecs, size_t index, EcsComponentType type);

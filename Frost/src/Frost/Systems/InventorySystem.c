@@ -35,7 +35,7 @@ typedef struct
 
 static InventorySystemData inventory_data;
 
-void InventorySystemLoad(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding)
+int InventorySystemInit(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding)
 {
 	inventory_data.screen_size = screen_size;
 	inventory_data.item_atlas = item_atlas;
@@ -44,6 +44,8 @@ void InventorySystemLoad(IgnisTexture2D* item_atlas, vec2 screen_size, float cel
 
 	InventoryCellIDReset(&inventory_data.dragged);
 	InventoryCellIDReset(&inventory_data.hover);
+
+	return 1;
 }
 
 InventoryHAlign InventorySystemGetHAlign(const char* str)
@@ -88,7 +90,7 @@ static float InventorySystemGetCellOffset(int index)
 	return index * (inventory_data.cell_size + inventory_data.padding) + inventory_data.padding;;
 }
 
-int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns)
+int InventoryCreate(Inventory* inv, vec2 pos, int rows, int columns)
 {
 	inv->cells = malloc(sizeof(InventoryCell) * rows * columns);
 
@@ -115,7 +117,7 @@ int InventoryInit(Inventory* inv, vec2 pos, int rows, int columns)
 	return 1;
 }
 
-int InventoryInitAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlign v_align, int rows, int columns)
+int InventoryCreateAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlign v_align, int rows, int columns)
 {
 	vec2 pos = vec2_zero();
 	float w = InventorySystemGetCellOffset(columns);
@@ -135,7 +137,7 @@ int InventoryInitAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAlig
 	case INV_VALIGN_BOTTOM: pos.y = -inventory_data.screen_size.y * 0.5f; break;
 	}
 
-	return InventoryInit(inv, pos, rows, columns);
+	return InventoryCreate(inv, pos, rows, columns);
 }
 
 static int InventoryGetCellAt(Inventory* inv, vec2 pos)

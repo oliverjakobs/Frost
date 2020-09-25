@@ -72,7 +72,6 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 
 	SceneClearActive(scene);
 
-	AnimationConditionsInit();
 	EcsInit(&scene->ecs);
 
 	return 1;
@@ -82,7 +81,6 @@ void SceneDestroy(Scene* scene)
 {
 	SceneClearActive(scene);
 
-	AnimationConditionsDestroy();
 	EcsDestroy(&scene->ecs);
 
 	tb_hashmap_free(&scene->scene_register);

@@ -129,9 +129,6 @@
     <ClInclude Include="src\Event\EventHandler.h">
       <Filter>src\Event</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\AnimationConditions.h">
-      <Filter>src\Frost</Filter>
-    </ClInclude>
     <ClInclude Include="src\Frost\Components\Animator.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
@@ -281,6 +278,8 @@
     </ClInclude>
     <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
     <ClInclude Include="src\Frost\Components\Inventory.h" />
+    <ClInclude Include="src\Frost\AnimationLoader.h" />
+    <ClInclude Include="src\Frost\EcsLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -321,9 +320,6 @@
     </ClCompile>
     <ClCompile Include="src\Event\EventHandler.c">
       <Filter>src\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\AnimationConditions.c">
-      <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Components\Animator.c">
       <Filter>src\Frost\Components</Filter>
@@ -460,6 +456,8 @@
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\InventorySystem.c" />
     <ClCompile Include="src\Frost\Components\Inventory.c" />
+    <ClCompile Include="src\Frost\AnimationLoader.c" />
+    <ClCompile Include="src\Frost\EcsLoader.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

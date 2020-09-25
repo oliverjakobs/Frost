@@ -32,13 +32,13 @@ static size_t EcsComponentMapHash(const void* key)
 int EcsComponentMapAlloc(EcsComponentMap* map, size_t element_size, void (*free_func)(void*))
 {
 	if (tb_hashmap_alloc(&map->map, EcsComponentMapHash, EcsComponentMapCmp, 0) != TB_HASHMAP_OK)
-		return 1;
+		return 0;
 
 	map->element_size = element_size;
 
 	tb_hashmap_set_key_alloc_funcs(&map->map, EcsComponentMapKeyAlloc, EcsComponentMapKeyFree);
 	tb_hashmap_set_value_alloc_funcs(&map->map, NULL, free_func);
-	return 0;
+	return 1;
 }
 
 void EcsComponentMapFree(EcsComponentMap* map)

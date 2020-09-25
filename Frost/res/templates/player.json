@@ -17,9 +17,9 @@
       "length": 4,
       "delay": 0.2,
       "transitions": [
-        [ "condition_jump", "jump" ], 
-        [ "condition_fall", "fall" ], 
-        [ "condition_walk", "walk" ]
+        [ "CONDITION_JUMP", "jump" ], 
+        [ "CONDITION_FALL", "fall" ], 
+        [ "CONDITION_WALK", "walk" ]
       ]
     },
     "walk": { 
@@ -27,9 +27,9 @@
       "length": 6,
       "delay": 0.125,
       "transitions": [
-        [ "condition_jump", "jump" ], 
-        [ "condition_fall", "fall" ], 
-        [ "condition_idle", "idle" ]
+        [ "CONDITION_JUMP", "jump" ], 
+        [ "CONDITION_FALL", "fall" ], 
+        [ "CONDITION_IDLE", "idle" ]
       ]
     },
     "jump": { 
@@ -37,9 +37,9 @@
       "length": 3,
       "delay": 0.3,
       "transitions": [
-        [ "condition_fall", "fall" ], 
-        [ "condition_walk", "walk" ], 
-        [ "condition_idle", "idle" ]
+        [ "CONDITION_FALL", "fall" ], 
+        [ "CONDITION_WALK", "walk" ], 
+        [ "CONDITION_IDLE", "idle" ]
       ]
     },
     "fall": { 
@@ -47,9 +47,9 @@
       "length": 2,
       "delay": 0.4,
       "transitions": [
-        [ "condition_jump", "jump" ], 
-        [ "condition_walk", "walk" ], 
-        [ "condition_idle", "idle" ]
+        [ "CONDITION_JUMP", "jump" ], 
+        [ "CONDITION_WALK", "walk" ], 
+        [ "CONDITION_IDLE", "idle" ]
       ]
     }
   },

@@ -2,7 +2,7 @@
 
 int EcsComponentListAlloc(EcsComponentList* list, size_t element_size, int (*cmp)(const void*, const void*))
 {
-	return tb_list_alloc(&list->list, 8, element_size, cmp) != TB_LIST_OK;
+	return tb_list_alloc(&list->list, 8, element_size, cmp) == TB_LIST_OK;
 }
 
 void EcsComponentListFree(EcsComponentList* list)

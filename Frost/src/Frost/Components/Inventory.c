@@ -31,7 +31,7 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 
 			InventoryVAlign v_align = InventorySystemGetVAlign(buffer);
 
-			InventoryInitAligned(&inv, h_align, v_align, rows, columns);
+			InventoryCreateAligned(&inv, h_align, v_align, rows, columns);
 		}
 		else
 		{

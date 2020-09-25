@@ -1,6 +1,5 @@
 #include "Frost/Frost.h"
 #include "Frost/FrostEcs.h"
-#include "Frost/AnimationConditions.h"
 
 Camera camera;
 
@@ -36,46 +35,25 @@ void OnInit(Application* app)
 
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
 
-	InventorySystemLoad(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
-
-	/* animation conditions */
-	AnimationConditionsRegisterCondition("condition_jump", AnimationConditionJump);
-	AnimationConditionsRegisterCondition("condition_fall", AnimationConditionFall);
-	AnimationConditionsRegisterCondition("condition_walk", AnimationConditionWalk);
-	AnimationConditionsRegisterCondition("condition_idle", AnimationConditionIdle);
+	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
+	AnimationSystemInit();
 
 	/* ecs */
-	EcsAddUpdateSystem(&scene.ecs, PhysicsSystem);
-	EcsAddUpdateSystem(&scene.ecs, PlayerSystem);
-	EcsAddUpdateSystem(&scene.ecs, AnimationSystem);
-	EcsAddUpdateSystem(&scene.ecs, InventoryUpdateSystem);
-	EcsAddUpdateSystem(&scene.ecs, InteractionSystem);
+	AddUpdateSystems(&scene.ecs);
+	AddRenderSystems(&scene.ecs);
 
-	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_PRIMARY, RenderSystem);
-	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_DEBUG, DebugRenderSystem);
-	EcsAddRenderSystem(&scene.ecs, ECS_RENDER_STAGE_UI, InventoryRenderSystem);
-
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Transform), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(RigidBody), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Movement), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Sprite), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Animator), AnimatorFree);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(CameraController), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Inventory), InventoryFree);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Interaction), NULL);
-	EcsRegisterDataComponent(&scene.ecs, sizeof(Interactor), NULL);
-
-	EcsRegisterOrderComponent(&scene.ecs, sizeof(Template), TemplateCmp);
-	EcsRegisterOrderComponent(&scene.ecs, sizeof(ZIndex), ZIndexCmp);
+	RegisterDataComponents(&scene.ecs);
+	RegisterOrderComponents(&scene.ecs);
 
 	/* setup starting state */
 	SceneChangeActive(&scene, "scene");
 	SceneEditorToggleActive(&scene_editor);
-
 }
 
 void OnDestroy(Application* app)
 {
+	AnimationSystemDestroy();
+
 	SceneDestroy(&scene);
 
 	FontRendererDestroy();

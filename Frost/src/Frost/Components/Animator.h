@@ -23,18 +23,6 @@ void AnimationDestroy(Animation* animation);
 void AnimationStart(Animation* animation);
 void AnimationTick(Animation* animation, float deltatime);
 
-/* ---------------------------------| AnimationCondition |-------------------------- */
-typedef struct
-{
-	int (*func)(Ecs*, EcsEntityID, int);
-} AnimationCondition;
-
-void AnimationConditionsInit();
-void AnimationConditionsDestroy();
-
-int AnimationConditionsRegisterCondition(const char* name, int (*condition)(Ecs*, EcsEntityID, int));
-AnimationCondition* AnimationConditionsGetCondition(const char* name);
-
 /* ---------------------------------| Animator |------------------------------------ */
 typedef struct
 {

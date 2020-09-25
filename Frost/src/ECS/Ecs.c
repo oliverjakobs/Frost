@@ -4,12 +4,12 @@
 
 void EcsInit(Ecs* ecs)
 {
-	tb_array_alloc(&ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT, sizeof(EcsEventSystem));
-	tb_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem));
-	tb_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem));
+	tb_array_alloc(&ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT, sizeof(EcsEventSystem), ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem), ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem), ECS_ARRAY_GROWTH_FACTOR);
 
-	tb_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(EcsComponentMap));
-	tb_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(EcsComponentList));
+	tb_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(EcsComponentMap), ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(EcsComponentList), ECS_ARRAY_GROWTH_FACTOR);
 }
 
 void EcsDestroy(Ecs* ecs)
@@ -44,7 +44,7 @@ void EcsAddEventSystem(Ecs* ecs, void(*handle)(Ecs*, Event))
 	EcsEventSystem system;
 	system.handle = handle;
 
-	tb_array_push_and_grow(&ecs->systems_event, &system, ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_push(&ecs->systems_event, &system);
 }
 
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
@@ -52,7 +52,7 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	EcsUpdateSystem system;
 	system.update = update;
 
-	tb_array_push_and_grow(&ecs->systems_update, &system, ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_push(&ecs->systems_update, &system);
 }
 
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,const float*))
@@ -61,7 +61,7 @@ void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,cons
 	system.render = render;
 	system.stage = stage;
 
-	tb_array_push_and_grow(&ecs->systems_render, &system, ECS_ARRAY_GROWTH_FACTOR);
+	tb_array_push(&ecs->systems_render, &system);
 }
 
 void EcsOnEvent(Ecs* ecs, Event e)
@@ -102,12 +102,12 @@ EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type)
 	return tb_array_get(&ecs->order_components, type);
 }
 
-EcsComponentType EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
+int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
 {
 	EcsComponentMap comp;
-	if ((EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree) == 0)
-		&& (tb_array_push_and_grow(&ecs->data_components, &comp, ECS_ARRAY_GROWTH_FACTOR)))
-		return (EcsComponentType)ecs->data_components.used - 1;
+	if (EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree))
+		return tb_array_push(&ecs->data_components, &comp) != NULL;
+
 	return 0;
 }
 
@@ -137,12 +137,11 @@ void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 	EcsComponentMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
-EcsComponentType EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const void*, const void*))
+int EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const void*, const void*))
 {
 	EcsComponentList comp;
-	if ((EcsComponentListAlloc(&comp, element_size, cmp) == 0)
-		&& (tb_array_push_and_grow(&ecs->order_components, &comp, ECS_ARRAY_GROWTH_FACTOR)))
-		return (EcsComponentType)ecs->order_components.used - 1;
+	if (EcsComponentListAlloc(&comp, element_size, cmp))
+		return tb_array_push(&ecs->order_components, &comp) != NULL;
 
 	return 0;
 }
