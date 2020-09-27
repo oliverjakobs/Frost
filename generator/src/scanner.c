@@ -103,14 +103,11 @@ static void scanner_skip_whitespaces(Scanner* scanner)
     {
         switch (scanner->current[0])
         {
+        case '\n':
+            scanner->line++;
         case ' ':
         case '\r':
         case '\t':
-            scanner->current++;
-            break;
-
-        case '\n':
-            scanner->line++;
             scanner->current++;
             break;
 
@@ -118,7 +115,8 @@ static void scanner_skip_whitespaces(Scanner* scanner)
         case '#':
             while(scanner->current[0] && scanner->current[0] != '\n')
                 scanner->current++;
-        
+            break;
+
         default:
             return;
         }
