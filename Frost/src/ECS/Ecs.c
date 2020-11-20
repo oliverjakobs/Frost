@@ -1,89 +1,102 @@
 #include "Ecs.h"
 
 #include <string.h>
+#include "toolbox/tb_stretchy.h"
+
+struct EcsEventSystem
+{
+	void (*handle)(Ecs*, Event);
+};
+
+struct EcsUpdateSystem
+{
+	void (*update)(Ecs*, float);
+};
+
+struct EcsRenderSystem
+{
+	void (*render)(Ecs*, const float*);
+	EcsRenderStage stage;
+};
 
 void EcsInit(Ecs* ecs)
 {
-	tb_array_alloc(&ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT, sizeof(EcsEventSystem), ECS_ARRAY_GROWTH_FACTOR);
-	tb_array_alloc(&ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT, sizeof(EcsUpdateSystem), ECS_ARRAY_GROWTH_FACTOR);
-	tb_array_alloc(&ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT, sizeof(EcsRenderSystem), ECS_ARRAY_GROWTH_FACTOR);
+	ecs->systems_event = NULL;
+	ecs->systems_update = NULL;
+	ecs->systems_render = NULL;
 
-	tb_array_alloc(&ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT, sizeof(EcsComponentMap), ECS_ARRAY_GROWTH_FACTOR);
-	tb_array_alloc(&ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT, sizeof(EcsComponentList), ECS_ARRAY_GROWTH_FACTOR);
+	ecs->data_components = NULL;
+	ecs->order_components = NULL;
+
+	tb_stretchy_reserve(ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT);
+	tb_stretchy_reserve(ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT);
+	tb_stretchy_reserve(ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT);
+
+	tb_stretchy_reserve(ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT);
+	tb_stretchy_reserve(ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT);
 }
 
 void EcsDestroy(Ecs* ecs)
 {
-	tb_array_free(&ecs->systems_event);
-	tb_array_free(&ecs->systems_update);
-	tb_array_free(&ecs->systems_render);
+	tb_stretchy_free(ecs->systems_event);
+	tb_stretchy_free(ecs->systems_update);
+	tb_stretchy_free(ecs->systems_render);
 
 	EcsClear(ecs);
-	for (size_t i = 0; i < ecs->data_components.used; ++i)
-		EcsComponentMapFree(tb_array_get(&ecs->data_components, i));
-	tb_array_free(&ecs->data_components);
+	for (EcsComponentMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
+		EcsComponentMapFree(it);
 
-	for (size_t i = 0; i < ecs->order_components.used; ++i)
-		EcsComponentListFree(tb_array_get(&ecs->order_components, i));
-	tb_array_free(&ecs->order_components);
+	for (EcsComponentList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
+		EcsComponentListFree(it);
+
+	tb_stretchy_free(ecs->data_components);
+	tb_stretchy_free(ecs->order_components);
 }
 
 void EcsClear(Ecs* ecs)
 {
-	for (size_t i = 0; i < ecs->data_components.used; ++i)
-		EcsComponentMapClear(tb_array_get(&ecs->data_components, i));
+	for (EcsComponentMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
+		EcsComponentMapClear(it);
 
-	for (size_t i = 0; i < ecs->order_components.used; ++i)
-		EcsComponentListClear(tb_array_get(&ecs->order_components, i));
+	for (EcsComponentList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
+		EcsComponentListClear(it);
 
 	EcsEntityResetIDCounter();
 }
 
 void EcsAddEventSystem(Ecs* ecs, void(*handle)(Ecs*, Event))
 {
-	EcsEventSystem system;
-	system.handle = handle;
-
-	tb_array_push(&ecs->systems_event, &system);
+	tb_stretchy_push(ecs->systems_event, ((EcsEventSystem) { handle }));
 }
 
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 {
-	EcsUpdateSystem system;
-	system.update = update;
-
-	tb_array_push(&ecs->systems_update, &system);
+	tb_stretchy_push(ecs->systems_update, ((EcsUpdateSystem) { update }));
 }
 
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,const float*))
 {
-	EcsRenderSystem system;
-	system.render = render;
-	system.stage = stage;
-
-	tb_array_push(&ecs->systems_render, &system);
+	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { render, stage }));
 }
 
 void EcsOnEvent(Ecs* ecs, Event e)
 {
-	for (size_t i = 0; i < ecs->systems_event.used; ++i)
-		((EcsEventSystem*)tb_array_get(&ecs->systems_event, i))->handle(ecs, e);
+	for (EcsEventSystem* it = ecs->systems_event; it != tb_stretchy_last(ecs->systems_event); it++)
+		it->handle(ecs, e);
 }
 
 void EcsOnUpdate(Ecs* ecs, float deltatime)
 {
-	for (size_t i = 0; i < ecs->systems_update.used; ++i)
-		((EcsUpdateSystem*)tb_array_get(&ecs->systems_update, i))->update(ecs, deltatime);
+	for (EcsUpdateSystem* it = ecs->systems_update; it != tb_stretchy_last(ecs->systems_update); it++)
+		it->update(ecs, deltatime);
 }
 
 void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
 {
-	for (size_t i = 0; i < ecs->systems_render.used; ++i)
+	for (EcsRenderSystem* it = ecs->systems_render; it != tb_stretchy_last(ecs->systems_render); it++)
 	{
-		EcsRenderSystem* system = tb_array_get(&ecs->systems_render, i);
-
-		if (system->stage == stage)
-			system->render(ecs, mat_view_proj);
+		if (it->stage == stage)
+			it->render(ecs, mat_view_proj);
 	}
 }
 
@@ -94,19 +107,19 @@ static void EcsComponentFree(void* block)
 
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type)
 {
-	return tb_array_get(&ecs->data_components, type);
+	return type < tb_stretchy_size(ecs->data_components) ? &ecs->data_components[type] : NULL;
 }
 
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type)
 {
-	return tb_array_get(&ecs->order_components, type);
+	return type < tb_stretchy_size(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
 
 int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
 {
 	EcsComponentMap comp;
 	if (EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree))
-		return tb_array_push(&ecs->data_components, &comp) != NULL;
+		return tb_stretchy_push(ecs->data_components, comp);
 
 	return 0;
 }
@@ -125,15 +138,11 @@ void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, v
 
 void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	if (type >= ecs->data_components.used) return NULL;
-
 	return EcsComponentMapFind(EcsGetComponentMap(ecs, type), entity);
 }
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	if (type >= ecs->data_components.used) return;
-
 	EcsComponentMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
@@ -141,7 +150,7 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const vo
 {
 	EcsComponentList comp;
 	if (EcsComponentListAlloc(&comp, element_size, cmp))
-		return tb_array_push(&ecs->order_components, &comp) != NULL;
+		return tb_stretchy_push(ecs->order_components, comp);
 
 	return 0;
 }
@@ -157,20 +166,16 @@ void* EcsAddOrderComponent(Ecs* ecs, EcsComponentType type, void* component)
 
 void* EcsGetOrderComponent(Ecs* ecs, size_t index, EcsComponentType type)
 {
-	if (type >= ecs->order_components.used) return NULL;
-
 	return EcsComponentListAt(EcsGetComponentList(ecs, type), index);
 }
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	if (type >= ecs->order_components.used) return;
-
 	EcsComponentListRemove(EcsGetComponentList(ecs, type), entity);
 }
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 {
-	for (uint32_t i = 0; i < ecs->data_components.used; ++i)
+	for (uint32_t i = 0; i < tb_stretchy_size(ecs->data_components); ++i)
 		EcsRemoveDataComponent(ecs, entity, i);
 }

@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 #include "Graphics/Renderer.h"
 
 void RenderSystem(Ecs* ecs, const float* mat_view_proj)

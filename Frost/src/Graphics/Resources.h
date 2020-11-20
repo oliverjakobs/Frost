@@ -8,11 +8,13 @@ extern "C"
 
 #include "Ignis/Ignis.h"
 #include "toolbox/tb_hashmap.h"
+#include "memory/arena.h"
 
 typedef struct
 {
 	tb_hashmap textures;	/* <str,IgnisTexture> */
 	tb_hashmap fonts;	/* <str,IgnisFont> */
+	Arena arena;
 } Resources;
 
 int ResourcesInit(Resources* resources, const char* path);

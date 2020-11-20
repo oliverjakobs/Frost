@@ -18,13 +18,13 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	font->num_chars = num;
 
 	/* load char data */
-	font->char_data = (stbtt_bakedchar*)malloc(sizeof(stbtt_bakedchar) * font->num_chars);
+	font->char_data = malloc(sizeof(stbtt_bakedchar) * font->num_chars);
 	if (!font->char_data)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for char data");
 	}
 
-	GLubyte* bitmap = (GLubyte*)malloc(sizeof(GLubyte) * bitmap_width * bitmap_height);
+	GLubyte* bitmap = malloc(sizeof(GLubyte) * bitmap_width * bitmap_height);
 	if (!bitmap)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for bitmap");
@@ -83,15 +83,22 @@ int ignisFontLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* ve
 		stbtt_aligned_quad q;
 		stbtt_GetBakedQuad(font->char_data, font->texture.width, font->texture.height, c - font->first_char, x, y, &q, 1);
 
-		float quad[] =
-		{
-			q.x0, q.y0, q.s0, q.t0,
-			q.x0, q.y1, q.s0, q.t1,
-			q.x1, q.y1, q.s1, q.t1,
-			q.x1, q.y0, q.s1, q.t0
-		};
-
-		memcpy(vertices + offset, quad, sizeof(quad));
+		vertices[offset + 0] = q.x0;
+		vertices[offset + 1] = q.y0;
+		vertices[offset + 2] = q.s0;
+		vertices[offset + 3] = q.t0;
+		vertices[offset + 4] = q.x0;
+		vertices[offset + 5] = q.y1;
+		vertices[offset + 6] = q.s0;
+		vertices[offset + 7] = q.t1;
+		vertices[offset + 8] = q.x1;
+		vertices[offset + 9] = q.y1;
+		vertices[offset + 10] = q.s1;
+		vertices[offset + 11] = q.t1;
+		vertices[offset + 12] = q.x1;
+		vertices[offset + 13] = q.y0;
+		vertices[offset + 14] = q.s1;
+		vertices[offset + 15] = q.t0;
 
 		return 1;
 	}

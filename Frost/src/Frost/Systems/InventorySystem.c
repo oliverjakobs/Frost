@@ -1,6 +1,6 @@
 #include "InventorySystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 typedef struct
 {

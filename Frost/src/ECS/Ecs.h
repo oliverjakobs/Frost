@@ -1,43 +1,23 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include "toolbox/tb_array.h"
-
 #include "ComponentMap.h"
 #include "ComponentList.h"
 
 #include "Event/Event.h"
 
-#define ECS_DEFAULT_EVENT_SYSTEM_COUNT			4
-#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT			4
-#define ECS_DEFAULT_RENDER_SYSTEM_COUNT			3
+#define ECS_DEFAULT_EVENT_SYSTEM_COUNT		4
+#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT		4
+#define ECS_DEFAULT_RENDER_SYSTEM_COUNT		3
 
 #define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
 #define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
 
-#define ECS_ARRAY_GROWTH_FACTOR		1.2f
-
 typedef uint32_t EcsComponentType;
 
-typedef struct
-{
-	tb_array systems_event;
-	tb_array systems_update;
-	tb_array systems_render;
-
-	tb_array data_components;
-	tb_array order_components;
-} Ecs;
-
-typedef struct
-{
-	void (*handle)(Ecs*,Event);
-} EcsEventSystem;
-
-typedef struct
-{
-	void (*update)(Ecs*,float);
-} EcsUpdateSystem;
+typedef struct EcsEventSystem EcsEventSystem;
+typedef struct EcsUpdateSystem EcsUpdateSystem;
+typedef struct EcsRenderSystem EcsRenderSystem;
 
 typedef enum
 {
@@ -48,9 +28,13 @@ typedef enum
 
 typedef struct
 {
-	void (*render)(Ecs*,const float*);
-	EcsRenderStage stage;
-} EcsRenderSystem;
+	EcsEventSystem* systems_event;
+	EcsUpdateSystem* systems_update;
+	EcsRenderSystem* systems_render;
+
+	EcsComponentMap* data_components;
+	EcsComponentList* order_components;
+} Ecs;
 
 void EcsInit(Ecs* ecs);
 void EcsDestroy(Ecs* ecs);

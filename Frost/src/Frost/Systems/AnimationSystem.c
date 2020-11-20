@@ -1,8 +1,9 @@
 #include "AnimationSystem.h"
 
-#include "Frost/FrostEcs.h"
-
+#include "Frost/Frost.h"
 #include "Frost/AnimationLoader.h"
+
+#include "toolbox/tb_array.h"
 
 static tb_array animation_conditions;
 

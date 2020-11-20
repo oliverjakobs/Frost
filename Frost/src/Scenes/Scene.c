@@ -5,7 +5,7 @@
 
 #include "Application/Debugger.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 
 int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources)

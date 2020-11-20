@@ -19,7 +19,7 @@ static Event* _EventHandlerGetNext()
 			return &event_handler.queue[i];
 	}
 
-	/* Event queue overflow */
+	/* Event queue is full */
 	return NULL;
 }
 

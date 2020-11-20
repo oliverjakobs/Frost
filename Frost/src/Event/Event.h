@@ -28,40 +28,30 @@ typedef enum
 
 typedef struct
 {
-	int32_t keycode;
-	uint32_t repeatcount;
-} KeyEvent;
-
-typedef struct
-{
-	float x, y;
-} MouseEvent;
-
-typedef struct
-{
-	int32_t buttoncode;
-} MouseButtonEvent;
-
-typedef struct
-{
-	uint32_t width, height;
-} WindowEvent;
-
-typedef struct
-{
-	const char* cmd;
-} ConsoleEvent;
-
-typedef struct
-{
 	EventType type;
 	union
 	{
-		KeyEvent key;
-		MouseEvent mouse;
-		MouseButtonEvent mousebutton;
-		WindowEvent window;
-		ConsoleEvent console;
+		struct
+		{
+			int32_t keycode;
+			uint32_t repeatcount;
+		} key;
+		struct
+		{
+			float x, y;
+		} mouse;
+		struct
+		{
+			int32_t buttoncode;
+		} mousebutton;
+		struct
+		{
+			uint32_t width, height;
+		} window;
+		struct
+		{
+			const char* cmd;
+		} console;
 	};
 	uint8_t handled;
 } Event;

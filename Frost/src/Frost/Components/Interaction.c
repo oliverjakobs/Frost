@@ -1,6 +1,6 @@
 #include "Interaction.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 #include "toolbox/tb_json.h"
 

@@ -156,9 +156,6 @@
     <ClInclude Include="src\Frost\Frost.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\FrostEcs.h">
-      <Filter>src\Frost</Filter>
-    </ClInclude>
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
       <Filter>src\Frost\Systems</Filter>
     </ClInclude>
@@ -280,6 +277,8 @@
     <ClInclude Include="src\Frost\Components\Inventory.h" />
     <ClInclude Include="src\Frost\AnimationLoader.h" />
     <ClInclude Include="src\Frost\EcsLoader.h" />
+    <ClInclude Include="src\memory\arena.h" />
+    <ClInclude Include="src\toolbox\tb_stretchy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -343,9 +342,6 @@
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Frost.c">
-      <Filter>src\Frost</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\FrostEcs.c">
       <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
@@ -458,6 +454,7 @@
     <ClCompile Include="src\Frost\Components\Inventory.c" />
     <ClCompile Include="src\Frost\AnimationLoader.c" />
     <ClCompile Include="src\Frost\EcsLoader.c" />
+    <ClCompile Include="src\memory\arena.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

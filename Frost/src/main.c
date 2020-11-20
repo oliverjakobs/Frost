@@ -1,5 +1,4 @@
 #include "Frost/Frost.h"
-#include "Frost/FrostEcs.h"
 
 Camera camera;
 

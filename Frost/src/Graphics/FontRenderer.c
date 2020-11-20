@@ -19,9 +19,9 @@ typedef struct
 
 	GLint uniform_location_proj;
 	GLint uniform_location_color;
-} _FontRendererStorage;
+} FontRendererStorage;
 
-static _FontRendererStorage _render_data;
+static FontRendererStorage _render_data;
 
 void FontRendererInit(const char* vert, const char* frag)
 {
@@ -136,21 +136,21 @@ typedef struct
 	float line_height;
 } TextField;
 
-static TextField s_textField;
+static TextField _text_field;
 
 void FontRendererTextFieldBegin(float x, float y, float line_height)
 {
-	s_textField.x = x;
-	s_textField.y = y;
-	s_textField.line_height = line_height;
+	_text_field.x = x;
+	_text_field.y = y;
+	_text_field.line_height = line_height;
 }
 
 void FontRendererTextFieldLine(const char* fmt, ...)
 {
-	s_textField.y += s_textField.line_height;
+	_text_field.y += _text_field.line_height;
 
 	va_list args;
 	va_start(args, fmt);
-	FontRendererRenderTextVA(s_textField.x, s_textField.y, fmt, args);
+	FontRendererRenderTextVA(_text_field.x, _text_field.y, fmt, args);
 	va_end(args);
 }

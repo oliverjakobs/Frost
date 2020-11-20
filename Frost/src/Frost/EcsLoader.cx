@@ -2,11 +2,7 @@ define ECS_LOADER_H
 
 include
 {
-    "Ecs/Ecs.h"
-}
-
-include
-{
+    "Ecs/Ecs.h",
     "Components/Animator.h",
     "Components/Transform.h",
     "Components/RigidBody.h",
@@ -14,7 +10,15 @@ include
     "Components/Movement.h",
     "Components/CameraController.h",
     "Components/Inventory.h",
-    "Components/Interaction.h"
+    "Components/Interaction.h",
+    "Components/Order.h",
+    "Systems/PhysicsSystem.h",
+    "Systems/PlayerSystem.h",
+    "Systems/AnimationSystem.h",
+    "Systems/InventorySystem.h",
+    "Systems/InteractionSystem.h",
+    "Systems/RenderSystem.h",
+    "Systems/DebugRenderSystem.h"
 }
 
 enum DataComponentType
@@ -32,11 +36,6 @@ enum DataComponentType
 
 generate RegisterDataComponents(Ecs* ecs): DataComponentType -> EcsRegisterDataComponent(ecs)
 
-include
-{
-    "Components/Order.h"
-}
-
 enum OrderComponentType
 {
     [ COMPONENT_TEMPLATE,   sizeof(Template),   TemplateCmp ],
@@ -44,17 +43,6 @@ enum OrderComponentType
 }
 
 generate RegisterOrderComponents(Ecs* ecs): OrderComponentType -> EcsRegisterOrderComponent(ecs)
-
-include
-{
-    "Systems/PhysicsSystem.h",
-    "Systems/PlayerSystem.h",
-    "Systems/AnimationSystem.h",
-    "Systems/InventorySystem.h",
-    "Systems/InteractionSystem.h",
-    "Systems/RenderSystem.h",
-    "Systems/DebugRenderSystem.h"
-}
 
 enum UpdateSystemType
 {

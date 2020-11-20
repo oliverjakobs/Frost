@@ -1,6 +1,6 @@
 #include "PlayerSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 #include "Application/Input.h"
 
 void PlayerSystem(Ecs* ecs, float deltatime)

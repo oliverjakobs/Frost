@@ -9,6 +9,8 @@
 
 int ResourcesInit(Resources* resources, const char* path)
 {
+	resources->arena.blocks = NULL;
+
 	if (tb_hashmap_alloc(&resources->textures, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 	if (tb_hashmap_alloc(&resources->fonts, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 
@@ -75,8 +77,6 @@ void ResourcesDestroy(Resources* resources)
 	{
 		IgnisTexture2D* tex = tb_hashmap_iter_get_value(iter);
 		ignisDeleteTexture2D(tex);
-		free(tex);
-		tb_hashmap_iter_remove(&resources->textures, iter);
 	}
 	tb_hashmap_free(&resources->textures);
 
@@ -84,16 +84,15 @@ void ResourcesDestroy(Resources* resources)
 	{
 		IgnisFont* font = tb_hashmap_iter_get_value(iter);
 		ignisDeleteFont(font);
-		free(font);
-		tb_hashmap_iter_remove(&resources->fonts, iter);
 	}
 	tb_hashmap_free(&resources->fonts);
+
+	arena_free(&resources->arena);
 }
 
 IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, const char* path, int rows, int columns)
 {
-	IgnisTexture2D* texture = malloc(sizeof(IgnisTexture2D));
-
+	IgnisTexture2D* texture = arena_alloc(&resources->arena, sizeof(IgnisTexture2D));
 	if (ignisCreateTexture2D(texture, path, rows, columns, 1, NULL))
 	{
 		if (tb_hashmap_insert(&resources->textures, name, texture) == texture)
@@ -103,23 +102,20 @@ IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, co
 		ignisDeleteTexture2D(texture);
 	}
 
-	free(texture);
 	return NULL;
 }
 
-IgnisFont* ResourcesAddFont(Resources* manager, const char* name, const char* path, float size)
+IgnisFont* ResourcesAddFont(Resources* resources, const char* name, const char* path, float size)
 {
-	IgnisFont* font = malloc(sizeof(IgnisFont));
-
+	IgnisFont* font = arena_alloc(&resources->arena, sizeof(IgnisFont));
 	if (ignisCreateFont(font, path, size))
 	{
-		if (tb_hashmap_insert(&manager->fonts, name, font) == font)
+		if (tb_hashmap_insert(&resources->fonts, name, font) == font)
 			return font;
 
 		DEBUG_ERROR("[Resources] Failed to add font: %s (%s)\n", name, path);
 		ignisDeleteFont(font);
 	}
-	free(font);
 	return NULL;
 }
 
