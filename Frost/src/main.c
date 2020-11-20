@@ -174,8 +174,35 @@ void OnRenderDebug(Application* app)
 	ConsoleRender(&console, 0.0f, (float)app->height, (float)app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 
+#include "toolbox/tb_stretchy.h"
+
 int main()
 {
+	int* buffer = NULL;
+	assert(tb_stretchy_len(buffer) == 0);
+
+	tb_stretchy_reserve(buffer, 5);
+
+	assert(tb_stretchy_len(buffer) == 0);
+	assert(tb_stretchy_cap(buffer) == 5);
+
+	enum { N = 512 };
+	for (int i = 0; i < N; ++i)
+		tb_stretchy_push(buffer, i);
+
+	assert(tb_stretchy_len(buffer) == N);
+
+	for (int i = 0; i < tb_stretchy_len(buffer); ++i)
+		printf("%3d: %3d\n", i, buffer[i]);
+
+	tb_stretchy_pack(buffer);
+
+	assert(tb_stretchy_len(buffer) == tb_stretchy_cap(buffer));
+
+	tb_stretchy_free(buffer);
+	assert(buffer == NULL);
+	assert(tb_stretchy_len(buffer) == 0);
+	/*
 	Application app;
 
 	ApplicationSetOnInitCallback(&app, OnInit);
@@ -192,4 +219,5 @@ int main()
 	ApplicationDestroy(&app);
 
 	return 0;
+	*/
 }

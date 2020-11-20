@@ -107,19 +107,22 @@ static void EcsComponentFree(void* block)
 
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type)
 {
-	return type < tb_stretchy_size(ecs->data_components) ? &ecs->data_components[type] : NULL;
+	return type < tb_stretchy_len(ecs->data_components) ? &ecs->data_components[type] : NULL;
 }
 
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type)
 {
-	return type < tb_stretchy_size(ecs->order_components) ? &ecs->order_components[type] : NULL;
+	return type < tb_stretchy_len(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
 
 int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
 {
 	EcsComponentMap comp;
 	if (EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree))
-		return tb_stretchy_push(ecs->data_components, comp);
+	{
+		tb_stretchy_push(ecs->data_components, comp);
+		return 1;
+	}
 
 	return 0;
 }
@@ -150,7 +153,10 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const vo
 {
 	EcsComponentList comp;
 	if (EcsComponentListAlloc(&comp, element_size, cmp))
-		return tb_stretchy_push(ecs->order_components, comp);
+	{
+		tb_stretchy_push(ecs->order_components, comp);
+		return 1;
+	}
 
 	return 0;
 }
@@ -176,6 +182,6 @@ void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 {
-	for (uint32_t i = 0; i < tb_stretchy_size(ecs->data_components); ++i)
+	for (uint32_t i = 0; i < tb_stretchy_len(ecs->data_components); ++i)
 		EcsRemoveDataComponent(ecs, entity, i);
 }
