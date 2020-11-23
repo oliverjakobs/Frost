@@ -85,13 +85,13 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = (char*)malloc(buffer_size + 1);
+	char* buffer = ignisAlloc(buffer_size + 1);
 	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 
 	s_ignisErrorCallback(level, buffer);
 
-	free(buffer);
+	ignisFree(buffer);
 }
 
 GLuint ignisGetOpenGLTypeSize(GLenum type)
@@ -158,7 +158,7 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 	size_t size = ftell(file);
 	rewind(file);
 
-	char* buffer = (char*)malloc(size + 1);
+	char* buffer = ignisAlloc(size + 1);
 	if (!buffer)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to allocate memory for file: %s", path);
@@ -166,18 +166,33 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 		return NULL;
 	}
 
-	memset(buffer, 0, size + 1); /* +1 guarantees trailing \0 */
-
 	if (fread(buffer, size, 1, file) != 1)
 	{
-		free(buffer);
+		ignisFree(buffer);
 		fclose(file);
 		return NULL;
 	}
+
+	buffer[size] = '\0'; /* zero terminate buffer */
 
 	if (sizeptr)
 		*sizeptr = size + 1;
 
 	fclose(file);
 	return buffer;
+}
+
+void* ignisAlloc(size_t size)
+{
+	return malloc(size);
+}
+
+void* ignisRealloc(void* block, size_t size)
+{
+	return realloc(block, size);
+}
+
+void ignisFree(void* block)
+{
+	free(block);
 }

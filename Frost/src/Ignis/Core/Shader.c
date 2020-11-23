@@ -20,8 +20,8 @@ int ignisCreateShadervf(IgnisShader* shader, const char* vert, const char* frag)
 
 	int status = ignisCreateShaderSrcvf(shader, vert_src, frag_src);
 
-	free(vert_src);
-	free(frag_src);
+	ignisFree(vert_src);
+	ignisFree(frag_src);
 
 	return IGNIS_SUCCESS;
 }
@@ -51,9 +51,9 @@ int ignisCreateShadervgf(IgnisShader* shader, const char* vert, const char* geom
 
 	int status = ignisCreateShaderSrcvgf(shader, vert_src, geom_src, frag_src);
 
-	free(vert_src);
-	free(geom_src);
-	free(frag_src);
+	ignisFree(vert_src);
+	ignisFree(geom_src);
+	ignisFree(frag_src);
 
 	return IGNIS_SUCCESS;
 }
@@ -337,12 +337,12 @@ void ignisPrintShaderLog(GLuint shader)
 
 	GLint log_length = 0;
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_length);
-	char* log_buffer = (char*)malloc(log_length);
+	char* log_buffer = ignisAlloc(log_length);
 	glGetShaderInfoLog(shader, log_length, &log_length, log_buffer);
 
 	_ignisErrorCallback(IGNIS_ERROR, "[SHADER] %.*s", log_length, log_buffer);
 
-	free(log_buffer);
+	ignisFree(log_buffer);
 }
 
 void ignisPrintProgramLog(GLuint program)
@@ -355,12 +355,12 @@ void ignisPrintProgramLog(GLuint program)
 
 	GLint log_length = 0;
 	glGetShaderiv(program, GL_INFO_LOG_LENGTH, &log_length);
-	char* log_buffer = (char*)malloc(log_length);
+	char* log_buffer = ignisAlloc(log_length);
 	glGetShaderInfoLog(program, log_length, &log_length, log_buffer);
 
 	_ignisErrorCallback(IGNIS_ERROR, "[SHADER] %.*s", log_length, log_buffer);
 
-	free(log_buffer);
+	ignisFree(log_buffer);
 }
 
 const char* ignisGetShaderType(GLenum type)

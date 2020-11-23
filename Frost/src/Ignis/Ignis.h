@@ -77,6 +77,11 @@ void ignisClearColorBuffer(IgnisColorRGBA color);
 
 char* ignisReadFile(const char* path, size_t* sizeptr);
 
+/* Memory */
+void* ignisAlloc(size_t size);
+void* ignisRealloc(void* block, size_t size);
+void ignisFree(void* block);
+
 #ifdef __cplusplus
 }
 #endif

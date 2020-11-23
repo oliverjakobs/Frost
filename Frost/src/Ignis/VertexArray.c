@@ -9,7 +9,7 @@ int ignisGenerateVertexArray(IgnisVertexArray* vao)
 	glGenVertexArrays(1, &vao->name);
 	glBindVertexArray(vao->name);
 
-	vao->array_buffers = (IgnisBuffer*)malloc(IGNIS_BUFFER_ARRAY_INITIAL_SIZE * sizeof(IgnisBuffer));
+	vao->array_buffers = ignisAlloc(IGNIS_BUFFER_ARRAY_INITIAL_SIZE * sizeof(IgnisBuffer));
 	if (!vao->array_buffers)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[VertexArray] Failed to allocate memeory for array buffers");
@@ -33,7 +33,7 @@ void ignisDeleteVertexArray(IgnisVertexArray* vao)
 		ignisDeleteBuffer(&vao->array_buffers[i]);
 	}
 
-	free(vao->array_buffers);
+	ignisFree(vao->array_buffers);
 	vao->array_buffer_count = vao->array_buffer_capacity = 0;
 
 	if (vao->element_buffer.target == GL_ELEMENT_ARRAY_BUFFER)
@@ -53,7 +53,7 @@ int _ignisInsertArrayBuffer(IgnisVertexArray* vao, IgnisBuffer* buffer)
 	if (vao->array_buffer_count == vao->array_buffer_capacity)
 	{
 		vao->array_buffer_capacity *= IGNIS_BUFFER_ARRAY_GROWTH_FACTOR;
-		void* temp = realloc(vao->array_buffers, vao->array_buffer_capacity * sizeof(IgnisBuffer));
+		void* temp = ignisRealloc(vao->array_buffers, vao->array_buffer_capacity * sizeof(IgnisBuffer));
 
 		if (!temp)
 		{
@@ -61,10 +61,10 @@ int _ignisInsertArrayBuffer(IgnisVertexArray* vao, IgnisBuffer* buffer)
 			return IGNIS_FAILURE;
 		}
 
-		vao->array_buffers = (IgnisBuffer*)temp;
+		vao->array_buffers = temp;
 	}
 
-	memcpy(vao->array_buffers + vao->array_buffer_count++, buffer, sizeof(IgnisBuffer));
+	vao->array_buffers[vao->array_buffer_count++] = *buffer;
 	return IGNIS_SUCCESS;
 }
 

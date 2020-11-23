@@ -24,7 +24,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for char data");
 	}
 
-	GLubyte* bitmap = malloc(sizeof(GLubyte) * bitmap_width * bitmap_height);
+	GLubyte* bitmap = ignisAlloc(sizeof(GLubyte) * bitmap_width * bitmap_height);
 	if (!bitmap)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for bitmap");
@@ -37,13 +37,13 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to read file: %s", path);
 		ignisDeleteFont(font);
-		free(bitmap);
+		ignisFree(bitmap);
 		return 0;
 	}
 
 	stbtt_BakeFontBitmap(buffer, 0, size, bitmap, bitmap_width, bitmap_height, font->first_char, font->num_chars, font->char_data);
 
-	free(buffer);
+	ignisFree(buffer);
 
 	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
 	config.internal_format = GL_R8;
@@ -56,14 +56,14 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 		return 0;
 	}
 
-	free(bitmap);
+	ignisFree(bitmap);
 	return 1;
 }
 
 void ignisDeleteFont(IgnisFont* font)
 {
 	if (font->char_data)
-		free(font->char_data);
+		ignisFree(font->char_data);
 
 	ignisDeleteTexture2D(&font->texture);
 }
