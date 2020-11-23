@@ -10,6 +10,8 @@
 int ResourcesInit(Resources* resources, const char* path)
 {
 	resources->arena.blocks = NULL;
+	resources->arena.ptr = NULL;
+	resources->arena.end = NULL;
 
 	if (tb_hashmap_alloc(&resources->textures, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 	if (tb_hashmap_alloc(&resources->fonts, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;

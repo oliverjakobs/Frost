@@ -2,68 +2,69 @@
 
 #include "Graphics/Renderer.h"
 
-int BackgroundInit(Background* background, size_t capacity)
-{
-	background->layers = (BackgroundLayer*)malloc(sizeof(BackgroundLayer) * capacity);
-	background->size = 0;
-	background->capacity = capacity;
-
-	return background->layers != NULL;
-}
-
-void BackgroundClear(Background* background)
-{
-	free(background->layers);
-	background->size = 0;
-	background->capacity = 0;
-}
-
-int BackgroundPushLayer(Background* background, IgnisTexture2D* texture, float x, float y, float w, float h, float parallax)
-{
-	if (background->size >= background->capacity)
-		return 0;
-
-	background->layers[background->size].texture = texture;
-	background->layers[background->size].startpos = x;
-	background->layers[background->size].pos_x = x;
-	background->layers[background->size].pos_y = y;
-	background->layers[background->size].width = w;
-	background->layers[background->size].height = h;
-	background->layers[background->size].parallax = parallax;
-	background->size++;
-	return 1;
-}
-
-static void _LayerUpdate(BackgroundLayer* layer, float x, float deltatime)
+static void BackgroundLayerUpdate(BackgroundLayer* layer, float x, float deltatime)
 {
 	float rel_dist = x * (1 - layer->parallax);
-	float dist = x * layer->parallax;
 
-	layer->pos_x = layer->startpos + dist;
+	layer->pos_x = layer->startpos + (x * layer->parallax);
 
 	if (rel_dist > layer->startpos + layer->width) layer->startpos += layer->width;
 	else if (rel_dist < layer->startpos - layer->width) layer->startpos -= layer->width;
 }
 
-static void _LayerRender(BackgroundLayer* layer)
+static void BackgroundLayerRender(BackgroundLayer* layer)
 {
 	BatchRenderer2DRenderTexture(layer->texture, layer->pos_x - layer->width, layer->pos_y, layer->width, layer->height);
 	BatchRenderer2DRenderTexture(layer->texture, layer->pos_x, layer->pos_y, layer->width, layer->height);
 	BatchRenderer2DRenderTexture(layer->texture, layer->pos_x + layer->width, layer->pos_y, layer->width, layer->height);
 }
 
+int BackgroundAlloc(Background* background, size_t max_layers)
+{
+	background->layers = malloc(sizeof(BackgroundLayer) * max_layers);
+	background->layer_count = 0;
+	background->max_layers = max_layers;
+
+	return background->layers != NULL;
+}
+
+void BackgroundFree(Background* background)
+{
+	free(background->layers);
+	background->layer_count = 0;
+	background->max_layers = 0;
+}
+
+size_t BackgroundPushLayer(Background* background, IgnisTexture2D* texture, float x, float y, float w, float h, float parallax)
+{
+	if (background->layer_count >= background->max_layers)
+		return 0;
+
+	background->layers[background->layer_count++] = (BackgroundLayer){
+		.texture = texture,
+		.startpos = x,
+		.pos_x = x,
+		.pos_y = y,
+		.width = w,
+		.height = h,
+		.parallax = parallax,
+	};
+
+	return background->layer_count;
+}
+
 void BackgroundUpdate(Background* background, float x, float deltatime)
 {
-	for (size_t i = 0; i < background->size; i++)
-		_LayerUpdate(&background->layers[i], x, deltatime);
+	for (size_t i = 0; i < background->layer_count; i++)
+		BackgroundLayerUpdate(&background->layers[i], x, deltatime);
 }
 
 void BackgroundRender(Background* background, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (size_t i = 0; i < background->size; i++)
-		_LayerRender(&background->layers[i]);
+	for (size_t i = 0; i < background->layer_count; i++)
+		BackgroundLayerRender(&background->layers[i]);
 
 	BatchRenderer2DFlush();
 }

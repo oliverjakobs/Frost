@@ -25,14 +25,14 @@ typedef struct
 {
 	BackgroundLayer* layers;
 
-	size_t size;
-	size_t capacity;
+	size_t layer_count;
+	size_t max_layers;
 } Background;
 
-int BackgroundInit(Background* background, size_t capacity);
-void BackgroundClear(Background* background);
+int BackgroundAlloc(Background* background, size_t max_layers);
+void BackgroundFree(Background* background);
 
-int BackgroundPushLayer(Background* background, IgnisTexture2D* texture, float x, float y, float w, float h, float parallax);
+size_t BackgroundPushLayer(Background* background, IgnisTexture2D* texture, float x, float y, float w, float h, float parallax);
 
 void BackgroundUpdate(Background* background, float x, float deltatime);
 void BackgroundRender(Background* background, const float* mat_view_proj);

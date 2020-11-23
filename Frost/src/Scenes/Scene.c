@@ -111,7 +111,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 
 void SceneClearActive(Scene* scene)
 {
-	BackgroundClear(&scene->background);
+	BackgroundFree(&scene->background);
 	EcsClear(&scene->ecs);
 
 	memset(scene->name, '\0', APPLICATION_STR_LEN);
@@ -177,7 +177,7 @@ int SceneLoad(Scene* scene, const char* path)
 		char* value = element.value;
 		Background* background = &scene->background;
 
-		BackgroundInit(background, element.elements);
+		BackgroundAlloc(background, element.elements);
 		for (int i = 0; i < element.elements; i++)
 		{
 			tb_json_element entity;
@@ -259,7 +259,7 @@ int SceneSave(Scene* scene, const char* path)
 	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	tb_jwrite_array(&jwc, "background");
 
-	for (int i = 0; i < scene->background.size; ++i)
+	for (int i = 0; i < scene->background.layer_count; ++i)
 	{
 		BackgroundLayer* bg = &scene->background.layers[i];
 
