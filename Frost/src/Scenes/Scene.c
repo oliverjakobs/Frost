@@ -105,7 +105,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 
 		/* Enter new scene */
 		SceneLoad(scene, path);
-		strcpy(scene->name, name);
+		strncpy(scene->name, name, APPLICATION_STR_LEN);
 	}
 }
 
@@ -283,7 +283,7 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+	for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->len; ++i)
 	{
 		tb_jwrite_array_array(&jwc);
 

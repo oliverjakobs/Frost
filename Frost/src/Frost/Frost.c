@@ -97,12 +97,13 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->list.used; ++i)
+			EcsComponentList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
+			for (size_t i = 0; i < list->len; ++i)
 			{
-				Template* templ = EcsGetOrderComponent(&scene->ecs, i, COMPONENT_TEMPLATE);
+				Template* templ = EcsComponentListAt(list, i);
 
 				if (templ)
-					ConsoleOut(console, " - %d \t | %s", *(EcsEntityID*)templ, templ->templ);
+					ConsoleOut(console, " - %d \t | %s", templ->entity, templ->templ);
 			}
 		}
 		else if (strcmp(spec, "templates") == 0)

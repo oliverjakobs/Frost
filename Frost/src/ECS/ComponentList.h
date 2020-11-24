@@ -1,21 +1,24 @@
 #ifndef ECS_COMPONENT_LIST_H
 #define ECS_COMPONENT_LIST_H
 
-#include "toolbox/tb_list.h"
-
 #include "Entity.h"
 
 typedef struct
 {
-	tb_list list;
+    char* data;
+    size_t len;
+    size_t cap;
+    size_t element_size;
+
+    int (*cmp_func)(const void*, const void*);
 } EcsComponentList;
 
-int EcsComponentListAlloc(EcsComponentList* list, size_t element_size, int (*cmp)(const void*, const void*));
+int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, int (*cmp)(const void*, const void*));
 void EcsComponentListFree(EcsComponentList* list);
 
 void EcsComponentListClear(EcsComponentList* list);
 
-size_t EcsComponentListLength(const EcsComponentList* list);
+int EcsComponentListResize(EcsComponentList* list, size_t size);
 
 void* EcsComponentListInsert(EcsComponentList* list, void* component);
 void EcsComponentListRemove(EcsComponentList* list, size_t index);
