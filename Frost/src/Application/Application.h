@@ -13,7 +13,8 @@
 
 #include "defines.h"
 
-typedef struct Application
+typedef struct Application Application;
+struct Application
 {
 	GLFWwindow* window;
 
@@ -33,14 +34,15 @@ typedef struct Application
 
 	mat4 screen_projection;
 
-	void (*on_init)(struct Application*);
-	void (*on_destroy)(struct Application*);
-	void (*on_event)(struct Application*, Event);
-	void (*on_update)(struct Application*, float);
-	void (*on_render)(struct Application*);
-	void (*on_render_debug)(struct Application*);
-	void (*on_render_gui)(struct Application*);
-} Application;
+	void (*on_init)(Application*);
+	void (*on_destroy)(Application*);
+
+	void (*on_event)(Application*, Event);
+	void (*on_update)(Application*, float);
+	void (*on_render)(Application*);
+	void (*on_render_debug)(Application*);
+	void (*on_render_gui)(Application*);
+};
 
 int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor, const char* res);
 int ApplicationLoadConfig(Application* app, const char* path);

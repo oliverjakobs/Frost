@@ -86,8 +86,7 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
 
-	if (res)
-		app->running = ResourcesInit(&app->resources, res);
+	app->running = ResourcesInit(&app->resources, res);
 
 	if (app->on_init)
 		app->on_init(app);

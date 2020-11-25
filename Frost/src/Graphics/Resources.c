@@ -9,6 +9,14 @@
 
 int ResourcesInit(Resources* resources, const char* path)
 {
+	char* json = ignisReadFile(path, NULL);
+
+	if (!json)
+	{
+		DEBUG_ERROR("[Resources] Failed to read index (%s)", path);
+		return 0;
+	}
+
 	resources->arena.blocks = NULL;
 	resources->arena.ptr = NULL;
 	resources->arena.end = NULL;
@@ -18,14 +26,6 @@ int ResourcesInit(Resources* resources, const char* path)
 
 	tb_hashmap_set_key_alloc_funcs(&resources->textures, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	tb_hashmap_set_key_alloc_funcs(&resources->fonts, tb_hashmap_str_alloc, tb_hashmap_str_free);
-
-	char* json = ignisReadFile(path, NULL);
-
-	if (!json)
-	{
-		DEBUG_ERROR("[Resources] Failed to read index (%s)", path);
-		return 0;
-	}
 
 	/* textures */
 	tb_json_element textures;
