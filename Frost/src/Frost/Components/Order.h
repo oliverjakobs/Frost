@@ -5,15 +5,11 @@
 
 typedef struct
 {
-	EcsEntityID entity;
 	char* templ;
 } Template;
 
-int TemplateCmp(const Template* left, const Template* right);
-
 typedef struct
 {
-	EcsEntityID entity;
 	int z_index;
 } ZIndex;
 

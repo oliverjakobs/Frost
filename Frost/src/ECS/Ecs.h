@@ -61,8 +61,7 @@ void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 
 int EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
 
-void* EcsAddOrderComponent(Ecs* ecs, EcsComponentType type, void* component);
-void* EcsGetOrderComponent(Ecs* ecs, size_t index, EcsComponentType type);
+void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 

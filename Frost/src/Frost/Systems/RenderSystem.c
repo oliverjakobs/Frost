@@ -8,14 +8,15 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 	BatchRenderer2DStart(mat_view_proj);
 
 	EcsComponentList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
-	for (size_t index = 0; index < list->len; ++index)
+
+	for (EcsComponentNode* it = list->first; it; it = EcsComponentNodeNext(it))
 	{
-		ZIndex* indexed = EcsComponentListAt(list, index);
-		Sprite* sprite = EcsGetDataComponent(ecs, indexed->entity, COMPONENT_SPRITE);
+		ZIndex* indexed = EcsComponentNodeComponent(it);
+		Sprite* sprite = EcsGetDataComponent(ecs, it->entity, COMPONENT_SPRITE);
 
 		if (!sprite) continue;
 
-		vec2 pos = GetEntityPosition(ecs, indexed->entity);
+		vec2 pos = GetEntityPosition(ecs, it->entity);
 
 		float x = pos.x - sprite->width / 2.0f;
 		float y = pos.y;

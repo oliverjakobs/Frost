@@ -283,19 +283,19 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (size_t i = 0; i < EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->len; ++i)
+	for (EcsComponentNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
 	{
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
-		Template* templ = EcsGetOrderComponent(&scene->ecs, i, COMPONENT_TEMPLATE);
+		Template* templ = EcsComponentNodeComponent(it);
 
 		/* template */
 		tb_jwrite_array_string(&jwc, templ->templ);
 
 		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, templ->entity);
+		vec2 pos = GetEntityPosition(&scene->ecs, it->entity);
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -303,7 +303,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), templ->entity);
+		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), it->entity);
 		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
 
 		tb_jwrite_end(&jwc);
@@ -356,16 +356,14 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	tb_json_element element;
 
 	Template t;
-	t.entity = entity;
 	t.templ = malloc(strlen(templ));
 	strcpy(t.templ, templ);
-	EcsAddOrderComponent(&scene->ecs, COMPONENT_TEMPLATE, &t);
+	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
 	/* TODO: Free template? */
 
 	ZIndex index;
-	index.entity = entity;
 	index.z_index = z_index;
-	EcsAddOrderComponent(&scene->ecs, COMPONENT_Z_INDEX, &index);
+	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &index);
 	/* TODO: ZIndex only for entities with sprite component */
 
 	/* Components */

@@ -16,7 +16,7 @@ void RegisterDataComponents(Ecs* ecs)
 
 void RegisterOrderComponents(Ecs* ecs)
 {
-	EcsRegisterOrderComponent(ecs, sizeof(Template), TemplateCmp);
+	EcsRegisterOrderComponent(ecs, sizeof(Template), NULL);
 	EcsRegisterOrderComponent(ecs, sizeof(ZIndex), ZIndexCmp);
 }
 

@@ -161,18 +161,13 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t element_size, int (*cmp)(const vo
 	return 0;
 }
 
-void* EcsAddOrderComponent(Ecs* ecs, EcsComponentType type, void* component)
+void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component)
 {
 	EcsComponentList* list = EcsGetComponentList(ecs, type);
 
 	if (!list) return NULL;
 
-	return EcsComponentListInsert(list, component);
-}
-
-void* EcsGetOrderComponent(Ecs* ecs, size_t index, EcsComponentType type)
-{
-	return EcsComponentListAt(EcsGetComponentList(ecs, type), index);
+	return EcsComponentListInsert(list, entity, component);
 }
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)

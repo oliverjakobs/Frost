@@ -3,11 +3,18 @@
 
 #include "Entity.h"
 
+typedef struct EcsComponentNode EcsComponentNode;
+
+struct EcsComponentNode
+{
+    EcsEntityID entity;
+    void* component;
+    EcsComponentNode* next;
+};
+
 typedef struct
 {
-    char* data;
-    size_t len;
-    size_t cap;
+    EcsComponentNode* first;
     size_t element_size;
 
     int (*cmp_func)(const void*, const void*);
@@ -18,12 +25,13 @@ void EcsComponentListFree(EcsComponentList* list);
 
 void EcsComponentListClear(EcsComponentList* list);
 
-int EcsComponentListResize(EcsComponentList* list, size_t size);
-
-void* EcsComponentListInsert(EcsComponentList* list, void* component);
-void EcsComponentListRemove(EcsComponentList* list, size_t index);
+void* EcsComponentListInsert(EcsComponentList* list, EcsEntityID entity, void* component);
+void EcsComponentListRemove(EcsComponentList* list, EcsEntityID entity);
 
 void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity);
-void* EcsComponentListAt(const EcsComponentList* list, size_t index);
+
+EcsEntityID EcsComponentNodeEntity(const EcsComponentNode* node);
+void* EcsComponentNodeComponent(const EcsComponentNode* node);
+EcsComponentNode* EcsComponentNodeNext(const EcsComponentNode* node);
 
 #endif /* !ECS_COMPONENT_LIST_H */
