@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostEcs.h"
 
 void PhysicsSystem(Ecs* ecs, float deltatime)
 {

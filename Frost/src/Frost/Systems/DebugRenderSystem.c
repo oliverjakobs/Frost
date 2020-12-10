@@ -1,7 +1,7 @@
 #include "DebugRenderSystem.h"
 
 #include "Graphics/Renderer.h"
-#include "Frost/Frost.h"
+#include "Frost/FrostEcs.h"
 
 void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 {

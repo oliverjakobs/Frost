@@ -106,7 +106,6 @@
     <ClInclude Include="src\ECS\Entity.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
-    <ClInclude Include="src\Frost\AnimationLoader.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
     <ClInclude Include="src\Frost\Components\CameraController.h" />
     <ClInclude Include="src\Frost\Components\Interaction.h" />
@@ -116,7 +115,7 @@
     <ClInclude Include="src\Frost\Components\RigidBody.h" />
     <ClInclude Include="src\Frost\Components\Sprite.h" />
     <ClInclude Include="src\Frost\Components\Transform.h" />
-    <ClInclude Include="src\Frost\EcsLoader.h" />
+    <ClInclude Include="src\Frost\FrostEcs.h" />
     <ClInclude Include="src\Frost\Frost.h" />
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
     <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h" />
@@ -175,7 +174,6 @@
     <ClCompile Include="src\ECS\Entity.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
-    <ClCompile Include="src\Frost\AnimationLoader.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\CameraController.c" />
     <ClCompile Include="src\Frost\Components\Interaction.c" />
@@ -184,7 +182,7 @@
     <ClCompile Include="src\Frost\Components\Order.c" />
     <ClCompile Include="src\Frost\Components\RigidBody.c" />
     <ClCompile Include="src\Frost\Components\Sprite.c" />
-    <ClCompile Include="src\Frost\EcsLoader.c" />
+    <ClCompile Include="src\Frost\FrostEcs.c" />
     <ClCompile Include="src\Frost\Frost.c" />
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
     <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c" />

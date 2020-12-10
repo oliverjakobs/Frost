@@ -3,6 +3,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct EcsListNode
+{
+	EcsEntityID entity;
+	void* component;
+	EcsListNode* next;
+};
+
 int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, int (*cmp)(const void*, const void*))
 {
 	list->first = NULL;
@@ -21,12 +28,21 @@ void EcsComponentListFree(EcsComponentList* list)
 
 void EcsComponentListClear(EcsComponentList* list)
 {
-	// TODO
+	EcsListNode* next = NULL;
+
+	while (list->first)
+	{
+		next = list->first->next;
+		free(list->first);
+		list->first = next;
+	}
+
+	list->first = NULL;
 }
 
-static EcsComponentNode* EcsComponentNodeAlloc(const void* component, EcsEntityID entity, size_t size)
+static EcsListNode* EcsComponentNodeAlloc(const void* component, EcsEntityID entity, size_t size)
 {
-	EcsComponentNode* node = malloc(sizeof(EcsComponentNode));
+	EcsListNode* node = malloc(sizeof(EcsListNode));
 
 	if (node)
 	{
@@ -39,7 +55,7 @@ static EcsComponentNode* EcsComponentNodeAlloc(const void* component, EcsEntityI
 	return node;
 }
 
-static int EcsComponentNodeCmp(EcsComponentNode* left, EcsComponentNode* right, int (*cmp_func)(const void*, const void*))
+static int EcsComponentNodeCmp(const EcsListNode* left, const EcsListNode* right, int (*cmp_func)(const void*, const void*))
 {
 	if (cmp_func) return cmp_func(left->component, right->component);
 
@@ -48,7 +64,7 @@ static int EcsComponentNodeCmp(EcsComponentNode* left, EcsComponentNode* right, 
 
 void* EcsComponentListInsert(EcsComponentList* list, EcsEntityID entity, void* component)
 {
-	EcsComponentNode* node = EcsComponentNodeAlloc(component, entity, list->element_size);
+	EcsListNode* node = EcsComponentNodeAlloc(component, entity, list->element_size);
 	if (!list->first || EcsComponentNodeCmp(node, list->first, list->cmp_func) <= 0)
 	{
 		node->next = list->first;
@@ -56,7 +72,7 @@ void* EcsComponentListInsert(EcsComponentList* list, EcsEntityID entity, void* c
 	}
 	else
 	{
-		EcsComponentNode* it = list->first;
+		EcsListNode* it = list->first;
 		while (it->next && EcsComponentNodeCmp(node, it->next, list->cmp_func) > 0)
 			it = it->next;
 
@@ -69,12 +85,28 @@ void* EcsComponentListInsert(EcsComponentList* list, EcsEntityID entity, void* c
 
 void EcsComponentListRemove(EcsComponentList* list, EcsEntityID entity)
 {
-	// TODO
+	EcsListNode* node = list->first;
+	EcsListNode* prev = NULL;
+
+	while (node && node->entity != entity)
+	{
+		prev = node;
+		node = node->next;
+	}
+
+	if (node == NULL) return;
+
+	if (prev)
+		prev->next = node->next;
+	else
+		list->first = node->next;
+
+	free(node);
 }
 
 void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity)
 {
-	for (EcsComponentNode* it = list->first; it; it = it->next)
+	for (EcsListNode* it = list->first; it; it = it->next)
 	{
 		if (entity == it->entity)
 			return it->component;
@@ -82,6 +114,6 @@ void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity)
 	return NULL;
 }
 
-EcsEntityID EcsComponentNodeEntity(const EcsComponentNode* node) { return node->entity; }
-void* EcsComponentNodeComponent(const EcsComponentNode* node) { return node->component; }
-EcsComponentNode* EcsComponentNodeNext(const EcsComponentNode* node) { return node->next; }
+EcsEntityID EcsComponentNodeEntity(const EcsListNode* node) { return node->entity; }
+void* EcsComponentNodeComponent(const EcsListNode* node) { return node->component; }
+EcsListNode* EcsComponentNodeNext(const EcsListNode* node) { return node->next; }

@@ -100,9 +100,13 @@ void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
 	}
 }
 
-static void EcsComponentFree(void* block)
+void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 {
-	free(block);
+	for (uint32_t i = 0; i < tb_stretchy_len(ecs->data_components); ++i)
+		EcsRemoveDataComponent(ecs, entity, i);
+
+	for (uint32_t i = 0; i < tb_stretchy_len(ecs->order_components); ++i)
+		EcsRemoveOrderComponent(ecs, entity, i);
 }
 
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type)
@@ -118,7 +122,7 @@ EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type)
 int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*))
 {
 	EcsComponentMap comp;
-	if (EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsComponentFree))
+	if (EcsComponentMapAlloc(&comp, element_size, free_func ? free_func : EcsMemFree))
 	{
 		tb_stretchy_push(ecs->data_components, comp);
 		return 1;
@@ -170,13 +174,27 @@ void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, 
 	return EcsComponentListInsert(list, entity, component);
 }
 
+void* EcsGetOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
+{
+	return EcsComponentListFind(EcsGetComponentList(ecs, type), entity);
+}
+
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
 	EcsComponentListRemove(EcsGetComponentList(ecs, type), entity);
 }
 
-void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
+void* EcsMemAlloc(size_t size)
 {
-	for (uint32_t i = 0; i < tb_stretchy_len(ecs->data_components); ++i)
-		EcsRemoveDataComponent(ecs, entity, i);
+	return malloc(size);
+}
+
+void* EcsMemRealloc(void* block, size_t size)
+{
+	return realloc(block, size);
+}
+
+void EcsMemFree(void* block)
+{
+	free(block);
 }

@@ -1,7 +1,6 @@
 #include "AnimationSystem.h"
 
-#include "Frost/Frost.h"
-#include "Frost/AnimationLoader.h"
+#include "Frost/FrostEcs.h"
 
 #include "toolbox/tb_array.h"
 

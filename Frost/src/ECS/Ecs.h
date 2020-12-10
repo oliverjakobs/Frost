@@ -49,9 +49,12 @@ void EcsOnEvent(Ecs* ecs, Event e);
 void EcsOnUpdate(Ecs* ecs, float deltatime);
 void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
 
+void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);
+
 EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);
 
+/* Data Components */
 int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
@@ -59,12 +62,17 @@ void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
+/* Order Components */
 int EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
+void* EcsGetOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
-void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);
+/* Memory */
+void* EcsMemAlloc(size_t size);
+void* EcsMemRealloc(void* block, size_t size);
+void EcsMemFree(void* block);
 
 #endif /* !ECS_H */

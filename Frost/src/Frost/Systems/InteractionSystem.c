@@ -1,6 +1,6 @@
 #include "InteractionSystem.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostEcs.h"
 
 void InteractionSystem(Ecs* ecs, float deltatime)
 {
