@@ -3,18 +3,11 @@
 
 #include "Entity.h"
 
-typedef struct EcsComponentNode EcsComponentNode;
-
-struct EcsComponentNode
-{
-    EcsEntityID entity;
-    void* component;
-    EcsComponentNode* next;
-};
+typedef struct EcsListNode EcsListNode;
 
 typedef struct
 {
-    EcsComponentNode* first;
+    EcsListNode* first;
     size_t element_size;
 
     int (*cmp_func)(const void*, const void*);
@@ -30,8 +23,8 @@ void EcsComponentListRemove(EcsComponentList* list, EcsEntityID entity);
 
 void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity);
 
-EcsEntityID EcsComponentNodeEntity(const EcsComponentNode* node);
-void* EcsComponentNodeComponent(const EcsComponentNode* node);
-EcsComponentNode* EcsComponentNodeNext(const EcsComponentNode* node);
+EcsEntityID EcsComponentNodeEntity(const EcsListNode* node);
+void* EcsComponentNodeComponent(const EcsListNode* node);
+EcsListNode* EcsComponentNodeNext(const EcsListNode* node);
 
 #endif /* !ECS_COMPONENT_LIST_H */

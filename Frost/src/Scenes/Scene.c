@@ -283,7 +283,7 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (EcsComponentNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
+	for (EcsListNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
 	{
 		tb_jwrite_array_array(&jwc);
 
@@ -295,7 +295,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_array_string(&jwc, templ->templ);
 
 		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, it->entity);
+		vec2 pos = GetEntityPosition(&scene->ecs, EcsComponentNodeEntity(it));
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -303,7 +303,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), it->entity);
+		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), EcsComponentNodeEntity(it));
 		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
 
 		tb_jwrite_end(&jwc);
