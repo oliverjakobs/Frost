@@ -73,6 +73,7 @@ void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type
 /* Memory */
 void* EcsMemAlloc(size_t size);
 void* EcsMemRealloc(void* block, size_t size);
+void* EcsMemDup(const void* block, size_t size);
 void EcsMemFree(void* block);
 
 #endif /* !ECS_H */

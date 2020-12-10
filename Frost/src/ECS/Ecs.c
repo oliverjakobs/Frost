@@ -194,6 +194,14 @@ void* EcsMemRealloc(void* block, size_t size)
 	return realloc(block, size);
 }
 
+void* EcsMemDup(const void* block, size_t size)
+{
+	void* dup = EcsMemAlloc(size);
+	if (dup) memcpy(dup, block, size);
+
+	return dup;
+}
+
 void EcsMemFree(void* block)
 {
 	free(block);

@@ -1,5 +1,7 @@
 #include "ComponentList.h"
 
+#include "Ecs.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,7 +35,7 @@ void EcsComponentListClear(EcsComponentList* list)
 	while (list->first)
 	{
 		next = list->first->next;
-		free(list->first);
+		EcsMemFree(list->first);
 		list->first = next;
 	}
 
@@ -42,13 +44,12 @@ void EcsComponentListClear(EcsComponentList* list)
 
 static EcsListNode* EcsComponentNodeAlloc(const void* component, EcsEntityID entity, size_t size)
 {
-	EcsListNode* node = malloc(sizeof(EcsListNode));
+	EcsListNode* node = EcsMemAlloc(sizeof(EcsListNode));
 
 	if (node)
 	{
 		node->entity = entity;
-		node->component = malloc(size);
-		memcpy(node->component, component, size);
+		node->component = EcsMemDup(component, size);
 		node->next = NULL;
 	}
 
@@ -101,7 +102,7 @@ void EcsComponentListRemove(EcsComponentList* list, EcsEntityID entity)
 	else
 		list->first = node->next;
 
-	free(node);
+	EcsMemFree(node);
 }
 
 void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity)
