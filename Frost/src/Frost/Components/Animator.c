@@ -35,6 +35,7 @@ void AnimatorFree(void* block)
 	free(block);
 }
 
+/* TODO: improve animation storage */
 static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation* animation)
 {
 	if (state >= NUM_ENTITY_STATES) return 0; 
