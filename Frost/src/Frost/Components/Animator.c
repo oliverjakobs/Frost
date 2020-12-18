@@ -8,81 +8,46 @@
 
 #include <stdlib.h>
 
-/* ---------------------------------| Animation |----------------------------------- */
-void AnimationLoad(Animation* animation, int start, int length, float delay, size_t initial)
+void AnimatorStart(Animator* animator, Animation* animation)
 {
-	animation->start = start;
-	animation->length = length;
-	animation->delay = delay;
-	animation->clock = 0.0f;
-	animation->frame = 0;
-
-	if (tb_hashmap_alloc(&animation->transitions, tb_hash_string, tb_hashmap_str_cmp, initial) == TB_HASHMAP_OK)
-	{
-		tb_hashmap_set_key_alloc_funcs(&animation->transitions, tb_hashmap_str_alloc, tb_hashmap_str_free);
-		tb_hashmap_set_value_alloc_funcs(&animation->transitions, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	}
+	animator->frame = animation->start;
+	animator->clock = 0.0f;
 }
 
-void AnimationDestroy(Animation* animation)
+void AnimatorTick(Animator* animator, Animation* animation, float deltatime)
 {
-	tb_hashmap_free(&animation->transitions);
-}
-
-void AnimationStart(Animation* animation)
-{
-	animation->frame = animation->start;
-	animation->clock = 0.0f;
-}
-
-void AnimationTick(Animation* animation, float deltatime)
-{
-	animation->clock += deltatime;
+	animator->clock += deltatime;
 
 	// change frame
-	if (animation->clock > animation->delay)
+	if (animator->clock > animation->delay)
 	{
-		animation->clock = 0.0f;
-		animation->frame++;
+		animator->clock = 0.0f;
+		animator->frame++;
 	}
 
 	// restart animation
-	if (animation->frame >= animation->start + animation->length || animation->frame < animation->start)
-	{
-		animation->frame = animation->start;
-		animation->clock = 0.0f;
-	}
+	if (animator->frame >= animation->start + animation->length || animator->frame < animation->start)
+		AnimatorStart(animator, animation);
 }
 
-/* ---------------------------------| Animator |------------------------------------ */
 void AnimatorFree(void* block)
 {
-	tb_hashmap* map = &((Animator*)block)->animations;
-	for (tb_hashmap_iter* iter = tb_hashmap_iterator(map); iter; iter = tb_hashmap_iter_next(map, iter))
-	{
-		free(tb_hashmap_iter_get_value(iter));
-		tb_hashmap_iter_remove(map, iter);
-	}
-	tb_hashmap_free(map);
 	free(block);
 }
 
-static int AnimatorAddAnimation(Animator* animator, const char* name, Animation* animation)
+static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation* animation)
 {
-	if (tb_hashmap_insert(&animator->animations, name, animation) != animation)
-	{
-		AnimationDestroy(animation);
-		free(animation);
-		return 0;
-	}
+	if (state >= NUM_ENTITY_STATES) return 0; 
 
-	if (animator->current == NULL)
-		animator->current = tb_hashmap_get_key_ptr(&animator->animations, name);
+	animator->animations[state] = *animation;
+
+	if (animator->current == ENTITY_STATE_NULL)
+		animator->current = state;
 
 	return 1;
 }
 
-void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
+void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'animation'");
@@ -90,51 +55,27 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 	{
 		Animator animator;
 
-		animator.current = NULL;
+		animator.current = ENTITY_STATE_NULL;
+		animator.clock = 0.0f;
+		animator.frame = 0;
+		memset(animator.animations, 0, NUM_ENTITY_STATES * sizeof(Animation));
 
-		if (tb_hashmap_alloc(&animator.animations, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
-		{
-			DEBUG_WARN("[Animator] Failed to allocate animation map");
-			return;
-		}
-
-		tb_hashmap_set_key_alloc_funcs(&animator.animations, tb_hashmap_str_alloc, tb_hashmap_str_free);
 		for (int i = 0; i < element.elements; i++)
 		{
-			char anim_name[APPLICATION_STR_LEN];
-			tb_json_string((char*)element.value, "{*", anim_name, APPLICATION_STR_LEN, &i);
+			char state_str[APPLICATION_STR_LEN];
+			tb_json_string((char*)element.value, "{*", state_str, APPLICATION_STR_LEN, &i);
+
+			EntityState state = EntityStateFromString(state_str);
 
 			tb_json_element anim;
-			tb_json_read_format((char*)element.value, &anim, "{'%s'", anim_name);
+			tb_json_read_format((char*)element.value, &anim, "{'%s'", state_str);
 
-			unsigned int start = tb_json_int((char*)anim.value, "{'start'", NULL, 0);
-			unsigned int length = tb_json_int((char*)anim.value, "{'length'", NULL, 0);
-			float delay = tb_json_float((char*)anim.value, "{'delay'", NULL, 0.0f);
+			Animation animation;
+			animation.start = tb_json_int((char*)anim.value, "{'start'", NULL, 0);
+			animation.length = tb_json_int((char*)anim.value, "{'length'", NULL, 0);
+			animation.delay = tb_json_float((char*)anim.value, "{'delay'", NULL, 0.0f);
 
-			tb_json_element transition_array;
-			tb_json_read((char*)anim.value, &transition_array, "{'transitions'");
-
-			Animation* animation = (Animation*)malloc(sizeof(Animation));
-			AnimationLoad(animation, start, length, delay, transition_array.elements);
-
-			char* value = (char*)transition_array.value;
-			tb_json_element transition_element;
-			for (int i = 0; i < transition_array.elements; i++)
-			{
-				value = tb_json_array_step(value, &transition_element);
-
-				if (transition_element.data_type == TB_JSON_ARRAY)
-				{
-					char condition[APPLICATION_STR_LEN];
-					tb_json_string((char*)transition_element.value, "[0", condition, APPLICATION_STR_LEN, NULL);
-					char next[APPLICATION_STR_LEN];
-					tb_json_string((char*)transition_element.value, "[1", next, APPLICATION_STR_LEN, NULL);
-
-					tb_hashmap_insert(&animation->transitions, condition, next);
-				}
-			}
-
-			AnimatorAddAnimation(&animator, anim_name, animation);
+			AnimatorAddAnimation(&animator, state, &animation);
 		}
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
 	}

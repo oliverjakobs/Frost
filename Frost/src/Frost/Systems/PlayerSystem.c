@@ -10,11 +10,11 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 	{
 		Movement* movement = EcsComponentMapIterValue(iter);
 
-		RigidBody* body = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
 		Sprite* sprite = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_SPRITE);
-		CameraController* camera = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_CAMERA);
-
+		RigidBody* body = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
 		if (!(body && sprite)) continue;
+
+		CameraController* camera = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_CAMERA);
 
 		vec2 velocity;
 		velocity.x = (-InputKeyPressed(KEY_A) + InputKeyPressed(KEY_D)) * movement->speed;
@@ -42,40 +42,7 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 		// set view
 		if (camera)
 		{
-			vec2 position = GetEntityPosition(ecs, EcsComponentMapIterKey(iter));
-
-			float smooth_w = (camera->camera->size.x * 0.5f) * camera->smooth;
-			float smooth_h = (camera->camera->size.y * 0.5f) * camera->smooth;
-
-			float center_x = camera->camera->position.x;
-			float center_y = camera->camera->position.y;
-
-			if (position.x > camera->camera->position.x + smooth_w)
-				center_x = position.x - smooth_w;
-			if (position.x < camera->camera->position.x - smooth_w)
-				center_x = position.x + smooth_w;
-
-			if (position.y > camera->camera->position.y + smooth_h)
-				center_y = position.y - smooth_h;
-			if (position.y < camera->camera->position.y - smooth_h)
-				center_y = position.y + smooth_h;
-
-			// constraint
-			float constraint_x = camera->camera->size.x * 0.5f;
-			float constraint_y = camera->camera->size.y * 0.5f;
-
-			if (center_x < constraint_x)
-				center_x = constraint_x;
-			if (center_x > camera->scene_w - constraint_x)
-				center_x = camera->scene_w - constraint_x;
-
-			if (center_y < constraint_y)
-				center_y = constraint_y;
-			if (center_y > camera->scene_h - constraint_y)
-				center_y = camera->scene_h - constraint_y;
-
-			camera->camera->position.x = center_x;
-			camera->camera->position.y = center_y;
+			CameraMoveConstrained(camera, GetEntityPosition(ecs, EcsComponentMapIterKey(iter)), 0.5f);
 			CameraUpdateViewOrtho(camera->camera);
 		}
 	}

@@ -12,45 +12,25 @@
     "texture": "player"
   },
   "animation": {
-    "idle": { 
+    "ENTITY_STATE_IDLE": { 
       "start": 0,
       "length": 4,
-      "delay": 0.2,
-      "transitions": [
-        [ "CONDITION_JUMP", "jump" ], 
-        [ "CONDITION_FALL", "fall" ], 
-        [ "CONDITION_WALK", "walk" ]
-      ]
+      "delay": 0.2
     },
-    "walk": { 
+    "ENTITY_STATE_WALK": { 
       "start": 6,
       "length": 6,
-      "delay": 0.125,
-      "transitions": [
-        [ "CONDITION_JUMP", "jump" ], 
-        [ "CONDITION_FALL", "fall" ], 
-        [ "CONDITION_IDLE", "idle" ]
-      ]
+      "delay": 0.125
     },
-    "jump": { 
+    "ENTITY_STATE_JUMP": { 
       "start": 12,
       "length": 3,
-      "delay": 0.3,
-      "transitions": [
-        [ "CONDITION_FALL", "fall" ], 
-        [ "CONDITION_WALK", "walk" ], 
-        [ "CONDITION_IDLE", "idle" ]
-      ]
+      "delay": 0.3
     },
-    "fall": { 
+    "ENTITY_STATE_FALL": { 
       "start": 18,
       "length": 2,
-      "delay": 0.4,
-      "transitions": [
-        [ "CONDITION_JUMP", "jump" ], 
-        [ "CONDITION_WALK", "walk" ], 
-        [ "CONDITION_IDLE", "idle" ]
-      ]
+      "delay": 0.4
     }
   },
   "movement": {

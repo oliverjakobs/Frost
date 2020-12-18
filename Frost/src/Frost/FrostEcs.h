@@ -5,6 +5,7 @@
 
 #include "Components/Animator.h"
 #include "Components/Transform.h"
+#include "Components/EntityState.h"
 #include "Components/RigidBody.h"
 #include "Components/Sprite.h"
 #include "Components/Movement.h"
@@ -16,6 +17,7 @@ typedef enum
 {
 	COMPONENT_TRANSFORM,
 	COMPONENT_RIGID_BODY,
+	COMPONENT_STATE,
 	COMPONENT_MOVEMENT,
 	COMPONENT_SPRITE,
 	COMPONENT_ANIMATOR,
@@ -37,6 +39,7 @@ typedef enum
 
 void RegisterOrderComponents(Ecs* ecs);
 
+#include "Systems/EntityStateSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/PlayerSystem.h"
 #include "Systems/AnimationSystem.h"
@@ -47,6 +50,7 @@ void RegisterOrderComponents(Ecs* ecs);
 
 typedef enum
 {
+	UPDATE_STATE,
 	UPDATE_PHYSICS,
 	UPDATE_PLAYER,
 	UPDATE_ANIMATION,
@@ -64,30 +68,5 @@ typedef enum
 } RenderSystemType;
 
 void AddRenderSystems(Ecs* ecs);
-
-/* ----------------------| Animations |------------------------------- */
-typedef enum
-{
-	CONDITION_IDLE,
-	CONDITION_FALL,
-	CONDITION_WALK,
-	CONDITION_JUMP
-} AnimationCondition;
-
-void RegisterAnimationCondition();
-
-const char* AnimationConditionToString(AnimationCondition value);
-AnimationCondition AnimationConditionFromString(const char* str);
-
-/* ----------------------| Ecs utility |------------------------------ */
-EcsEntityID GetEntityAt(Ecs* ecs, vec2 pos);
-
-void SetEntityPosition(Ecs* ecs, EcsEntityID entity, vec2 pos);
-
-vec2 GetEntityPosition(Ecs* ecs, EcsEntityID entity);
-vec2 GetEntityCenter(Ecs* ecs, EcsEntityID entity);
-
-rect GetEntityRect(Ecs* ecs, EcsEntityID entity);
-
 
 #endif /* !FROST_ECS_H */

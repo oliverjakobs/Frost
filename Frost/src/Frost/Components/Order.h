@@ -1,18 +1,16 @@
 #ifndef ENTITY_ORDER_H
 #define ENTITY_ORDER_H
 
-#include "Ecs/Entity.h"
+#include "ECS/Ecs.h"
 
 typedef struct
 {
 	char* templ;
 } Template;
 
-typedef struct
-{
-	int z_index;
-} ZIndex;
+typedef int ZIndex;
 
+ZIndex EntityGetZIndex(Ecs* ecs, EcsEntityID entity);
 int ZIndexCmp(const ZIndex* left, const ZIndex* right);
 
 #endif /* !ENTITY_ORDER_H */

@@ -108,6 +108,7 @@
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
     <ClInclude Include="src\Frost\Components\CameraController.h" />
+    <ClInclude Include="src\Frost\Components\EntityState.h" />
     <ClInclude Include="src\Frost\Components\Interaction.h" />
     <ClInclude Include="src\Frost\Components\Inventory.h" />
     <ClInclude Include="src\Frost\Components\Movement.h" />
@@ -119,6 +120,7 @@
     <ClInclude Include="src\Frost\Frost.h" />
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
     <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h" />
+    <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h" />
     <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
     <ClInclude Include="src\Frost\Systems\PhysicsSystem.h" />
@@ -176,16 +178,19 @@
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\CameraController.c" />
+    <ClCompile Include="src\Frost\Components\EntityState.c" />
     <ClCompile Include="src\Frost\Components\Interaction.c" />
     <ClCompile Include="src\Frost\Components\Inventory.c" />
     <ClCompile Include="src\Frost\Components\Movement.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />
     <ClCompile Include="src\Frost\Components\RigidBody.c" />
     <ClCompile Include="src\Frost\Components\Sprite.c" />
+    <ClCompile Include="src\Frost\Components\Transform.c" />
     <ClCompile Include="src\Frost\FrostEcs.c" />
     <ClCompile Include="src\Frost\Frost.c" />
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
     <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c" />
+    <ClCompile Include="src\Frost\Systems\EntityStateSystem.c" />
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c" />
     <ClCompile Include="src\Frost\Systems\InventorySystem.c" />
     <ClCompile Include="src\Frost\Systems\PhysicsSystem.c" />

@@ -23,7 +23,7 @@ typedef struct
 } Inventory;
 
 
-void InventoryLoad(Scene* scene, EcsEntityID entity, char* json);
+void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
 
 void InventoryFree(Inventory* inv);
 

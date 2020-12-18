@@ -19,7 +19,7 @@ typedef struct
 	InteractionType type;
 } Interaction;
 
-void InteractorLoad(Scene* scene, EcsEntityID entity, char* json);
-void InteractionLoad(Scene* scene, EcsEntityID entity, char* json);
+void InteractorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
+void InteractionLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
 
 #endif /* !INTERACTION_H */

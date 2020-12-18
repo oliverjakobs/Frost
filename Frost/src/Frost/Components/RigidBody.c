@@ -5,7 +5,7 @@
 
 #include "toolbox/tb_json.h"
 
-void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
+void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'rigidbody'");
@@ -23,9 +23,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
 		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
 
-		Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
-
-		body.position = vec2_add(transform ? transform->position : vec2_zero(), body.offset);
+		body.position = vec2_add(pos, body.offset);
 
 		body.collides_bottom = 0;
 		body.collides_top = 0;

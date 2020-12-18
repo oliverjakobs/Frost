@@ -35,7 +35,6 @@ void OnInit(Application* app)
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
 
 	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
-	AnimationSystemInit();
 
 	/* ecs */
 	AddUpdateSystems(&scene.ecs);
@@ -51,8 +50,6 @@ void OnInit(Application* app)
 
 void OnDestroy(Application* app)
 {
-	AnimationSystemDestroy();
-
 	SceneDestroy(&scene);
 
 	FontRendererDestroy();
@@ -154,10 +151,12 @@ void OnRenderDebug(Application* app)
 		FontRendererTextFieldBegin(app->width - 470.0f, 0.0f, 24.0f);
 
 		FontRendererTextFieldLine("Scene: %s", scene.name);
+		FontRendererTextFieldLine("Size: %4.2f, %4.2f", scene.width, scene.height);
 		FontRendererTextFieldLine("------------------------");
 
 		EcsEntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
+		FontRendererTextFieldLine("State: %s", EntityGetStateString(&scene.ecs, player));
 		vec2 position = GetEntityPosition(&scene.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);

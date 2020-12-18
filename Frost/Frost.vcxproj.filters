@@ -278,6 +278,8 @@
     <ClInclude Include="src\memory\arena.h" />
     <ClInclude Include="src\toolbox\tb_stretchy.h" />
     <ClInclude Include="src\Frost\FrostEcs.h" />
+    <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
+    <ClInclude Include="src\Frost\Components\EntityState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -453,6 +455,9 @@
     <ClCompile Include="src\Frost\Components\Inventory.c" />
     <ClCompile Include="src\memory\arena.c" />
     <ClCompile Include="src\Frost\FrostEcs.c" />
+    <ClCompile Include="src\Frost\Systems\EntityStateSystem.c" />
+    <ClCompile Include="src\Frost\Components\EntityState.c" />
+    <ClCompile Include="src\Frost\Components\Transform.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

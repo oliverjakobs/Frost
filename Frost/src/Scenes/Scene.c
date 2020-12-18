@@ -303,8 +303,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		ZIndex* indexed = EcsComponentListFind(EcsGetComponentList(&scene->ecs, COMPONENT_Z_INDEX), EcsComponentNodeEntity(it));
-		tb_jwrite_array_int(&jwc, indexed ? indexed->z_index : 0);
+		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsComponentNodeEntity(it)));
 
 		tb_jwrite_end(&jwc);
 
@@ -353,42 +352,25 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 		return 0;
 	}
 
-	tb_json_element element;
-
 	Template t;
 	t.templ = malloc(strlen(templ));
 	strcpy(t.templ, templ);
 	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
 	/* TODO: Free template? */
 
-	ZIndex index;
-	index.z_index = z_index;
-	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &index);
-	/* TODO: ZIndex only for entities with sprite component */
+	EntityState state = ENTITY_STATE_NULL;
+	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
 
 	/* Components */
-	tb_json_read(json, &element, "{'transform'");
-	if (element.error == TB_JSON_OK)
-	{
-		Transform transform;
-		transform.position = pos;
-
-		transform.size.x = tb_json_float((char*)element.value, "{'size'[0", NULL, 0.0f);
-		transform.size.y = tb_json_float((char*)element.value, "{'size'[1", NULL, 0.0f);
-
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
-	}
-
-	/* ------------------------------------------------------------------ */
-	/* TODO to code generation */
-	RigidBodyLoad(scene, entity, json);
-	SpriteLoad(scene, entity, json);
-	AnimatorLoad(scene, entity, json);
-	MovementLoad(scene, entity, json);
-	CameraControllerLoad(scene, entity, json);
-	InventoryLoad(scene, entity, json);
-	InteractorLoad(scene, entity, json);
-	InteractionLoad(scene, entity, json);
+	TransformLoad(scene, entity, pos, z_index, json);
+	RigidBodyLoad(scene, entity, pos, z_index, json);
+	SpriteLoad(scene, entity, pos, z_index,json);
+	AnimatorLoad(scene, entity, pos, z_index, json);
+	MovementLoad(scene, entity, pos, z_index, json);
+	CameraControllerLoad(scene, entity, pos, z_index, json);
+	InventoryLoad(scene, entity, pos, z_index, json);
+	InteractorLoad(scene, entity, pos, z_index, json);
+	InteractionLoad(scene, entity, pos, z_index, json);
 
 	free(json);
 

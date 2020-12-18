@@ -6,7 +6,7 @@
 
 #include "Application/Debugger.h"
 
-void SpriteLoad(Scene* scene, EcsEntityID entity, char* json)
+void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'sprite'");
@@ -30,7 +30,10 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, char* json)
 		sprite.texture = ResourcesGetTexture2D(scene->resources, texture);
 
 		if (sprite.texture)
+		{
 			EcsAddDataComponent(&scene->ecs, entity, COMPONENT_SPRITE, &sprite);
+			EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
+		}
 		else
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
 	}
