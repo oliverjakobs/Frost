@@ -13,6 +13,8 @@
 #include "Components/Inventory.h"
 #include "Components/Interaction.h"
 
+#include "Components/Order.h"
+
 typedef enum
 {
 	COMPONENT_TRANSFORM,
@@ -27,17 +29,11 @@ typedef enum
 	COMPONENT_INTERACTOR
 } DataComponentType;
 
-void RegisterDataComponents(Ecs* ecs);
-
-#include "Components/Order.h"
-
 typedef enum
 {
 	COMPONENT_TEMPLATE,
 	COMPONENT_Z_INDEX
 } OrderComponentType;
-
-void RegisterOrderComponents(Ecs* ecs);
 
 #include "Systems/EntityStateSystem.h"
 #include "Systems/PhysicsSystem.h"
@@ -58,8 +54,6 @@ typedef enum
 	UPDATE_INTERACTION
 } UpdateSystemType;
 
-void AddUpdateSystems(Ecs* ecs);
-
 typedef enum
 {
 	RENDER_SPRITE,
@@ -67,6 +61,6 @@ typedef enum
 	RENDER_INVENTORY
 } RenderSystemType;
 
-void AddRenderSystems(Ecs* ecs);
+void LoadEcs(Ecs* ecs);
 
 #endif /* !FROST_ECS_H */

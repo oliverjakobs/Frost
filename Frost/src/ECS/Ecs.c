@@ -3,11 +3,6 @@
 #include <string.h>
 #include "toolbox/tb_stretchy.h"
 
-struct EcsEventSystem
-{
-	void (*handle)(Ecs*, Event);
-};
-
 struct EcsUpdateSystem
 {
 	void (*update)(Ecs*, float);
@@ -21,14 +16,12 @@ struct EcsRenderSystem
 
 void EcsInit(Ecs* ecs)
 {
-	ecs->systems_event = NULL;
 	ecs->systems_update = NULL;
 	ecs->systems_render = NULL;
 
 	ecs->data_components = NULL;
 	ecs->order_components = NULL;
 
-	tb_stretchy_reserve(ecs->systems_event, ECS_DEFAULT_EVENT_SYSTEM_COUNT);
 	tb_stretchy_reserve(ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT);
 	tb_stretchy_reserve(ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT);
 
@@ -38,7 +31,6 @@ void EcsInit(Ecs* ecs)
 
 void EcsDestroy(Ecs* ecs)
 {
-	tb_stretchy_free(ecs->systems_event);
 	tb_stretchy_free(ecs->systems_update);
 	tb_stretchy_free(ecs->systems_render);
 
@@ -64,11 +56,6 @@ void EcsClear(Ecs* ecs)
 	EcsEntityResetIDCounter();
 }
 
-void EcsAddEventSystem(Ecs* ecs, void(*handle)(Ecs*, Event))
-{
-	tb_stretchy_push(ecs->systems_event, ((EcsEventSystem) { handle }));
-}
-
 void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 {
 	tb_stretchy_push(ecs->systems_update, ((EcsUpdateSystem) { update }));
@@ -77,12 +64,6 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,const float*))
 {
 	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { render, stage }));
-}
-
-void EcsOnEvent(Ecs* ecs, Event e)
-{
-	for (EcsEventSystem* it = ecs->systems_event; it != tb_stretchy_last(ecs->systems_event); it++)
-		it->handle(ecs, e);
 }
 
 void EcsOnUpdate(Ecs* ecs, float deltatime)

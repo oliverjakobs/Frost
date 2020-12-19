@@ -6,7 +6,6 @@
 
 #include "Event/Event.h"
 
-#define ECS_DEFAULT_EVENT_SYSTEM_COUNT		4
 #define ECS_DEFAULT_UPDATE_SYSTEM_COUNT		4
 #define ECS_DEFAULT_RENDER_SYSTEM_COUNT		3
 
@@ -15,7 +14,6 @@
 
 typedef uint32_t EcsComponentType;
 
-typedef struct EcsEventSystem EcsEventSystem;
 typedef struct EcsUpdateSystem EcsUpdateSystem;
 typedef struct EcsRenderSystem EcsRenderSystem;
 
@@ -28,7 +26,6 @@ typedef enum
 
 typedef struct
 {
-	EcsEventSystem* systems_event;
 	EcsUpdateSystem* systems_update;
 	EcsRenderSystem* systems_render;
 
@@ -41,11 +38,9 @@ void EcsDestroy(Ecs* ecs);
 
 void EcsClear(Ecs* ecs);
 
-void EcsAddEventSystem(Ecs* ecs, void (*handle)(Ecs*, Event));
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*, const float*));
 
-void EcsOnEvent(Ecs* ecs, Event e);
 void EcsOnUpdate(Ecs* ecs, float deltatime);
 void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
 

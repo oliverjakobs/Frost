@@ -37,11 +37,7 @@ void OnInit(Application* app)
 	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
 
 	/* ecs */
-	AddUpdateSystems(&scene.ecs);
-	AddRenderSystems(&scene.ecs);
-
-	RegisterDataComponents(&scene.ecs);
-	RegisterOrderComponents(&scene.ecs);
+	LoadEcs(&scene.ecs);
 
 	/* setup starting state */
 	SceneChangeActive(&scene, "scene");
@@ -68,30 +64,14 @@ void OnEvent(Application* app, Event e)
 
 	switch (EventKeyPressed(&e))
 	{
-	case KEY_ESCAPE:
-		ApplicationClose(app);
-		break;
-	case KEY_F1:
-		SceneEditorToggleActive(&scene_editor);
-		break;
-	case KEY_F2:
-		ConsoleToggleFocus(&console);
-		break;
-	case KEY_F5: 
-		ApplicationPause(app);
-		break;
-	case KEY_F6:
-		ApplicationToggleVsync(app);
-		break;
-	case KEY_F7:
-		ApplicationToggleDebugMode(app);
-		break;
-	case KEY_F8:
-		SceneEditorToggleGrid(&scene_editor);
-		break;
-	case KEY_F9:
-		show_debug_info = !show_debug_info;
-		break;
+	case KEY_ESCAPE:	ApplicationClose(app); break;
+	case KEY_F1:		SceneEditorToggleActive(&scene_editor); break;
+	case KEY_F2:		ConsoleToggleFocus(&console); break;
+	case KEY_F5:		ApplicationPause(app); break;
+	case KEY_F6:		ApplicationToggleVsync(app); break;
+	case KEY_F7:		ApplicationToggleDebugMode(app); break;
+	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
+	case KEY_F9:		show_debug_info = !show_debug_info; break;
 	}
 
 	if (EventCheckType(&e, EVENT_CONSOLE_EXEC))

@@ -121,7 +121,7 @@ void SceneClearActive(Scene* scene)
 
 void SceneOnEvent(Scene* scene, Event e)
 {
-	EcsOnEvent(&scene->ecs, e);
+
 }
 
 void SceneOnUpdate(Scene* scene, float deltatime)

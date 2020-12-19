@@ -104,6 +104,7 @@
     <ClInclude Include="src\ECS\ComponentMap.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
+    <ClInclude Include="src\ECS\Loader.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\ECS\ComponentMap.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
+    <ClCompile Include="src\ECS\Loader.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />

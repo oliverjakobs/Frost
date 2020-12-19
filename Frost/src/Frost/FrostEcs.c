@@ -1,40 +1,49 @@
 #include "FrostEcs.h"
 
-#include <string.h>
+#include "ECS/Loader.h"
 
-void RegisterDataComponents(Ecs* ecs)
+EcsDataComponentLoader data_comps[] =
 {
-	EcsRegisterDataComponent(ecs, sizeof(Transform), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(RigidBody), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(EntityState), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Movement), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Sprite), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Animator), AnimatorFree);
-	EcsRegisterDataComponent(ecs, sizeof(CameraController), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Inventory), InventoryFree);
-	EcsRegisterDataComponent(ecs, sizeof(Interaction), NULL);
-	EcsRegisterDataComponent(ecs, sizeof(Interactor), NULL);
-}
+	[COMPONENT_TRANSFORM] =		{ sizeof(Transform),		NULL },
+	[COMPONENT_RIGID_BODY] =	{ sizeof(RigidBody),		NULL },
+	[COMPONENT_STATE] =			{ sizeof(EntityState),		NULL },
+	[COMPONENT_MOVEMENT] =		{ sizeof(Movement),			NULL },
+	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
+	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorFree },
+	[COMPONENT_CAMERA] =		{ sizeof(CameraController), NULL },
+	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
+	[COMPONENT_INTERACTION] =	{ sizeof(Interaction),		NULL },
+	[COMPONENT_INTERACTOR] =	{ sizeof(Interactor),		NULL }
+};
 
-void RegisterOrderComponents(Ecs* ecs)
+EcsOrderComponentLoader order_comps[] =
 {
-	EcsRegisterOrderComponent(ecs, sizeof(Template), NULL);
-	EcsRegisterOrderComponent(ecs, sizeof(ZIndex), ZIndexCmp);
-}
+	[COMPONENT_TEMPLATE] =	{ sizeof(Template), NULL },
+	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),	ZIndexCmp }
+};
 
-void AddUpdateSystems(Ecs* ecs)
+EcsUpdateSystemLoader update_systems[] =
 {
-	EcsAddUpdateSystem(ecs, EntityStateSystem);
-	EcsAddUpdateSystem(ecs, PhysicsSystem);
-	EcsAddUpdateSystem(ecs, PlayerSystem);
-	EcsAddUpdateSystem(ecs, AnimationSystem);
-	EcsAddUpdateSystem(ecs, InventoryUpdateSystem);
-	EcsAddUpdateSystem(ecs, InteractionSystem);
-}
+	[UPDATE_STATE] =		{ EntityStateSystem },
+	[UPDATE_PHYSICS] =		{ PhysicsSystem },
+	[UPDATE_PLAYER] =		{ PlayerSystem },
+	[UPDATE_ANIMATION] =	{ AnimationSystem },
+	[UPDATE_INVENTORY] =	{ InventoryUpdateSystem },
+	[UPDATE_INTERACTION] =	{ InteractionSystem }
+};
 
-void AddRenderSystems(Ecs* ecs)
+EcsRenderSystemLoader render_systems[] =
 {
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_PRIMARY, RenderSystem);
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_DEBUG, DebugRenderSystem);
-	EcsAddRenderSystem(ecs, ECS_RENDER_STAGE_UI, InventoryRenderSystem);
+	[RENDER_SPRITE] =		{ ECS_RENDER_STAGE_PRIMARY, RenderSystem },
+	[RENDER_DEBUG] =		{ ECS_RENDER_STAGE_DEBUG,	DebugRenderSystem },
+	[RENDER_INVENTORY] =	{ ECS_RENDER_STAGE_UI,		InventoryRenderSystem }
+};
+
+void LoadEcs(Ecs* ecs)
+{
+	EcsLoadUpdateSystems(ecs, update_systems, ECS_SIZEOF_LOADER(update_systems));
+	EcsLoadRenderSystems(ecs, render_systems, ECS_SIZEOF_LOADER(render_systems));
+
+	EcsLoadDataComponents(ecs, data_comps, ECS_SIZEOF_LOADER(data_comps));
+	EcsLoadOrderComponents(ecs, order_comps, ECS_SIZEOF_LOADER(order_comps));
 }
