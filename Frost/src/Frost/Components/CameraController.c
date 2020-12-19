@@ -11,8 +11,8 @@ void CameraControllerLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_inde
 	if (element.error == TB_JSON_OK)
 	{
 		CameraController comp;
+		comp.smooth = tb_json_float(element.value, "{'smooth'", NULL, 0.0f);
 		comp.camera = scene->camera;
-		comp.smooth = tb_json_float((char*)element.value, "{'smooth'", NULL, 0.0f);
 		comp.scene_w = scene->width;
 		comp.scene_h = scene->height;
 

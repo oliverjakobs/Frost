@@ -120,7 +120,6 @@
     <ClInclude Include="src\Frost\FrostEcs.h" />
     <ClInclude Include="src\Frost\Frost.h" />
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
-    <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h" />
     <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h" />
     <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
@@ -191,7 +190,6 @@
     <ClCompile Include="src\Frost\FrostEcs.c" />
     <ClCompile Include="src\Frost\Frost.c" />
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
-    <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c" />
     <ClCompile Include="src\Frost\Systems\EntityStateSystem.c" />
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c" />
     <ClCompile Include="src\Frost\Systems\InventorySystem.c" />

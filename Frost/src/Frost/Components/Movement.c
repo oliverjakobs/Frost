@@ -14,8 +14,8 @@ void MovementLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char*
 		Movement comp;
 
 		comp.direction = MOVEMENT_LEFT;
-		comp.speed = tb_json_float((char*)element.value, "{'speed'", NULL, 0.0f);
-		comp.jump_power = tb_json_float((char*)element.value, "{'jumppower'", NULL, 0.0f);
+		comp.speed = tb_json_float(element.value, "{'speed'", NULL, 0.0f);
+		comp.jump_power = tb_json_float(element.value, "{'jumppower'", NULL, 0.0f);
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_MOVEMENT, &comp);
 	}

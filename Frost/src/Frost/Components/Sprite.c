@@ -14,18 +14,18 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* j
 	{
 		Sprite sprite;
 		sprite.flip = SPRITE_FLIP_NONE;
-		sprite.width = tb_json_float((char*)element.value, "{'size'[0", NULL, -1.0f);
-		sprite.height = tb_json_float((char*)element.value, "{'size'[1", NULL, -1.0f);
+		sprite.width = tb_json_float(element.value, "{'size'[0", NULL, -1.0f);
+		sprite.height = tb_json_float(element.value, "{'size'[1", NULL, -1.0f);
 
 		Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
 
 		if (sprite.width < 0.0f && transform) sprite.width = transform->size.x;
 		if (sprite.height < 0.0f && transform) sprite.height = transform->size.y;
 
-		sprite.frame = tb_json_int((char*)element.value, "{'frame'", NULL, 0);
+		sprite.frame = tb_json_int(element.value, "{'frame'", NULL, 0);
 
 		char texture[APPLICATION_STR_LEN];
-		tb_json_string((char*)element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
+		tb_json_string(element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
 
 		sprite.texture = ResourcesGetTexture2D(scene->resources, texture);
 
@@ -35,6 +35,8 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* j
 			EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
 		}
 		else
+		{
 			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
+		}
 	}
 }

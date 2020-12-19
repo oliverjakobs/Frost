@@ -12,26 +12,10 @@
     "texture": "player"
   },
   "animation": {
-    "ENTITY_STATE_IDLE": { 
-      "start": 0,
-      "length": 4,
-      "delay": 0.2
-    },
-    "ENTITY_STATE_WALK": { 
-      "start": 6,
-      "length": 6,
-      "delay": 0.125
-    },
-    "ENTITY_STATE_JUMP": { 
-      "start": 12,
-      "length": 3,
-      "delay": 0.3
-    },
-    "ENTITY_STATE_FALL": { 
-      "start": 18,
-      "length": 2,
-      "delay": 0.4
-    }
+    "ENTITY_STATE_IDLE": [ 0, 2, 0.2 ],
+    "ENTITY_STATE_WALK": [ 6, 6, 0.125 ],
+    "ENTITY_STATE_JUMP": [ 12, 3, 0.3 ],
+    "ENTITY_STATE_FALL": [ 18, 2, 0.4 ]
   },
   "movement": {
     "speed": 400.0,

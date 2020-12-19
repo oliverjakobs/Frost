@@ -16,14 +16,14 @@ typedef struct
 
 	Camera* camera;
 	Resources* resources;
-
 	Ecs ecs;
-	Background background;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
 	float width;
 	float height;
+
+	Background background;
 } Scene;
 
 int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources);

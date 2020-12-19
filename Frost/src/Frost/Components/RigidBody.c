@@ -12,18 +12,18 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 	if (element.error == TB_JSON_OK)
 	{
 		RigidBody body;
-		body.type = (RigidBodyType)tb_json_int((char*)element.value, "{'type'", NULL, 0);
+		body.type = (RigidBodyType)tb_json_int(element.value, "{'type'", NULL, 0);
 
-		body.half_size.x = tb_json_float((char*)element.value, "{'halfsize'[0", NULL, 0.0f);
-		body.half_size.y = tb_json_float((char*)element.value, "{'halfsize'[1", NULL, 0.0f);
+		body.half_size.x = tb_json_float(element.value, "{'halfsize'[0", NULL, 0.0f);
+		body.half_size.y = tb_json_float(element.value, "{'halfsize'[1", NULL, 0.0f);
+
+		body.offset.x = tb_json_float(element.value, "{'offset'[0", NULL, 0.0f);
+		body.offset.y = tb_json_float(element.value, "{'offset'[1", NULL, 0.0f);
+
+		body.position = vec2_add(pos, body.offset);
 
 		body.velocity.x = 0.0f;
 		body.velocity.y = 0.0f;
-
-		body.offset.x = tb_json_float((char*)element.value, "{'offset'[0", NULL, 0.0f);
-		body.offset.y = tb_json_float((char*)element.value, "{'offset'[1", NULL, 0.0f);
-
-		body.position = vec2_add(pos, body.offset);
 
 		body.collides_bottom = 0;
 		body.collides_top = 0;

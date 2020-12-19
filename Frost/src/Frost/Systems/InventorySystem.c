@@ -50,29 +50,17 @@ int InventorySystemInit(IgnisTexture2D* item_atlas, vec2 screen_size, float cell
 
 InventoryHAlign InventorySystemGetHAlign(const char* str)
 {
-	if (strcmp(str, "left") == 0)
-		return INV_HALIGN_LEFT;
-
-	if (strcmp(str, "center") == 0)
-		return INV_HALIGN_CENTER;
-
-	if (strcmp(str, "right") == 0)
-		return INV_HALIGN_RIGHT;
-
+	if (strcmp(str, "left") == 0)	return INV_HALIGN_LEFT;
+	if (strcmp(str, "center") == 0)	return INV_HALIGN_CENTER;
+	if (strcmp(str, "right") == 0)	return INV_HALIGN_RIGHT;
 	return INV_HALIGN_LEFT;
 }
 
 InventoryVAlign InventorySystemGetVAlign(const char* str)
 {
-	if (strcmp(str, "top") == 0)
-		return INV_VALIGN_TOP;
-
-	if (strcmp(str, "center") == 0)
-		return INV_VALIGN_CENTER;
-
-	if (strcmp(str, "bottom") == 0)
-		return INV_VALIGN_BOTTOM;
-
+	if (strcmp(str, "top") == 0)	return INV_VALIGN_TOP;
+	if (strcmp(str, "center") == 0)	return INV_VALIGN_CENTER;
+	if (strcmp(str, "bottom") == 0)	return INV_VALIGN_BOTTOM;
 	return INV_VALIGN_TOP;
 }
 

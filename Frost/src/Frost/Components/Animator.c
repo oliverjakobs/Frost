@@ -64,17 +64,17 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char*
 		for (int i = 0; i < element.elements; i++)
 		{
 			char state_str[APPLICATION_STR_LEN];
-			tb_json_string((char*)element.value, "{*", state_str, APPLICATION_STR_LEN, &i);
+			tb_json_string(element.value, "{*", state_str, APPLICATION_STR_LEN, &i);
 
 			EntityState state = EntityStateFromString(state_str);
 
 			tb_json_element anim;
-			tb_json_read_format((char*)element.value, &anim, "{'%s'", state_str);
+			tb_json_read_format(element.value, &anim, "{'%s'", state_str);
 
 			Animation animation;
-			animation.start = tb_json_int((char*)anim.value, "{'start'", NULL, 0);
-			animation.length = tb_json_int((char*)anim.value, "{'length'", NULL, 0);
-			animation.delay = tb_json_float((char*)anim.value, "{'delay'", NULL, 0.0f);
+			animation.start = tb_json_int(anim.value, "[0", NULL, 0);
+			animation.length = tb_json_int(anim.value, "[1", NULL, 0);
+			animation.delay = tb_json_float(anim.value, "[2", NULL, 0.0f);
 
 			AnimatorAddAnimation(&animator, state, &animation);
 		}

@@ -159,9 +159,6 @@
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
       <Filter>src\Frost\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\Systems\DebugRenderSystem.h">
-      <Filter>src\Frost\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h">
       <Filter>src\Frost\Systems</Filter>
     </ClInclude>
@@ -347,9 +344,6 @@
       <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
-      <Filter>src\Frost\Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\DebugRenderSystem.c">
       <Filter>src\Frost\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c">

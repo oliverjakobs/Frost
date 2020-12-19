@@ -42,7 +42,6 @@ typedef enum
 #include "Systems/InventorySystem.h"
 #include "Systems/InteractionSystem.h"
 #include "Systems/RenderSystem.h"
-#include "Systems/DebugRenderSystem.h"
 
 typedef enum
 {

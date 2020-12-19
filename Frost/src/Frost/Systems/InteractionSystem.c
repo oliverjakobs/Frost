@@ -14,7 +14,6 @@ void InteractionSystem(Ecs* ecs, float deltatime)
 		for (EcsComponentMapIter* iter = EcsComponentMapIterator(interactions); iter; iter = EcsComponentMapIterNext(interactions, iter))
 		{
 			Interaction* interaction = EcsComponentMapIterValue(iter);
-
 			if (interaction->type <= interactor->type)
 			{
 				EcsEntityID interaction_entity = EcsComponentMapIterKey(iter);
