@@ -2,16 +2,20 @@
 
 #include "Frost/FrostEcs.h"
 
-static void PlayAnimation(Animator* animator, EntityState state)
+static void AnimatorTick(Animator* animator, Animation* animation, float deltatime)
 {
-	if (state == ENTITY_STATE_NULL || animator->current == state) return;
+	animator->clock += deltatime;
 
-	Animation* animation = &animator->animations[state];
-	if (animation)
+	// change frame
+	if (animator->clock > animation->delay)
 	{
-		AnimatorStart(animator, animation);
-		animator->current = state;
+		animator->clock = 0.0f;
+		animator->frame++;
 	}
+
+	// restart animation
+	if (animator->frame >= animation->start + animation->length || animator->frame < animation->start)
+		AnimatorStart(animator, animation->start);
 }
 
 void AnimationSystem(Ecs* ecs, float deltatime)
@@ -20,21 +24,31 @@ void AnimationSystem(Ecs* ecs, float deltatime)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Animator* animator = EcsComponentMapIterValue(iter);
-
-		Sprite* sprite = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_SPRITE);
-
-		if (!sprite) continue;
+		ECS_COMPONENT_REQUIRE(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
 
 		Animation* current = &animator->animations[animator->current];
-		if (!current)
+		if (current)
 		{
-			sprite->frame = 0;
+			EntityState state = EntityGetState(ecs, EcsComponentMapIterKey(iter));
+			if (animator->current == state)
+			{
+				AnimatorTick(animator, current, deltatime);
+			}
+			else
+			{
+				Animation* animation = &animator->animations[state];
+				if (animation)
+				{
+					AnimatorStart(animator, animation->start);
+					animator->current = state;
+				}
+			}
+
+			sprite->frame = animator->frame;
 		}
 		else
 		{
-			AnimatorTick(animator, current, deltatime);
-			PlayAnimation(animator, EntityGetState(ecs, EcsComponentMapIterKey(iter)));
-			sprite->frame = animator->frame;
+			sprite->frame = 0;
 		}
 	}
 }

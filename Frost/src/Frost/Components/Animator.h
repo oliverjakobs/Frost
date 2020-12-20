@@ -21,10 +21,9 @@ typedef struct
 	float clock;
 } Animator;
 
-void AnimatorStart(Animator* animator, Animation* animation);
-void AnimatorTick(Animator* animator, Animation* animation, float deltatime);
-
 void AnimatorFree(void* block);
+
+void AnimatorStart(Animator* animator, int start);
 
 void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
 

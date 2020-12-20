@@ -7,8 +7,7 @@
 
 #include "Frost/Frost.h"
 
-
-int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources)
+int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const char* start, Resources* resources)
 {
 	if (tb_hashmap_alloc(&scene->scene_register, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 	if (tb_hashmap_alloc(&scene->templates, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
@@ -18,13 +17,13 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 	tb_hashmap_set_key_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	tb_hashmap_set_value_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 
-	char* json = ignisReadFile(path, NULL);
+	char* json = ignisReadFile(reg, NULL);
 
 	if (!json)
 	{
 		tb_hashmap_free(&scene->scene_register);
 		tb_hashmap_free(&scene->templates);
-		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", path);
+		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", reg);
 		return 0;
 	}
 
@@ -67,12 +66,12 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 
 	free(json);
 
+	scene->ecs = ecs;
 	scene->camera = camera;
 	scene->resources = resources;
 
 	SceneClearActive(scene);
-
-	EcsInit(&scene->ecs);
+	SceneChangeActive(scene, start);
 
 	return 1;
 }
@@ -80,8 +79,6 @@ int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resourc
 void SceneDestroy(Scene* scene)
 {
 	SceneClearActive(scene);
-
-	EcsDestroy(&scene->ecs);
 
 	tb_hashmap_free(&scene->scene_register);
 	tb_hashmap_free(&scene->templates);
@@ -112,7 +109,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 void SceneClearActive(Scene* scene)
 {
 	BackgroundFree(&scene->background);
-	EcsClear(&scene->ecs);
+	EcsClear(scene->ecs);
 
 	memset(scene->name, '\0', APPLICATION_STR_LEN);
 	scene->width = 0.0f;
@@ -128,19 +125,19 @@ void SceneOnUpdate(Scene* scene, float deltatime)
 {
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltatime);
 
-	EcsOnUpdate(&scene->ecs, deltatime);
+	EcsOnUpdate(scene->ecs, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
 }
 
 int SceneLoad(Scene* scene, const char* path)
@@ -184,25 +181,25 @@ int SceneLoad(Scene* scene, const char* path)
 			value = tb_json_array_step(value, &entity);
 
 			char name[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
+			tb_json_string(entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
 
-			float x = tb_json_float((char*)entity.value, "[1", NULL, 0.0f);
-			float y = tb_json_float((char*)entity.value, "[2", NULL, 0.0f);
+			float x = tb_json_float(entity.value, "[1", NULL, 0.0f);
+			float y = tb_json_float(entity.value, "[2", NULL, 0.0f);
 
-			float w = tb_json_float((char*)entity.value, "[3", NULL, 0.0f);
-			float h = tb_json_float((char*)entity.value, "[4", NULL, 0.0f);
+			float w = tb_json_float(entity.value, "[3", NULL, 0.0f);
+			float h = tb_json_float(entity.value, "[4", NULL, 0.0f);
 
-			float parallax = tb_json_float((char*)entity.value, "[5", NULL, 0.0f);
+			float parallax = tb_json_float(entity.value, "[5", NULL, 0.0f);
 
 			BackgroundPushLayer(background, ResourcesGetTexture2D(scene->resources, name), x, y, w, h, parallax);
 		}
 	}
 
-	tb_json_read((char*)json, &element, "{'templates'");
+	tb_json_read(json, &element, "{'templates'");
 
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
-		char* value = (char*)element.value;
+		char* value = element.value;
 
 		for (size_t i = 0; i < element.elements; ++i)
 		{
@@ -210,13 +207,13 @@ int SceneLoad(Scene* scene, const char* path)
 			value = tb_json_array_step(value, &entity_template);
 
 			char templ[APPLICATION_STR_LEN];
-			tb_json_string((char*)entity_template.value, "[0", templ, APPLICATION_STR_LEN, NULL);
+			tb_json_string(entity_template.value, "[0", templ, APPLICATION_STR_LEN, NULL);
 
 			vec2 pos;
-			pos.x = tb_json_float((char*)entity_template.value, "[1[0", NULL, 0.0f);
-			pos.y = tb_json_float((char*)entity_template.value, "[1[1", NULL, 0.0f);
+			pos.x = tb_json_float(entity_template.value, "[1[0", NULL, 0.0f);
+			pos.y = tb_json_float(entity_template.value, "[1[1", NULL, 0.0f);
 
-			int z_index = tb_json_int((char*)entity_template.value, "[2", NULL, 0);
+			int z_index = tb_json_int(entity_template.value, "[2", NULL, 0);
 
 			/* Load Template */
 			if (!SceneLoadTemplate(scene, templ, EcsEntityGetNextID(), pos, z_index))
@@ -283,7 +280,7 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (EcsListNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
+	for (EcsListNode* it = EcsGetComponentList(scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
 	{
 		tb_jwrite_array_array(&jwc);
 
@@ -295,7 +292,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_array_string(&jwc, templ->templ);
 
 		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, EcsComponentNodeEntity(it));
+		vec2 pos = GetEntityPosition(scene->ecs, EcsComponentNodeEntity(it));
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -303,7 +300,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsComponentNodeEntity(it)));
+		tb_jwrite_array_int(&jwc, EntityGetZIndex(scene->ecs, EcsComponentNodeEntity(it)));
 
 		tb_jwrite_end(&jwc);
 
@@ -355,11 +352,11 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	Template t;
 	t.templ = malloc(strlen(templ));
 	strcpy(t.templ, templ);
-	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
+	EcsAddOrderComponent(scene->ecs, entity, COMPONENT_TEMPLATE, &t);
 	/* TODO: Free template? */
 
 	EntityState state = ENTITY_STATE_NULL;
-	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
+	EcsAddDataComponent(scene->ecs, entity, COMPONENT_STATE, &state);
 
 	/* Components */
 	TransformLoad(scene, entity, pos, z_index, json);

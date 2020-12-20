@@ -12,6 +12,21 @@
 #define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
 #define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
 
+#define ECS_COMPONENT_REQUIRE(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), type); \
+	if (!var) continue
+
+#define ECS_COMPONENT_REQUIRE_NODE(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsComponentNodeEntity(iter), type); \
+	if (!var) continue
+
+#define ECS_COMPONENT_OPTIONAL(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), type)
+
+#define ECS_COMPONENT_OPTIONAL_NODE(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsComponentNodeEntity(iter), type)
+
+
 typedef uint32_t EcsComponentType;
 
 typedef struct EcsUpdateSystem EcsUpdateSystem;

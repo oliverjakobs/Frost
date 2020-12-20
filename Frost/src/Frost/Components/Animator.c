@@ -8,31 +8,15 @@
 
 #include <stdlib.h>
 
-void AnimatorStart(Animator* animator, Animation* animation)
-{
-	animator->frame = animation->start;
-	animator->clock = 0.0f;
-}
-
-void AnimatorTick(Animator* animator, Animation* animation, float deltatime)
-{
-	animator->clock += deltatime;
-
-	// change frame
-	if (animator->clock > animation->delay)
-	{
-		animator->clock = 0.0f;
-		animator->frame++;
-	}
-
-	// restart animation
-	if (animator->frame >= animation->start + animation->length || animator->frame < animation->start)
-		AnimatorStart(animator, animation);
-}
-
 void AnimatorFree(void* block)
 {
 	free(block);
+}
+
+void AnimatorStart(Animator* animator, int start)
+{
+	animator->frame = start;
+	animator->clock = 0.0f;
 }
 
 /* TODO: improve animation storage */
@@ -78,6 +62,6 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char*
 
 			AnimatorAddAnimation(&animator, state, &animation);
 		}
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
+		EcsAddDataComponent(scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
 	}
 }

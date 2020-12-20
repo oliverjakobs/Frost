@@ -16,7 +16,7 @@ typedef struct
 
 	Camera* camera;
 	Resources* resources;
-	Ecs ecs;
+	Ecs* ecs;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
@@ -26,7 +26,7 @@ typedef struct
 	Background background;
 } Scene;
 
-int SceneInit(Scene* scene, Camera* camera, const char* path, Resources* resources);
+int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const char* start, Resources* resources);
 void SceneDestroy(Scene* scene);
 
 void SceneChangeActive(Scene* scene, const char* name);

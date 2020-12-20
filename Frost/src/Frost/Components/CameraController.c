@@ -16,12 +16,14 @@ void CameraControllerLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_inde
 		comp.scene_w = scene->width;
 		comp.scene_h = scene->height;
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
+		EcsAddDataComponent(scene->ecs, entity, COMPONENT_CAMERA, &comp);
 	}
 }
 
-void CameraMoveConstrained(CameraController* controller, vec2 pos, float constraint)
+void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, float constraint)
 {
+	if (!controller) return;
+
 	float center_x = controller->camera->position.x;
 	float center_y = controller->camera->position.y;
 
@@ -54,4 +56,6 @@ void CameraMoveConstrained(CameraController* controller, vec2 pos, float constra
 
 	controller->camera->position.x = center_x;
 	controller->camera->position.y = center_y;
+
+	CameraUpdateViewOrtho(controller->camera);
 }

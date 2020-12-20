@@ -9,12 +9,9 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Movement* movement = EcsComponentMapIterValue(iter);
-
-		Sprite* sprite = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_SPRITE);
-		RigidBody* body = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
-		if (!(body && sprite)) continue;
-
-		CameraController* camera = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_CAMERA);
+		ECS_COMPONENT_REQUIRE(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
+		ECS_COMPONENT_REQUIRE(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
+		ECS_COMPONENT_OPTIONAL(CameraController, ecs, camera, iter, COMPONENT_CAMERA);
 
 		vec2 velocity;
 		velocity.x = (-InputKeyPressed(KEY_A) + InputKeyPressed(KEY_D)) * movement->speed;
@@ -40,10 +37,6 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 		body->velocity = velocity;
 
 		// set view
-		if (camera)
-		{
-			CameraMoveConstrained(camera, GetEntityPosition(ecs, EcsComponentMapIterKey(iter)), 0.5f);
-			CameraUpdateViewOrtho(camera->camera);
-		}
+		CameraControllerMoveConstrained(camera, GetEntityPosition(ecs, EcsComponentMapIterKey(iter)), 0.5f);
 	}
 }

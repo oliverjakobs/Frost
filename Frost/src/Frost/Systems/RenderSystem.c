@@ -12,9 +12,7 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 	for (EcsListNode* it = list->first; it; it = EcsComponentNodeNext(it))
 	{
 		ZIndex* indexed = EcsComponentNodeComponent(it);
-		Sprite* sprite = EcsGetDataComponent(ecs, EcsComponentNodeEntity(it), COMPONENT_SPRITE);
-
-		if (!sprite) continue;
+		ECS_COMPONENT_REQUIRE_NODE(Sprite, ecs, sprite, it, COMPONENT_SPRITE);
 
 		vec2 pos = GetEntityPosition(ecs, EcsComponentNodeEntity(it));
 
@@ -52,16 +50,13 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Transform* transform = EcsComponentMapIterValue(iter);
-
-		vec2 pos = GetEntityPosition(ecs, EcsComponentMapIterKey(iter));
-		Primitives2DRenderCircle(pos.x, pos.y, 2.0f, IGNIS_WHITE);
+		Primitives2DRenderCircle(transform->position.x, transform->position.y, 2.0f, IGNIS_WHITE);
 	}
 
 	map = EcsGetComponentMap(ecs, COMPONENT_INTERACTION);
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Interaction* interaction = EcsComponentMapIterValue(iter);
-
 		vec2 cen = GetEntityCenter(ecs, EcsComponentMapIterKey(iter));
 		Primitives2DRenderCircle(cen.x, cen.y, interaction->radius, IGNIS_WHITE);
 	}

@@ -46,7 +46,7 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		InventorySetCellContent(&inv, 3, 3);
 		*/
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INVENTORY, &inv);
+		EcsAddDataComponent(scene->ecs, entity, COMPONENT_INVENTORY, &inv);
 	}
 }
 

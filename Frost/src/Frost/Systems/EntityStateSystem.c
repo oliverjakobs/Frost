@@ -13,7 +13,7 @@ void EntityStateSystem(Ecs* ecs, float deltatime)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		EntityState* state = EcsComponentMapIterValue(iter);
-		RigidBody* body = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_RIGID_BODY);
+		ECS_COMPONENT_OPTIONAL(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
 
 		if (EntityStateJump(body)) *state = ENTITY_STATE_JUMP;
 		else if (EntityStateFall(body)) *state = ENTITY_STATE_FALL;

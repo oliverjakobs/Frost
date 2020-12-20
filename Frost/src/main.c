@@ -2,6 +2,7 @@
 
 Camera camera;
 
+Ecs ecs;
 Scene scene;
 SceneEditor scene_editor;
 
@@ -32,21 +33,19 @@ void OnInit(Application* app)
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
 	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
 
-	SceneInit(&scene, &camera, "res/register.json", &app->resources);
-	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
-
-
 	/* ecs */
-	LoadEcs(&scene.ecs);
+	EcsInit(&ecs);
+	LoadEcs(&ecs);
 
-	/* setup starting state */
-	SceneChangeActive(&scene, "scene");
+	SceneInit(&scene, &ecs, &camera, "res/register.json", "scene", &app->resources);
+	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&scene_editor);
 }
 
 void OnDestroy(Application* app)
 {
 	SceneDestroy(&scene);
+	EcsDestroy(&ecs);
 
 	FontRendererDestroy();
 	Primitives2DDestroy();
@@ -101,7 +100,7 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor, &scene);
 
-	EcsOnRender(&scene.ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(&camera));
+	EcsOnRender(scene.ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(&camera));
 }
 
 void OnRenderDebug(Application* app)
@@ -136,8 +135,8 @@ void OnRenderDebug(Application* app)
 
 		EcsEntityID player = 0;
 		FontRendererTextFieldLine("Player ID: %d", player);
-		FontRendererTextFieldLine("State: %s", EntityGetStateString(&scene.ecs, player));
-		vec2 position = GetEntityPosition(&scene.ecs, player);
+		FontRendererTextFieldLine("State: %s", EntityGetStateString(scene.ecs, player));
+		vec2 position = GetEntityPosition(scene.ecs, player);
 		FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
 		FontRendererTextFieldLine("Precise Y: %f", position.y);
 
