@@ -30,7 +30,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		body.collides_left = 0;
 		body.collides_right = 0;
 
-		EcsAddDataComponent(scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
 	}
 }
 

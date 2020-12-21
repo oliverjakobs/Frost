@@ -62,6 +62,6 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char*
 
 			AnimatorAddAnimation(&animator, state, &animation);
 		}
-		EcsAddDataComponent(scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
 	}
 }

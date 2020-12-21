@@ -7,7 +7,16 @@
 
 #include "Frost/Frost.h"
 
-int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const char* start, Resources* resources)
+int SceneInit(Scene* scene, Camera* camera, Resources* resources, int (*load)(Ecs* ecs))
+{
+	scene->camera = camera;
+	scene->resources = resources;
+
+	EcsInit(&scene->ecs);
+	return load ? load(&scene->ecs) : 1;
+}
+
+int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 {
 	if (tb_hashmap_alloc(&scene->scene_register, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 	if (tb_hashmap_alloc(&scene->templates, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
@@ -66,10 +75,6 @@ int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const cha
 
 	free(json);
 
-	scene->ecs = ecs;
-	scene->camera = camera;
-	scene->resources = resources;
-
 	SceneClearActive(scene);
 	SceneChangeActive(scene, start);
 
@@ -79,6 +84,7 @@ int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const cha
 void SceneDestroy(Scene* scene)
 {
 	SceneClearActive(scene);
+	EcsDestroy(&scene->ecs);
 
 	tb_hashmap_free(&scene->scene_register);
 	tb_hashmap_free(&scene->templates);
@@ -109,7 +115,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 void SceneClearActive(Scene* scene)
 {
 	BackgroundFree(&scene->background);
-	EcsClear(scene->ecs);
+	EcsClear(&scene->ecs);
 
 	memset(scene->name, '\0', APPLICATION_STR_LEN);
 	scene->width = 0.0f;
@@ -125,19 +131,24 @@ void SceneOnUpdate(Scene* scene, float deltatime)
 {
 	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltatime);
 
-	EcsOnUpdate(scene->ecs, deltatime);
+	EcsOnUpdate(&scene->ecs, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
 
-	EcsOnRender(scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
+}
+
+void SceneOnRenderUI(Scene* scene)
+{
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRender(scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
 }
 
 int SceneLoad(Scene* scene, const char* path)
@@ -280,7 +291,7 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (EcsListNode* it = EcsGetComponentList(scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
+	for (EcsListNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
 	{
 		tb_jwrite_array_array(&jwc);
 
@@ -292,7 +303,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_array_string(&jwc, templ->templ);
 
 		/* pos */
-		vec2 pos = GetEntityPosition(scene->ecs, EcsComponentNodeEntity(it));
+		vec2 pos = GetEntityPosition(&scene->ecs, EcsComponentNodeEntity(it));
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -300,7 +311,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(scene->ecs, EcsComponentNodeEntity(it)));
+		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsComponentNodeEntity(it)));
 
 		tb_jwrite_end(&jwc);
 
@@ -352,11 +363,11 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	Template t;
 	t.templ = malloc(strlen(templ));
 	strcpy(t.templ, templ);
-	EcsAddOrderComponent(scene->ecs, entity, COMPONENT_TEMPLATE, &t);
+	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
 	/* TODO: Free template? */
 
 	EntityState state = ENTITY_STATE_NULL;
-	EcsAddDataComponent(scene->ecs, entity, COMPONENT_STATE, &state);
+	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
 
 	/* Components */
 	TransformLoad(scene, entity, pos, z_index, json);

@@ -14,9 +14,9 @@ typedef struct
 	tb_hashmap scene_register;
 	tb_hashmap templates;
 
+	Ecs ecs;
 	Camera* camera;
 	Resources* resources;
-	Ecs* ecs;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
@@ -26,7 +26,8 @@ typedef struct
 	Background background;
 } Scene;
 
-int SceneInit(Scene* scene, Ecs* ecs, Camera* camera, const char* reg, const char* start, Resources* resources);
+int SceneInit(Scene* scene, Camera* camera, Resources* resources, int (*load)(Ecs* ecs));
+int SceneLoadScenes(Scene* scene, const char* reg, const char* start);
 void SceneDestroy(Scene* scene);
 
 void SceneChangeActive(Scene* scene, const char* name);
@@ -35,6 +36,7 @@ void SceneClearActive(Scene* scene);
 void SceneOnEvent(Scene* scene, Event e);
 void SceneOnUpdate(Scene* scene, float deltatime);
 void SceneOnRender(Scene* scene);
+void SceneOnRenderUI(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
 
 int SceneLoad(Scene* scene, const char* path);

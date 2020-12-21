@@ -17,7 +17,7 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* j
 		sprite.width = tb_json_float(element.value, "{'size'[0", NULL, -1.0f);
 		sprite.height = tb_json_float(element.value, "{'size'[1", NULL, -1.0f);
 
-		Transform* transform = EcsGetDataComponent(scene->ecs, entity, COMPONENT_TRANSFORM);
+		Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
 
 		if (sprite.width < 0.0f && transform) sprite.width = transform->size.x;
 		if (sprite.height < 0.0f && transform) sprite.height = transform->size.y;
@@ -31,8 +31,8 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* j
 
 		if (sprite.texture)
 		{
-			EcsAddDataComponent(scene->ecs, entity, COMPONENT_SPRITE, &sprite);
-			EcsAddOrderComponent(scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
+			EcsAddDataComponent(&scene->ecs, entity, COMPONENT_SPRITE, &sprite);
+			EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
 		}
 		else
 		{

@@ -97,7 +97,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 		}
 		else if (strcmp(spec, "entities") == 0)
 		{
-			EcsComponentList* list = EcsGetComponentList(scene->ecs, COMPONENT_TEMPLATE);
+			EcsComponentList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
 			for (EcsListNode* it = list->first; it; it = EcsComponentNodeNext(it))
 			{
 				Template* templ = EcsComponentNodeComponent(it);

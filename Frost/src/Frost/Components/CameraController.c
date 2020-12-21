@@ -16,7 +16,7 @@ void CameraControllerLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_inde
 		comp.scene_w = scene->width;
 		comp.scene_h = scene->height;
 
-		EcsAddDataComponent(scene->ecs, entity, COMPONENT_CAMERA, &comp);
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
 	}
 }
 

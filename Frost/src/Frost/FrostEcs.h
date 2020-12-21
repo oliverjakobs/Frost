@@ -60,6 +60,6 @@ typedef enum
 	RENDER_INVENTORY
 } RenderSystemType;
 
-void LoadEcs(Ecs* ecs);
+int LoadEcs(Ecs* ecs);
 
 #endif /* !FROST_ECS_H */

@@ -39,11 +39,13 @@ EcsRenderSystemLoader render_systems[] =
 	[RENDER_INVENTORY] =	{ ECS_RENDER_STAGE_UI,		InventoryRenderSystem }
 };
 
-void LoadEcs(Ecs* ecs)
+int LoadEcs(Ecs* ecs)
 {
 	EcsLoadUpdateSystems(ecs, update_systems, ECS_SIZEOF_LOADER(update_systems));
 	EcsLoadRenderSystems(ecs, render_systems, ECS_SIZEOF_LOADER(render_systems));
 
 	EcsLoadDataComponents(ecs, data_comps, ECS_SIZEOF_LOADER(data_comps));
 	EcsLoadOrderComponents(ecs, order_comps, ECS_SIZEOF_LOADER(order_comps));
+
+	return 1;
 }
