@@ -114,6 +114,7 @@
     <ClInclude Include="src\Frost\Components\Inventory.h" />
     <ClInclude Include="src\Frost\Components\Movement.h" />
     <ClInclude Include="src\Frost\Components\Order.h" />
+    <ClInclude Include="src\Frost\Components\Player.h" />
     <ClInclude Include="src\Frost\Components\RigidBody.h" />
     <ClInclude Include="src\Frost\Components\Sprite.h" />
     <ClInclude Include="src\Frost\Components\Transform.h" />
@@ -184,6 +185,7 @@
     <ClCompile Include="src\Frost\Components\Inventory.c" />
     <ClCompile Include="src\Frost\Components\Movement.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />
+    <ClCompile Include="src\Frost\Components\Player.c" />
     <ClCompile Include="src\Frost\Components\RigidBody.c" />
     <ClCompile Include="src\Frost\Components\Sprite.c" />
     <ClCompile Include="src\Frost\Components\Transform.c" />
@@ -265,6 +267,7 @@
     <Image Include="res\textures\background_2\0.png" />
     <Image Include="res\textures\background_2\1.png" />
     <Image Include="res\textures\box.png" />
+    <Image Include="res\textures\chest.png" />
     <Image Include="res\textures\door.png" />
     <Image Include="res\textures\floor.png" />
     <Image Include="res\textures\items.png" />

@@ -89,18 +89,14 @@ void InputMousePosition(float* x, float* y)
 float InputMouseX()
 {
 	float x;
-
 	InputMousePosition(&x, NULL);
-
 	return x;
 }
 
 float InputMouseY()
 {
 	float y;
-
 	InputMousePosition(NULL, &y);
-
 	return y;
 }
 

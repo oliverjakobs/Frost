@@ -35,10 +35,10 @@ inline int32_t tb_min_i32(int32_t a, int32_t b) { return a < b ? a : b; }
 inline int64_t tb_min_i64(int64_t a, int64_t b) { return a < b ? a : b; }
 inline float tb_min_f(float a, float b) { return a < b ? a : b; }
 
-inline uint8_t tb_between_i(int start, int end, int value) { return (value >= start) && (value <= end); }
-inline uint8_t tb_between_i32(int start, int end, int value) { return (value >= start) && (value <= end); }
-inline uint8_t tb_between_i64(int start, int end, int value) { return (value >= start) && (value <= end); }
-inline uint8_t tb_between_f(int start, int end, int value) { return (value >= start) && (value <= end); }
+inline uint8_t tb_between_i(int start, int end, int value) { return (value <= end) && (value >= start); }
+inline uint8_t tb_between_i32(int32_t start, int32_t end, int32_t value) { return (value <= end) && (value >= start); }
+inline uint8_t tb_between_i64(int64_t start, int64_t end, int64_t value) { return (value <= end) && (value >= start); }
+inline uint8_t tb_between_f(float start, float end, float value) { return (value <= end) && (value >= start); }
 
 
 #endif /* !TOOLBOX_H */

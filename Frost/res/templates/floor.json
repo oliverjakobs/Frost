@@ -5,6 +5,7 @@
   },
   "rigidbody": {
     "type": 0,
+    "filter": 1,
     "halfsize": [ 128.0, 192.0 ],
     "offset": [ 0.0, 192.0 ]
   },

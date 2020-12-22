@@ -3,6 +3,7 @@
 		"player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
 		"trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
 		"door": { "path": "res/textures/door.png", "atlas": [ 1, 2 ] },
+		"chest": { "path": "res/textures/chest.png" },
 		"items": { "path": "res/textures/items.png", "atlas": [ 1, 6 ] },
 		"machine": { "path": "res/textures/machine.png" },
 		"floor": { "path": "res/textures/floor.png" },

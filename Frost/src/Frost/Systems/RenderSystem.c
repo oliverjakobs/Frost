@@ -53,12 +53,13 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 		Primitives2DRenderCircle(transform->position.x, transform->position.y, 2.0f, IGNIS_WHITE);
 	}
 
-	map = EcsGetComponentMap(ecs, COMPONENT_INTERACTION);
+	map = EcsGetComponentMap(ecs, COMPONENT_INTERACTABLE);
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
-		Interaction* interaction = EcsComponentMapIterValue(iter);
+		Interactable* interactable = EcsComponentMapIterValue(iter);
 		vec2 cen = GetEntityCenter(ecs, EcsComponentMapIterKey(iter));
-		Primitives2DRenderCircle(cen.x, cen.y, interaction->radius, IGNIS_WHITE);
+		Primitives2DRenderCircle(cen.x, cen.y, interactable->min_radius, IGNIS_WHITE);
+		Primitives2DRenderCircle(cen.x, cen.y, interactable->max_radius, IGNIS_WHITE);
 	}
 
 	map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);

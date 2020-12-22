@@ -5,8 +5,10 @@
   },
   "rigidbody": {
     "type": 1,
-    "halfsize": [ 20.0, 30.0 ],
-    "offset": [ 0.0, 30.0 ]
+    "filter": 3
+  },
+  "player": {
+    "controls": { }
   },
   "sprite": {
     "texture": "player"
@@ -25,8 +27,8 @@
     "smooth": 0.5
   },
   "inventory": {
-    "rows": 1,
-    "columns": 4,
+    "grid": [ 1, 4 ],
+    "state": 2,
     "align": ["center", "bottom"],
     "save": "res/save/player_inv.json"
   },

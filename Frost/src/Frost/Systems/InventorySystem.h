@@ -6,7 +6,7 @@
 #include "Graphics/Resources.h"
 #include "../Components/Inventory.h"
 
-int InventorySystemInit(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding);
+int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera, float cell_size, float padding);
 
 typedef enum
 {

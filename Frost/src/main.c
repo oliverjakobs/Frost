@@ -31,7 +31,7 @@ void OnInit(Application* app)
 	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
 
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
-	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), camera.size, 64.0f, 8.0f);
+	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &camera, 64.0f, 8.0f);
 
 	/* ecs */
 	SceneInit(&scene, &camera, &app->resources, LoadEcs);

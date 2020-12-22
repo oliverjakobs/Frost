@@ -13,8 +13,8 @@ void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		Transform transform;
 		transform.position = pos;
 
-		transform.size.x = tb_json_float((char*)element.value, "{'size'[0", NULL, 0.0f);
-		transform.size.y = tb_json_float((char*)element.value, "{'size'[1", NULL, 0.0f);
+		transform.size.x = tb_json_float(element.value, "{'size'[0", NULL, 0.0f);
+		transform.size.y = tb_json_float(element.value, "{'size'[1", NULL, 0.0f);
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
 	}

@@ -14,8 +14,10 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 	{
 		Inventory inv;
 
-		int rows = tb_json_int(element.value, "{'rows'", NULL, 0);
-		int columns = tb_json_int(element.value, "{'columns'", NULL, 0);
+		int rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
+		int cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
+
+		inv.state = (InventoryState)tb_json_int(element.value, "{'state'", NULL, INVENTORY_CLOSED);
 
 		tb_json_element align;
 		tb_json_read(element.value, &align, "{'align'");
@@ -24,14 +26,12 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		{
 			char buffer[32];
 			tb_json_string(align.value, "[0", buffer, 32, NULL);
-
 			InventoryHAlign h_align = InventorySystemGetHAlign(buffer);
 
 			tb_json_string(align.value, "[1", buffer, 32, NULL);
-
 			InventoryVAlign v_align = InventorySystemGetVAlign(buffer);
 
-			InventoryCreateAligned(&inv, h_align, v_align, rows, columns);
+			InventoryCreateAligned(&inv, h_align, v_align, rows, cols);
 		}
 		else
 		{
@@ -39,12 +39,10 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		}
 
 		/* TODO load inv content */
-		/* 
 		InventorySetCellContent(&inv, 0, 3);
 		InventorySetCellContent(&inv, 1, 1);
 		InventorySetCellContent(&inv, 2, 2);
 		InventorySetCellContent(&inv, 3, 3);
-		*/
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INVENTORY, &inv);
 	}
@@ -59,6 +57,12 @@ void InventoryFree(Inventory* inv)
 	inv->size = vec2_zero();
 
 	inv->columns = inv->rows = 0;
+}
+
+void InventoryToggle(Inventory* inv)
+{
+	if (inv->state == INVENTORY_OPEN) inv->state = INVENTORY_CLOSED;
+	else if (inv->state == INVENTORY_CLOSED) inv->state = INVENTORY_OPEN;
 }
 
 int InventoryGetCellIndex(Inventory* inv, int row, int column)

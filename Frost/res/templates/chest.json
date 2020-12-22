@@ -4,12 +4,16 @@
     "size": [ 64.0, 44.0 ]
   },
   "sprite": {
-    "texture": "door",
-    "frame": 0
+    "texture": "chest"
   },
   "inventory": {
-    "rows": 3,
-    "columns": 2,
+    "grid": [ 3, 2 ],
     "align": ["left", "center"]
+  },
+  "interaction": {
+    "type": 1,
+    "min-radius": 64.0,
+    "max-radius": 128.0,
+    "interaction": 2
   }
 }

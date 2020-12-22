@@ -356,7 +356,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 
 	if (!json)
 	{
-		DEBUG_WARN("[Scenes] Couldn't read template (%s)", path);
+		DEBUG_WARN("[Scenes] Couldn't read template (%s)\n", path);
 		return 0;
 	}
 
@@ -376,9 +376,9 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	AnimatorLoad(scene, entity, pos, z_index, json);
 	MovementLoad(scene, entity, pos, z_index, json);
 	CameraControllerLoad(scene, entity, pos, z_index, json);
+	PlayerLoad(scene, entity, pos, z_index, json);
 	InventoryLoad(scene, entity, pos, z_index, json);
-	InteractorLoad(scene, entity, pos, z_index, json);
-	InteractionLoad(scene, entity, pos, z_index, json);
+	InteractableLoad(scene, entity, pos, z_index, json);
 
 	free(json);
 

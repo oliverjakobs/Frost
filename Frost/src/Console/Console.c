@@ -9,6 +9,8 @@
 const float CONSOLE_CURSOR_ON = 1.0f;
 const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
+const char* CONSOLE_PROMPT = "> ";
+
 void ConsoleInit(Console* console, IgnisFont* font)
 {
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
@@ -22,8 +24,6 @@ void ConsoleInit(Console* console, IgnisFont* font)
 	console->font = font;
 	console->font_color = IGNIS_WHITE;
 	console->bg_color = (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f };
-
-	console->prompt = "> ";
 }
 
 void ConsoleOnEvent(Console* console, Event* e)
@@ -111,7 +111,7 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 	float text_y = y - padding;
 	float cursor_x = text_x 
 		+ ignisFontGetTextWidth(console->font, console->cmd_buffer, console->cusor_pos) 
-		+ ignisFontGetTextWidth(console->font, console->prompt, strlen(console->prompt));
+		+ ignisFontGetTextWidth(console->font, CONSOLE_PROMPT, strlen(CONSOLE_PROMPT));
 	float cursor_y = y - (padding / 2.0f);
 	float cursor_w = console->cursor_size;
 	float cursor_h = -(h - (padding * 1.5f));
@@ -130,7 +130,7 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 
 	FontRendererStart(proj);
 
-	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", console->prompt, console->cusor_pos, console->cmd_buffer);
+	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer);
 
 	FontRendererFlush();
 }
@@ -138,7 +138,6 @@ void ConsoleRender(Console* console, float x, float y, float w, float h, float p
 void ConsoleOut(Console* console, const char* fmt, ...)
 {
 	char row[CONSOLE_OUT_ROW_SIZE];
-	memset(row, '\0', CONSOLE_OUT_ROW_SIZE);
 
 	va_list ap;
 	va_start(ap, fmt);

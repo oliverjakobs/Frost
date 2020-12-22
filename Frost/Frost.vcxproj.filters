@@ -278,6 +278,7 @@
     <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
     <ClInclude Include="src\Frost\Components\EntityState.h" />
     <ClInclude Include="src\ECS\Loader.h" />
+    <ClInclude Include="src\Frost\Components\Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -454,6 +455,7 @@
     <ClCompile Include="src\Frost\Components\EntityState.c" />
     <ClCompile Include="src\Frost\Components\Transform.c" />
     <ClCompile Include="src\ECS\Loader.c" />
+    <ClCompile Include="src\Frost\Components\Player.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -568,5 +570,6 @@
     <Image Include="res\textures\trees.png">
       <Filter>res\textures</Filter>
     </Image>
+    <Image Include="res\textures\chest.png" />
   </ItemGroup>
 </Project>

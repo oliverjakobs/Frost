@@ -26,7 +26,8 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 			if (EcsComponentMapIterKey(iter) == EcsComponentMapIterKey(other_iter)) continue;
 
 			RigidBody* other = EcsComponentMapIterValue(other_iter);
-			RigidBodyResolveCollision(body, other, old_position);
+			if (body->filter & other->filter)
+				RigidBodyResolveCollision(body, other, old_position);
 		}
 
 		transform->position = vec2_sub(body->position, body->offset);

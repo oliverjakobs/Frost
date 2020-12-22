@@ -11,9 +11,9 @@ EcsDataComponentLoader data_comps[] =
 	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
 	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorFree },
 	[COMPONENT_CAMERA] =		{ sizeof(CameraController), NULL },
+	[COMPONENT_PLAYER] =		{ sizeof(Player), NULL },
 	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
-	[COMPONENT_INTERACTION] =	{ sizeof(Interaction),		NULL },
-	[COMPONENT_INTERACTOR] =	{ sizeof(Interactor),		NULL }
+	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL }
 };
 
 EcsOrderComponentLoader order_comps[] =

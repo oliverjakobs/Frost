@@ -11,6 +11,13 @@ typedef struct
 	vec2 pos;
 } InventoryCell;
 
+typedef enum
+{
+	INVENTORY_CLOSED,
+	INVENTORY_OPEN,
+	INVENTORY_FIXED
+} InventoryState;
+
 typedef struct
 {
 	vec2 pos;
@@ -19,13 +26,16 @@ typedef struct
 	int rows;
 	int columns;
 
+	InventoryState state;
+
 	InventoryCell* cells;
 } Inventory;
-
 
 void InventoryLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
 
 void InventoryFree(Inventory* inv);
+
+void InventoryToggle(Inventory* inv);
 
 int InventoryGetCellIndex(Inventory* inv, int row, int column);
 

@@ -2,25 +2,35 @@
 
 #include "Frost/FrostEcs.h"
 
+#include "toolbox/toolbox.h"
+
 void InteractionSystem(Ecs* ecs, float deltatime)
 {
-	EcsComponentMap* interactors = EcsGetComponentMap(ecs, COMPONENT_INTERACTOR);
-	for (EcsComponentMapIter* interactor_iter = EcsComponentMapIterator(interactors); interactor_iter; interactor_iter = EcsComponentMapIterNext(interactors, interactor_iter))
+	EcsComponentMap* p_map = EcsGetComponentMap(ecs, COMPONENT_PLAYER);
+	for (EcsComponentMapIter* p_iter = EcsComponentMapIterator(p_map); p_iter; p_iter = EcsComponentMapIterNext(p_map, p_iter))
 	{
-		Interactor* interactor = EcsComponentMapIterValue(interactor_iter);
-		vec2 interactor_center = GetEntityCenter(ecs, EcsComponentMapIterKey(interactor_iter));
+		Player* player = EcsComponentMapIterValue(p_iter);
+		vec2 p_center = GetEntityCenter(ecs, EcsComponentMapIterKey(p_iter));
 
-		EcsComponentMap* interactions = EcsGetComponentMap(ecs, COMPONENT_INTERACTION);
+		EcsComponentMap* interactions = EcsGetComponentMap(ecs, COMPONENT_INTERACTABLE);
 		for (EcsComponentMapIter* iter = EcsComponentMapIterator(interactions); iter; iter = EcsComponentMapIterNext(interactions, iter))
 		{
-			Interaction* interaction = EcsComponentMapIterValue(iter);
-			if (interaction->type <= interactor->type)
-			{
-				EcsEntityID interaction_entity = EcsComponentMapIterKey(iter);
-				vec2 center = GetEntityCenter(ecs, interaction_entity);
+			Interactable* interactable = EcsComponentMapIterValue(iter);
+			EcsEntityID interactable_entity = EcsComponentMapIterKey(iter);
+			vec2 center = GetEntityCenter(ecs, interactable_entity);
 
-				if (vec2_distance(center, interactor_center) <= interaction->radius)
-					printf("Interaction with %d\n", interaction_entity);
+			float distance = vec2_distance(center, p_center);
+			if (interactable->type == INTERACTION_TYPE_TOGGLE)
+			{
+				if (tb_between_f(interactable->min_radius, interactable->max_radius, distance) && InputKeyUp(interactable->key))
+					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
+			}
+			else if (interactable->type == INTERACTION_TYPE_RANGE)
+			{
+				if (distance <= interactable->min_radius && InputKeyUp(interactable->key))
+					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
+				else if (distance >= interactable->max_radius)
+					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 0);
 			}
 		}
 	}

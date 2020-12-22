@@ -10,6 +10,7 @@
 #include "Components/Sprite.h"
 #include "Components/Movement.h"
 #include "Components/CameraController.h"
+#include "Components/Player.h"
 #include "Components/Inventory.h"
 #include "Components/Interaction.h"
 
@@ -24,9 +25,9 @@ typedef enum
 	COMPONENT_SPRITE,
 	COMPONENT_ANIMATOR,
 	COMPONENT_CAMERA,
+	COMPONENT_PLAYER,
 	COMPONENT_INVENTORY,
-	COMPONENT_INTERACTION,
-	COMPONENT_INTERACTOR
+	COMPONENT_INTERACTABLE
 } DataComponentType;
 
 typedef enum

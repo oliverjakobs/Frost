@@ -21,8 +21,6 @@ typedef struct
 	IgnisFont* font;
 	IgnisColorRGBA font_color;
 	IgnisColorRGBA bg_color;
-
-	char* prompt;
 } Console;
 
 void ConsoleInit(Console* console, IgnisFont* font);

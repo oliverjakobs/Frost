@@ -22,7 +22,7 @@ static void InventoryCellIDReset(InventoryCellID* id)
 
 typedef struct
 {
-	vec2 screen_size;
+	Camera* camera;
 
 	float cell_size;
 	float padding;
@@ -35,9 +35,10 @@ typedef struct
 
 static InventorySystemData inventory_data;
 
-int InventorySystemInit(IgnisTexture2D* item_atlas, vec2 screen_size, float cell_size, float padding)
+
+int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera, float cell_size, float padding)
 {
-	inventory_data.screen_size = screen_size;
+	inventory_data.camera = camera;
 	inventory_data.item_atlas = item_atlas;
 	inventory_data.cell_size = cell_size;
 	inventory_data.padding = padding;
@@ -62,15 +63,6 @@ InventoryVAlign InventorySystemGetVAlign(const char* str)
 	if (strcmp(str, "center") == 0)	return INV_VALIGN_CENTER;
 	if (strcmp(str, "bottom") == 0)	return INV_VALIGN_BOTTOM;
 	return INV_VALIGN_TOP;
-}
-
-static vec2 InventorySystemGetMousePos(vec2 mouse)
-{
-	vec2 pos;
-	pos.x = mouse.x - (inventory_data.screen_size.x / 2.0f);
-	pos.y = (inventory_data.screen_size.y - mouse.y) - (inventory_data.screen_size.y / 2.0f);
-
-	return pos;
 }
 
 static float InventorySystemGetCellOffset(int index)
@@ -113,16 +105,16 @@ int InventoryCreateAligned(Inventory* inv, InventoryHAlign h_align, InventoryVAl
 
 	switch (h_align)
 	{
-	case INV_HALIGN_LEFT: pos.x = -inventory_data.screen_size.x * 0.5f; break;
+	case INV_HALIGN_LEFT: pos.x = -inventory_data.camera->size.x * 0.5f; break;
 	case INV_HALIGN_CENTER: pos.x = -w * 0.5f; break;
-	case INV_HALIGN_RIGHT: pos.x = (inventory_data.screen_size.x * 0.5f) - w; break;
+	case INV_HALIGN_RIGHT: pos.x = (inventory_data.camera->size.x * 0.5f) - w; break;
 	}
 
 	switch (v_align)
 	{
-	case INV_VALIGN_TOP: pos.y = (inventory_data.screen_size.y * 0.5f) - h; break;
+	case INV_VALIGN_TOP: pos.y = (inventory_data.camera->size.y * 0.5f) - h; break;
 	case INV_VALIGN_CENTER: pos.y = -h * 0.5f; break;
-	case INV_VALIGN_BOTTOM: pos.y = -inventory_data.screen_size.y * 0.5f; break;
+	case INV_VALIGN_BOTTOM: pos.y = -inventory_data.camera->size.y * 0.5f; break;
 	}
 
 	return InventoryCreate(inv, pos, rows, columns);
@@ -156,7 +148,7 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 {
 	InventoryCellIDReset(&inventory_data.hover);
 
-	vec2 mouse = InventorySystemGetMousePos(InputMousePositionVec2());
+	vec2 mouse = CameraGetMousePos(inventory_data.camera, InputMousePositionVec2());
 
 	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
@@ -195,6 +187,7 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Inventory* inv = EcsComponentMapIterValue(iter);
+		if (inv->state == INVENTORY_CLOSED) continue;
 
 		Primitives2DFillRect(inv->pos.x, inv->pos.y, inv->size.x, inv->size.y, bg);
 		Primitives2DRenderRect(inv->pos.x, inv->pos.y, inv->size.x, inv->size.y, IGNIS_WHITE);
@@ -218,6 +211,7 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		Inventory* inv = EcsComponentMapIterValue(iter);
+		if (inv->state == INVENTORY_CLOSED) continue;
 
 		for (int cell_index = 0; cell_index < (inv->rows * inv->columns); ++cell_index)
 		{
@@ -240,7 +234,7 @@ void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	{
 		Inventory* inv = EcsGetDataComponent(ecs, inventory_data.dragged.entity, COMPONENT_INVENTORY);
 
-		vec2 mouse_pos = InventorySystemGetMousePos(InputMousePositionVec2());
+		vec2 mouse_pos = CameraGetMousePos(inventory_data.camera, InputMousePositionVec2());
 		float cell_x = mouse_pos.x - (inventory_data.cell_size / 2.0f);
 		float cell_y = mouse_pos.y - (inventory_data.cell_size / 2.0f);
 
