@@ -16,6 +16,7 @@ void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size
 typedef struct
 {
     size_t element_size;
+    void (*free_func)(void*);
     int (*cmp_func)(const void*, const void*);
 } EcsOrderComponentLoader;
 

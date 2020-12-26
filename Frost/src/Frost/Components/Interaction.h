@@ -26,7 +26,7 @@ typedef struct
 	int key;
 } Interactable;
 
-void InteractableLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
+void InteractableLoad(Scene* scene, EcsEntityID entity, char* json);
 
 int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active);
 

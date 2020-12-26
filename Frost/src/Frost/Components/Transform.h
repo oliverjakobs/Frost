@@ -11,7 +11,7 @@ typedef struct
 	vec2 size;
 } Transform;
 
-void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
+void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, char* json);
 
 EcsEntityID GetEntityAt(Ecs* ecs, vec2 pos);
 

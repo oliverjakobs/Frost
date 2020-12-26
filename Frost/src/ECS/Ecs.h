@@ -65,7 +65,7 @@ EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
 EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);
 
 /* Data Components */
-int EcsRegisterDataComponent(Ecs* ecs, size_t element_size, void (*free_func)(void*));
+int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, void (*free)(void*));
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
 void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
@@ -73,7 +73,7 @@ void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 /* Order Components */
-int EcsRegisterOrderComponent(Ecs* ecs, size_t  element_size, int (*cmp)(const void*, const void*));
+int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*));
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
 void* EcsGetOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);

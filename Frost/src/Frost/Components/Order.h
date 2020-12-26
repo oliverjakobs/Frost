@@ -1,12 +1,15 @@
 #ifndef ENTITY_ORDER_H
 #define ENTITY_ORDER_H
 
-#include "ECS/Ecs.h"
+#include "Scenes/Scene.h"
 
 typedef struct
 {
 	char* templ;
 } Template;
+
+void TemplateLoad(Scene* scene, EcsEntityID entity, const char* templ);
+void TemplateFree(Template* templ);
 
 typedef int ZIndex;
 

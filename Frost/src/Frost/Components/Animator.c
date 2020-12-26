@@ -32,7 +32,7 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
 	return 1;
 }
 
-void AnimatorLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'animation'");

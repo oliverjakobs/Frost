@@ -12,10 +12,39 @@ struct EcsListNode
 	EcsListNode* next;
 };
 
-int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, int (*cmp)(const void*, const void*))
+static EcsListNode* EcsComponentNodeAlloc(const void* component, EcsEntityID entity, size_t size)
+{
+	EcsListNode* node = EcsMemAlloc(sizeof(EcsListNode));
+
+	if (node)
+	{
+		node->entity = entity;
+		node->component = EcsMemDup(component, size);
+		node->next = NULL;
+	}
+
+	return node;
+}
+
+static void EcsComponentNodeFree(const EcsComponentList* list, EcsListNode* node)
+{
+	if (list->free_func) list->free_func(node->component);
+	EcsMemFree(node->component);
+	EcsMemFree(node);
+}
+
+static int EcsComponentNodeCmp(const EcsListNode* left, const EcsListNode* right, int (*cmp_func)(const void*, const void*))
+{
+	if (cmp_func) return cmp_func(left->component, right->component);
+
+	return left->entity - right->entity;
+}
+
+int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*))
 {
 	list->first = NULL;
 	list->element_size = elem_size;
+	list->free_func = free;
 	list->cmp_func = cmp;
 
 	return 1;
@@ -35,32 +64,11 @@ void EcsComponentListClear(EcsComponentList* list)
 	while (list->first)
 	{
 		next = list->first->next;
-		EcsMemFree(list->first);
+		EcsComponentNodeFree(list, list->first);
 		list->first = next;
 	}
 
 	list->first = NULL;
-}
-
-static EcsListNode* EcsComponentNodeAlloc(const void* component, EcsEntityID entity, size_t size)
-{
-	EcsListNode* node = EcsMemAlloc(sizeof(EcsListNode));
-
-	if (node)
-	{
-		node->entity = entity;
-		node->component = EcsMemDup(component, size);
-		node->next = NULL;
-	}
-
-	return node;
-}
-
-static int EcsComponentNodeCmp(const EcsListNode* left, const EcsListNode* right, int (*cmp_func)(const void*, const void*))
-{
-	if (cmp_func) return cmp_func(left->component, right->component);
-
-	return left->entity - right->entity;
 }
 
 void* EcsComponentListInsert(EcsComponentList* list, EcsEntityID entity, void* component)
@@ -102,7 +110,7 @@ void EcsComponentListRemove(EcsComponentList* list, EcsEntityID entity)
 	else
 		list->first = node->next;
 
-	EcsMemFree(node);
+	EcsComponentNodeFree(list, node);
 }
 
 void* EcsComponentListFind(const EcsComponentList* list, EcsEntityID entity)

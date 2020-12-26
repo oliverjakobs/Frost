@@ -10,10 +10,11 @@ typedef struct
     EcsListNode* first;
     size_t element_size;
 
+    void (*free_func)(void*);
     int (*cmp_func)(const void*, const void*);
 } EcsComponentList;
 
-int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, int (*cmp)(const void*, const void*));
+int EcsComponentListAlloc(EcsComponentList* list, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*));
 void EcsComponentListFree(EcsComponentList* list);
 
 void EcsComponentListClear(EcsComponentList* list);

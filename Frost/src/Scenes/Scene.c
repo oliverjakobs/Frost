@@ -360,25 +360,21 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 		return 0;
 	}
 
-	Template t;
-	t.templ = malloc(strlen(templ));
-	strcpy(t.templ, templ);
-	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
-	/* TODO: Free template? */
+	TemplateLoad(scene, entity, templ);
 
 	EntityState state = ENTITY_STATE_NULL;
 	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
 
 	/* Components */
-	TransformLoad(scene, entity, pos, z_index, json);
-	RigidBodyLoad(scene, entity, pos, z_index, json);
-	SpriteLoad(scene, entity, pos, z_index,json);
-	AnimatorLoad(scene, entity, pos, z_index, json);
-	MovementLoad(scene, entity, pos, z_index, json);
-	CameraControllerLoad(scene, entity, pos, z_index, json);
-	PlayerLoad(scene, entity, pos, z_index, json);
-	InventoryLoad(scene, entity, pos, z_index, json);
-	InteractableLoad(scene, entity, pos, z_index, json);
+	TransformLoad(scene, entity, pos, json);
+	RigidBodyLoad(scene, entity, json);
+	SpriteLoad(scene, entity, z_index, json);
+	AnimatorLoad(scene, entity, json);
+	MovementLoad(scene, entity, json);
+	CameraControllerLoad(scene, entity, json);
+	PlayerLoad(scene, entity, json);
+	InventoryLoad(scene, entity, json);
+	InteractableLoad(scene, entity, json);
 
 	free(json);
 

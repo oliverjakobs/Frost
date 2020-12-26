@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void CameraControllerLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'camera'");

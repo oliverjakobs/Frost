@@ -14,7 +14,7 @@ void EcsLoadOrderComponents(Ecs* ecs, EcsOrderComponentLoader* loader, size_t si
     for (size_t i = 0; i < size; ++i)
     {
         EcsOrderComponentLoader* comp = &loader[i];
-        if (comp) EcsRegisterOrderComponent(ecs, comp->element_size, comp->cmp_func);
+        if (comp) EcsRegisterOrderComponent(ecs, comp->element_size, comp->free_func, comp->cmp_func);
     }
 }
 

@@ -43,7 +43,7 @@ typedef struct
 	int collides_right;
 } RigidBody;
 
-void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json);
+void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json);
 
 void RigidBodyTick(RigidBody* body, vec2 gravity, float deltatime);
 void RigidBodyResolveCollision(RigidBody* body, const RigidBody* other, vec2 oldpos);

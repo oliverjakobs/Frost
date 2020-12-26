@@ -6,12 +6,12 @@
 
 #include "Application/Debugger.h"
 
-void SpriteLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void SpriteLoad(Scene* scene, EcsEntityID entity, int z_index, char* json)
 {
 	Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
-		DEBUG_ERROR("[Scenes] Sprite requires Transform\n");
+		DEBUG_ERROR("[ECS] Sprite requires Transform\n");
 		return;
 	}
 

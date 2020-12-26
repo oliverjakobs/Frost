@@ -7,12 +7,12 @@
 
 #include "Application/Debugger.h"
 
-void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
-		DEBUG_ERROR("[Scenes] RigidBody requires Transform\n");
+		DEBUG_ERROR("[ECS] RigidBody requires Transform\n");
 		return;
 	}
 
@@ -30,7 +30,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char
 		body.offset.x = tb_json_float(element.value, "{'offset'[0", NULL, 0.0f);
 		body.offset.y = tb_json_float(element.value, "{'offset'[1", NULL, body.half_size.y);
 
-		body.position = vec2_add(pos, body.offset);
+		body.position = vec2_add(transform->position, body.offset);
 
 		body.velocity.x = 0.0f;
 		body.velocity.y = 0.0f;

@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void InteractableLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void InteractableLoad(Scene* scene, EcsEntityID entity, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'interaction'");

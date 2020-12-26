@@ -10,16 +10,16 @@ EcsDataComponentLoader data_comps[] =
 	[COMPONENT_MOVEMENT] =		{ sizeof(Movement),			NULL },
 	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
 	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorFree },
-	[COMPONENT_CAMERA] =		{ sizeof(CameraController), NULL },
-	[COMPONENT_PLAYER] =		{ sizeof(Player), NULL },
+	[COMPONENT_CAMERA] =		{ sizeof(CameraController),	NULL },
+	[COMPONENT_PLAYER] =		{ sizeof(Player),			NULL },
 	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
 	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL }
 };
 
 EcsOrderComponentLoader order_comps[] =
 {
-	[COMPONENT_TEMPLATE] =	{ sizeof(Template), NULL },
-	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),	ZIndexCmp }
+	[COMPONENT_TEMPLATE] =	{ sizeof(Template), TemplateFree,	NULL },
+	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),	NULL,			ZIndexCmp }
 };
 
 EcsUpdateSystemLoader update_systems[] =

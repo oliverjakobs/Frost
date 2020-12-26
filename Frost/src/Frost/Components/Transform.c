@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, int z_index, char* json)
+void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, char* json)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'transform'");
