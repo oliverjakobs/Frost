@@ -360,12 +360,10 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 		return 0;
 	}
 
-	TemplateLoad(scene, entity, templ);
-
-	EntityState state = ENTITY_STATE_NULL;
-	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
-
 	/* Components */
+	TemplateLoad(scene, entity, templ);
+	EntityStateLoad(scene, entity, ENTITY_STATE_NULL);
+
 	TransformLoad(scene, entity, pos, json);
 	RigidBodyLoad(scene, entity, json);
 	SpriteLoad(scene, entity, z_index, json);

@@ -4,14 +4,6 @@
 #include "ComponentMap.h"
 #include "ComponentList.h"
 
-#include "Event/Event.h"
-
-#define ECS_DEFAULT_UPDATE_SYSTEM_COUNT		4
-#define ECS_DEFAULT_RENDER_SYSTEM_COUNT		3
-
-#define ECS_DEFAULT_DATA_COMPONENT_COUNT	8
-#define ECS_DEFAULT_ORDER_COMPONENT_COUNT	2
-
 #define ECS_COMPONENT_REQUIRE(Comp, ecs, var, iter, type) \
 	Comp* var = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), type); \
 	if (!var) continue
@@ -25,7 +17,6 @@
 
 #define ECS_COMPONENT_OPTIONAL_NODE(Comp, ecs, var, iter, type) \
 	Comp* var = EcsGetDataComponent(ecs, EcsComponentNodeEntity(iter), type)
-
 
 typedef uint32_t EcsComponentType;
 
@@ -50,6 +41,9 @@ typedef struct
 
 void EcsInit(Ecs* ecs);
 void EcsDestroy(Ecs* ecs);
+
+void EcsReserveSystems(Ecs* ecs, size_t update, size_t render);
+void EcsReserveComponents(Ecs* ecs, size_t data, size_t order);
 
 void EcsClear(Ecs* ecs);
 

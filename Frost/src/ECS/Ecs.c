@@ -21,12 +21,6 @@ void EcsInit(Ecs* ecs)
 
 	ecs->data_components = NULL;
 	ecs->order_components = NULL;
-
-	tb_stretchy_reserve(ecs->systems_update, ECS_DEFAULT_UPDATE_SYSTEM_COUNT);
-	tb_stretchy_reserve(ecs->systems_render, ECS_DEFAULT_RENDER_SYSTEM_COUNT);
-
-	tb_stretchy_reserve(ecs->data_components, ECS_DEFAULT_DATA_COMPONENT_COUNT);
-	tb_stretchy_reserve(ecs->order_components, ECS_DEFAULT_ORDER_COMPONENT_COUNT);
 }
 
 void EcsDestroy(Ecs* ecs)
@@ -43,6 +37,18 @@ void EcsDestroy(Ecs* ecs)
 
 	tb_stretchy_free(ecs->data_components);
 	tb_stretchy_free(ecs->order_components);
+}
+
+void EcsReserveSystems(Ecs* ecs, size_t update, size_t render)
+{
+	tb_stretchy_reserve(ecs->systems_update, update);
+	tb_stretchy_reserve(ecs->systems_render, render);
+}
+
+void EcsReserveComponents(Ecs* ecs, size_t data, size_t order)
+{
+	tb_stretchy_reserve(ecs->data_components, data);
+	tb_stretchy_reserve(ecs->order_components, order);
 }
 
 void EcsClear(Ecs* ecs)
@@ -75,10 +81,7 @@ void EcsOnUpdate(Ecs* ecs, float deltatime)
 void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
 {
 	for (EcsRenderSystem* it = ecs->systems_render; it != tb_stretchy_last(ecs->systems_render); it++)
-	{
-		if (it->stage == stage)
-			it->render(ecs, mat_view_proj);
-	}
+		if (it->stage == stage) it->render(ecs, mat_view_proj);
 }
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
