@@ -279,6 +279,9 @@
     <ClInclude Include="src\Frost\Components\EntityState.h" />
     <ClInclude Include="src\ECS\Loader.h" />
     <ClInclude Include="src\Frost\Components\Player.h" />
+    <ClInclude Include="src\tile\tilemap.h" />
+    <ClInclude Include="src\tile\tile.h" />
+    <ClInclude Include="src\tile\tile_renderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -456,6 +459,8 @@
     <ClCompile Include="src\Frost\Components\Transform.c" />
     <ClCompile Include="src\ECS\Loader.c" />
     <ClCompile Include="src\Frost\Components\Player.c" />
+    <ClCompile Include="src\tile\tilemap.c" />
+    <ClCompile Include="src\tile\tile_renderer.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

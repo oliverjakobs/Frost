@@ -38,22 +38,10 @@ float mat4_determinant(mat4 mat)
 mat4 mat4_indentity()
 {
     mat4 result;
-    result.v[0] = 1.0f;
-    result.v[1] = 0.0f;
-    result.v[2] = 0.0f;
-    result.v[3] = 0.0f;
-    result.v[4] = 0.0f;
-    result.v[5] = 1.0f;
-    result.v[6] = 0.0f;
-    result.v[7] = 0.0f;
-    result.v[8] = 0.0f;
-    result.v[9] = 0.0f;
-    result.v[10] = 1.0f;
-    result.v[11] = 0.0f;
-    result.v[12] = 0.0f;
-    result.v[13] = 0.0f;
-    result.v[14] = 0.0f;
-    result.v[15] = 1.0f;
+    result.v[0] = 1.0f; result.v[4] = 0.0f; result.v[8] = 0.0f; result.v[12] = 0.0f;
+    result.v[1] = 0.0f; result.v[5] = 1.0f; result.v[9] = 0.0f; result.v[13] = 0.0f;
+    result.v[2] = 0.0f; result.v[6] = 0.0f; result.v[10] = 1.0f;result.v[14] = 0.0f;
+    result.v[3] = 0.0f; result.v[7] = 0.0f; result.v[11] = 0.0f;result.v[15] = 1.0f;
 
     return result;
 }

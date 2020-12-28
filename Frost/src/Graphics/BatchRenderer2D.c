@@ -100,7 +100,7 @@ void BatchRenderer2DFlush()
 	_render_data.texture_slot_index = 0;
 }
 
-void _BatchRenderer2DPushValue(float value)
+static void _BatchRenderer2DPushValue(float value)
 {
 	if (_render_data.vertex_index >= BATCHRENDERER2D_BUFFER_SIZE)
 	{

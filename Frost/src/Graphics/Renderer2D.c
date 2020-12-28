@@ -34,13 +34,9 @@ void Renderer2DDestroy()
 void Renderer2DSetShader(IgnisShader* shader)
 {
 	if (shader)
-	{
 		_render_data.shader = shader;
-	}
 	else
-	{
 		_render_data.shader = &_render_data.default_shader;
-	}
 
 	_render_data.uniform_location_view_proj = ignisGetUniformLocation(_render_data.shader, "u_ViewProjection");
 	_render_data.uniform_location_color = ignisGetUniformLocation(_render_data.shader, "u_Color");

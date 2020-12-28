@@ -1,5 +1,7 @@
 #include "Frost/Frost.h"
 
+#include "tile/tile_renderer.h"
+
 Camera camera;
 
 Ecs ecs;
@@ -9,6 +11,10 @@ SceneEditor scene_editor;
 Console console;
 
 int show_debug_info;
+
+TileMap map;
+TileRenderer renderer;
+IgnisTexture2D* tile_tex;
 
 void OnInit(Application* app)
 {
@@ -38,10 +44,31 @@ void OnInit(Application* app)
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&scene_editor);
+
+	TileID tiles[] =
+	{
+		1, 2, 1, 2, 1, 2, 1, 2,
+		5, 6, 5, 6, 5, 6, 5, 6,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+		3, 3, 3, 3, 3, 3, 3, 3,
+	};
+
+	TileMapLoad(&map, tiles, 8, 9, 32.0f);
+	TileRendererInit(&renderer, &map);
+
+	tile_tex = ResourcesGetTexture2D(&app->resources, "tiles");
 }
 
 void OnDestroy(Application* app)
 {
+	TileRendererDestroy(&renderer);
+	TileMapDestroy(&map);
+
 	SceneDestroy(&scene);
 
 	FontRendererDestroy();
@@ -94,7 +121,10 @@ void OnUpdate(Application* app, float deltatime)
 void OnRender(Application* app)
 {
 	SceneOnRender(&scene);
+	TileMapRender(&renderer, tile_tex, vec2_zero(), camera.viewProjection);
+
 	SceneEditorOnRender(&scene_editor, &scene);
+
 	SceneOnRenderUI(&scene);
 }
 

@@ -2,6 +2,7 @@
 #define MATH_H
 
 #include <math.h>
+#include <stdint.h>
 
 /* based on https://github.com/felselva/mathc */
 #include "vec2.h"
