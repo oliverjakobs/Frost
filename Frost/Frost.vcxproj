@@ -150,6 +150,7 @@
     <ClInclude Include="src\memory\arena.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
+    <ClInclude Include="src\tile\body.h" />
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\tile\tilemap.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\memory\arena.c" />
+    <ClCompile Include="src\tile\body.c" />
     <ClCompile Include="src\tile\tilemap.c" />
     <ClCompile Include="src\tile\tile_renderer.c" />
     <ClCompile Include="src\toolbox\tb_json.c" />

@@ -4,14 +4,19 @@
 #include "tilemap.h"
 
 #include "Ignis/Ignis.h"
+#include "Ignis/Quad.h"
 
 typedef struct TileRenderer
 {
-    IgnisVertexArray vao;
-
+    IgnisQuad quad;
     IgnisShader shader;
 
     size_t tile_count;
+
+    GLint uniform_location_view_proj;
+    GLint uniform_location_model;
+    GLint uniform_location_rows;
+    GLint uniform_location_cols;
 } TileRenderer;
 
 int TileRendererInit(TileRenderer* renderer, TileMap* map);

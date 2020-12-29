@@ -17,7 +17,14 @@ typedef struct
 int TileMapLoad(TileMap* map, TileID* tiles, size_t width, size_t height, float tile_size);
 void TileMapDestroy(TileMap* map);
 
-int32_t TileMapGetIndex(const TileMap* map, vec2 pos);
 Tile* TileMapAt(const TileMap* map, size_t row, size_t col);
+Tile* TileMapAtPos(const TileMap* map, vec2 pos);
+
+int TileMapCheckType(const TileMap* map, vec2 pos, TileType type);
+
+size_t TileMapGetArea(const TileMap* map, Tile** tiles, float x, float y, float w, float h);
+
+size_t TileMapGetClamp(const TileMap* map, float x);
+
 
 #endif /* !TILEMAP_H */

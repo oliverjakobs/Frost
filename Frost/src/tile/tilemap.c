@@ -40,16 +40,6 @@ void TileMapDestroy(TileMap* map)
 	free(map->tiles);
 }
 
-int32_t TileMapGetIndex(const TileMap* map, vec2 pos)
-{
-    int32_t x = (int32_t)floorf(pos.x / map->tile_size);
-    int32_t y = (int32_t)floorf(pos.y / map->tile_size);
-
-    if (x < 0 || x >= map->width) return -1;
-
-    return (int32_t)(y * map->width + x);
-}
-
 Tile* TileMapAt(const TileMap* map, size_t row, size_t col)
 {
 	if (row < 0 || col < 0) return NULL;
@@ -57,3 +47,43 @@ Tile* TileMapAt(const TileMap* map, size_t row, size_t col)
 
     return &map->tiles[row * map->width + col];
 }
+
+Tile* TileMapAtPos(const TileMap* map, vec2 pos)
+{
+	size_t col = TileMapGetClamp(map, pos.x);
+	size_t row = TileMapGetClamp(map, pos.y);
+
+	return TileMapAt(map, row, col);
+}
+
+int TileMapCheckType(const TileMap* map, vec2 pos, TileType type)
+{
+	Tile* tile = TileMapAtPos(map, pos);
+
+	return tile && tile->type == type;
+}
+
+size_t TileMapGetArea(const TileMap* map, Tile** tiles, float x, float y, float w, float h)
+{
+	size_t start_col = TileMapGetClamp(map, x);
+	size_t end_col = TileMapGetClamp(map, x + w);
+
+	size_t start_row = TileMapGetClamp(map, y);
+	size_t end_row = TileMapGetClamp(map, y + h);
+
+	size_t tile_index = 0;
+	for (size_t col = start_col; col <= end_col; ++col)
+	{
+		for (size_t row = start_row; row <= end_row; ++row)
+		{
+			Tile* tile = TileMapAt(map, row, col);
+
+			if (tile && tile->type != TILE_EMPTY)
+				tiles[tile_index++] = tile;
+		}
+	}
+
+	return tile_index;
+}
+
+size_t TileMapGetClamp(const TileMap* map, float x) { return (size_t)floor(x / map->tile_size); }

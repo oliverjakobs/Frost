@@ -1,26 +1,10 @@
 #include "tile_renderer.h"
 
-
 int TileRendererInit(TileRenderer* renderer, TileMap* map)
 {
 	size_t tile_count = map->height * map->width;
 
-	float vertices[] =
-	{
-		0.0f, 0.0f, 0.0f, 0.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		0.0f, 1.0f, 0.0f, 1.0f
-	};
-
-	IgnisBufferElement layout[] =
-	{
-		{GL_FLOAT, 2, GL_FALSE},	/* position */
-		{GL_FLOAT, 2, GL_FALSE}		/* Texture coords*/
-	};
-
-	ignisGenerateVertexArray(&renderer->vao);
-	ignisAddArrayBufferLayout(&renderer->vao, sizeof(vertices), vertices, GL_STATIC_DRAW, 0, layout, 2);
+	ignisCreateQuadTextured(&renderer->quad, GL_STATIC_DRAW);
 
 	vec2* offsets = malloc(sizeof(vec2) * tile_count);
 	GLuint* frames = malloc(sizeof(GLuint) * tile_count);
@@ -33,16 +17,13 @@ int TileRendererInit(TileRenderer* renderer, TileMap* map)
 		frames[i] = map->tiles[i].id;
 	}
 
-	ignisAddArrayBuffer(&renderer->vao, sizeof(vec2) * tile_count, offsets, GL_DYNAMIC_DRAW);
+	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(vec2) * tile_count, offsets, GL_DYNAMIC_DRAW);
 	ignisVertexAttribFloat(2, 2, GL_FALSE, 2, 0);
 	ignisVertexAttribDivisor(2, 1);
 
-	ignisAddArrayBuffer(&renderer->vao, sizeof(GLuint) * tile_count, frames, GL_DYNAMIC_DRAW);
+	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(GLuint) * tile_count, frames, GL_DYNAMIC_DRAW);
 	ignisVertexAttribInt(3, 1, 1, 0);
 	ignisVertexAttribDivisor(3, 1);
-
-	GLuint indices[] = { 0, 1, 2, 2, 3, 0 };
-	ignisLoadElementBuffer(&renderer->vao, indices, 6, GL_STATIC_DRAW);
 
 	renderer->tile_count = tile_count;
 
@@ -54,29 +35,34 @@ int TileRendererInit(TileRenderer* renderer, TileMap* map)
 	ignisSetUniform1i(&renderer->shader, "u_Texture", 0);
 	ignisSetUniform1f(&renderer->shader, "u_TileSize", map->tile_size);
 
+	renderer->uniform_location_view_proj = ignisGetUniformLocation(&renderer->shader, "u_ViewProjection");
+	renderer->uniform_location_model = ignisGetUniformLocation(&renderer->shader, "u_Model");
+	renderer->uniform_location_rows = ignisGetUniformLocation(&renderer->shader, "u_Rows");
+	renderer->uniform_location_cols = ignisGetUniformLocation(&renderer->shader, "u_Columns");
+
     return 1;
 }
 
 void TileRendererDestroy(TileRenderer* renderer)
 {
 	ignisDeleteShader(&renderer->shader);
-	ignisDeleteVertexArray(&renderer->vao);
+	ignisDeleteQuad(&renderer->quad);
 }
-
 
 void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, vec2 offset, mat4 view_proj)
 {
 	mat4 model = mat4_indentity();
+	model = mat4_translate(model, (vec3) { offset.x, offset.y, 0.0f });
 
 	ignisUseShader(&renderer->shader);
-	ignisSetUniformMat4(&renderer->shader, "u_ViewProjection", view_proj.v);
-	ignisSetUniformMat4(&renderer->shader, "u_Model", model.v);
+	ignisSetUniformMat4l(&renderer->shader, renderer->uniform_location_view_proj, view_proj.v);
+	ignisSetUniformMat4l(&renderer->shader, renderer->uniform_location_model, model.v);
 
-	ignisSetUniform1i(&renderer->shader, "u_Rows", texture->rows);
-	ignisSetUniform1i(&renderer->shader, "u_Columns", texture->columns);
+	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_rows, texture->rows);
+	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_cols, texture->columns);
 
-	ignisBindVertexArray(&renderer->vao);
+	ignisBindQuad(&renderer->quad);
 	ignisBindTexture2D(texture, 0);
 
-	glDrawElementsInstanced(GL_TRIANGLES, renderer->vao.element_count, GL_UNSIGNED_INT, NULL, (GLsizei)renderer->tile_count);
+	glDrawElementsInstanced(GL_TRIANGLES, renderer->quad.vao.element_count, GL_UNSIGNED_INT, NULL, (GLsizei)renderer->tile_count);
 }
