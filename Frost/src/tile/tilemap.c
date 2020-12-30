@@ -45,7 +45,7 @@ Tile* TileMapAt(const TileMap* map, size_t row, size_t col)
 	if (row < 0 || col < 0) return NULL;
 	if (row >= map->height || col >= map->width) return NULL;
 
-    return &map->tiles[row * map->width + col];
+    return &map->tiles[(map->height - row - 1) * map->width + col];
 }
 
 Tile* TileMapAtPos(const TileMap* map, vec2 pos)
@@ -63,7 +63,7 @@ int TileMapCheckType(const TileMap* map, vec2 pos, TileType type)
 	return tile && tile->type == type;
 }
 
-size_t TileMapGetArea(const TileMap* map, Tile** tiles, float x, float y, float w, float h)
+size_t TileMapGetArea(const TileMap* map, Tile** tiles, size_t max_tiles, float x, float y, float w, float h)
 {
 	size_t start_col = TileMapGetClamp(map, x);
 	size_t end_col = TileMapGetClamp(map, x + w);
@@ -78,8 +78,9 @@ size_t TileMapGetArea(const TileMap* map, Tile** tiles, float x, float y, float 
 		{
 			Tile* tile = TileMapAt(map, row, col);
 
-			if (tile && tile->type != TILE_EMPTY)
-				tiles[tile_index++] = tile;
+			if (tile) tiles[tile_index++] = tile;
+
+			if (tile_index >= max_tiles) return max_tiles;
 		}
 	}
 

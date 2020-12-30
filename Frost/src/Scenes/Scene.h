@@ -8,6 +8,8 @@
 
 #include "ECS/Ecs.h"
 
+#include "tile/tilemap.h"
+
 typedef struct 
 {
 	/* register */
@@ -17,6 +19,7 @@ typedef struct
 	Ecs ecs;
 	Camera* camera;
 	Resources* resources;
+	TileMap map;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];

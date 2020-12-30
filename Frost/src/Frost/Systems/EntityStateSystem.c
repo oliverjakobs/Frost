@@ -2,10 +2,10 @@
 
 #include "Frost/FrostEcs.h"
 
-int EntityStateJump(RigidBody* body) { return body ? (body->velocity.y > 0.0f) : 0; }
-int EntityStateFall(RigidBody* body) { return body ? (!body->collides_bottom && (body->velocity.y <= 0.0f)) : 0; }
-int EntityStateWalk(RigidBody* body) { return body ? (body->collides_bottom && (body->velocity.x != 0.0f)) : 0; }
-int EntityStateIdle(RigidBody* body) { return body ? (body->collides_bottom && (body->velocity.x == 0.0f)) : 0; }
+int EntityStateJump(RigidBody* body) { return body ? (body->body.velocity.y > 0.0f) : 0; }
+int EntityStateFall(RigidBody* body) { return body ? (!body->body.collides_bottom && (body->body.velocity.y <= 0.0f)) : 0; }
+int EntityStateWalk(RigidBody* body) { return body ? (body->body.collides_bottom && (body->body.velocity.x != 0.0f)) : 0; }
+int EntityStateIdle(RigidBody* body) { return body ? (body->body.collides_bottom && (body->body.velocity.x == 0.0f)) : 0; }
 
 void EntityStateSystem(Ecs* ecs, float deltatime)
 {

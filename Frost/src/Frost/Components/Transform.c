@@ -43,7 +43,7 @@ void SetEntityPosition(Ecs* ecs, EcsEntityID entity, vec2 pos)
 	if (transform) transform->position = pos;
 
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
-	if (body) body->position = vec2_add(pos, body->offset);
+	if (body) body->body.position = vec2_add(pos, body->offset);
 }
 
 vec2 GetEntityPosition(Ecs* ecs, EcsEntityID entity)

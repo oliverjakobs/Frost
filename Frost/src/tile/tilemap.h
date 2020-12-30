@@ -22,7 +22,7 @@ Tile* TileMapAtPos(const TileMap* map, vec2 pos);
 
 int TileMapCheckType(const TileMap* map, vec2 pos, TileType type);
 
-size_t TileMapGetArea(const TileMap* map, Tile** tiles, float x, float y, float w, float h);
+size_t TileMapGetArea(const TileMap* map, Tile** tiles, size_t max_tiles, float x, float y, float w, float h);
 
 size_t TileMapGetClamp(const TileMap* map, float x);
 

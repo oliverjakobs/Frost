@@ -67,9 +67,15 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	{
 		RigidBody* body = EcsComponentMapIterValue(iter);
 
-		vec2 pos = vec2_sub(body->position, body->half_size);
-		vec2 dim = vec2_mult(body->half_size, 2.0f);
+		vec2 pos = vec2_sub(body->body.position, body->body.half_dim);
+		vec2 dim = vec2_mult(body->body.half_dim, 2.0f);
 		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == RIGID_BODY_DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
+
+		if (body->type == RIGID_BODY_DYNAMIC)
+		{
+			line sensor = TileBodyGetSensor(&body->body, TILE_BOTTOM, body->body.position, body->body.offset_vertical);
+			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+		}
 	}
 
 	Primitives2DFlush();

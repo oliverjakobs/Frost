@@ -12,7 +12,6 @@ Console console;
 
 int show_debug_info;
 
-TileMap map;
 TileRenderer renderer;
 IgnisTexture2D* tile_tex;
 
@@ -47,19 +46,26 @@ void OnInit(Application* app)
 
 	TileID tiles[] =
 	{
-		1, 2, 1, 2, 1, 2, 1, 2,
-		5, 6, 5, 6, 5, 6, 5, 6,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
-		3, 3, 3, 3, 3, 3, 3, 3,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		1, 1, 1, 1, 1, 1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
-	TileMapLoad(&map, tiles, 8, 9, 32.0f);
-	TileRendererInit(&renderer, &map);
+	TileMapLoad(&scene.map, tiles, 8, 16, 32.0f);
+	TileRendererInit(&renderer, &scene.map);
 
 	tile_tex = ResourcesGetTexture2D(&app->resources, "tiles");
 }
@@ -67,7 +73,7 @@ void OnInit(Application* app)
 void OnDestroy(Application* app)
 {
 	TileRendererDestroy(&renderer);
-	TileMapDestroy(&map);
+	TileMapDestroy(&scene.map);
 
 	SceneDestroy(&scene);
 
@@ -132,6 +138,16 @@ void OnRenderDebug(Application* app)
 {
 	if (!scene_editor.active)
 		SceneOnRenderDebug(&scene);
+
+	Primitives2DStart(CameraGetViewProjectionPtr(&camera));
+
+	for (size_t i = 0; i < (scene.map.width * scene.map.height); ++i)
+	{
+		Tile* tile = &scene.map.tiles[i];
+		Primitives2DRenderRect(tile->pos.x, tile->pos.y, scene.map.tile_size, scene.map.tile_size, tile->type == TILE_SOLID ? IGNIS_RED : IGNIS_WHITE);
+	}
+
+	Primitives2DFlush();
 
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 	

@@ -5,6 +5,14 @@
 
 typedef enum
 {
+	TILE_LEFT,
+	TILE_RIGHT,
+	TILE_TOP,
+	TILE_BOTTOM
+} TileDirection;
+
+typedef enum
+{
 	TILE_EMPTY = 0,
 	TILE_SOLID = 1,
 	TILE_SLOPE_LEFT = 2,

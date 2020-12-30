@@ -16,9 +16,9 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 
 		vec2 velocity;
 		velocity.x = (-InputKeyPressed(player->move_left) + InputKeyPressed(player->move_right)) * movement->speed;
-		velocity.y = body->velocity.y;
+		velocity.y = body->body.velocity.y;
 
-		if (InputKeyPressed(player->jump) && body->collides_bottom)
+		if (InputKeyPressed(player->jump) && body->body.collides_bottom)
 			velocity.y = movement->jump_power;
 		else if (InputKeyReleased(player->jump) && (velocity.y > 0.0f))
 			velocity.y *= 0.5f;
@@ -35,7 +35,7 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 		}
 
 		// apply velocity
-		body->velocity = velocity;
+		body->body.velocity = velocity;
 
 		// set view
 		CameraControllerMoveConstrained(camera, GetEntityPosition(ecs, EcsComponentMapIterKey(iter)), 0.5f);
