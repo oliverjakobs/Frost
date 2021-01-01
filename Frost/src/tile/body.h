@@ -40,15 +40,10 @@ void TileBodyMoveY(TileBody* body, float y);
 int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y);
 int TileBodyCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y);
 int TileBodyCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x);
-int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_y);
+int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x);
 
 void TileBodyResolveMap(TileBody* body, vec2 gravity, float deltatime);
 void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos);
-
-float TileBodyGetX(const TileBody* body);
-float TileBodyGetY(const TileBody* body);
-float TileBodyGetX2(const TileBody* body);
-float TileBodyGetY2(const TileBody* body);
 
 line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos, vec2 offset);
 

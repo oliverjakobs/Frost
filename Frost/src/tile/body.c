@@ -89,51 +89,50 @@ void TileBodyMoveY(TileBody* body, float y)
 	}
 }
 
-static int CmpTilesBottom(const Tile** left, const Tile** right)
-{
-	if ((*left)->pos.y == (*right)->pos.y)
-		return (*left)->type - (*right)->type;
-
-	return (*right)->pos.y - (*left)->pos.y;
-}
-
 int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 {
 	line sensor = TileBodyGetSensor(body, TILE_BOTTOM, pos, body->offset_vertical);
 	line old_sensor = TileBodyGetSensor(body, TILE_BOTTOM, old_pos, body->offset_vertical);
 
-	float area_x = old_sensor.start.x;
-	float area_y = old_sensor.start.y;
-	float area_w = sensor.end.x - area_x;
-	float area_h = sensor.end.y - area_y + (body->slope_detected ? body->map->tile_size / 2.0f : 0.0f);
+	float tile_size = body->map->tile_size;
 
-	Tile* tiles[64];
-	size_t tile_count = TileMapGetArea(body->map, tiles, 64, area_x, area_y, area_w, area_h);
-		
-	for (size_t i = 0; i < tile_count; ++i)
+	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
+	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
+
+	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
+	int32_t end_row = TileMapClamp(body->map, sensor.end.y + (body->slope_detected ? tile_size * 0.5f : 0.0f));
+
+	if (start_row < 0 || end_row < 0) return 1;
+
+	for (int32_t row = start_row; row >= end_row; --row)
 	{
-		Tile* tile = tiles[i];
-		switch (tile->type)
+		for (int32_t col = start_col; col <= end_col; ++col)
 		{
-		case TILE_SOLID:
-			if (body->on_slope) break;
+			Tile* tile = TileMapAt(body->map, row, col);
+			if (!tile) continue;
 
-			*ground_y = tile->pos.y + body->map->tile_size;
-			return 1;
-		case TILE_SLOPE_LEFT:
-			*ground_y = tile->pos.y + body->map->tile_size - (body->position.x - body->half_dim.x - tile->pos.x);
-			body->on_slope = 1;
-			return 1;
-		case TILE_SLOPE_RIGHT:
-			*ground_y = tile->pos.y + (body->position.x + body->half_dim.x + tile->pos.x);
-			body->on_slope = 1;
-			return 1;
-		case TILE_PLATFORM:
-			if (body->drop) break;
+			switch (tile->type)
+			{
+			case TILE_SOLID:
+				if (body->on_slope) break;
 
-			*ground_y = tile->pos.y + body->map->tile_size;
-			if ((old_pos.y - body->half_dim.y) >= *ground_y)
+				*ground_y = tile->pos.y + tile_size;
 				return 1;
+			case TILE_SLOPE_LEFT:
+				*ground_y = tile->pos.y + tile_size - (body->position.x - body->half_dim.x - tile->pos.x);
+				body->on_slope = 1;
+				return 1;
+			case TILE_SLOPE_RIGHT:
+				*ground_y = tile->pos.y + (body->position.x + body->half_dim.x + tile->pos.x);
+				body->on_slope = 1;
+				return 1;
+			case TILE_PLATFORM:
+				if (body->drop) break;
+
+				*ground_y = tile->pos.y + tile_size;
+				if ((old_pos.y - body->half_dim.y) >= *ground_y)
+					return 1;
+			}
 		}
 	}
 
@@ -142,16 +141,88 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 
 int TileBodyCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 {
+	line sensor = TileBodyGetSensor(body, TILE_TOP, pos, body->offset_vertical);
+	line old_sensor = TileBodyGetSensor(body, TILE_TOP, old_pos, body->offset_vertical);
+
+	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
+	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
+
+	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
+	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
+
+	if (start_row >= body->map->height || end_row >= body->map->height) return 0;
+
+	for (int32_t row = start_row; row <= end_row; ++row)
+	{
+		for (int32_t col = start_col; col <= end_col; ++col)
+		{
+			Tile* tile = TileMapAt(body->map, row, col);
+			if (tile && tile->type == TILE_SOLID)
+			{
+				*ground_y = tile->pos.y;
+				return 1;
+			}
+		}
+	}
+
 	return 0;
 }
 
 int TileBodyCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 {
+	line sensor = TileBodyGetSensor(body, TILE_LEFT, pos, body->offset_horizontal);
+	line old_sensor = TileBodyGetSensor(body, TILE_LEFT, old_pos, body->offset_horizontal);
+
+	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
+	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
+
+	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
+	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
+
+	if (start_col < 0 || end_col < 0) return 0;
+
+	for (int32_t col = start_col; col >= end_col; --col)
+	{
+		for (int32_t row = start_row; row <= end_row; ++row)
+		{
+			Tile* tile = TileMapAt(body->map, row, col);
+			if (tile && tile->type == TILE_SOLID)
+			{
+				*wall_x = tile->pos.x + body->map->tile_size;
+				return 1;
+			}
+		}
+	}
+
 	return 0;
 }
 
-int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_y)
+int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 {
+	line sensor = TileBodyGetSensor(body, TILE_RIGHT, pos, body->offset_horizontal);
+	line old_sensor = TileBodyGetSensor(body, TILE_RIGHT, old_pos, body->offset_horizontal);
+
+	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
+	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
+
+	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
+	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
+
+	if (start_col >= body->map->width || end_col >= body->map->width) return 0;
+
+	for (int32_t col = start_col; col <= end_col; ++col)
+	{
+		for (int32_t row = start_row; row <= end_row; ++row)
+		{
+			Tile* tile = TileMapAt(body->map, row, col);
+			if (tile && tile->type == TILE_SOLID)
+			{
+				*wall_x = tile->pos.x;
+				return 1;
+			}
+		}
+	}
+
 	return 0;
 }
 
@@ -255,11 +326,6 @@ void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos)
 		}
 	}
 }
-
-float TileBodyGetX(const TileBody* body) { return body->position.x - body->half_dim.x; }
-float TileBodyGetY(const TileBody* body) { return body->position.y - body->half_dim.y; }
-float TileBodyGetX2(const TileBody* body) { return body->position.x + body->half_dim.x; }
-float TileBodyGetY2(const TileBody* body) { return body->position.y + body->half_dim.y; }
 
 line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos, vec2 offset)
 {

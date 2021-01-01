@@ -21,7 +21,6 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 		vec2 old_position = body->body.position;
 		TileBodyResolveMap(&body->body, gravity, deltatime);
 
-		/*
 		for (EcsComponentMapIter* other_iter = EcsComponentMapIterator(map); other_iter; other_iter = EcsComponentMapIterNext(map, other_iter))
 		{
 			if (EcsComponentMapIterKey(iter) == EcsComponentMapIterKey(other_iter)) continue;
@@ -30,7 +29,6 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 			if (body->filter & other->filter)
 				TileBodyResolveBody(&body->body, &other->body, old_position);
 		}
-		*/
 
 		transform->position = vec2_sub(body->body.position, body->offset);
 	}
