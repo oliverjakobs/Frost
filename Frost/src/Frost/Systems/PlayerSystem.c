@@ -18,7 +18,7 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 		velocity.x = (-InputKeyPressed(player->move_left) + InputKeyPressed(player->move_right)) * movement->speed;
 		velocity.y = body->body.velocity.y;
 
-		if (InputKeyPressed(player->jump) && body->body.collides_bottom)
+		if (InputKeyPressed(player->jump) && body->body.collision_state[TILE_BOTTOM])
 			velocity.y = movement->jump_power;
 		else if (InputKeyReleased(player->jump) && (velocity.y > 0.0f))
 			velocity.y *= 0.5f;

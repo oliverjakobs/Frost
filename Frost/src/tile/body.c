@@ -21,10 +21,11 @@ void TileBodyInit(TileBody* body, const TileMap* map, float x, float y, float h_
 	body->velocity = vec2_zero();
 	body->sensor_offset = TILE_SENSOR_OFFSET;
 
-	body->collides_bottom = 0;
-	body->collides_top = 0;
-	body->collides_left = 0;
-	body->collides_right = 0;
+	body->collision_state[TILE_LEFT] = 0;
+	body->collision_state[TILE_RIGHT] = 0;
+	body->collision_state[TILE_TOP] = 0;
+	body->collision_state[TILE_BOTTOM] = 0;
+
 	body->on_slope = 0;
 	body->slope_detected = 0;
 	body->drop = 0;
@@ -39,8 +40,8 @@ void TileBodyInit(TileBody* body, const TileMap* map, float x, float y, float h_
 
 void TileBodyMoveX(TileBody* body, float x)
 {
-	body->collides_left = 0;
-	body->collides_right = 1;
+	body->collision_state[TILE_LEFT] = 0;
+	body->collision_state[TILE_RIGHT] = 0;
 
 	vec2 old_pos = body->position;
 	body->position.x += x;
@@ -49,23 +50,21 @@ void TileBodyMoveX(TileBody* body, float x)
 	if (body->velocity.x <= 0.0f && TileBodyCheckLeft(body, body->position, old_pos, &wall_x))
 	{
 		body->position.x = wall_x + body->half_dim.x;
-		body->velocity.x = 0.0f;
-		body->collides_left = 1;
+		TileBodySetCollision(body, TILE_LEFT);
 	}
 
 	wall_x = 0.0f;
 	if (body->velocity.x >= 0.0f && TileBodyCheckRight(body, body->position, old_pos, &wall_x))
 	{
 		body->position.x = wall_x - body->half_dim.x;
-		body->velocity.x = 0.0f;
-		body->collides_right = 1;
+		TileBodySetCollision(body, TILE_RIGHT);
 	}
 }
 
 void TileBodyMoveY(TileBody* body, float y)
 {
-	body->collides_bottom = 0;
-	body->collides_top = 0;
+	body->collision_state[TILE_BOTTOM] = 0;
+	body->collision_state[TILE_TOP] = 0;
 
 	vec2 old_pos = body->position;
 	body->position.y += y;
@@ -76,16 +75,14 @@ void TileBodyMoveY(TileBody* body, float y)
 	if (body->velocity.y <= 0.0f && TileBodyCheckBottom(body, body->position, old_pos, &ground_y))
 	{
 		body->position.y = ground_y + body->half_dim.y;
-		body->velocity.y = 0.0f;
-		body->collides_bottom = 1;
+		TileBodySetCollision(body, TILE_BOTTOM);
 	}
 
 	ground_y = 0.0f;
 	if (body->velocity.y >= 0.0f && TileBodyCheckTop(body, body->position, old_pos, &ground_y))
 	{
 		body->position.y = ground_y - body->half_dim.y;
-		body->velocity.y = 0.0f;
-		body->collides_top = 1;
+		TileBodySetCollision(body, TILE_TOP);
 	}
 }
 
@@ -226,6 +223,18 @@ int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 	return 0;
 }
 
+void TileBodySetCollision(TileBody* body, TileDirection dir)
+{
+	if (dir >= 4 || dir < 0) return;
+
+	body->collision_state[dir] = 1;
+
+	if (dir == TILE_LEFT || dir == TILE_RIGHT)
+		body->velocity.x = 0.0f;
+	else if (dir == TILE_TOP || dir == TILE_BOTTOM)
+		body->velocity.y = 0.0f;
+}
+
 void TileBodyResolveMap(TileBody* body, vec2 gravity, float deltatime)
 {
 	if (body->on_slope && body->velocity.y <= 0.0f)
@@ -289,14 +298,12 @@ void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos)
 		if (body->velocity.x < 0.0f)
 		{
 			body->position.x += tb_max_f(overlap_x, 0.0f);
-			body->velocity.x = 0.0f;
-			body->collides_left = 1;
+			TileBodySetCollision(body, TILE_LEFT);
 		}
 		else if (body->velocity.x > 0.0f)
 		{
 			body->position.x -= tb_max_f(overlap_x, 0.0f);
-			body->velocity.x = 0.0f;
-			body->collides_right = 1;
+			TileBodySetCollision(body, TILE_RIGHT);
 		}
 	}
 
@@ -315,14 +322,12 @@ void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos)
 		if (body->velocity.y < 0.0f)
 		{
 			body->position.y += tb_max_f(overlap_y, 0.0f);
-			body->velocity.y = 0.0f;
-			body->collides_bottom = 1;
+			TileBodySetCollision(body, TILE_BOTTOM);
 		}
 		else if (body->velocity.y > 0.0f)
 		{
 			body->position.y -= tb_max_f(overlap_y, 0.0f);
-			body->velocity.y = 0.0f;
-			body->collides_top = 1;
+			TileBodySetCollision(body, TILE_TOP);
 		}
 	}
 }

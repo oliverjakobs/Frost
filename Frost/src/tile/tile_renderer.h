@@ -22,6 +22,8 @@ typedef struct TileRenderer
 int TileRendererInit(TileRenderer* renderer, TileMap* map);
 void TileRendererDestroy(TileRenderer* renderer);
 
-void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, vec2 offset, mat4 view_proj);
+void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj);
+
+void TileMapRenderDebug(TileMap* map, mat4 view_proj);
 
 #endif // !TILE_RENDERER_H

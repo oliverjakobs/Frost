@@ -1,5 +1,7 @@
 #include "tile_renderer.h"
 
+#include "Graphics/Primitives2D.h"
+
 int TileRendererInit(TileRenderer* renderer, TileMap* map)
 {
 	size_t tile_count = map->height * map->width;
@@ -49,10 +51,9 @@ void TileRendererDestroy(TileRenderer* renderer)
 	ignisDeleteQuad(&renderer->quad);
 }
 
-void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, vec2 offset, mat4 view_proj)
+void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj)
 {
 	mat4 model = mat4_indentity();
-	model = mat4_translate(model, (vec3) { offset.x, offset.y, 0.0f });
 
 	ignisUseShader(&renderer->shader);
 	ignisSetUniformMat4l(&renderer->shader, renderer->uniform_location_view_proj, view_proj.v);
@@ -65,4 +66,29 @@ void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, vec2 offset,
 	ignisBindTexture2D(texture, 0);
 
 	glDrawElementsInstanced(GL_TRIANGLES, renderer->quad.vao.element_count, GL_UNSIGNED_INT, NULL, (GLsizei)renderer->tile_count);
+}
+
+void TileMapRenderDebug(TileMap* map, mat4 view_proj)
+{
+	Primitives2DStart(view_proj.v);
+
+	/* map border */
+	Primitives2DRenderRect(0.0f, 0.0f, map->width * map->tile_size, map->height * map->tile_size, IGNIS_WHITE);
+
+
+	for (size_t i = 0; i < (map->width * map->height); ++i)
+	{
+		Tile* tile = &map->tiles[i];
+		switch (tile->type)
+		{
+		case TILE_SOLID:
+			Primitives2DRenderRect(tile->pos.x, tile->pos.y, map->tile_size, map->tile_size, IGNIS_WHITE);
+			break;
+		default:
+			break;
+		}
+		
+	}
+
+	Primitives2DFlush();
 }
