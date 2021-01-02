@@ -75,7 +75,6 @@ void TileMapRenderDebug(TileMap* map, mat4 view_proj)
 	/* map border */
 	Primitives2DRenderRect(0.0f, 0.0f, map->width * map->tile_size, map->height * map->tile_size, IGNIS_WHITE);
 
-
 	for (size_t i = 0; i < (map->width * map->height); ++i)
 	{
 		Tile* tile = &map->tiles[i];
@@ -84,6 +83,28 @@ void TileMapRenderDebug(TileMap* map, mat4 view_proj)
 		case TILE_SOLID:
 			Primitives2DRenderRect(tile->pos.x, tile->pos.y, map->tile_size, map->tile_size, IGNIS_WHITE);
 			break;
+		case TILE_SLOPE_RIGHT:
+		{
+			float vertices[] =
+			{
+				tile->pos.x, tile->pos.y,
+				tile->pos.x + map->tile_size, tile->pos.y,
+				tile->pos.x + map->tile_size, tile->pos.y + map->tile_size
+			};
+			Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
+			break;
+		}
+		case TILE_SLOPE_LEFT:
+		{
+			float vertices[] =
+			{
+				tile->pos.x, tile->pos.y,
+				tile->pos.x + map->tile_size, tile->pos.y,
+				tile->pos.x, tile->pos.y + map->tile_size
+			};
+			Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
+			break;
+		}
 		default:
 			break;
 		}

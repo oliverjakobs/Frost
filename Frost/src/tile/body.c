@@ -32,17 +32,11 @@ void TileBodyInit(TileBody* body, const TileMap* map, float x, float y, float h_
 
 	body->gravity_scale = 1.0f;
 
-	body->offset_horizontal = vec2_zero();
-	body->offset_vertical = vec2_zero();
-
 	body->map = map;
 }
 
 void TileBodyMoveX(TileBody* body, float x)
 {
-	body->collision_state[TILE_LEFT] = 0;
-	body->collision_state[TILE_RIGHT] = 0;
-
 	vec2 old_pos = body->position;
 	body->position.x += x;
 
@@ -63,9 +57,6 @@ void TileBodyMoveX(TileBody* body, float x)
 
 void TileBodyMoveY(TileBody* body, float y)
 {
-	body->collision_state[TILE_BOTTOM] = 0;
-	body->collision_state[TILE_TOP] = 0;
-
 	vec2 old_pos = body->position;
 	body->position.y += y;
 
@@ -88,8 +79,8 @@ void TileBodyMoveY(TileBody* body, float y)
 
 int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 {
-	line sensor = TileBodyGetSensor(body, TILE_BOTTOM, pos, body->offset_vertical);
-	line old_sensor = TileBodyGetSensor(body, TILE_BOTTOM, old_pos, body->offset_vertical);
+	line sensor = TileBodyGetSensor(body, TILE_BOTTOM, pos);
+	line old_sensor = TileBodyGetSensor(body, TILE_BOTTOM, old_pos);
 
 	float tile_size = body->map->tile_size;
 
@@ -99,7 +90,11 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
 	int32_t end_row = TileMapClamp(body->map, sensor.end.y + (body->slope_detected ? tile_size * 0.5f : 0.0f));
 
-	if (start_row < 0 || end_row < 0) return 1;
+	if (start_row < 0 || end_row < 0)
+	{
+		*ground_y = 0.0f;
+		return 1;
+	}
 
 	for (int32_t row = start_row; row >= end_row; --row)
 	{
@@ -116,11 +111,11 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 				*ground_y = tile->pos.y + tile_size;
 				return 1;
 			case TILE_SLOPE_LEFT:
-				*ground_y = tile->pos.y + tile_size - (body->position.x - body->half_dim.x - tile->pos.x);
+				*ground_y = tile->pos.y + tile_size - body->position.x + body->half_dim.x + tile->pos.x;
 				body->on_slope = 1;
 				return 1;
 			case TILE_SLOPE_RIGHT:
-				*ground_y = tile->pos.y + (body->position.x + body->half_dim.x + tile->pos.x);
+				*ground_y = tile->pos.y + body->position.x + body->half_dim.x - tile->pos.x;
 				body->on_slope = 1;
 				return 1;
 			case TILE_PLATFORM:
@@ -138,8 +133,8 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 
 int TileBodyCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 {
-	line sensor = TileBodyGetSensor(body, TILE_TOP, pos, body->offset_vertical);
-	line old_sensor = TileBodyGetSensor(body, TILE_TOP, old_pos, body->offset_vertical);
+	line sensor = TileBodyGetSensor(body, TILE_TOP, pos);
+	line old_sensor = TileBodyGetSensor(body, TILE_TOP, old_pos);
 
 	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
 	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
@@ -167,8 +162,8 @@ int TileBodyCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 
 int TileBodyCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 {
-	line sensor = TileBodyGetSensor(body, TILE_LEFT, pos, body->offset_horizontal);
-	line old_sensor = TileBodyGetSensor(body, TILE_LEFT, old_pos, body->offset_horizontal);
+	line sensor = TileBodyGetSensor(body, TILE_LEFT, pos);
+	line old_sensor = TileBodyGetSensor(body, TILE_LEFT, old_pos);
 
 	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
 	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
@@ -196,8 +191,8 @@ int TileBodyCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 
 int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 {
-	line sensor = TileBodyGetSensor(body, TILE_RIGHT, pos, body->offset_horizontal);
-	line old_sensor = TileBodyGetSensor(body, TILE_RIGHT, old_pos, body->offset_horizontal);
+	line sensor = TileBodyGetSensor(body, TILE_RIGHT, pos);
+	line old_sensor = TileBodyGetSensor(body, TILE_RIGHT, old_pos);
 
 	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
 	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
@@ -223,6 +218,41 @@ int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 	return 0;
 }
 
+int TileBodyCheckSlope(const TileBody* body)
+{
+	int slope_detected = 0;
+	float tile_size = body->map->tile_size;
+
+	if (body->velocity.x < 0.0f)
+	{
+		// far sensors
+		vec2 offset = (vec2){ -(body->half_dim.x + tile_size - body->sensor_offset), body->sensor_offset - body->half_dim.y };
+		slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
+		// near sensors
+		offset = (vec2){ -(body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset), body->sensor_offset - body->half_dim.y };
+		slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
+	}
+	else if (body->velocity.x > 0.0f)
+	{
+		// far sensors
+		vec2 offset = (vec2){ body->half_dim.x + tile_size - body->sensor_offset, body->sensor_offset - body->half_dim.y };
+		slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
+		// near sensors
+		offset = (vec2){ body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset, body->sensor_offset - body->half_dim.y };
+		slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
+	}
+
+	return slope_detected;
+}
+
+void TileBodyResetCollision(TileBody* body)
+{
+	body->collision_state[TILE_LEFT] = 0;
+	body->collision_state[TILE_RIGHT] = 0;
+	body->collision_state[TILE_BOTTOM] = 0;
+	body->collision_state[TILE_TOP] = 0;
+}
+
 void TileBodySetCollision(TileBody* body, TileDirection dir)
 {
 	if (dir >= 4 || dir < 0) return;
@@ -237,43 +267,18 @@ void TileBodySetCollision(TileBody* body, TileDirection dir)
 
 void TileBodyResolveMap(TileBody* body, vec2 gravity, float deltatime)
 {
+	float grav = body->gravity_scale * deltatime;
 	if (body->on_slope && body->velocity.y <= 0.0f)
-	{
-		body->velocity.x += gravity.x * body->gravity_scale * TILE_SLOPE_GRIP * deltatime;
-		body->velocity.y += gravity.y * body->gravity_scale * TILE_SLOPE_GRIP * deltatime;
-	}
-	else
-	{
-		body->velocity.x += gravity.x * body->gravity_scale * deltatime;
-		body->velocity.y += gravity.y * body->gravity_scale * deltatime;
-	}
+		grav *= TILE_SLOPE_GRIP;
 
-	body->offset_horizontal = (vec2){ body->sensor_offset, body->on_slope ? 12.0f : 2.0f };
-	body->offset_vertical = (vec2){ 2.0f, body->sensor_offset };
-
-	float tile_size = body->map->tile_size;
+	body->velocity.x += gravity.x * grav;
+	body->velocity.y += gravity.y * grav;
 
 	// check for slopes
-	body->slope_detected = 0;
-	if (body->velocity.x < 0.0f)
-	{
-		// far sensors
-		vec2 offset = (vec2){ -(body->half_dim.x + tile_size - body->sensor_offset), body->sensor_offset - body->half_dim.y };
-		body->slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
-		// near sensors
-		offset = (vec2){ -(body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset), body->sensor_offset - body->half_dim.y };
-		body->slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
-	}
-	else if (body->velocity.x > 0.0f)
-	{
-		// far sensors
-		vec2 offset = (vec2){ body->half_dim.x + tile_size - body->sensor_offset, body->sensor_offset - body->half_dim.y };
-		body->slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
-		// near sensors
-		offset = (vec2){ body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset, body->sensor_offset - body->half_dim.y };
-		body->slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
-	}
+	body->slope_detected = TileBodyCheckSlope(body);
 
+	TileBodyResetCollision(body);
+	
 	// move first in x direction and then in y direction
 	TileBodyMoveX(body, body->velocity.x * deltatime);
 	TileBodyMoveY(body, body->velocity.y * deltatime);
@@ -332,24 +337,29 @@ void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos)
 	}
 }
 
-line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos, vec2 offset)
+line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos)
 {
 	line l;
+	vec2 offset;
 	switch (dir)
 	{
 	case TILE_LEFT:
+		offset = (vec2){ body->sensor_offset, body->on_slope ? 12.0f : 2.0f };
 		l.start = (vec2){ pos.x - body->half_dim.x - offset.x, pos.y - body->half_dim.y + offset.y };
 		l.end = (vec2){ pos.x - body->half_dim.x - offset.x, pos.y + body->half_dim.y - offset.y };
 		break;
 	case TILE_RIGHT:
+		offset = (vec2){ body->sensor_offset, body->on_slope ? 12.0f : 2.0f };
 		l.start = (vec2){ pos.x + body->half_dim.x + offset.x, pos.y - body->half_dim.y + offset.y };
 		l.end = (vec2){ pos.x + body->half_dim.x + offset.x, pos.y + body->half_dim.y - offset.y };
 		break;
 	case TILE_TOP:
+		offset = (vec2){ 2.0f, body->sensor_offset };
 		l.start = (vec2){ pos.x - body->half_dim.x + offset.x, pos.y + body->half_dim.y + offset.y };
 		l.end = (vec2){ pos.x + body->half_dim.x - offset.x, pos.y + body->half_dim.y + offset.y };
 		break;
 	case TILE_BOTTOM:
+		offset = (vec2){ 2.0f, body->sensor_offset };
 		l.start = (vec2){ pos.x - body->half_dim.x + offset.x, pos.y - body->half_dim.y - offset.y };
 		l.end = (vec2){ pos.x + body->half_dim.x - offset.x, pos.y - body->half_dim.y - offset.y };
 		break;

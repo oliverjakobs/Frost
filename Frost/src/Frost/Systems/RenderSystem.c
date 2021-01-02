@@ -73,8 +73,25 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 
 		if (body->type == RIGID_BODY_DYNAMIC)
 		{
-			line sensor = TileBodyGetSensor(&body->body, TILE_BOTTOM, body->body.position, body->body.offset_vertical);
+			vec2 position = body->body.position;
+			vec2 half_dim = body->body.half_dim;
+			float tile_size = body->body.map->tile_size;
+			float sensor_offset = body->body.sensor_offset;
+
+			line sensor = TileBodyGetSensor(&body->body, TILE_BOTTOM, body->body.position);
 			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+			vec2 offset = (vec2){ -(half_dim.x + tile_size - sensor_offset), sensor_offset - half_dim.y };
+			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
+
+			offset = (vec2){ -(half_dim.x + (tile_size / 2.0f) - sensor_offset), sensor_offset - half_dim.y };
+			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
+
+			offset = (vec2){ half_dim.x + tile_size - sensor_offset, sensor_offset - half_dim.y };
+			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
+
+			offset = (vec2){ half_dim.x + (tile_size / 2.0f) - sensor_offset, sensor_offset - half_dim.y };
+			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
 		}
 	}
 

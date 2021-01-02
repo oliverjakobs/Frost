@@ -14,8 +14,6 @@ typedef struct
 	// -----------------------------------
 	float gravity_scale;	// amplifies the magnitude of the gravity
 	float sensor_offset;	// offset to the edges
-	vec2 offset_horizontal;
-	vec2 offset_vertical;
 
 	// CollisionState
 	int collision_state[4];
@@ -36,11 +34,14 @@ int TileBodyCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y);
 int TileBodyCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x);
 int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x);
 
+int TileBodyCheckSlope(const TileBody* body);
+
+void TileBodyResetCollision(TileBody* body);
 void TileBodySetCollision(TileBody* body, TileDirection dir);
 
 void TileBodyResolveMap(TileBody* body, vec2 gravity, float deltatime);
 void TileBodyResolveBody(TileBody* body, const TileBody* other, vec2 old_pos);
 
-line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos, vec2 offset);
+line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos);
 
 #endif // !TILE_BODY_H
