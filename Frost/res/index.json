@@ -4,7 +4,7 @@
 		"trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
 		"door": { "path": "res/textures/door.png", "atlas": [ 1, 2 ] },
 		"items": { "path": "res/textures/items.png", "atlas": [ 1, 6 ] },
-		"tiles": { "path": "res/textures/tiles.png", "atlas": [ 2, 4 ] },
+		"tiles": { "path": "res/textures/tiles.png", "atlas": [ 3, 4 ] },
 		"machine": { "path": "res/textures/machine.png" },
 		"floor": { "path": "res/textures/floor.png" },
 		"box": { "path": "res/textures/box.png" },

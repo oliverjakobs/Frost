@@ -105,6 +105,9 @@ void TileMapRenderDebug(TileMap* map, mat4 view_proj)
 			Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
 			break;
 		}
+		case TILE_PLATFORM:
+			Primitives2DRenderRect(tile->pos.x, tile->pos.y + map->tile_size - 4.0f, map->tile_size, 4.0f, IGNIS_CYAN);
+			break;
 		default:
 			break;
 		}

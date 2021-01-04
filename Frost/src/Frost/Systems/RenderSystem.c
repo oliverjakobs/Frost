@@ -78,7 +78,7 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 			float tile_size = body->body.map->tile_size;
 			float sensor_offset = body->body.sensor_offset;
 
-			Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->body.slope_detected ? IGNIS_BLUE : IGNIS_WHITE);
+			Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->body.on_slope ? IGNIS_BLUE : IGNIS_WHITE);
 
 			line sensor = TileBodyGetSensor(&body->body, TILE_BOTTOM, body->body.position);
 			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
@@ -91,18 +91,6 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 
 			sensor = TileBodyGetSensor(&body->body, TILE_RIGHT, body->body.position);
 			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-			vec2 offset = (vec2){ -(half_dim.x + tile_size - sensor_offset), sensor_offset - half_dim.y };
-			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
-
-			offset = (vec2){ -(half_dim.x + (tile_size / 2.0f) - sensor_offset), sensor_offset - half_dim.y };
-			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
-
-			offset = (vec2){ half_dim.x + tile_size - sensor_offset, sensor_offset - half_dim.y };
-			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
-
-			offset = (vec2){ half_dim.x + (tile_size / 2.0f) - sensor_offset, sensor_offset - half_dim.y };
-			Primitives2DRenderCircle(position.x + offset.x, position.y + offset.y, 2.0f, IGNIS_GREEN);
 		}
 		else
 			Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, IGNIS_WHITE);

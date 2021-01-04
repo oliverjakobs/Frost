@@ -2,6 +2,7 @@
 
 #include "toolbox/toolbox.h"
 
+#include <stdio.h>
 
 // To show a body's sensors on render
 #define TILE_SHOW_SENSOR 0
@@ -84,11 +85,11 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 
 	float tile_size = body->map->tile_size;
 
-	int32_t start_col = TileMapClamp(body->map, old_sensor.start.x);
-	int32_t end_col = TileMapClamp(body->map, sensor.end.x);
+	int32_t start_col = TileMapClamp(body->map, sensor.start.x);
+	int32_t end_col = TileMapClamp(body->map, old_sensor.end.x);
 
-	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
-	int32_t end_row = TileMapClamp(body->map, sensor.end.y + (body->slope_detected ? tile_size * 0.5f : 0.0f));
+	int32_t start_row = TileMapClamp(body->map, old_sensor.end.y + (body->slope_detected ? tile_size * 0.5f : 0.0f));
+	int32_t end_row = TileMapClamp(body->map, sensor.start.y);
 
 	if (start_row < 0 || end_row < 0)
 	{
@@ -98,33 +99,45 @@ int TileBodyCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 
 	for (int32_t row = start_row; row >= end_row; --row)
 	{
+		TileType collision_type = TILE_EMPTY;
 		for (int32_t col = start_col; col <= end_col; ++col)
 		{
 			Tile* tile = TileMapAt(body->map, row, col);
-			if (!tile) continue;
+			if (!tile || (collision_type != TILE_EMPTY && collision_type <= tile->type)) continue;
 
 			switch (tile->type)
 			{
 			case TILE_SOLID:
-				if (body->on_slope) break;
-
-				*ground_y = tile->pos.y + tile_size;
-				return 1;
+				if (!body->on_slope)
+				{
+					*ground_y = tile->pos.y + tile_size;
+					collision_type = TILE_SOLID;
+				}
+				break;
 			case TILE_SLOPE_LEFT:
 				*ground_y = tile->pos.y + tile_size - body->position.x + body->half_dim.x + tile->pos.x;
-				body->on_slope = 1;
-				return 1;
+				collision_type = TILE_SLOPE_LEFT;
+				break;
 			case TILE_SLOPE_RIGHT:
 				*ground_y = tile->pos.y + body->position.x + body->half_dim.x - tile->pos.x;
-				body->on_slope = 1;
-				return 1;
+				collision_type = TILE_SLOPE_RIGHT;
+				break;
 			case TILE_PLATFORM:
-				if (body->drop) break;
-
-				*ground_y = tile->pos.y + tile_size;
-				if ((old_pos.y - body->half_dim.y) >= *ground_y)
-					return 1;
+				if (!body->drop)
+				{
+					*ground_y = tile->pos.y + tile_size;
+					if ((old_pos.y - body->half_dim.y) >= *ground_y)
+						collision_type = TILE_PLATFORM;
+				}
+				break;
 			}
+		}
+		if (collision_type != TILE_EMPTY)
+		{
+			if (collision_type == TILE_SLOPE_RIGHT || collision_type == TILE_SLOPE_LEFT)
+				body->on_slope = 1;
+
+			return 1;
 		}
 	}
 
