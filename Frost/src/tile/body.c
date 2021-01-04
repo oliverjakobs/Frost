@@ -220,29 +220,30 @@ int TileBodyCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 
 int TileBodyCheckSlope(const TileBody* body)
 {
-	int slope_detected = 0;
 	float tile_size = body->map->tile_size;
+	
+	float near_x = 0.0f;
+	float far_x = 0.0f;
+	float y = 0.0f;
+	TileType slope_type;
 
 	if (body->velocity.x < 0.0f)
 	{
-		// far sensors
-		vec2 offset = (vec2){ -(body->half_dim.x + tile_size - body->sensor_offset), body->sensor_offset - body->half_dim.y };
-		slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
-		// near sensors
-		offset = (vec2){ -(body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset), body->sensor_offset - body->half_dim.y };
-		slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_LEFT);
+		slope_type = TILE_SLOPE_LEFT;
+		far_x = body->position.x - body->half_dim.x - tile_size + body->sensor_offset;
+		near_x = body->position.x - body->half_dim.x - tile_size * 0.5f + body->sensor_offset;
+		y = body->position.y + body->sensor_offset - body->half_dim.y;
 	}
 	else if (body->velocity.x > 0.0f)
 	{
-		// far sensors
-		vec2 offset = (vec2){ body->half_dim.x + tile_size - body->sensor_offset, body->sensor_offset - body->half_dim.y };
-		slope_detected = TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
-		// near sensors
-		offset = (vec2){ body->half_dim.x + (tile_size / 2.0f) - body->sensor_offset, body->sensor_offset - body->half_dim.y };
-		slope_detected |= TileMapCheckType(body->map, vec2_add(body->position, offset), TILE_SLOPE_RIGHT);
+		slope_type = TILE_SLOPE_RIGHT;
+		far_x = body->position.x + body->half_dim.x + tile_size - body->sensor_offset;
+		near_x = body->position.x + body->half_dim.x + tile_size * 0.5f - body->sensor_offset;
+		y = body->position.y + body->sensor_offset - body->half_dim.y;
 	}
+	else return 0;
 
-	return slope_detected;
+	return TileMapCheckType(body->map, (vec2){far_x, y}, slope_type) || TileMapCheckType(body->map, (vec2){ near_x, y }, TILE_SLOPE_RIGHT);
 }
 
 void TileBodyResetCollision(TileBody* body)
