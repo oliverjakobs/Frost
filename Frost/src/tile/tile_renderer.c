@@ -1,6 +1,7 @@
 #include "tile_renderer.h"
 
-#include "Graphics/Primitives2D.h"
+#include "body.h"
+#include "tilemap.h"
 
 int TileRendererInit(TileRenderer* renderer, TileMap* map)
 {
@@ -68,7 +69,7 @@ void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_pr
 	glDrawElementsInstanced(GL_TRIANGLES, renderer->quad.vao.element_count, GL_UNSIGNED_INT, NULL, (GLsizei)renderer->tile_count);
 }
 
-void TileMapRenderDebug(TileMap* map, mat4 view_proj)
+void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
 {
 	Primitives2DStart(view_proj.v);
 
@@ -115,4 +116,31 @@ void TileMapRenderDebug(TileMap* map, mat4 view_proj)
 	}
 
 	Primitives2DFlush();
+}
+
+void TileBodyRenderDebug(const TileBody* body)
+{
+	vec2 pos = vec2_sub(body->position, body->half_dim);
+	vec2 dim = vec2_mult(body->half_dim, 2.0f);
+
+	if (body->type == TILE_BODY_DYNAMIC)
+	{
+		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->on_slope ? IGNIS_BLUE : IGNIS_GREEN);
+
+		line sensor = TileBodyGetSensor(body, TILE_BOTTOM, body->position);
+		Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+		sensor = TileBodyGetSensor(body, TILE_TOP, body->position);
+		Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+		sensor = TileBodyGetSensor(body, TILE_LEFT, body->position);
+		Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+		sensor = TileBodyGetSensor(body, TILE_RIGHT, body->position);
+		Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+	}
+	else
+	{
+		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, IGNIS_WHITE);
+	}
 }

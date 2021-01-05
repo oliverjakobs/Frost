@@ -1,5 +1,6 @@
 #include "Frost/Frost.h"
 
+#include "tile/tilemap.h"
 #include "tile/tile_renderer.h"
 
 Camera camera;

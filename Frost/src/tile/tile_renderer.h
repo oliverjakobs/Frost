@@ -1,10 +1,9 @@
 #ifndef TILE_RENDERER_H
 #define TILE_RENDERER_H
 
-#include "tilemap.h"
+#include "tile.h"
 
-#include "Ignis/Ignis.h"
-#include "Ignis/Quad.h"
+#include "Graphics/Renderer.h"
 
 typedef struct TileRenderer
 {
@@ -24,6 +23,7 @@ void TileRendererDestroy(TileRenderer* renderer);
 
 void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj);
 
-void TileMapRenderDebug(TileMap* map, mat4 view_proj);
+void TileMapRenderDebug(const TileMap* map, mat4 view_proj);
+void TileBodyRenderDebug(const TileBody* body);
 
 #endif // !TILE_RENDERER_H

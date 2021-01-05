@@ -7,12 +7,6 @@
 
 typedef enum
 {
-	RIGID_BODY_STATIC,
-	RIGID_BODY_DYNAMIC
-} RigidBodyType;
-
-typedef enum
-{
 	RIGID_BODY_FILTER_NONE		= 0,		/* 00000000 */
 	RIGID_BODY_FILTER_WORLD		= 1 << 0,	/* 00000001 */
 	RIGID_BODY_FILTER_PLAYER	= 1 << 1,	/* 00000010	*/
@@ -29,8 +23,6 @@ typedef struct
 	TileBody body;
 
 	vec2 offset;
-
-	RigidBodyType type;
 	RigidBodyFilter filter;
 } RigidBody;
 

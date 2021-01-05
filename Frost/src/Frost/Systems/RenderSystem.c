@@ -1,7 +1,7 @@
 #include "RenderSystem.h"
 
 #include "Frost/FrostEcs.h"
-#include "Graphics/Renderer.h"
+#include "tile/tile_renderer.h"
 
 void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 {
@@ -66,34 +66,7 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
 	{
 		RigidBody* body = EcsComponentMapIterValue(iter);
-
-		vec2 pos = vec2_sub(body->body.position, body->body.half_dim);
-		vec2 dim = vec2_mult(body->body.half_dim, 2.0f);
-		Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->type == RIGID_BODY_DYNAMIC ? IGNIS_GREEN : IGNIS_WHITE);
-
-		if (body->type == RIGID_BODY_DYNAMIC)
-		{
-			vec2 position = body->body.position;
-			vec2 half_dim = body->body.half_dim;
-			float tile_size = body->body.map->tile_size;
-			float sensor_offset = body->body.sensor_offset;
-
-			Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->body.on_slope ? IGNIS_BLUE : IGNIS_WHITE);
-
-			line sensor = TileBodyGetSensor(&body->body, TILE_BOTTOM, body->body.position);
-			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-			sensor = TileBodyGetSensor(&body->body, TILE_TOP, body->body.position);
-			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-			sensor = TileBodyGetSensor(&body->body, TILE_LEFT, body->body.position);
-			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-			sensor = TileBodyGetSensor(&body->body, TILE_RIGHT, body->body.position);
-			Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-		}
-		else
-			Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, IGNIS_WHITE);
+		TileBodyRenderDebug(&body->body);
 	}
 
 	Primitives2DFlush();

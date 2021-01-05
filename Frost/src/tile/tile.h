@@ -14,14 +14,20 @@ typedef enum
 typedef enum
 {
 	TILE_EMPTY = 0,
-	TILE_SOLID = 1,
-	TILE_SLOPE_LEFT = 2,
-	TILE_SLOPE_RIGHT = 3,
-	TILE_PLATFORM = 4,
+	TILE_SOLID,
+	TILE_SLOPE_LEFT,
+	TILE_SLOPE_RIGHT,
+	TILE_PLATFORM,
 	// not implemented yet
-	TILE_CEIL_LEFT = 5,
-	TILE_CEIL_RIGHT = 6
+	TILE_CEIL_LEFT,
+	TILE_CEIL_RIGHT
 } TileType;
+
+typedef enum
+{
+	TILE_BODY_STATIC,
+	TILE_BODY_DYNAMIC
+} TileBodyType;
 
 typedef uint32_t TileID;
 
@@ -31,5 +37,8 @@ typedef struct
 	vec2 pos;
 	TileType type;
 } Tile;
+
+typedef struct TileMap TileMap;
+typedef struct TileBody TileBody;
 
 #endif /* !TILE_H */

@@ -283,6 +283,7 @@
     <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
     <ClInclude Include="src\tile\body.h" />
+    <ClInclude Include="src\tile\collision.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -463,6 +464,7 @@
     <ClCompile Include="src\tile\tilemap.c" />
     <ClCompile Include="src\tile\tile_renderer.c" />
     <ClCompile Include="src\tile\body.c" />
+    <ClCompile Include="src\tile\collision.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
