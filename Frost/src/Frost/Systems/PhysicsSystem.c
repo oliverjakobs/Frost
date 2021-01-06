@@ -4,6 +4,9 @@
 
 #include "tile/collision.h"
 
+static const vec2 GRAVITY = { 0.0f, -980.0f };
+static const float SLOPE_GRIP = 100.0f;
+
 void PhysicsSystem(Ecs* ecs, float deltatime)
 {
 	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
@@ -18,10 +21,10 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 
 		if (body->body.type == TILE_BODY_STATIC) continue;
 
-		vec2 gravity = (vec2){ 0.0f, -980.0f };
-
 		vec2 old_position = body->body.position;
-		TileBodyTick(&body->body, gravity, deltatime);
+
+		TileBodyApplyGravity(&body->body, GRAVITY, SLOPE_GRIP, deltatime);
+		TileBodyTick(&body->body, deltatime);
 
 		for (EcsComponentMapIter* other_iter = EcsComponentMapIterator(map); other_iter; other_iter = EcsComponentMapIterNext(map, other_iter))
 		{

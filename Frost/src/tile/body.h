@@ -33,7 +33,8 @@ void TileBodyMoveY(TileBody* body, float y);
 void TileBodyResetCollision(TileBody* body);
 void TileBodySetCollision(TileBody* body, TileDirection dir);
 
-void TileBodyTick(TileBody* body, vec2 gravity, float deltatime);
+void TileBodyApplyGravity(TileBody* body, vec2 gravity, float slope_grip, float deltatime);
+void TileBodyTick(TileBody* body, float deltatime);
 
 line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos);
 

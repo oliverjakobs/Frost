@@ -22,6 +22,7 @@ void ignisDeleteQuad(IgnisQuad* quad);
 void ignisBindQuad(IgnisQuad* quad);
 
 void ignisDrawQuadElements(IgnisQuad* quad, GLenum mode);
+void ignisDrawQuadElementsInstanced(IgnisQuad* quad, GLenum mode, GLsizei primcount);
 
 #ifdef __cplusplus
 }

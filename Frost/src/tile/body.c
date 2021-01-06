@@ -5,9 +5,6 @@
 //
 #define TILE_SENSOR_OFFSET 2.0f
 
-// 
-#define TILE_SLOPE_GRIP 100.0f
-
 void TileBodyInit(TileBody* body, const TileMap* map, TileBodyType type, float x, float y, float h_w, float h_h)
 {
 	body->position = (vec2){ x, y };
@@ -18,10 +15,7 @@ void TileBodyInit(TileBody* body, const TileMap* map, TileBodyType type, float x
 	body->velocity = vec2_zero();
 	body->sensor_offset = TILE_SENSOR_OFFSET;
 
-	body->collision_state[TILE_LEFT] = 0;
-	body->collision_state[TILE_RIGHT] = 0;
-	body->collision_state[TILE_TOP] = 0;
-	body->collision_state[TILE_BOTTOM] = 0;
+	TileBodyResetCollision(body);
 
 	body->on_slope = 0;
 	body->slope_detected = 0;
@@ -84,26 +78,28 @@ void TileBodyResetCollision(TileBody* body)
 
 void TileBodySetCollision(TileBody* body, TileDirection dir)
 {
-	if (dir >= 4 || dir < 0) return;
-
-	body->collision_state[dir] = 1;
-
-	if (dir == TILE_LEFT || dir == TILE_RIGHT)
+	if (dir >= 4 || dir < 0) 
+		return;
+	else if (dir == TILE_LEFT || dir == TILE_RIGHT)
 		body->velocity.x = 0.0f;
 	else if (dir == TILE_TOP || dir == TILE_BOTTOM)
 		body->velocity.y = 0.0f;
+
+	body->collision_state[dir] = 1;
 }
 
-void TileBodyTick(TileBody* body, vec2 gravity, float deltatime)
+void TileBodyApplyGravity(TileBody* body, vec2 gravity, float slope_grip, float deltatime)
 {
-	/* apply gravity */
 	float grav = body->gravity_scale * deltatime;
 	if (body->on_slope && body->velocity.y <= 0.0f)
-		grav *= TILE_SLOPE_GRIP;
+		grav *= slope_grip;
 
 	body->velocity.x += gravity.x * grav;
 	body->velocity.y += gravity.y * grav;
+}
 
+void TileBodyTick(TileBody* body, float deltatime)
+{
 	body->slope_detected = TileCheckSlope(body);
 
 	TileBodyResetCollision(body);
@@ -118,28 +114,32 @@ void TileBodyTick(TileBody* body, vec2 gravity, float deltatime)
 line TileBodyGetSensor(const TileBody* body, TileDirection dir, vec2 pos)
 {
 	line l;
-	vec2 offset;
+	float sensor_padding = 2.0f;
 	switch (dir)
 	{
 	case TILE_LEFT:
-		offset = (vec2){ body->sensor_offset, body->on_slope ? 12.0f : 2.0f };
-		l.start = (vec2){ pos.x - body->half_dim.x - offset.x, pos.y - body->half_dim.y + offset.y };
-		l.end = (vec2){ pos.x - body->half_dim.x - offset.x, pos.y + body->half_dim.y - offset.y };
+		l.start.x = pos.x - body->half_dim.x - body->sensor_offset;
+		l.start.y = pos.y - body->half_dim.y + (body->on_slope ? 2.0f : 1.0f) * sensor_padding;
+		l.end.x = pos.x - body->half_dim.x - body->sensor_offset;
+		l.end.y = pos.y + body->half_dim.y - (body->on_slope ? 2.0f : 1.0f) * sensor_padding;
 		break;
 	case TILE_RIGHT:
-		offset = (vec2){ body->sensor_offset, body->on_slope ? 12.0f : 2.0f };
-		l.start = (vec2){ pos.x + body->half_dim.x + offset.x, pos.y - body->half_dim.y + offset.y };
-		l.end = (vec2){ pos.x + body->half_dim.x + offset.x, pos.y + body->half_dim.y - offset.y };
+		l.start.x = pos.x + body->half_dim.x + body->sensor_offset;
+		l.start.y = pos.y - body->half_dim.y + (body->on_slope ? 2.0f : 1.0f) * sensor_padding;
+		l.end.x = pos.x + body->half_dim.x + body->sensor_offset;
+		l.end.y = pos.y + body->half_dim.y - (body->on_slope ? 2.0f : 1.0f) * sensor_padding;
 		break;
 	case TILE_TOP:
-		offset = (vec2){ 2.0f, body->sensor_offset };
-		l.start = (vec2){ pos.x - body->half_dim.x + offset.x, pos.y + body->half_dim.y + offset.y };
-		l.end = (vec2){ pos.x + body->half_dim.x - offset.x, pos.y + body->half_dim.y + offset.y };
+		l.start.x = pos.x - body->half_dim.x + sensor_padding;
+		l.start.y = pos.y + body->half_dim.y + body->sensor_offset;
+		l.end.x = pos.x + body->half_dim.x - sensor_padding;
+		l.end.y = pos.y + body->half_dim.y + body->sensor_offset;
 		break;
 	case TILE_BOTTOM:
-		offset = (vec2){ 2.0f, body->sensor_offset };
-		l.start = (vec2){ pos.x - body->half_dim.x + offset.x, pos.y - body->half_dim.y - offset.y };
-		l.end = (vec2){ pos.x + body->half_dim.x - offset.x, pos.y - body->half_dim.y - offset.y };
+		l.start.x = pos.x - body->half_dim.x + sensor_padding;
+		l.start.y = pos.y - body->half_dim.y - body->sensor_offset;
+		l.end.x = pos.x + body->half_dim.x - sensor_padding;
+		l.end.y = pos.y - body->half_dim.y - body->sensor_offset;
 		break;
 	default:
 		l.start = vec2_zero();

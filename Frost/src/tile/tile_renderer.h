@@ -11,6 +11,8 @@ typedef struct TileRenderer
     IgnisShader shader;
 
     size_t tile_count;
+    vec2* offsets;
+    GLuint* frames;
 
     GLint uniform_location_view_proj;
     GLint uniform_location_model;
@@ -18,8 +20,10 @@ typedef struct TileRenderer
     GLint uniform_location_cols;
 } TileRenderer;
 
-int TileRendererInit(TileRenderer* renderer, TileMap* map);
+int TileRendererInit(TileRenderer* renderer, const TileMap* map);
 void TileRendererDestroy(TileRenderer* renderer);
+
+void TileRendererUpdateBuffers(TileRenderer* renderer, const TileMap* map);
 
 void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj);
 

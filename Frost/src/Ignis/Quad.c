@@ -6,12 +6,12 @@ int ignisCreateQuad(IgnisQuad* quad, GLfloat* vertices, size_t vertex_count, GLe
 {
 	if (ignisGenerateVertexArray(&quad->vao) == IGNIS_SUCCESS)
 	{
-		if (ignisAddArrayBufferLayout(&quad->vao, sizeof(GLfloat) * vertex_count, vertices, usage, 0, layout, layout_size) == IGNIS_FAILURE)
-			return IGNIS_FAILURE;
-
-		quad->vertex_count = vertex_count;
-
-		return ignisLoadElementBuffer(&quad->vao, indices, element_count, GL_STATIC_DRAW);
+		GLsizeiptr size = sizeof(GLfloat) * vertex_count;
+		if (ignisAddArrayBufferLayout(&quad->vao, size, vertices, usage, 0, layout, layout_size) == IGNIS_SUCCESS)
+		{
+			quad->vertex_count = vertex_count;
+			return ignisLoadElementBuffer(&quad->vao, indices, element_count, GL_STATIC_DRAW);
+		}
 	}
 
 	return IGNIS_FAILURE;
@@ -51,4 +51,10 @@ void ignisDrawQuadElements(IgnisQuad* quad, GLenum mode)
 {
 	ignisBindQuad(quad);
 	glDrawElements(mode, quad->vao.element_count, GL_UNSIGNED_INT, NULL);
+}
+
+void ignisDrawQuadElementsInstanced(IgnisQuad* quad, GLenum mode, GLsizei primcount)
+{
+	ignisBindQuad(quad);
+	glDrawElementsInstanced(mode, quad->vao.element_count, GL_UNSIGNED_INT, NULL, primcount);
 }

@@ -41,13 +41,13 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 	for (int i = 0; i < element.elements; i++)
 	{
 		char name[APPLICATION_STR_LEN];
-		tb_json_string((char*)element.value, "{*", name, APPLICATION_STR_LEN, &i);
+		tb_json_string(element.value, "{*", name, APPLICATION_STR_LEN, &i);
 
 		tb_json_element scene_element;
-		tb_json_read_format((char*)element.value, &scene_element, "{'%s'", name);
+		tb_json_read_format(element.value, &scene_element, "{'%s'", name);
 
 		char scene_path[APPLICATION_PATH_LEN];
-		strncpy(scene_path, (char*)scene_element.value, scene_element.bytelen);
+		strncpy(scene_path, scene_element.value, scene_element.bytelen);
 
 		scene_path[scene_element.bytelen] = '\0';
 
@@ -59,13 +59,13 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 	for (int i = 0; i < element.elements; i++)
 	{
 		char name[APPLICATION_STR_LEN];
-		tb_json_string((char*)element.value, "{*", name, APPLICATION_STR_LEN, &i);
+		tb_json_string(element.value, "{*", name, APPLICATION_STR_LEN, &i);
 
 		tb_json_element template_element;
-		tb_json_read_format((char*)element.value, &template_element, "{'%s'", name);
+		tb_json_read_format(element.value, &template_element, "{'%s'", name);
 
 		char templ_path[APPLICATION_PATH_LEN];
-		strncpy(templ_path, (char*)template_element.value, template_element.bytelen);
+		strncpy(templ_path, template_element.value, template_element.bytelen);
 
 		templ_path[template_element.bytelen] = '\0';
 
@@ -345,13 +345,7 @@ int SceneSave(Scene* scene, const char* path)
 
 int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index)
 {
-	char* path = tb_hashmap_find(&scene->templates, templ);
-	if (!path)
-	{
-		DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
-		return 0;
-	}
-
+	const char* path =  SceneGetTemplatePath(scene, templ);
 	char* json = ignisReadFile(path, NULL);
 
 	if (!json)
@@ -377,4 +371,11 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 	free(json);
 
 	return 1;
+}
+
+const char* SceneGetTemplatePath(const Scene* scene, const char* templ)
+{
+	const char* path = tb_hashmap_find(&scene->templates, templ);
+	if (!path) DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
+	return path;
 }

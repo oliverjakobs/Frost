@@ -41,8 +41,6 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 		/* TODO load inv content */
 		InventorySetCellContent(&inv, 0, 3);
 		InventorySetCellContent(&inv, 1, 1);
-		InventorySetCellContent(&inv, 2, 2);
-		InventorySetCellContent(&inv, 3, 3);
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INVENTORY, &inv);
 	}

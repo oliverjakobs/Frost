@@ -35,7 +35,6 @@ typedef struct
 
 static InventorySystemData inventory_data;
 
-
 int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera, float cell_size, float padding)
 {
 	inventory_data.camera = camera;
@@ -155,7 +154,7 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 	{
 		Inventory* inv = EcsComponentMapIterValue(iter);
 
-		if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)))
+		if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, inv->size)) && inv->state != INVENTORY_CLOSED)
 			InventoryCellIDSet(&inventory_data.hover, EcsComponentMapIterKey(iter), InventoryGetCellAt(inv, mouse));
 	}
 

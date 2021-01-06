@@ -3,35 +3,24 @@
 #include "body.h"
 #include "tilemap.h"
 
-int TileRendererInit(TileRenderer* renderer, TileMap* map)
+int TileRendererInit(TileRenderer* renderer, const TileMap* map)
 {
-	size_t tile_count = map->height * map->width;
+	/* TODO error checking */
+	renderer->tile_count = map->height * map->width;
 
 	ignisCreateQuadTextured(&renderer->quad, GL_STATIC_DRAW);
 
-	vec2* offsets = malloc(sizeof(vec2) * tile_count);
-	GLuint* frames = malloc(sizeof(GLuint) * tile_count);
-
-	for (size_t i = 0; i < tile_count; ++i)
-	{
-		offsets[i].x = map->tiles[i].pos.x;
-		offsets[i].y = map->tiles[i].pos.y;
-
-		frames[i] = map->tiles[i].id;
-	}
-
-	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(vec2) * tile_count, offsets, GL_DYNAMIC_DRAW);
+	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(vec2) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
 	ignisVertexAttribFloat(2, 2, GL_FALSE, 2, 0);
 	ignisVertexAttribDivisor(2, 1);
 
-	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(GLuint) * tile_count, frames, GL_DYNAMIC_DRAW);
+	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(GLuint) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
 	ignisVertexAttribInt(3, 1, 1, 0);
 	ignisVertexAttribDivisor(3, 1);
 
-	renderer->tile_count = tile_count;
-
-	free(offsets);
-	free(frames);
+	renderer->offsets = malloc(sizeof(vec2) * renderer->tile_count);
+	renderer->frames = malloc(sizeof(GLuint) * renderer->tile_count);
+	TileRendererUpdateBuffers(renderer, map);
 
 	ignisCreateShadervf(&renderer->shader, "res/shaders/tile.vert", "res/shaders/tile.frag");
 	ignisUseShader(&renderer->shader);
@@ -50,6 +39,24 @@ void TileRendererDestroy(TileRenderer* renderer)
 {
 	ignisDeleteShader(&renderer->shader);
 	ignisDeleteQuad(&renderer->quad);
+
+	free(renderer->offsets);
+	free(renderer->frames);
+}
+
+void TileRendererUpdateBuffers(TileRenderer* renderer, const TileMap* map)
+{
+	for (size_t i = 0; i < renderer->tile_count; ++i)
+	{
+		renderer->offsets[i].x = map->tiles[i].pos.x;
+		renderer->offsets[i].y = map->tiles[i].pos.y;
+
+		renderer->frames[i] = map->tiles[i].id;
+	}
+
+	IgnisBuffer* buffers = renderer->quad.vao.array_buffers;
+	ignisBufferSubData(&buffers[1], 0, sizeof(vec2) * renderer->tile_count, renderer->offsets);
+	ignisBufferSubData(&buffers[2], 0, sizeof(GLuint) * renderer->tile_count, renderer->frames);
 }
 
 void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj)
@@ -63,18 +70,18 @@ void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_pr
 	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_rows, texture->rows);
 	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_cols, texture->columns);
 
-	ignisBindQuad(&renderer->quad);
 	ignisBindTexture2D(texture, 0);
-
-	glDrawElementsInstanced(GL_TRIANGLES, renderer->quad.vao.element_count, GL_UNSIGNED_INT, NULL, (GLsizei)renderer->tile_count);
+	ignisDrawQuadElementsInstanced(&renderer->quad, GL_TRIANGLES, (GLsizei)renderer->tile_count);
 }
 
 void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
 {
+	float tile_size = map->tile_size;
+
 	Primitives2DStart(view_proj.v);
 
 	/* map border */
-	Primitives2DRenderRect(0.0f, 0.0f, map->width * map->tile_size, map->height * map->tile_size, IGNIS_WHITE);
+	Primitives2DRenderRect(0.0f, 0.0f, map->width * tile_size, map->height * tile_size, IGNIS_WHITE);
 
 	for (size_t i = 0; i < (map->width * map->height); ++i)
 	{
@@ -82,15 +89,15 @@ void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
 		switch (tile->type)
 		{
 		case TILE_SOLID:
-			Primitives2DRenderRect(tile->pos.x, tile->pos.y, map->tile_size, map->tile_size, IGNIS_WHITE);
+			Primitives2DRenderRect(tile->pos.x, tile->pos.y, tile_size, tile_size, IGNIS_WHITE);
 			break;
 		case TILE_SLOPE_RIGHT:
 		{
 			float vertices[] =
 			{
 				tile->pos.x, tile->pos.y,
-				tile->pos.x + map->tile_size, tile->pos.y,
-				tile->pos.x + map->tile_size, tile->pos.y + map->tile_size
+				tile->pos.x + tile_size, tile->pos.y,
+				tile->pos.x + tile_size, tile->pos.y + tile_size
 			};
 			Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
 			break;
@@ -100,14 +107,14 @@ void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
 			float vertices[] =
 			{
 				tile->pos.x, tile->pos.y,
-				tile->pos.x + map->tile_size, tile->pos.y,
-				tile->pos.x, tile->pos.y + map->tile_size
+				tile->pos.x + tile_size, tile->pos.y,
+				tile->pos.x, tile->pos.y + tile_size
 			};
 			Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
 			break;
 		}
 		case TILE_PLATFORM:
-			Primitives2DRenderRect(tile->pos.x, tile->pos.y + map->tile_size - 4.0f, map->tile_size, 4.0f, IGNIS_CYAN);
+			Primitives2DRenderRect(tile->pos.x, tile->pos.y + tile_size - 4.0f, tile_size, 4.0f, IGNIS_CYAN);
 			break;
 		default:
 			break;

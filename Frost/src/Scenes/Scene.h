@@ -47,4 +47,6 @@ int SceneSave(Scene* scene, const char* path);
 
 int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index);
 
+const char* SceneGetTemplatePath(const Scene* scene, const char* templ);
+
 #endif /* !SCENE_MANAGER_H */
