@@ -1,11 +1,10 @@
 ﻿{
-  "name": "player",
   "transform": {
 	"size": [ 40.0, 60.0 ]
   },
   "rigidbody": {
-    "type": 1,
-    "filter": 3
+    "type": "DYNAMIC",
+    "filter": "PLAYER"
   },
   "player": {
     "controls": { }

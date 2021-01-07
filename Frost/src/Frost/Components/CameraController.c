@@ -13,8 +13,8 @@ void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json)
 		CameraController comp;
 		comp.smooth = tb_json_float(element.value, "{'smooth'", NULL, 0.0f);
 		comp.camera = scene->camera;
-		comp.scene_w = scene->width;
-		comp.scene_h = scene->height;
+		comp.scene_w = SceneGetWidth(scene);
+		comp.scene_h = SceneGetHeight(scene);
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
 	}

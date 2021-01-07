@@ -7,8 +7,8 @@
 #include "Camera/Camera.h"
 
 #include "ECS/Ecs.h"
-
 #include "tile/tilemap.h"
+#include "tile/tile_renderer.h"
 
 typedef struct 
 {
@@ -17,14 +17,15 @@ typedef struct
 	tb_hashmap templates;
 
 	Ecs ecs;
+	TileMap map;
+	TileRenderer renderer;
+
 	Camera* camera;
 	Resources* resources;
-	TileMap map;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
-	float width;
-	float height;
+	IgnisTexture2D* tile_set;
 
 	Background background;
 } Scene;
@@ -42,11 +43,9 @@ void SceneOnRender(Scene* scene);
 void SceneOnRenderUI(Scene* scene);
 void SceneOnRenderDebug(Scene* scene);
 
-int SceneLoad(Scene* scene, const char* path);
-int SceneSave(Scene* scene, const char* path);
-
-int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index);
-
 const char* SceneGetTemplatePath(const Scene* scene, const char* templ);
+
+float SceneGetWidth(const Scene* scene);
+float SceneGetHeight(const Scene* scene);
 
 #endif /* !SCENE_MANAGER_H */

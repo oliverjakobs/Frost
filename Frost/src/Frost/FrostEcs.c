@@ -1,6 +1,6 @@
 #include "FrostEcs.h"
 
-#include "ECS/Loader.h"
+#include "ECS/EcsLoader.h"
 
 EcsDataComponentLoader data_comps[] =
 {

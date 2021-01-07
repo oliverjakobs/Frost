@@ -1,4 +1,4 @@
-#include "Loader.h"
+#include "EcsLoader.h"
 
 void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size)
 {

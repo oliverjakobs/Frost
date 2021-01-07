@@ -4,7 +4,7 @@
     "size": [ 16.0, 64.0 ]
   },
   "rigidbody": {
-    "filter": 2;
+    "filter": "PLAYER"
   },
   "sprite": {
     "texture": "door"

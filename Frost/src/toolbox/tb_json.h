@@ -214,8 +214,7 @@ char* tb_json_read_param(char* json, tb_json_element* result, char* query, int* 
 //   {
 //       char* array= (char*)theArray.value;
 //       tb_json_element arrayElement;
-//       int index;
-//       for(index = 0; index < theArray.elements; index++)
+//       for(int index = 0; index < theArray.elements; index++)
 //       {
 //           array = tb_json_array_step(array, &arrayElement);
 //           ...
@@ -231,6 +230,9 @@ long    tb_json_long(char* json, char* query, int* query_params, long default_va
 int     tb_json_int(char* json, char* query, int* query_params, int default_value);
 float   tb_json_float(char* json, char* query, int* query_params, float default_value);
 int     tb_json_string(char* json, char* query, char *dest, int destlen, int* query_params);
+
+typedef int(*tb_json_parse_func)(const char*, size_t);
+int     tb_json_parse(char* json, char* query, int* query_params, tb_json_parse_func parse);
 
 char* tb_json_atoi(char* p, unsigned int* result);  // string to unsigned int
 char* tb_json_atol(char* p, long* result);          // string to signed long

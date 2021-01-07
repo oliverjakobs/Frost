@@ -7,7 +7,6 @@
 		"box": "res/templates/box.json",
 		"chest": "res/templates/chest.json",
 		"door": "res/templates/door.json",
-		"floor": "res/templates/floor.json",
 		"machine": "res/templates/machine.json",
 		"player": "res/templates/player.json",
 		"tree_1": "res/templates/tree_1.json",

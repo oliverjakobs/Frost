@@ -104,7 +104,7 @@
     <ClInclude Include="src\ECS\ComponentMap.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\Entity.h" />
-    <ClInclude Include="src\ECS\Loader.h" />
+    <ClInclude Include="src\ECS\EcsLoader.h" />
     <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
@@ -148,6 +148,7 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\memory\arena.h" />
+    <ClInclude Include="src\Scenes\SceneLoader.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
     <ClInclude Include="src\tile\body.h" />
@@ -180,7 +181,7 @@
     <ClCompile Include="src\ECS\ComponentMap.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\Entity.c" />
-    <ClCompile Include="src\ECS\Loader.c" />
+    <ClCompile Include="src\ECS\EcsLoader.c" />
     <ClCompile Include="src\Event\Event.c" />
     <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />
@@ -221,6 +222,7 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\memory\arena.c" />
+    <ClCompile Include="src\Scenes\SceneLoader.c" />
     <ClCompile Include="src\tile\body.c" />
     <ClCompile Include="src\tile\collision.c" />
     <ClCompile Include="src\tile\tilemap.c" />
@@ -258,7 +260,6 @@
     <None Include="res\templates\box.json" />
     <None Include="res\templates\chest.json" />
     <None Include="res\templates\door.json" />
-    <None Include="res\templates\floor.json" />
     <None Include="res\templates\machine.json" />
     <None Include="res\templates\player.json" />
     <None Include="res\templates\tree_1.json" />

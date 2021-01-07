@@ -152,23 +152,30 @@
 
 #include "math/math.h"
 
+/* define types for key and mouse button */
+typedef int8_t MouseButton;
+typedef int16_t Key;
+
 void InputUpdate(GLFWwindow* context);
 
-int InputKeyPressed(int keycode);
-int InputKeyReleased(int keycode);
+int InputKeyPressed(Key keycode);
+int InputKeyReleased(Key keycode);
 
-int InputKeyHit(int keycode);
+int InputKeyHit(Key keycode);
 
-int InputKeyDown(int keycode);
-int InputKeyUp(int keycode);
+int InputKeyDown(Key keycode);
+int InputKeyUp(Key keycode);
 
-int InputMousePressed(int button);
-int InputMouseReleased(int button);
+int InputMousePressed(MouseButton button);
+int InputMouseReleased(MouseButton button);
 
 void InputMousePosition(float* x, float* y);
 float InputMouseX();
 float InputMouseY();
 
 vec2 InputMousePositionVec2();
+
+Key InputParseKeyCode(const char* str);
+MouseButton InputParseMouseButton(const char* str);
 
 #endif /* !INPUT_H */

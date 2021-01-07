@@ -508,6 +508,14 @@ int tb_json_string(char* json, char* query, char* dest, int destlen, int* query_
     return element.bytelen;
 }
 
+int tb_json_parse(char* json, char* query, int* query_params, tb_json_parse_func parse)
+{
+    tb_json_element element;
+    tb_json_read_param(json, &element, query, query_params);
+
+    return parse(element.value, element.bytelen);
+}
+
 // read unsigned int from string
 char* tb_json_atoi(char* p, unsigned int* result)
 {

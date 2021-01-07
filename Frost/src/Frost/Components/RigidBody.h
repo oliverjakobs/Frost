@@ -5,6 +5,31 @@
 
 #include "Scenes/Scene.h"
 
+/*
+REQUIRES:
+	- transform
+
+PARSE_RULES:
+
+TileBodyType:
+	"DYNAMIC"	-> TILE_BODY_DYNAMIC
+	default		-> TILE_BODY_STATIC
+
+RigidBodyFilter:
+	"WORLD"		-> RIGID_BODY_FILTER_WORLD
+	"PLAYER"	-> RIGID_BODY_FILTER_PLAYER
+	default		-> RIGID_BODY_FILTER_NONE
+
+JSON - Template:
+
+"rigidbody": {
+	"type": <TileBodyType>,
+	"filter": <RigidBodyFilter>,
+	"halfsize": [ <HALF_WIDTH:float>, <HALF_HEIGHT:float> ], -- OPTIONAL (default transform size/2)
+	"offset": [ <X:float>, <Y:float> ], -- OPTIONAL (default [ 0.0f, HALF_HEIGHT ])
+}
+*/
+
 typedef enum
 {
 	RIGID_BODY_FILTER_NONE		= 0,		/* 00000000 */
@@ -27,5 +52,9 @@ typedef struct
 } RigidBody;
 
 void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json);
+
+TileBodyType RigidBodyParseType(const char* str, size_t max_count);
+/* TODO parse multiple filters */
+RigidBodyFilter RigidBodyParseFilter(const char* str, size_t max_count);
 
 #endif /* !RIGID_BODY_H */

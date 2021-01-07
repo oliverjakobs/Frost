@@ -96,11 +96,11 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* scene)
 		float padding = editor->padding;
 		float granularity = editor->gridsize;
 
-		for (float x = -padding; x <= scene->width + padding; x += granularity)
-			Primitives2DRenderLine(x, -padding, x, scene->height + padding, color);
+		for (float x = -padding; x <= SceneGetWidth(scene) + padding; x += granularity)
+			Primitives2DRenderLine(x, -padding, x, SceneGetHeight(scene) + padding, color);
 
-		for (float y = -padding; y <= scene->height + padding; y += granularity)
-			Primitives2DRenderLine(-padding, y, scene->width + padding, y, color);
+		for (float y = -padding; y <= SceneGetHeight(scene) + padding; y += granularity)
+			Primitives2DRenderLine(-padding, y, SceneGetWidth(scene) + padding, y, color);
 	}
 
 	if (editor->hover != ECS_NULL_ENTITY)
@@ -112,6 +112,8 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* scene)
 		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
 		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
 	}
+
+	TileMapRenderDebug(&scene->map);
 
 	Primitives2DFlush();
 }

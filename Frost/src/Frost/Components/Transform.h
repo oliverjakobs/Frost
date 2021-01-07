@@ -5,6 +5,14 @@
 
 #include "Scenes/Scene.h"
 
+/*
+JSON - Template
+
+"transform": {
+	"size": [ <WIDTH:float>, <HEIGHT:float> ]
+}
+*/
+
 typedef struct
 {
 	vec2 position;

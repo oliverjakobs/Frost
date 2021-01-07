@@ -3,6 +3,7 @@
 
 #include "FrostEcs.h"
 #include "Scenes/Scene.h"
+#include "Scenes/SceneLoader.h"
 #include "Scenes/SceneEditor.h"
 
 #include "Console/Console.h"

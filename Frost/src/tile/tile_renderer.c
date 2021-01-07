@@ -3,29 +3,14 @@
 #include "body.h"
 #include "tilemap.h"
 
-int TileRendererInit(TileRenderer* renderer, const TileMap* map)
+int TileRendererInit(TileRenderer* renderer)
 {
 	/* TODO error checking */
-	renderer->tile_count = map->height * map->width;
-
 	ignisCreateQuadTextured(&renderer->quad, GL_STATIC_DRAW);
-
-	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(vec2) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
-	ignisVertexAttribFloat(2, 2, GL_FALSE, 2, 0);
-	ignisVertexAttribDivisor(2, 1);
-
-	ignisAddArrayBuffer(&renderer->quad.vao, sizeof(GLuint) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
-	ignisVertexAttribInt(3, 1, 1, 0);
-	ignisVertexAttribDivisor(3, 1);
-
-	renderer->offsets = malloc(sizeof(vec2) * renderer->tile_count);
-	renderer->frames = malloc(sizeof(GLuint) * renderer->tile_count);
-	TileRendererUpdateBuffers(renderer, map);
 
 	ignisCreateShadervf(&renderer->shader, "res/shaders/tile.vert", "res/shaders/tile.frag");
 	ignisUseShader(&renderer->shader);
 	ignisSetUniform1i(&renderer->shader, "u_Texture", 0);
-	ignisSetUniform1f(&renderer->shader, "u_TileSize", map->tile_size);
 
 	renderer->uniform_location_view_proj = ignisGetUniformLocation(&renderer->shader, "u_ViewProjection");
 	renderer->uniform_location_model = ignisGetUniformLocation(&renderer->shader, "u_Model");
@@ -37,8 +22,41 @@ int TileRendererInit(TileRenderer* renderer, const TileMap* map)
 
 void TileRendererDestroy(TileRenderer* renderer)
 {
+	if (renderer->tile_count > 0)
+		TileRendererClear(renderer);
+
 	ignisDeleteShader(&renderer->shader);
 	ignisDeleteQuad(&renderer->quad);
+}
+
+void TileRendererBindMap(TileRenderer* renderer, const TileMap* map)
+{
+	renderer->tile_count = map->height * map->width;
+
+	ignisBindQuad(&renderer->quad);
+
+	ignisGenerateArrayBuffer(&renderer->offset_buffer, sizeof(vec2) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
+	ignisVertexAttribFloat(2, 2, GL_FALSE, 2, 0);
+	ignisVertexAttribDivisor(2, 1);
+
+	ignisGenerateArrayBuffer(&renderer->frames_buffer, sizeof(GLuint) * renderer->tile_count, NULL, GL_DYNAMIC_DRAW);
+	ignisVertexAttribInt(3, 1, 1, 0);
+	ignisVertexAttribDivisor(3, 1);
+
+	renderer->offsets = malloc(sizeof(vec2) * renderer->tile_count);
+	renderer->frames = malloc(sizeof(GLuint) * renderer->tile_count);
+	TileRendererUpdateBuffers(renderer, map);
+
+	ignisUseShader(&renderer->shader);
+	ignisSetUniform1f(&renderer->shader, "u_TileSize", map->tile_size);
+}
+
+void TileRendererClear(TileRenderer* renderer)
+{
+	renderer->tile_count = 0;
+
+	ignisDeleteBuffer(&renderer->offset_buffer);
+	ignisDeleteBuffer(&renderer->frames_buffer);
 
 	free(renderer->offsets);
 	free(renderer->frames);
@@ -54,13 +72,14 @@ void TileRendererUpdateBuffers(TileRenderer* renderer, const TileMap* map)
 		renderer->frames[i] = map->tiles[i].id;
 	}
 
-	IgnisBuffer* buffers = renderer->quad.vao.array_buffers;
-	ignisBufferSubData(&buffers[1], 0, sizeof(vec2) * renderer->tile_count, renderer->offsets);
-	ignisBufferSubData(&buffers[2], 0, sizeof(GLuint) * renderer->tile_count, renderer->frames);
+	ignisBufferSubData(&renderer->offset_buffer, 0, sizeof(vec2) * renderer->tile_count, renderer->offsets);
+	ignisBufferSubData(&renderer->frames_buffer, 0, sizeof(GLuint) * renderer->tile_count, renderer->frames);
 }
 
 void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj)
 {
+	if (renderer->tile_count == 0) return;
+
 	mat4 model = mat4_indentity();
 
 	ignisUseShader(&renderer->shader);
@@ -74,11 +93,9 @@ void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_pr
 	ignisDrawQuadElementsInstanced(&renderer->quad, GL_TRIANGLES, (GLsizei)renderer->tile_count);
 }
 
-void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
+void TileMapRenderDebug(const TileMap* map)
 {
 	float tile_size = map->tile_size;
-
-	Primitives2DStart(view_proj.v);
 
 	/* map border */
 	Primitives2DRenderRect(0.0f, 0.0f, map->width * tile_size, map->height * tile_size, IGNIS_WHITE);
@@ -121,8 +138,6 @@ void TileMapRenderDebug(const TileMap* map, mat4 view_proj)
 		}
 		
 	}
-
-	Primitives2DFlush();
 }
 
 void TileBodyRenderDebug(const TileBody* body)
