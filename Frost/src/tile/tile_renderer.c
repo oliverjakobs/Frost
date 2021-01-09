@@ -100,6 +100,32 @@ void TileMapRenderDebug(const TileMap* map)
 	/* map border */
 	Primitives2DRenderRect(0.0f, 0.0f, map->width * tile_size, map->height * tile_size, IGNIS_WHITE);
 
+	if (TileMapGetBorder(map, TILE_BOTTOM))
+	{
+		for (size_t i = 0; i < map->width; ++i)
+			Primitives2DRenderRect(i * tile_size, -tile_size, tile_size, tile_size, IGNIS_BLACK);
+	}
+
+	if (TileMapGetBorder(map, TILE_TOP))
+	{
+		float y = map->height * tile_size;
+		for (size_t i = 0; i < map->width; ++i)
+			Primitives2DRenderRect(i * tile_size, y, tile_size, tile_size, IGNIS_BLACK);
+	}
+
+	if (TileMapGetBorder(map, TILE_LEFT))
+	{
+		for (size_t i = 0; i < map->height; ++i)
+			Primitives2DRenderRect(-tile_size, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
+	}
+
+	if (TileMapGetBorder(map, TILE_RIGHT))
+	{
+		float x = map->width * tile_size;
+		for (size_t i = 0; i < map->height; ++i)
+			Primitives2DRenderRect(x, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
+	}
+
 	for (size_t i = 0; i < (map->width * map->height); ++i)
 	{
 		Tile* tile = &map->tiles[i];

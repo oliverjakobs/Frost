@@ -10,6 +10,11 @@ int TileMapLoad(TileMap* map, TileID* tiles, size_t width, size_t height, float 
 	map->types = types;
 	map->types_count = types_count;
 
+	map->borders[TILE_LEFT] = 0;
+	map->borders[TILE_RIGHT] = 0;
+	map->borders[TILE_TOP] = 0;
+	map->borders[TILE_BOTTOM] = 0;
+
     map->tiles = malloc(width * height * sizeof(Tile));
 
 	if (!map->tiles) return 0;
@@ -67,3 +72,13 @@ TileType TileMapGetType(const TileMap* map, TileID id)
 }
 
 int32_t TileMapClamp(const TileMap* map, float x) { return (int32_t)floorf(x / map->tile_size); }
+
+void TileMapSetBorder(TileMap* map, TileDirection dir, int8_t value)
+{
+	map->borders[dir] = value;
+}
+
+int8_t TileMapGetBorder(const TileMap* map, TileDirection dir)
+{
+	return map->borders[dir];
+}

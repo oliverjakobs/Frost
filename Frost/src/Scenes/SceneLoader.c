@@ -276,6 +276,10 @@ int SceneLoadMap(Scene* scene, char* json)
 
 	scene->tile_set = ResourcesGetTexture2D(scene->resources, "tiles");
 
+	TileMapSetBorder(&scene->map, TILE_BOTTOM, 1);
+	TileMapSetBorder(&scene->map, TILE_LEFT, 1);
+	TileMapSetBorder(&scene->map, TILE_RIGHT, 1);
+
 	return 1;
 }
 

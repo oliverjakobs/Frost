@@ -12,6 +12,8 @@ struct TileMap
 
 	Tile* tiles;
 
+	int8_t borders[4];
+
 	/* types */
 	TileType* types;
 	size_t types_count;
@@ -27,5 +29,8 @@ int TileMapCheckType(const TileMap* map, vec2 pos, TileType type);
 TileType TileMapGetType(const TileMap* map, TileID id);
 
 int32_t TileMapClamp(const TileMap* map, float x);
+
+void TileMapSetBorder(TileMap* map, TileDirection dir, int8_t value);
+int8_t TileMapGetBorder(const TileMap* map, TileDirection dir);
 
 #endif /* !TILEMAP_H */

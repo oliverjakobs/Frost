@@ -21,7 +21,7 @@ int TileCheckBottom(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 	if (start_row < 0 || end_row < 0)
 	{
 		*ground_y = 0.0f;
-		return 1;
+		return TileMapGetBorder(body->map, TILE_BOTTOM);
 	}
 
 	for (int32_t row = start_row; row >= end_row; --row)
@@ -82,7 +82,11 @@ int TileCheckTop(TileBody* body, vec2 pos, vec2 old_pos, float* ground_y)
 	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
 	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
 
-	if (start_row >= body->map->height || end_row >= body->map->height) return 0;
+	if (start_row >= body->map->height || end_row >= body->map->height)
+	{
+		*ground_y = body->map->height * body->map->tile_size;
+		return TileMapGetBorder(body->map, TILE_TOP);
+	}
 
 	for (int32_t row = start_row; row <= end_row; ++row)
 	{
@@ -111,7 +115,11 @@ int TileCheckLeft(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
 	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
 
-	if (start_col < 0 || end_col < 0) return 0;
+	if (start_col < 0 || end_col < 0)
+	{
+		*wall_x = 0.0f;
+		return TileMapGetBorder(body->map, TILE_LEFT);
+	}
 
 	for (int32_t col = start_col; col >= end_col; --col)
 	{
@@ -140,7 +148,11 @@ int TileCheckRight(TileBody* body, vec2 pos, vec2 old_pos, float* wall_x)
 	int32_t start_row = TileMapClamp(body->map, old_sensor.start.y);
 	int32_t end_row = TileMapClamp(body->map, sensor.end.y);
 
-	if (start_col >= body->map->width || end_col >= body->map->width) return 0;
+	if (start_col >= body->map->width || end_col >= body->map->width)
+	{
+		*wall_x = body->map->width * body->map->tile_size;
+		return TileMapGetBorder(body->map, TILE_RIGHT);
+	}
 
 	for (int32_t col = start_col; col <= end_col; ++col)
 	{
