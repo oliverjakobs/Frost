@@ -22,19 +22,7 @@ typedef struct
 
 void EcsLoadOrderComponents(Ecs* ecs, EcsOrderComponentLoader* loader, size_t size);
 
-typedef struct
-{
-    void(*update)(Ecs*, float);
-} EcsUpdateSystemLoader;
-
-void EcsLoadUpdateSystems(Ecs* ecs, EcsUpdateSystemLoader* loader, size_t size);
-
-typedef struct
-{
-    EcsRenderStage stage;
-    void (*render)(Ecs*, const float*);
-} EcsRenderSystemLoader;
-
-void EcsLoadRenderSystems(Ecs* ecs, EcsRenderSystemLoader* loader, size_t size);
+void EcsLoadUpdateSystems(Ecs* ecs, EcsUpdateSystem* systems, size_t size);
+void EcsLoadRenderSystems(Ecs* ecs, EcsRenderSystem* systems, size_t size);
 
 #endif /* ECS_LOADER_H */

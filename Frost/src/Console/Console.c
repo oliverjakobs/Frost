@@ -1,4 +1,4 @@
-#include "Console.h"
+﻿#include "Console.h"
 
 #include "Graphics/FontRenderer.h"
 #include "Graphics/Primitives2D.h"
@@ -103,35 +103,27 @@ void ConsoleCharRemoveLast(Console* console)
 		console->cusor_pos = 0;
 }
 
-void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj)
+void ConsoleRenderBackground(Console* console, float x, float y, float w, float h, const float* proj)
 {
 	if (!console->focus) return;
 
+	Primitives2DStart(proj);
+	Primitives2DFillRect(x, y, w, -h, console->bg_color);
+	Primitives2DFlush();
+}
+
+void ConsoleRender(Console* console, float x, float y, float padding, const float* proj)
+{
+	if (!console->focus || !console->font) return;
+
 	float text_x = x + padding;
 	float text_y = y - padding;
-	float cursor_x = text_x 
-		+ ignisFontGetTextWidth(console->font, console->cmd_buffer, console->cusor_pos) 
-		+ ignisFontGetTextWidth(console->font, CONSOLE_PROMPT, strlen(CONSOLE_PROMPT));
-	float cursor_y = y - (padding / 2.0f);
-	float cursor_w = console->cursor_size;
-	float cursor_h = -(h - (padding * 1.5f));
 
-	Primitives2DStart(proj);
+	char cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON) ? '_' : '\0';
 
-	Primitives2DFillRect(x, y, w, -h, console->bg_color);
-
-	if (console->cursor_tick <= CONSOLE_CURSOR_ON)
-		Primitives2DFillRect(cursor_x, cursor_y, cursor_w, cursor_h, console->font_color);
-
-	Primitives2DFlush();
-
-	if (console->font)
-		FontRendererBindFontColor(console->font, console->font_color);
-
+	FontRendererBindFontColor(console->font, console->font_color);
 	FontRendererStart(proj);
-
-	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer);
-
+	FontRendererRenderTextFormat(text_x, text_y, "%s%.*s%c", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer, cursor);
 	FontRendererFlush();
 }
 

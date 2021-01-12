@@ -1,18 +1,17 @@
 {
-  "name": "door",
   "transform": {
     "size": [ 16.0, 64.0 ]
   },
   "rigidbody": {
-    "filter": "PLAYER"
+    "filter": [ "DOOR" ]
   },
   "sprite": {
     "texture": "door"
   },
   "interaction": {
-    "type": 0,
-    "min-radius": 28.0,
-    "max-radius": 80.0,
-    "interaction": 1
+    "type": "TOGGLE",
+    "interaction": "TOGGLE_DOOR",
+    "key": "E",
+    "range": [ 28.0, 80.0 ]
   }
 }

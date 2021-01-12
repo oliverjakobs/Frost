@@ -3,10 +3,43 @@
 
 #include "Scenes/Scene.h"
 
+/*
+REQUIRES:
+	- transform
+
+PARSE_RULES:
+
+InteractionType:
+	"TOGGLE"	-> INTERACTION_TYPE_TOGGLE
+	"RANGED"	-> INTERACTION_TYPE_RANGED
+	"TIMED"		-> INTERACTION_TYPE_TIMED
+	default		-> INTERACTION_TYPE_TOGGLE
+
+Interaction:
+	"TOGGLE_DOOR"		-> INTERACTION_TOGGLE_DOOR
+	"OPEN_INVENTORY"	-> INTERACTION_OPEN_INVENTORY
+	default				-> INTERACTION_NONE
+
+JSON - Template:
+
+"interaction": {
+	"type": <InteractionType>,
+	"interaction": <Interaction>,
+	"key": <KeyName>,
+	<IF type = INTERACTION_TYPE_TOGGLE>
+		"range": [ <MIN:float>, <MAX:float> ]
+	<IF type = INTERACTION_TYPE_RANGE>
+		"range": [ <ACTIVATION:float>, <LEAVE:float> ]
+	<IF type = INTERACTION_TYPE_TIMED>
+		"range": [ <MIN:float>, <MAX:float> ],
+		"time": <float>
+}
+*/
+
 typedef enum
 {
 	INTERACTION_TYPE_TOGGLE,	/* toggleable, on/off */
-	INTERACTION_TYPE_RANGE,		/* range based, 'undo' if out of range */
+	INTERACTION_TYPE_RANGED,	/* range based, 'undo' if out of range */
 	INTERACTION_TYPE_TIMED		/* time based */
 } InteractionType;
 
@@ -20,14 +53,19 @@ typedef enum
 typedef struct
 {
 	InteractionType type;
-	float min_radius;
-	float max_radius;
 	Interaction interaction;
 	int key;
+
+	float range_min;
+	float range_max;
+	float time;
 } Interactable;
 
 void InteractableLoad(Scene* scene, EcsEntityID entity, char* json);
 
 int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active);
+
+Interaction InteractionParse(const char* str, size_t max_count);
+InteractionType InteractionParseType(const char* str, size_t max_count);
 
 #endif /* !INTERACTION_H */

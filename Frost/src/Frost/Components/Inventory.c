@@ -2,6 +2,7 @@
 
 #include "Frost/Frost.h"
 
+#include "toolbox/tb_str.h"
 #include "toolbox/tb_json.h"
 
 #include "Application/Debugger.h"
@@ -17,19 +18,15 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 		int rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
 		int cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
 
-		inv.state = (InventoryState)tb_json_int(element.value, "{'state'", NULL, INVENTORY_CLOSED);
+		inv.state = tb_json_parse(element.value, "{'state'", NULL, (tb_json_parse_func)InventoryParseState);
 
 		tb_json_element align;
 		tb_json_read(element.value, &align, "{'align'");
 
 		if (align.error == TB_JSON_OK)
 		{
-			char buffer[32];
-			tb_json_string(align.value, "[0", buffer, 32, NULL);
-			InventoryHAlign h_align = InventorySystemGetHAlign(buffer);
-
-			tb_json_string(align.value, "[1", buffer, 32, NULL);
-			InventoryVAlign v_align = InventorySystemGetVAlign(buffer);
+			InventoryHAlign h_align = tb_json_parse(align.value, "[0", NULL, (tb_json_parse_func)InventoryParseHAlign);
+			InventoryVAlign v_align = tb_json_parse(align.value, "[1", NULL, (tb_json_parse_func)InventoryParseVAlign);
 
 			InventoryCreateAligned(&inv, h_align, v_align, rows, cols);
 		}
@@ -86,4 +83,31 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 {
 	InventorySetCellContent(dst_inv, dst_cell, InventoryGetCellContent(src_inv, src_cell));
 	InventorySetCellContent(src_inv, src_cell, NULL_ITEM);
+}
+
+InventoryState InventoryParseState(const char* str, size_t max_count)
+{
+	if (max_count == 0) return INVENTORY_CLOSED;
+	if (tb_strncasecmp(str, "open", max_count) == 0) return INVENTORY_OPEN;
+	if (tb_strncasecmp(str, "fixed", max_count) == 0) return INVENTORY_FIXED;
+
+	return INVENTORY_CLOSED;
+}
+
+InventoryHAlign InventoryParseHAlign(const char* str, size_t max_count)
+{
+	if (max_count == 0) return INV_HALIGN_LEFT;
+	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_HALIGN_CENTER;
+	if (tb_strncasecmp(str, "right", max_count) == 0) return INV_HALIGN_RIGHT;
+
+	return INV_HALIGN_LEFT;
+}
+
+InventoryVAlign InventoryParseVAlign(const char* str, size_t max_count)
+{
+	if (max_count == 0) return INV_VALIGN_TOP;
+	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_VALIGN_CENTER;
+	if (tb_strncasecmp(str, "bottom", max_count) == 0) return INV_VALIGN_BOTTOM;
+
+	return INV_VALIGN_TOP;
 }

@@ -20,8 +20,12 @@
 
 typedef uint32_t EcsComponentType;
 
-typedef struct EcsUpdateSystem EcsUpdateSystem;
-typedef struct EcsRenderSystem EcsRenderSystem;
+typedef struct Ecs Ecs;
+
+typedef struct
+{
+	void (*update)(Ecs*, float);
+} EcsUpdateSystem;
 
 typedef enum
 {
@@ -32,12 +36,18 @@ typedef enum
 
 typedef struct
 {
+	EcsRenderStage stage;
+	void (*render)(const Ecs*, const float*);
+} EcsRenderSystem;
+
+struct Ecs
+{
 	EcsUpdateSystem* systems_update;
 	EcsRenderSystem* systems_render;
 
 	EcsComponentMap* data_components;
 	EcsComponentList* order_components;
-} Ecs;
+};
 
 void EcsInit(Ecs* ecs);
 void EcsDestroy(Ecs* ecs);
@@ -48,21 +58,21 @@ void EcsReserveComponents(Ecs* ecs, size_t data, size_t order);
 void EcsClear(Ecs* ecs);
 
 void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
-void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*, const float*));
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(const Ecs*, const float*));
 
 void EcsOnUpdate(Ecs* ecs, float deltatime);
-void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
+void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);
 
-EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type);
-EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type);
+EcsComponentMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type);
+EcsComponentList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type);
 
 /* Data Components */
 int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, void (*free)(void*));
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
-void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
+void* EcsGetDataComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
@@ -70,7 +80,7 @@ void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*));
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
-void* EcsGetOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
+void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 

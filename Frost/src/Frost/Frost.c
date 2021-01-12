@@ -71,7 +71,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 				break;
 			}
 
-			vec2 pos = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
+			vec2 pos = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
 
 			if (SceneLoadTemplate(scene, args[0], EcsEntityGetNextID(), pos, atoi(args[1])))
 				ConsoleOut(console, "Created entity with template %s", args[0]);

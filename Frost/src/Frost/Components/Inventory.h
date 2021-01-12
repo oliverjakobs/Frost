@@ -18,6 +18,20 @@ typedef enum
 	INVENTORY_FIXED
 } InventoryState;
 
+typedef enum
+{
+	INV_HALIGN_LEFT,
+	INV_HALIGN_CENTER,
+	INV_HALIGN_RIGHT
+} InventoryHAlign;
+
+typedef enum
+{
+	INV_VALIGN_TOP,
+	INV_VALIGN_CENTER,
+	INV_VALIGN_BOTTOM
+} InventoryVAlign;
+
 typedef struct
 {
 	vec2 pos;
@@ -43,5 +57,9 @@ void InventorySetCellContent(Inventory* inv, int index, int itemID);
 int InventoryGetCellContent(Inventory* inv, int index);
 
 void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_inv, int src_cell);
+
+InventoryState InventoryParseState(const char* str, size_t max_count);
+InventoryHAlign InventoryParseHAlign(const char* str, size_t max_count);
+InventoryVAlign InventoryParseVAlign(const char* str, size_t max_count);
 
 #endif /* !INVENTORY_H */

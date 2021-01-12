@@ -107,12 +107,6 @@ int SceneSave(Scene* scene, const char* path)
 	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
 	tb_jwrite_set_float_prec(&jwc, 2);
 
-	/* size 
-	tb_jwrite_array(&jwc, "size");
-	tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-	tb_jwrite_end(&jwc);
-	*/
-
 	/* background */
 	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	tb_jwrite_array(&jwc, "background");

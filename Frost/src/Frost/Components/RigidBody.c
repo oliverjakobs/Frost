@@ -2,7 +2,7 @@
 
 #include "Frost/Frost.h"
 
-#include "toolbox/toolbox.h"
+#include "toolbox/tb_str.h"
 #include "toolbox/tb_json.h"
 
 #include "Application/Debugger.h"
@@ -26,7 +26,20 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 		float half_h = tb_json_float(element.value, "{'halfsize'[1", NULL, transform->size.y / 2.0f);
 
 		RigidBody body;
-		body.filter = tb_json_parse(element.value, "{'filter'", NULL, (tb_json_parse_func)RigidBodyParseFilter);
+		body.filter = RIGID_BODY_FILTER_NONE;
+
+		tb_json_element filter;
+		tb_json_read(element.value, &filter, "{'filter'");
+		if (filter.error == TB_JSON_OK && filter.data_type == TB_JSON_ARRAY)
+		{
+			tb_json_element filter_bit;
+			char* value = filter.value;
+			for (size_t i = 0; i < filter.elements; ++i)
+			{
+				value = tb_json_array_step(value, &filter_bit);
+				body.filter |= RigidBodyParseFilter(filter_bit.value, filter_bit.bytelen);
+			}
+		}
 
 		body.offset.x = tb_json_float(element.value, "{'offset'[0", NULL, 0.0f);
 		body.offset.y = tb_json_float(element.value, "{'offset'[1", NULL, half_h);
@@ -40,19 +53,23 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 
 TileBodyType RigidBodyParseType(const char* str, size_t max_count)
 {
-	switch (str[0])
+	if (max_count > 0)
 	{
-	case 'D': if (strncmp(str, "DYNAMIC", max_count) == 0) return TILE_BODY_DYNAMIC;
+		if (tb_strncasecmp(str, "dynamic", max_count) == 0) return TILE_BODY_DYNAMIC;
 	}
+
 	return TILE_BODY_STATIC;
 }
 
 RigidBodyFilter RigidBodyParseFilter(const char* str, size_t max_count)
 {
-	switch (str[0])
+	if (max_count > 0)
 	{
-	case 'W': if (strncmp(str, "WORLD", max_count) == 0) return RIGID_BODY_FILTER_WORLD; break;
-	case 'P': if (strncmp(str, "PLAYER", max_count) == 0) return RIGID_BODY_FILTER_PLAYER; break;
+		if (tb_strncasecmp(str, "world", max_count) == 0) return RIGID_BODY_FILTER_WORLD;
+		if (tb_strncasecmp(str, "player", max_count) == 0) return RIGID_BODY_FILTER_PLAYER;
+		if (tb_strncasecmp(str, "npc", max_count) == 0) return RIGID_BODY_FILTER_NPC;
+		if (tb_strncasecmp(str, "door", max_count) == 0) return RIGID_BODY_FILTER_DOOR;
 	}
-    return RIGID_BODY_FILTER_NONE;
+
+	return RIGID_BODY_FILTER_NONE;
 }

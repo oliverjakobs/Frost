@@ -4,7 +4,7 @@
   },
   "rigidbody": {
     "type": "DYNAMIC",
-    "filter": "PLAYER"
+    "filter": [ "PLAYER", "DOOR" ]
   },
   "player": {
     "controls": { }

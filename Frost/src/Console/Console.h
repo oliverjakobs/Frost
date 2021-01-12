@@ -36,7 +36,8 @@ void ConsoleExecuteCmd(Console* console);
 void ConsoleCharTyped(Console* console, char c);
 void ConsoleCharRemoveLast(Console* console);
 
-void ConsoleRender(Console* console, float x, float y, float w, float h, float padding, const float* proj);
+void ConsoleRenderBackground(Console* console, float x, float y, float w, float h, const float* proj);
+void ConsoleRender(Console* console, float x, float y, float padding, const float* proj);
 
 void ConsoleOut(Console* console, const char* fmt, ...);
 

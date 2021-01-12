@@ -175,7 +175,7 @@ float InputMouseY();
 
 vec2 InputMousePositionVec2();
 
-Key InputParseKeyCode(const char* str);
-MouseButton InputParseMouseButton(const char* str);
+Key InputParseKeyCode(const char* str, size_t size);
+MouseButton InputParseMouseButton(const char* str, size_t size);
 
 #endif /* !INPUT_H */

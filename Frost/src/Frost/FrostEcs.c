@@ -22,7 +22,7 @@ EcsOrderComponentLoader order_comps[] =
 	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),	NULL,			ZIndexCmp }
 };
 
-EcsUpdateSystemLoader update_systems[] =
+EcsUpdateSystem update_systems[] =
 {
 	[UPDATE_STATE] =		{ EntityStateSystem },
 	[UPDATE_PHYSICS] =		{ PhysicsSystem },
@@ -32,7 +32,7 @@ EcsUpdateSystemLoader update_systems[] =
 	[UPDATE_INTERACTION] =	{ InteractionSystem }
 };
 
-EcsRenderSystemLoader render_systems[] =
+EcsRenderSystem render_systems[] =
 {
 	[RENDER_SPRITE] =		{ ECS_RENDER_STAGE_PRIMARY, RenderSystem },
 	[RENDER_DEBUG] =		{ ECS_RENDER_STAGE_DEBUG,	DebugRenderSystem },

@@ -20,7 +20,7 @@ typedef struct
 	TileMap map;
 	TileRenderer renderer;
 
-	Camera* camera;
+	Camera camera;
 	Resources* resources;
 
 	/* active scene specific data */
@@ -30,7 +30,7 @@ typedef struct
 	Background background;
 } Scene;
 
-int SceneInit(Scene* scene, Camera* camera, Resources* resources, int (*load)(Ecs* ecs));
+int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources, int (*load)(Ecs* ecs));
 int SceneLoadScenes(Scene* scene, const char* reg, const char* start);
 void SceneDestroy(Scene* scene);
 

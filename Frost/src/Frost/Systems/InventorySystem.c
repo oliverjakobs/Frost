@@ -48,22 +48,6 @@ int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera, float cell_s
 	return 1;
 }
 
-InventoryHAlign InventorySystemGetHAlign(const char* str)
-{
-	if (strcmp(str, "left") == 0)	return INV_HALIGN_LEFT;
-	if (strcmp(str, "center") == 0)	return INV_HALIGN_CENTER;
-	if (strcmp(str, "right") == 0)	return INV_HALIGN_RIGHT;
-	return INV_HALIGN_LEFT;
-}
-
-InventoryVAlign InventorySystemGetVAlign(const char* str)
-{
-	if (strcmp(str, "top") == 0)	return INV_VALIGN_TOP;
-	if (strcmp(str, "center") == 0)	return INV_VALIGN_CENTER;
-	if (strcmp(str, "bottom") == 0)	return INV_VALIGN_BOTTOM;
-	return INV_VALIGN_TOP;
-}
-
 static float InventorySystemGetCellOffset(int index)
 {
 	return index * (inventory_data.cell_size + inventory_data.padding) + inventory_data.padding;;
@@ -174,7 +158,7 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 	}
 }
 
-void InventoryRenderSystem(Ecs* ecs, const float* mat_view_proj)
+void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 {
 	/* render inventory backgrounds */
 	Primitives2DStart(mat_view_proj);

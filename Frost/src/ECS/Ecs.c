@@ -3,17 +3,6 @@
 #include <string.h>
 #include "toolbox/tb_stretchy.h"
 
-struct EcsUpdateSystem
-{
-	void (*update)(Ecs*, float);
-};
-
-struct EcsRenderSystem
-{
-	void (*render)(Ecs*, const float*);
-	EcsRenderStage stage;
-};
-
 void EcsInit(Ecs* ecs)
 {
 	ecs->systems_update = NULL;
@@ -67,9 +56,9 @@ void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
 	tb_stretchy_push(ecs->systems_update, ((EcsUpdateSystem) { update }));
 }
 
-void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(Ecs*,const float*))
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(const Ecs*,const float*))
 {
-	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { render, stage }));
+	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { stage, render }));
 }
 
 void EcsOnUpdate(Ecs* ecs, float deltatime)
@@ -78,7 +67,7 @@ void EcsOnUpdate(Ecs* ecs, float deltatime)
 		it->update(ecs, deltatime);
 }
 
-void EcsOnRender(Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
+void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
 {
 	for (EcsRenderSystem* it = ecs->systems_render; it != tb_stretchy_last(ecs->systems_render); it++)
 		if (it->stage == stage) it->render(ecs, mat_view_proj);
@@ -93,12 +82,12 @@ void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 		EcsRemoveOrderComponent(ecs, entity, i);
 }
 
-EcsComponentMap* EcsGetComponentMap(Ecs* ecs, EcsComponentType type)
+EcsComponentMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type)
 {
 	return type < tb_stretchy_len(ecs->data_components) ? &ecs->data_components[type] : NULL;
 }
 
-EcsComponentList* EcsGetComponentList(Ecs* ecs, EcsComponentType type)
+EcsComponentList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 {
 	return type < tb_stretchy_len(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
@@ -127,7 +116,7 @@ void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, v
 	return EcsComponentMapInsert(map, entity, data);
 }
 
-void* EcsGetDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
+void* EcsGetDataComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
 	return EcsComponentMapFind(EcsGetComponentMap(ecs, type), entity);
 }
@@ -158,7 +147,7 @@ void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, 
 	return EcsComponentListInsert(list, entity, component);
 }
 
-void* EcsGetOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
+void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
 	return EcsComponentListFind(EcsGetComponentList(ecs, type), entity);
 }

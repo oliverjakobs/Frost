@@ -1,5 +1,4 @@
 {
-  "name": "chest",
   "transform": {
     "size": [ 64.0, 44.0 ]
   },
@@ -11,9 +10,9 @@
     "align": ["left", "center"]
   },
   "interaction": {
-    "type": 1,
-    "min-radius": 64.0,
-    "max-radius": 128.0,
-    "interaction": 2
+    "type": "RANGED",
+    "interaction": "OPEN_INVENTORY",
+    "key": "E",
+    "range": [ 64.0, 128.0 ]
   }
 }

@@ -111,12 +111,12 @@ static void _BatchRenderer2DPushValue(float value)
 	_render_data.vertices[_render_data.vertex_index++] = value;
 }
 
-void BatchRenderer2DRenderTexture(IgnisTexture2D* texture, float x, float y, float w, float h)
+void BatchRenderer2DRenderTexture(const IgnisTexture2D* texture, float x, float y, float w, float h)
 {
 	BatchRenderer2DRenderTextureFrame(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-void BatchRenderer2DRenderTextureFrame(IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+void BatchRenderer2DRenderTextureFrame(const IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
 {
 	if (_render_data.quad_count >= BATCHRENDERER2D_MAX_QUADS || _render_data.texture_slot_index >= BATCHRENDERER2D_TEXTURES)
 		BatchRenderer2DFlush();

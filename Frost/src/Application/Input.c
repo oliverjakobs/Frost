@@ -109,9 +109,9 @@ vec2 InputMousePositionVec2()
 	return vec;
 }
 
-static Key InputParseKeyCodeSingle(const char* str)
+static Key InputParseKeyCodeChar(char c)
 {
-	switch (str[0])
+	switch (c)
 	{
 	case ' ': return KEY_SPACE;
 	case '\'': return KEY_APOSTROPHE;
@@ -168,16 +168,20 @@ static Key InputParseKeyCodeSingle(const char* str)
 	return KEY_UNKNOWN;
 }
 
-Key InputParseKeyCode(const char* str)
+Key InputParseKeyCode(const char* str, size_t size)
 {
-	if (strlen(str) == 1)
-		return InputParseKeyCodeSingle(str);
+	if (size == 0) return KEY_UNKNOWN;
+	if (size == 1) return InputParseKeyCodeChar(str[0]);
+
+	const char* prefix = "KEY_";
 	
 	return KEY_UNKNOWN;
 }
 
-MouseButton InputParseMouseButton(const char* str)
+MouseButton InputParseMouseButton(const char* str, size_t size)
 {
+	if (size == 0) return MOUSE_BUTTON_UNKNOWN;
+
 	switch (str[0])
 	{
 	case '1': return MOUSE_BUTTON_1;

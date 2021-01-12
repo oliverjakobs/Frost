@@ -136,7 +136,7 @@ GLuint ignisGenerateTexture(GLuint target, int width, int height, void* pixels, 
 	return name;
 }
 
-void ignisBindTexture2D(IgnisTexture2D* texture, GLuint slot)
+void ignisBindTexture2D(const IgnisTexture2D* texture, GLuint slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, (texture) ? texture->name : 0);

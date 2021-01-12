@@ -22,8 +22,7 @@ int TileRendererInit(TileRenderer* renderer)
 
 void TileRendererDestroy(TileRenderer* renderer)
 {
-	if (renderer->tile_count > 0)
-		TileRendererClear(renderer);
+	TileRendererClear(renderer);
 
 	ignisDeleteShader(&renderer->shader);
 	ignisDeleteQuad(&renderer->quad);
@@ -53,6 +52,8 @@ void TileRendererBindMap(TileRenderer* renderer, const TileMap* map)
 
 void TileRendererClear(TileRenderer* renderer)
 {
+	if (renderer->tile_count == 0) return;
+
 	renderer->tile_count = 0;
 
 	ignisDeleteBuffer(&renderer->offset_buffer);

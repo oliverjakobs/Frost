@@ -285,6 +285,7 @@
     <ClInclude Include="src\tile\collision.h" />
     <ClInclude Include="src\ECS\EcsLoader.h" />
     <ClInclude Include="src\Scenes\SceneLoader.h" />
+    <ClInclude Include="src\toolbox\tb_str.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -467,6 +468,7 @@
     <ClCompile Include="src\tile\collision.c" />
     <ClCompile Include="src\ECS\EcsLoader.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />
+    <ClCompile Include="src\toolbox\tb_str.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

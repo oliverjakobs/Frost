@@ -18,20 +18,20 @@ void EcsLoadOrderComponents(Ecs* ecs, EcsOrderComponentLoader* loader, size_t si
     }
 }
 
-void EcsLoadUpdateSystems(Ecs* ecs, EcsUpdateSystemLoader* loader, size_t size)
+void EcsLoadUpdateSystems(Ecs* ecs, EcsUpdateSystem* systems, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
     {
-        EcsUpdateSystemLoader* sys = &loader[i];
+        EcsUpdateSystem* sys = &systems[i];
         if (sys) EcsAddUpdateSystem(ecs, sys->update);
     }
 }
 
-void EcsLoadRenderSystems(Ecs* ecs, EcsRenderSystemLoader* loader, size_t size)
+void EcsLoadRenderSystems(Ecs* ecs, EcsRenderSystem* systems, size_t size)
 {
     for (size_t i = 0; i < size; ++i)
     {
-        EcsRenderSystemLoader* sys = &loader[i];
+        EcsRenderSystem* sys = &systems[i];
         if (sys) EcsAddRenderSystem(ecs, sys->stage, sys->render);
     }
 }

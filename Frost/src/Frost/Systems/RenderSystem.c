@@ -3,12 +3,11 @@
 #include "Frost/FrostEcs.h"
 #include "tile/tile_renderer.h"
 
-void RenderSystem(Ecs* ecs, const float* mat_view_proj)
+void RenderSystem(const Ecs* ecs, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
 	EcsComponentList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
-
 	for (EcsListNode* it = list->first; it; it = EcsComponentNodeNext(it))
 	{
 		ZIndex* indexed = EcsComponentNodeComponent(it);
@@ -42,7 +41,7 @@ void RenderSystem(Ecs* ecs, const float* mat_view_proj)
 	BatchRenderer2DFlush();
 }
 
-void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
+void DebugRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 {
 	Primitives2DStart(mat_view_proj);
 
@@ -58,8 +57,8 @@ void DebugRenderSystem(Ecs* ecs, const float* mat_view_proj)
 	{
 		Interactable* interactable = EcsComponentMapIterValue(iter);
 		vec2 cen = GetEntityCenter(ecs, EcsComponentMapIterKey(iter));
-		Primitives2DRenderCircle(cen.x, cen.y, interactable->min_radius, IGNIS_WHITE);
-		Primitives2DRenderCircle(cen.x, cen.y, interactable->max_radius, IGNIS_WHITE);
+		Primitives2DRenderCircle(cen.x, cen.y, interactable->range_min, IGNIS_WHITE);
+		Primitives2DRenderCircle(cen.x, cen.y, interactable->range_max, IGNIS_WHITE);
 	}
 
 	map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);

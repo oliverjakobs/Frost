@@ -1,8 +1,5 @@
 #include "Frost/Frost.h"
 
-Camera camera;
-
-Ecs ecs;
 Scene scene;
 SceneEditor scene_editor;
 
@@ -28,13 +25,13 @@ void OnInit(Application* app)
 
 	show_debug_info = 1;
 
-	CameraCreateOrtho(&camera, app->width / 2.0f, app->height / 2.0f, 0.0f, (float)app->width, (float)app->height);
-
 	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
-	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &camera, 64.0f, 8.0f);
 
 	/* ecs */
-	SceneInit(&scene, &camera, &app->resources, LoadEcs);
+	SceneInit(&scene, (float)app->width, (float)app->height, &app->resources, LoadEcs);
+
+	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &scene.camera, 64.0f, 8.0f);
+
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&scene_editor);
@@ -53,10 +50,7 @@ void OnDestroy(Application* app)
 void OnEvent(Application* app, Event e)
 {
 	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
-	{
 		ApplicationSetViewport(app, 0, 0, e.window.width, e.window.height);
-		CameraSetProjectionOrtho(&camera, (float)e.window.width, (float)e.window.height);
-	}
 
 	switch (EventKeyPressed(&e))
 	{
@@ -141,12 +135,13 @@ void OnRenderDebug(Application* app)
 		
 		FontRendererTextFieldLine("Camera:");
 		FontRendererTextFieldLine("------------------------");
-		FontRendererTextFieldLine("Position: %4.2f, %4.2f", camera.position.x, camera.position.y);
+		FontRendererTextFieldLine("Position: %4.2f, %4.2f", scene.camera.position.x, scene.camera.position.y);
 	}
 
 	FontRendererFlush();
 
-	ConsoleRender(&console, 0.0f, (float)app->height, (float)app->width, 32.0f, 8.0f, ApplicationGetScreenProjPtr(app));
+	ConsoleRenderBackground(&console, 0.0f, (float)app->height, (float)app->width, 32.0f, ApplicationGetScreenProjPtr(app));
+	ConsoleRender(&console, 0.0f, (float)app->height, 8.0f, ApplicationGetScreenProjPtr(app));
 }
 
 int main()

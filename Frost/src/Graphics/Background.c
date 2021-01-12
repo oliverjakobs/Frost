@@ -12,7 +12,7 @@ static void BackgroundLayerUpdate(BackgroundLayer* layer, float x, float deltati
 	else if (rel_dist < layer->startpos - layer->width) layer->startpos -= layer->width;
 }
 
-static void BackgroundLayerRender(BackgroundLayer* layer)
+static void BackgroundLayerRender(const BackgroundLayer* layer)
 {
 	BatchRenderer2DRenderTexture(layer->texture, layer->pos_x - layer->width, layer->pos_y, layer->width, layer->height);
 	BatchRenderer2DRenderTexture(layer->texture, layer->pos_x, layer->pos_y, layer->width, layer->height);
@@ -35,7 +35,7 @@ void BackgroundFree(Background* background)
 	background->max_layers = 0;
 }
 
-size_t BackgroundPushLayer(Background* background, IgnisTexture2D* texture, float x, float y, float w, float h, float parallax)
+size_t BackgroundPushLayer(Background* background, const IgnisTexture2D* texture, float x, float y, float w, float h, float parallax)
 {
 	if (background->layer_count >= background->max_layers)
 		return 0;
@@ -59,7 +59,7 @@ void BackgroundUpdate(Background* background, float x, float deltatime)
 		BackgroundLayerUpdate(&background->layers[i], x, deltatime);
 }
 
-void BackgroundRender(Background* background, const float* mat_view_proj)
+void BackgroundRender(const Background* background, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 

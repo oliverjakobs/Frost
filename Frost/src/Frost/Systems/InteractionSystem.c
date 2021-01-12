@@ -22,14 +22,14 @@ void InteractionSystem(Ecs* ecs, float deltatime)
 			float distance = vec2_distance(center, p_center);
 			if (interactable->type == INTERACTION_TYPE_TOGGLE)
 			{
-				if (tb_between_f(interactable->min_radius, interactable->max_radius, distance) && InputKeyUp(interactable->key))
+				if (tb_between_f(interactable->range_min, interactable->range_max, distance) && InputKeyUp(interactable->key))
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
 			}
-			else if (interactable->type == INTERACTION_TYPE_RANGE)
+			else if (interactable->type == INTERACTION_TYPE_RANGED)
 			{
-				if (distance <= interactable->min_radius && InputKeyUp(interactable->key))
+				if (distance <= interactable->range_min && InputKeyUp(interactable->key))
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
-				else if (distance >= interactable->max_radius)
+				else if (distance >= interactable->range_max)
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 0);
 			}
 		}

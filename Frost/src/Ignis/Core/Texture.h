@@ -42,7 +42,7 @@ int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows,
 
 void ignisDeleteTexture2D(IgnisTexture2D* texture);
 
-void ignisBindTexture2D(IgnisTexture2D* texture, GLuint slot);
+void ignisBindTexture2D(const IgnisTexture2D* texture, GLuint slot);
 
 #ifdef __cplusplus
 }

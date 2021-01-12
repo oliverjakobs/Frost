@@ -139,7 +139,7 @@ IgnisFont* ResourcesGetFont(Resources* manager, const char* name)
 	return font;
 }
 
-const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* texture)
+const char* ResourcesGetTexture2DName(Resources* resources, const IgnisTexture2D* texture)
 {
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&resources->textures); iter; iter = tb_hashmap_iter_next(&resources->textures, iter))
 	{
@@ -150,7 +150,7 @@ const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* text
 	return NULL;
 }
 
-const char* ResourcesGetFontName(Resources* resources, IgnisFont* font)
+const char* ResourcesGetFontName(Resources* resources, const IgnisFont* font)
 {
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&resources->fonts); iter; iter = tb_hashmap_iter_next(&resources->fonts, iter))
 	{

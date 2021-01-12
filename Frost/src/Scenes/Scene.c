@@ -5,9 +5,9 @@
 
 #include "SceneLoader.h"
 
-int SceneInit(Scene* scene, Camera* camera, Resources* resources, int (*load)(Ecs* ecs))
+int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources, int (*load)(Ecs* ecs))
 {
-	scene->camera = camera;
+	CameraCreateOrtho(&scene->camera, camera_w / 2.0f, camera_h / 2.0f, 0.0f, camera_w, camera_h);
 	scene->resources = resources;
 
 	TileRendererInit(&scene->renderer);
@@ -128,33 +128,34 @@ void SceneClearActive(Scene* scene)
 
 void SceneOnEvent(Scene* scene, Event e)
 {
-
+	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
+		CameraSetProjectionOrtho(&scene->camera, (float)e.window.width, (float)e.window.height);
 }
 
 void SceneOnUpdate(Scene* scene, float deltatime)
 {
-	BackgroundUpdate(&scene->background, scene->camera->position.x - scene->camera->size.x / 2.0f, deltatime);
+	BackgroundUpdate(&scene->background, scene->camera.position.x - scene->camera.size.x / 2.0f, deltatime);
 
 	EcsOnUpdate(&scene->ecs, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
 {
-	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(scene->camera));
+	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(&scene->camera));
 
-	TileMapRender(&scene->renderer, scene->tile_set, scene->camera->viewProjection);
+	TileMapRender(&scene->renderer, scene->tile_set, scene->camera.viewProjection);
 
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(&scene->camera));
 }
 
 void SceneOnRenderUI(Scene* scene)
 {
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(&scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(&scene->camera));
 }
 
 const char* SceneGetTemplatePath(const Scene* scene, const char* templ)

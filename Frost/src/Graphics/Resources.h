@@ -26,8 +26,8 @@ IgnisFont* ResourcesAddFont(Resources* resources, const char* name, const char* 
 IgnisTexture2D* ResourcesGetTexture2D(Resources* resources, const char* name);
 IgnisFont* ResourcesGetFont(Resources* resources, const char* name);
 
-const char* ResourcesGetTexture2DName(Resources* resources, IgnisTexture2D* texture);
-const char* ResourcesGetFontName(Resources* resources, IgnisFont* font);
+const char* ResourcesGetTexture2DName(Resources* resources, const IgnisTexture2D* texture);
+const char* ResourcesGetFontName(Resources* resources, const IgnisFont* font);
 
 #ifdef __cplusplus
 }

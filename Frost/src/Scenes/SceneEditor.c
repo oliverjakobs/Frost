@@ -42,7 +42,7 @@ void SceneEditorOnEvent(SceneEditor* editor, Scene* scene, Event e)
 	{
 		if (editor->hover != ECS_NULL_ENTITY)
 		{
-			vec2 mouse = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
+			vec2 mouse = CameraGetMousePosView(& scene->camera, InputMousePositionVec2());
 			editor->offset = vec2_sub(mouse, GetEntityPosition(&scene->ecs, editor->hover));
 			editor->clicked = 1;
 		}
@@ -59,7 +59,7 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime)
 {
 	if (!editor->active) return;
 
-	vec3 position = scene->camera->position;
+	vec3 position = scene->camera.position;
 
 	if (InputKeyPressed(KEY_A))
 		position.x -= editor->cameraspeed * deltatime;
@@ -70,10 +70,10 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime)
 	if (InputKeyPressed(KEY_W))
 		position.y += editor->cameraspeed * deltatime;
 
-	scene->camera->position = position;
-	CameraUpdateViewOrtho(scene->camera);
+	scene->camera.position = position;
+	CameraUpdateViewOrtho(&scene->camera);
 
-	vec2 mouse = CameraGetMousePosView(scene->camera, InputMousePositionVec2());
+	vec2 mouse = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
 
 	if (editor->clicked)
 		SetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
@@ -85,7 +85,7 @@ void SceneEditorOnRender(SceneEditor* editor, Scene* scene)
 {
 	if (!editor->active) return;
 
-	Primitives2DStart(CameraGetViewProjectionPtr(scene->camera));
+	Primitives2DStart(CameraGetViewProjectionPtr(&scene->camera));
 
 	/* render grid */
 	if (editor->showgrid)
