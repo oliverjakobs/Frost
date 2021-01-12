@@ -51,7 +51,7 @@ void InventoryFree(Inventory* inv)
 	inv->pos = vec2_zero();
 	inv->size = vec2_zero();
 
-	inv->columns = inv->rows = 0;
+	inv->cols = inv->rows = 0;
 }
 
 void InventoryToggle(Inventory* inv)
@@ -60,21 +60,33 @@ void InventoryToggle(Inventory* inv)
 	else if (inv->state == INVENTORY_CLOSED) inv->state = INVENTORY_OPEN;
 }
 
-int InventoryGetCellIndex(Inventory* inv, int row, int column)
+int InventoryGetCellIndex(const Inventory* inv, int row, int column)
 {
-	return row * inv->columns + column;
+	return row * inv->cols + column;
+}
+
+vec2 InventoryGetCellPos(const Inventory* inv, int index, float cell_size, float padding)
+{
+	int col = index % inv->cols;
+	int row = index / inv->cols;
+
+	vec2 pos;
+	pos.x = col * (cell_size + padding) + padding;
+	pos.y = row * (cell_size + padding) + padding;
+
+	return vec2_add(inv->pos, pos);
 }
 
 void InventorySetCellContent(Inventory* inv, int index, int itemID)
 {
-	if (index < 0 || index >= (inv->rows * inv->columns)) return;
+	if (index < 0 || index >= (inv->rows * inv->cols)) return;
 
 	inv->cells[index].itemID = itemID;
 }
 
-int InventoryGetCellContent(Inventory* inv, int index)
+int InventoryGetCellContent(const Inventory* inv, int index)
 {
-	if (index < 0 || index >= (inv->rows * inv->columns)) return NULL_ITEM;
+	if (index < 0 || index >= (inv->rows * inv->cols)) return NULL_ITEM;
 
 	return inv->cells[index].itemID;
 }

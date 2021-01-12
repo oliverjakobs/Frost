@@ -27,7 +27,7 @@
   },
   "inventory": {
     "grid": [ 1, 4 ],
-    "state": 2,
+    "state": "FIXED",
     "align": ["center", "bottom"],
     "save": "res/save/player_inv.json"
   },

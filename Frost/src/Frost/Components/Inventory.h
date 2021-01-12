@@ -5,10 +5,10 @@
 
 #define NULL_ITEM (-1)
 
+/* TODO InventoryCell to typedef ItemID */
 typedef struct
 {
 	int itemID;
-	vec2 pos;
 } InventoryCell;
 
 typedef enum
@@ -37,8 +37,9 @@ typedef struct
 	vec2 pos;
 	vec2 size;
 
+	/* TODO cell_size and padding to inv? */
 	int rows;
-	int columns;
+	int cols;
 
 	InventoryState state;
 
@@ -51,10 +52,11 @@ void InventoryFree(Inventory* inv);
 
 void InventoryToggle(Inventory* inv);
 
-int InventoryGetCellIndex(Inventory* inv, int row, int column);
+int InventoryGetCellIndex(const Inventory* inv, int row, int column);
+vec2 InventoryGetCellPos(const Inventory* inv, int index, float cell_size, float padding);
 
 void InventorySetCellContent(Inventory* inv, int index, int itemID);
-int InventoryGetCellContent(Inventory* inv, int index);
+int InventoryGetCellContent(const Inventory* inv, int index);
 
 void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_inv, int src_cell);
 
