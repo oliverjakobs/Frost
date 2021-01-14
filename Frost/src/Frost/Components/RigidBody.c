@@ -1,8 +1,7 @@
 #include "RigidBody.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
-#include "toolbox/tb_str.h"
 #include "toolbox/tb_json.h"
 
 #include "Application/Debugger.h"
@@ -20,7 +19,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 	tb_json_read(json, &element, "{'rigidbody'");
 	if (element.error == TB_JSON_OK)
 	{
-		TileBodyType type = tb_json_parse(element.value, "{'type'", NULL, (tb_json_parse_func)RigidBodyParseType);
+		TileBodyType type = tb_json_parse(element.value, "{'type'", NULL, RigidBodyParseType);
 
 		float half_w = tb_json_float(element.value, "{'halfsize'[0", NULL, transform->size.x / 2.0f);
 		float half_h = tb_json_float(element.value, "{'halfsize'[1", NULL, transform->size.y / 2.0f);
@@ -45,31 +44,10 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 		body.offset.y = tb_json_float(element.value, "{'offset'[1", NULL, half_h);
 
 		vec2 position = vec2_add(transform->position, body.offset);
-		TileBodyInit(&body.body, &scene->map, type, position.x, position.y, half_w, half_h);
+		TileBodyInit(&body.body, type, position.x, position.y, half_w, half_h);
+
+		if (type == TILE_BODY_DYNAMIC) TileBodySetSensor(&body.body, 2.0f, 2.0f);
 
 		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
 	}
-}
-
-TileBodyType RigidBodyParseType(const char* str, size_t max_count)
-{
-	if (max_count > 0)
-	{
-		if (tb_strncasecmp(str, "dynamic", max_count) == 0) return TILE_BODY_DYNAMIC;
-	}
-
-	return TILE_BODY_STATIC;
-}
-
-RigidBodyFilter RigidBodyParseFilter(const char* str, size_t max_count)
-{
-	if (max_count > 0)
-	{
-		if (tb_strncasecmp(str, "world", max_count) == 0) return RIGID_BODY_FILTER_WORLD;
-		if (tb_strncasecmp(str, "player", max_count) == 0) return RIGID_BODY_FILTER_PLAYER;
-		if (tb_strncasecmp(str, "npc", max_count) == 0) return RIGID_BODY_FILTER_NPC;
-		if (tb_strncasecmp(str, "door", max_count) == 0) return RIGID_BODY_FILTER_DOOR;
-	}
-
-	return RIGID_BODY_FILTER_NONE;
 }

@@ -1,11 +1,11 @@
-#include "tilemap.h"
+#include "tile_map.h"
 
 #include <stdlib.h>
 
-int TileMapLoad(TileMap* map, TileID* tiles, size_t width, size_t height, float tile_size, TileType* types, size_t types_count)
+int TileMapLoad(TileMap* map, TileID* tiles, size_t rows, size_t cols, float tile_size, TileType* types, size_t types_count)
 {
-    map->width = width;
-    map->height = height;
+    map->rows = rows;
+    map->cols = cols;
     map->tile_size = tile_size;
 	map->types = types;
 	map->types_count = types_count;
@@ -15,18 +15,18 @@ int TileMapLoad(TileMap* map, TileID* tiles, size_t width, size_t height, float 
 	map->borders[TILE_TOP] = 0;
 	map->borders[TILE_BOTTOM] = 0;
 
-    map->tiles = malloc(width * height * sizeof(Tile));
+    map->tiles = malloc(rows * cols * sizeof(Tile));
 
 	if (!map->tiles) return 0;
 
 	size_t index = 0;
-	for (size_t row = 0; row < height; ++row)
+	for (size_t row = 0; row < rows; ++row)
 	{
-		for (size_t col = 0; col < width; ++col)
+		for (size_t col = 0; col < cols; ++col)
 		{
 			Tile tile;
-			tile.pos = (vec2){ col * tile_size, (height - (row + 1)) * tile_size };
-			tile.id = tiles[row * width + col];
+			tile.pos = (vec2){ col * tile_size, (rows - (row + 1)) * tile_size };
+			tile.id = tiles[row * cols + col];
 
 			tile.type = TileMapGetType(map, tile.id);
 
@@ -45,9 +45,9 @@ void TileMapDestroy(TileMap* map)
 Tile* TileMapAt(const TileMap* map, size_t row, size_t col)
 {
 	if (row < 0 || col < 0) return NULL;
-	if (row >= map->height || col >= map->width) return NULL;
+	if (row >= map->rows || col >= map->cols) return NULL;
 
-    return &map->tiles[(map->height - row - 1) * map->width + col];
+    return &map->tiles[(map->rows - row - 1) * map->cols + col];
 }
 
 Tile* TileMapAtPos(const TileMap* map, vec2 pos)

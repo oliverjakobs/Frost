@@ -22,16 +22,16 @@ void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, char* json)
 
 EcsEntityID GetEntityAt(const Ecs* ecs, vec2 pos)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Transform* transform = EcsComponentMapIterValue(iter);
+		Transform* transform = EcsMapIterValue(iter);
 
 		vec2 min = vec2_sub(transform->position, (vec2) { transform->size.x / 2.0f, 0.0f });
 		vec2 max = vec2_add(min, transform->size);
 
 		if (vec2_inside(pos, min, max))
-			return EcsComponentMapIterKey(iter);
+			return EcsMapIterKey(iter);
 	}
 
 	return ECS_NULL_ENTITY;

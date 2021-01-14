@@ -1,30 +1,26 @@
 #ifndef ECS_H
 #define ECS_H
 
-#include "ComponentMap.h"
-#include "ComponentList.h"
+#include "EcsMap.h"
+#include "EcsList.h"
 
-#define ECS_COMPONENT_REQUIRE(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), type); \
+#define ECS_REQUIRE_MAP(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type); \
 	if (!var) continue
 
-#define ECS_COMPONENT_REQUIRE_NODE(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsComponentNodeEntity(iter), type); \
+#define ECS_OPTIONAL_MAP(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type)
+
+#define ECS_REQUIRE_LIST(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsListNodeEntity(iter), type); \
 	if (!var) continue
 
-#define ECS_COMPONENT_OPTIONAL(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), type)
-
-#define ECS_COMPONENT_OPTIONAL_NODE(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsComponentNodeEntity(iter), type)
-
-typedef uint32_t EcsComponentType;
-
-typedef struct Ecs Ecs;
+#define ECS_OPTIONAL_LIST(Comp, ecs, var, iter, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsListNodeEntity(iter), type)
 
 typedef struct
 {
-	void (*update)(Ecs*, float);
+	EcsUpdateCallback update;
 } EcsUpdateSystem;
 
 typedef enum
@@ -37,7 +33,7 @@ typedef enum
 typedef struct
 {
 	EcsRenderStage stage;
-	void (*render)(const Ecs*, const float*);
+	EcsRenderCallback render;
 } EcsRenderSystem;
 
 struct Ecs
@@ -45,8 +41,8 @@ struct Ecs
 	EcsUpdateSystem* systems_update;
 	EcsRenderSystem* systems_render;
 
-	EcsComponentMap* data_components;
-	EcsComponentList* order_components;
+	EcsMap* data_components;
+	EcsList* order_components;
 };
 
 void EcsInit(Ecs* ecs);
@@ -57,37 +53,31 @@ void EcsReserveComponents(Ecs* ecs, size_t data, size_t order);
 
 void EcsClear(Ecs* ecs);
 
-void EcsAddUpdateSystem(Ecs* ecs, void (*update)(Ecs*,float));
-void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(const Ecs*, const float*));
+void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update);
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render);
 
-void EcsOnUpdate(Ecs* ecs, float deltatime);
-void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj);
+void EcsOnUpdate(Ecs* ecs, const void* world, float deltatime);
+void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const void* world, const float* mat_view_proj);
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);
 
-EcsComponentMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type);
-EcsComponentList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type);
+EcsMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type);
+EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type);
 
 /* Data Components */
-int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, void (*free)(void*));
+int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free);
 
-void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
+void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component);
 void* EcsGetDataComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 /* Order Components */
-int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*));
+int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free, EcsCmpFunc cmp);
 
-void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component);
+void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component);
 void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
-
-/* Memory */
-void* EcsMemAlloc(size_t size);
-void* EcsMemRealloc(void* block, size_t size);
-void* EcsMemDup(const void* block, size_t size);
-void EcsMemFree(void* block);
 
 #endif /* !ECS_H */

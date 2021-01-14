@@ -1,6 +1,6 @@
 #include "Interaction.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
 #include "toolbox/tb_json.h"
 #include "Application/Debugger.h"
@@ -18,9 +18,9 @@ void InteractableLoad(Scene* scene, EcsEntityID entity, char* json)
 	if (element.error == TB_JSON_OK)
 	{
 		Interactable comp;
-		comp.type = tb_json_parse(element.value, "{'type'", NULL, (tb_json_parse_func)InteractionParseType);
-		comp.interaction = tb_json_parse(element.value, "{'interaction'", NULL, (tb_json_parse_func)InteractionParse);
-		comp.key = tb_json_parse(element.value, "{'key'", NULL, (tb_json_parse_func)InputParseKeyCode);
+		comp.type = tb_json_parse(element.value, "{'type'", NULL, InteractionParseType);
+		comp.interaction = tb_json_parse(element.value, "{'interaction'", NULL, InteractionParse);
+		comp.key = tb_json_parse(element.value, "{'key'", NULL, InputParseKeyCode);
 
 		comp.range_min = tb_json_float(element.value, "{'range'[0", NULL, 0.0f);
 		comp.range_max = tb_json_float(element.value, "{'range'[1", NULL, 0.0f);
@@ -66,21 +66,3 @@ int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, i
 	default: return 0;
 	}
 }
-
-Interaction InteractionParse(const char* str, size_t max_count)
-{
-	if (strncmp(str, "TOGGLE_DOOR", max_count) == 0) return INTERACTION_TOGGLE_DOOR;
-	if (strncmp(str, "OPEN_INVENTORY", max_count) == 0) return INTERACTION_OPEN_INVENTORY;
-
-	return INTERACTION_NONE;
-}
-
-InteractionType InteractionParseType(const char* str, size_t max_count)
-{
-	if (strncmp(str, "TOGGLE", max_count) == 0) return INTERACTION_TYPE_TOGGLE;
-	if (strncmp(str, "RANGED", max_count) == 0) return INTERACTION_TYPE_RANGED;
-	if (strncmp(str, "TIMED", max_count) == 0) return INTERACTION_TYPE_TIMED;
-
-	return INTERACTION_TYPE_TOGGLE;
-}
-

@@ -65,7 +65,4 @@ void InteractableLoad(Scene* scene, EcsEntityID entity, char* json);
 
 int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active);
 
-Interaction InteractionParse(const char* str, size_t max_count);
-InteractionType InteractionParseType(const char* str, size_t max_count);
-
 #endif /* !INTERACTION_H */

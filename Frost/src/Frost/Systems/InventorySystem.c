@@ -22,10 +22,7 @@ static void InventoryCellIDReset(InventoryCellID* id)
 
 typedef struct
 {
-	Camera* camera;
-
 	IgnisTexture2D* item_atlas;
-
 } InventorySystemData;
 
 static InventorySystemData inventory_data;
@@ -33,10 +30,9 @@ static InventorySystemData inventory_data;
 static InventoryCellID dragged;
 static InventoryCellID hover;
 
-int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera)
+int InventorySystemInit(IgnisTexture2D* item_atlas)
 {
 	inventory_data.item_atlas = item_atlas;
-	inventory_data.camera = camera;
 
 	InventoryCellIDReset(&dragged);
 	InventoryCellIDReset(&hover);
@@ -44,16 +40,16 @@ int InventorySystemInit(IgnisTexture2D* item_atlas, Camera* camera)
 	return 1;
 }
 
-void InventoryUpdateSystem(Ecs* ecs, float deltatime)
+void InventoryUpdateSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
 	InventoryCellIDReset(&hover);
 
-	vec2 mouse = CameraGetMousePos(inventory_data.camera, InputMousePositionVec2());
+	vec2 mouse = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
 
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Inventory* inv = EcsComponentMapIterValue(iter);
+		Inventory* inv = EcsMapIterValue(iter);
 
 		vec2 size;
 		size.x = InventoryGetWidth(inv);
@@ -62,7 +58,7 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 		if (vec2_inside(mouse, inv->pos, vec2_add(inv->pos, size)) && inv->state != INVENTORY_CLOSED)
 		{
 			int cell = InventoryGetCellAt(inv, mouse);
-			InventoryCellIDSet(&hover, EcsComponentMapIterKey(iter), cell);
+			InventoryCellIDSet(&hover, EcsMapIterKey(iter), cell);
 		}
 	}
 
@@ -84,7 +80,7 @@ void InventoryUpdateSystem(Ecs* ecs, float deltatime)
 	/* TODO drop items */
 }
 
-void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
+void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
 	/* render inventory backgrounds */
 	Primitives2DStart(mat_view_proj);
@@ -92,10 +88,10 @@ void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 	IgnisColorRGBA bg = IGNIS_WHITE;
 	ignisBlendColorRGBA(&bg, 0.4f);
 
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Inventory* inv = EcsComponentMapIterValue(iter);
+		Inventory* inv = EcsMapIterValue(iter);
 		if (inv->state == INVENTORY_CLOSED) continue;
 
 		float width = InventoryGetWidth(inv);
@@ -110,7 +106,7 @@ void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 
 			Primitives2DRenderRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
 
-			if (EcsComponentMapIterKey(iter) == hover.entity && cell_index == hover.cell_index)
+			if (EcsMapIterKey(iter) == hover.entity && cell_index == hover.cell_index)
 				Primitives2DFillRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
 		}
 	}
@@ -120,14 +116,14 @@ void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 	/* render inventory contents */
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Inventory* inv = EcsComponentMapIterValue(iter);
+		Inventory* inv = EcsMapIterValue(iter);
 		if (inv->state == INVENTORY_CLOSED) continue;
 
 		for (int cell_index = 0; cell_index < (inv->rows * inv->cols); ++cell_index)
 		{
-			if (inv->cells[cell_index] == NULL_ITEM || (EcsComponentMapIterKey(iter) == dragged.entity 
+			if (inv->cells[cell_index] == NULL_ITEM || (EcsMapIterKey(iter) == dragged.entity 
 				&& cell_index == dragged.cell_index))
 				continue;
 
@@ -145,7 +141,7 @@ void InventoryRenderSystem(const Ecs* ecs, const float* mat_view_proj)
 	{
 		Inventory* inv = EcsGetDataComponent(ecs, dragged.entity, COMPONENT_INVENTORY);
 
-		vec2 mouse_pos = CameraGetMousePos(inventory_data.camera, InputMousePositionVec2());
+		vec2 mouse_pos = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
 		float cell_x = mouse_pos.x - (inv->cell_size * 0.5f);
 		float cell_y = mouse_pos.y - (inv->cell_size * 0.5f);
 

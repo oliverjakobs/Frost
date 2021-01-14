@@ -1,7 +1,7 @@
 #ifndef TILE_RENDERER_H
 #define TILE_RENDERER_H
 
-#include "tile.h"
+#include "tile_body.h"
 
 #include "Graphics/Renderer.h"
 

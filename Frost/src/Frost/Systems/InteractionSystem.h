@@ -1,8 +1,8 @@
 #ifndef INTERACTION_SYSTEM_H
 #define INTERACTION_SYSTEM_H
 
-#include "Ecs/Ecs.h"
+#include "Scenes/Scene.h"
 
-void InteractionSystem(Ecs* ecs, float deltatime);
+void InteractionSystem(Ecs* ecs, const Scene* scene, float deltatime);
 
 #endif /* !INTERACTION_SYSTEM_H */

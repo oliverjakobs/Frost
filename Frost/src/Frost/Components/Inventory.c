@@ -1,16 +1,12 @@
 #include "Inventory.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
-#include "toolbox/tb_str.h"
 #include "toolbox/tb_json.h"
-
-#include "Application/Debugger.h"
-
-#include "..\Systems\InventorySystem.h"
 
 const float INV_CELL_SIZE = 64.0f;
 const float INV_PADDING = 8.0f;
+const float INV_SPACING = 8.0f;
 
 void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 {
@@ -27,17 +23,17 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 		int rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
 		int cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
 
-		InventoryState state = tb_json_parse(element.value, "{'state'", NULL, (tb_json_parse_func)InventoryParseState);
+		InventoryState state = tb_json_parse(element.value, "{'state'", NULL, InventoryParseState);
 		
 		InventoryCreate(&inv, state, pos, rows, cols);
-		InventorySetLayout(&inv, INV_CELL_SIZE, INV_PADDING);
+		InventorySetLayout(&inv, INV_CELL_SIZE, INV_PADDING, INV_SPACING);
 
 		tb_json_element align;
 		tb_json_read(element.value, &align, "{'align'");
 		if (align.error == TB_JSON_OK)
 		{
-			InvHAlign h_align = tb_json_parse(align.value, "[0", NULL, (tb_json_parse_func)InventoryParseHAlign);
-			InvVAlign v_align = tb_json_parse(align.value, "[1", NULL, (tb_json_parse_func)InventoryParseVAlign);
+			InvHAlign h_align = tb_json_parse(align.value, "[0", NULL, InventoryParseHAlign);
+			InvVAlign v_align = tb_json_parse(align.value, "[1", NULL, InventoryParseVAlign);
 
 			InventoryAlign(&inv, h_align, v_align, scene->camera.size);
 		}
@@ -69,10 +65,11 @@ int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, in
 	return 1;
 }
 
-void InventorySetLayout(Inventory* inv, float cell_size, float padding)
+void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing)
 {
 	inv->cell_size = cell_size;
 	inv->padding = padding;
+	inv->spacing = spacing;
 }
 
 void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size)
@@ -177,31 +174,3 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 float InventoryGetWidth(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->cols); }
 float InventoryGetHeight(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->rows); }
 
-InventoryState InventoryParseState(const char* str, size_t max_count)
-{
-	if (max_count == 0) return INVENTORY_CLOSED;
-	if (tb_strncasecmp(str, "open", max_count) == 0) return INVENTORY_OPEN;
-	if (tb_strncasecmp(str, "fixed", max_count) == 0) return INVENTORY_FIXED;
-
-	return INVENTORY_CLOSED;
-}
-
-InvHAlign InventoryParseHAlign(const char* str, size_t max_count)
-{
-	if (max_count == 0) return INV_HALIGN_NONE;
-	if (tb_strncasecmp(str, "left", max_count) == 0) return INV_HALIGN_LEFT;
-	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_HALIGN_CENTER;
-	if (tb_strncasecmp(str, "right", max_count) == 0) return INV_HALIGN_RIGHT;
-
-	return INV_HALIGN_NONE;
-}
-
-InvVAlign InventoryParseVAlign(const char* str, size_t max_count)
-{
-	if (max_count == 0) return INV_VALIGN_NONE;
-	if (tb_strncasecmp(str, "top", max_count) == 0) return INV_VALIGN_TOP;
-	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_VALIGN_CENTER;
-	if (tb_strncasecmp(str, "bottom", max_count) == 0) return INV_VALIGN_BOTTOM;
-
-	return INV_VALIGN_NONE;
-}

@@ -18,11 +18,11 @@ void EcsDestroy(Ecs* ecs)
 	tb_stretchy_free(ecs->systems_render);
 
 	EcsClear(ecs);
-	for (EcsComponentMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
-		EcsComponentMapFree(it);
+	for (EcsMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
+		EcsMapFree(it);
 
-	for (EcsComponentList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
-		EcsComponentListFree(it);
+	for (EcsList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
+		EcsListFree(it);
 
 	tb_stretchy_free(ecs->data_components);
 	tb_stretchy_free(ecs->order_components);
@@ -42,35 +42,35 @@ void EcsReserveComponents(Ecs* ecs, size_t data, size_t order)
 
 void EcsClear(Ecs* ecs)
 {
-	for (EcsComponentMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
-		EcsComponentMapClear(it);
+	for (EcsMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
+		EcsMapClear(it);
 
-	for (EcsComponentList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
-		EcsComponentListClear(it);
+	for (EcsList* it = ecs->order_components; it != tb_stretchy_last(ecs->order_components); it++)
+		EcsListClear(it);
 
 	EcsEntityResetIDCounter();
 }
 
-void EcsAddUpdateSystem(Ecs* ecs, void(*update)(Ecs*,float))
+void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update)
 {
 	tb_stretchy_push(ecs->systems_update, ((EcsUpdateSystem) { update }));
 }
 
-void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, void (*render)(const Ecs*,const float*))
+void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render)
 {
 	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { stage, render }));
 }
 
-void EcsOnUpdate(Ecs* ecs, float deltatime)
+void EcsOnUpdate(Ecs* ecs, const void* world, float deltatime)
 {
 	for (EcsUpdateSystem* it = ecs->systems_update; it != tb_stretchy_last(ecs->systems_update); it++)
-		it->update(ecs, deltatime);
+		it->update(ecs, world, deltatime);
 }
 
-void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const float* mat_view_proj)
+void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const void* world, const float* mat_view_proj)
 {
 	for (EcsRenderSystem* it = ecs->systems_render; it != tb_stretchy_last(ecs->systems_render); it++)
-		if (it->stage == stage) it->render(ecs, mat_view_proj);
+		if (it->stage == stage) it->render(ecs, world, mat_view_proj);
 }
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
@@ -82,20 +82,20 @@ void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 		EcsRemoveOrderComponent(ecs, entity, i);
 }
 
-EcsComponentMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type)
+EcsMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type)
 {
 	return type < tb_stretchy_len(ecs->data_components) ? &ecs->data_components[type] : NULL;
 }
 
-EcsComponentList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
+EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 {
 	return type < tb_stretchy_len(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
 
-int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, void (*free)(void*))
+int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free)
 {
-	EcsComponentMap comp;
-	if (EcsComponentMapAlloc(&comp, elem_size, free ? free : EcsMemFree))
+	EcsMap comp;
+	if (EcsMapAlloc(&comp, elem_size, free))
 	{
 		tb_stretchy_push(ecs->data_components, comp);
 		return 1;
@@ -104,32 +104,29 @@ int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, void (*free)(void*))
 	return 0;
 }
 
-void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component)
+void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, type);
+	EcsMap* map = EcsGetComponentMap(ecs, type);
 
 	if (!map) return NULL;
 
-	void* data = malloc(map->element_size);
-	memcpy(data, component, map->element_size);
-
-	return EcsComponentMapInsert(map, entity, data);
+	return EcsMapInsert(map, entity, component);
 }
 
 void* EcsGetDataComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	return EcsComponentMapFind(EcsGetComponentMap(ecs, type), entity);
+	return EcsMapFind(EcsGetComponentMap(ecs, type), entity);
 }
 
 void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	EcsComponentMapRemove(EcsGetComponentMap(ecs, type), entity);
+	EcsMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
-int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, void (*free)(void*), int (*cmp)(const void*, const void*))
+int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free, EcsCmpFunc cmp)
 {
-	EcsComponentList comp;
-	if (EcsComponentListAlloc(&comp, elem_size, free, cmp))
+	EcsList comp;
+	if (EcsListAlloc(&comp, elem_size, free, cmp))
 	{
 		tb_stretchy_push(ecs->order_components, comp);
 		return 1;
@@ -138,44 +135,21 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, void (*free)(void*), i
 	return 0;
 }
 
-void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, void* component)
+void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
 {
-	EcsComponentList* list = EcsGetComponentList(ecs, type);
+	EcsList* list = EcsGetComponentList(ecs, type);
 
 	if (!list) return NULL;
 
-	return EcsComponentListInsert(list, entity, component);
+	return EcsListInsert(list, entity, component);
 }
 
 void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	return EcsComponentListFind(EcsGetComponentList(ecs, type), entity);
+	return EcsListFind(EcsGetComponentList(ecs, type), entity);
 }
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 {
-	EcsComponentListRemove(EcsGetComponentList(ecs, type), entity);
-}
-
-void* EcsMemAlloc(size_t size)
-{
-	return malloc(size);
-}
-
-void* EcsMemRealloc(void* block, size_t size)
-{
-	return realloc(block, size);
-}
-
-void* EcsMemDup(const void* block, size_t size)
-{
-	void* dup = EcsMemAlloc(size);
-	if (dup) memcpy(dup, block, size);
-
-	return dup;
-}
-
-void EcsMemFree(void* block)
-{
-	free(block);
+	EcsListRemove(EcsGetComponentList(ecs, type), entity);
 }

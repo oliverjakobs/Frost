@@ -1,5 +1,5 @@
-#ifndef SCENE_MANAGER_H
-#define SCENE_MANAGER_H
+#ifndef SCENE_H
+#define SCENE_H
 
 #include "Application/Application.h"
 #include "Graphics/Background.h"
@@ -7,7 +7,7 @@
 #include "Camera/Camera.h"
 
 #include "ECS/Ecs.h"
-#include "tile/tilemap.h"
+#include "tile/tile_map.h"
 #include "tile/tile_renderer.h"
 
 typedef struct 
@@ -18,6 +18,7 @@ typedef struct
 
 	Ecs ecs;
 	TileMap map;
+	vec2 gravity;
 	TileRenderer renderer;
 
 	Camera camera;
@@ -48,4 +49,4 @@ const char* SceneGetTemplatePath(const Scene* scene, const char* templ);
 float SceneGetWidth(const Scene* scene);
 float SceneGetHeight(const Scene* scene);
 
-#endif /* !SCENE_MANAGER_H */
+#endif /* !SCENE_H */

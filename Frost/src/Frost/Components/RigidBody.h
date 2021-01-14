@@ -1,7 +1,7 @@
 #ifndef RIGID_BODY_H
 #define RIGID_BODY_H
 
-#include "tile/body.h"
+#include "tile/tile_body.h"
 
 #include "Scenes/Scene.h"
 
@@ -56,8 +56,5 @@ typedef struct
 } RigidBody;
 
 void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json);
-
-TileBodyType RigidBodyParseType(const char* str, size_t max_count);
-RigidBodyFilter RigidBodyParseFilter(const char* str, size_t max_count);
 
 #endif /* !RIGID_BODY_H */

@@ -29,6 +29,9 @@ int SceneLoad(Scene* scene, const char* path)
 		return 0;
 	}
 
+	scene->gravity.x = tb_json_float(json, "{'gravity'[0", NULL, 0.0f);
+	scene->gravity.y = tb_json_float(json, "{'gravity'[1", NULL, 0.0f);
+
 	tb_json_element element;
 	tb_json_read(json, &element, "{'background'");
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
@@ -135,19 +138,20 @@ int SceneSave(Scene* scene, const char* path)
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
 
-	for (EcsListNode* it = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE)->first; it; it = EcsComponentNodeNext(it))
+	EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
+	for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
 	{
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
-		Template* templ = EcsComponentNodeComponent(it);
+		Template* templ = EcsListNodeComponent(it);
 
 		/* template */
 		tb_jwrite_array_string(&jwc, templ->templ);
 
 		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, EcsComponentNodeEntity(it));
+		vec2 pos = GetEntityPosition(&scene->ecs, EcsListNodeEntity(it));
 
 		tb_jwrite_array_array(&jwc);
 		tb_jwrite_array_float(&jwc, pos.x);
@@ -155,7 +159,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_end(&jwc);
 
 		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsComponentNodeEntity(it)));
+		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsListNodeEntity(it)));
 
 		tb_jwrite_end(&jwc);
 
@@ -219,22 +223,19 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 
 int SceneLoadMap(Scene* scene, char* json)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'map'");
+	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
+	size_t rows = tb_json_long(json, "{'size'[1", NULL, 0);
 
-	size_t width = tb_json_long(element.value, "{'size'[0", NULL, 0);
-	size_t height = tb_json_long(element.value, "{'size'[1", NULL, 0);
+	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
-	float tile_size = tb_json_float(element.value, "{'tile_size'", NULL, 0.0f);
-
-	if (width == 0 || height == 0 || tile_size <= 0.0f)
+	if (rows == 0 || cols == 0 || tile_size <= 0.0f)
 	{
 		DEBUG_ERROR("[Scenes] Map size or tile size can not be zero.");
 		return 0;
 	}
 
 	tb_json_element tiles;
-	tb_json_read(element.value, &tiles, "{'tiles'");
+	tb_json_read(json, &tiles, "{'tiles'");
 
 	TileID* tile_ids = NULL;
 
@@ -263,7 +264,7 @@ int SceneLoadMap(Scene* scene, char* json)
 		[10] = TILE_SLOPE_LEFT,
 	};
 
-	TileMapLoad(&scene->map, tile_ids, width, height, tile_size, types, 11);
+	TileMapLoad(&scene->map, tile_ids, rows, cols, tile_size, types, 11);
 	TileRendererBindMap(&scene->renderer, &scene->map);
 
 	free(tile_ids);

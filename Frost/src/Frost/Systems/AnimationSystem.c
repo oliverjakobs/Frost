@@ -18,18 +18,18 @@ static void AnimatorTick(Animator* animator, Animation* animation, float deltati
 		AnimatorStart(animator, animation->start);
 }
 
-void AnimationSystem(Ecs* ecs, float deltatime)
+void AnimationSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_ANIMATOR);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_ANIMATOR);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Animator* animator = EcsComponentMapIterValue(iter);
-		ECS_COMPONENT_REQUIRE(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
+		Animator* animator = EcsMapIterValue(iter);
+		ECS_REQUIRE_MAP(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
 
 		Animation* current = &animator->animations[animator->current];
 		if (current)
 		{
-			EntityState state = EntityGetState(ecs, EcsComponentMapIterKey(iter));
+			EntityState state = EntityGetState(ecs, EcsMapIterKey(iter));
 			if (animator->current == state)
 			{
 				AnimatorTick(animator, current, deltatime);

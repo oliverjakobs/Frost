@@ -1,8 +1,5 @@
 #include "tile_renderer.h"
 
-#include "body.h"
-#include "tilemap.h"
-
 int TileRendererInit(TileRenderer* renderer)
 {
 	/* TODO error checking */
@@ -30,7 +27,7 @@ void TileRendererDestroy(TileRenderer* renderer)
 
 void TileRendererBindMap(TileRenderer* renderer, const TileMap* map)
 {
-	renderer->tile_count = map->height * map->width;
+	renderer->tile_count = map->rows * map->cols;
 
 	ignisBindQuad(&renderer->quad);
 
@@ -99,35 +96,35 @@ void TileMapRenderDebug(const TileMap* map)
 	float tile_size = map->tile_size;
 
 	/* map border */
-	Primitives2DRenderRect(0.0f, 0.0f, map->width * tile_size, map->height * tile_size, IGNIS_WHITE);
+	Primitives2DRenderRect(0.0f, 0.0f, map->cols * tile_size, map->rows * tile_size, IGNIS_WHITE);
 
 	if (TileMapGetBorder(map, TILE_BOTTOM))
 	{
-		for (size_t i = 0; i < map->width; ++i)
+		for (size_t i = 0; i < map->cols; ++i)
 			Primitives2DRenderRect(i * tile_size, -tile_size, tile_size, tile_size, IGNIS_BLACK);
 	}
 
 	if (TileMapGetBorder(map, TILE_TOP))
 	{
-		float y = map->height * tile_size;
-		for (size_t i = 0; i < map->width; ++i)
+		float y = map->rows * tile_size;
+		for (size_t i = 0; i < map->cols; ++i)
 			Primitives2DRenderRect(i * tile_size, y, tile_size, tile_size, IGNIS_BLACK);
 	}
 
 	if (TileMapGetBorder(map, TILE_LEFT))
 	{
-		for (size_t i = 0; i < map->height; ++i)
+		for (size_t i = 0; i < map->rows; ++i)
 			Primitives2DRenderRect(-tile_size, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
 	}
 
 	if (TileMapGetBorder(map, TILE_RIGHT))
 	{
-		float x = map->width * tile_size;
-		for (size_t i = 0; i < map->height; ++i)
+		float x = map->cols * tile_size;
+		for (size_t i = 0; i < map->rows; ++i)
 			Primitives2DRenderRect(x, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
 	}
 
-	for (size_t i = 0; i < (map->width * map->height); ++i)
+	for (size_t i = 0; i < (map->rows * map->cols); ++i)
 	{
 		Tile* tile = &map->tiles[i];
 		switch (tile->type)

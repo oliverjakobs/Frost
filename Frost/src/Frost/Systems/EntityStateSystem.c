@@ -7,13 +7,13 @@ int EntityStateFall(RigidBody* body) { return body ? (!body->body.collision_stat
 int EntityStateWalk(RigidBody* body) { return body ? (body->body.collision_state[TILE_BOTTOM] && (body->body.velocity.x != 0.0f)) : 0; }
 int EntityStateIdle(RigidBody* body) { return body ? (body->body.collision_state[TILE_BOTTOM] && (body->body.velocity.x == 0.0f)) : 0; }
 
-void EntityStateSystem(Ecs* ecs, float deltatime)
+void EntityStateSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_STATE);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_STATE);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		EntityState* state = EcsComponentMapIterValue(iter);
-		ECS_COMPONENT_OPTIONAL(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
+		EntityState* state = EcsMapIterValue(iter);
+		ECS_OPTIONAL_MAP(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
 
 		if (EntityStateJump(body)) *state = ENTITY_STATE_JUMP;
 		else if (EntityStateFall(body)) *state = ENTITY_STATE_FALL;

@@ -3,16 +3,16 @@
 #include "Frost/FrostEcs.h"
 #include "Application/Input.h"
 
-void PlayerSystem(Ecs* ecs, float deltatime)
+void PlayerSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_PLAYER);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_PLAYER);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		Player* player = EcsComponentMapIterValue(iter);
-		ECS_COMPONENT_REQUIRE(Movement, ecs, movement, iter, COMPONENT_MOVEMENT);
-		ECS_COMPONENT_REQUIRE(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
-		ECS_COMPONENT_REQUIRE(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
-		ECS_COMPONENT_OPTIONAL(CameraController, ecs, camera, iter, COMPONENT_CAMERA);
+		Player* player = EcsMapIterValue(iter);
+		ECS_REQUIRE_MAP(Movement, ecs, movement, iter, COMPONENT_MOVEMENT);
+		ECS_REQUIRE_MAP(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
+		ECS_REQUIRE_MAP(RigidBody, ecs, body, iter, COMPONENT_RIGID_BODY);
+		ECS_OPTIONAL_MAP(CameraController, ecs, camera, iter, COMPONENT_CAMERA);
 
 		vec2 velocity;
 		velocity.x = (-InputKeyPressed(player->move_left) + InputKeyPressed(player->move_right)) * movement->speed;
@@ -41,6 +41,6 @@ void PlayerSystem(Ecs* ecs, float deltatime)
 		body->body.velocity = velocity;
 
 		// set view
-		CameraControllerMoveConstrained(camera, GetEntityPosition(ecs, EcsComponentMapIterKey(iter)), 0.5f);
+		CameraControllerMoveConstrained(camera, GetEntityPosition(ecs, EcsMapIterKey(iter)), 0.5f);
 	}
 }

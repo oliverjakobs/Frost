@@ -30,7 +30,7 @@ void OnInit(Application* app)
 	/* ecs */
 	SceneInit(&scene, (float)app->width, (float)app->height, &app->resources, LoadEcs);
 
-	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &scene.camera);
+	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"));
 
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
@@ -122,6 +122,7 @@ void OnRenderDebug(Application* app)
 
 		FontRendererTextFieldLine("Scene: %s", scene.name);
 		FontRendererTextFieldLine("Size: %4.2f, %4.2f", SceneGetWidth(&scene), SceneGetHeight(&scene));
+		FontRendererTextFieldLine("Gravity: %4.2f, %4.2f", scene.gravity.x, scene.gravity.y);
 		FontRendererTextFieldLine("------------------------");
 
 		EcsEntityID player = 0;

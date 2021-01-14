@@ -29,11 +29,13 @@ typedef enum
 	INVENTORY_FIXED
 } InventoryState;
 
+/* TODO implement spacing */
 typedef struct
 {
 	vec2 pos;
 
 	float padding;
+	float spacing;
 	float cell_size;
 
 	int rows;
@@ -47,7 +49,7 @@ typedef struct
 void InventoryLoad(Scene* scene, EcsEntityID entity, char* json);
 
 int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols);
-void InventorySetLayout(Inventory* inv, float cell_size, float padding);
+void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing);
 void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size);
 void InventoryFree(Inventory* inv);
 
@@ -66,9 +68,5 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 
 float InventoryGetWidth(const Inventory* inv);
 float InventoryGetHeight(const Inventory* inv);
-
-InventoryState InventoryParseState(const char* str, size_t max_count);
-InvHAlign InventoryParseHAlign(const char* str, size_t max_count);
-InvVAlign InventoryParseVAlign(const char* str, size_t max_count);
 
 #endif /* !INVENTORY_H */

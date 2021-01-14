@@ -111,16 +111,7 @@
     <ClInclude Include="src\Console\Console.h">
       <Filter>src\Console</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\ComponentList.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\ComponentMap.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
     <ClInclude Include="src\ECS\Ecs.h">
-      <Filter>src\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ECS\Entity.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
     <ClInclude Include="src\Event\Event.h">
@@ -278,14 +269,23 @@
     <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
     <ClInclude Include="src\Frost\Components\EntityState.h" />
     <ClInclude Include="src\Frost\Components\Player.h" />
-    <ClInclude Include="src\tile\tilemap.h" />
-    <ClInclude Include="src\tile\tile.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
-    <ClInclude Include="src\tile\body.h" />
-    <ClInclude Include="src\tile\collision.h" />
     <ClInclude Include="src\ECS\EcsLoader.h" />
     <ClInclude Include="src\Scenes\SceneLoader.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
+    <ClInclude Include="src\tile\tile_collision.h" />
+    <ClInclude Include="src\tile\tile_body.h" />
+    <ClInclude Include="src\tile\tile_map.h" />
+    <ClInclude Include="src\ECS\EcsList.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\EcsCommon.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\EcsMap.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\FrostParser.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -309,16 +309,7 @@
     <ClCompile Include="src\Console\Console.c">
       <Filter>src\Console</Filter>
     </ClCompile>
-    <ClCompile Include="src\ECS\ComponentList.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\ComponentMap.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
     <ClCompile Include="src\ECS\Ecs.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\Entity.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Event\Event.c">
@@ -462,13 +453,23 @@
     <ClCompile Include="src\Frost\Components\EntityState.c" />
     <ClCompile Include="src\Frost\Components\Transform.c" />
     <ClCompile Include="src\Frost\Components\Player.c" />
-    <ClCompile Include="src\tile\tilemap.c" />
     <ClCompile Include="src\tile\tile_renderer.c" />
-    <ClCompile Include="src\tile\body.c" />
-    <ClCompile Include="src\tile\collision.c" />
     <ClCompile Include="src\ECS\EcsLoader.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />
     <ClCompile Include="src\toolbox\tb_str.c" />
+    <ClCompile Include="src\tile\tile_collision.c" />
+    <ClCompile Include="src\tile\tile_body.c" />
+    <ClCompile Include="src\tile\tile_map.c" />
+    <ClCompile Include="src\ECS\EcsList.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\EcsCommon.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\EcsMap.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostParser.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

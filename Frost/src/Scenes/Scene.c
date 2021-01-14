@@ -9,6 +9,8 @@ int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources
 {
 	CameraCreateOrtho(&scene->camera, camera_w / 2.0f, camera_h / 2.0f, 0.0f, camera_w, camera_h);
 	scene->resources = resources;
+	scene->gravity = vec2_zero();
+	scene->tile_set = NULL;
 
 	TileRendererInit(&scene->renderer);
 
@@ -136,7 +138,7 @@ void SceneOnUpdate(Scene* scene, float deltatime)
 {
 	BackgroundUpdate(&scene->background, scene->camera.position.x - scene->camera.size.x / 2.0f, deltatime);
 
-	EcsOnUpdate(&scene->ecs, deltatime);
+	EcsOnUpdate(&scene->ecs, scene, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
@@ -145,17 +147,17 @@ void SceneOnRender(Scene* scene)
 
 	TileMapRender(&scene->renderer, scene->tile_set, scene->camera.viewProjection);
 
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, CameraGetViewProjectionPtr(&scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, scene, CameraGetViewProjectionPtr(&scene->camera));
 }
 
 void SceneOnRenderUI(Scene* scene)
 {
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_UI, CameraGetProjectionPtr(&scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_UI, scene, CameraGetProjectionPtr(&scene->camera));
 }
 
 void SceneOnRenderDebug(Scene* scene)
 {
-	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, CameraGetViewProjectionPtr(&scene->camera));
+	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, scene, CameraGetViewProjectionPtr(&scene->camera));
 }
 
 const char* SceneGetTemplatePath(const Scene* scene, const char* templ)
@@ -165,5 +167,5 @@ const char* SceneGetTemplatePath(const Scene* scene, const char* templ)
 	return path;
 }
 
-float SceneGetWidth(const Scene* scene) { return scene->map.tile_size * scene->map.width; }
-float SceneGetHeight(const Scene* scene) { return scene->map.tile_size * scene->map.height; }
+float SceneGetWidth(const Scene* scene) { return scene->map.tile_size * scene->map.cols; }
+float SceneGetHeight(const Scene* scene) { return scene->map.tile_size * scene->map.rows; }

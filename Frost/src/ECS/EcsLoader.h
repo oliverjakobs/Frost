@@ -8,7 +8,7 @@
 typedef struct
 {
     size_t element_size;
-    void (*free_func)(void*);
+    EcsFreeFunc free;
 } EcsDataComponentLoader;
 
 void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size);
@@ -16,8 +16,8 @@ void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size
 typedef struct
 {
     size_t element_size;
-    void (*free_func)(void*);
-    int (*cmp_func)(const void*, const void*);
+    EcsFreeFunc free;
+    EcsCmpFunc cmp;
 } EcsOrderComponentLoader;
 
 void EcsLoadOrderComponents(Ecs* ecs, EcsOrderComponentLoader* loader, size_t size);

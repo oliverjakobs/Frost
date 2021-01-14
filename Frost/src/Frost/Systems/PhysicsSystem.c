@@ -2,19 +2,18 @@
 
 #include "Frost/FrostEcs.h"
 
-#include "tile/collision.h"
+#include "tile/tile_collision.h"
 
-static const vec2 GRAVITY = { 0.0f, -980.0f };
 static const float SLOPE_GRIP = 100.0f;
 
-void PhysicsSystem(Ecs* ecs, float deltatime)
+void PhysicsSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
-	EcsComponentMap* map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
-	for (EcsComponentMapIter* iter = EcsComponentMapIterator(map); iter; iter = EcsComponentMapIterNext(map, iter))
+	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
+	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
-		RigidBody* body = EcsComponentMapIterValue(iter);
+		RigidBody* body = EcsMapIterValue(iter);
 
-		Transform* transform = EcsGetDataComponent(ecs, EcsComponentMapIterKey(iter), COMPONENT_TRANSFORM);
+		Transform* transform = EcsGetDataComponent(ecs, EcsMapIterKey(iter), COMPONENT_TRANSFORM);
 		if (!transform) continue;
 
 		body->body.position = vec2_add(transform->position, body->offset);
@@ -23,14 +22,14 @@ void PhysicsSystem(Ecs* ecs, float deltatime)
 
 		vec2 old_position = body->body.position;
 
-		TileBodyApplyGravity(&body->body, GRAVITY, SLOPE_GRIP, deltatime);
-		TileBodyTick(&body->body, deltatime);
+		TileBodyApplyGravity(&body->body, scene->gravity, SLOPE_GRIP, deltatime);
+		TileBodyTick(&body->body, &scene->map, deltatime);
 
-		for (EcsComponentMapIter* other_iter = EcsComponentMapIterator(map); other_iter; other_iter = EcsComponentMapIterNext(map, other_iter))
+		for (EcsMapIter* other_iter = EcsMapIterator(map); other_iter; other_iter = EcsMapIterNext(map, other_iter))
 		{
-			if (EcsComponentMapIterKey(iter) == EcsComponentMapIterKey(other_iter)) continue;
+			if (EcsMapIterKey(iter) == EcsMapIterKey(other_iter)) continue;
 
-			RigidBody* other = EcsComponentMapIterValue(other_iter);
+			RigidBody* other = EcsMapIterValue(other_iter);
 			if (body->filter & other->filter)
 				TileResolveBodies(&body->body, &other->body, old_position);
 		}
