@@ -30,7 +30,7 @@ void OnInit(Application* app)
 	/* ecs */
 	SceneInit(&scene, (float)app->width, (float)app->height, &app->resources, LoadEcs);
 
-	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &scene.camera, 64.0f, 8.0f);
+	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"), &scene.camera);
 
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
