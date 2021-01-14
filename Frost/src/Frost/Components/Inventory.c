@@ -174,15 +174,8 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 	InventorySetCellContent(src_inv, src_cell, NULL_ITEM);
 }
 
-float InventoryGetWidth(const Inventory* inv)
-{
-	return InventoryGetCellOffset(inv, inv->cols);
-}
-
-float InventoryGetHeight(const Inventory* inv)
-{
-	return InventoryGetCellOffset(inv, inv->rows);
-}
+float InventoryGetWidth(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->cols); }
+float InventoryGetHeight(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->rows); }
 
 InventoryState InventoryParseState(const char* str, size_t max_count)
 {
