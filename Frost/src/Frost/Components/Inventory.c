@@ -23,7 +23,7 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 		int rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
 		int cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
 
-		InventoryState state = tb_json_parse(element.value, "{'state'", NULL, InventoryParseState);
+		InventoryState state = tb_json_parse(element.value, "{'state'", NULL, FrostParseInventoryState);
 		
 		InventoryCreate(&inv, state, pos, rows, cols);
 		InventorySetLayout(&inv, INV_CELL_SIZE, INV_PADDING, INV_SPACING);
@@ -32,8 +32,8 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 		tb_json_read(element.value, &align, "{'align'");
 		if (align.error == TB_JSON_OK)
 		{
-			InvHAlign h_align = tb_json_parse(align.value, "[0", NULL, InventoryParseHAlign);
-			InvVAlign v_align = tb_json_parse(align.value, "[1", NULL, InventoryParseVAlign);
+			InvHAlign h_align = tb_json_parse(align.value, "[0", NULL, FrostParseInventoryHAlign);
+			InvVAlign v_align = tb_json_parse(align.value, "[1", NULL, FrostParseInventoryVAlign);
 
 			InventoryAlign(&inv, h_align, v_align, scene->camera.size);
 		}

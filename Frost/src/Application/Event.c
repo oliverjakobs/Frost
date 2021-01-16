@@ -1,6 +1,6 @@
 #include "Event.h"
 
-#include "Application/Input.h"
+#include "Input.h"
 
 void EventReset(Event* e)
 {

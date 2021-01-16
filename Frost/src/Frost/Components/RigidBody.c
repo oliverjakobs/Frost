@@ -19,7 +19,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 	tb_json_read(json, &element, "{'rigidbody'");
 	if (element.error == TB_JSON_OK)
 	{
-		TileBodyType type = tb_json_parse(element.value, "{'type'", NULL, RigidBodyParseType);
+		TileBodyType type = tb_json_parse(element.value, "{'type'", NULL, FrostParseRigidBodyType);
 
 		float half_w = tb_json_float(element.value, "{'halfsize'[0", NULL, transform->size.x / 2.0f);
 		float half_h = tb_json_float(element.value, "{'halfsize'[1", NULL, transform->size.y / 2.0f);
@@ -36,7 +36,7 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 			for (size_t i = 0; i < filter.elements; ++i)
 			{
 				value = tb_json_array_step(value, &filter_bit);
-				body.filter |= RigidBodyParseFilter(filter_bit.value, filter_bit.bytelen);
+				body.filter |= FrostParseRigidBodyFilter(filter_bit.value, filter_bit.bytelen);
 			}
 		}
 

@@ -20,11 +20,11 @@ int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources
 
 int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 {
-	if (tb_hashmap_alloc(&scene->scene_register, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
+	if (tb_hashmap_alloc(&scene->scenes, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 	if (tb_hashmap_alloc(&scene->templates, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
 
-	tb_hashmap_set_key_alloc_funcs(&scene->scene_register, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	tb_hashmap_set_value_alloc_funcs(&scene->scene_register, tb_hashmap_str_alloc, tb_hashmap_str_free);
+	tb_hashmap_set_key_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
+	tb_hashmap_set_value_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	tb_hashmap_set_key_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	tb_hashmap_set_value_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 
@@ -32,7 +32,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 
 	if (!json)
 	{
-		tb_hashmap_free(&scene->scene_register);
+		tb_hashmap_free(&scene->scenes);
 		tb_hashmap_free(&scene->templates);
 		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", reg);
 		return 0;
@@ -53,7 +53,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 
 		scene_path[scene_element.bytelen] = '\0';
 
-		if (!tb_hashmap_insert(&scene->scene_register, name, scene_path))
+		if (!tb_hashmap_insert(&scene->scenes, name, scene_path))
 			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
 	}
 
@@ -92,7 +92,7 @@ void SceneDestroy(Scene* scene)
 
 	EcsDestroy(&scene->ecs);
 
-	tb_hashmap_free(&scene->scene_register);
+	tb_hashmap_free(&scene->scenes);
 	tb_hashmap_free(&scene->templates);
 }
 
@@ -101,7 +101,7 @@ void SceneChangeActive(Scene* scene, const char* name)
 	if (strcmp(scene->name, name) != 0)
 	{
 		/* Check if scene is in the register */
-		char* path = tb_hashmap_find(&scene->scene_register, name);
+		char* path = tb_hashmap_find(&scene->scenes, name);
 		if (!path)
 		{
 			DEBUG_ERROR("[Scenes] Couldn't find scene: %s\n", name);

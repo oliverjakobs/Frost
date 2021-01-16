@@ -18,9 +18,9 @@ void InteractableLoad(Scene* scene, EcsEntityID entity, char* json)
 	if (element.error == TB_JSON_OK)
 	{
 		Interactable comp;
-		comp.type = tb_json_parse(element.value, "{'type'", NULL, InteractionParseType);
-		comp.interaction = tb_json_parse(element.value, "{'interaction'", NULL, InteractionParse);
-		comp.key = tb_json_parse(element.value, "{'key'", NULL, InputParseKeyCode);
+		comp.type = tb_json_parse(element.value, "{'type'", NULL, FrostParseInteractionType);
+		comp.interaction = tb_json_parse(element.value, "{'interaction'", NULL, FrostParseInteraction);
+		comp.key = tb_json_parse(element.value, "{'key'", NULL, FrostParseInputKeyCode);
 
 		comp.range_min = tb_json_float(element.value, "{'range'[0", NULL, 0.0f);
 		comp.range_max = tb_json_float(element.value, "{'range'[1", NULL, 0.0f);

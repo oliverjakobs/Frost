@@ -2,75 +2,78 @@
 
 #include "toolbox/tb_str.h"
 
-int InventoryParseState(const char* str, size_t max_count)
+/* ------------------| Inventory |---------------------------- */
+int FrostParseInventoryState(const char* str, size_t max_count)
 {
 	if (max_count == 0) return INVENTORY_CLOSED;
-	if (tb_strncasecmp(str, "open", max_count) == 0) return INVENTORY_OPEN;
-	if (tb_strncasecmp(str, "fixed", max_count) == 0) return INVENTORY_FIXED;
+	if (tb_strncasecmp("open", str, max_count) == 0) return INVENTORY_OPEN;
+	if (tb_strncasecmp("fixed", str, max_count) == 0) return INVENTORY_FIXED;
 
 	return INVENTORY_CLOSED;
 }
 
-int InventoryParseHAlign(const char* str, size_t max_count)
+int FrostParseInventoryHAlign(const char* str, size_t max_count)
 {
 	if (max_count == 0) return INV_HALIGN_NONE;
-	if (tb_strncasecmp(str, "left", max_count) == 0) return INV_HALIGN_LEFT;
-	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_HALIGN_CENTER;
-	if (tb_strncasecmp(str, "right", max_count) == 0) return INV_HALIGN_RIGHT;
+	if (tb_strncasecmp("left", str, max_count) == 0) return INV_HALIGN_LEFT;
+	if (tb_strncasecmp("center", str, max_count) == 0) return INV_HALIGN_CENTER;
+	if (tb_strncasecmp("right", str, max_count) == 0) return INV_HALIGN_RIGHT;
 
 	return INV_HALIGN_NONE;
 }
 
-int InventoryParseVAlign(const char* str, size_t max_count)
+int FrostParseInventoryVAlign(const char* str, size_t max_count)
 {
 	if (max_count == 0) return INV_VALIGN_NONE;
-	if (tb_strncasecmp(str, "top", max_count) == 0) return INV_VALIGN_TOP;
-	if (tb_strncasecmp(str, "center", max_count) == 0) return INV_VALIGN_CENTER;
-	if (tb_strncasecmp(str, "bottom", max_count) == 0) return INV_VALIGN_BOTTOM;
+	if (tb_strncasecmp("top", str, max_count) == 0) return INV_VALIGN_TOP;
+	if (tb_strncasecmp("center", str, max_count) == 0) return INV_VALIGN_CENTER;
+	if (tb_strncasecmp("bottom", str, max_count) == 0) return INV_VALIGN_BOTTOM;
 
 	return INV_VALIGN_NONE;
 }
 
-
-int InteractionParse(const char* str, size_t max_count)
+/* ------------------| Interaction |-------------------------- */
+int FrostParseInteraction(const char* str, size_t max_count)
 {
-	if (strncmp(str, "TOGGLE_DOOR", max_count) == 0) return INTERACTION_TOGGLE_DOOR;
-	if (strncmp(str, "OPEN_INVENTORY", max_count) == 0) return INTERACTION_OPEN_INVENTORY;
+	if (max_count == 0) return INTERACTION_NONE;
+	if (tb_strncasecmp("toggle_door", str, max_count) == 0) return INTERACTION_TOGGLE_DOOR;
+	if (tb_strncasecmp("open_inventory", str, max_count) == 0) return INTERACTION_OPEN_INVENTORY;
 
 	return INTERACTION_NONE;
 }
 
-int InteractionParseType(const char* str, size_t max_count)
+int FrostParseInteractionType(const char* str, size_t max_count)
 {
-	if (strncmp(str, "TOGGLE", max_count) == 0) return INTERACTION_TYPE_TOGGLE;
-	if (strncmp(str, "RANGED", max_count) == 0) return INTERACTION_TYPE_RANGED;
-	if (strncmp(str, "TIMED", max_count) == 0) return INTERACTION_TYPE_TIMED;
+	if (max_count == 0) return INTERACTION_TYPE_TOGGLE;
+	if (tb_strncasecmp("toggle", str, max_count) == 0) return INTERACTION_TYPE_TOGGLE;
+	if (tb_strncasecmp("ranged", str, max_count) == 0) return INTERACTION_TYPE_RANGED;
+	if (tb_strncasecmp("timed", str, max_count) == 0) return INTERACTION_TYPE_TIMED;
 
 	return INTERACTION_TYPE_TOGGLE;
 }
 
-
-int RigidBodyParseType(const char* str, size_t max_count)
+/* ------------------| RigidBody |---------------------------- */
+int FrostParseRigidBodyType(const char* str, size_t max_count)
 {
 	if (max_count == 0) return TILE_BODY_STATIC;
-	if (tb_strncasecmp(str, "dynamic", max_count) == 0) return TILE_BODY_DYNAMIC;
+	if (tb_strncasecmp("dynamic", str, max_count) == 0) return TILE_BODY_DYNAMIC;
 
 	return TILE_BODY_STATIC;
 }
 
-int RigidBodyParseFilter(const char* str, size_t max_count)
+int FrostParseRigidBodyFilter(const char* str, size_t max_count)
 {
 	if (max_count == 0) return RIGID_BODY_FILTER_NONE;
-	if (tb_strncasecmp(str, "world", max_count) == 0) return RIGID_BODY_FILTER_WORLD;
-	if (tb_strncasecmp(str, "player", max_count) == 0) return RIGID_BODY_FILTER_PLAYER;
-	if (tb_strncasecmp(str, "npc", max_count) == 0) return RIGID_BODY_FILTER_NPC;
-	if (tb_strncasecmp(str, "door", max_count) == 0) return RIGID_BODY_FILTER_DOOR;
+	if (tb_strncasecmp("world", str, max_count) == 0) return RIGID_BODY_FILTER_WORLD;
+	if (tb_strncasecmp("player", str, max_count) == 0) return RIGID_BODY_FILTER_PLAYER;
+	if (tb_strncasecmp("npc", str, max_count) == 0) return RIGID_BODY_FILTER_NPC;
+	if (tb_strncasecmp("door", str, max_count) == 0) return RIGID_BODY_FILTER_DOOR;
 
 	return RIGID_BODY_FILTER_NONE;
 }
 
-
-static int InputParseKeyCodeChar(char c)
+/* ------------------| Input |-------------------------------- */
+static int FrostParseInputKeyCodeChar(char c)
 {
 	switch (c)
 	{
@@ -129,16 +132,16 @@ static int InputParseKeyCodeChar(char c)
 	return KEY_UNKNOWN;
 }
 
-int InputParseKeyCode(const char* str, size_t max_count)
+int FrostParseInputKeyCode(const char* str, size_t max_count)
 {
 	if (max_count == 0) return KEY_UNKNOWN;
-	if (max_count == 1) return InputParseKeyCodeChar(str[0]);
+	if (max_count == 1) return FrostParseInputKeyCodeChar(str[0]);
 
 	const char* prefix = "KEY_";
 	size_t prefix_len = strlen(prefix);
 
 	if (tb_strncasecmp(prefix, str, prefix_len) == 0)
-		return InputParseMouseButton(str + prefix_len, max_count - prefix_len);
+		return FrostParseInputKeyCode(str + prefix_len, max_count - prefix_len);
 
 	/* named keys and function keys */
 	switch (str[0])
@@ -270,7 +273,7 @@ int InputParseKeyCode(const char* str, size_t max_count)
 	return KEY_UNKNOWN;
 }
 
-int InputParseMouseButton(const char* str, size_t max_count)
+int FrostParseInputMouseButton(const char* str, size_t max_count)
 {
 	if (max_count == 0) return MOUSE_BUTTON_UNKNOWN;
 
@@ -278,7 +281,7 @@ int InputParseMouseButton(const char* str, size_t max_count)
 	size_t prefix_len = strlen(prefix);
 
 	if (tb_strncasecmp(prefix, str, prefix_len) == 0)
-		return InputParseMouseButton(str + prefix_len, max_count - prefix_len);
+		return FrostParseInputMouseButton(str + prefix_len, max_count - prefix_len);
 
 	switch (str[0])
 	{

@@ -105,8 +105,8 @@
     <ClInclude Include="src\ECS\Ecs.h" />
     <ClInclude Include="src\ECS\EcsCommon.h" />
     <ClInclude Include="src\ECS\EcsLoader.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
+    <ClInclude Include="src\Application\Event.h" />
+    <ClInclude Include="src\Application\EventHandler.h" />
     <ClInclude Include="src\Frost\Components\Animator.h" />
     <ClInclude Include="src\Frost\Components\CameraController.h" />
     <ClInclude Include="src\Frost\Components\EntityState.h" />
@@ -156,12 +156,10 @@
     <ClInclude Include="src\tile\tile_collision.h" />
     <ClInclude Include="src\tile\tile_map.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
-    <ClInclude Include="src\toolbox\tb_array.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
     <ClInclude Include="src\toolbox\tb_stretchy.h" />
     <ClInclude Include="src\toolbox\toolbox.h" />
     <ClInclude Include="src\toolbox\tb_hashmap.h" />
-    <ClInclude Include="src\toolbox\tb_list.h" />
     <ClInclude Include="src\toolbox\tb_json.h" />
     <ClInclude Include="src\toolbox\tb_jwrite.h" />
     <ClInclude Include="src\math\grid.h" />
@@ -183,8 +181,8 @@
     <ClCompile Include="src\ECS\Ecs.c" />
     <ClCompile Include="src\ECS\EcsCommon.c" />
     <ClCompile Include="src\ECS\EcsLoader.c" />
-    <ClCompile Include="src\Event\Event.c" />
-    <ClCompile Include="src\Event\EventHandler.c" />
+    <ClCompile Include="src\Application\Event.c" />
+    <ClCompile Include="src\Application\EventHandler.c" />
     <ClCompile Include="src\Frost\Components\Animator.c" />
     <ClCompile Include="src\Frost\Components\CameraController.c" />
     <ClCompile Include="src\Frost\Components\EntityState.c" />
@@ -232,11 +230,9 @@
     <ClCompile Include="src\toolbox\tb_json.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
-    <ClCompile Include="src\toolbox\tb_array.c" />
     <ClCompile Include="src\toolbox\tb_str.c" />
     <ClCompile Include="src\toolbox\toolbox.c" />
     <ClCompile Include="src\toolbox\tb_hashmap.c" />
-    <ClCompile Include="src\toolbox\tb_list.c" />
     <ClCompile Include="src\toolbox\tb_jwrite.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\grid.c" />

@@ -88,7 +88,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scenes") == 0)
 		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->scene_register); iter; iter = tb_hashmap_iter_next(&scene->scene_register, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->scenes); iter; iter = tb_hashmap_iter_next(&scene->scenes, iter))
 			{
 				const char* name = tb_hashmap_iter_get_key(iter);
 
@@ -141,7 +141,7 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = tb_hashmap_find(&scene->scene_register, scene->name);
+			char* path = tb_hashmap_find(&scene->scenes, scene->name);
 			if (!path)
 			{
 				ConsoleOut(console, "Couldn't find path for %s", scene->name);

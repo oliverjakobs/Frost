@@ -13,7 +13,7 @@
 typedef struct 
 {
 	/* register */
-	tb_hashmap scene_register;
+	tb_hashmap scenes;
 	tb_hashmap templates;
 
 	Ecs ecs;
