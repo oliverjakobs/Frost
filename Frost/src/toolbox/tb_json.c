@@ -1,6 +1,7 @@
 #include "tb_json.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 // By default we use single quote in query strings so it's a lot easier
@@ -602,9 +603,7 @@ char* tb_json_atof(char* p, float* result)
 int tb_json_strcmp(tb_json_element* a, tb_json_element* b)
 {
     int i;
-    if ((a->data_type != TB_JSON_STRING) ||
-        (b->data_type != TB_JSON_STRING) ||
-        (a->bytelen != b->bytelen))
+    if ((a->data_type != TB_JSON_STRING) || (b->data_type != TB_JSON_STRING) || (a->bytelen != b->bytelen))
         return 1;
 
     for (i = 0; i < a->bytelen; i++)

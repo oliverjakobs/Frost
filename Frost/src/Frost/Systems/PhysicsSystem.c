@@ -6,6 +6,12 @@
 
 static const float SLOPE_GRIP = 100.0f;
 
+/* match filters while ignoring world filter */
+int PhysicsMatchFilter(RigidBodyFilter f1, RigidBodyFilter f2)
+{
+	return (f1 & ~RIGID_BODY_FILTER_WORLD) & (f2 & ~RIGID_BODY_FILTER_WORLD);
+}
+
 void PhysicsSystem(Ecs* ecs, const Scene* scene, float deltatime)
 {
 	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
@@ -25,12 +31,12 @@ void PhysicsSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		TileBodyApplyGravity(&body->body, scene->gravity, SLOPE_GRIP, deltatime);
 		TileBodyTick(&body->body, &scene->map, deltatime);
 
-		for (EcsMapIter* other_iter = EcsMapIterator(map); other_iter; other_iter = EcsMapIterNext(map, other_iter))
+		for (EcsMapIter* o_iter = EcsMapIterator(map); o_iter; o_iter = EcsMapIterNext(map, o_iter))
 		{
-			if (EcsMapIterKey(iter) == EcsMapIterKey(other_iter)) continue;
+			if (EcsMapIterKey(iter) == EcsMapIterKey(o_iter)) continue;
 
-			RigidBody* other = EcsMapIterValue(other_iter);
-			if (body->filter & other->filter)
+			RigidBody* other = EcsMapIterValue(o_iter);
+			if (PhysicsMatchFilter(body->filter, other->filter))
 				TileResolveBodies(&body->body, &other->body, old_position);
 		}
 

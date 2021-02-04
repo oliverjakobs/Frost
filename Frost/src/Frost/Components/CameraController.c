@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json)
+void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'camera'");
@@ -16,7 +16,7 @@ void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json)
 		comp.scene_w = SceneGetWidth(scene);
 		comp.scene_h = SceneGetHeight(scene);
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
+		EcsAddDataComponent(ecs, entity, COMPONENT_CAMERA, &comp);
 	}
 }
 

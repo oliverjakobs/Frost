@@ -13,7 +13,7 @@ typedef uint32_t EcsComponentType;
 
 typedef struct Ecs Ecs;
 
-typedef void (*EcsUpdateCallback)(Ecs*, const void*, float);
+typedef void (*EcsUpdateCallback)(Ecs*, void*, float);
 typedef void (*EcsRenderCallback)(const Ecs*, const void*, const float*);
 
 typedef void (*EcsFreeFunc)(void*);

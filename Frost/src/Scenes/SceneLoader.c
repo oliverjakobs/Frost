@@ -79,9 +79,10 @@ int SceneLoad(Scene* scene, const char* path)
 			pos.y = tb_json_float(entity_template.value, "[1[1", NULL, 0.0f);
 
 			int z_index = tb_json_int(entity_template.value, "[2", NULL, 0);
+			int variant = tb_json_int(entity_template.value, "[3", NULL, 0);
 
 			/* Load Template */
-			if (!SceneLoadTemplate(scene, templ, EcsEntityGetNextID(), pos, z_index))
+			if (!SceneLoadTemplate(scene, templ, pos, z_index, variant))
 			{
 				DEBUG_ERROR("[Scenes] Failed to load template %s\n", templ);
 			}
@@ -191,7 +192,7 @@ int SceneSave(Scene* scene, const char* path)
 	return 1;
 }
 
-int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 pos, int z_index)
+int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant)
 {
 	const char* path = SceneGetTemplatePath(scene, templ);
 	char* json = ignisReadFile(path, NULL);
@@ -202,19 +203,21 @@ int SceneLoadTemplate(Scene* scene, const char* templ, EcsEntityID entity, vec2 
 		return 0;
 	}
 
-	/* Components */
-	TemplateLoad(scene, entity, templ);
-	EntityStateLoad(scene, entity, ENTITY_STATE_NULL);
+	EcsEntityID entity = EcsEntityGetNextID();
 
-	TransformLoad(scene, entity, pos, json);
-	RigidBodyLoad(scene, entity, json);
-	SpriteLoad(scene, entity, z_index, json);
-	AnimatorLoad(scene, entity, json);
-	MovementLoad(scene, entity, json);
-	CameraControllerLoad(scene, entity, json);
-	PlayerLoad(scene, entity, json);
-	InventoryLoad(scene, entity, json);
-	InteractableLoad(scene, entity, json);
+	/* Components */
+	TemplateLoad(&scene->ecs, entity, templ);
+	EntityStateLoad(&scene->ecs, entity, ENTITY_STATE_NULL);
+
+	TransformLoad(json, &scene->ecs, entity, pos);
+	RigidBodyLoad(json, &scene->ecs, entity);
+	SpriteLoad(json, &scene->ecs, entity, scene->resources, z_index, variant);
+	AnimatorLoad(json, &scene->ecs, entity);
+	MovementLoad(json, &scene->ecs, entity);
+	CameraControllerLoad(json, &scene->ecs, entity, scene);
+	PlayerLoad(json, &scene->ecs, entity);
+	InventoryLoad(json, &scene->ecs, entity, scene->camera.size);
+	InteractableLoad(json, &scene->ecs, entity);
 
 	free(json);
 

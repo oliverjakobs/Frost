@@ -61,7 +61,7 @@ void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render
 	tb_stretchy_push(ecs->systems_render, ((EcsRenderSystem) { stage, render }));
 }
 
-void EcsOnUpdate(Ecs* ecs, const void* world, float deltatime)
+void EcsOnUpdate(Ecs* ecs, void* world, float deltatime)
 {
 	for (EcsUpdateSystem* it = ecs->systems_update; it != tb_stretchy_last(ecs->systems_update); it++)
 		it->update(ecs, world, deltatime);

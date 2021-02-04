@@ -1,10 +1,7 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 
-#include "Scenes/Scene.h"
-
-#define NULL_ITEM (-1)
-typedef int32_t ItemID;
+#include "Item.h"
 
 typedef enum
 {
@@ -34,8 +31,8 @@ typedef struct
 {
 	vec2 pos;
 
-	float padding;
-	float spacing;
+	float padding; /* padding at border */
+	float spacing; /* spacing between cells */
 	float cell_size;
 
 	int rows;
@@ -46,7 +43,7 @@ typedef struct
 	ItemID* cells;
 } Inventory;
 
-void InventoryLoad(Scene* scene, EcsEntityID entity, char* json);
+void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
 
 int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols);
 void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing);

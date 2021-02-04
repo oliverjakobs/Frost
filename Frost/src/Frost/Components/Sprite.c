@@ -1,14 +1,12 @@
 #include "Sprite.h"
 
-#include "Frost/Frost.h"
-
-#include "toolbox/tb_json.h"
+#include "Frost/FrostParser.h"
 
 #include "Application/Debugger.h"
 
-void SpriteLoad(Scene* scene, EcsEntityID entity, int z_index, char* json)
+void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant)
 {
-	Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
+	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
 		DEBUG_ERROR("[ECS] Sprite requires Transform\n");
@@ -24,17 +22,17 @@ void SpriteLoad(Scene* scene, EcsEntityID entity, int z_index, char* json)
 		sprite.width = tb_json_float(element.value, "{'size'[0", NULL, transform->size.x);
 		sprite.height = tb_json_float(element.value, "{'size'[1", NULL, transform->size.y);
 
-		sprite.frame = tb_json_int(element.value, "{'frame'", NULL, 0);
+		sprite.frame = FrostMatchVariant(element.value, "{'frame'", variant);
 
 		char texture[APPLICATION_STR_LEN];
 		tb_json_string(element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
 
-		sprite.texture = ResourcesGetTexture2D(scene->resources, texture);
+		sprite.texture = ResourcesGetTexture2D(res, texture);
 
 		if (sprite.texture)
 		{
-			EcsAddDataComponent(&scene->ecs, entity, COMPONENT_SPRITE, &sprite);
-			EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
+			EcsAddDataComponent(ecs, entity, COMPONENT_SPRITE, &sprite);
+			EcsAddOrderComponent(ecs, entity, COMPONENT_Z_INDEX, &z_index);
 		}
 		else
 		{

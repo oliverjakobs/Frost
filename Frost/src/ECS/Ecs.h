@@ -56,7 +56,7 @@ void EcsClear(Ecs* ecs);
 void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update);
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render);
 
-void EcsOnUpdate(Ecs* ecs, const void* world, float deltatime);
+void EcsOnUpdate(Ecs* ecs, void* world, float deltatime);
 void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const void* world, const float* mat_view_proj);
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity);

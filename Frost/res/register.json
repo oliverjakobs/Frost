@@ -9,10 +9,7 @@
 		"door": "res/templates/door.json",
 		"machine": "res/templates/machine.json",
 		"player": "res/templates/player.json",
-		"tree_1": "res/templates/tree_1.json",
-		"tree_2": "res/templates/tree_2.json",
-		"tree_3": "res/templates/tree_3.json",
-		"tree_4": "res/templates/tree_4.json",
-		"tree_5": "res/templates/tree_5.json"
+		"tree": "res/templates/tree.json",
+		"item": "res/templates/item.json"
 	}
 }

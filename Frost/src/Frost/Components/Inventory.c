@@ -8,7 +8,7 @@ const float INV_CELL_SIZE = 64.0f;
 const float INV_PADDING = 8.0f;
 const float INV_SPACING = 8.0f;
 
-void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
+void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'inventory'");
@@ -35,14 +35,14 @@ void InventoryLoad(Scene* scene, EcsEntityID entity, char* json)
 			InvHAlign h_align = tb_json_parse(align.value, "[0", NULL, FrostParseInventoryHAlign);
 			InvVAlign v_align = tb_json_parse(align.value, "[1", NULL, FrostParseInventoryVAlign);
 
-			InventoryAlign(&inv, h_align, v_align, scene->camera.size);
+			InventoryAlign(&inv, h_align, v_align, screen_size);
 		}
 
 		/* TODO load inv content */
 		InventorySetCellContent(&inv, 0, 3);
 		InventorySetCellContent(&inv, 1, 1);
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INVENTORY, &inv);
+		EcsAddDataComponent(ecs, entity, COMPONENT_INVENTORY, &inv);
 	}
 }
 

@@ -2,6 +2,20 @@
 
 #include "toolbox/tb_str.h"
 
+int FrostMatchVariant(char* json, char* query, int variant)
+{
+	tb_json_element element;
+	tb_json_read(json, &element, query);
+
+	if (element.data_type == TB_JSON_STRING && 
+		strncmp(element.value, FROST_VARIANT_STR, element.bytelen) == 0)
+		return variant;
+
+	long result;
+	tb_json_atol(element.value, &result);
+	return (int)result;
+}
+
 /* ------------------| Inventory |---------------------------- */
 int FrostParseInventoryState(const char* str, size_t max_count)
 {

@@ -5,9 +5,9 @@
 #include "toolbox/tb_json.h"
 #include "Application/Debugger.h"
 
-void InteractableLoad(Scene* scene, EcsEntityID entity, char* json)
+void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
-	if (!EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM))
+	if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
 	{
 		DEBUG_ERROR("[ECS] Interactable requires Transform\n");
 		return;
@@ -30,7 +30,7 @@ void InteractableLoad(Scene* scene, EcsEntityID entity, char* json)
 		else
 			comp.time = 0.0f;
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INTERACTABLE, &comp);
+		EcsAddDataComponent(ecs, entity, COMPONENT_INTERACTABLE, &comp);
 	}
 }
 

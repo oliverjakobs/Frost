@@ -1,9 +1,0 @@
-{
-  "transform": {
-    "size": [ 96.0, 256.0 ]
-  },
-  "sprite": {
-    "texture": "trees",
-    "frame": 0
-  }
-}

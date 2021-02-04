@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void MovementLoad(Scene* scene, EcsEntityID entity, char* json)
+void MovementLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'movement'");
@@ -17,6 +17,6 @@ void MovementLoad(Scene* scene, EcsEntityID entity, char* json)
 		comp.speed = tb_json_float(element.value, "{'speed'", NULL, 0.0f);
 		comp.jump_power = tb_json_float(element.value, "{'jumppower'", NULL, 0.0f);
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_MOVEMENT, &comp);
+		EcsAddDataComponent(ecs, entity, COMPONENT_MOVEMENT, &comp);
 	}
 }

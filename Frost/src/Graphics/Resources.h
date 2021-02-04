@@ -23,11 +23,11 @@ void ResourcesDestroy(Resources* resources);
 IgnisTexture2D* ResourcesAddTexture2D(Resources* resources, const char* name, const char* path, int rows, int columns);
 IgnisFont* ResourcesAddFont(Resources* resources, const char* name, const char* path, float size);
 
-IgnisTexture2D* ResourcesGetTexture2D(Resources* resources, const char* name);
-IgnisFont* ResourcesGetFont(Resources* resources, const char* name);
+IgnisTexture2D* ResourcesGetTexture2D(const Resources* resources, const char* name);
+IgnisFont* ResourcesGetFont(const Resources* resources, const char* name);
 
-const char* ResourcesGetTexture2DName(Resources* resources, const IgnisTexture2D* texture);
-const char* ResourcesGetFontName(Resources* resources, const IgnisFont* font);
+const char* ResourcesGetTexture2DName(const Resources* resources, const IgnisTexture2D* texture);
+const char* ResourcesGetFontName(const Resources* resources, const IgnisFont* font);
 
 #ifdef __cplusplus
 }

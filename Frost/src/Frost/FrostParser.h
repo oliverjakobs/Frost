@@ -2,6 +2,11 @@
 #define FROST_PARSER_H
 
 #include "Frost.h"
+#include "toolbox/tb_json.h"
+
+#define FROST_VARIANT_STR "<VARIANT>"
+
+int FrostMatchVariant(char* json, char* query, int variant);
 
 /* ------------------| Inventory |---------------------------- */
 int FrostParseInventoryState(const char* str, size_t max_count);

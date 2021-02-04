@@ -3,9 +3,9 @@
 #include "../FrostEcs.h"
 #include <string.h>
 
-void EntityStateLoad(Scene* scene, EcsEntityID entity, EntityState state)
+void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state)
 {
-	EcsAddDataComponent(&scene->ecs, entity, COMPONENT_STATE, &state);
+	EcsAddDataComponent(ecs, entity, COMPONENT_STATE, &state);
 }
 
 EntityState EntityGetState(Ecs* ecs, EcsEntityID entity)

@@ -11,7 +11,7 @@ typedef struct
 	float scene_h;
 } CameraController;
 
-void CameraControllerLoad(Scene* scene, EcsEntityID entity, char* json);
+void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene);
 
 void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, float constraint);
 

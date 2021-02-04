@@ -2,13 +2,13 @@
 
 #include "..\FrostEcs.h"
 
-void TemplateLoad(Scene* scene, EcsEntityID entity, const char* templ)
+void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ)
 {
 	Template t;
 	t.templ = malloc(strlen(templ) + 1);
 	strcpy(t.templ, templ);
 
-	EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_TEMPLATE, &t);
+	EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &t);
 }
 
 void TemplateFree(Template* templ)

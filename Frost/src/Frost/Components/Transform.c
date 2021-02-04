@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_json.h"
 
-void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, char* json)
+void TransformLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 pos)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'transform'");
@@ -16,7 +16,7 @@ void TransformLoad(Scene* scene, EcsEntityID entity, vec2 pos, char* json)
 		transform.size.x = tb_json_float(element.value, "{'size'[0", NULL, 0.0f);
 		transform.size.y = tb_json_float(element.value, "{'size'[1", NULL, 0.0f);
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
+		EcsAddDataComponent(ecs, entity, COMPONENT_TRANSFORM, &transform);
 	}
 }
 

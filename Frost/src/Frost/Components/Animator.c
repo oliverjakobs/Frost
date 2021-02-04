@@ -22,7 +22,7 @@ void AnimatorStart(Animator* animator, int start)
 /* TODO: improve animation storage */
 static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation* animation)
 {
-	if (state >= NUM_ENTITY_STATES) return 0; 
+	if (state >= NUM_ENTITY_STATES || state < 0) return 0; 
 
 	animator->animations[state] = *animation;
 
@@ -32,7 +32,7 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
 	return 1;
 }
 
-void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
+void AnimatorLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'animation'");
@@ -62,6 +62,6 @@ void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json)
 
 			AnimatorAddAnimation(&animator, state, &animation);
 		}
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
+		EcsAddDataComponent(ecs, entity, COMPONENT_ANIMATOR, &animator);
 	}
 }

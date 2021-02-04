@@ -13,7 +13,7 @@ typedef enum
     NUM_ENTITY_STATES
 } EntityState;
 
-void EntityStateLoad(Scene* scene, EcsEntityID entity, EntityState state);
+void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state);
 
 EntityState EntityGetState(Ecs* ecs, EcsEntityID entity);
 const char* EntityGetStateString(Ecs* ecs, EcsEntityID entity);

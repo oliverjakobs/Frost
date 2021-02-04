@@ -13,7 +13,8 @@ EcsDataComponentLoader data_comps[] =
 	[COMPONENT_CAMERA] =		{ sizeof(CameraController),	NULL },
 	[COMPONENT_PLAYER] =		{ sizeof(Player),			NULL },
 	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
-	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL }
+	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL },
+	[COMPONENT_ITEM] =			{ sizeof(Item),				NULL }
 };
 
 EcsOrderComponentLoader order_comps[] =

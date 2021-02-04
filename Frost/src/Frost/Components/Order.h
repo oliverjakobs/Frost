@@ -8,7 +8,7 @@ typedef struct
 	char* templ;
 } Template;
 
-void TemplateLoad(Scene* scene, EcsEntityID entity, const char* templ);
+void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ);
 void TemplateFree(Template* templ);
 
 typedef int ZIndex;

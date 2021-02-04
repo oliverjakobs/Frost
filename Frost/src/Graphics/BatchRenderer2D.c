@@ -54,8 +54,8 @@ void BatchRenderer2DInit(const char* vert, const char* frag)
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 
-	_render_data.texture_slots = (GLuint*)malloc(BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
-	memset(_render_data.texture_slots, 0, BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
+	_render_data.texture_slots = malloc(BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
+	if (_render_data.texture_slots) memset(_render_data.texture_slots, 0, BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
 	_render_data.texture_slot_index = 0;
 }
 
@@ -113,10 +113,18 @@ static void _BatchRenderer2DPushValue(float value)
 
 void BatchRenderer2DRenderTexture(const IgnisTexture2D* texture, float x, float y, float w, float h)
 {
-	BatchRenderer2DRenderTextureFrame(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
+	BatchRenderer2DRenderTextureSrc(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-void BatchRenderer2DRenderTextureFrame(const IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+void BatchRenderer2DRenderTextureFrame(const IgnisTexture2D* texture, float x, float y, float w, float h, size_t frame)
+{
+	float src_x, src_y, src_w, src_h;
+	GetTexture2DSrcRect(texture, frame, &src_x, &src_y, &src_w, &src_h);
+
+	BatchRenderer2DRenderTextureSrc(texture, x, y, w, h, src_x, src_y, src_w, src_h);
+}
+
+void BatchRenderer2DRenderTextureSrc(const IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
 {
 	if (_render_data.quad_count >= BATCHRENDERER2D_MAX_QUADS || _render_data.texture_slot_index >= BATCHRENDERER2D_TEXTURES)
 		BatchRenderer2DFlush();

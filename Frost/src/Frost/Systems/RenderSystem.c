@@ -17,25 +17,32 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 
 		float x = pos.x - sprite->width / 2.0f;
 		float y = pos.y;
+		float w = sprite->width;
+		float h = sprite->height;
 
 		float src_x, src_y, src_w, src_h;
 		GetTexture2DSrcRect(sprite->texture, sprite->frame, &src_x, &src_y, &src_w, &src_h);
 
 		switch (sprite->flip)
 		{
-		case SPRITE_FLIP_NONE:
-			BatchRenderer2DRenderTextureFrame(sprite->texture, x, y, sprite->width, sprite->height, src_x, src_y, src_w, src_h);
-			break;
+		case SPRITE_FLIP_NONE: break;
 		case SPRITE_FLIP_HORIZONTAL:
-			BatchRenderer2DRenderTextureFrame(sprite->texture, x, y, sprite->width, sprite->height, src_x + src_w, src_y, -src_w, src_h);
+			src_x += src_w;
+			src_w = -src_w;
 			break;
 		case SPRITE_FLIP_VERTICAL:
-			BatchRenderer2DRenderTextureFrame(sprite->texture, x, y, sprite->width, sprite->height, src_x, src_y + src_h, src_w, -src_h);
+			src_y += src_h;
+			src_h = -src_h;
 			break;
 		case SPRITE_FLIP_BOTH:
-			BatchRenderer2DRenderTextureFrame(sprite->texture, x, y, sprite->width, sprite->height, src_x + src_w, src_y + src_h, -src_w, -src_h);
+			src_x += src_w;
+			src_w = -src_w;
+			src_y += src_h;
+			src_h = -src_h;
 			break;
 		}
+
+		BatchRenderer2DRenderTextureSrc(sprite->texture, x, y, w, h, src_x, src_y, src_w, src_h);
 	}
 
 	BatchRenderer2DFlush();

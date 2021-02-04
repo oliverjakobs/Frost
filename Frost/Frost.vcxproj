@@ -112,6 +112,7 @@
     <ClInclude Include="src\Frost\Components\EntityState.h" />
     <ClInclude Include="src\Frost\Components\Interaction.h" />
     <ClInclude Include="src\Frost\Components\Inventory.h" />
+    <ClInclude Include="src\Frost\Components\Item.h" />
     <ClInclude Include="src\Frost\Components\Movement.h" />
     <ClInclude Include="src\Frost\Components\Order.h" />
     <ClInclude Include="src\Frost\Components\Player.h" />
@@ -188,6 +189,7 @@
     <ClCompile Include="src\Frost\Components\EntityState.c" />
     <ClCompile Include="src\Frost\Components\Interaction.c" />
     <ClCompile Include="src\Frost\Components\Inventory.c" />
+    <ClCompile Include="src\Frost\Components\Item.c" />
     <ClCompile Include="src\Frost\Components\Movement.c" />
     <ClCompile Include="src\Frost\Components\Order.c" />
     <ClCompile Include="src\Frost\Components\Player.c" />
@@ -259,13 +261,10 @@
     <None Include="res\templates\box.json" />
     <None Include="res\templates\chest.json" />
     <None Include="res\templates\door.json" />
+    <None Include="res\templates\item.json" />
     <None Include="res\templates\machine.json" />
     <None Include="res\templates\player.json" />
-    <None Include="res\templates\tree_1.json" />
-    <None Include="res\templates\tree_2.json" />
-    <None Include="res\templates\tree_3.json" />
-    <None Include="res\templates\tree_4.json" />
-    <None Include="res\templates\tree_5.json" />
+    <None Include="res\templates\tree.json" />
     <None Include="src\Frost\load_script.cx" />
   </ItemGroup>
   <ItemGroup>

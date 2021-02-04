@@ -25,6 +25,6 @@ void AnimatorFree(void* block);
 
 void AnimatorStart(Animator* animator, int start);
 
-void AnimatorLoad(Scene* scene, EcsEntityID entity, char* json);
+void AnimatorLoad(char* json, Ecs* ecs, EcsEntityID entity);
 
 #endif /* !ANIMATOR_H */

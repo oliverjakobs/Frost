@@ -13,6 +13,7 @@
 #include "Components/Player.h"
 #include "Components/Inventory.h"
 #include "Components/Interaction.h"
+#include "Components/Item.h"
 
 #include "Components/Order.h"
 
@@ -27,7 +28,8 @@ typedef enum
 	COMPONENT_CAMERA,
 	COMPONENT_PLAYER,
 	COMPONENT_INVENTORY,
-	COMPONENT_INTERACTABLE
+	COMPONENT_INTERACTABLE,
+	COMPONENT_ITEM
 } DataComponentType;
 
 typedef enum

@@ -6,9 +6,9 @@
 
 #include "Application/Debugger.h"
 
-void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
+void RigidBodyLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
-	Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
+	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
 		DEBUG_ERROR("[ECS] RigidBody requires Transform\n");
@@ -48,6 +48,6 @@ void RigidBodyLoad(Scene* scene, EcsEntityID entity, char* json)
 
 		if (type == TILE_BODY_DYNAMIC) TileBodySetSensor(&body.body, 2.0f, 2.0f);
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
+		EcsAddDataComponent(ecs, entity, COMPONENT_RIGID_BODY, &body);
 	}
 }

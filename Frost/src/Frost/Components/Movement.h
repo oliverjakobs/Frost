@@ -18,6 +18,6 @@ typedef struct
 	float jump_power;
 } Movement;
 
-void MovementLoad(Scene* scene, EcsEntityID entity, char* json);
+void MovementLoad(char* json, Ecs* ecs, EcsEntityID entity);
 
 #endif /* !MOVEMENT_H */

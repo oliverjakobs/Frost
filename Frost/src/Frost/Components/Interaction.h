@@ -61,7 +61,7 @@ typedef struct
 	float time;
 } Interactable;
 
-void InteractableLoad(Scene* scene, EcsEntityID entity, char* json);
+void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity);
 
 int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active);
 

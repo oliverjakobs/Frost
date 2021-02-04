@@ -4,6 +4,6 @@
   },
   "sprite": {
     "texture": "trees",
-    "frame": 1
+    "frame": "<VARIANT>"
   }
 }

@@ -1,10 +1,8 @@
 #include "Player.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
-#include "toolbox/tb_json.h"
-
-void PlayerLoad(Scene* scene, EcsEntityID entity, char* json)
+void PlayerLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	tb_json_element element;
 	tb_json_read(json, &element, "{'player'");
@@ -15,6 +13,6 @@ void PlayerLoad(Scene* scene, EcsEntityID entity, char* json)
 		comp.move_right = KEY_D;
 		comp.jump = KEY_SPACE;
 
-		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_PLAYER, &comp);
+		EcsAddDataComponent(ecs, entity, COMPONENT_PLAYER, &comp);
 	}
 }
