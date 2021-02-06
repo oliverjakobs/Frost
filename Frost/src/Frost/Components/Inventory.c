@@ -37,13 +37,17 @@ void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 
 			InventoryAlign(&inv, h_align, v_align, screen_size);
 		}
-
-		/* TODO load inv content */
-		InventorySetCellContent(&inv, 0, 3);
-		InventorySetCellContent(&inv, 1, 1);
+		InventoryLoadContent(&inv, "");
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_INVENTORY, &inv);
 	}
+}
+
+void InventoryLoadContent(Inventory* inv, const char* path)
+{
+	/* TODO load inv content from file */
+	InventorySetCellContent(&inv, 0, 3);
+	InventorySetCellContent(&inv, 1, 1);
 }
 
 int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols)
@@ -104,6 +108,11 @@ void InventoryToggle(Inventory* inv)
 	else if (inv->state == INVENTORY_CLOSED) inv->state = INVENTORY_OPEN;
 }
 
+int InventoryClampOffset(const Inventory* inv, float offset)
+{
+	return (int)((offset - inv->padding + inv->spacing) / (inv->cell_size + inv->spacing));;
+}
+
 int InventoryGetCellIndex(const Inventory* inv, int row, int column)
 {
 	return row * inv->cols + column;
@@ -120,8 +129,8 @@ int InventoryGetCellAt(const Inventory* inv, vec2 pos)
 	float width = InventoryGetWidth(inv);
 	if (cell_offset.x >= (width - inv->padding)) return -1;
 
-	int col = (int)(cell_offset.x / (inv->cell_size + inv->padding));
-	int row = (int)(cell_offset.y / (inv->cell_size + inv->padding));
+	int col = InventoryClampOffset(inv, cell_offset.x);
+	int row = InventoryClampOffset(inv, cell_offset.y);
 
 	/* filter cells that would be out of bounds */
 	if (row >= inv->rows || col >= inv->cols) return -1;
@@ -148,7 +157,7 @@ vec2 InventoryGetCellPos(const Inventory* inv, int index)
 
 float InventoryGetCellOffset(const Inventory* inv, int index)
 {
-	return index * (inv->cell_size + inv->padding) + inv->padding;
+	return index * (inv->cell_size + inv->spacing) + inv->padding;
 }
 
 void InventorySetCellContent(Inventory* inv, int index, ItemID itemID)
@@ -171,6 +180,6 @@ void InventoryMoveCellContent(Inventory* dst_inv, int dst_cell, Inventory* src_i
 	InventorySetCellContent(src_inv, src_cell, NULL_ITEM);
 }
 
-float InventoryGetWidth(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->cols); }
-float InventoryGetHeight(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->rows); }
+float InventoryGetWidth(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->cols) + inv->padding; }
+float InventoryGetHeight(const Inventory* inv) { return InventoryGetCellOffset(inv, inv->rows) + inv->padding; }
 

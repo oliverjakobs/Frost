@@ -6,6 +6,7 @@
     "texture": "chest"
   },
   "inventory": {
+    "id": "chest1",
     "grid": [ 3, 2 ],
     "align": ["left", "center"]
   },

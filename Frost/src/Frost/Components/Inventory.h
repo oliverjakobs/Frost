@@ -26,7 +26,6 @@ typedef enum
 	INVENTORY_FIXED
 } InventoryState;
 
-/* TODO implement spacing */
 typedef struct
 {
 	vec2 pos;
@@ -35,8 +34,7 @@ typedef struct
 	float spacing; /* spacing between cells */
 	float cell_size;
 
-	int rows;
-	int cols;
+	int rows, cols;
 
 	InventoryState state;
 
@@ -44,6 +42,7 @@ typedef struct
 } Inventory;
 
 void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
+void InventoryLoadContent(Inventory* inv, const char* path);
 
 int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols);
 void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing);
@@ -52,6 +51,7 @@ void InventoryFree(Inventory* inv);
 
 void InventoryToggle(Inventory* inv);
 
+int InventoryClampOffset(const Inventory* inv, float pos);
 int InventoryGetCellIndex(const Inventory* inv, int row, int column);
 int InventoryGetCellAt(const Inventory* inv, vec2 pos);
 
