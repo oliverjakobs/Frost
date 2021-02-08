@@ -16,6 +16,30 @@ int FrostMatchVariant(char* json, char* query, int variant)
 	return (int)result;
 }
 
+/* ------------------| EntityState |-------------------------- */
+int FrostParseEntityState(const char* str, size_t max_count)
+{
+	if (max_count == 0) return ENTITY_STATE_NULL;
+	if (tb_strncasecmp("idle", str, max_count) == 0) return ENTITY_STATE_IDLE;
+	if (tb_strncasecmp("walk", str, max_count) == 0) return ENTITY_STATE_WALK;
+	if (tb_strncasecmp("jump", str, max_count) == 0) return ENTITY_STATE_JUMP;
+	if (tb_strncasecmp("fall", str, max_count) == 0) return ENTITY_STATE_FALL;
+
+	return ENTITY_STATE_NULL;
+}
+
+const char* FrostEntityStateToString(EntityState value)
+{
+	switch (value)
+	{
+	case ENTITY_STATE_IDLE: return "idle";
+	case ENTITY_STATE_WALK: return "walk";
+	case ENTITY_STATE_JUMP: return "jump";
+	case ENTITY_STATE_FALL: return "fall";
+	default: return "null";
+	}
+}
+
 /* ------------------| Inventory |---------------------------- */
 int FrostParseInventoryState(const char* str, size_t max_count)
 {

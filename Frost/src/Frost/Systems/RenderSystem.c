@@ -21,26 +21,7 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 		float h = sprite->height;
 
 		float src_x, src_y, src_w, src_h;
-		GetTexture2DSrcRect(sprite->texture, sprite->frame, &src_x, &src_y, &src_w, &src_h);
-
-		switch (sprite->flip)
-		{
-		case SPRITE_FLIP_NONE: break;
-		case SPRITE_FLIP_HORIZONTAL:
-			src_x += src_w;
-			src_w = -src_w;
-			break;
-		case SPRITE_FLIP_VERTICAL:
-			src_y += src_h;
-			src_h = -src_h;
-			break;
-		case SPRITE_FLIP_BOTH:
-			src_x += src_w;
-			src_w = -src_w;
-			src_y += src_h;
-			src_h = -src_h;
-			break;
-		}
+		SpriteGetSrcRect(sprite, &src_x, &src_y, &src_w, &src_h);
 
 		BatchRenderer2DRenderTextureSrc(sprite->texture, x, y, w, h, src_x, src_y, src_w, src_h);
 	}

@@ -205,7 +205,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 
 	EcsEntityID entity = EcsEntityGetNextID();
 
-	/* Components */
+	/* Load components */
 	TemplateLoad(&scene->ecs, entity, templ);
 	EntityStateLoad(&scene->ecs, entity, ENTITY_STATE_NULL);
 
@@ -224,6 +224,14 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 	return 1;
 }
 
+void* SceneStreamTiles(void* stream, TileID* id)
+{
+	tb_json_element element;
+	stream = tb_json_array_step(stream, &element);
+	tb_json_atoi(element.value, id);
+	return stream;
+}
+
 int SceneLoadMap(Scene* scene, char* json)
 {
 	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
@@ -233,30 +241,17 @@ int SceneLoadMap(Scene* scene, char* json)
 
 	if (rows == 0 || cols == 0 || tile_size <= 0.0f)
 	{
-		DEBUG_ERROR("[Scenes] Map size or tile size can not be zero.");
+		DEBUG_ERROR("[Scenes] Map size or tile size can not be zero.\n");
 		return 0;
 	}
 
-	tb_json_element tiles;
-	tb_json_read(json, &tiles, "{'tiles'");
-
-	TileID* tile_ids = NULL;
-
-	if (tiles.error == TB_JSON_OK && tiles.data_type == TB_JSON_ARRAY)
+	if (!TileMapLoad(&scene->map, rows, cols, tile_size))
 	{
-		tile_ids = malloc(tiles.elements * sizeof(TileID));
-
-		if (!tile_ids) return 0;
-
-		tb_json_element id;
-		char* value = tiles.value;
-		for (size_t i = 0; i < tiles.elements; ++i)
-		{
-			value = tb_json_array_step(value, &id);
-			tb_json_atoi(id.value, tile_ids + i);
-		}
+		DEBUG_ERROR("[Scenes] Failed to load map.\n");
+		return 0;
 	}
 
+	/* TODO: stream types */
 	TileType types[] =
 	{
 		[0] = TILE_EMPTY,
@@ -267,10 +262,17 @@ int SceneLoadMap(Scene* scene, char* json)
 		[10] = TILE_SLOPE_LEFT,
 	};
 
-	TileMapLoad(&scene->map, tile_ids, rows, cols, tile_size, types, 11);
-	TileRendererBindMap(&scene->renderer, &scene->map);
+	tb_json_element tiles;
+	tb_json_read(json, &tiles, "{'tiles'");
 
-	free(tile_ids);
+	if (tiles.error != TB_JSON_OK || tiles.data_type != TB_JSON_ARRAY)
+	{
+		DEBUG_ERROR("[Scenes] Failed to read tiles.\n");
+		return 0;
+	}
+
+	TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, types, 11);
+	TileRendererBindMap(&scene->renderer, &scene->map);
 
 	scene->tile_set = ResourcesGetTexture2D(scene->resources, "tiles");
 

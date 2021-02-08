@@ -5,10 +5,10 @@
 
 #include "SceneLoader.h"
 
-int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources, int (*load)(Ecs* ecs))
+int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* res, int (*load)(Ecs* ecs))
 {
 	CameraCreateOrtho(&scene->camera, camera_w / 2.0f, camera_h / 2.0f, 0.0f, camera_w, camera_h);
-	scene->resources = resources;
+	scene->resources = res;
 	scene->gravity = vec2_zero();
 	scene->tile_set = NULL;
 

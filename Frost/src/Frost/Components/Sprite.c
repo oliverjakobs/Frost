@@ -40,3 +40,20 @@ void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, 
 		}
 	}
 }
+
+void SpriteGetSrcRect(const Sprite* sprite, float* src_x, float* src_y, float* src_w, float* src_h)
+{
+	GetTexture2DSrcRect(sprite->texture, sprite->frame, src_x, src_y, src_w, src_h);
+
+	if (sprite->flip == SPRITE_FLIP_HORIZONTAL || sprite->flip == SPRITE_FLIP_BOTH)
+	{
+		*src_x += *src_w;
+		*src_w = -*src_w;
+	}
+
+	if (sprite->flip == SPRITE_FLIP_VERTICAL || sprite->flip == SPRITE_FLIP_BOTH)
+	{
+		*src_y += *src_h;
+		*src_h = -*src_h;
+	}
+}

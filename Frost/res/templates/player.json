@@ -13,10 +13,10 @@
     "texture": "player"
   },
   "animation": {
-    "ENTITY_STATE_IDLE": [ 0, 2, 0.2 ],
-    "ENTITY_STATE_WALK": [ 6, 6, 0.125 ],
-    "ENTITY_STATE_JUMP": [ 12, 3, 0.3 ],
-    "ENTITY_STATE_FALL": [ 18, 2, 0.4 ]
+    "idle": [ 0, 2, 0.2 ],
+    "walk": [ 6, 6, 0.125 ],
+    "jump": [ 12, 3, 0.3 ],
+    "fall": [ 18, 2, 0.4 ]
   },
   "movement": {
     "speed": 400.0,
@@ -28,8 +28,7 @@
   "inventory": {
     "grid": [ 1, 4 ],
     "state": "FIXED",
-    "align": ["center", "bottom"],
-    "save": "res/save/player_inv.json"
+    "align": ["center", "bottom"]
   },
   "interactor": {
     "type": 0

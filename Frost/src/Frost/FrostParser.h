@@ -8,6 +8,10 @@
 
 int FrostMatchVariant(char* json, char* query, int variant);
 
+/* ------------------| EntityState |-------------------------- */
+int FrostParseEntityState(const char* str, size_t max_count);
+const char* FrostEntityStateToString(EntityState value);
+
 /* ------------------| Inventory |---------------------------- */
 int FrostParseInventoryState(const char* str, size_t max_count);
 int FrostParseInventoryHAlign(const char* str, size_t max_count);

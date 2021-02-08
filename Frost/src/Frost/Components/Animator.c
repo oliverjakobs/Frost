@@ -1,13 +1,11 @@
 #include "Animator.h"
 
-#include "Frost/Frost.h"
-
-#include "toolbox/tb_json.h"
-
+#include "Frost/FrostParser.h"
 #include "Application/Debugger.h"
 
 #include <stdlib.h>
 
+/* kept for when storage is improved */
 void AnimatorFree(void* block)
 {
 	free(block);
@@ -47,13 +45,13 @@ void AnimatorLoad(char* json, Ecs* ecs, EcsEntityID entity)
 
 		for (int i = 0; i < element.elements; i++)
 		{
-			char state_str[APPLICATION_STR_LEN];
-			tb_json_string(element.value, "{*", state_str, APPLICATION_STR_LEN, &i);
+			tb_json_element key;
+			tb_json_read_param(element.value, &key, "{*", &i);
 
-			EntityState state = EntityStateFromString(state_str);
+			EntityState state = FrostParseEntityState(key.value, key.bytelen);
 
 			tb_json_element anim;
-			tb_json_read_format(element.value, &anim, "{'%s'", state_str);
+			tb_json_read_format(element.value, &anim, "{'%.*s'", key.bytelen, key.value);
 
 			Animation animation;
 			animation.start = tb_json_int(anim.value, "[0", NULL, 0);

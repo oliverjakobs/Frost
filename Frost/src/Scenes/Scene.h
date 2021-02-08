@@ -31,7 +31,7 @@ typedef struct
 	Background background;
 } Scene;
 
-int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* resources, int (*load)(Ecs* ecs));
+int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* res, int (*load)(Ecs* ecs));
 int SceneLoadScenes(Scene* scene, const char* reg, const char* start);
 void SceneDestroy(Scene* scene);
 

@@ -1,8 +1,6 @@
 #include "Interaction.h"
 
 #include "Frost/FrostParser.h"
-
-#include "toolbox/tb_json.h"
 #include "Application/Debugger.h"
 
 void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)

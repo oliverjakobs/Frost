@@ -18,7 +18,4 @@ void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state);
 EntityState EntityGetState(Ecs* ecs, EcsEntityID entity);
 const char* EntityGetStateString(Ecs* ecs, EcsEntityID entity);
 
-const char* EntityStateToString(EntityState value);
-EntityState EntityStateFromString(const char* str);
-
 #endif /* !ENTITY_STATE_H */

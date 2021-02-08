@@ -166,7 +166,7 @@ typedef struct
 	tb_json_type data_type; // type of the element
 	int elements;           // number of elements (e.g. elements in array or object)
 	int bytelen;            // byte length of element (e.g. length of string, array text "[ ... ]" etc.)
-	void* value;            // pointer to value string in JSON text
+	char* value;            // pointer to value string in JSON text
 	tb_json_error error;    // error value if data_type == TB_JSON_ERROR
 } tb_json_element;
 

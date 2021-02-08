@@ -48,7 +48,9 @@ typedef struct
 	size_t types_count;
 } TileMap;
 
-int TileMapLoad(TileMap* map, TileID* tiles, size_t rows, size_t cols, float tile_size, TileType* types, size_t types_count);
+int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size);
+int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count);
+int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), TileType* types, size_t types_count);
 void TileMapDestroy(TileMap* map);
 
 Tile* TileMapAt(const TileMap* map, size_t row, size_t col);

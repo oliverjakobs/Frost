@@ -26,4 +26,6 @@ typedef struct
 
 void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant);
 
+void SpriteGetSrcRect(const Sprite* sprite, float* src_x, float* src_y, float* src_w, float* src_h);
+
 #endif /* !SPRITE_H */

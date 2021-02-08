@@ -1,8 +1,6 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
-#include "math/math.h"
-
 #include "Scenes/Scene.h"
 
 /*

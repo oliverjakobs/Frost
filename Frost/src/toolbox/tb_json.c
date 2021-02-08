@@ -245,11 +245,11 @@ char* tb_json_read_format(char* json, tb_json_element* result, const char* query
     va_list args;
     va_start(args, query_fmt);
     size_t query_size = vsnprintf(NULL, 0, query_fmt, args);
-    char* query = (char*)malloc(query_size + 1);
+    char* query = malloc(query_size + 1);
     vsnprintf(query, query_size + 1, query_fmt, args);
     va_end(args);
 
-    json = tb_json_read(json, result, query);
+    json = tb_json_read_param(json, result, query, NULL);
 
     free(query);
 
@@ -294,7 +294,7 @@ char* tb_json_read_param(char* json, tb_json_element* result, char* query, int* 
             switch (token_q)
             {
             case TB_JSON_NUMBER:
-                query = tb_json_atoi((char*)query, &index); // index value
+                query = tb_json_atoi(query, &index); // index value
                 break;
             case TB_JSON_QPARAM:
                 query++;
@@ -462,9 +462,9 @@ long tb_json_long(char* json, char* query, int* query_params, long default_value
     if ((elem.data_type == TB_JSON_ERROR) || (elem.data_type == TB_JSON_NULL))
         return default_value;
     if (elem.data_type == TB_JSON_BOOL)
-        return *((char*)elem.value) == 't' ? 1 : 0;
+        return *(elem.value) == 't' ? 1 : 0;
 
-    tb_json_atol((char*)elem.value, &result);
+    tb_json_atol(elem.value, &result);
     return result;
 }
 

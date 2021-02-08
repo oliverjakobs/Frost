@@ -2,13 +2,11 @@
 
 #include <stdlib.h>
 
-int TileMapLoad(TileMap* map, TileID* tiles, size_t rows, size_t cols, float tile_size, TileType* types, size_t types_count)
+int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size)
 {
     map->rows = rows;
     map->cols = cols;
     map->tile_size = tile_size;
-	map->types = types;
-	map->types_count = types_count;
 
 	map->borders[TILE_LEFT] = 0;
 	map->borders[TILE_RIGHT] = 0;
@@ -17,23 +15,47 @@ int TileMapLoad(TileMap* map, TileID* tiles, size_t rows, size_t cols, float til
 
     map->tiles = malloc(rows * cols * sizeof(Tile));
 
-	if (!map->tiles) return 0;
+	return map->tiles != NULL;
+}
 
-	size_t index = 0;
-	for (size_t row = 0; row < rows; ++row)
+static vec2 TileGetPosition(const TileMap* map, size_t index)
+{
+	size_t col = index % map->cols;
+	size_t row = (index / map->cols) + 1;
+
+	return (vec2){ col * map->tile_size, (map->rows - row) * map->tile_size };
+}
+
+int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
+{
+	map->types = types;
+	map->types_count = types_count;
+
+	for (size_t index = 0; index < (map->rows * map->cols); ++index)
 	{
-		for (size_t col = 0; col < cols; ++col)
-		{
-			Tile tile;
-			tile.pos = (vec2){ col * tile_size, (rows - (row + 1)) * tile_size };
-			tile.id = tiles[row * cols + col];
-
-			tile.type = TileMapGetType(map, tile.id);
-
-			map->tiles[index++] = tile;
-		}
+		map->tiles[index].id = tiles[index];
+		map->tiles[index].pos = TileGetPosition(map, index);
+		map->tiles[index].type = TileMapGetType(map, tiles[index]);
 	}
 
+	return 1;
+}
+
+int TileMapStreamTiles(TileMap* map, void* stream, void*(*next)(void*, TileID*), TileType* types, size_t types_count)
+{
+	map->types = types;
+	map->types_count = types_count;
+
+	for (size_t index = 0; index < (map->rows * map->cols); ++index)
+	{
+		TileID id;
+		stream = next(stream, &id);
+		if (!stream) return 0;
+
+		map->tiles[index].id = id;
+		map->tiles[index].pos = TileGetPosition(map, index);
+		map->tiles[index].type = TileMapGetType(map, id);
+	}
 	return 1;
 }
 
