@@ -5,7 +5,7 @@
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_jwrite.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
 static int SceneLoadMap(Scene* scene, char* json);
 static int SceneSaveMap(Scene* scene, tb_jwrite_control* jwc);
@@ -61,7 +61,6 @@ int SceneLoad(Scene* scene, const char* path)
 	}
 
 	tb_json_read(json, &element, "{'templates'");
-
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
 		char* value = element.value;
@@ -232,6 +231,14 @@ void* SceneStreamTiles(void* stream, TileID* id)
 	return stream;
 }
 
+void* SceneStreamTileTypes(void* stream, TileType* type)
+{
+	tb_json_element element;
+	stream = tb_json_array_step(stream, &element);
+	*type = FrostParseTileType(element.value, element.bytelen);
+	return stream;
+}
+
 int SceneLoadMap(Scene* scene, char* json)
 {
 	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
@@ -251,16 +258,20 @@ int SceneLoadMap(Scene* scene, char* json)
 		return 0;
 	}
 
-	/* TODO: stream types */
-	TileType types[] =
+	tb_json_element types;
+	tb_json_read(json, &types, "{'tile_types'");
+
+	if (types.error != TB_JSON_OK || types.data_type != TB_JSON_ARRAY)
 	{
-		[0] = TILE_EMPTY,
-		[1] = TILE_SOLID,
-		[2] = TILE_SOLID,
-		[8] = TILE_SLOPE_RIGHT,
-		[9] = TILE_PLATFORM,
-		[10] = TILE_SLOPE_LEFT,
-	};
+		DEBUG_ERROR("[Scenes] Failed to read tile types.\n");
+		return 0;
+	}
+
+	if (!TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements))
+	{
+		DEBUG_ERROR("[Scenes] Failed to stream tile types.\n");
+		return 0;
+	}
 
 	tb_json_element tiles;
 	tb_json_read(json, &tiles, "{'tiles'");
@@ -271,7 +282,12 @@ int SceneLoadMap(Scene* scene, char* json)
 		return 0;
 	}
 
-	TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, types, 11);
+	if (!TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements))
+	{
+		DEBUG_ERROR("[Scenes] Failed to stream tiles.\n");
+		return 0;
+	}
+
 	TileRendererBindMap(&scene->renderer, &scene->map);
 
 	scene->tile_set = ResourcesGetTexture2D(scene->resources, "tiles");

@@ -29,4 +29,7 @@ int FrostParseRigidBodyFilter(const char* str, size_t max_count);
 int FrostParseInputKeyCode(const char* str, size_t max_count);
 int FrostParseInputMouseButton(const char* str, size_t max_count);
 
+/* ------------------| Tile |--------------------------------- */
+int FrostParseTileType(const char* str, size_t max_count);
+
 #endif // !FROST_PARSER_H

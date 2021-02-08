@@ -1,6 +1,7 @@
 #include "tile_map.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size)
 {
@@ -28,7 +29,10 @@ static vec2 TileGetPosition(const TileMap* map, size_t index)
 
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
 {
-	map->types = types;
+	map->types = malloc(sizeof(TileType) * types_count);
+	if (!map->types) return 0;
+
+	memcpy(map->types, types, types_count);
 	map->types_count = types_count;
 
 	for (size_t index = 0; index < (map->rows * map->cols); ++index)
@@ -41,12 +45,17 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 	return 1;
 }
 
-int TileMapStreamTiles(TileMap* map, void* stream, void*(*next)(void*, TileID*), TileType* types, size_t types_count)
+void TileMapDestroy(TileMap* map)
 {
-	map->types = types;
-	map->types_count = types_count;
+	free(map->tiles);
+	free(map->types);
+}
 
-	for (size_t index = 0; index < (map->rows * map->cols); ++index)
+int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)
+{
+	if (len != (map->rows * map->cols)) return 0;
+
+	for (size_t index = 0; index < len; ++index)
 	{
 		TileID id;
 		stream = next(stream, &id);
@@ -59,9 +68,19 @@ int TileMapStreamTiles(TileMap* map, void* stream, void*(*next)(void*, TileID*),
 	return 1;
 }
 
-void TileMapDestroy(TileMap* map)
+int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType*), size_t len)
 {
-	free(map->tiles);
+	map->types = malloc(sizeof(TileType) * len);
+	if (!map->types) return 0;
+
+	for (size_t index = 0; index < len; ++index)
+	{
+		stream = next(stream, map->types + index);
+		if (!stream) return 0;
+	}
+
+	map->types_count = len;
+	return 1;
 }
 
 Tile* TileMapAt(const TileMap* map, size_t row, size_t col)

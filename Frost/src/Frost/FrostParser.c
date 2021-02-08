@@ -344,3 +344,15 @@ int FrostParseInputMouseButton(const char* str, size_t max_count)
 	}
 	return MOUSE_BUTTON_UNKNOWN;
 }
+
+/* ------------------| Tile |--------------------------------- */
+int FrostParseTileType(const char* str, size_t max_count)
+{
+	if (max_count == 0) return TILE_EMPTY;
+	if (tb_strncasecmp("solid", str, max_count) == 0) return TILE_SOLID;
+	if (tb_strncasecmp("slope_left", str, max_count) == 0) return TILE_SLOPE_LEFT;
+	if (tb_strncasecmp("slope_right", str, max_count) == 0) return TILE_SLOPE_RIGHT;
+	if (tb_strncasecmp("platform", str, max_count) == 0) return TILE_PLATFORM;
+
+	return TILE_EMPTY;
+}
