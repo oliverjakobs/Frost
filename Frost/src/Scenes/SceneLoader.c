@@ -1,20 +1,14 @@
 #include "SceneLoader.h"
 
-#include "Application/Debugger.h"
-
-#include "toolbox/tb_json.h"
-#include "toolbox/tb_jwrite.h"
-
 #include "Frost/FrostParser.h"
 
-static int SceneLoadMap(Scene* scene, char* json);
-static int SceneSaveMap(Scene* scene, tb_jwrite_control* jwc);
+#include "toolbox/tb_file.h"
 
 int SceneLoad(Scene* scene, const char* path)
 {
 	if (!scene) return 0;
 
-	char* json = ignisReadFile(path, NULL);
+	char* json = tb_file_read(path, "rb", NULL);
 
 	if (!json)
 	{
@@ -22,9 +16,10 @@ int SceneLoad(Scene* scene, const char* path)
 		return 0;
 	}
 
-	if (!SceneLoadMap(scene, json))
+	SceneLoadError error = SceneLoadMap(scene, json);
+	if (error != SCENE_LOAD_OK)
 	{
-		DEBUG_ERROR("[Scenes] Failed to load scene: %s", path);
+		DEBUG_ERROR("[Scenes] %s.", SceneLoadErrorDesc(error));
 		free(json);
 		return 0;
 	}
@@ -92,109 +87,10 @@ int SceneLoad(Scene* scene, const char* path)
 	return 1;
 }
 
-int SceneSave(Scene* scene, const char* path)
-{
-	char* temp_ext = ".temp";
-	char* temp_path = malloc(strlen(path) + strlen(temp_ext));
-
-	if (!temp_path)
-	{
-		DEBUG_ERROR("[Scenes] Failed to allocate memory for temp path\n");
-		return 0;
-	}
-
-	strcpy(temp_path, path);
-	strcat(temp_path, temp_ext);
-
-	tb_jwrite_control jwc;
-	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
-	tb_jwrite_set_float_prec(&jwc, 2);
-
-	/* background */
-	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	tb_jwrite_array(&jwc, "background");
-
-	for (int i = 0; i < scene->background.layer_count; ++i)
-	{
-		BackgroundLayer* bg = &scene->background.layers[i];
-
-		tb_jwrite_array_array(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, ResourcesGetTexture2DName(scene->resources, bg->texture));
-
-		tb_jwrite_array_float(&jwc, bg->startpos);
-		tb_jwrite_array_float(&jwc, bg->pos_y);
-		tb_jwrite_array_float(&jwc, bg->width);
-		tb_jwrite_array_float(&jwc, bg->height);
-		tb_jwrite_array_float(&jwc, bg->parallax);
-		tb_jwrite_end(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	}
-
-	tb_jwrite_end(&jwc);
-
-	/* templates */
-	tb_jwrite_array(&jwc, "templates");
-
-	EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
-	for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
-	{
-		tb_jwrite_array_array(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-
-		Template* templ = EcsListNodeComponent(it);
-
-		/* template */
-		tb_jwrite_array_string(&jwc, templ->templ);
-
-		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, EcsListNodeEntity(it));
-
-		tb_jwrite_array_array(&jwc);
-		tb_jwrite_array_float(&jwc, pos.x);
-		tb_jwrite_array_float(&jwc, pos.y);
-		tb_jwrite_end(&jwc);
-
-		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsListNodeEntity(it)));
-
-		tb_jwrite_end(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	}
-
-	tb_jwrite_end(&jwc);
-
-	tb_jwrite_error err = tb_jwrite_close(&jwc);
-
-	if (err != TB_JWRITE_OK)
-	{
-		DEBUG_ERROR("[JWRITE] Error: %s at function call %d\n", tb_jwrite_error_string(err), tb_jwrite_error_pos(&jwc));
-		return 0;
-	}
-
-	if (remove(path) != 0)
-	{
-		DEBUG_ERROR("[Scenes] Failed to remove old save file (%s)\n", path);
-		return 0;
-	}
-
-	if (rename(temp_path, path) != 0)
-	{
-		DEBUG_ERROR("[Scenes] Failed to rename temp save file (%s)\n", temp_path);
-		return 0;
-	}
-
-	return 1;
-}
-
 int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant)
 {
 	const char* path = SceneGetTemplatePath(scene, templ);
-	char* json = ignisReadFile(path, NULL);
+	char* json = tb_file_read(path, "rb", NULL);
 
 	if (!json)
 	{
@@ -223,7 +119,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 	return 1;
 }
 
-void* SceneStreamTiles(void* stream, TileID* id)
+static void* SceneStreamTiles(void* stream, TileID* id)
 {
 	tb_json_element element;
 	stream = tb_json_array_step(stream, &element);
@@ -231,7 +127,7 @@ void* SceneStreamTiles(void* stream, TileID* id)
 	return stream;
 }
 
-void* SceneStreamTileTypes(void* stream, TileType* type)
+static void* SceneStreamTileTypes(void* stream, TileType* type)
 {
 	tb_json_element element;
 	stream = tb_json_array_step(stream, &element);
@@ -239,7 +135,7 @@ void* SceneStreamTileTypes(void* stream, TileType* type)
 	return stream;
 }
 
-int SceneLoadMap(Scene* scene, char* json)
+SceneLoadError SceneLoadMap(Scene* scene, char* json)
 {
 	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
 	size_t rows = tb_json_long(json, "{'size'[1", NULL, 0);
@@ -247,45 +143,29 @@ int SceneLoadMap(Scene* scene, char* json)
 	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
 	if (rows == 0 || cols == 0 || tile_size <= 0.0f)
-	{
-		DEBUG_ERROR("[Scenes] Map size or tile size can not be zero.\n");
-		return 0;
-	}
+		return SCENE_LOAD_MAP_SIZE_ERROR;
 
 	if (!TileMapLoad(&scene->map, rows, cols, tile_size))
-	{
-		DEBUG_ERROR("[Scenes] Failed to load map.\n");
-		return 0;
-	}
+		return SCENE_LOAD_MAP_ERROR;
 
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");
 
-	if (types.error != TB_JSON_OK || types.data_type != TB_JSON_ARRAY)
+	if (!(tb_json_is_type(&types, TB_JSON_ARRAY) 
+		&& TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements)))
 	{
-		DEBUG_ERROR("[Scenes] Failed to read tile types.\n");
-		return 0;
-	}
-
-	if (!TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements))
-	{
-		DEBUG_ERROR("[Scenes] Failed to stream tile types.\n");
-		return 0;
+		TileMapDestroy(&scene->map);
+		return SCENE_LOAD_STREAM_TYPES_ERROR;
 	}
 
 	tb_json_element tiles;
 	tb_json_read(json, &tiles, "{'tiles'");
 
-	if (tiles.error != TB_JSON_OK || tiles.data_type != TB_JSON_ARRAY)
+	if (!(tb_json_is_type(&tiles, TB_JSON_ARRAY)
+		&& TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements)))
 	{
-		DEBUG_ERROR("[Scenes] Failed to read tiles.\n");
-		return 0;
-	}
-
-	if (!TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements))
-	{
-		DEBUG_ERROR("[Scenes] Failed to stream tiles.\n");
-		return 0;
+		TileMapDestroy(&scene->map);
+		return SCENE_LOAD_STREAM_MAP_ERROR;
 	}
 
 	TileRendererBindMap(&scene->renderer, &scene->map);
@@ -296,11 +176,18 @@ int SceneLoadMap(Scene* scene, char* json)
 	TileMapSetBorder(&scene->map, TILE_LEFT, 1);
 	TileMapSetBorder(&scene->map, TILE_RIGHT, 1);
 
-	return 1;
+	return SCENE_LOAD_OK;
 }
 
-/* TODO: implement map saving */
-int SceneSaveMap(Scene* scene, tb_jwrite_control* jwc)
+const char* SceneLoadErrorDesc(SceneLoadError error)
 {
-	return 0;
+	switch (error)
+	{
+	case SCENE_LOAD_OK:					return "No error";
+	case SCENE_LOAD_MAP_ERROR:			return "Failed to load map";
+	case SCENE_LOAD_MAP_SIZE_ERROR:		return "Map size or tile size can not be zero";
+	case SCENE_LOAD_STREAM_MAP_ERROR:	return "Failed to stream tiles";
+	case SCENE_LOAD_STREAM_TYPES_ERROR: return "Failed to stream tile types";
+	default:							return "Unkown error";
+	}
 }

@@ -238,8 +238,10 @@ char* tb_json_atoi(char* p, unsigned int* result);  // string to unsigned int
 char* tb_json_atol(char* p, long* result);          // string to signed long
 char* tb_json_atof(char* p, float* result);         // string to float (does not do exponents)
 
-int tb_json_strcmp(tb_json_element* a, tb_json_element* b); // compare STRING elements
-char* tb_json_strcpy(char* dest_buffer, int dest_length, tb_json_element* element); // copy element to '\0'-terminated buffer
+int tb_json_strcmp(const tb_json_element* a, const tb_json_element* b); // compare STRING elements
+char* tb_json_strcpy(char* dest_buffer, const tb_json_element* element); // copy element to '\0'-terminated buffer
+
+int tb_json_is_type(const tb_json_element* element, tb_json_type type);
 
 void tb_json_print_element(tb_json_element element);
 

@@ -1,6 +1,7 @@
 #include "Resources.h"
 
 #include "toolbox/tb_json.h"
+#include "toolbox/tb_file.h"
 
 #include "math/math.h"
 
@@ -9,7 +10,7 @@
 
 int ResourcesInit(Resources* resources, const char* path)
 {
-	char* json = ignisReadFile(path, NULL);
+	char* json = tb_file_read(path, "rb", NULL);
 
 	if (!json)
 	{

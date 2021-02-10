@@ -3,6 +3,7 @@
 		"scene": "res/scenes/scene.json",
 		"scene2": "res/scenes/scene2.json"
 	},
+	"item_atlas": "items", 
 	"templates": {
 		"box": "res/templates/box.json",
 		"chest": "res/templates/chest.json",

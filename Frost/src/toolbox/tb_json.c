@@ -600,14 +600,14 @@ char* tb_json_atof(char* p, float* result)
 
 // compare two json elements
 // returns: 0 if they are identical strings, else 1
-int tb_json_strcmp(tb_json_element* a, tb_json_element* b)
+int tb_json_strcmp(const tb_json_element* a, const tb_json_element* b)
 {
-    int i;
-    if ((a->data_type != TB_JSON_STRING) || (b->data_type != TB_JSON_STRING) || (a->bytelen != b->bytelen))
+    if ((a->data_type != TB_JSON_STRING) || (b->data_type != TB_JSON_STRING) 
+        || (a->bytelen != b->bytelen))
         return 1;
 
-    for (i = 0; i < a->bytelen; i++)
-        if (((char*)(a->value))[i] != ((char*)(b->value))[i])
+    for (int i = 0; i < a->bytelen; i++)
+        if (a->value[i] != b->value[i])
             return 1;
     return 0;
 }
@@ -616,20 +616,22 @@ int tb_json_strcmp(tb_json_element* a, tb_json_element* b)
 // always copies element irrespective of data_type (unless it's an error)
 // dest_buffer is always '\0'-terminated (even on zero lenght returns)
 // returns pointer to dest_buffer
-char* tb_json_strcpy(char* dest_buffer, int dest_length, tb_json_element* element)
+char* tb_json_strcpy(char* dest_buffer, const tb_json_element* element)
 {
-    int len = element->bytelen;
     char* dest = dest_buffer;
-    char* src = (char*)element->value;
+    char* src = element->value;
     if (element->error == 0)
     {
-        if (len >= dest_length)
-            len = dest_length;
-        for (int i = 0; i < dest_length; i++)
+        for (int i = 0; i < element->bytelen; i++)
             *dest++ = *src++;
     }
     *dest = '\0';
     return dest_buffer;
+}
+
+int tb_json_is_type(const tb_json_element* element, tb_json_type type)
+{
+    return element->error == TB_JSON_OK && element->data_type == type;
 }
 
 // prints the value of an element

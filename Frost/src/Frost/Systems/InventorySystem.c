@@ -21,27 +21,15 @@ static void InventoryCellIDReset(InventoryCellID* id)
 	id->cell = -1;
 }
 
-static IgnisTexture2D* inv_item_atlas;
-
-static InventoryCellID dragged;
-static InventoryCellID hover;
-
-int InventorySystemInit(IgnisTexture2D* item_atlas)
-{
-	inv_item_atlas = item_atlas;
-
-	InventoryCellIDReset(&dragged);
-	InventoryCellIDReset(&hover);
-
-	return 1;
-}
+static InventoryCellID dragged = { ECS_NULL_ENTITY, -1 };
+static InventoryCellID hover = { ECS_NULL_ENTITY, -1 };
 
 void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 {
 	InventoryCellIDReset(&hover);
 
 	Inventory* inv_hover = NULL;
-	Inventory* inv_dragged = EcsGetDataComponent(ecs, dragged.entity, COMPONENT_INVENTORY);
+	Inventory* inv_dragged = NULL;
 	vec2 mouse = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
 
 	/* update hover cell */
@@ -49,6 +37,8 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
 		Inventory* inv = EcsMapIterValue(iter);
+
+		if (EcsMapIterKey(iter) == dragged.entity) inv_dragged = inv;
 
 		vec2 max;
 		max.x = inv->pos.x + InventoryGetWidth(inv);
@@ -68,7 +58,7 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 	{
 		InventoryCellIDSet(&dragged, hover.entity, hover.cell);
 	}
-	else if (InputMouseReleased(MOUSE_BUTTON_LEFT) && dragged.cell >= 0)
+	else if (InputMouseReleased(MOUSE_BUTTON_LEFT) && inv_dragged && dragged.cell >= 0)
 	{
 		if (inv_hover && InventoryGetCellContent(inv_hover, hover.cell) == NULL_ITEM)
 		{
@@ -88,6 +78,7 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
 	/* render inventory backgrounds */
+	/* TODO: background texture */
 	Primitives2DStart(mat_view_proj);
 
 	IgnisColorRGBA bg = IGNIS_WHITE;
@@ -139,20 +130,22 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 			}
 
 			vec2 pos = InventoryGetCellPos(inv, cell);
-			float cell_size = inv->cell_size;
-			BatchRenderer2DRenderTextureFrame(inv_item_atlas, pos.x, pos.y, cell_size, cell_size, inv->cells[cell]);
+			float size = inv->cell_size;
+			size_t frame = inv->cells[cell];
+			BatchRenderer2DRenderTextureFrame(scene->item_atlas, pos.x, pos.y, size, size, frame);
 		}
 	}
 
 	/* render dragged item */
 	if (dragged_inv && dragged.cell >= 0)
 	{
-		float cell_size = dragged_inv->cell_size;
 		vec2 mouse_pos = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
-		float x = mouse_pos.x - (cell_size * 0.5f);
-		float y = mouse_pos.y - (cell_size * 0.5f);
+		float size = dragged_inv->cell_size;
+		float x = mouse_pos.x - (size * 0.5f);
+		float y = mouse_pos.y - (size * 0.5f);
+		size_t frame = dragged_inv->cells[dragged.cell];
 
-		BatchRenderer2DRenderTextureFrame(inv_item_atlas, x, y, cell_size, cell_size, dragged_inv->cells[dragged.cell]);
+		BatchRenderer2DRenderTextureFrame(scene->item_atlas, x, y, size, size, frame);
 	}
 
 	BatchRenderer2DFlush();

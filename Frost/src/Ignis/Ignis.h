@@ -77,6 +77,12 @@ void ignisClearColorBuffer(IgnisColorRGBA color);
 
 char* ignisReadFile(const char* path, size_t* sizeptr);
 
+/* Infos */
+const char* ingisGetGLVersion();
+const char* ingisGetGLVendor();
+const char* ingisGetGLRenderer();
+const char* ingisGetGLSLVersion();
+
 /* Memory */
 void* ignisAlloc(size_t size);
 void* ignisRealloc(void* block, size_t size);

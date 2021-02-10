@@ -153,10 +153,12 @@
     <ClInclude Include="src\Scenes\SceneLoader.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
+    <ClInclude Include="src\Scenes\SceneSaver.h" />
     <ClInclude Include="src\tile\tile_body.h" />
     <ClInclude Include="src\tile\tile_collision.h" />
     <ClInclude Include="src\tile\tile_map.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
+    <ClInclude Include="src\toolbox\tb_file.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
     <ClInclude Include="src\toolbox\tb_stretchy.h" />
     <ClInclude Include="src\toolbox\toolbox.h" />
@@ -225,10 +227,12 @@
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\memory\arena.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />
+    <ClCompile Include="src\Scenes\SceneSaver.c" />
     <ClCompile Include="src\tile\tile_body.c" />
     <ClCompile Include="src\tile\tile_collision.c" />
     <ClCompile Include="src\tile\tile_map.c" />
     <ClCompile Include="src\tile\tile_renderer.c" />
+    <ClCompile Include="src\toolbox\tb_file.c" />
     <ClCompile Include="src\toolbox\tb_json.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />

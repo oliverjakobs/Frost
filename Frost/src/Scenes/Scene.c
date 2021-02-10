@@ -4,10 +4,13 @@
 #include "toolbox/tb_json.h"
 
 #include "SceneLoader.h"
+#include "SceneSaver.h"
 
-int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* res, int (*load)(Ecs* ecs))
+#include "toolbox/tb_file.h"
+
+int SceneInit(Scene* scene, vec2 size, Resources* res, int (*load)(Ecs* ecs))
 {
-	CameraCreateOrtho(&scene->camera, camera_w / 2.0f, camera_h / 2.0f, 0.0f, camera_w, camera_h);
+	CameraCreateOrtho(&scene->camera, size.x * .5f, size.y * .5f, 0.0f, size.x, size.y);
 	scene->resources = res;
 	scene->gravity = vec2_zero();
 	scene->tile_set = NULL;
@@ -28,7 +31,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 	tb_hashmap_set_key_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 	tb_hashmap_set_value_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
 
-	char* json = ignisReadFile(reg, NULL);
+	char* json = tb_file_read(reg, "rb", NULL);
 
 	if (!json)
 	{
@@ -54,7 +57,19 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 		scene_path[scene_element.bytelen] = '\0';
 
 		if (!tb_hashmap_insert(&scene->scenes, name, scene_path))
-			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
+			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)\n", name, scene_path);
+	}
+
+	tb_json_read(json, &element, "{'item_atlas'");
+	if (element.error == TB_JSON_OK)
+	{
+		char name[APPLICATION_STR_LEN];
+		tb_json_strcpy(name, &element);
+
+		scene->item_atlas = ResourcesGetTexture2D(scene->resources, name);
+
+		if (!scene->item_atlas)
+			DEBUG_WARN("[Scenes] Could not find item atlas: %s\n", name);
 	}
 
 	tb_json_read(json, &element, "{'templates'");
@@ -72,7 +87,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 		templ_path[template_element.bytelen] = '\0';
 
 		if (!tb_hashmap_insert(&scene->templates, name, templ_path))
-			DEBUG_WARN("[Scenes] Failed to add template: %s (%s)", name, templ_path);
+			DEBUG_WARN("[Scenes] Failed to add template: %s (%s)\n", name, templ_path);
 	}
 
 	free(json);
@@ -109,11 +124,14 @@ void SceneChangeActive(Scene* scene, const char* name)
 		}
 
 		/* Clear old Scene */
-		if (scene->name[0] != '\0')
-			SceneClearActive(scene);
+		if (scene->name[0] != '\0') SceneClearActive(scene);
 
 		/* Enter new scene */
-		SceneLoad(scene, path);
+		if (!SceneLoad(scene, path))
+		{
+			DEBUG_ERROR("[Scenes] Failed to load new scene: %s\n", name);
+			return;
+		}
 		strncpy(scene->name, name, APPLICATION_STR_LEN);
 	}
 }

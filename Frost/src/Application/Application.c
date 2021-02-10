@@ -3,13 +3,19 @@
 #include "ApplicationCallback.h"
 
 #include "toolbox/tb_json.h"
+#include "toolbox/tb_file.h"
 
 #include "Debugger.h"
 #include "defines.h"
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor, const char* res)
+int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor)
 {
 	app->title = malloc(strlen(title));
+	if (!app->title)
+	{
+		DEBUG_ERROR("[GLFW] Failed to allocate memory for title\n");
+		return 0;
+	}
 	strcpy(app->title, title);
 
 	app->width = width;
@@ -78,25 +84,21 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 		return 0;
 	}
 
-	DEBUG_INFO("[OpenGL] Version: %s\n", glGetString(GL_VERSION));
-	DEBUG_INFO("[OpenGL] Vendor: %s\n", glGetString(GL_VENDOR));
-	DEBUG_INFO("[OpenGL] Renderer: %s\n", glGetString(GL_RENDERER));
-	DEBUG_INFO("[OpenGL] GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	DEBUG_INFO("[OpenGL] Version: %s\n", ingisGetGLVersion());
+	DEBUG_INFO("[OpenGL] Vendor: %s\n", ingisGetGLVendor());
+	DEBUG_INFO("[OpenGL] Renderer: %s\n", ingisGetGLRenderer());
+	DEBUG_INFO("[OpenGL] GLSL Version: %s\n", ingisGetGLSLVersion());
 
 	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
 
-	app->running = ResourcesInit(&app->resources, res);
-
-	if (app->on_init)
-		app->on_init(app);
-
+	app->running = (app->on_init) ? app->on_init(app) : 1;
 	return app->running;
 }
 
 int ApplicationLoadConfig(Application* app, const char* path)
 {
-	char* json = ignisReadFile(path, NULL);
+	char* json = tb_file_read(path, "rb", NULL);
 
 	if (!json)
 	{
@@ -116,20 +118,14 @@ int ApplicationLoadConfig(Application* app, const char* path)
 	int major = tb_json_int((char*)element.value, "{'opengl'[0", NULL, 0);
 	int minor = tb_json_int((char*)element.value, "{'opengl'[1", NULL, 0);
 
-	char index[APPLICATION_PATH_LEN];
-	tb_json_string(json, "{'resources'", index, APPLICATION_PATH_LEN, NULL);
-
 	free(json);
 
-	return ApplicationLoad(app, title, width, height, major, minor, index);
+	return ApplicationLoad(app, title, width, height, major, minor);
 }
 
 void ApplicationDestroy(Application* app)
 {
-	if (app->on_destroy)
-		app->on_destroy(app);
-
-	ResourcesDestroy(&app->resources);
+	if (app->on_destroy) app->on_destroy(app);
 
 	EventHandlerDestroy();
 
@@ -175,7 +171,7 @@ void ApplicationPause(Application* app)
 
 void ApplicationClose(Application* app) { app->running = 0; }
 
-void ApplicationSetOnInitCallback(Application* app, void(*callback)(Application*))
+void ApplicationSetOnInitCallback(Application* app, int(*callback)(Application*))
 {
 	app->on_init = callback;
 }
@@ -216,9 +212,14 @@ void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
 	glViewport(x, y, w, h);
 }
 
-const float* ApplicationGetScreenProjPtr(Application* app)
+const float* ApplicationGetScreenProjPtr(const Application* app)
 {
 	return app->screen_projection.v;
+}
+
+vec2 ApplicationGetScreenSize(const Application* app)
+{
+	return (vec2) { (float)app->width, (float)app->height };
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }
@@ -237,7 +238,7 @@ void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = (char*)malloc(buffer_size + 1);
+	char* buffer = malloc(buffer_size + 1);
 	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 

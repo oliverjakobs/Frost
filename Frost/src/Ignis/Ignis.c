@@ -182,6 +182,11 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 	return buffer;
 }
 
+const char* ingisGetGLVersion()		{ return glGetString(GL_VERSION); }
+const char* ingisGetGLVendor()		{ return glGetString(GL_VENDOR); }
+const char* ingisGetGLRenderer()	{ return glGetString(GL_RENDERER); }
+const char* ingisGetGLSLVersion()	{ return glGetString(GL_SHADING_LANGUAGE_VERSION); }
+
 void* ignisAlloc(size_t size)
 {
 	return malloc(size);

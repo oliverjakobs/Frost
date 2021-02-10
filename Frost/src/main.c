@@ -2,39 +2,42 @@
 
 Scene scene;
 SceneEditor scene_editor;
+Resources resources;
 
 Console console;
 
 int show_debug_info;
 
-void OnInit(Application* app)
+int OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
 	ignisEnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	ignisSetClearColor((IgnisColorRGBA){ 0.2f, 0.2f, 0.2f, 1.0f });
+
+	ResourcesInit(&resources, "res/index.json");
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
 	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	FontRendererBindFontColor(ResourcesGetFont(&app->resources, "gui"), IGNIS_WHITE);
+	FontRendererBindFontColor(ResourcesGetFont(&resources, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
 	show_debug_info = 1;
 
-	ConsoleInit(&console, ResourcesGetFont(&app->resources, "gui"));
+	ConsoleInit(&console, ResourcesGetFont(&resources, "gui"));
 
 	/* ecs */
-	SceneInit(&scene, (float)app->width, (float)app->height, &app->resources, LoadEcs);
-
-	InventorySystemInit(ResourcesGetTexture2D(&app->resources, "items"));
+	SceneInit(&scene, ApplicationGetScreenSize(app), &resources, LoadEcs);
 
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&scene_editor);
+
+	return 1;
 }
 
 void OnDestroy(Application* app)
@@ -45,6 +48,8 @@ void OnDestroy(Application* app)
 	Primitives2DDestroy();
 	BatchRenderer2DDestroy();
 	Renderer2DDestroy();
+
+	ResourcesDestroy(&resources);
 }
 
 void OnEvent(Application* app, Event e)

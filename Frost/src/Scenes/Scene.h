@@ -1,8 +1,10 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "Application/Application.h"
+#include "Graphics/Renderer.h"
+#include "Graphics/Resources.h"
 #include "Graphics/Background.h"
+#include "Application/Application.h"
 
 #include "Camera/Camera.h"
 
@@ -23,6 +25,7 @@ typedef struct
 
 	Camera camera;
 	Resources* resources;
+	IgnisTexture2D* item_atlas;
 
 	/* active scene specific data */
 	char name[APPLICATION_STR_LEN];
@@ -31,7 +34,7 @@ typedef struct
 	Background background;
 } Scene;
 
-int SceneInit(Scene* scene, float camera_w, float camera_h, Resources* res, int (*load)(Ecs* ecs));
+int SceneInit(Scene* scene, vec2 screen_size, Resources* res, int (*load)(Ecs* ecs));
 int SceneLoadScenes(Scene* scene, const char* reg, const char* start);
 void SceneDestroy(Scene* scene);
 

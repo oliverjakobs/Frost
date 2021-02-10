@@ -15,6 +15,8 @@ int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size)
 	map->borders[TILE_BOTTOM] = 0;
 
     map->tiles = malloc(rows * cols * sizeof(Tile));
+	map->types = NULL;
+	map->types_count = 0;
 
 	return map->tiles != NULL;
 }
@@ -47,8 +49,8 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 
 void TileMapDestroy(TileMap* map)
 {
-	free(map->tiles);
-	free(map->types);
+	if (map->tiles) free(map->tiles);
+	if (map->types) free(map->types);
 }
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)

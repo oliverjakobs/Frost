@@ -4,6 +4,5 @@
     "width": 1024,
     "height": 800,
     "opengl": [4, 4]
-  },
-  "resources": "res/index.json"
+  }
 }
