@@ -1,16 +1,4 @@
 {
-	"scenes": {
-		"scene": "res/scenes/scene.json",
-		"scene2": "res/scenes/scene2.json"
-	},
-	"item_atlas": "items", 
-	"templates": {
-		"box": "res/templates/box.json",
-		"chest": "res/templates/chest.json",
-		"door": "res/templates/door.json",
-		"machine": "res/templates/machine.json",
-		"player": "res/templates/player.json",
-		"tree": "res/templates/tree.json",
-		"item": "res/templates/item.json"
-	}
+	"scene": "res/scenes/scene.json",
+	"scene2": "res/scenes/scene2.json"
 }

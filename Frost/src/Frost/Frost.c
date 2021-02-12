@@ -9,7 +9,8 @@ typedef enum
 	CONSOLE_CMD_CREATE,
 	CONSOLE_CMD_LIST,
 	CONSOLE_CMD_REMOVE,
-	CONSOLE_CMD_SAVE
+	CONSOLE_CMD_SAVE,
+	CONSOLE_CMD_RELOAD
 } ConsoleCmd;
 
 static ConsoleCmd _CmdGetType(const char* buffer)
@@ -28,7 +29,10 @@ static ConsoleCmd _CmdGetType(const char* buffer)
 			}
 		break;
 	case 'l': cmd = cmd_check_keyword(buffer, "list", CONSOLE_CMD_LIST); break;
-	case 'r': cmd = cmd_check_keyword(buffer, "remove", CONSOLE_CMD_REMOVE); break;
+	case 'r':
+		if (cmd = cmd_check_keyword(buffer, "remove", CONSOLE_CMD_REMOVE)) break;
+		if (cmd = cmd_check_keyword(buffer, "reload", CONSOLE_CMD_RELOAD)) break;
+		break;
 	case 's': cmd = cmd_check_keyword(buffer, "save", CONSOLE_CMD_SAVE); break;
 	}
 
@@ -50,9 +54,22 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			SceneChangeActive(scene, args[0]);
+			SceneChangeActive(scene, args[0], 0);
 			SceneEditorReset(editor);
 			ConsoleOut(console, "Changed Scene to %s", args[0]);
+		}
+		break;
+	}
+	case CONSOLE_CMD_RELOAD:
+	{
+		char* spec = cmd_get_args(cmd_buffer, 6, NULL, 0);
+		if (!spec) break;
+
+		if (strcmp(spec, "scene") == 0)
+		{
+			SceneChangeActive(scene, scene->name, 1);
+			SceneEditorReset(editor);
+			ConsoleOut(console, "Reloaded Scene.");
 		}
 		break;
 	}
@@ -100,30 +117,22 @@ void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* edi
 			EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
 			for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
 			{
-				Template* templ = EcsListNodeComponent(it);
-				ConsoleOut(console, " - %d \t | %s", EcsListNodeEntity(it), templ->templ);
+				const char** templ = EcsListNodeComponent(it);
+				ConsoleOut(console, " - %d \t | %s", EcsListNodeEntity(it), *templ);
 			}
 		}
-		else if (strcmp(spec, "templates") == 0)
+		/*
+		else if (strcmp(spec, "fonts") == 0)
 		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->templates); iter; iter = tb_hashmap_iter_next(&scene->templates, iter))
-			{
-				const char* name = tb_hashmap_iter_get_key(iter);
-				char* templ = tb_hashmap_iter_get_value(iter);
-
-				ConsoleOut(console, " - %s: %s", name, templ);
-			}
-		}
-		else if (strcmp(spec, "res") == 0)
-		{
-			ConsoleOut(console, "Textures:");
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->textures); iter; iter = tb_hashmap_iter_next(&scene->resources->textures, iter))
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->fonts); iter; iter = tb_hashmap_iter_next(&scene->resources->fonts, iter))
 			{
 				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
 			}
-
-			ConsoleOut(console, "Fonts:");
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->fonts); iter; iter = tb_hashmap_iter_next(&scene->resources->fonts, iter))
+		}
+		*/
+		else if (strcmp(spec, "res") == 0)
+		{
+			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->res.textures); iter; iter = tb_hashmap_iter_next(&scene->res.textures, iter))
 			{
 				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
 			}

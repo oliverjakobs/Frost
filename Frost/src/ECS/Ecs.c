@@ -17,7 +17,6 @@ void EcsDestroy(Ecs* ecs)
 	tb_stretchy_free(ecs->systems_update);
 	tb_stretchy_free(ecs->systems_render);
 
-	EcsClear(ecs);
 	for (EcsMap* it = ecs->data_components; it != tb_stretchy_last(ecs->data_components); it++)
 		EcsMapFree(it);
 

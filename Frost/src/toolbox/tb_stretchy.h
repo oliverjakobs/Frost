@@ -31,7 +31,7 @@
 static void* tb_stretchy__resize(void* buf, size_t new_cap, size_t elem_size)
 {
     size_t hdr_size = 2 * sizeof(size_t);
-    size_t* hdr = realloc(buf ? tb_stretchy__hdr(buf) : NULL, hdr_size + new_cap * elem_size);
+    size_t* hdr = realloc(buf ? tb_stretchy__hdr(buf) : NULL, hdr_size + (new_cap * elem_size));
 
     if (!hdr) return NULL; /* out of memory */
 

@@ -16,7 +16,15 @@ int SceneLoad(Scene* scene, const char* path)
 		return 0;
 	}
 
-	SceneLoadError error = SceneLoadMap(scene, json);
+	SceneLoadError error = SceneLoadTextures(scene, json);
+	if (error != SCENE_LOAD_OK)
+	{
+		DEBUG_ERROR("[Scenes] %s.", SceneLoadErrorDesc(error));
+		free(json);
+		return 0;
+	}
+
+	error = SceneLoadMap(scene, json);
 	if (error != SCENE_LOAD_OK)
 	{
 		DEBUG_ERROR("[Scenes] %s.", SceneLoadErrorDesc(error));
@@ -28,6 +36,14 @@ int SceneLoad(Scene* scene, const char* path)
 	scene->gravity.y = tb_json_float(json, "{'gravity'[1", NULL, 0.0f);
 
 	tb_json_element element;
+	tb_json_read(json, &element, "{'item_atlas'");
+	if (!SceneLoadTexture2D(element.value, &scene->item_atlas))
+		DEBUG_WARN("[Scenes] Could not load item atlas.\n");
+
+	tb_json_read(json, &element, "{'tile_set'");
+	if (!SceneLoadTexture2D(element.value, &scene->tile_set)) 
+		DEBUG_WARN("[Scenes] Could not load item atlas.\n");
+
 	tb_json_read(json, &element, "{'background'");
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
@@ -40,8 +56,8 @@ int SceneLoad(Scene* scene, const char* path)
 			tb_json_element entity;
 			value = tb_json_array_step(value, &entity);
 
-			char name[APPLICATION_STR_LEN];
-			tb_json_string(entity.value, "[0", name, APPLICATION_STR_LEN, NULL);
+			char path[APPLICATION_PATH_LEN];
+			tb_json_string(entity.value, "[0", path, APPLICATION_PATH_LEN, NULL);
 
 			float x = tb_json_float(entity.value, "[1", NULL, 0.0f);
 			float y = tb_json_float(entity.value, "[2", NULL, 0.0f);
@@ -51,7 +67,7 @@ int SceneLoad(Scene* scene, const char* path)
 
 			float parallax = tb_json_float(entity.value, "[5", NULL, 0.0f);
 
-			BackgroundPushLayer(background, ResourcesGetTexture2D(scene->resources, name), x, y, w, h, parallax);
+			BackgroundPushLayer(background, path, x, y, w, h, parallax);
 		}
 	}
 
@@ -65,8 +81,8 @@ int SceneLoad(Scene* scene, const char* path)
 			tb_json_element entity_template;
 			value = tb_json_array_step(value, &entity_template);
 
-			char templ[APPLICATION_STR_LEN];
-			tb_json_string(entity_template.value, "[0", templ, APPLICATION_STR_LEN, NULL);
+			char templ[APPLICATION_PATH_LEN];
+			tb_json_string(entity_template.value, "[0", templ, APPLICATION_PATH_LEN, NULL);
 
 			vec2 pos;
 			pos.x = tb_json_float(entity_template.value, "[1[0", NULL, 0.0f);
@@ -89,12 +105,11 @@ int SceneLoad(Scene* scene, const char* path)
 
 int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant)
 {
-	const char* path = SceneGetTemplatePath(scene, templ);
-	char* json = tb_file_read(path, "rb", NULL);
+	char* json = tb_file_read(templ, "rb", NULL);
 
 	if (!json)
 	{
-		DEBUG_WARN("[Scenes] Couldn't read template (%s)\n", path);
+		DEBUG_WARN("[Scenes] Couldn't read template (%s)\n", templ);
 		return 0;
 	}
 
@@ -106,7 +121,7 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 
 	TransformLoad(json, &scene->ecs, entity, pos);
 	RigidBodyLoad(json, &scene->ecs, entity);
-	SpriteLoad(json, &scene->ecs, entity, scene->resources, z_index, variant);
+	SpriteLoad(json, &scene->ecs, entity, &scene->res, z_index, variant);
 	AnimatorLoad(json, &scene->ecs, entity);
 	MovementLoad(json, &scene->ecs, entity);
 	CameraControllerLoad(json, &scene->ecs, entity, scene);
@@ -133,6 +148,42 @@ static void* SceneStreamTileTypes(void* stream, TileType* type)
 	stream = tb_json_array_step(stream, &element);
 	*type = FrostParseTileType(element.value, element.bytelen);
 	return stream;
+}
+
+int SceneLoadTexture2D(char* json, IgnisTexture2D* texture)
+{
+	char path[APPLICATION_PATH_LEN];
+	tb_json_string(json, "{'path'", path, APPLICATION_PATH_LEN, NULL);
+
+	int rows = tb_json_int(json, "{'atlas'[0", NULL, 1);
+	int cols = tb_json_int(json, "{'atlas'[1", NULL, 1);
+
+	return ignisCreateTexture2D(texture, path, rows, cols, 1, NULL);
+}
+
+SceneLoadError SceneLoadTextures(Scene* scene, char* json)
+{
+	tb_json_element textures;
+	tb_json_read(json, &textures, "{'textures'");
+
+	for (int i = 0; i < textures.elements; i++)
+	{
+		char name[APPLICATION_STR_LEN];
+		tb_json_string(textures.value, "{*", name, APPLICATION_STR_LEN, &i);
+
+		tb_json_element texture;
+		tb_json_read_format(textures.value, &texture, "{'%s'", name);
+
+		char path[APPLICATION_PATH_LEN];
+		tb_json_string(texture.value, "{'path'", path, APPLICATION_PATH_LEN, NULL);
+
+		int rows = tb_json_int(texture.value, "{'atlas'[0", NULL, 1);
+		int cols = tb_json_int(texture.value, "{'atlas'[1", NULL, 1);
+
+		ResourcesAddTexture2D(&scene->res, name, path, rows, cols);
+	}
+
+	return SCENE_LOAD_OK;
 }
 
 SceneLoadError SceneLoadMap(Scene* scene, char* json)
@@ -169,8 +220,6 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 	}
 
 	TileRendererBindMap(&scene->renderer, &scene->map);
-
-	scene->tile_set = ResourcesGetTexture2D(scene->resources, "tiles");
 
 	TileMapSetBorder(&scene->map, TILE_BOTTOM, 1);
 	TileMapSetBorder(&scene->map, TILE_LEFT, 1);

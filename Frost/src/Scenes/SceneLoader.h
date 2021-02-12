@@ -15,6 +15,8 @@ typedef enum
 int SceneLoad(Scene* scene, const char* path);
 int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant);
 
+int SceneLoadTexture2D(char* json, IgnisTexture2D* texture);
+SceneLoadError SceneLoadTextures(Scene* scene, char* json);
 SceneLoadError SceneLoadMap(Scene* scene, char* json);
 
 const char* SceneLoadErrorDesc(SceneLoadError error);

@@ -67,7 +67,8 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 		else if (!inv_hover && InventoryGetCellContent(inv_dragged, dragged.cell) != NULL_ITEM)
 		{
 			vec2 drop_pos = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
-			if (SceneLoadTemplate(scene, "item", drop_pos, 0, inv_dragged->cells[dragged.cell]))
+			ItemID id = inv_dragged->cells[dragged.cell];
+			if (SceneLoadTemplate(scene, "res/templates/item.json", drop_pos, 0, id))
 				InventorySetCellContent(inv_dragged, dragged.cell, NULL_ITEM);
 		}
 
@@ -96,14 +97,15 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 		Primitives2DFillRect(inv->pos.x, inv->pos.y, width, height, bg);
 		Primitives2DRenderRect(inv->pos.x, inv->pos.y, width, height, IGNIS_WHITE);
 
-		for (int cell_index = 0; cell_index < (inv->rows * inv->cols); ++cell_index)
+		for (int cell = 0; cell < (inv->rows * inv->cols); ++cell)
 		{
-			vec2 cell_pos = InventoryGetCellPos(inv, cell_index);
+			vec2 pos = InventoryGetCellPos(inv, cell);
+			float size = inv->cell_size;
 
-			Primitives2DRenderRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+			Primitives2DRenderRect(pos.x, pos.y, size, size, IGNIS_WHITE);
 
-			if (EcsMapIterKey(iter) == hover.entity && cell_index == hover.cell)
-				Primitives2DFillRect(cell_pos.x, cell_pos.y, inv->cell_size, inv->cell_size, IGNIS_WHITE);
+			if (EcsMapIterKey(iter) == hover.entity && cell == hover.cell)
+				Primitives2DFillRect(pos.x, pos.y, size, size, IGNIS_WHITE);
 		}
 	}
 
@@ -132,7 +134,7 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 			vec2 pos = InventoryGetCellPos(inv, cell);
 			float size = inv->cell_size;
 			size_t frame = inv->cells[cell];
-			BatchRenderer2DRenderTextureFrame(scene->item_atlas, pos.x, pos.y, size, size, frame);
+			BatchRenderer2DRenderTextureFrame(&scene->item_atlas, pos.x, pos.y, size, size, frame);
 		}
 	}
 
@@ -145,7 +147,7 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 		float y = mouse_pos.y - (size * 0.5f);
 		size_t frame = dragged_inv->cells[dragged.cell];
 
-		BatchRenderer2DRenderTextureFrame(scene->item_atlas, x, y, size, size, frame);
+		BatchRenderer2DRenderTextureFrame(&scene->item_atlas, x, y, size, size, frame);
 	}
 
 	BatchRenderer2DFlush();

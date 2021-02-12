@@ -20,7 +20,7 @@ int SceneSave(Scene* scene, const char* path)
 	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
 	tb_jwrite_set_float_prec(&jwc, 2);
 
-	/* background */
+	/* background 
 	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
 	tb_jwrite_array(&jwc, "background");
 
@@ -31,7 +31,7 @@ int SceneSave(Scene* scene, const char* path)
 		tb_jwrite_array_array(&jwc);
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, ResourcesGetTexture2DName(scene->resources, bg->texture));
+		tb_jwrite_array_string(&jwc, SceneGetTexture2DName(scene, bg->texture));
 
 		tb_jwrite_array_float(&jwc, bg->startpos);
 		tb_jwrite_array_float(&jwc, bg->pos_y);
@@ -44,6 +44,7 @@ int SceneSave(Scene* scene, const char* path)
 	}
 
 	tb_jwrite_end(&jwc);
+	*/
 
 	/* templates */
 	tb_jwrite_array(&jwc, "templates");
@@ -55,10 +56,10 @@ int SceneSave(Scene* scene, const char* path)
 
 		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
 
-		Template* templ = EcsListNodeComponent(it);
+		const char** templ = EcsListNodeComponent(it);
 
 		/* template */
-		tb_jwrite_array_string(&jwc, templ->templ);
+		tb_jwrite_array_string(&jwc, *templ);
 
 		/* pos */
 		vec2 pos = GetEntityPosition(&scene->ecs, EcsListNodeEntity(it));

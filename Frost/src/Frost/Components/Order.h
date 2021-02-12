@@ -3,13 +3,7 @@
 
 #include "Scenes/Scene.h"
 
-typedef struct
-{
-	char* templ;
-} Template;
-
 void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ);
-void TemplateFree(Template* templ);
 
 typedef int ZIndex;
 

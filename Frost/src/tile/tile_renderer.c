@@ -85,7 +85,7 @@ void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_pr
 	ignisSetUniformMat4l(&renderer->shader, renderer->uniform_location_model, model.v);
 
 	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_rows, texture->rows);
-	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_cols, texture->columns);
+	ignisSetUniform1il(&renderer->shader, renderer->uniform_location_cols, texture->cols);
 
 	ignisBindTexture2D(texture, 0);
 	ignisDrawQuadElementsInstanced(&renderer->quad, GL_TRIANGLES, (GLsizei)renderer->tile_count);
@@ -155,8 +155,13 @@ void TileMapRenderDebug(const TileMap* map)
 			break;
 		}
 		case TILE_PLATFORM:
-			Primitives2DRenderRect(tile->pos.x, tile->pos.y + tile_size - 4.0f, tile_size, 4.0f, IGNIS_CYAN);
+		{
+			float height = 4.0f;
+			float x = tile->pos.x;
+			float y = tile->pos.y + tile_size - height;
+			Primitives2DRenderRect(x, y, tile_size, height, IGNIS_CYAN);
 			break;
+		}
 		default:
 			break;
 		}

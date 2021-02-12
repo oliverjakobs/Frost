@@ -264,7 +264,7 @@ char* tb_json_read_param(char* json, tb_json_element* result, char* query, int* 
     tb_json_element element_q, element_j;
 
     json = _tb_json_find_token(json, &token_j);
-    query = _tb_json_find_token(query, &token_q);
+    query = _tb_json_find_token(query ? query : "", &token_q);
 
     result->data_type = token_j;
     result->bytelen = result->elements = 0;

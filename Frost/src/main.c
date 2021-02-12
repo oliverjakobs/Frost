@@ -1,8 +1,11 @@
 #include "Frost/Frost.h"
 
+#include "Graphics/FontManager.h"
+
 Scene scene;
 SceneEditor scene_editor;
-Resources resources;
+
+FontManager fonts;
 
 Console console;
 
@@ -14,24 +17,24 @@ int OnInit(Application* app)
 	ignisEnableBlend(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	ignisSetClearColor((IgnisColorRGBA){ 0.2f, 0.2f, 0.2f, 1.0f });
 
-	ResourcesInit(&resources, "res/index.json");
+	FontManagerInit(&fonts, "res/fonts.json");
 
 	Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
 	Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
 	BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 	FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
-	FontRendererBindFontColor(ResourcesGetFont(&resources, "gui"), IGNIS_WHITE);
+	FontRendererBindFontColor(FontManagerGetFont(&fonts, "gui"), IGNIS_WHITE);
 
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
 	show_debug_info = 1;
 
-	ConsoleInit(&console, ResourcesGetFont(&resources, "gui"));
+	ConsoleInit(&console, FontManagerGetFont(&fonts, "gui"));
 
 	/* ecs */
-	SceneInit(&scene, ApplicationGetScreenSize(app), &resources, LoadEcs);
+	SceneInit(&scene, ApplicationGetScreenSize(app), LoadEcs);
 
 	SceneLoadScenes(&scene, "res/register.json", "scene");
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
@@ -49,7 +52,7 @@ void OnDestroy(Application* app)
 	BatchRenderer2DDestroy();
 	Renderer2DDestroy();
 
-	ResourcesDestroy(&resources);
+	FontManagerDestroy(&fonts);
 }
 
 void OnEvent(Application* app, Event e)
@@ -81,12 +84,11 @@ void OnEvent(Application* app, Event e)
 
 void OnUpdate(Application* app, float deltatime)
 {
-	ConsoleOnUpdate(&console, deltatime);
-
-	if (!console.focus)
+	if (console.focus)
+		ConsoleOnUpdate(&console, deltatime);
+	else if (scene_editor.active)
 		SceneEditorOnUpdate(&scene_editor, &scene, deltatime);
-
-	if (!(scene_editor.active || console.focus))
+	else
 		SceneOnUpdate(&scene, deltatime);
 }
 

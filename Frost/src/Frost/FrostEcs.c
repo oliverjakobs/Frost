@@ -19,8 +19,8 @@ EcsDataComponentLoader data_comps[] =
 
 EcsOrderComponentLoader order_comps[] =
 {
-	[COMPONENT_TEMPLATE] =	{ sizeof(Template), TemplateFree,	NULL },
-	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),	NULL,			ZIndexCmp }
+	[COMPONENT_TEMPLATE] =	{ sizeof(const char*),	NULL,	NULL },
+	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),		NULL,	ZIndexCmp }
 };
 
 EcsUpdateSystem update_systems[] =

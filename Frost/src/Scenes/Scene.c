@@ -8,12 +8,18 @@
 
 #include "toolbox/tb_file.h"
 
-int SceneInit(Scene* scene, vec2 size, Resources* res, int (*load)(Ecs* ecs))
+int SceneInit(Scene* scene, vec2 size, int (*load)(Ecs* ecs))
 {
+	if (tb_hashmap_alloc(&scene->scenes, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
+		return 0;
+
+	tb_hashmap_set_key_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
+	tb_hashmap_set_value_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
+
+	ResourcesInit(&scene->res);
+
 	CameraCreateOrtho(&scene->camera, size.x * .5f, size.y * .5f, 0.0f, size.x, size.y);
-	scene->resources = res;
 	scene->gravity = vec2_zero();
-	scene->tile_set = NULL;
 
 	TileRendererInit(&scene->renderer);
 
@@ -23,26 +29,16 @@ int SceneInit(Scene* scene, vec2 size, Resources* res, int (*load)(Ecs* ecs))
 
 int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 {
-	if (tb_hashmap_alloc(&scene->scenes, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
-	if (tb_hashmap_alloc(&scene->templates, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK) return 0;
-
-	tb_hashmap_set_key_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	tb_hashmap_set_value_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	tb_hashmap_set_key_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	tb_hashmap_set_value_alloc_funcs(&scene->templates, tb_hashmap_str_alloc, tb_hashmap_str_free);
-
 	char* json = tb_file_read(reg, "rb", NULL);
 
 	if (!json)
 	{
-		tb_hashmap_free(&scene->scenes);
-		tb_hashmap_free(&scene->templates);
 		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", reg);
 		return 0;
 	}
 
 	tb_json_element element;
-	tb_json_read(json, &element, "{'scenes'");
+	tb_json_read(json, &element, NULL);
 	for (int i = 0; i < element.elements; i++)
 	{
 		char name[APPLICATION_STR_LEN];
@@ -60,40 +56,10 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)\n", name, scene_path);
 	}
 
-	tb_json_read(json, &element, "{'item_atlas'");
-	if (element.error == TB_JSON_OK)
-	{
-		char name[APPLICATION_STR_LEN];
-		tb_json_strcpy(name, &element);
-
-		scene->item_atlas = ResourcesGetTexture2D(scene->resources, name);
-
-		if (!scene->item_atlas)
-			DEBUG_WARN("[Scenes] Could not find item atlas: %s\n", name);
-	}
-
-	tb_json_read(json, &element, "{'templates'");
-	for (int i = 0; i < element.elements; i++)
-	{
-		char name[APPLICATION_STR_LEN];
-		tb_json_string(element.value, "{*", name, APPLICATION_STR_LEN, &i);
-
-		tb_json_element template_element;
-		tb_json_read_format(element.value, &template_element, "{'%s'", name);
-
-		char templ_path[APPLICATION_PATH_LEN];
-		strncpy(templ_path, template_element.value, template_element.bytelen);
-
-		templ_path[template_element.bytelen] = '\0';
-
-		if (!tb_hashmap_insert(&scene->templates, name, templ_path))
-			DEBUG_WARN("[Scenes] Failed to add template: %s (%s)\n", name, templ_path);
-	}
-
 	free(json);
 
 	SceneClearActive(scene);
-	SceneChangeActive(scene, start);
+	SceneChangeActive(scene, start, 0);
 
 	return 1;
 }
@@ -107,13 +73,13 @@ void SceneDestroy(Scene* scene)
 
 	EcsDestroy(&scene->ecs);
 
+	ResourcesDestroy(&scene->res);
 	tb_hashmap_free(&scene->scenes);
-	tb_hashmap_free(&scene->templates);
 }
 
-void SceneChangeActive(Scene* scene, const char* name)
+void SceneChangeActive(Scene* scene, const char* name, int reload)
 {
-	if (strcmp(scene->name, name) != 0)
+	if (strcmp(scene->name, name) != 0 || reload)
 	{
 		/* Check if scene is in the register */
 		char* path = tb_hashmap_find(&scene->scenes, name);
@@ -143,7 +109,10 @@ void SceneClearActive(Scene* scene)
 
 	EcsClear(&scene->ecs);
 
-	memset(scene->name, '\0', APPLICATION_STR_LEN);
+	ResourcesClear(&scene->res);
+
+	ignisDeleteTexture2D(&scene->item_atlas);
+	ignisDeleteTexture2D(&scene->tile_set);
 }
 
 void SceneOnEvent(Scene* scene, Event e)
@@ -154,7 +123,7 @@ void SceneOnEvent(Scene* scene, Event e)
 
 void SceneOnUpdate(Scene* scene, float deltatime)
 {
-	BackgroundUpdate(&scene->background, scene->camera.position.x - scene->camera.size.x / 2.0f, deltatime);
+	BackgroundUpdate(&scene->background, scene->camera.position.x - scene->camera.size.x * .5f, deltatime);
 
 	EcsOnUpdate(&scene->ecs, scene, deltatime);
 }
@@ -163,7 +132,7 @@ void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(&scene->camera));
 
-	TileMapRender(&scene->renderer, scene->tile_set, scene->camera.viewProjection);
+	TileMapRender(&scene->renderer, &scene->tile_set, scene->camera.viewProjection);
 
 	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, scene, CameraGetViewProjectionPtr(&scene->camera));
 }
@@ -176,13 +145,6 @@ void SceneOnRenderUI(Scene* scene)
 void SceneOnRenderDebug(Scene* scene)
 {
 	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_DEBUG, scene, CameraGetViewProjectionPtr(&scene->camera));
-}
-
-const char* SceneGetTemplatePath(const Scene* scene, const char* templ)
-{
-	const char* path = tb_hashmap_find(&scene->templates, templ);
-	if (!path) DEBUG_WARN("[Scenes] Couldn't find template for %s\n", templ);
-	return path;
 }
 
 float SceneGetWidth(const Scene* scene) { return scene->map.tile_size * scene->map.cols; }

@@ -1,8 +1,9 @@
 {
     "gravity": [ 0.0, -980.0 ],
     "size": [ 64, 25 ],
+	"item_atlas": { "path": "res/textures/items.png", "atlas": [ 1, 6 ] },
+    "tile_set": { "path": "res/textures/tiles.png", "atlas": [ 3, 4 ] },
     "tile_size": 32.0,
-    "tile_set": "tiles",
     "tile_types": [
         "empty",
         "solid",
@@ -43,17 +44,23 @@
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
         3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
     ],
+    "textures": {
+        "player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
+        "trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
+        "door": { "path": "res/textures/door.png", "atlas": [ 1, 2 ] },
+        "chest": { "path": "res/textures/chest.png" }
+    },
     "background": [
-        [ "bg_layer_0", 0, 288, 1088, 600, 1 ],
-        [ "bg_layer_1", 0, 288, 1088, 600, 0.5 ],
-        [ "bg_layer_2", 0, 288, 1088, 600, 0.3 ],
-        [ "bg_layer_3", 0, 288, 1088, 600, 0 ]
+        [ "res/textures/background/0.png", 0, 288, 1088, 600, 1 ],
+        [ "res/textures/background/1.png", 0, 288, 1088, 600, 0.5 ],
+        [ "res/textures/background/2.png", 0, 288, 1088, 600, 0.3 ],
+        [ "res/textures/background/3.png", 0, 288, 1088, 600, 0 ]
     ],
     "templates": [
-        [ "player", [ 96, 288 ], 1 ],
-        [ "tree", [ 192, 288 ], 2, 1 ],
-        [ "tree", [ 384, 288 ], 0, 2 ],
-        [ "door", [ 1200, 288 ], 0 ],
-        [ "chest", [ 240, 288 ], 0 ]
+        [ "res/templates/player.json", [ 96, 288 ], 1 ],
+        [ "res/templates/tree.json", [ 192, 288 ], 2, 1 ],
+        [ "res/templates/tree.json", [ 384, 288 ], 0, 2 ],
+        [ "res/templates/door.json", [ 1200, 288 ], 0 ],
+        [ "res/templates/chest.json", [ 240, 288 ], 0 ]
     ]
 }

@@ -131,11 +131,11 @@
     <ClInclude Include="src\Frost\Systems\RenderSystem.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
+    <ClInclude Include="src\Graphics\FontManager.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\Graphics\Resources.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -150,6 +150,7 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\memory\arena.h" />
+    <ClInclude Include="src\Scenes\Resources.h" />
     <ClInclude Include="src\Scenes\SceneLoader.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
@@ -210,11 +211,11 @@
     <ClCompile Include="src\Frost\Systems\RenderSystem.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
+    <ClCompile Include="src\Graphics\FontManager.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
-    <ClCompile Include="src\Graphics\Resources.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
@@ -226,6 +227,7 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\memory\arena.c" />
+    <ClCompile Include="src\Scenes\Resources.c" />
     <ClCompile Include="src\Scenes\SceneLoader.c" />
     <ClCompile Include="src\Scenes\SceneSaver.c" />
     <ClCompile Include="src\tile\tile_body.c" />
@@ -249,6 +251,7 @@
   <ItemGroup>
     <None Include="config.json" />
     <None Include="res\animations\player.json" />
+    <None Include="res\fonts.json" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
     <None Include="res\save\inventories.json" />

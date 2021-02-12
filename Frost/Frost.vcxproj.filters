@@ -174,9 +174,6 @@
     <ClInclude Include="src\Graphics\Renderer2D.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\Resources.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Ignis\ComputeShader.h">
       <Filter>src\Ignis</Filter>
     </ClInclude>
@@ -283,6 +280,8 @@
     <ClInclude Include="src\Frost\Components\Item.h" />
     <ClInclude Include="src\Scenes\SceneSaver.h" />
     <ClInclude Include="src\toolbox\tb_file.h" />
+    <ClInclude Include="src\Graphics\FontManager.h" />
+    <ClInclude Include="src\Scenes\Resources.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -364,9 +363,6 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Renderer2D.c">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Graphics\Resources.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Ignis\ComputeShader.c">
@@ -464,6 +460,8 @@
     <ClCompile Include="src\Frost\Components\Item.c" />
     <ClCompile Include="src\Scenes\SceneSaver.c" />
     <ClCompile Include="src\toolbox\tb_file.c" />
+    <ClCompile Include="src\Graphics\FontManager.c" />
+    <ClCompile Include="src\Scenes\Resources.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
@@ -523,6 +521,7 @@
       <Filter>res\templates</Filter>
     </None>
     <None Include="res\save\inventories.json" />
+    <None Include="res\fonts.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

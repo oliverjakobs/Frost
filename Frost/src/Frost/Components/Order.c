@@ -1,19 +1,13 @@
 #include "Order.h"
 
-#include "..\FrostEcs.h"
+#include "../FrostEcs.h"
+
+#include "toolbox/tb_str.h"
 
 void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ)
 {
-	Template t;
-	t.templ = malloc(strlen(templ) + 1);
-	strcpy(t.templ, templ);
-
+	const char* t = tb_strdup(templ);
 	EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &t);
-}
-
-void TemplateFree(Template* templ)
-{
-	free(templ->templ);
 }
 
 ZIndex EntityGetZIndex(Ecs* ecs, EcsEntityID entity)

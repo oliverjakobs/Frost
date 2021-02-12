@@ -10,7 +10,7 @@ extern "C"
 
 typedef struct
 {
-	const IgnisTexture2D* texture;
+	IgnisTexture2D texture;
 
 	float startpos;
 	float pos_x;
@@ -32,7 +32,7 @@ typedef struct
 int BackgroundAlloc(Background* background, size_t max_layers);
 void BackgroundFree(Background* background);
 
-size_t BackgroundPushLayer(Background* background, const IgnisTexture2D* texture, float x, float y, float w, float h, float parallax);
+size_t BackgroundPushLayer(Background* background, const char* path, float x, float y, float w, float h, float parallax);
 
 void BackgroundUpdate(Background* background, float x, float deltatime);
 void BackgroundRender(const Background* background, const float* mat_view_proj);
