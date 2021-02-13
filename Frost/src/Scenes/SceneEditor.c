@@ -2,7 +2,7 @@
 
 #include "Frost/Frost.h"
 
-#include "Application/Debugger.h"
+#include "Application/Logger.h"
 #include "math/grid.h"
 
 void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int padding)

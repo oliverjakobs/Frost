@@ -7,9 +7,11 @@
 #include "Ignis/Ignis.h"
 
 #include "Input.h"
-#include <GLFW/glfw3.h>
 
-#include "defines.h"
+#define APPLICATION_STR_LEN		32
+#define APPLICATION_PATH_LEN	64
+
+#define EVENT_HANDLER_QUEUE_SIZE	64
 
 typedef struct Application Application;
 struct Application
@@ -41,7 +43,7 @@ struct Application
 	void (*on_render_gui)(Application*);
 };
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor);
+int ApplicationLoad(Application* app, const char* title, int width, int height, int gl_major, int gl_minor);
 int ApplicationLoadConfig(Application* app, const char* path);
 void ApplicationDestroy(Application* app);
 

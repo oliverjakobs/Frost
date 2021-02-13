@@ -2,16 +2,14 @@
 
 #include "Frost/FrostParser.h"
 
-#include "toolbox/tb_json.h"
-
-#include "Application/Debugger.h"
+#include "Application/Logger.h"
 
 void RigidBodyLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
-		DEBUG_ERROR("[ECS] RigidBody requires Transform\n");
+		DEBUG_ERROR("[ECS] RigidBody requires Transform");
 		return;
 	}
 

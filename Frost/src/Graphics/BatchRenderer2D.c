@@ -50,7 +50,7 @@ void BatchRenderer2DInit(const char* vert, const char* frag)
 
 	_render_data.uniform_location_view_proj = ignisGetUniformLocation(&_render_data.shader, "u_ViewProjection");
 
-	_render_data.vertices = (float*)malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
+	_render_data.vertices = malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 

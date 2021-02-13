@@ -3,7 +3,7 @@
 
 #include "Frost.h"
 #include "toolbox/tb_json.h"
-#include "Application/Debugger.h"
+#include "Application/Logger.h"
 
 #define FROST_VARIANT_STR "<VARIANT>"
 

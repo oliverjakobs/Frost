@@ -129,12 +129,14 @@ void ConsoleRender(Console* console, float x, float y, float padding, const floa
 
 void ConsoleOut(Console* console, const char* fmt, ...)
 {
+	printf("[OUT] ");
+
 	char row[CONSOLE_OUT_ROW_SIZE];
 
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(row, fmt, ap);
-	va_end(ap);
+	va_list arg;
+	va_start(arg, fmt);
+	vfprintf(stdout, fmt, arg);
+	va_end(arg);
 
-	printf("[OUT] %s\n", row);
+	printf("\n");
 }

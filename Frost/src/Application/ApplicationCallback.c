@@ -1,6 +1,7 @@
 #include "ApplicationCallback.h"
 
 #include "Application.h"
+#include "Logger.h"
 
 void ApplicationEventCallback(Application* app, Event e)
 {
@@ -15,15 +16,15 @@ void ApplicationIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
 	switch (level)
 	{
-	case IGNIS_WARN:		printf("%s\n", desc); break;
-	case IGNIS_ERROR:		printf("%s\n", desc); break;
-	case IGNIS_CRITICAL:	printf("%s\n", desc); break;
+	case IGNIS_WARN:		DEBUG_WARN("%s", desc); break;
+	case IGNIS_ERROR:		DEBUG_ERROR("%s", desc); break;
+	case IGNIS_CRITICAL:	DEBUG_CRITICAL("%s", desc); break;
 	}
 }
 
 void ApplicationGLFWErrorCallback(int error, const char* desc)
 {
-	printf("[GLFW] (%d) %s\n", error, desc);
+	DEBUG_ERROR("[GLFW] (%d) %s", error, desc);
 }
 
 void ApplicationGLFWWindowSizeCallback(GLFWwindow* window, int width, int height)

@@ -4,8 +4,20 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\animations">
+      <UniqueIdentifier>{51518F66-3D1F-836C-26B3-F39212205FD1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="res\fonts">
       <UniqueIdentifier>{E81E0011-5489-B487-9DC7-652D097192DC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\maps">
+      <UniqueIdentifier>{2F3F8F1F-1B0C-EA2A-4425-D8D230511FB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\saves">
+      <UniqueIdentifier>{40D0E311-AC3A-9888-F578-492E612276DD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="res\scenes">
+      <UniqueIdentifier>{BFDB784E-AB93-BA9B-149B-93F70072558C}</UniqueIdentifier>
     </Filter>
     <Filter Include="res\shaders">
       <UniqueIdentifier>{4841F028-B4F6-681E-3DEB-62F5A99F5F22}</UniqueIdentifier>
@@ -37,9 +49,6 @@
     <Filter Include="src\ECS">
       <UniqueIdentifier>{F76D2FA9-634D-AE44-6C65-391BD8C314A6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Event">
-      <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Frost">
       <UniqueIdentifier>{6A2CEFB2-D696-A329-1FD5-54CF8B7E817E}</UniqueIdentifier>
     </Filter>
@@ -67,20 +76,20 @@
     <Filter Include="src\Ignis\stb">
       <UniqueIdentifier>{8E518088-FA11-FCBE-C34C-453C2FCC409B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Inventory">
-      <UniqueIdentifier>{AAB1955C-1672-1193-DFAC-5A104B2C566F}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Scenes">
       <UniqueIdentifier>{BDC7122E-A97F-547B-1287-2DD7FE5DEF6B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\clib">
-      <UniqueIdentifier>{D6512ECF-C21E-89DA-EB37-7782D763BE68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\json">
-      <UniqueIdentifier>{164732CF-0214-8DDA-2B2D-7B821759C268}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\math">
       <UniqueIdentifier>{46A033CF-326D-8EDA-5B86-7C8247B2C368}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\memory">
+      <UniqueIdentifier>{1582E16A-013A-23B8-6A41-FC135618BEA8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\tile">
+      <UniqueIdentifier>{EA9737CF-D664-92DA-FF7D-8082EBA9C768}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\toolbox">
+      <UniqueIdentifier>{434B5FF9-AF00-D8EE-38F5-D1C5A4A9CEF2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,16 +99,16 @@
     <ClInclude Include="src\Application\ApplicationCallback.h">
       <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\Debugger.h">
+    <ClInclude Include="src\Application\Event.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\EventHandler.h">
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Application\Input.h">
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Application\Timer.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\defines.h">
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Camera\Camera.h">
@@ -114,19 +123,43 @@
     <ClInclude Include="src\ECS\Ecs.h">
       <Filter>src\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\ECS\EcsCommon.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\EcsList.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\EcsLoader.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ECS\EcsMap.h">
+      <Filter>src\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Frost\Components\Animator.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Components\CameraController.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\Components\EntityState.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Frost\Components\Interaction.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Inventory.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Item.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Components\Movement.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Components\Order.h">
+      <Filter>src\Frost\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Components\Player.h">
       <Filter>src\Frost\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Components\RigidBody.h">
@@ -141,10 +174,22 @@
     <ClInclude Include="src\Frost\Frost.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\FrostEcs.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\FrostParser.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
       <Filter>src\Frost\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\Systems\EntityStateSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h">
+      <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\Systems\InventorySystem.h">
       <Filter>src\Frost\Systems</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Systems\PhysicsSystem.h">
@@ -160,6 +205,9 @@
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\BatchRenderer2D.h">
+      <Filter>src\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics\FontManager.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\FontRenderer.h">
@@ -213,10 +261,19 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h">
       <Filter>src\Ignis\stb</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scenes\Resources.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scenes\Scene.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\Scenes\SceneEditor.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scenes\SceneLoader.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scenes\SceneSaver.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\math\grid.h">
@@ -234,60 +291,58 @@
     <ClInclude Include="src\math\vec3.h">
       <Filter>src\math</Filter>
     </ClInclude>
+    <ClInclude Include="src\memory\arena.h">
+      <Filter>src\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile\tile_body.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile\tile_collision.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile\tile_map.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\tile\tile_renderer.h">
+      <Filter>src\tile</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_file.h">
+      <Filter>src\toolbox</Filter>
+    </ClInclude>
     <ClInclude Include="src\toolbox\tb_hashmap.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\toolbox\toolbox.h">
-      <Filter>src\clib</Filter>
-    </ClInclude>
-    <ClInclude Include="src\toolbox\tb_jwrite.h">
-      <Filter>src\json</Filter>
+      <Filter>src\toolbox</Filter>
     </ClInclude>
     <ClInclude Include="src\toolbox\tb_json.h">
-      <Filter>src\json</Filter>
+      <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\Systems\InventorySystem.h" />
-    <ClInclude Include="src\Frost\Components\Inventory.h" />
-    <ClInclude Include="src\memory\arena.h" />
-    <ClInclude Include="src\toolbox\tb_stretchy.h" />
-    <ClInclude Include="src\Frost\FrostEcs.h" />
-    <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
-    <ClInclude Include="src\Frost\Components\EntityState.h" />
-    <ClInclude Include="src\Frost\Components\Player.h" />
-    <ClInclude Include="src\tile\tile_renderer.h" />
-    <ClInclude Include="src\ECS\EcsLoader.h" />
-    <ClInclude Include="src\Scenes\SceneLoader.h" />
-    <ClInclude Include="src\toolbox\tb_str.h" />
-    <ClInclude Include="src\tile\tile_collision.h" />
-    <ClInclude Include="src\tile\tile_body.h" />
-    <ClInclude Include="src\tile\tile_map.h" />
-    <ClInclude Include="src\ECS\EcsList.h">
-      <Filter>src\ECS</Filter>
+    <ClInclude Include="src\toolbox\tb_jwrite.h">
+      <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\EcsCommon.h">
-      <Filter>src\ECS</Filter>
+    <ClInclude Include="src\toolbox\tb_str.h">
+      <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\ECS\EcsMap.h">
-      <Filter>src\ECS</Filter>
+    <ClInclude Include="src\toolbox\tb_stretchy.h">
+      <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\FrostParser.h" />
-    <ClInclude Include="src\Application\EventHandler.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="src\toolbox\toolbox.h">
+      <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\Event.h">
-      <Filter>src\Event</Filter>
+    <ClInclude Include="src\Application\Logger.h">
+      <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\Components\Item.h" />
-    <ClInclude Include="src\Scenes\SceneSaver.h" />
-    <ClInclude Include="src\toolbox\tb_file.h" />
-    <ClInclude Include="src\Graphics\FontManager.h" />
-    <ClInclude Include="src\Scenes\Resources.h" />
+    <ClInclude Include="src\Frost\FrostDebugger.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\ApplicationCallback.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Event.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\EventHandler.c">
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Input.c">
@@ -308,13 +363,34 @@
     <ClCompile Include="src\ECS\Ecs.c">
       <Filter>src\ECS</Filter>
     </ClCompile>
+    <ClCompile Include="src\ECS\EcsCommon.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\EcsList.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\EcsLoader.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ECS\EcsMap.c">
+      <Filter>src\ECS</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\Components\Animator.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Components\CameraController.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Components\EntityState.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\Components\Interaction.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Inventory.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Components\Item.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Components\Movement.c">
@@ -323,19 +399,37 @@
     <ClCompile Include="src\Frost\Components\Order.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Components\Player.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\Components\RigidBody.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Components\Sprite.c">
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Components\Transform.c">
+      <Filter>src\Frost\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\Frost.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostEcs.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostParser.c">
       <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
       <Filter>src\Frost\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\Systems\EntityStateSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c">
+      <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\Systems\InventorySystem.c">
       <Filter>src\Frost\Systems</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\PhysicsSystem.c">
@@ -351,6 +445,9 @@
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\BatchRenderer2D.c">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics\FontManager.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\FontRenderer.c">
@@ -395,10 +492,19 @@
     <ClCompile Include="src\Ignis\glad\glad.c">
       <Filter>src\Ignis\glad</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scenes\Resources.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scenes\Scene.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\SceneEditor.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scenes\SceneLoader.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scenes\SceneSaver.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\main.c">
@@ -416,60 +522,67 @@
     <ClCompile Include="src\math\vec3.c">
       <Filter>src\math</Filter>
     </ClCompile>
+    <ClCompile Include="src\memory\arena.c">
+      <Filter>src\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile\tile_body.c">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile\tile_collision.c">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile\tile_map.c">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\tile\tile_renderer.c">
+      <Filter>src\tile</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_file.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
     <ClCompile Include="src\toolbox\tb_hashmap.c">
-      <Filter>src\clib</Filter>
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_json.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_jwrite.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_str.c">
+      <Filter>src\toolbox</Filter>
     </ClCompile>
     <ClCompile Include="src\toolbox\toolbox.c">
-      <Filter>src\clib</Filter>
+      <Filter>src\toolbox</Filter>
     </ClCompile>
-    <ClCompile Include="src\toolbox\tb_json.c" />
-    <ClCompile Include="src\toolbox\tb_jwrite.c">
-      <Filter>src\json</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Systems\InventorySystem.c" />
-    <ClCompile Include="src\Frost\Components\Inventory.c" />
-    <ClCompile Include="src\memory\arena.c" />
-    <ClCompile Include="src\Frost\FrostEcs.c" />
-    <ClCompile Include="src\Frost\Systems\EntityStateSystem.c" />
-    <ClCompile Include="src\Frost\Components\EntityState.c" />
-    <ClCompile Include="src\Frost\Components\Transform.c" />
-    <ClCompile Include="src\Frost\Components\Player.c" />
-    <ClCompile Include="src\tile\tile_renderer.c" />
-    <ClCompile Include="src\ECS\EcsLoader.c" />
-    <ClCompile Include="src\Scenes\SceneLoader.c" />
-    <ClCompile Include="src\toolbox\tb_str.c" />
-    <ClCompile Include="src\tile\tile_collision.c" />
-    <ClCompile Include="src\tile\tile_body.c" />
-    <ClCompile Include="src\tile\tile_map.c" />
-    <ClCompile Include="src\ECS\EcsList.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\EcsCommon.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ECS\EcsMap.c">
-      <Filter>src\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\FrostParser.c" />
-    <ClCompile Include="src\Application\Event.c">
-      <Filter>src\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\EventHandler.c">
-      <Filter>src\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\Components\Item.c" />
-    <ClCompile Include="src\Scenes\SceneSaver.c" />
-    <ClCompile Include="src\toolbox\tb_file.c" />
-    <ClCompile Include="src\Graphics\FontManager.c" />
-    <ClCompile Include="src\Scenes\Resources.c" />
+    <ClCompile Include="src\Frost\FrostDebugger.c" />
+    <ClCompile Include="src\Application\Logger.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
+    <None Include="res\animations\player.json">
+      <Filter>res\animations</Filter>
+    </None>
+    <None Include="res\fonts.json">
+      <Filter>res</Filter>
+    </None>
     <None Include="res\fonts\OpenSans.ttf">
       <Filter>res\fonts</Filter>
     </None>
     <None Include="res\fonts\ProggyTiny.ttf">
       <Filter>res\fonts</Filter>
+    </None>
+    <None Include="res\maps\map.json">
+      <Filter>res\maps</Filter>
+    </None>
+    <None Include="res\register.json">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\saves\save.json">
+      <Filter>res\saves</Filter>
+    </None>
+    <None Include="res\scenes\scene.json">
+      <Filter>res\scenes</Filter>
     </None>
     <None Include="res\shaders\batchrenderer.frag">
       <Filter>res\shaders</Filter>
@@ -504,7 +617,13 @@
     <None Include="res\templates\box.json">
       <Filter>res\templates</Filter>
     </None>
+    <None Include="res\templates\chest.json">
+      <Filter>res\templates</Filter>
+    </None>
     <None Include="res\templates\door.json">
+      <Filter>res\templates</Filter>
+    </None>
+    <None Include="res\templates\item.json">
       <Filter>res\templates</Filter>
     </None>
     <None Include="res\templates\machine.json">
@@ -513,16 +632,10 @@
     <None Include="res\templates\player.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="res\templates\chest.json" />
-    <None Include="src\Frost\load_script.cx" />
-    <None Include="res\animations\player.json" />
-    <None Include="res\templates\item.json" />
     <None Include="res\templates\tree.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="res\fonts.json" />
-    <None Include="res\saves\save.json" />
-    <None Include="res\maps\map.json" />
+    <None Include="config.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">
@@ -546,6 +659,9 @@
     <Image Include="res\textures\box.png">
       <Filter>res\textures</Filter>
     </Image>
+    <Image Include="res\textures\chest.png">
+      <Filter>res\textures</Filter>
+    </Image>
     <Image Include="res\textures\door.png">
       <Filter>res\textures</Filter>
     </Image>
@@ -561,9 +677,11 @@
     <Image Include="res\textures\player.png">
       <Filter>res\textures</Filter>
     </Image>
+    <Image Include="res\textures\tiles.png">
+      <Filter>res\textures</Filter>
+    </Image>
     <Image Include="res\textures\trees.png">
       <Filter>res\textures</Filter>
     </Image>
-    <Image Include="res\textures\chest.png" />
   </ItemGroup>
 </Project>

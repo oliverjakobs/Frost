@@ -35,10 +35,10 @@ project "Frost"
 		--Config
 		"%{prj.name}/config.json",
 		--Resources
+		"%{prj.name}/res/**.json",
 		"%{prj.name}/res/fonts/**.ttf",
 		"%{prj.name}/res/shaders/**.vert",
 		"%{prj.name}/res/shaders/**.frag",
-		"%{prj.name}/res/templates/**.json",
 		"%{prj.name}/res/textures/**.png"
 	}
 

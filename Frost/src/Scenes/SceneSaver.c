@@ -9,7 +9,7 @@ int SceneSave(Scene* scene, const char* path)
 
 	if (!temp_path)
 	{
-		DEBUG_ERROR("[Scenes] Failed to allocate memory for temp path\n");
+		DEBUG_ERROR("[Scenes] Failed to allocate memory for temp path");
 		return 0;
 	}
 
@@ -83,19 +83,19 @@ int SceneSave(Scene* scene, const char* path)
 
 	if (err != TB_JWRITE_OK)
 	{
-		DEBUG_ERROR("[JWRITE] Error: %s at function call %d\n", tb_jwrite_error_string(err), tb_jwrite_error_pos(&jwc));
+		DEBUG_ERROR("[JWRITE] Error: %s at function call %d", tb_jwrite_error_string(err), tb_jwrite_error_pos(&jwc));
 		return 0;
 	}
 
 	if (remove(path) != 0)
 	{
-		DEBUG_ERROR("[Scenes] Failed to remove old save file (%s)\n", path);
+		DEBUG_ERROR("[Scenes] Failed to remove old save file (%s)", path);
 		return 0;
 	}
 
 	if (rename(temp_path, path) != 0)
 	{
-		DEBUG_ERROR("[Scenes] Failed to rename temp save file (%s)\n", temp_path);
+		DEBUG_ERROR("[Scenes] Failed to rename temp save file (%s)", temp_path);
 		return 0;
 	}
 

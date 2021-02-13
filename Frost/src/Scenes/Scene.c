@@ -1,11 +1,11 @@
 #include "Scene.h"
 
-#include "Application/Debugger.h"
-#include "toolbox/tb_json.h"
+#include "Application/Logger.h"
 
 #include "SceneLoader.h"
 #include "SceneSaver.h"
 
+#include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
 
 int SceneInit(Scene* scene, vec2 size, int (*load)(Ecs* ecs))
@@ -33,7 +33,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 
 	if (!json)
 	{
-		DEBUG_ERROR("[Scenes] Failed to read register (%s)\n", reg);
+		DEBUG_ERROR("[Scenes] Failed to read register (%s)", reg);
 		return 0;
 	}
 
@@ -53,7 +53,7 @@ int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
 		scene_path[scene_element.bytelen] = '\0';
 
 		if (!tb_hashmap_insert(&scene->scenes, name, scene_path))
-			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)\n", name, scene_path);
+			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
 	}
 
 	free(json);
@@ -85,7 +85,7 @@ void SceneChangeActive(Scene* scene, const char* name, int reload)
 		char* path = tb_hashmap_find(&scene->scenes, name);
 		if (!path)
 		{
-			DEBUG_ERROR("[Scenes] Couldn't find scene: %s\n", name);
+			DEBUG_ERROR("[Scenes] Couldn't find scene: %s", name);
 			return;
 		}
 
@@ -95,7 +95,7 @@ void SceneChangeActive(Scene* scene, const char* name, int reload)
 		/* Enter new scene */
 		if (!SceneLoad(scene, path))
 		{
-			DEBUG_ERROR("[Scenes] Failed to load new scene: %s\n", name);
+			DEBUG_ERROR("[Scenes] Failed to load new scene: %s", name);
 			return;
 		}
 		strncpy(scene->name, name, APPLICATION_STR_LEN);

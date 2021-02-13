@@ -4,19 +4,18 @@
 
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
+#include "toolbox/tb_str.h"
 
-#include "Debugger.h"
-#include "defines.h"
+#include "Logger.h"
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int glMajor, int glMinor)
+int ApplicationLoad(Application* app, const char* title, int width, int height, int gl_major, int gl_minor)
 {
-	app->title = malloc(strlen(title));
+	app->title = tb_strdup(title);
 	if (!app->title)
 	{
-		DEBUG_ERROR("[GLFW] Failed to allocate memory for title\n");
+		DEBUG_ERROR("[GLFW] Failed to allocate memory for title");
 		return 0;
 	}
-	strcpy(app->title, title);
 
 	app->width = width;
 	app->height = height;
@@ -29,15 +28,15 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	/* GLFW initialization */
 	if (glfwInit() == GLFW_FALSE)
 	{
-		DEBUG_ERROR("[GLFW] Failed to initialize GLFW\n");
+		DEBUG_ERROR("[GLFW] Failed to initialize GLFW");
 		glfwTerminate();
 		return 0;
 	}
 
-	DEBUG_INFO("[GLFW] Initialized GLFW %s\n", glfwGetVersionString());
+	DEBUG_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glMajor);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glMinor);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef _DEBUG
@@ -48,7 +47,7 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	app->window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (app->window == NULL)
 	{
-		DEBUG_ERROR("[GLFW] Failed to create GLFW window\n");
+		DEBUG_ERROR("[GLFW] Failed to create GLFW window");
 		glfwTerminate();
 		return 0;
 	}
@@ -68,26 +67,25 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	glfwSetScrollCallback(app->window, ApplicationGLFWScrollCallback);
 	glfwSetCursorPosCallback(app->window, ApplicationGLFWCursorPosCallback);
 
+	/* ingis initialization */
 	ignisSetErrorCallback(ApplicationIgnisErrorCallback);
 
 	int debug = 0;
-
 #ifdef _DEBUG
 	debug = 1;
-#endif /* !_DEBUG */
+#endif
 
-	/* ingis initialization */
 	if (!ignisInit(debug))
 	{
-		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis\n");
+		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis");
 		glfwTerminate();
 		return 0;
 	}
 
-	DEBUG_INFO("[OpenGL] Version: %s\n", ingisGetGLVersion());
-	DEBUG_INFO("[OpenGL] Vendor: %s\n", ingisGetGLVendor());
-	DEBUG_INFO("[OpenGL] Renderer: %s\n", ingisGetGLRenderer());
-	DEBUG_INFO("[OpenGL] GLSL Version: %s\n", ingisGetGLSLVersion());
+	DEBUG_INFO("[OpenGL] Version: %s", ingisGetGLVersion());
+	DEBUG_INFO("[OpenGL] Vendor: %s", ingisGetGLVendor());
+	DEBUG_INFO("[OpenGL] Renderer: %s", ingisGetGLRenderer());
+	DEBUG_INFO("[OpenGL] GLSL Version: %s", ingisGetGLSLVersion());
 
 	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
@@ -102,7 +100,7 @@ int ApplicationLoadConfig(Application* app, const char* path)
 
 	if (!json)
 	{
-		DEBUG_ERROR("Failed to read config (%s)\n", path);
+		DEBUG_ERROR("Failed to read config (%s)", path);
 		return 0;
 	}
 
@@ -141,15 +139,13 @@ void ApplicationRun(Application* app)
 		TimerStart(&app->timer, glfwGetTime());
 		InputUpdate(app->window);
 
-		if (!app->paused)
-			app->on_update(app, (float)app->timer.deltatime);
+		if (!app->paused) app->on_update(app, (float)app->timer.deltatime);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		app->on_render(app);
 
-		if (app->debug)
-			app->on_render_debug(app);
+		if (app->debug) app->on_render_debug(app);
 
 		glfwPollEvents();
 		EventHandlerPoll(app);
@@ -181,7 +177,7 @@ void ApplicationSetOnDestroyCallback(Application* app, void(*callback)(Applicati
 	app->on_destroy = callback;
 }
 
-void ApplicationSetOnEventCallback(Application* app, void(*callback)(Application*, const Event))
+void ApplicationSetOnEventCallback(Application* app, void(*callback)(Application*, Event))
 {
 	app->on_event = callback;
 }

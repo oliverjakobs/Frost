@@ -1,6 +1,6 @@
 #include "Resources.h"
 
-#include "Application/Debugger.h"
+#include "Application/Logger.h"
 
 int ResourcesInit(Resources* res)
 {
@@ -35,7 +35,7 @@ IgnisTexture2D* ResourcesAddTexture2D(Resources* res, const char* name, const ch
 		if (tb_hashmap_insert(&res->textures, name, texture) == texture)
 			return texture;
 
-		DEBUG_ERROR("[Scenes] Failed to add texture: %s (%s)\n", name, path);
+		DEBUG_ERROR("[Scenes] Failed to add texture: %s (%s)", name, path);
 		ignisDeleteTexture2D(texture);
 	}
 
@@ -46,7 +46,7 @@ IgnisTexture2D* ResourcesGetTexture2D(const Resources* res, const char* name)
 {
 	IgnisTexture2D* tex = tb_hashmap_find(&res->textures, name);
 
-	if (!tex) DEBUG_WARN("[Scenes] Could not find texture: %s\n", name);
+	if (!tex) DEBUG_WARN("[Scenes] Could not find texture: %s", name);
 
 	return tex;
 }

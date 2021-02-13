@@ -1,13 +1,13 @@
 #include "Interaction.h"
 
 #include "Frost/FrostParser.h"
-#include "Application/Debugger.h"
+#include "Application/Logger.h"
 
 void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
 	{
-		DEBUG_ERROR("[ECS] Interactable requires Transform\n");
+		DEBUG_ERROR("[ECS] Interactable requires Transform");
 		return;
 	}
 
