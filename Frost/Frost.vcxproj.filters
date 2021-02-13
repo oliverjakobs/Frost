@@ -520,8 +520,9 @@
     <None Include="res\templates\tree.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="res\save\inventories.json" />
     <None Include="res\fonts.json" />
+    <None Include="res\saves\save.json" />
+    <None Include="res\maps\map.json" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

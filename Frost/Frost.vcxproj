@@ -254,7 +254,8 @@
     <None Include="res\fonts.json" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
-    <None Include="res\save\inventories.json" />
+    <None Include="res\maps\map.json" />
+    <None Include="res\saves\save.json" />
     <None Include="res\shaders\batchrenderer.frag" />
     <None Include="res\shaders\batchrenderer.vert" />
     <None Include="res\shaders\font.frag" />
