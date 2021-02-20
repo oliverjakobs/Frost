@@ -3,8 +3,8 @@
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
 
-#include "Application/Debugger.h"
-#include "Application/defines.h"
+#include "Application/Logger.h"
+#include "Application/Application.h"
 
 int FontManagerInit(FontManager* manager, const char* path)
 {

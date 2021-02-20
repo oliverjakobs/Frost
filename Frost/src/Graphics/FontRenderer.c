@@ -35,7 +35,7 @@ void FontRendererInit(const char* vert, const char* frag)
 
 	ignisLoadElementBuffer(&_render_data.vao, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
 
-	_render_data.vertices = (float*)malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
+	_render_data.vertices = malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 
@@ -138,19 +138,20 @@ typedef struct
 
 static TextField _text_field;
 
-void FontRendererTextFieldBegin(float x, float y, float line_height)
+void FontRendererTextFieldBegin(float x, float y, float spacing)
 {
 	_text_field.x = x;
 	_text_field.y = y;
-	_text_field.line_height = line_height;
+	_text_field.line_height = _render_data.font ? ignisFontGetHeight(_render_data.font) : 0.0f;
+	_text_field.line_height += spacing;
 }
 
 void FontRendererTextFieldLine(const char* fmt, ...)
 {
-	_text_field.y += _text_field.line_height;
-
 	va_list args;
 	va_start(args, fmt);
 	FontRendererRenderTextVA(_text_field.x, _text_field.y, fmt, args);
 	va_end(args);
+
+	_text_field.y += _text_field.line_height;
 }

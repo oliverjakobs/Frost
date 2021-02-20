@@ -15,7 +15,7 @@ typedef enum
 
 void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state);
 
-EntityState EntityGetState(Ecs* ecs, EcsEntityID entity);
-const char* EntityGetStateString(Ecs* ecs, EcsEntityID entity);
+EntityState EntityGetState(const Ecs* ecs, EcsEntityID entity);
+const char* EntityGetStateString(const Ecs* ecs, EcsEntityID entity);
 
 #endif /* !ENTITY_STATE_H */

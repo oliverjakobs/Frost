@@ -131,8 +131,6 @@ void ConsoleOut(Console* console, const char* fmt, ...)
 {
 	printf("[OUT] ");
 
-	char row[CONSOLE_OUT_ROW_SIZE];
-
 	va_list arg;
 	va_start(arg, fmt);
 	vfprintf(stdout, fmt, arg);

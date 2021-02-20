@@ -10,7 +10,7 @@ FontManager fonts;
 
 Console console;
 
-int show_debug_info;
+FrostDebugger debugger;
 
 int OnInit(Application* app)
 {
@@ -30,7 +30,8 @@ int OnInit(Application* app)
 	ApplicationEnableDebugMode(app, 1);
 	ApplicationEnableVsync(app, 0);
 
-	show_debug_info = 1;
+	FrostDebuggerInit(&debugger);
+	ForstDebuggerShow(&debugger, 1);
 
 	ConsoleInit(&console, FontManagerGetFont(&fonts, "gui"));
 
@@ -70,7 +71,7 @@ void OnEvent(Application* app, Event e)
 	case KEY_F6:		ApplicationToggleVsync(app); break;
 	case KEY_F7:		ApplicationToggleDebugMode(app); break;
 	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
-	case KEY_F9:		show_debug_info = !show_debug_info; break;
+	case KEY_F9:		FrostDebuggerToggleDisplay(&debugger); break;
 	}
 
 	if (EventCheckType(&e, EVENT_CONSOLE_EXEC))
@@ -110,10 +111,13 @@ void OnRenderDebug(Application* app)
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 	
 	/* fps */
-	FontRendererRenderTextFormat(8.0f, 20.0f, "FPS: %d", app->timer.fps);
+	FontRendererRenderTextFormat(8.0f, 12.0f, "FPS: %d", app->timer.fps);
 
-	if (show_debug_info)
-		FrostShowDebugInfo(&scene, ApplicationGetScreenSize(app));
+	/* Settings */
+	FrostDebugRenderSettings(&debugger, app->width - 220.0f, 12.0f);
+
+	/* Debug info */
+	FrostDebugRenderInfo(&debugger, &scene, app->width - 470.0f, 12.0f);
 
 	FontRendererFlush();
 

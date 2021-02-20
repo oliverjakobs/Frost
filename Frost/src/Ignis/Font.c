@@ -41,7 +41,33 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 		return 0;
 	}
 
-	stbtt_BakeFontBitmap(buffer, 0, size, bitmap, bitmap_width, bitmap_height, font->first_char, font->num_chars, font->char_data);
+	/* init stbfont */
+	stbtt_fontinfo info;
+	if (!stbtt_InitFont(&info, buffer, 0))
+	{
+		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to load font info: %s", path);
+		ignisDeleteFont(font);
+		ignisFree(bitmap);
+		return 0;
+	}
+
+	/* get height and scale */
+	int ascent, descent, linegap;
+	stbtt_GetFontVMetrics(&info, &ascent, &descent, &linegap);
+	float scale = stbtt_ScaleForMappingEmToPixels(&info, size);
+	font->height = (ascent - descent + linegap) * scale + 0.5;
+
+	/* load glyphs */
+	float s = stbtt_ScaleForMappingEmToPixels(&info, 1) / stbtt_ScaleForPixelHeight(&info, 1);
+	stbtt_BakeFontBitmap(buffer, 0, size * s, bitmap, bitmap_width, bitmap_height, font->first_char, font->num_chars, font->char_data);
+
+	/* adjust glyph yoffsets and xadvance */
+	int scaled_ascent = ascent * scale + 0.5;
+	for (int i = 0; i < font->num_chars; i++)
+	{
+		font->char_data[i].yoff += scaled_ascent;
+		font->char_data[i].xadvance = floorf(font->char_data[i].xadvance);
+	}
 
 	ignisFree(buffer);
 
@@ -106,7 +132,7 @@ int ignisFontLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* ve
 	return 0;
 }
 
-float ignisFontGetTextWidth(IgnisFont* font, const char* text, size_t len)
+float ignisFontGetTextWidth(const IgnisFont* font, const char* text, size_t len)
 {
 	float x = 0.0f;
 	float y = 0.0f;
@@ -121,23 +147,8 @@ float ignisFontGetTextWidth(IgnisFont* font, const char* text, size_t len)
 	return x;
 }
 
-float ignisFontGetTextHeight(IgnisFont* font, const char* text, size_t len, float* y_offset)
+float ignisFontGetHeight(const IgnisFont* font)
 {
-	float x = 0.0f;
-	float y = 0.0f;
+	return font->height;
 
-	float height = 0.0f;
-
-	for (size_t i = 0; i < len; i++)
-	{
-		if (text[i] >= font->first_char && text[i] < font->first_char + font->num_chars)
-		{
-			stbtt_aligned_quad q;
-			stbtt_GetBakedQuad(font->char_data, font->texture.width, font->texture.height, text[i] - font->first_char, &x, &y, &q, 1);
-
-			if (height < y - q.y0) height = y - q.y0;
-			if (y_offset && *y_offset > y - q.y1) *y_offset = y - q.y1;
-		}
-	}
-	return height;
 }

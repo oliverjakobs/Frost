@@ -20,7 +20,7 @@ void FontRendererFlush();
 void FontRendererRenderText(float x, float y, const char* text);
 void FontRendererRenderTextFormat(float x, float y, const char* fmt, ...);
 
-void FontRendererTextFieldBegin(float x, float y, float line_height);
+void FontRendererTextFieldBegin(float x, float y, float spacing);
 void FontRendererTextFieldLine(const char* fmt, ...);
 
 #ifdef __cplusplus

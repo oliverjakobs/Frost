@@ -14,6 +14,7 @@ typedef struct
 {
 	int first_char;
 	int num_chars;
+	float height;
 
 	stbtt_bakedchar* char_data;
 
@@ -28,8 +29,8 @@ void ignisBindFont(IgnisFont* font, GLuint slot);
 
 int ignisFontLoadCharQuad(IgnisFont* font, char c, float* x, float* y, float* vertices, size_t offset);
 
-float ignisFontGetTextWidth(IgnisFont* font, const char* text, size_t len);
-float ignisFontGetTextHeight(IgnisFont* font, const char* text, size_t len, float* y_offset);
+float ignisFontGetTextWidth(const IgnisFont* font, const char* text, size_t len);
+float ignisFontGetHeight(const IgnisFont* font);
 
 #ifdef __cplusplus
 }
