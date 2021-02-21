@@ -61,14 +61,6 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	float s = stbtt_ScaleForMappingEmToPixels(&info, 1) / stbtt_ScaleForPixelHeight(&info, 1);
 	stbtt_BakeFontBitmap(buffer, 0, size * s, bitmap, bitmap_width, bitmap_height, font->first_char, font->num_chars, font->char_data);
 
-	/* adjust glyph yoffsets and xadvance */
-	int scaled_ascent = ascent * scale + 0.5;
-	for (int i = 0; i < font->num_chars; i++)
-	{
-		font->char_data[i].yoff += scaled_ascent;
-		font->char_data[i].xadvance = floorf(font->char_data[i].xadvance);
-	}
-
 	ignisFree(buffer);
 
 	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;

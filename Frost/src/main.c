@@ -108,16 +108,21 @@ void OnRenderDebug(Application* app)
 	if (!scene_editor.active)
 		SceneOnRenderDebug(&scene);
 
+	/* 
+	Primitives2DStart(ApplicationGetScreenProjPtr(app));
+	Primitives2DFlush();
+	*/
+
 	FontRendererStart(ApplicationGetScreenProjPtr(app));
 	
 	/* fps */
-	FontRendererRenderTextFormat(8.0f, 12.0f, "FPS: %d", app->timer.fps);
+	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
 
 	/* Settings */
-	FrostDebugRenderSettings(&debugger, app->width - 220.0f, 12.0f);
+	FrostDebugRenderSettings(&debugger, app->width - 220.0f, 8.0f);
 
 	/* Debug info */
-	FrostDebugRenderInfo(&debugger, &scene, app->width - 470.0f, 12.0f);
+	FrostDebugRenderInfo(&debugger, &scene, app->width - 470.0f, 8.0f);
 
 	FontRendererFlush();
 

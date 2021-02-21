@@ -35,7 +35,7 @@ void FontRendererInit(const char* vert, const char* frag)
 
 	ignisLoadElementBuffer(&_render_data.vao, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
 
-	_render_data.vertices = malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
+	_render_data.vertices = malloc(FONTRENDERER_BUFFER_SIZE * sizeof(float));
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 
@@ -99,6 +99,8 @@ void FontRendererRenderText(float x, float y, const char* text)
 		_ignisErrorCallback(IGNIS_WARN, "[FontRenderer] No font bound");
 		return;
 	}
+
+	y += ignisFontGetHeight(_render_data.font);
 
 	for (size_t i = 0; i < strlen(text); i++)
 	{

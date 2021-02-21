@@ -117,7 +117,7 @@ void ConsoleRender(Console* console, float x, float y, float padding, const floa
 	if (!console->focus || !console->font) return;
 
 	float text_x = x + padding;
-	float text_y = y - padding;
+	float text_y = y - padding - ignisFontGetHeight(console->font);
 
 	char cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON) ? '_' : '\0';
 
