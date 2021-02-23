@@ -9,8 +9,6 @@
  */
 void ApplicationEventCallback(Application* app, Event e);
 
-void ApplicationIgnisErrorCallback(ignisErrorLevel level, const char* desc);
-
 /* 
  * Translates GLFW events to application events
  */

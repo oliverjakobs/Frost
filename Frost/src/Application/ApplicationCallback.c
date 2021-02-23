@@ -12,16 +12,6 @@ void ApplicationEventCallback(Application* app, Event e)
 	}
 }
 
-void ApplicationIgnisErrorCallback(ignisErrorLevel level, const char* desc)
-{
-	switch (level)
-	{
-	case IGNIS_WARN:		DEBUG_WARN("%s", desc); break;
-	case IGNIS_ERROR:		DEBUG_ERROR("%s", desc); break;
-	case IGNIS_CRITICAL:	DEBUG_CRITICAL("%s", desc); break;
-	}
-}
-
 void ApplicationGLFWErrorCallback(int error, const char* desc)
 {
 	DEBUG_ERROR("[GLFW] (%d) %s", error, desc);

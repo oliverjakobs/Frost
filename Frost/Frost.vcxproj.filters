@@ -331,6 +331,7 @@
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\FrostDebugger.h" />
+    <ClInclude Include="src\toolbox\tb_ini.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">

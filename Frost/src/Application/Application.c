@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <stdlib.h>
+
 #include "ApplicationCallback.h"
 
 #include "toolbox/tb_json.h"
@@ -67,27 +69,6 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	glfwSetScrollCallback(app->window, ApplicationGLFWScrollCallback);
 	glfwSetCursorPosCallback(app->window, ApplicationGLFWCursorPosCallback);
 
-	/* ingis initialization */
-	ignisSetErrorCallback(ApplicationIgnisErrorCallback);
-
-	int debug = 0;
-#ifdef _DEBUG
-	debug = 1;
-#endif
-
-	if (!ignisInit(debug))
-	{
-		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis");
-		glfwTerminate();
-		return 0;
-	}
-
-	DEBUG_INFO("[OpenGL] Version: %s", ingisGetGLVersion());
-	DEBUG_INFO("[OpenGL] Vendor: %s", ingisGetGLVendor());
-	DEBUG_INFO("[OpenGL] Renderer: %s", ingisGetGLRenderer());
-	DEBUG_INFO("[OpenGL] GLSL Version: %s", ingisGetGLSLVersion());
-
-	ApplicationSetViewport(app, 0, 0, app->width, app->height);
 	TimerReset(&app->timer);
 
 	app->running = (app->on_init) ? app->on_init(app) : 1;
@@ -200,22 +181,6 @@ void ApplicationSetOnRenderDebugCallback(Application* app, void(*callback)(Appli
 void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Application*))
 {
 	app->on_render_gui = callback;
-}
-
-void ApplicationSetViewport(Application* app, int x, int y, int w, int h)
-{
-	app->screen_projection = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
-	glViewport(x, y, w, h);
-}
-
-const float* ApplicationGetScreenProjPtr(const Application* app)
-{
-	return app->screen_projection.v;
-}
-
-vec2 ApplicationGetScreenSize(const Application* app)
-{
-	return (vec2) { (float)app->width, (float)app->height };
 }
 
 void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }

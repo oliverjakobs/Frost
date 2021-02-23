@@ -2,6 +2,46 @@
 
 #include "Console/Command.h"
 
+#include "Application/Logger.h"
+
+static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
+{
+	switch (level)
+	{
+	case IGNIS_WARN:		DEBUG_WARN("%s", desc); break;
+	case IGNIS_ERROR:		DEBUG_ERROR("%s", desc); break;
+	case IGNIS_CRITICAL:	DEBUG_CRITICAL("%s", desc); break;
+	}
+}
+
+int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
+{
+	/* ingis initialization */
+	ignisSetErrorCallback(FrostIgnisErrorCallback);
+
+	int debug = 0;
+#ifdef _DEBUG
+	debug = 1;
+#endif
+
+	if (!ignisInit(debug))
+	{
+		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis");
+		glfwTerminate();
+		return 0;
+	}
+
+	ignisEnableBlend(blend_s, blend_d);
+	ignisSetClearColor(clear_color);
+
+	DEBUG_INFO("[OpenGL] Version: %s", ingisGetGLVersion());
+	DEBUG_INFO("[OpenGL] Vendor: %s", ingisGetGLVendor());
+	DEBUG_INFO("[OpenGL] Renderer: %s", ingisGetGLRenderer());
+	DEBUG_INFO("[OpenGL] GLSL Version: %s", ingisGetGLSLVersion());
+
+	return 1;
+}
+
 typedef enum
 {
 	CONSOLE_CMD_NONE = -1,

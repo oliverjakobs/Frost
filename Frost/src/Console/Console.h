@@ -6,6 +6,7 @@
 #define CONSOLE_OUT_BUF_SIZE	64
 #define CONSOLE_OUT_ROW_SIZE	64
 
+#include "Ignis/Ignis.h"
 #include "Application/Application.h"
 
 typedef struct

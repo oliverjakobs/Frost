@@ -4,8 +4,6 @@
 #include "Timer.h"
 #include "EventHandler.h"
 
-#include "Ignis/Ignis.h"
-
 #include "Input.h"
 
 #define APPLICATION_STR_LEN		32
@@ -30,8 +28,6 @@ struct Application
 	int vsync;
 
 	Timer timer;
-
-	mat4 screen_projection;
 
 	int (*on_init)(Application*);
 	void (*on_destroy)(Application*);
@@ -58,10 +54,6 @@ void ApplicationSetOnEventCallback(Application* app, void (*callback)(Applicatio
 void ApplicationSetOnUpdateCallback(Application* app, void (*callback)(Application*, float));
 void ApplicationSetOnRenderCallback(Application* app, void (*callback)(Application*));
 void ApplicationSetOnRenderDebugCallback(Application* app, void (*callback)(Application*));
-
-void ApplicationSetViewport(Application* app, int x, int y, int w, int h);
-const float* ApplicationGetScreenProjPtr(const Application* app);
-vec2 ApplicationGetScreenSize(const Application* app);
 
 /* --------------------------| Settings |-------------------------------- */
 void ApplicationEnableDebugMode(Application* app, int b);

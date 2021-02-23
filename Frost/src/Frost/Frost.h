@@ -9,6 +9,8 @@
 
 #include "Console/Console.h"
 
+int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d);
+
 void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* editor, const char* cmd_buffer);
 
 #endif /* !FROST_H */

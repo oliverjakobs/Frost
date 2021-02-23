@@ -166,6 +166,7 @@
     <ClInclude Include="src\tile\tile_renderer.h" />
     <ClInclude Include="src\toolbox\tb_file.h" />
     <ClInclude Include="src\toolbox\tb_hashmap.h" />
+    <ClInclude Include="src\toolbox\tb_ini.h" />
     <ClInclude Include="src\toolbox\tb_json.h" />
     <ClInclude Include="src\toolbox\tb_jwrite.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
