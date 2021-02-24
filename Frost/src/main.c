@@ -149,12 +149,14 @@ int main()
 
 	ApplicationLoadConfig(&app, "config.json");
 
-	const char* ini_file = tb_file_read("config.ini", "rb", NULL);
+	char* ini_file = tb_file_read("config.ini", "rb", NULL);
 
 	tb_ini ini;
 	tb_ini_parse(&ini, ini_file);
 
 	free(ini_file);
+
+	return 0;
 
 	ApplicationRun(&app);
 
