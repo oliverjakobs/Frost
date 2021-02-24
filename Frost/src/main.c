@@ -3,6 +3,9 @@
 
 #include "Graphics/FontManager.h"
 
+#include "toolbox/tb_ini.h"
+#include "toolbox/tb_file.h"
+
 Scene scene;
 SceneEditor scene_editor;
 
@@ -114,8 +117,7 @@ void OnRender(Application* app)
 
 void OnRenderDebug(Application* app)
 {
-	if (!scene_editor.active)
-		SceneOnRenderDebug(&scene);
+	if (!scene_editor.active) SceneOnRenderDebug(&scene);
 
 	FontRendererStart(screen_projection.v);
 	
@@ -146,6 +148,13 @@ int main()
 	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
 
 	ApplicationLoadConfig(&app, "config.json");
+
+	const char* ini_file = tb_file_read("config.ini", "rb", NULL);
+
+	tb_ini ini;
+	tb_ini_parse(&ini, ini_file);
+
+	free(ini_file);
 
 	ApplicationRun(&app);
 

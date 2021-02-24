@@ -558,6 +558,7 @@
     </ClCompile>
     <ClCompile Include="src\Frost\FrostDebugger.c" />
     <ClCompile Include="src\Application\Logger.c" />
+    <ClCompile Include="src\toolbox\tb_ini.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
