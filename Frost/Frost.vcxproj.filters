@@ -562,9 +562,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />
-    <None Include="res\animations\player.json">
-      <Filter>res\animations</Filter>
-    </None>
     <None Include="res\fonts.json">
       <Filter>res</Filter>
     </None>
@@ -638,6 +635,8 @@
       <Filter>res\templates</Filter>
     </None>
     <None Include="config.ini" />
+    <None Include="res\frost.json" />
+    <None Include="res\frost.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">

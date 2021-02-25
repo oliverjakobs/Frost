@@ -12,55 +12,120 @@ char* tb_ini_skip_whitespaces(char* cursor)
     return cursor;
 }
 
-char* tb_ini_parse_key(char* cursor, char* key)
+size_t tb_ini_strncpy(char* dst, char* src, size_t len, size_t max_len)
 {
-    char* sp = cursor;
-    while (*sp != '\0' && *sp != '=' && !isspace(*sp)) sp++;
+    if (len >= max_len) len = max_len - 1;
+    strncpy(dst, src, len);
+    dst[len] = '\0';
 
-    size_t key_len = sp - cursor;
-    if (key_len >= TB_INI_NAME_LEN) key_len = TB_INI_NAME_LEN - 1;
-    strncpy(key, cursor, key_len);
-    key[key_len] = '\0';
-
-    return tb_ini_skip_whitespaces(sp);
+    return len;
 }
 
-char* tb_ini_parse_section(char* cursor, tb_ini_section* section)
+char* tb_ini_atoi(char* p, int32_t* result)
 {
-    char* sp = cursor;
-    while (*sp != '\0' && *sp != ']') sp++;
-
-    section->name_len = sp - cursor;
-    if (section->name_len >= TB_INI_NAME_LEN) section->name_len = TB_INI_NAME_LEN - 1;
-
-    strncpy(section->name, cursor, section->name_len);
-    section->name[section->name_len] = '\0';
-
-    printf("Section: \"%s\"\n", section->name);
-
-    sp++; /* skip ']' after section name */
-    sp = tb_ini_skip_whitespaces(sp);
-
-    while (*sp != '\0' && *sp != '[')
+    uint8_t neg = 0;
+    if (*p == '-')
     {
-        /* read key */
-        char key[TB_INI_NAME_LEN];
-        sp = tb_ini_parse_key(sp, key);
-
-        if (*sp != '=') break;
-
-        printf("Key: \"%s\"\n", key);
-
-        /* read value */
-        sp = strchr(sp, '\n');
-
-        sp = tb_ini_skip_whitespaces(sp);
+        neg = 1;
+        ++p;
     }
 
-    /* skip till next */
-    sp = strchr(sp, '[');
+    int32_t x = 0;
+    while (*p >= '0' && *p <= '9')
+    {
+        x = (x * 10) + (*p - '0');
+        ++p;
+    }
 
-    return sp;
+    *result = neg ? -x : x;
+    return p;
+}
+
+char* tb_ini_parse_key(char* stream, tb_ini_property* property)
+{
+    char* start = stream;
+    while (*stream != '\0' && *stream != '=' && !isspace(*stream)) stream++;
+
+    property->name_len = tb_ini_strncpy(property->name, start, stream - start, TB_INI_NAME_LEN);
+
+    return tb_ini_skip_whitespaces(stream);
+}
+
+char* tb_ini_parse_value(char* stream, tb_ini_property* property)
+{
+    property->type = TB_INI_ERROR;
+
+    stream = tb_ini_skip_whitespaces(stream);
+    switch (*stream)
+    {
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
+        stream = tb_ini_atoi(stream, &property->ival);
+        if (isspace(*stream)) property->type = TB_INI_INT;
+        break;
+    case 't': case 'f':
+    {
+        char* start = stream;
+        while (*stream != '\0' && !isspace(*stream)) stream++;
+
+        if (strncmp(start, "true", stream - start) == 0) property->bval = 1;
+        else if (strncmp(start, "false", stream - start) == 0) property->bval = 0;
+        else break;
+        property->type = TB_INI_BOOL;
+        break;
+    }
+    case '\"':
+    {
+        char* start = ++stream; /* skip starting quote */
+        while (*stream != '\"')
+        {
+            if (*stream == '\0' || *stream == '\n') return stream;
+            stream++;
+        }
+
+        property->str_len = tb_ini_strncpy(property->strval, start, stream - start, TB_INI_VALUE_LEN);
+        property->type = TB_INI_STRING;
+
+        stream++; /* skip closing quote */
+        break;
+    }
+    default:
+        property->type = TB_INI_ERROR;
+        break;
+    }
+
+    return stream;
+}
+
+char* tb_ini_parse_section(char* stream, tb_ini_section* section)
+{
+    char* start = stream;
+    while (*stream != '\0' && *stream != ']') stream++;
+
+    section->name_len = tb_ini_strncpy(section->name, start, stream - start, TB_INI_NAME_LEN);
+    stream = tb_ini_skip_whitespaces(++stream); /* skip ']' and whitespaces after section name */
+
+    printf("Section: <%s>\n", section->name);
+
+    while (*stream != '\0' && *stream != '[')
+    {
+        tb_ini_property property;
+
+        /* read key */
+        stream = tb_ini_parse_key(stream, &property);
+
+        /* check and skip '=' */
+        if (*stream++ != '=') break;
+
+        /* read value */
+        stream = tb_ini_parse_value(stream, &property);
+
+        print_property(&property);
+
+        stream = tb_ini_skip_whitespaces(stream);
+    }
+
+    return stream;
 }
 
 tb_ini_error tb_ini_parse(tb_ini* ini, char* data)
@@ -88,4 +153,27 @@ void tb_ini_destroy(tb_ini* ini)
 {
     free(ini->sections);
     ini->section_count = 0;
+}
+
+void print_property(const tb_ini_property* property)
+{
+    if (property->type == TB_INI_STRING)
+        printf("%s: \'%s\'\n", property->name, property->strval);
+    else if (property->type == TB_INI_INT)
+        printf("%s: %d\n", property->name, property->ival);
+    else if (property->type == TB_INI_BOOL)
+        printf("%s: %s\n", property->name, property->bval ? "true" : "false");
+    else
+        printf("%s: %s\n", property->name, tb_ini_get_type_name(property->type));
+}
+
+const char* tb_ini_get_type_name(tb_ini_value_type type)
+{
+    switch (type)
+    {
+    case TB_INI_STRING: return "string";
+    case TB_INI_INT:    return "int";
+    case TB_INI_BOOL:   return "bool";
+    default:            return "error";
+    }
 }

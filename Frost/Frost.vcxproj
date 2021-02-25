@@ -255,10 +255,11 @@
   <ItemGroup>
     <None Include="config.ini" />
     <None Include="config.json" />
-    <None Include="res\animations\player.json" />
     <None Include="res\fonts.json" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
+    <None Include="res\frost.ini" />
+    <None Include="res\frost.json" />
     <None Include="res\maps\map.json" />
     <None Include="res\register.json" />
     <None Include="res\saves\save.json" />

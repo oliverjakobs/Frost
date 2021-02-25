@@ -31,9 +31,12 @@ typedef struct
     {
         int32_t ival;
         uint8_t bval;
-        char strval[TB_INI_VALUE_LEN];
+        struct
+        {
+            char strval[TB_INI_VALUE_LEN];
+            size_t str_len;
+        };
     };
-
 } tb_ini_property;
 
 typedef struct
@@ -50,5 +53,8 @@ typedef struct
 
 tb_ini_error tb_ini_parse(tb_ini* ini, char* data);
 void tb_ini_destroy(tb_ini* ini);
+
+void print_property(const tb_ini_property* property);
+const char* tb_ini_get_type_name(tb_ini_value_type type);
 
 #endif /* !TB_INI_H */

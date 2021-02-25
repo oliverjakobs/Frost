@@ -147,8 +147,6 @@ int main()
 	ApplicationSetOnRenderCallback(&app, OnRender);
 	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
 
-	ApplicationLoadConfig(&app, "config.json");
-
 	char* ini_file = tb_file_read("config.ini", "rb", NULL);
 
 	tb_ini ini;
@@ -157,6 +155,8 @@ int main()
 	free(ini_file);
 
 	return 0;
+
+	ApplicationLoadConfig(&app, "config.json");
 
 	ApplicationRun(&app);
 
