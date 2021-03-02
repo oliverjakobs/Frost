@@ -21,6 +21,11 @@ size_t tb_ini_strncpy(char* dst, char* src, size_t len, size_t max_len)
     return len;
 }
 
+int tb_ini_push_property(tb_ini_section* section, tb_ini_property* property)
+{
+
+}
+
 char* tb_ini_atoi(char* p, int32_t* result)
 {
     uint8_t neg = 0;
@@ -99,13 +104,13 @@ char* tb_ini_parse_value(char* stream, tb_ini_property* property)
 
 char* tb_ini_parse_section(char* stream, tb_ini_section* section)
 {
+    section->property_count = 0;
+
     char* start = stream;
     while (*stream != '\0' && *stream != ']') stream++;
 
     section->name_len = tb_ini_strncpy(section->name, start, stream - start, TB_INI_NAME_LEN);
     stream = tb_ini_skip_whitespaces(++stream); /* skip ']' and whitespaces after section name */
-
-    printf("Section: <%s>\n", section->name);
 
     while (*stream != '\0' && *stream != '[')
     {
@@ -120,8 +125,7 @@ char* tb_ini_parse_section(char* stream, tb_ini_section* section)
         /* read value */
         stream = tb_ini_parse_value(stream, &property);
 
-        print_property(&property);
-
+        /* skip to next property */
         stream = tb_ini_skip_whitespaces(stream);
     }
 
@@ -157,14 +161,27 @@ void tb_ini_destroy(tb_ini* ini)
 
 void print_property(const tb_ini_property* property)
 {
-    if (property->type == TB_INI_STRING)
-        printf("%s: \'%s\'\n", property->name, property->strval);
-    else if (property->type == TB_INI_INT)
-        printf("%s: %d\n", property->name, property->ival);
-    else if (property->type == TB_INI_BOOL)
-        printf("%s: %s\n", property->name, property->bval ? "true" : "false");
-    else
-        printf("%s: %s\n", property->name, tb_ini_get_type_name(property->type));
+    switch (property->type)
+    {
+    case TB_INI_STRING: printf("%s: \'%s\'\n", property->name, property->strval); break;
+    case TB_INI_INT:    printf("%s: %d\n", property->name, property->ival); break;
+    case TB_INI_BOOL:   printf("%s: %s\n", property->name, property->bval ? "true" : "false"); break;
+    default:            printf("%s: %s\n", property->name, tb_ini_get_type_name(property->type)); break;
+    }
+}
+
+void print_section(const tb_ini_section* section)
+{
+    printf("Section: <%s>\n", section->name);
+
+    for (size_t i = 0; i < section->property_count; ++i)
+        print_property(section->properties + i);
+}
+
+void print_ini(const tb_ini* ini)
+{
+    for (size_t i = 0; i < ini->section_count; ++i)
+        print_property(ini->sections + i);
 }
 
 const char* tb_ini_get_type_name(tb_ini_value_type type)
@@ -176,4 +193,83 @@ const char* tb_ini_get_type_name(tb_ini_value_type type)
     case TB_INI_BOOL:   return "bool";
     default:            return "error";
     }
+}
+
+char* tb_ini_read_element(char* ini, tb_ini_element* element)
+{
+    element->start = ini;
+    element->type = TB_INI_STRING;
+
+    return ini;
+}
+
+char* tb_ini_query_section(char* section, char* query, tb_ini_element* element)
+{
+    size_t query_len = strlen(query);
+    section = tb_ini_skip_whitespaces(section);
+    while (*section != '\0' && *section != '[')
+    {
+        /* compare key */
+        if (strncmp(section, query, query_len) == 0)
+        {
+
+            /* check and skip '=' 
+            if (*section++ != '=') break;
+            */
+
+            /* read element */
+            return tb_ini_read_element(section, element);
+        }
+
+        /* skip to next property */
+        section = strchr(section, '\n');
+        section = tb_ini_skip_whitespaces(section);
+    }
+    return NULL;
+}
+
+char* tb_ini_find_section(char* ini, char* name, size_t name_len)
+{
+    if (name_len == 0) return ini;
+    while (*ini != '\0')
+    {
+        if (*ini != '[') ini++;
+        else if (strncmp(++ini, name, name_len) == 0)
+        {
+            while (*ini != '\0' && *ini != ']') ini++;
+            return tb_ini_skip_whitespaces(++ini);
+        }
+    }
+
+    return NULL;
+}
+
+char* tb_ini_query(char* ini, char* query, tb_ini_element* element)
+{
+    char* s_name = query;
+    char* p_name = strchr(query, '.');
+
+    size_t s_len = p_name++ - s_name;
+
+    char* section = tb_ini_find_section(ini, s_name, s_len);
+
+    /* TODO: query for section only */
+
+    if (!section)
+    {
+        element->type = TB_INI_ERROR;
+        element->error = TB_INI_BAD_SECTION;
+        return NULL;
+    }
+
+    printf("%s\n", section);
+
+    return tb_ini_query_section(section, p_name, element);
+}
+
+
+void tb_ini_print_element(tb_ini_element* element)
+{
+    if (element->type == TB_INI_STRING)
+        printf("%s", element->start);
 }

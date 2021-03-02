@@ -152,6 +152,21 @@ int main()
 	tb_ini ini;
 	tb_ini_parse(&ini, ini_file);
 
+	printf("---\n");
+
+	tb_ini_element element;
+	tb_ini_query(ini_file, "app.width", &element);
+	printf("---\n");
+	tb_ini_print_element(&element);
+	printf("---\n");
+	tb_ini_query(ini_file, "options.debug", &element);
+	printf("---\n");
+	tb_ini_print_element(&element);
+	printf("---\n");
+	tb_ini_query(ini_file, "fonts.gui", &element);
+	printf("---\n");
+	tb_ini_print_element(&element);
+
 	free(ini_file);
 
 	return 0;

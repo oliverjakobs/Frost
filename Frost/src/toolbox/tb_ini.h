@@ -10,12 +10,15 @@
 typedef enum
 {
     TB_INI_OK,
+    TB_INI_BAD_SECTION,
+    TB_INI_BAD_PROPERTY,
     TB_INI_MEM_ERROR
 } tb_ini_error;
 
 typedef enum
 {
     TB_INI_ERROR,
+    TB_INI_SECTION,
     TB_INI_STRING,
     TB_INI_INT,
     TB_INI_BOOL
@@ -43,6 +46,9 @@ typedef struct
 {
     char name[TB_INI_NAME_LEN];
     size_t name_len;
+
+    tb_ini_property* properties;
+    size_t property_count;
 } tb_ini_section;
 
 typedef struct
@@ -55,6 +61,23 @@ tb_ini_error tb_ini_parse(tb_ini* ini, char* data);
 void tb_ini_destroy(tb_ini* ini);
 
 void print_property(const tb_ini_property* property);
+void print_section(const tb_ini_section* section);
+void print_ini(const tb_ini* ini);
+
 const char* tb_ini_get_type_name(tb_ini_value_type type);
+
+/* in place query functions */
+typedef struct
+{
+    char* start;
+    size_t len;
+    tb_ini_value_type type;
+    tb_ini_error error;
+} tb_ini_element;
+
+char* tb_ini_query(char* ini, char* query, tb_ini_element* element);
+char* tb_ini_query_section(char* section, char* query, tb_ini_element* element);
+
+void tb_ini_print_element(tb_ini_element* element);
 
 #endif /* !TB_INI_H */
