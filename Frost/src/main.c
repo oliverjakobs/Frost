@@ -147,31 +147,7 @@ int main()
 	ApplicationSetOnRenderCallback(&app, OnRender);
 	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
 
-	char* ini_file = tb_file_read("config.ini", "rb", NULL);
-
-	tb_ini ini;
-	tb_ini_parse(&ini, ini_file);
-
-	printf("---\n");
-
-	tb_ini_element element;
-	tb_ini_query(ini_file, "app.width", &element);
-	printf("---\n");
-	tb_ini_print_element(&element);
-	printf("---\n");
-	tb_ini_query(ini_file, "options.debug", &element);
-	printf("---\n");
-	tb_ini_print_element(&element);
-	printf("---\n");
-	tb_ini_query(ini_file, "fonts.gui", &element);
-	printf("---\n");
-	tb_ini_print_element(&element);
-
-	free(ini_file);
-
-	return 0;
-
-	ApplicationLoadConfig(&app, "config.json");
+	ApplicationLoadConfig(&app, "config.ini");
 
 	ApplicationRun(&app);
 

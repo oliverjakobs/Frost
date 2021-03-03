@@ -5,6 +5,7 @@
 #include "ApplicationCallback.h"
 
 #include "toolbox/tb_json.h"
+#include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
 #include "toolbox/tb_str.h"
 
@@ -77,29 +78,29 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 
 int ApplicationLoadConfig(Application* app, const char* path)
 {
-	char* json = tb_file_read(path, "rb", NULL);
+	char* config = tb_file_read(path, "rb", NULL);
 
-	if (!json)
+	if (!config)
 	{
 		DEBUG_ERROR("Failed to read config (%s)", path);
 		return 0;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'app'");
+	tb_ini_element section;
+	tb_ini_query(config, "app", &section);
 
 	char title[APPLICATION_STR_LEN];
-	tb_json_string((char*)element.value, "{'title'", title, APPLICATION_STR_LEN, NULL);
+	tb_ini_query_string(section.start, ".title", title, APPLICATION_STR_LEN);
 
-	int width = tb_json_int((char*)element.value, "{'width'", NULL, 0);
-	int height = tb_json_int((char*)element.value, "{'height'", NULL, 0);
+	int w = tb_ini_query_int(section.start, ".width", 0);
+	int h = tb_ini_query_int(section.start, ".height", 0);
 
-	int major = tb_json_int((char*)element.value, "{'opengl'[0", NULL, 0);
-	int minor = tb_json_int((char*)element.value, "{'opengl'[1", NULL, 0);
+	int major = 4;
+	int minor = 4;
 
-	free(json);
+	free(config);
 
-	return ApplicationLoad(app, title, width, height, major, minor);
+	return ApplicationLoad(app, title, w, h, major, minor);
 }
 
 void ApplicationDestroy(Application* app)
