@@ -6,6 +6,8 @@
 #include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
 
+#include "GUI/Gui.h"
+
 Scene scene;
 SceneEditor scene_editor;
 
@@ -15,13 +17,7 @@ Console console;
 
 FrostDebugger debugger;
 
-mat4 screen_projection;
-
-static void set_viewport(int x, int y, int w, int h)
-{
-	screen_projection = mat4_ortho((float)x, (float)w, (float)h, (float)y, -1.0f, 1.0f);
-	glViewport(x, y, w, h);
-}
+GuiManager gui;
 
 int OnInit(Application* app)
 {
@@ -37,9 +33,6 @@ int OnInit(Application* app)
 
 	FontRendererBindFontColor(FontManagerGetFont(&fonts, "gui"), IGNIS_WHITE);
 
-	ApplicationEnableDebugMode(app, 1);
-	ApplicationEnableVsync(app, 0);
-
 	FrostDebuggerInit(&debugger);
 	ForstDebuggerShow(&debugger, 1);
 
@@ -52,7 +45,8 @@ int OnInit(Application* app)
 	SceneEditorInit(&scene_editor, 400.0f, 32.0f, 4);
 	SceneEditorToggleActive(&scene_editor);
 
-	set_viewport(0, 0, app->width, app->height);
+	GuiSetViewport(&gui, (float)app->width, (float)app->height);
+	glViewport(0, 0, app->width, app->height);
 
 	return 1;
 }
@@ -72,7 +66,10 @@ void OnDestroy(Application* app)
 void OnEvent(Application* app, Event e)
 {
 	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
-		set_viewport(0, 0, e.window.width, e.window.height);
+	{
+		GuiSetViewport(&gui, (float)e.window.width, (float)e.window.height);
+		glViewport(0, 0, e.window.width, e.window.height);
+	}
 
 	switch (EventKeyPressed(&e))
 	{
@@ -81,7 +78,7 @@ void OnEvent(Application* app, Event e)
 	case KEY_F2:		ConsoleToggleFocus(&console); break;
 	case KEY_F5:		ApplicationPause(app); break;
 	case KEY_F6:		ApplicationToggleVsync(app); break;
-	case KEY_F7:		ApplicationToggleDebugMode(app); break;
+	case KEY_F7:		ApplicationToggleDebug(app); break;
 	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
 	case KEY_F9:		FrostDebuggerToggleDisplay(&debugger); break;
 	}
@@ -119,7 +116,7 @@ void OnRenderDebug(Application* app)
 {
 	if (!scene_editor.active) SceneOnRenderDebug(&scene);
 
-	FontRendererStart(screen_projection.v);
+	FontRendererStart(GuiGetScreenProjPtr(&gui));
 	
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
@@ -132,8 +129,8 @@ void OnRenderDebug(Application* app)
 
 	FontRendererFlush();
 
-	ConsoleRenderBackground(&console, 0.0f, (float)app->height, (float)app->width, 32.0f, screen_projection.v);
-	ConsoleRender(&console, 0.0f, (float)app->height, 8.0f, screen_projection.v);
+	ConsoleRenderBackground(&console, 0.0f, (float)app->height, (float)app->width, 32.0f, GuiGetScreenProjPtr(&gui));
+	ConsoleRender(&console, 0.0f, (float)app->height, 8.0f, GuiGetScreenProjPtr(&gui));
 }
 
 int main()

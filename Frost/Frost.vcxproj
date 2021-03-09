@@ -136,6 +136,7 @@
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
+    <ClInclude Include="src\GUI\Gui.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
+    <ClCompile Include="src\GUI\Gui.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />

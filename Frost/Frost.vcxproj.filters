@@ -332,6 +332,7 @@
     </ClInclude>
     <ClInclude Include="src\Frost\FrostDebugger.h" />
     <ClInclude Include="src\toolbox\tb_ini.h" />
+    <ClInclude Include="src\GUI\Gui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -559,6 +560,7 @@
     <ClCompile Include="src\Frost\FrostDebugger.c" />
     <ClCompile Include="src\Application\Logger.c" />
     <ClCompile Include="src\toolbox\tb_ini.c" />
+    <ClCompile Include="src\GUI\Gui.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.json" />

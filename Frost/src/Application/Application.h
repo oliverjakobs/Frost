@@ -6,6 +6,7 @@
 
 #include "Input.h"
 
+#define APPLICATION_VER_STR_LEN 8
 #define APPLICATION_STR_LEN		32
 #define APPLICATION_PATH_LEN	64
 
@@ -39,7 +40,7 @@ struct Application
 	void (*on_render_gui)(Application*);
 };
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int gl_major, int gl_minor);
+int ApplicationLoad(Application* app, const char* title, int width, int height, char* gl_version);
 int ApplicationLoadConfig(Application* app, const char* path);
 void ApplicationDestroy(Application* app);
 
@@ -56,10 +57,10 @@ void ApplicationSetOnRenderCallback(Application* app, void (*callback)(Applicati
 void ApplicationSetOnRenderDebugCallback(Application* app, void (*callback)(Application*));
 
 /* --------------------------| Settings |-------------------------------- */
-void ApplicationEnableDebugMode(Application* app, int b);
+void ApplicationEnableDebug(Application* app, int b);
 void ApplicationEnableVsync(Application* app, int b);
 
-void ApplicationToggleDebugMode(Application* app);
+void ApplicationToggleDebug(Application* app);
 void ApplicationToggleVsync(Application* app);
 
 void ApplicationSetWindowTitle(Application* app, const char* title);

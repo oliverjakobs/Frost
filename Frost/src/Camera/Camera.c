@@ -48,6 +48,9 @@ void CameraSetProjectionOrtho(Camera* camera, float w, float h)
 {
 	camera->projection = mat4_ortho(-w / 2.0f, w / 2.0f, -h / 2.0f, h / 2.0f, -1.0f, 1.0f);
 
+	camera->size.x = w;
+	camera->size.y = h;
+
 	CameraUpdateViewOrtho(camera);
 }
 

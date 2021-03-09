@@ -11,7 +11,19 @@
 
 #include "Logger.h"
 
-int ApplicationLoad(Application* app, const char* title, int width, int height, int gl_major, int gl_minor)
+static void ApplicationGetGLVersion(char* version_str, int* major, int* minor)
+{
+	const char* sep = ".";
+	char* maj_str = tb_strsep(&version_str, sep);
+	char* min_str = tb_strsep(&version_str, sep);
+
+	if (!maj_str || !min_str) return;
+
+	*major = atoi(maj_str);
+	*minor = atoi(min_str);
+}
+
+int ApplicationLoad(Application* app, const char* title, int width, int height, char* gl_version)
 {
 	app->title = tb_strdup(title);
 	if (!app->title)
@@ -37,6 +49,9 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	}
 
 	DEBUG_INFO("[GLFW] Initialized GLFW %s", glfwGetVersionString());
+
+	int gl_major, gl_minor;
+	ApplicationGetGLVersion(gl_version, &gl_major, &gl_minor);
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, gl_major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, gl_minor);
@@ -89,18 +104,34 @@ int ApplicationLoadConfig(Application* app, const char* path)
 	tb_ini_element section;
 	tb_ini_query(config, "app", &section);
 
+	if (section.type == TB_INI_ERROR)
+	{
+		DEBUG_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
+		return 0;
+	}
+
 	char title[APPLICATION_STR_LEN];
 	tb_ini_query_string(section.start, ".title", title, APPLICATION_STR_LEN);
 
 	int w = tb_ini_query_int(section.start, ".width", 0);
 	int h = tb_ini_query_int(section.start, ".height", 0);
 
-	int major = 4;
-	int minor = 4;
+	char gl_version[APPLICATION_VER_STR_LEN];
+	tb_ini_query_string(section.start, ".opengl", gl_version, APPLICATION_VER_STR_LEN);
+
+	ApplicationLoad(app, title, w, h, gl_version);
+	
+	/* apply settings */
+	tb_ini_query(config, "options", &section);
+	if (section.type != TB_INI_ERROR)
+	{
+		ApplicationEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
+		ApplicationEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
+	}
 
 	free(config);
 
-	return ApplicationLoad(app, title, w, h, major, minor);
+	return app->running;
 }
 
 void ApplicationDestroy(Application* app)
@@ -184,10 +215,10 @@ void ApplicationSetOnRenderGuiCallback(Application* app, void(*callback)(Applica
 	app->on_render_gui = callback;
 }
 
-void ApplicationEnableDebugMode(Application* app, int b) { app->debug = b; }
+void ApplicationEnableDebug(Application* app, int b) { app->debug = b; }
 void ApplicationEnableVsync(Application* app, int b) { glfwSwapInterval(b); app->vsync = b; }
 
-void ApplicationToggleDebugMode(Application* app) { ApplicationEnableDebugMode(app, !app->debug); }
+void ApplicationToggleDebug(Application* app) { ApplicationEnableDebug(app, !app->debug); }
 void ApplicationToggleVsync(Application* app) { ApplicationEnableVsync(app, !app->vsync); }
 
 void ApplicationSetWindowTitle(Application* app, const char* title) 

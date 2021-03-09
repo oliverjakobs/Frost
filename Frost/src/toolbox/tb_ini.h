@@ -31,9 +31,11 @@ typedef enum
 /* in place query functions */
 typedef struct
 {
+    char* name;
+    size_t name_len;    /* bytelen of name */
     tb_ini_type type;
     char* start;
-    size_t len;
+    size_t len;         /* bytelen of value_str or num of properites in section if type == TB_INI_SECTION */
     tb_ini_error error;
 } tb_ini_element;
 
@@ -47,12 +49,10 @@ size_t tb_ini_query_string(char* ini, char* query, char* dst, size_t dst_len);
 /*  */
 char* tb_ini_atoi(char* p, int32_t* result);
 
-
 void tb_ini_print_element(tb_ini_element* element);
 
 const char* tb_ini_get_type_name(tb_ini_type type);
 const char* tb_ini_get_error_desc(tb_ini_error error);
-
 
 /* WIP parsed structure approach */
 typedef struct

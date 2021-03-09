@@ -36,10 +36,39 @@ int tb_strncasecmp(const char* str1, const char* str2, size_t max_count)
 	return 0;
 }
 
+size_t tb_strlcpy(char* dst, const char* src, size_t size)
+{
+	size_t ret = strlen(src);
+
+	if (size)
+	{
+		size_t len = (ret >= size) ? size - 1 : ret;
+		memcpy(dst, src, len);
+		dst[len] = '\0';
+	}
+	return ret;
+}
+
 char* tb_strdup(const char* src)
 {
     size_t len = strlen(src) + 1;
     char* dst = malloc(len);
 
     return dst ? memcpy(dst, src, len) : NULL;
+}
+
+char* tb_strndup(const char* src, size_t max_len)
+{
+	return NULL;
+}
+
+char* tb_strsep(char** str_ptr, const char* sep)
+{
+	char* begin = *str_ptr;
+	if (!begin) return NULL;
+
+	char* end = begin + strcspn(begin, sep);
+	if (*end) *end++ = '\0';
+	*str_ptr = end;
+	return begin;
 }
