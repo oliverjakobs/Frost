@@ -207,9 +207,6 @@
     <ClInclude Include="src\Graphics\BatchRenderer2D.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Graphics\FontManager.h">
-      <Filter>src\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="src\Graphics\FontRenderer.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
@@ -270,12 +267,6 @@
     <ClInclude Include="src\Scenes\SceneEditor.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scenes\SceneLoader.h">
-      <Filter>src\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scenes\SceneSaver.h">
-      <Filter>src\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="src\math\grid.h">
       <Filter>src\math</Filter>
     </ClInclude>
@@ -333,6 +324,14 @@
     <ClInclude Include="src\Frost\FrostDebugger.h" />
     <ClInclude Include="src\toolbox\tb_ini.h" />
     <ClInclude Include="src\GUI\Gui.h" />
+    <ClInclude Include="src\Frost\SceneSaver.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\SceneLoader.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scenes\MapEditor.h" />
+    <ClInclude Include="src\Scenes\WorldEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -449,9 +448,6 @@
     <ClCompile Include="src\Graphics\BatchRenderer2D.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Graphics\FontManager.c">
-      <Filter>src\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="src\Graphics\FontRenderer.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
@@ -501,12 +497,6 @@
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\SceneEditor.c">
-      <Filter>src\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scenes\SceneLoader.c">
-      <Filter>src\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scenes\SceneSaver.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\main.c">
@@ -561,9 +551,16 @@
     <ClCompile Include="src\Application\Logger.c" />
     <ClCompile Include="src\toolbox\tb_ini.c" />
     <ClCompile Include="src\GUI\Gui.c" />
+    <ClCompile Include="src\Frost\SceneLoader.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\SceneSaver.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scenes\WorldEditor.c" />
+    <ClCompile Include="src\Scenes\MapEditor.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.json" />
     <None Include="res\fonts.json">
       <Filter>res</Filter>
     </None>
@@ -575,9 +572,6 @@
     </None>
     <None Include="res\maps\map.json">
       <Filter>res\maps</Filter>
-    </None>
-    <None Include="res\register.json">
-      <Filter>res</Filter>
     </None>
     <None Include="res\saves\save.json">
       <Filter>res\saves</Filter>
@@ -637,7 +631,6 @@
       <Filter>res\templates</Filter>
     </None>
     <None Include="config.ini" />
-    <None Include="res\frost.json" />
     <None Include="res\frost.ini" />
   </ItemGroup>
   <ItemGroup>

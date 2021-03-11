@@ -1,7 +1,7 @@
 #ifndef SCENE_SAVER_H
 #define SCENE_SAVER_H
 
-#include "Scene.h"
+#include "Scenes/Scene.h"
 #include "toolbox/tb_jwrite.h"
 
 typedef enum

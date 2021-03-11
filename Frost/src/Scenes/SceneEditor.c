@@ -3,16 +3,20 @@
 #include "Frost/Frost.h"
 
 #include "Application/Logger.h"
-#include "math/grid.h"
 
-void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int padding)
+#include "MapEditor.h"
+#include "WorldEditor.h"
+
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, float gridsize, int padding)
 {
+	editor->scene = scene;
+	editor->mode = SCENE_EDIT_NONE;
+
 	editor->cameraspeed = cameraspeed;
 	editor->gridsize = gridsize;
 	editor->padding = gridsize * padding;
 
 	editor->showgrid = 1;
-	editor->active = 0;
 
 	SceneEditorReset(editor);
 }
@@ -24,9 +28,25 @@ void SceneEditorReset(SceneEditor* editor)
 	editor->hover = ECS_NULL_ENTITY;
 }
 
-void SceneEditorToggleActive(SceneEditor* editor)
+void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode)
 {
-	editor->active = !editor->active;
+	editor->mode = mode;
+}
+
+void SceneEditorToggleWorldMode(SceneEditor* editor)
+{
+	if (editor->mode == SCENE_EDIT_NONE)
+		editor->mode = SCENE_EDIT_WORLD;
+	else if (editor->mode == SCENE_EDIT_WORLD)
+		editor->mode = SCENE_EDIT_NONE;
+}
+
+void SceneEditorToggleMapMode(SceneEditor* editor)
+{
+	if (editor->mode == SCENE_EDIT_NONE)
+		editor->mode = SCENE_EDIT_MAP;
+	else if (editor->mode == SCENE_EDIT_MAP)
+		editor->mode = SCENE_EDIT_NONE;
 }
 
 void SceneEditorToggleGrid(SceneEditor* editor)
@@ -34,32 +54,24 @@ void SceneEditorToggleGrid(SceneEditor* editor)
 	editor->showgrid = !editor->showgrid;
 }
 
-void SceneEditorOnEvent(SceneEditor* editor, Scene* scene, Event e)
+int SceneEditorIsActive(const SceneEditor* editor)
 {
-	if (!editor->active) return;
-
-	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
-	{
-		if (editor->hover != ECS_NULL_ENTITY)
-		{
-			vec2 mouse = CameraGetMousePosView(& scene->camera, InputMousePositionVec2());
-			editor->offset = vec2_sub(mouse, GetEntityPosition(&scene->ecs, editor->hover));
-			editor->clicked = 1;
-		}
-	}
-
-	if (EventMouseButtonReleased(&e) == MOUSE_BUTTON_LEFT)
-	{
-		editor->offset = vec2_zero();
-		editor->clicked = 0;
-	}
+	return editor->mode != SCENE_EDIT_NONE;
 }
 
-void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime)
+void SceneEditorOnEvent(SceneEditor* editor, Event e)
 {
-	if (!editor->active) return;
+	if (editor->mode == SCENE_EDIT_WORLD)
+		WorldEditorOnEvent(editor, e);
+	else if (editor->mode == SCENE_EDIT_MAP)
+		MapEditorOnEvent(editor, e);
+}
 
-	vec3 position = scene->camera.position;
+void SceneEditorOnUpdate(SceneEditor* editor, float deltatime)
+{
+	if (editor->mode == SCENE_EDIT_NONE) return;
+
+	vec3 position = editor->scene->camera.position;
 
 	if (InputKeyPressed(KEY_A))
 		position.x -= editor->cameraspeed * deltatime;
@@ -70,50 +82,19 @@ void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime)
 	if (InputKeyPressed(KEY_W))
 		position.y += editor->cameraspeed * deltatime;
 
-	scene->camera.position = position;
-	CameraUpdateViewOrtho(&scene->camera);
+	editor->scene->camera.position = position;
+	CameraUpdateViewOrtho(&editor->scene->camera);
 
-	vec2 mouse = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
-
-	if (editor->clicked)
-		SetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
-	else
-		editor->hover = GetEntityAt(&scene->ecs, mouse);
+	if (editor->mode == SCENE_EDIT_WORLD)
+		WorldEditorOnUpdate(editor, deltatime);
+	else if (editor->mode == SCENE_EDIT_MAP)
+		MapEditorOnUpdate(editor, deltatime);
 }
 
-void SceneEditorOnRender(SceneEditor* editor, Scene* scene)
+void SceneEditorOnRender(const SceneEditor* editor)
 {
-	if (!editor->active) return;
-
-	Primitives2DStart(CameraGetViewProjectionPtr(&scene->camera));
-
-	/* render grid */
-	if (editor->showgrid)
-	{
-		IgnisColorRGBA color = IGNIS_WHITE;
-		ignisBlendColorRGBA(&color, 0.2f);
-
-		float padding = editor->padding;
-		float granularity = editor->gridsize;
-
-		for (float x = -padding; x <= SceneGetWidth(scene) + padding; x += granularity)
-			Primitives2DRenderLine(x, -padding, x, SceneGetHeight(scene) + padding, color);
-
-		for (float y = -padding; y <= SceneGetHeight(scene) + padding; y += granularity)
-			Primitives2DRenderLine(-padding, y, SceneGetWidth(scene) + padding, y, color);
-	}
-
-	if (editor->hover != ECS_NULL_ENTITY)
-	{
-		rect r = GetEntityRect(&scene->ecs, editor->hover);
-
-		vec2 position = GetEntityPosition(&scene->ecs, editor->hover);
-
-		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
-		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
-	}
-
-	TileMapRenderDebug(&scene->map);
-
-	Primitives2DFlush();
+	if (editor->mode == SCENE_EDIT_WORLD)
+		WorldEditorOnRender(editor);
+	else if (editor->mode == SCENE_EDIT_MAP)
+		MapEditorOnRender(editor);
 }

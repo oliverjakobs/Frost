@@ -2,13 +2,9 @@
 
 #include "Application/Logger.h"
 
-#include "SceneLoader.h"
-#include "SceneSaver.h"
+#include "toolbox/tb_str.h"
 
-#include "toolbox/tb_json.h"
-#include "toolbox/tb_file.h"
-
-int SceneInit(Scene* scene, vec2 size, int (*load)(Ecs* ecs))
+int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, int(*load_ecs)(Ecs* ecs))
 {
 	if (tb_hashmap_alloc(&scene->scenes, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
 		return 0;
@@ -23,45 +19,11 @@ int SceneInit(Scene* scene, vec2 size, int (*load)(Ecs* ecs))
 
 	TileRendererInit(&scene->renderer);
 
+	scene->load = load;
+	scene->save = save;
+
 	EcsInit(&scene->ecs);
-	return load ? load(&scene->ecs) : 1;
-}
-
-int SceneLoadScenes(Scene* scene, const char* reg, const char* start)
-{
-	char* json = tb_file_read(reg, "rb", NULL);
-
-	if (!json)
-	{
-		DEBUG_ERROR("[Scenes] Failed to read register (%s)", reg);
-		return 0;
-	}
-
-	tb_json_element element;
-	tb_json_read(json, &element, NULL);
-	for (int i = 0; i < element.elements; i++)
-	{
-		char name[APPLICATION_STR_LEN];
-		tb_json_string(element.value, "{*", name, APPLICATION_STR_LEN, &i);
-
-		tb_json_element scene_element;
-		tb_json_read_format(element.value, &scene_element, "{'%s'", name);
-
-		char scene_path[APPLICATION_PATH_LEN];
-		strncpy(scene_path, scene_element.value, scene_element.bytelen);
-
-		scene_path[scene_element.bytelen] = '\0';
-
-		if (!tb_hashmap_insert(&scene->scenes, name, scene_path))
-			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", name, scene_path);
-	}
-
-	free(json);
-
-	SceneClearActive(scene);
-	SceneChangeActive(scene, start, 0);
-
-	return 1;
+	return load_ecs ? load_ecs(&scene->ecs) : 1;
 }
 
 void SceneDestroy(Scene* scene)
@@ -77,6 +39,11 @@ void SceneDestroy(Scene* scene)
 	tb_hashmap_free(&scene->scenes);
 }
 
+int SceneRegisterScene(Scene* scene, const char* name, char* path)
+{
+	return tb_hashmap_insert(&scene->scenes, name, path) != NULL;
+}
+
 void SceneChangeActive(Scene* scene, const char* name, int reload)
 {
 	if (strcmp(scene->name, name) != 0 || reload)
@@ -89,16 +56,20 @@ void SceneChangeActive(Scene* scene, const char* name, int reload)
 			return;
 		}
 
-		/* Clear old Scene */
-		if (scene->name[0] != '\0') SceneClearActive(scene);
+		/* Clear and save old Scene */
+		if (scene->name[0] != '\0')
+		{
+			if (scene->save && !scene->save(scene, scene->path))
+				DEBUG_ERROR("[Scenes] Failed to save scene: %s", scene->name);
+			SceneClearActive(scene);
+		}
 
 		/* Enter new scene */
-		if (!SceneLoad(scene, path))
-		{
+		if (scene->load && !scene->load(scene, path))
 			DEBUG_ERROR("[Scenes] Failed to load new scene: %s", name);
-			return;
-		}
-		strncpy(scene->name, name, APPLICATION_STR_LEN);
+
+		tb_strlcpy(scene->name, name, APPLICATION_STR_LEN);
+		tb_strlcpy(scene->path, path, APPLICATION_PATH_LEN);
 	}
 }
 

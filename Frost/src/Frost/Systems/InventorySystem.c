@@ -1,7 +1,7 @@
 #include "InventorySystem.h"
 
 #include "Frost/FrostEcs.h"
-#include "Scenes/SceneLoader.h"
+#include "Frost/SceneLoader.h"
 
 typedef struct
 {

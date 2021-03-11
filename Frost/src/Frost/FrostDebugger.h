@@ -3,17 +3,31 @@
 
 #include "Frost.h"
 
+#include "Console/Console.h"
+
 typedef struct
 {
-    int show;
+    int show_info;
+    Console console;
+    
+    Scene* scene;
+    SceneEditor* editor;
 } FrostDebugger;
 
-void FrostDebuggerInit(FrostDebugger* debugger);
+void FrostDebuggerInit(FrostDebugger* debugger, int show_info, IgnisFont* font);
+void FrostDebuggerBindScene(FrostDebugger* debugger, Scene* scene, SceneEditor* editor);
 
-void ForstDebuggerShow(FrostDebugger* debugger, int b);
-void FrostDebuggerToggleDisplay(FrostDebugger* debugger);
+void ForstDebuggerShowInfo(FrostDebugger* debugger, int b);
+void FrostDebuggerToggleInfo(FrostDebugger* debugger);
+
+void FrostDebuggerOnEvent(FrostDebugger* debugger, Event e);
+void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime);
 
 void FrostDebugRenderSettings(const FrostDebugger* debugger, float x, float y);
 void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, float x, float y);
+
+void FrostDebugRenderConsole(const FrostDebugger* debugger, float w, float h, const float* proj);
+
+void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer);
 
 #endif /* !FROST_DEBUGGER_H */

@@ -1,8 +1,10 @@
 #include "Frost.h"
 
-#include "Console/Command.h"
-
 #include "Application/Logger.h"
+
+#include "toolbox/tb_ini.h"
+#include "toolbox/tb_json.h"
+#include "toolbox/tb_file.h"
 
 static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
@@ -42,171 +44,72 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	return 1;
 }
 
-typedef enum
+int FrostLoadScene(Scene* scene, const char* path, float w, float h)
 {
-	CONSOLE_CMD_NONE = -1,
-	CONSOLE_CMD_CHANGE,
-	CONSOLE_CMD_CREATE,
-	CONSOLE_CMD_LIST,
-	CONSOLE_CMD_REMOVE,
-	CONSOLE_CMD_SAVE,
-	CONSOLE_CMD_RELOAD
-} ConsoleCmd;
+	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, LoadEcs);
 
-static ConsoleCmd _CmdGetType(const char* buffer)
-{
-	ConsoleCmd cmd = CONSOLE_CMD_NONE;
-	size_t cmd_length = strlen(buffer);
+	char* config = tb_file_read(path, "rb", NULL);
 
-	switch (buffer[0])
+	tb_ini_element section;
+	char* scenes = tb_ini_query(config, "scenes", &section);
+
+	for (size_t i = 0; i < section.len; ++i)
 	{
-	case 'c':
-		if (cmd_length > 1)
-			switch (buffer[1])
-			{
-			case 'h': cmd = cmd_check_keyword(buffer, "change", CONSOLE_CMD_CHANGE); break;
-			case 'r': cmd = cmd_check_keyword(buffer, "create", CONSOLE_CMD_CREATE); break;
-			}
-		break;
-	case 'l': cmd = cmd_check_keyword(buffer, "list", CONSOLE_CMD_LIST); break;
-	case 'r':
-		if (cmd = cmd_check_keyword(buffer, "remove", CONSOLE_CMD_REMOVE)) break;
-		if (cmd = cmd_check_keyword(buffer, "reload", CONSOLE_CMD_RELOAD)) break;
-		break;
-	case 's': cmd = cmd_check_keyword(buffer, "save", CONSOLE_CMD_SAVE); break;
+		tb_ini_element element;
+		scenes = tb_ini_query_section(scenes, "", &element);
+
+		char scene_name[APPLICATION_STR_LEN];
+		tb_ini_get_name(&element, scene_name, APPLICATION_STR_LEN);
+
+		char scene_path[APPLICATION_PATH_LEN];
+		tb_ini_to_string(&element, scene_path, APPLICATION_STR_LEN);
+
+		if (!SceneRegisterScene(scene, scene_name, scene_path))
+			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", scene_name, scene_path);
 	}
 
-	return cmd;
+	free(config);
+
+	SceneChangeActive(scene, "scene", 0);
+
+	return 1;
 }
 
-void FrostExecuteConsoleCommand(Console* console, Scene* scene, SceneEditor* editor, const char* cmd_buffer)
+int FrostLoadRenderer(const char* path)
 {
-	ConsoleCmd cmd = _CmdGetType(cmd_buffer);
+	char* config = tb_file_read(path, "rb", NULL);
 
-	switch (cmd)
-	{
-	case CONSOLE_CMD_CHANGE:
-	{
-		char* args[1];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 1);
+	char vert[APPLICATION_PATH_LEN];
+	char frag[APPLICATION_PATH_LEN];
 
-		if (!spec) break;
+	tb_ini_element section;
+	/* renderer2D */
+	tb_ini_query(config, "renderer2D", &section);
+	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	Renderer2DInit(vert, frag);
 
-		if (strcmp(spec, "scene") == 0)
-		{
-			SceneChangeActive(scene, args[0], 0);
-			SceneEditorReset(editor);
-			ConsoleOut(console, "Changed Scene to %s", args[0]);
-		}
-		break;
-	}
-	case CONSOLE_CMD_RELOAD:
-	{
-		char* spec = cmd_get_args(cmd_buffer, 6, NULL, 0);
-		if (!spec) break;
+	/* primitives2D */
+	tb_ini_query(config, "primitives2D", &section);
+	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	Primitives2DInit(vert, frag);
 
-		if (strcmp(spec, "scene") == 0)
-		{
-			SceneChangeActive(scene, scene->name, 1);
-			SceneEditorReset(editor);
-			ConsoleOut(console, "Reloaded Scene.");
-		}
-		break;
-	}
-	case CONSOLE_CMD_CREATE:
-	{
-		char* args[2];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 2);
+	/* batchrenderer2D */
+	tb_ini_query(config, "batchrenderer2D", &section);
+	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	BatchRenderer2DInit(vert, frag);
 
-		if (!spec) break;
+	/* fontrenderer */
+	tb_ini_query(config, "fontrenderer", &section);
+	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	FontRendererInit(vert, frag);
 
-		if (strcmp(spec, "entity") == 0)
-		{
-			if (!editor->active)
-			{
-				ConsoleOut(console, "Editmode needs to be active to create an entity.");
-				break;
-			}
+	free(config);
 
-			vec2 pos = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
-
-			if (SceneLoadTemplate(scene, args[0], pos, atoi(args[1]), 0))
-				ConsoleOut(console, "Created entity with template %s", args[0]);
-		}
-		break;
-	}
-	case CONSOLE_CMD_LIST:
-	{
-		char* spec = cmd_get_args(cmd_buffer, 4, NULL, 0);
-
-		if (!spec) break;
-
-		ConsoleOut(console, "%s", cmd_buffer);
-
-		if (strcmp(spec, "scenes") == 0)
-		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->scenes); iter; iter = tb_hashmap_iter_next(&scene->scenes, iter))
-			{
-				const char* name = tb_hashmap_iter_get_key(iter);
-
-				ConsoleOut(console, " - %s %s", name, (strcmp(name, scene->name) == 0) ? "(active)" : "");
-			}
-		}
-		else if (strcmp(spec, "entities") == 0)
-		{
-			EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
-			for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
-			{
-				const char** templ = EcsListNodeComponent(it);
-				ConsoleOut(console, " - %d \t | %s", EcsListNodeEntity(it), *templ);
-			}
-		}
-		/*
-		else if (strcmp(spec, "fonts") == 0)
-		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->resources->fonts); iter; iter = tb_hashmap_iter_next(&scene->resources->fonts, iter))
-			{
-				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
-			}
-		}
-		*/
-		else if (strcmp(spec, "res") == 0)
-		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->res.textures); iter; iter = tb_hashmap_iter_next(&scene->res.textures, iter))
-			{
-				ConsoleOut(console, " - %s", tb_hashmap_iter_get_key(iter));
-			}
-		}
-		break;
-	}
-	case CONSOLE_CMD_REMOVE:
-		ConsoleOut(console, " > remove");
-		break;
-	case CONSOLE_CMD_SAVE:
-	{
-		char* spec = cmd_get_args(cmd_buffer, 4, NULL, 0);
-
-		if (!spec) break;
-
-		if (strcmp(spec, "scene") == 0)
-		{
-			char* path = tb_hashmap_find(&scene->scenes, scene->name);
-			if (!path)
-			{
-				ConsoleOut(console, "Couldn't find path for %s", scene->name);
-				break;
-			}
-
-			SceneSave(scene, path);
-			ConsoleOut(console, "Saved scene (%s) to %s", scene->name, path);
-		}
-		break;
-	}
-	default:
-		ConsoleOut(console, "Unkown command");
-		break;
-	}
-
-	ConsoleToggleFocus(console);
+	return 1;
 }
+
 

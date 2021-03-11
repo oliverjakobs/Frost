@@ -1,7 +1,7 @@
 #ifndef SCENE_LOADER_H
 #define SCENE_LOADER_H
 
-#include "Scene.h"
+#include "Scenes/Scene.h"
 
 typedef enum
 {

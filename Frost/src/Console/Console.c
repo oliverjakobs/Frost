@@ -103,7 +103,7 @@ void ConsoleCharRemoveLast(Console* console)
 		console->cusor_pos = 0;
 }
 
-void ConsoleRenderBackground(Console* console, float x, float y, float w, float h, const float* proj)
+void ConsoleRenderBackground(const Console* console, float x, float y, float w, float h, const float* proj)
 {
 	if (!console->focus) return;
 
@@ -112,7 +112,7 @@ void ConsoleRenderBackground(Console* console, float x, float y, float w, float 
 	Primitives2DFlush();
 }
 
-void ConsoleRender(Console* console, float x, float y, float padding, const float* proj)
+void ConsoleRender(const Console* console, float x, float y, float padding, const float* proj)
 {
 	if (!console->focus || !console->font) return;
 
@@ -127,7 +127,7 @@ void ConsoleRender(Console* console, float x, float y, float padding, const floa
 	FontRendererFlush();
 }
 
-void ConsoleOut(Console* console, const char* fmt, ...)
+void ConsoleOut(const Console* console, const char* fmt, ...)
 {
 	printf("[OUT] ");
 

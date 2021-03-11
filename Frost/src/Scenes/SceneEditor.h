@@ -3,10 +3,19 @@
 
 #include "Scene.h"
 
+typedef enum
+{
+	SCENE_EDIT_NONE,
+	SCENE_EDIT_WORLD,
+	SCENE_EDIT_MAP
+} SceneEditMode;
+
 typedef struct
 {
+	SceneEditMode mode;
+	Scene* scene;
+
 	int showgrid;
-	int active;
 
 	float cameraspeed;
 	float gridsize;
@@ -18,15 +27,19 @@ typedef struct
 	EcsEntityID hover;
 } SceneEditor;
 
-void SceneEditorInit(SceneEditor* editor, float cameraspeed, float gridsize, int padding);
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, float gridsize, int padding);
 
 void SceneEditorReset(SceneEditor* editor);
 
-void SceneEditorToggleActive(SceneEditor* editor);
+void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode);
+void SceneEditorToggleWorldMode(SceneEditor* editor);
+void SceneEditorToggleMapMode(SceneEditor* editor);
 void SceneEditorToggleGrid(SceneEditor* editor);
 
-void SceneEditorOnEvent(SceneEditor* editor, Scene* scene, Event e);
-void SceneEditorOnUpdate(SceneEditor* editor, Scene* scene, float deltatime);
-void SceneEditorOnRender(SceneEditor* editor, Scene* scene);
+int SceneEditorIsActive(const SceneEditor* editor);
+
+void SceneEditorOnEvent(SceneEditor* editor, Event e);
+void SceneEditorOnUpdate(SceneEditor* editor, float deltatime);
+void SceneEditorOnRender(const SceneEditor* editor);
 
 #endif /* !SCENE_EDITOR_H */

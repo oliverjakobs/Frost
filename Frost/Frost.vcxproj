@@ -131,7 +131,6 @@
     <ClInclude Include="src\Frost\Systems\RenderSystem.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
-    <ClInclude Include="src\Graphics\FontManager.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
@@ -150,17 +149,19 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
+    <ClInclude Include="src\Scenes\MapEditor.h" />
     <ClInclude Include="src\Scenes\Resources.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
-    <ClInclude Include="src\Scenes\SceneLoader.h" />
-    <ClInclude Include="src\Scenes\SceneSaver.h" />
+    <ClInclude Include="src\Frost\SceneLoader.h" />
+    <ClInclude Include="src\Frost\SceneSaver.h" />
     <ClInclude Include="src\math\grid.h" />
     <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\memory\arena.h" />
+    <ClInclude Include="src\Scenes\WorldEditor.h" />
     <ClInclude Include="src\tile\tile_body.h" />
     <ClInclude Include="src\tile\tile_collision.h" />
     <ClInclude Include="src\tile\tile_map.h" />
@@ -215,7 +216,6 @@
     <ClCompile Include="src\Frost\Systems\RenderSystem.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
-    <ClCompile Include="src\Graphics\FontManager.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
@@ -231,17 +231,19 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\Scenes\MapEditor.c" />
     <ClCompile Include="src\Scenes\Resources.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
-    <ClCompile Include="src\Scenes\SceneLoader.c" />
-    <ClCompile Include="src\Scenes\SceneSaver.c" />
+    <ClCompile Include="src\Frost\SceneLoader.c" />
+    <ClCompile Include="src\Frost\SceneSaver.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\grid.c" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
     <ClCompile Include="src\memory\arena.c" />
+    <ClCompile Include="src\Scenes\WorldEditor.c" />
     <ClCompile Include="src\tile\tile_body.c" />
     <ClCompile Include="src\tile\tile_collision.c" />
     <ClCompile Include="src\tile\tile_map.c" />
@@ -256,14 +258,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />
-    <None Include="config.json" />
     <None Include="res\fonts.json" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
     <None Include="res\frost.ini" />
-    <None Include="res\frost.json" />
     <None Include="res\maps\map.json" />
-    <None Include="res\register.json" />
     <None Include="res\saves\save.json" />
     <None Include="res\scenes\scene.json" />
     <None Include="res\shaders\batchrenderer.frag" />

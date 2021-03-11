@@ -64,7 +64,7 @@ void tb_ini_make_section(tb_ini_element* element, char* start)
     element->error = TB_INI_OK;
 }
 
-char* tb_ini_read_element(char* ini, tb_ini_element* element)
+char* tb_ini_read_value(char* ini, tb_ini_element* element)
 {
     char* start = ini;
     switch (*ini++)
@@ -100,23 +100,54 @@ char* tb_ini_read_element(char* ini, tb_ini_element* element)
     return ini;
 }
 
+char* tb_ini_read_name(char* ini, tb_ini_element* element)
+{
+    if (!isalpha(*ini))
+    {
+        tb_ini_make_error(element, TB_INI_BAD_NAME, ini);
+        return ini;
+    }
+
+    element->name = ini++;
+    while (*ini != '\0' && isalnum(*ini)) ini++;
+
+    if (*ini == '\0')
+        tb_ini_make_error(element, TB_INI_BAD_NAME, ini);
+    else
+        element->name_len = ini - element->name;
+
+    return ini;
+}
+
+char* tb_ini_read_element(char* ini, tb_ini_element* element)
+{
+    ini = tb_ini_skip_whitespaces(ini);
+
+    ini = tb_ini_read_name(ini, element);
+    if (element->type == TB_INI_ERROR) return ini;
+
+    ini = tb_ini_skip_whitespaces(ini);
+
+    if (*ini++ == '=')
+        return tb_ini_read_value(tb_ini_skip_whitespaces(ini), element);
+
+    tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
+    return ini;
+}
+
 char* tb_ini_query_section(char* section, char* query, tb_ini_element* element)
 {
     size_t query_len = strlen(query);
     section = tb_ini_skip_whitespaces(section);
+
+    if (query_len == 0)
+        return tb_ini_read_element(section, element);
+
     while (*section != '\0' && *section != '[')
     {
         /* compare key */
         if (strncmp(section, query, query_len) == 0)
-        {
-            section = tb_ini_skip_whitespaces(section + query_len);
-
-            if (*section++ != '=')
-                tb_ini_make_error(element, TB_INI_BAD_PROPERTY, section);
-
-            /* read element */
-            return tb_ini_read_element(tb_ini_skip_whitespaces(section), element);
-        }
+            return tb_ini_read_element(section, element);
 
         /* skip to next property */
         section = strchr(section, '\n');
@@ -125,7 +156,7 @@ char* tb_ini_query_section(char* section, char* query, tb_ini_element* element)
     return NULL;
 }
 
-char* tb_ini_find_section(char* ini, char* name, size_t name_len)
+char* tb_ini_find_section(char* ini, char* name, size_t name_len, tb_ini_element* element)
 {
     if (name_len == 0) return ini;
     while (*ini != '\0')
@@ -133,6 +164,8 @@ char* tb_ini_find_section(char* ini, char* name, size_t name_len)
         if (*ini != '[') ini++;
         else if (strncmp(++ini, name, name_len) == 0)
         {
+            element->name = ini;
+            element->name_len = name_len;
             while (*ini != '\0' && *ini != ']') ini++;
             return tb_ini_skip_whitespaces(++ini);
         }
@@ -148,7 +181,7 @@ char* tb_ini_query(char* ini, char* query, tb_ini_element* element)
 
     size_t s_len = p_name ? p_name++ - s_name : strlen(query);
 
-    char* section = tb_ini_find_section(ini, s_name, s_len);
+    char* section = tb_ini_find_section(ini, s_name, s_len, element);
 
     if (!section)
     {
@@ -169,31 +202,53 @@ int32_t tb_ini_query_int(char* ini, char* query, int32_t def)
 {
     tb_ini_element element;
     tb_ini_query(ini, query, &element);
-    if (element.type != TB_INI_INT) return def;
 
-    int32_t result;
-    tb_ini_atoi(element.start, &result);
-    return result;
+    return tb_ini_to_int(&element, def);
 }
 
 uint8_t tb_ini_query_bool(char* ini, char* query, uint8_t def)
 {
     tb_ini_element element;
     tb_ini_query(ini, query, &element);
-    if (element.type != TB_INI_BOOL) return def;
 
-    return *element.start == 't' ? 1 : 0;
+    return tb_ini_to_bool(&element, def);
 }
 
 size_t tb_ini_query_string(char* ini, char* query, char* dst, size_t dst_len)
 {
-    *dst = '\0';
-
     tb_ini_element element;
     tb_ini_query(ini, query, &element);
-    if (element.type != TB_INI_STRING) return 0;
 
-    return tb_ini_strncpy(dst, element.start + 1, element.len - 2, dst_len);
+    return tb_ini_to_string(&element, dst, dst_len);
+}
+
+int32_t tb_ini_to_int(const tb_ini_element* element, int32_t def)
+{
+    if (element->type != TB_INI_INT) return def;
+
+    int32_t result;
+    tb_ini_atoi(element->start, &result);
+    return result;
+}
+
+uint8_t tb_ini_to_bool(const tb_ini_element* element, uint8_t def)
+{
+    if (element->type != TB_INI_BOOL) return def;
+
+    return *element->start == 't' ? 1 : 0;
+}
+
+size_t tb_ini_to_string(const tb_ini_element* element, char* dst, size_t dst_len)
+{
+    *dst = '\0';
+    if (element->type != TB_INI_STRING) return 0;
+
+    return tb_ini_strncpy(dst, element->start + 1, element->len - 2, dst_len);
+}
+
+size_t tb_ini_get_name(const tb_ini_element* element, char* dst, size_t dst_len)
+{
+    return tb_ini_strncpy(dst, element->name, element->name_len, dst_len);
 }
 
 char* tb_ini_atoi(char* p, int32_t* result)
@@ -241,6 +296,7 @@ const char* tb_ini_get_error_desc(tb_ini_error error)
     switch (error)
     {
     case TB_INI_OK:                 return "no error";
+    case TB_INI_BAD_NAME:           return "bad name";
     case TB_INI_BAD_SECTION:        return "bad section";
     case TB_INI_BAD_PROPERTY:       return "bad property";
     case TB_INI_BAD_NUMBER:         return "bad number";
@@ -249,144 +305,4 @@ const char* tb_ini_get_error_desc(tb_ini_error error)
     case TB_INI_MEM_ERROR:          return "memory error";
     default:                        return "unkown error";
     }
-}
-
-
-/* WIP parsed structure approach */
-char* tb_ini_parse_key(char* stream, tb_ini_property* property)
-{
-    char* start = stream;
-    while (*stream != '\0' && *stream != '=' && !isspace(*stream)) stream++;
-
-    property->name_len = tb_ini_strncpy(property->name, start, stream - start, TB_INI_NAME_LEN);
-
-    return tb_ini_skip_whitespaces(stream);
-}
-
-char* tb_ini_parse_value(char* stream, tb_ini_property* property)
-{
-    property->type = TB_INI_ERROR;
-
-    stream = tb_ini_skip_whitespaces(stream);
-    switch (*stream)
-    {
-    case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '8': case '9':
-        stream = tb_ini_atoi(stream, &property->ival);
-        if (isspace(*stream)) property->type = TB_INI_INT;
-        break;
-    case 't': case 'f':
-    {
-        char* start = stream;
-        while (*stream != '\0' && !isspace(*stream)) stream++;
-
-        if (strncmp(start, "true", stream - start) == 0) property->bval = 1;
-        else if (strncmp(start, "false", stream - start) == 0) property->bval = 0;
-        else break;
-        property->type = TB_INI_BOOL;
-        break;
-    }
-    case '\"':
-    {
-        char* start = ++stream; /* skip starting quote */
-        while (*stream != '\"')
-        {
-            if (*stream == '\0' || *stream == '\n') return stream;
-            stream++;
-        }
-
-        property->str_len = tb_ini_strncpy(property->strval, start, stream - start, TB_INI_VALUE_LEN);
-        property->type = TB_INI_STRING;
-
-        stream++; /* skip closing quote */
-        break;
-    }
-    default:
-        property->type = TB_INI_ERROR;
-        break;
-    }
-
-    return stream;
-}
-
-char* tb_ini_parse_section(char* stream, tb_ini_section* section)
-{
-    section->property_count = 0;
-
-    char* start = stream;
-    while (*stream != '\0' && *stream != ']') stream++;
-
-    section->name_len = tb_ini_strncpy(section->name, start, stream - start, TB_INI_NAME_LEN);
-    stream = tb_ini_skip_whitespaces(++stream); /* skip ']' and whitespaces after section name */
-
-    while (*stream != '\0' && *stream != '[')
-    {
-        tb_ini_property property;
-
-        /* read key */
-        stream = tb_ini_parse_key(stream, &property);
-
-        /* check and skip '=' */
-        if (*stream++ != '=') break;
-
-        /* read value */
-        stream = tb_ini_parse_value(stream, &property);
-
-        /* skip to next property */
-        stream = tb_ini_skip_whitespaces(stream);
-    }
-
-    return stream;
-}
-
-tb_ini_error tb_ini_parse(tb_ini* ini, char* data)
-{
-    ini->section_count = 3;
-    ini->sections = malloc(ini->section_count * sizeof(tb_ini_section));
-
-    if (!ini->sections) return TB_INI_MEM_ERROR;
-
-    char* cursor = tb_ini_skip_whitespaces(data);
-
-    for (size_t i = 0; i < 3; ++i)
-    {
-        if (*cursor++ == '[')
-        {
-            cursor = tb_ini_parse_section(cursor, ini->sections + i);
-        }
-
-    }
-
-    return TB_INI_OK;
-}
-
-void tb_ini_destroy(tb_ini* ini)
-{
-    free(ini->sections);
-    ini->section_count = 0;
-}
-
-void print_property(const tb_ini_property* property)
-{
-    switch (property->type)
-    {
-    case TB_INI_STRING: printf("%s: \'%s\'\n", property->name, property->strval); break;
-    case TB_INI_INT:    printf("%s: %d\n", property->name, property->ival); break;
-    case TB_INI_BOOL:   printf("%s: %s\n", property->name, property->bval ? "true" : "false"); break;
-    default:            printf("%s: %s\n", property->name, tb_ini_get_type_name(property->type)); break;
-    }
-}
-
-void print_section(const tb_ini_section* section)
-{
-    printf("Section: <%s>\n", section->name);
-
-    for (size_t i = 0; i < section->property_count; ++i)
-        print_property(section->properties + i);
-}
-
-void print_ini(const tb_ini* ini)
-{
-    for (size_t i = 0; i < ini->section_count; ++i)
-        print_section(ini->sections + i);
 }
