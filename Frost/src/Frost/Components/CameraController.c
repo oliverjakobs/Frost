@@ -3,6 +3,7 @@
 #include "Frost/Frost.h"
 
 #include "toolbox/tb_json.h"
+#include "toolbox/toolbox.h"
 
 void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene)
 {
@@ -24,8 +25,7 @@ void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, flo
 {
 	if (!controller) return;
 
-	float center_x = controller->camera->position.x;
-	float center_y = controller->camera->position.y;
+	vec2 center = CameraGetCenter(controller->camera);
 
 	float constraint_x = controller->camera->size.x * constraint;
 	float constraint_y = controller->camera->size.y * constraint;
@@ -33,29 +33,12 @@ void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, flo
 	float smooth_w = constraint_x * controller->smooth;
 	float smooth_h = constraint_y * controller->smooth;
 
-	if (pos.x > controller->camera->position.x + smooth_w)
-		center_x = pos.x - smooth_w;
-	if (pos.x < controller->camera->position.x - smooth_w)
-		center_x = pos.x + smooth_w;
-
-	if (pos.y > controller->camera->position.y + smooth_h)
-		center_y = pos.y - smooth_h;
-	if (pos.y < controller->camera->position.y - smooth_h)
-		center_y = pos.y + smooth_h;
+	center.x = tb_clampf(center.x, pos.x - smooth_w, pos.x + smooth_w);
+	center.y = tb_clampf(center.y, pos.y - smooth_h, pos.y + smooth_h);
 
 	// constraint
-	if (center_x < constraint_x)
-		center_x = constraint_x;
-	if (center_x > controller->scene_w - constraint_x)
-		center_x = controller->scene_w - constraint_x;
+	center.x = tb_clampf(center.x, constraint_x, controller->scene_w - constraint_x);
+	center.y = tb_clampf(center.y, constraint_y, controller->scene_h - constraint_y);
 
-	if (center_y < constraint_y)
-		center_y = constraint_y;
-	if (center_y > controller->scene_h - constraint_y)
-		center_y = controller->scene_h - constraint_y;
-
-	controller->camera->position.x = center_x;
-	controller->camera->position.y = center_y;
-
-	CameraUpdateViewOrtho(controller->camera);
+	CameraSetCenter(controller->camera, center);
 }

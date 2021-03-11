@@ -25,9 +25,10 @@ void WorldEditorOnEvent(SceneEditor* editor, Event e)
 void WorldEditorOnUpdate(SceneEditor* editor, float deltatime)
 {
 	vec2 mouse = CameraGetMousePosView(&editor->scene->camera, InputMousePositionVec2());
+	float gridsize = editor->scene->map.tile_size;
 
 	if (editor->clicked)
-		SetEntityPosition(&editor->scene->ecs, editor->hover, grid_clip_vec2(editor->gridsize, vec2_sub(mouse, editor->offset)));
+		SetEntityPosition(&editor->scene->ecs, editor->hover, grid_clip_vec2(gridsize, vec2_sub(mouse, editor->offset)));
 	else
 		editor->hover = GetEntityAt(&editor->scene->ecs, mouse);
 }
@@ -36,21 +37,7 @@ void WorldEditorOnRender(const SceneEditor* editor)
 {
 	Primitives2DStart(CameraGetViewProjectionPtr(&editor->scene->camera));
 
-	/* render grid */
-	if (editor->showgrid)
-	{
-		IgnisColorRGBA color = IGNIS_WHITE;
-		ignisBlendColorRGBA(&color, 0.2f);
-
-		float padding = editor->padding;
-		float granularity = editor->gridsize;
-
-		for (float x = -padding; x <= SceneGetWidth(editor->scene) + padding; x += granularity)
-			Primitives2DRenderLine(x, -padding, x, SceneGetHeight(editor->scene) + padding, color);
-
-		for (float y = -padding; y <= SceneGetHeight(editor->scene) + padding; y += granularity)
-			Primitives2DRenderLine(-padding, y, SceneGetWidth(editor->scene) + padding, y, color);
-	}
+	SceneEditorRenderGrid(editor);
 
 	if (editor->hover != ECS_NULL_ENTITY)
 	{

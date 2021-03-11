@@ -14,7 +14,7 @@ int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, int(*
 
 	ResourcesInit(&scene->res);
 
-	CameraCreateOrtho(&scene->camera, size.x * .5f, size.y * .5f, 0.0f, size.x, size.y);
+	CameraCreateOrtho(&scene->camera, 0.0f, 0.0f, 0.0f, size.x, size.y);
 	scene->gravity = vec2_zero();
 
 	TileRendererInit(&scene->renderer);

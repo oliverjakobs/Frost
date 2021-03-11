@@ -7,14 +7,13 @@
 #include "MapEditor.h"
 #include "WorldEditor.h"
 
-void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, float gridsize, int padding)
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding)
 {
 	editor->scene = scene;
 	editor->mode = SCENE_EDIT_NONE;
 
 	editor->cameraspeed = cameraspeed;
-	editor->gridsize = gridsize;
-	editor->padding = gridsize * padding;
+	editor->padding = editor->scene->map.tile_size * padding;
 
 	editor->showgrid = 1;
 
@@ -26,6 +25,8 @@ void SceneEditorReset(SceneEditor* editor)
 	editor->clicked = 0;
 	editor->offset = vec2_zero();
 	editor->hover = ECS_NULL_ENTITY;
+
+	editor->tile_hover = NULL;
 }
 
 void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode)
@@ -57,6 +58,23 @@ void SceneEditorToggleGrid(SceneEditor* editor)
 int SceneEditorIsActive(const SceneEditor* editor)
 {
 	return editor->mode != SCENE_EDIT_NONE;
+}
+
+void SceneEditorRenderGrid(const SceneEditor* editor)
+{
+	if (!editor->showgrid) return;
+
+	IgnisColorRGBA color = IGNIS_WHITE;
+	ignisBlendColorRGBA(&color, 0.2f);
+
+	float padding = editor->padding;
+	float granularity = editor->scene->map.tile_size;
+
+	for (float x = -padding; x <= SceneGetWidth(editor->scene) + padding; x += granularity)
+		Primitives2DRenderLine(x, -padding, x, SceneGetHeight(editor->scene) + padding, color);
+
+	for (float y = -padding; y <= SceneGetHeight(editor->scene) + padding; y += granularity)
+		Primitives2DRenderLine(-padding, y, SceneGetWidth(editor->scene) + padding, y, color);
 }
 
 void SceneEditorOnEvent(SceneEditor* editor, Event e)

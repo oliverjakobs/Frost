@@ -18,16 +18,19 @@ typedef struct
 	int showgrid;
 
 	float cameraspeed;
-	float gridsize;
 	float padding;
 
 	int clicked;
 
+	/* world editor */
 	vec2 offset;
 	EcsEntityID hover;
+
+	/* map editor */
+	Tile* tile_hover;
 } SceneEditor;
 
-void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, float gridsize, int padding);
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding);
 
 void SceneEditorReset(SceneEditor* editor);
 
@@ -37,6 +40,8 @@ void SceneEditorToggleMapMode(SceneEditor* editor);
 void SceneEditorToggleGrid(SceneEditor* editor);
 
 int SceneEditorIsActive(const SceneEditor* editor);
+
+void SceneEditorRenderGrid(const SceneEditor* editor);
 
 void SceneEditorOnEvent(SceneEditor* editor, Event e);
 void SceneEditorOnUpdate(SceneEditor* editor, float deltatime);

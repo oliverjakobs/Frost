@@ -27,8 +27,8 @@ int OnInit(Application* app)
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));
 	FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
-	SceneEditorInit(&scene_editor, &scene, 400.0f, 32.0f, 4);
-	SceneEditorSetMode(&scene_editor, SCENE_EDIT_WORLD);
+	SceneEditorInit(&scene_editor, &scene, 400.0f, 4);
+	SceneEditorSetMode(&scene_editor, SCENE_EDIT_MAP);
 
 	glViewport(0, 0, app->width, app->height);
 
@@ -91,7 +91,8 @@ void OnRender(Application* app)
 
 	SceneEditorOnRender(&scene_editor);
 
-	SceneOnRenderUI(&scene);
+	if (scene_editor.mode != SCENE_EDIT_MAP)
+		SceneOnRenderUI(&scene);
 }
 
 void OnRenderDebug(Application* app)

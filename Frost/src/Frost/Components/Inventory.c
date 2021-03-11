@@ -83,16 +83,16 @@ void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 s
 
 	switch (h_align)
 	{
-	case INV_HALIGN_LEFT:	inv->pos.x = -screen_size.x * 0.5f; break;
-	case INV_HALIGN_CENTER:	inv->pos.x = -width * 0.5f; break;
-	case INV_HALIGN_RIGHT:	inv->pos.x = (screen_size.x * 0.5f) - width; break;
+	case INV_HALIGN_LEFT:	inv->pos.x = 0.0f; break;
+	case INV_HALIGN_CENTER:	inv->pos.x = (screen_size.x - width) * 0.5f; break;
+	case INV_HALIGN_RIGHT:	inv->pos.x = screen_size.x - width; break;
 	}
 
 	switch (v_align)
 	{
-	case INV_VALIGN_TOP:	inv->pos.y = (screen_size.y * 0.5f) - height; break;
-	case INV_VALIGN_CENTER:	inv->pos.y = -height * 0.5f; break;
-	case INV_VALIGN_BOTTOM:	inv->pos.y = -screen_size.y * 0.5f; break;
+	case INV_VALIGN_TOP:	inv->pos.y = screen_size.y - height; break;
+	case INV_VALIGN_CENTER:	inv->pos.y = (screen_size.y - height) * 0.5f; break;
+	case INV_VALIGN_BOTTOM:	inv->pos.y = 0.0f; break;
 	}
 }
 

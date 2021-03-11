@@ -50,7 +50,7 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 	/* block key events */
 	int32_t key = EventKey(e);
-	if (tb_between_i32(KEY_SPACE, KEY_WORLD_2, key))
+	if (tb_between32(KEY_SPACE, KEY_WORLD_2, key))
 		e->handled = 1;
 }
 

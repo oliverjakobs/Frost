@@ -41,6 +41,6 @@ void PlayerSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		body->body.velocity = velocity;
 
 		// set view
-		CameraControllerMoveConstrained(camera, GetEntityPosition(ecs, EcsMapIterKey(iter)), 0.5f);
+		CameraControllerMoveConstrained(camera, GetEntityCenter(ecs, EcsMapIterKey(iter)), 0.5f);
 	}
 }

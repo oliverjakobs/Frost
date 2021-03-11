@@ -18,13 +18,14 @@ void CameraCreateOrtho(Camera* camera, float x, float y, float z, float w, float
 void CameraCreateVec(Camera* camera, vec3 pos, vec2 size);
 void CameraCreateOrthoVec(Camera* camera, vec3 center, vec2 size);
 
-/*
- * Call after changing size or position
- */
+/* Call after changing size or position */
 void CameraUpdateViewOrtho(Camera* camera);
 
 void CameraSetProjectionOrtho(Camera* camera, float w, float h);
 void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size);
+
+void CameraSetCenter(Camera* camera, vec2 center);
+vec2 CameraGetCenter(const Camera* camera);
 
 vec2 CameraGetMousePos(const Camera* camera, vec2 mouse);
 vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse);
