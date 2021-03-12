@@ -172,7 +172,7 @@
     <ClInclude Include="src\toolbox\tb_json.h" />
     <ClInclude Include="src\toolbox\tb_jwrite.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
-    <ClInclude Include="src\toolbox\tb_stretchy.h" />
+    <ClInclude Include="src\toolbox\tb_array.h" />
     <ClInclude Include="src\toolbox\toolbox.h" />
   </ItemGroup>
   <ItemGroup>

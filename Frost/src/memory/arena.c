@@ -3,7 +3,7 @@
 #include <string.h>
 #include <assert.h>
 
-#include "toolbox/tb_stretchy.h"
+#include "toolbox/tb_array.h"
 
 #define ALIGN_DOWN(n, a)        ((n) & ~((a) - 1))
 #define ALIGN_UP(n, a)          ALIGN_DOWN((n) + (a) - 1, (a))
@@ -21,7 +21,7 @@ void arena_grow(Arena* arena, size_t min_size)
     }
 
     arena->end = arena->ptr + size;
-    tb_stretchy_push(arena->blocks, arena->ptr);
+    tb_array_push(arena->blocks, arena->ptr);
 }
 
 void* arena_alloc(Arena* arena, size_t size)
@@ -48,6 +48,6 @@ void* arena_dup(Arena* arena, void* src, size_t size)
 
 void arena_free(Arena* arena)
 {
-    for (char** it = arena->blocks; it != tb_stretchy_last(arena->blocks); it++)
+    for (char** it = arena->blocks; it != tb_array_last(arena->blocks); it++)
         free(*it);
 }

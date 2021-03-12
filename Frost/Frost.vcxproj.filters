@@ -312,9 +312,6 @@
     <ClInclude Include="src\toolbox\tb_str.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\toolbox\tb_stretchy.h">
-      <Filter>src\toolbox</Filter>
-    </ClInclude>
     <ClInclude Include="src\toolbox\toolbox.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
@@ -332,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="src\Scenes\MapEditor.h" />
     <ClInclude Include="src\Scenes\WorldEditor.h" />
+    <ClInclude Include="src\toolbox\tb_array.h">
+      <Filter>src\toolbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
