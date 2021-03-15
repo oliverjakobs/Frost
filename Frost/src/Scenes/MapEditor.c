@@ -37,7 +37,7 @@ void MapEditorOnRender(const SceneEditor* editor)
 	/* UI */
 	Primitives2DStart(CameraGetProjectionPtr(&editor->scene->camera));
 
-	Primitives2DFillRect(0.0f, 0.0f, editor->scene->camera.size.x, PALETTE_HEIGHT, IGNIS_GREEN);
+	Primitives2DFillRect(0.0f, 0.0f, editor->scene->camera.size.x, PALETTE_HEIGHT, IGNIS_LIGHT_GREY);
 
 	Primitives2DFlush();
 }

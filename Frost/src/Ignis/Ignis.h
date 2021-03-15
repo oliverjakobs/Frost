@@ -70,6 +70,9 @@ extern const IgnisColorRGBA IGNIS_CYAN;
 extern const IgnisColorRGBA IGNIS_MAGENTA;
 extern const IgnisColorRGBA IGNIS_YELLOW;
 
+extern const IgnisColorRGBA IGNIS_DARK_GREY;
+extern const IgnisColorRGBA IGNIS_LIGHT_GREY;
+
 IgnisColorRGBA* ignisBlendColorRGBA(IgnisColorRGBA* color, float alpha);
 
 void ignisSetClearColor(IgnisColorRGBA color);

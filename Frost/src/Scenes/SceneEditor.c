@@ -36,18 +36,18 @@ void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode)
 
 void SceneEditorToggleWorldMode(SceneEditor* editor)
 {
-	if (editor->mode == SCENE_EDIT_NONE)
-		editor->mode = SCENE_EDIT_WORLD;
-	else if (editor->mode == SCENE_EDIT_WORLD)
+	if (editor->mode == SCENE_EDIT_WORLD)
 		editor->mode = SCENE_EDIT_NONE;
+	else
+		editor->mode = SCENE_EDIT_WORLD;
 }
 
 void SceneEditorToggleMapMode(SceneEditor* editor)
 {
-	if (editor->mode == SCENE_EDIT_NONE)
-		editor->mode = SCENE_EDIT_MAP;
-	else if (editor->mode == SCENE_EDIT_MAP)
+	if (editor->mode == SCENE_EDIT_MAP)
 		editor->mode = SCENE_EDIT_NONE;
+	else
+		editor->mode = SCENE_EDIT_MAP;
 }
 
 void SceneEditorToggleGrid(SceneEditor* editor)

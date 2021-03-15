@@ -16,7 +16,7 @@ GuiManager gui;
 int OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
-	FrostLoadIgnis((IgnisColorRGBA) { 0.2f, 0.2f, 0.2f, 1.0f }, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	FrostLoadScene(&scene, "res/frost.ini", (float)app->width, (float)app->height);
 
 	FrostLoadRenderer("config.ini");

@@ -6,9 +6,8 @@
 typedef struct
 {
 	Camera* camera;
+	vec2 scene_size;
 	float smooth;
-	float scene_w;
-	float scene_h;
 } CameraController;
 
 void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene);
