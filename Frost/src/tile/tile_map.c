@@ -3,8 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size)
+int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, void* allocator)
 {
+	if (rows == 0 || cols == 0 || tile_size <= 0.0f) return 0;
+
     map->rows = rows;
     map->cols = cols;
     map->tile_size = tile_size;
@@ -14,14 +16,16 @@ int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size)
 	map->borders[TILE_TOP] = 0;
 	map->borders[TILE_BOTTOM] = 0;
 
-    map->tiles = malloc(rows * cols * sizeof(Tile));
+	map->allocator = allocator;
+
+	map->tiles = TILE_MAP_ALLOCATE(allocator, sizeof(Tile) * rows * cols);
 	map->types = NULL;
 	map->types_count = 0;
 
 	return map->tiles != NULL;
 }
 
-static vec2 TileGetPosition(const TileMap* map, size_t index)
+static vec2 TileMapGetTilePos(const TileMap* map, size_t index)
 {
 	size_t col = index % map->cols;
 	size_t row = (index / map->cols) + 1;
@@ -31,7 +35,7 @@ static vec2 TileGetPosition(const TileMap* map, size_t index)
 
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
 {
-	map->types = malloc(sizeof(TileType) * types_count);
+	map->types = TILE_MAP_ALLOCATE(map->allocator, sizeof(TileType) * types_count);
 	if (!map->types) return 0;
 
 	memcpy(map->types, types, types_count);
@@ -40,7 +44,7 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 	for (size_t index = 0; index < (map->rows * map->cols); ++index)
 	{
 		map->tiles[index].id = tiles[index];
-		map->tiles[index].pos = TileGetPosition(map, index);
+		map->tiles[index].pos = TileMapGetTilePos(map, index);
 		map->tiles[index].type = TileMapGetType(map, tiles[index]);
 	}
 
@@ -49,8 +53,8 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 
 void TileMapDestroy(TileMap* map)
 {
-	if (map->tiles) free(map->tiles);
-	if (map->types) free(map->types);
+	if (map->tiles) TILE_MAP_FREE(map->allocator, map->tiles);
+	if (map->types) TILE_MAP_FREE(map->allocator, map->types);
 }
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)
@@ -64,7 +68,7 @@ int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*)
 		if (!stream) return 0;
 
 		map->tiles[index].id = id;
-		map->tiles[index].pos = TileGetPosition(map, index);
+		map->tiles[index].pos = TileMapGetTilePos(map, index);
 		map->tiles[index].type = TileMapGetType(map, id);
 	}
 	return 1;
@@ -72,7 +76,7 @@ int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*)
 
 int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType*), size_t len)
 {
-	map->types = malloc(sizeof(TileType) * len);
+	map->types = TILE_MAP_ALLOCATE(map->allocator, sizeof(TileType) * len);
 	if (!map->types) return 0;
 
 	for (size_t index = 0; index < len; ++index)
@@ -116,12 +120,5 @@ TileType TileMapGetType(const TileMap* map, TileID id)
 
 int32_t TileMapClamp(const TileMap* map, float x) { return (int32_t)floorf(x / map->tile_size); }
 
-void TileMapSetBorder(TileMap* map, TileDirection dir, int8_t value)
-{
-	map->borders[dir] = value;
-}
-
-int8_t TileMapGetBorder(const TileMap* map, TileDirection dir)
-{
-	return map->borders[dir];
-}
+void TileMapSetBorder(TileMap* map, TileDirection dir, int8_t value) { map->borders[dir] = value; }
+int8_t TileMapGetBorder(const TileMap* map, TileDirection dir) { return map->borders[dir]; }

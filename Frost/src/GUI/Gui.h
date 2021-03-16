@@ -1,7 +1,7 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "Camera/Camera.h"
+#include "math/math.h"
 #include "Ignis/Ignis.h"
 
 #include "toolbox/tb_hashmap.h"

@@ -3,6 +3,14 @@
 
 #include "math/math.h"
 
+/* Memory management */
+#ifndef TILE_MAP_ALLOCATE
+#define TILE_MAP_ALLOCATE(allocator, size) malloc(size);
+#endif
+#ifndef TILE_MAP_FREE
+#define TILE_MAP_FREE(allocator, block) free(block);
+#endif
+
 typedef enum
 {
 	TILE_LEFT,
@@ -43,12 +51,14 @@ typedef struct
 
 	int8_t borders[4];
 
+	void* allocator;
+
 	/* types */
 	TileType* types;
 	size_t types_count;
 } TileMap;
 
-int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size);
+int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, void* allocator);
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count);
 void TileMapDestroy(TileMap* map);
 

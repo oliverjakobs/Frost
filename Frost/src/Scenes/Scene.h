@@ -1,11 +1,11 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "Camera.h"
 #include "Resources.h"
+
 #include "Graphics/Background.h"
 #include "Application/Application.h"
-
-#include "Camera/Camera.h"
 
 #include "ECS/Ecs.h"
 #include "tile/tile_map.h"

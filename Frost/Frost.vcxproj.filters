@@ -111,9 +111,6 @@
     <ClInclude Include="src\Application\Timer.h">
       <Filter>src\Application</Filter>
     </ClInclude>
-    <ClInclude Include="src\Camera\Camera.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="src\Console\Command.h">
       <Filter>src\Console</Filter>
     </ClInclude>
@@ -332,6 +329,10 @@
     <ClInclude Include="src\toolbox\tb_array.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
+    <ClInclude Include="src\memory\allocator.h" />
+    <ClInclude Include="src\Scenes\Camera.h">
+      <Filter>src\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -351,9 +352,6 @@
     </ClCompile>
     <ClCompile Include="src\Application\Timer.c">
       <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Camera\Camera.c">
-      <Filter>src\Camera</Filter>
     </ClCompile>
     <ClCompile Include="src\Console\Command.c">
       <Filter>src\Console</Filter>
@@ -559,6 +557,9 @@
     </ClCompile>
     <ClCompile Include="src\Scenes\WorldEditor.c" />
     <ClCompile Include="src\Scenes\MapEditor.c" />
+    <ClCompile Include="src\Scenes\Camera.c">
+      <Filter>src\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts.json">

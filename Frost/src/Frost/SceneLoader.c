@@ -188,8 +188,7 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 
 	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
-	if (rows == 0 || cols == 0 || tile_size <= 0.0f)		return SCENE_LOAD_MAP_SIZE_ERROR;
-	if (!TileMapLoad(&scene->map, rows, cols, tile_size))	return SCENE_LOAD_MAP_ERROR;
+	if (!TileMapLoad(&scene->map, rows, cols, tile_size, NULL))	return SCENE_LOAD_MAP_ERROR;
 
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");
