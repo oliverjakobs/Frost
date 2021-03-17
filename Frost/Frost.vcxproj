@@ -184,6 +184,7 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Logger.c" />
     <ClCompile Include="src\Application\Timer.c" />
+    <ClCompile Include="src\memory\allocator.c" />
     <ClCompile Include="src\Scenes\Camera.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, void* allocator)
+int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, tb_allocator* allocator)
 {
 	if (rows == 0 || cols == 0 || tile_size <= 0.0f) return 0;
 
@@ -18,7 +18,7 @@ int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, void* a
 
 	map->allocator = allocator;
 
-	map->tiles = TILE_MAP_ALLOCATE(allocator, sizeof(Tile) * rows * cols);
+	map->tiles = tb_mem_alloc(allocator, sizeof(Tile) * rows * cols);
 	map->types = NULL;
 	map->types_count = 0;
 
@@ -35,7 +35,7 @@ static vec2 TileMapGetTilePos(const TileMap* map, size_t index)
 
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
 {
-	map->types = TILE_MAP_ALLOCATE(map->allocator, sizeof(TileType) * types_count);
+	map->types = tb_mem_alloc(map->allocator, sizeof(TileType) * types_count);
 	if (!map->types) return 0;
 
 	memcpy(map->types, types, types_count);
@@ -53,8 +53,8 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 
 void TileMapDestroy(TileMap* map)
 {
-	if (map->tiles) TILE_MAP_FREE(map->allocator, map->tiles);
-	if (map->types) TILE_MAP_FREE(map->allocator, map->types);
+	if (map->tiles) tb_mem_free(map->allocator, map->tiles, sizeof(Tile) * map->rows * map->cols);
+	if (map->types) tb_mem_free(map->allocator, map->types, sizeof(TileType) * map->types_count);
 }
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)
@@ -76,7 +76,7 @@ int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*)
 
 int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType*), size_t len)
 {
-	map->types = TILE_MAP_ALLOCATE(map->allocator, sizeof(TileType) * len);
+	map->types = tb_mem_alloc(map->allocator, sizeof(TileType) * len);
 	if (!map->types) return 0;
 
 	for (size_t index = 0; index < len; ++index)

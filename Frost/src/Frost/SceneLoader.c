@@ -181,6 +181,26 @@ static void* SceneStreamTileTypes(void* stream, TileType* type)
 	return stream;
 }
 
+static void* scene_alloc(void* data, size_t size)
+{
+	DEBUG_INFO("Allocate %llu bytes", size);
+	return malloc(size);
+}
+
+static void* scene_realloc(void* data, void* block, size_t size)
+{
+	DEBUG_INFO("Reallocate %llu bytes", size);
+	return realloc(block, size);
+}
+
+static void scene_free(void* data, void* block, size_t size)
+{
+	DEBUG_INFO("Free %llu bytes", size);
+	free(block);
+}
+
+static tb_allocator scene_allocator;
+
 SceneLoadError SceneLoadMap(Scene* scene, char* json)
 {
 	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
@@ -188,7 +208,10 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 
 	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
-	if (!TileMapLoad(&scene->map, rows, cols, tile_size, NULL))	return SCENE_LOAD_MAP_ERROR;
+	scene_allocator.alloc = scene_alloc;
+	scene_allocator.free = scene_free;
+
+	if (!TileMapLoad(&scene->map, rows, cols, tile_size, &scene_allocator))	return SCENE_LOAD_MAP_ERROR;
 
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");

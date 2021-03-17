@@ -1,10 +1,18 @@
-#ifndef ALLOCATOR_H
-#define ALLOCATOR_H
+#ifndef TB_ALLOCATOR_H
+#define TB_ALLOCATOR_H
 
 #include <stdlib.h>
 
-void* mem_alloc(void* allocator, size_t size);
-void* mem_realloc(void* allocator, void* block, size_t size);
-void mem_free(void* allocator, void* block, size_t size);
+typedef struct
+{
+    void* (*alloc)(void*, size_t);
+    void* (*realloc)(void*, void*, size_t);
+    void (*free)(void*, void*, size_t);
+    void* data;
+} tb_allocator;
 
-#endif /* !ALLOCATOR_H */
+void* tb_mem_alloc(tb_allocator* allocator, size_t size);
+void* tb_mem_realloc(tb_allocator* allocator, void* block, size_t size);
+void tb_mem_free(tb_allocator* allocator, void* block, size_t size);
+
+#endif /* !TB_ALLOCATOR_H */

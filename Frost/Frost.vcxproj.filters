@@ -560,6 +560,7 @@
     <ClCompile Include="src\Scenes\Camera.c">
       <Filter>src\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="src\memory\allocator.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts.json">
