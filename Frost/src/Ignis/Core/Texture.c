@@ -1,9 +1,12 @@
 #include "Texture.h"
 
+#include "../Ignis.h"
+
+#define STBI_MALLOC(size)			ignisAlloc(size)
+#define STBI_REALLOC(block, size)	ignisRealloc(block, size)
+#define STBI_FREE(block)			ignisFree(block)
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
-
-#include "../Ignis.h"
 
 int ignisGenerateTexture2D(IgnisTexture2D* texture, int width, int height, void* pixels, IgnisTextureConfig* configptr)
 {
@@ -56,22 +59,19 @@ int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows,
 
 	int bpp = 0;
 
-	unsigned char* pixels = stbi_load(path, &texture->width, &texture->height, &bpp, 4);
+	size_t buffer_len;
+	char* buffer = ignisReadFile(path, &buffer_len);
 
-	/* check if bpp and format matches */
-	if (bpp == 4)
-	{
-		if (config.format != GL_RGBA || config.internal_format != GL_RGBA8)
-			_ignisErrorCallback(IGNIS_WARN, "[Texture] Format mismatch for %s", path);
-	}
-	else if (bpp == 3)
-	{
-		if (config.format != GL_RGB || config.internal_format != GL_RGB8)
-			_ignisErrorCallback(IGNIS_WARN, "[Texture] Format mismatch for %s", path);
-	}
+	unsigned char* pixels = stbi_load_from_memory(buffer, buffer_len, &texture->width, &texture->height, &bpp, 4);
 
 	if (pixels)
 	{
+		/* check if bpp and format matches */
+		if (bpp == 4 && (config.format != GL_RGBA || config.internal_format != GL_RGBA8))
+			_ignisErrorCallback(IGNIS_WARN, "[Texture] Format mismatch for %s", path);
+		else if (bpp == 3 && (config.format != GL_RGB || config.internal_format != GL_RGB8))
+			_ignisErrorCallback(IGNIS_WARN, "[Texture] Format mismatch for %s", path);
+
 		texture->name = ignisGenerateTexture(GL_TEXTURE_2D, texture->width, texture->height, pixels, config);
 		texture->rows = rows;
 		texture->cols = columns;

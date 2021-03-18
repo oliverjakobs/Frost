@@ -1,25 +1,33 @@
 #include "allocator.h"
 
+#include <string.h>
 
 void* tb_mem_alloc(tb_allocator* allocator, size_t size)
 {
-    if (allocator && allocator->alloc) return allocator->alloc(allocator->data, size);
-    return malloc(size);
+    size += sizeof(size_t);
+    size_t* hdr = (allocator && allocator->alloc) ? allocator->alloc(allocator->data, size) : malloc(size);
+
+    if (!hdr) return NULL;
+
+    hdr[0] = size;
+
+    return hdr + 1;
 }
 
-void* tb_mem_realloc(tb_allocator* allocator, void* block, size_t size)
+void tb_mem_free(tb_allocator* allocator, void* block)
 {
-    if (allocator && allocator->realloc) return allocator->realloc(allocator->data, block, size);
-    return realloc(block, size);
-}
+    if (!block) return;
 
-void tb_mem_free(tb_allocator* allocator, void* block, size_t size)
-{
+    size_t* hdr = TB_MEM_HDR(block);
     if (allocator && allocator->free)
-    {
-        allocator->free(allocator->data, block, size);
-        return;
-    }
+        allocator->free(allocator->data, hdr, hdr[0]);
+    else
+        free(hdr);
+}
 
-    free(block);
+void* tb_mem_dup(tb_allocator* allocator, const void* src, size_t size)
+{
+    void* dst = tb_mem_alloc(allocator, size);
+    
+    return dst ? memcpy(dst, src, size) : NULL;
 }

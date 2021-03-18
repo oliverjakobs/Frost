@@ -35,10 +35,9 @@ static vec2 TileMapGetTilePos(const TileMap* map, size_t index)
 
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
 {
-	map->types = tb_mem_alloc(map->allocator, sizeof(TileType) * types_count);
+	map->types = tb_mem_dup(map->allocator, types, sizeof(TileType) * types_count);
 	if (!map->types) return 0;
 
-	memcpy(map->types, types, types_count);
 	map->types_count = types_count;
 
 	for (size_t index = 0; index < (map->rows * map->cols); ++index)
@@ -53,8 +52,8 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 
 void TileMapDestroy(TileMap* map)
 {
-	if (map->tiles) tb_mem_free(map->allocator, map->tiles, sizeof(Tile) * map->rows * map->cols);
-	if (map->types) tb_mem_free(map->allocator, map->types, sizeof(TileType) * map->types_count);
+	tb_mem_free(map->allocator, map->tiles);
+	tb_mem_free(map->allocator, map->types);
 }
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)
@@ -113,9 +112,7 @@ int TileMapCheckType(const TileMap* map, vec2 pos, TileType type)
 
 TileType TileMapGetType(const TileMap* map, TileID id)
 {
-	if (id < 0 || id >= map->types_count) return TILE_EMPTY;
-
-	return map->types[id];
+	return (id >= 0 || id < map->types_count) ? map->types[id] : TILE_EMPTY;
 }
 
 int32_t TileMapClamp(const TileMap* map, float x) { return (int32_t)floorf(x / map->tile_size); }
