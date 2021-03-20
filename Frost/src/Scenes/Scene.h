@@ -18,9 +18,6 @@ typedef (*SceneSaveFn)(Scene*, const char*);
 
 struct Scene
 {
-	/* register */
-	tb_hashmap scenes;
-
 	Camera camera;
 
 	Ecs ecs;
@@ -31,7 +28,6 @@ struct Scene
 	SceneSaveFn save;
 	
 	/* active scene specific data */
-	char name[APPLICATION_STR_LEN];
 	char path[APPLICATION_PATH_LEN];
 
 	vec2 gravity;
@@ -43,12 +39,10 @@ struct Scene
 	Background background;
 };
 
-int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save, int (*load_ecs)(Ecs* ecs));
+int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save);
 void SceneDestroy(Scene* scene);
 
-int SceneRegisterScene(Scene* scene, const char* name, char* path);
-
-void SceneChangeActive(Scene* scene, const char* name, int reload);
+void SceneChangeActive(Scene* scene, const char* path, int reload);
 void SceneClearActive(Scene* scene);
 
 void SceneOnEvent(Scene* scene, Event e);

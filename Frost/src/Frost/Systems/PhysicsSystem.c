@@ -1,6 +1,6 @@
 #include "PhysicsSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 #include "tile/tile_collision.h"
 

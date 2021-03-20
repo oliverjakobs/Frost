@@ -171,9 +171,6 @@
     <ClInclude Include="src\Frost\Frost.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
-    <ClInclude Include="src\Frost\FrostEcs.h">
-      <Filter>src\Frost</Filter>
-    </ClInclude>
     <ClInclude Include="src\Frost\FrostParser.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
@@ -329,10 +326,11 @@
     <ClInclude Include="src\toolbox\tb_array.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\memory\allocator.h" />
     <ClInclude Include="src\Scenes\Camera.h">
       <Filter>src\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\FrostMem.h" />
+    <ClInclude Include="src\toolbox\tb_mem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -411,9 +409,6 @@
       <Filter>src\Frost\Components</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Frost.c">
-      <Filter>src\Frost</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\FrostEcs.c">
       <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\FrostParser.c">
@@ -560,7 +555,9 @@
     <ClCompile Include="src\Scenes\Camera.c">
       <Filter>src\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="src\memory\allocator.c" />
+    <ClCompile Include="src\toolbox\tb_mem.c" />
+    <ClCompile Include="src\Frost\FrostMem.c" />
+    <ClCompile Include="src\toolbox\tb_array.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="res\fonts.json">

@@ -3,20 +3,9 @@
 
 #include <stdlib.h>
 #include <stddef.h>
-#include <string.h>
-
-/*
- * Define TB_NOASSERT to compile out all assertions used internally.
- */
-/* #define TB_NOASSERT */
-#ifndef TB_NOASSERT
-#include <assert.h>
-#define TB_ASSERT(expr) assert(expr)
-#else
-#define TB_ASSERT(expr)
-#endif
-
 #include <stdint.h>
+
+#include <string.h>
 
 void tb_swap(void** a, void** b);
 void tb_swapi(int* a, int* b);

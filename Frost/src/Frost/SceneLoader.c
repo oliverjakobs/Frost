@@ -1,6 +1,7 @@
 #include "SceneLoader.h"
 
-#include "Frost/FrostParser.h"
+#include "FrostParser.h"
+#include "FrostMem.h"
 
 #include "toolbox/tb_file.h"
 
@@ -40,7 +41,8 @@ int SceneLoad(Scene* scene, const char* path)
 {
 	if (!scene) return 0;
 
-	char* json = tb_file_read(path, "rb", NULL);
+	size_t size;
+	char* json = tb_file_read(path, "rb", &size);
 
 	if (!json)
 	{
@@ -130,9 +132,12 @@ int SceneLoad(Scene* scene, const char* path)
 
 int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant)
 {
-	char* json = tb_file_read(templ, "rb", NULL);
+	char json[FROST_TEMPLATE_SIZE];
+	size_t size = tb_file_read_buf(templ, "rb", json, FROST_TEMPLATE_SIZE);
+	if (size == FROST_TEMPLATE_SIZE)
+		DEBUG_WARN("[Scenes] Template buffer may be too small");
 
-	if (!json)
+	if (size == 0)
 	{
 		DEBUG_WARN("[Scenes] Couldn't read template (%s)", templ);
 		return 0;
@@ -153,8 +158,6 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 	PlayerLoad(json, &scene->ecs, entity);
 	InventoryLoad(json, &scene->ecs, entity, scene->camera.size);
 	InteractableLoad(json, &scene->ecs, entity);
-
-	free(json);
 
 	return 1;
 }
@@ -181,26 +184,6 @@ static void* SceneStreamTileTypes(void* stream, TileType* type)
 	return stream;
 }
 
-static void* scene_alloc(void* data, size_t size)
-{
-	DEBUG_INFO("Allocate %llu bytes", size);
-	return malloc(size);
-}
-
-static void* scene_realloc(void* data, void* block, size_t size)
-{
-	DEBUG_INFO("Reallocate %llu bytes", size);
-	return realloc(block, size);
-}
-
-static void scene_free(void* data, void* block, size_t size)
-{
-	DEBUG_INFO("Free %llu bytes", size);
-	free(block);
-}
-
-static tb_allocator scene_allocator;
-
 SceneLoadError SceneLoadMap(Scene* scene, char* json)
 {
 	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
@@ -208,10 +191,7 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 
 	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
-	scene_allocator.alloc = scene_alloc;
-	scene_allocator.free = scene_free;
-
-	if (!TileMapLoad(&scene->map, rows, cols, tile_size, &scene_allocator))	return SCENE_LOAD_MAP_ERROR;
+	if (!TileMapLoad(&scene->map, rows, cols, tile_size, FrostGetAllocator())) return SCENE_LOAD_MAP_ERROR;
 
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");

@@ -1,6 +1,6 @@
 #include "AnimationSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 static void AnimatorTick(Animator* animator, Animation* animation, float deltatime)
 {

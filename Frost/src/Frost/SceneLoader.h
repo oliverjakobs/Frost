@@ -3,6 +3,8 @@
 
 #include "Scenes/Scene.h"
 
+#define FROST_TEMPLATE_SIZE 1024
+
 typedef enum
 {
     SCENE_LOAD_OK,

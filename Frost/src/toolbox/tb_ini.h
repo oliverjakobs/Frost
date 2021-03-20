@@ -4,9 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define TB_INI_NAME_LEN     32
-#define TB_INI_VALUE_LEN    64
-
 typedef enum
 {
     TB_INI_OK,

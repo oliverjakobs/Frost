@@ -1,6 +1,6 @@
 #include "EntityStateSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 
 int EntityStateJump(RigidBody* body) { return body ? (body->body.velocity.y > 0.0f) : 0; }
 int EntityStateFall(RigidBody* body) { return body ? (!body->body.collision_state[TILE_BOTTOM] && (body->body.velocity.y <= 0.0f)) : 0; }

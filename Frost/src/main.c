@@ -17,7 +17,7 @@ int OnInit(Application* app)
 {
 	/* ---------------| Config |------------------------------------------ */
 	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	FrostLoadScene(&scene, "res/frost.ini", (float)app->width, (float)app->height);
+	FrostLoadScene(&scene, (float)app->width, (float)app->height, "res/scenes/scene.json");
 
 	FrostLoadRenderer("config.ini");
 
@@ -131,6 +131,10 @@ int main()
 	ApplicationRun(&app);
 
 	ApplicationDestroy(&app);
+
+	size_t bytes = FrostGetMemBytes();
+	if (bytes != 0)
+		DEBUG_WARN("%llu bytes not freed", bytes);
 
 	return 0;
 }

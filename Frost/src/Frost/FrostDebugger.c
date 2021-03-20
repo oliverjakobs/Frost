@@ -59,7 +59,10 @@ void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, flo
 
 	FontRendererTextFieldBegin(x, y, 8.0f);
 
-	FontRendererTextFieldLine("Scene: %s", scene->name);
+	FontRendererTextFieldLine("Memory: %llu bytes", FrostGetMemBytes());
+	FontRendererTextFieldLine("------------------------");
+
+	FontRendererTextFieldLine("Scene: %s", scene->path);
 	FontRendererTextFieldLine("Size: %4.2f, %4.2f", SceneGetWidth(scene), SceneGetHeight(scene));
 	FontRendererTextFieldLine("Gravity: %4.2f, %4.2f", scene->gravity.x, scene->gravity.y);
 	FontRendererTextFieldLine("------------------------");
@@ -152,7 +155,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			SceneChangeActive(scene, scene->name, 1);
+			SceneChangeActive(scene, scene->path, 1);
 			SceneEditorReset(editor);
 			ConsoleOut(console, "Reloaded Scene.");
 		}
@@ -188,16 +191,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 
 		ConsoleOut(console, "%s", cmd_buffer);
 
-		if (strcmp(spec, "scenes") == 0)
-		{
-			for (tb_hashmap_iter* iter = tb_hashmap_iterator(&scene->scenes); iter; iter = tb_hashmap_iter_next(&scene->scenes, iter))
-			{
-				const char* name = tb_hashmap_iter_get_key(iter);
-
-				ConsoleOut(console, " - %s %s", name, (strcmp(name, scene->name) == 0) ? "(active)" : "");
-			}
-		}
-		else if (strcmp(spec, "entities") == 0)
+		if (strcmp(spec, "entities") == 0)
 		{
 			EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
 			for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
@@ -235,15 +229,8 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 
 		if (strcmp(spec, "scene") == 0)
 		{
-			char* path = tb_hashmap_find(&scene->scenes, scene->name);
-			if (!path)
-			{
-				ConsoleOut(console, "Couldn't find path for %s", scene->name);
-				break;
-			}
-
-			SceneSave(scene, path);
-			ConsoleOut(console, "Saved scene (%s) to %s", scene->name, path);
+			SceneSave(scene, scene->path);
+			ConsoleOut(console, "Saved scene to %s", scene->path);
 		}
 		break;
 	}

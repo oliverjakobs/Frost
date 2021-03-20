@@ -1,8 +1,9 @@
 #include "EntityState.h"
 
-#include "../FrostEcs.h"
+#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
+
 #include <string.h>
-#include "..\FrostParser.h"
 
 void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state)
 {

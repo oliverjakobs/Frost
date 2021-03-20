@@ -2,6 +2,8 @@
 
 #include "Application/Logger.h"
 
+#include "ECS/EcsLoader.h"
+
 #include "toolbox/tb_ini.h"
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
@@ -44,33 +46,12 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	return 1;
 }
 
-int FrostLoadScene(Scene* scene, const char* path, float w, float h)
+int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 {
-	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, LoadEcs);
+	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL);
+	FrostLoadEcs(&scene->ecs);
 
-	char* config = tb_file_read(path, "rb", NULL);
-
-	tb_ini_element section;
-	char* scenes = tb_ini_query(config, "scenes", &section);
-
-	for (size_t i = 0; i < section.len; ++i)
-	{
-		tb_ini_element element;
-		scenes = tb_ini_query_section(scenes, "", &element);
-
-		char scene_name[APPLICATION_STR_LEN];
-		tb_ini_get_name(&element, scene_name, APPLICATION_STR_LEN);
-
-		char scene_path[APPLICATION_PATH_LEN];
-		tb_ini_to_string(&element, scene_path, APPLICATION_STR_LEN);
-
-		if (!SceneRegisterScene(scene, scene_name, scene_path))
-			DEBUG_WARN("[Scenes] Failed to add scene: %s (%s)", scene_name, scene_path);
-	}
-
-	free(config);
-
-	SceneChangeActive(scene, "scene", 0);
+	SceneChangeActive(scene, start, 0);
 
 	return 1;
 }
@@ -112,4 +93,60 @@ int FrostLoadRenderer(const char* path)
 	return 1;
 }
 
+EcsDataComponentLoader data_comps[] =
+{
+	[COMPONENT_TRANSFORM] =		{ sizeof(Transform),		NULL },
+	[COMPONENT_RIGID_BODY] =	{ sizeof(RigidBody),		NULL },
+	[COMPONENT_STATE] =			{ sizeof(EntityState),		NULL },
+	[COMPONENT_MOVEMENT] =		{ sizeof(Movement),			NULL },
+	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
+	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorFree },
+	[COMPONENT_CAMERA] =		{ sizeof(CameraController),	NULL },
+	[COMPONENT_PLAYER] =		{ sizeof(Player),			NULL },
+	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
+	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL },
+	[COMPONENT_ITEM] =			{ sizeof(Item),				NULL }
+};
+
+EcsOrderComponentLoader order_comps[] =
+{
+	[COMPONENT_TEMPLATE] =	{ sizeof(const char*),	NULL,	NULL },
+	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),		NULL,	ZIndexCmp }
+};
+
+EcsUpdateSystem update_systems[] =
+{
+	[UPDATE_STATE] =		{ EntityStateSystem },
+	[UPDATE_PHYSICS] =		{ PhysicsSystem },
+	[UPDATE_PLAYER] =		{ PlayerSystem },
+	[UPDATE_ANIMATION] =	{ AnimationSystem },
+	[UPDATE_INVENTORY] =	{ InventoryUpdateSystem },
+	[UPDATE_INTERACTION] =	{ InteractionSystem }
+};
+
+EcsRenderSystem render_systems[] =
+{
+	[RENDER_SPRITE] =		{ ECS_RENDER_STAGE_PRIMARY, RenderSystem },
+	[RENDER_DEBUG] =		{ ECS_RENDER_STAGE_DEBUG,	DebugRenderSystem },
+	[RENDER_INVENTORY] =	{ ECS_RENDER_STAGE_UI,		InventoryRenderSystem }
+};
+
+int FrostLoadEcs(Ecs* ecs)
+{
+	size_t update_size = ECS_SIZEOF_LOADER(update_systems);
+	size_t render_size = ECS_SIZEOF_LOADER(render_systems);
+
+	size_t data_size = ECS_SIZEOF_LOADER(data_comps);
+	size_t order_size = ECS_SIZEOF_LOADER(order_comps);
+
+	EcsReserveSystems(ecs, update_size, render_size);
+	EcsLoadUpdateSystems(ecs, update_systems, update_size);
+	EcsLoadRenderSystems(ecs, render_systems, render_size);
+
+	EcsReserveComponents(ecs, data_size, order_size);
+	EcsLoadDataComponents(ecs, data_comps, data_size);
+	EcsLoadOrderComponents(ecs, order_comps, order_size);
+
+	return 1;
+}
 

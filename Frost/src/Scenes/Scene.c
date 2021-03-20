@@ -4,14 +4,8 @@
 
 #include "toolbox/tb_str.h"
 
-int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, int(*load_ecs)(Ecs* ecs))
+int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save)
 {
-	if (tb_hashmap_alloc(&scene->scenes, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
-		return 0;
-
-	tb_hashmap_set_key_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
-	tb_hashmap_set_value_alloc_funcs(&scene->scenes, tb_hashmap_str_alloc, tb_hashmap_str_free);
-
 	ResourcesInit(&scene->res);
 
 	CameraCreateOrtho(&scene->camera, 0.0f, 0.0f, 0.0f, size.x, size.y);
@@ -23,7 +17,7 @@ int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, int(*
 	scene->save = save;
 
 	EcsInit(&scene->ecs);
-	return load_ecs ? load_ecs(&scene->ecs) : 1;
+	return 1;
 }
 
 void SceneDestroy(Scene* scene)
@@ -36,39 +30,24 @@ void SceneDestroy(Scene* scene)
 	EcsDestroy(&scene->ecs);
 
 	ResourcesDestroy(&scene->res);
-	tb_hashmap_free(&scene->scenes);
 }
 
-int SceneRegisterScene(Scene* scene, const char* name, char* path)
+void SceneChangeActive(Scene* scene, const char* path, int reload)
 {
-	return tb_hashmap_insert(&scene->scenes, name, path) != NULL;
-}
-
-void SceneChangeActive(Scene* scene, const char* name, int reload)
-{
-	if (strcmp(scene->name, name) != 0 || reload)
+	if (strcmp(scene->path, path) != 0 || reload)
 	{
-		/* Check if scene is in the register */
-		char* path = tb_hashmap_find(&scene->scenes, name);
-		if (!path)
-		{
-			DEBUG_ERROR("[Scenes] Couldn't find scene: %s", name);
-			return;
-		}
-
 		/* Clear and save old Scene */
-		if (scene->name[0] != '\0')
+		if (scene->path[0] != '\0')
 		{
 			if (scene->save && !scene->save(scene, scene->path))
-				DEBUG_ERROR("[Scenes] Failed to save scene: %s", scene->name);
+				DEBUG_ERROR("[Scenes] Failed to save scene: %s", scene->path);
 			SceneClearActive(scene);
 		}
 
 		/* Enter new scene */
 		if (scene->load && !scene->load(scene, path))
-			DEBUG_ERROR("[Scenes] Failed to load new scene: %s", name);
+			DEBUG_ERROR("[Scenes] Failed to load new scene: %s", path);
 
-		tb_strlcpy(scene->name, name, APPLICATION_STR_LEN);
 		tb_strlcpy(scene->path, path, APPLICATION_PATH_LEN);
 	}
 }

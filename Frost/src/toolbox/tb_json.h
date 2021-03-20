@@ -1,6 +1,3 @@
-#ifndef TB_JSON_INCLUDE_H
-#define TB_JSON_INCLUDE_H
-
 // tb_json - an in-place JSON element reader
 // =======================================
 //
@@ -91,27 +88,14 @@
 // uncomment this if you really want to use double quotes in query strings instead of '
 //#define TB_JSON_DOUBLE_QUOTE_IN_QUERY
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#ifndef TB_JSON_INCLUDE_H
+#define TB_JSON_INCLUDE_H
 
 #include <stdarg.h>
 
-/*
-* -----------------------------------------------------------------------------
-* ----| Version |--------------------------------------------------------------
-* -----------------------------------------------------------------------------
-*/
-
-#define TB_JSON_VERSION_MAJOR   1
-#define TB_JSON_VERSION_MINOR   2
-
-/*
-* --------------------------------------------------------------------
-* enums
-* --------------------------------------------------------------------
-*/
+//--------------------------------------------------------------------
+// enums
+//--------------------------------------------------------------------
 
 typedef enum
 {
@@ -252,32 +236,4 @@ void tb_json_print_element(tb_json_element element);
 char* tb_json_type_to_string(tb_json_type data_type);   // string describes data_type
 char* tb_json_error_to_string(tb_json_error error);     // string descibes error code
 
-#ifdef __cplusplus
-}
-#endif
-
 #endif // TB_JSON_INCLUDE_H
-
-/*
-------------------------------------------------------------------------------
-This software is available under the MIT License.
-------------------------------------------------------------------------------
-Copyright (c) 2019 Oliver Jakobs
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-------------------------------------------------------------------------------
-*/

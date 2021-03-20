@@ -1,6 +1,6 @@
 #include "RenderSystem.h"
 
-#include "Frost/FrostEcs.h"
+#include "Frost/Frost.h"
 #include "tile/tile_renderer.h"
 
 void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
