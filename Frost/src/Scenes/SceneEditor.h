@@ -30,7 +30,7 @@ typedef struct
 	Tile* tile_hover;
 } SceneEditor;
 
-void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding);
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding, SceneEditMode mode);
 
 void SceneEditorReset(SceneEditor* editor);
 

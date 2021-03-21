@@ -4,7 +4,7 @@
 
 #include "toolbox/tb_str.h"
 
-int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save)
+int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator)
 {
 	ResourcesInit(&scene->res);
 
@@ -15,6 +15,7 @@ int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save)
 
 	scene->load = load;
 	scene->save = save;
+	scene->allocator = allocator;
 
 	EcsInit(&scene->ecs);
 	return 1;

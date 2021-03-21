@@ -10,11 +10,8 @@ void* tb_mem_alloc(tb_allocator* allocator, size_t size)
     size += sizeof(size_t);
     size_t* hdr = (allocator && allocator->alloc) ? allocator->alloc(size) : malloc(size);
 
-    if (!hdr) return NULL;
-
-    hdr[0] = size;
-
-    return hdr + 1;
+    if (hdr) { hdr[0] = size; return hdr + 1; }
+    return NULL;
 }
 
 void* tb_mem_realloc(tb_allocator* allocator, void* block, size_t size)
@@ -25,11 +22,8 @@ void* tb_mem_realloc(tb_allocator* allocator, void* block, size_t size)
     size += sizeof(size_t);
     hdr = (allocator && allocator->realloc) ? allocator->realloc(hdr, old_size, size) : realloc(hdr, size);
 
-    if (!hdr) return NULL;
-
-    hdr[0] = size;
-
-    return hdr + 1;
+    if (hdr) { hdr[0] = size; return hdr + 1; }
+    return NULL;
 }
 
 void tb_mem_free(tb_allocator* allocator, void* block)

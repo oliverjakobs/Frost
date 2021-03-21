@@ -3,8 +3,12 @@
 
 #include "toolbox/tb_mem.h"
 
+void* FrostMalloc(size_t size);
+void FrostFree(void* block);
+
 tb_allocator* FrostGetAllocator();
 
-size_t FrostGetMemBytes();
+size_t FrostMemGetBytes();
+size_t FrostMemGetPeak();
 
 #endif /* !FROST_MEM_H */

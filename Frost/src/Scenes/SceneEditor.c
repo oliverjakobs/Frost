@@ -7,10 +7,10 @@
 #include "MapEditor.h"
 #include "WorldEditor.h"
 
-void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding)
+void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding, SceneEditMode mode)
 {
 	editor->scene = scene;
-	editor->mode = SCENE_EDIT_NONE;
+	editor->mode = mode;
 
 	editor->cameraspeed = cameraspeed;
 	editor->padding = editor->scene->map.tile_size * padding;

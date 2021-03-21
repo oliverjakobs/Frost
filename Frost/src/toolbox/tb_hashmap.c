@@ -376,40 +376,12 @@ tb_hashmap_iter* tb_hashmap_iter_remove(tb_hashmap* map, const tb_hashmap_iter* 
 
 const void* tb_hashmap_iter_get_key(const tb_hashmap_iter* iter)
 {
-    if (!iter) return NULL;
-
-    return (const void*)((tb_hashmap_entry*)iter)->key;
+    return iter ? (const void*)((tb_hashmap_entry*)iter)->key : NULL;
 }
 
 void* tb_hashmap_iter_get_value(const tb_hashmap_iter* iter)
 {
-    if (!iter) return NULL;
-
-    return ((tb_hashmap_entry*)iter)->value;
-}
-
-int tb_hashmap_str_cmp(const void* a, const void* b)
-{
-    return strcmp((const char*)a, (const char*)b);
-}
-
-void* tb_hashmap_str_alloc(const void* src)
-{
-    size_t size = strlen(src);
-    char* dst = malloc(size + 1);
-
-    if (!dst) return NULL;
-
-    strcpy(dst, src);
-    /* make sure string is null-terminated */
-    dst[size] = '\0';
-
-    return (void*)dst;
-}
-
-void tb_hashmap_str_free(void* block)
-{
-    free(block);
+    return iter ? ((tb_hashmap_entry*)iter)->value : NULL;
 }
 
 size_t tb_hash_string(const char* str)

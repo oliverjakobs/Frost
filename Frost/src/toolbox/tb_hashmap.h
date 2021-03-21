@@ -146,13 +146,6 @@ const void* tb_hashmap_iter_get_key(const tb_hashmap_iter* iter);
  */
 void* tb_hashmap_iter_get_value(const tb_hashmap_iter* iter);
 
-/*
- * Default functions for strings
- */
-int tb_hashmap_str_cmp(const void* a, const void* b);
-void* tb_hashmap_str_alloc(const void* src);
-void tb_hashmap_str_free(void* block);
-
 /* 
  * Hash functions
  */

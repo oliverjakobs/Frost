@@ -4,6 +4,7 @@
 
 #include "ApplicationCallback.h"
 
+#include "toolbox/toolbox.h"
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
@@ -93,7 +94,7 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 
 int ApplicationLoadConfig(Application* app, const char* path)
 {
-	char* config = tb_file_read(path, "rb", NULL);
+	char* config = tb_file_read(path, "rb");
 
 	if (!config)
 	{
@@ -231,11 +232,10 @@ void ApplicationSetWindowTitleFormat(Application* app, const char* fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = malloc(buffer_size + 1);
-	vsnprintf(buffer, buffer_size + 1, fmt, args);
+
+	char buffer[APPLICATION_STR_LEN];
+	vsnprintf(buffer, tb_min64(buffer_size + 1, APPLICATION_STR_LEN), fmt, args);
 	va_end(args);
 
 	ApplicationSetWindowTitle(app, buffer);
-
-	free(buffer);
 }

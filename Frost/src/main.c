@@ -27,8 +27,7 @@ int OnInit(Application* app)
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));
 	FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
-	SceneEditorInit(&scene_editor, &scene, 400.0f, 4);
-	SceneEditorSetMode(&scene_editor, SCENE_EDIT_MAP);
+	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_MAP);
 
 	glViewport(0, 0, app->width, app->height);
 
@@ -67,6 +66,13 @@ void OnEvent(Application* app, Event e)
 	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
 	case KEY_F9:		FrostDebuggerToggleInfo(&debugger); break;
 	}
+
+	if (scene_editor.mode == SCENE_EDIT_MAP)
+		ApplicationSetWindowTitleFormat(app, "%s | Map Editor", app->title);
+	else if (scene_editor.mode == SCENE_EDIT_WORLD)
+		ApplicationSetWindowTitleFormat(app, "%s | World Editor", app->title);
+	else if (!app->paused)
+		ApplicationSetWindowTitle(app, app->title);
 
 	FrostDebuggerOnEvent(&debugger, e);
 
@@ -132,7 +138,7 @@ int main()
 
 	ApplicationDestroy(&app);
 
-	size_t bytes = FrostGetMemBytes();
+	size_t bytes = FrostMemGetBytes();
 	if (bytes != 0)
 		DEBUG_WARN("%llu bytes not freed", bytes);
 

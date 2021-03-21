@@ -1,13 +1,15 @@
 #include "Resources.h"
 
+#include "toolbox/tb_str.h"
+
 #include "Application/Logger.h"
 
 int ResourcesInit(Resources* res)
 {
-    if (tb_hashmap_alloc(&res->textures, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
+    if (tb_hashmap_alloc(&res->textures, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
         return 0;
 
-    tb_hashmap_set_key_alloc_funcs(&res->textures, tb_hashmap_str_alloc, tb_hashmap_str_free);
+    tb_hashmap_set_key_alloc_funcs(&res->textures, tb_strdup, free);
 
     return 1;
 }

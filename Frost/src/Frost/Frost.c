@@ -48,7 +48,7 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 
 int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 {
-	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL);
+	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostGetAllocator());
 	FrostLoadEcs(&scene->ecs);
 
 	SceneChangeActive(scene, start, 0);
@@ -58,7 +58,7 @@ int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 
 int FrostLoadRenderer(const char* path)
 {
-	char* config = tb_file_read(path, "rb", NULL);
+	char* config = tb_file_read(path, "rb");
 
 	char vert[APPLICATION_PATH_LEN];
 	char frag[APPLICATION_PATH_LEN];

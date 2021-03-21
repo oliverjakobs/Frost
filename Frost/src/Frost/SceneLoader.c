@@ -7,7 +7,7 @@
 
 static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*load_func)(Scene*, char*))
 {
-	char* json = tb_file_read(path, "rb", NULL);
+	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 	if (!json)
 	{
 		DEBUG_ERROR("[Scenes] Failed to read file (%s).", path);
@@ -15,7 +15,7 @@ static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*loa
 	}
 
 	SceneLoadError error = load_func(scene, json);
-	free(json);
+	FrostFree(json);
 
 	if (error != SCENE_LOAD_OK)
 	{
@@ -41,8 +41,7 @@ int SceneLoad(Scene* scene, const char* path)
 {
 	if (!scene) return 0;
 
-	size_t size;
-	char* json = tb_file_read(path, "rb", &size);
+	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 
 	if (!json)
 	{
@@ -56,7 +55,7 @@ int SceneLoad(Scene* scene, const char* path)
 
 	if (!SceneLoadFromFile(scene, map_path, SceneLoadMap))
 	{
-		free(json);
+		FrostFree(json);
 		return 0;
 	}
 
@@ -125,7 +124,7 @@ int SceneLoad(Scene* scene, const char* path)
 	char save_path[APPLICATION_PATH_LEN];
 	tb_json_string(json, "{'save'", save_path, APPLICATION_PATH_LEN, NULL);
 
-	free(json);
+	FrostFree(json);
 
 	return SceneLoadFromFile(scene, save_path, SceneLoadSaveState);
 }
@@ -191,7 +190,7 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 
 	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
 
-	if (!TileMapLoad(&scene->map, rows, cols, tile_size, FrostGetAllocator())) return SCENE_LOAD_MAP_ERROR;
+	if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator)) return SCENE_LOAD_MAP_ERROR;
 
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");

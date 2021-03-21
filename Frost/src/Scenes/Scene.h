@@ -11,6 +11,8 @@
 #include "tile/tile_map.h"
 #include "tile/tile_renderer.h"
 
+#include "toolbox/tb_mem.h"
+
 typedef struct Scene Scene;
 
 typedef (*SceneLoadFn)(Scene*, const char*);
@@ -26,6 +28,7 @@ struct Scene
 
 	SceneLoadFn load;
 	SceneSaveFn save;
+	tb_allocator* allocator;
 	
 	/* active scene specific data */
 	char path[APPLICATION_PATH_LEN];
@@ -39,7 +42,7 @@ struct Scene
 	Background background;
 };
 
-int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save);
+int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator);
 void SceneDestroy(Scene* scene);
 
 void SceneChangeActive(Scene* scene, const char* path, int reload);

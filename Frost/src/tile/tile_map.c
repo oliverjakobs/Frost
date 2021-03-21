@@ -58,7 +58,7 @@ void TileMapDestroy(TileMap* map)
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)
 {
-	if (len != (map->rows * map->cols)) return 0;
+	if (len > (map->rows * map->cols)) return 0;
 
 	for (size_t index = 0; index < len; ++index)
 	{

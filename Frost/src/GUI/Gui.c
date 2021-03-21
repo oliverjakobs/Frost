@@ -2,13 +2,14 @@
 
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
+#include "toolbox/tb_str.h"
 
 #include "Application/Logger.h"
 #include "Application/Application.h"
 
 int GuiInit(GuiManager* gui, float w, float h, const char* path)
 {
-	char* json = tb_file_read(path, "rb", NULL);
+	char* json = tb_file_read(path, "rb");
 
 	if (!json)
 	{
@@ -20,13 +21,13 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path)
 	gui->arena.ptr = NULL;
 	gui->arena.end = NULL;
 
-	if (tb_hashmap_alloc(&gui->fonts, tb_hash_string, tb_hashmap_str_cmp, 0) != TB_HASHMAP_OK)
+	if (tb_hashmap_alloc(&gui->fonts, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
 	{
 		DEBUG_ERROR("[GUI] Failed to allocate hashmap index\n");
 		return 0;
 	}
 
-	tb_hashmap_set_key_alloc_funcs(&gui->fonts, tb_hashmap_str_alloc, tb_hashmap_str_free);
+	tb_hashmap_set_key_alloc_funcs(&gui->fonts, tb_strdup, free);
 
 	/* load fonts */
 	tb_json_element fonts;
