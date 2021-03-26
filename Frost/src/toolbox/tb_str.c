@@ -2,38 +2,40 @@
 
 #include <stdlib.h>
 
-char tb_tolower(unsigned char c)
-{
-    return (c >= 'A' && c <= 'Z') ? 'a' + (c - 'A') : c;
-}
-
 int tb_strcasecmp(const char* str1, const char* str2)
 {
-    const unsigned char* us1 = (const unsigned char*)str1;
-    const unsigned char* us2 = (const unsigned char*)str2;
+    while (tb_tolower(*str1) == tb_tolower(*str2++))
+        if (*str1++ == '\0') return 0;
 
-    while (tb_tolower(*us1) == tb_tolower(*us2++))
-        if (*us1++ == '\0') return 0;
-
-    return (tb_tolower(*us1) - tb_tolower(*--us2));
+    return (tb_tolower(*str1) - tb_tolower(*--str2));
 }
 
 int tb_strncasecmp(const char* str1, const char* str2, size_t max_count)
 {
-	if (max_count != 0)
+	while (max_count-- != 0)
 	{
-		const unsigned char* us1 = (const unsigned char*)str1;
-		const unsigned char* us2 = (const unsigned char*)str2;
+		if (tb_tolower(*str1) != tb_tolower(*str2++))
+			return tb_tolower(*str1) - tb_tolower(*--str2);
 
-		do
-		{
-			if (tb_tolower(*us1) != tb_tolower(*us2++))
-				return tb_tolower(*us1) - tb_tolower(*--us2);
-
-			if (*us1++ == '\0') break;
-		} while (--max_count != 0);
+		if (*str1++ == '\0') break;
 	}
 	return 0;
+}
+
+int tb_streq(const char* str1, const char* str2)
+{
+	size_t len1 = strlen(str1);
+	size_t len2 = strlen(str2);
+
+	return len1 == len2 ? strncmp(str1, str2, len1) == 0 : 0;
+}
+
+int tb_strcaseeq(const char* str1, const char* str2)
+{
+	size_t len1 = strlen(str1);
+	size_t len2 = strlen(str2);
+
+	return len1 == len2 ? tb_strncasecmp(str1, str2, len1) == 0 : 0;
 }
 
 size_t tb_strlcpy(char* dst, const char* src, size_t size)
@@ -53,13 +55,13 @@ char* tb_strdup(const char* src)
 {
     size_t len = strlen(src) + 1;
     char* dst = malloc(len);
-
     return dst ? memcpy(dst, src, len) : NULL;
 }
 
 char* tb_strndup(const char* src, size_t max_len)
 {
-	return NULL;
+	char* dst = malloc(max_len + 1);
+	return dst ? memcpy(dst, src, max_len + 1) : NULL;
 }
 
 char* tb_strsep(char** str_ptr, const char* sep)
@@ -72,3 +74,6 @@ char* tb_strsep(char** str_ptr, const char* sep)
 	*str_ptr = end;
 	return begin;
 }
+
+char tb_tolower(char c) { return (c >= 'A' && c <= 'Z') ? 'a' + (c - 'A') : c; }
+char tb_toupper(char c) { return (c >= 'a' && c <= 'z') ? 'A' + (c - 'a') : c; }

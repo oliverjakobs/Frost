@@ -35,7 +35,7 @@ void SceneDestroy(Scene* scene)
 
 void SceneChangeActive(Scene* scene, const char* path, int reload)
 {
-	if (strcmp(scene->path, path) != 0 || reload)
+	if (!tb_streq(scene->path, path) || reload)
 	{
 		/* Clear and save old Scene */
 		if (scene->path[0] != '\0')

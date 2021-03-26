@@ -18,7 +18,7 @@ int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, tb_allo
 
 	map->allocator = allocator;
 
-	map->tiles = tb_mem_alloc(allocator, sizeof(Tile) * rows * cols);
+	map->tiles = tb_mem_malloc(allocator, sizeof(Tile) * rows * cols);
 	map->types = NULL;
 	map->types_count = 0;
 
@@ -75,7 +75,7 @@ int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*)
 
 int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType*), size_t len)
 {
-	map->types = tb_mem_alloc(map->allocator, sizeof(TileType) * len);
+	map->types = tb_mem_malloc(map->allocator, sizeof(TileType) * len);
 	if (!map->types) return 0;
 
 	for (size_t index = 0; index < len; ++index)

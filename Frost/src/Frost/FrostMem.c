@@ -23,6 +23,18 @@ static void* FrostAllocatorAlloc(size_t size)
     return block;
 }
 
+static void* FrostAllocatorRealloc(void* block, size_t old_size, size_t new_size)
+{
+    void* new_block = realloc(block, new_size);
+    if (new_block)
+    {
+        frost_mem_trace.allocated -= old_size;
+        frost_mem_trace.allocated += new_size;
+        frost_mem_trace.peak = tb_max64(frost_mem_trace.peak, frost_mem_trace.allocated);
+    }
+    return new_block;
+}
+
 static void FrostAllocatorFree(void* block, size_t size)
 {
     if (size > frost_mem_trace.allocated)
@@ -34,13 +46,14 @@ static void FrostAllocatorFree(void* block, size_t size)
 
 static tb_allocator frost_allocator = 
 {
-    .alloc = FrostAllocatorAlloc,
+    .malloc = FrostAllocatorAlloc,
     .realloc = NULL,
     .free = FrostAllocatorFree,
 };
 
-void* FrostMalloc(size_t size)  { return tb_mem_alloc(&frost_allocator, size); }
-void  FrostFree(void* block)    { tb_mem_free(&frost_allocator, block); }
+void* FrostMalloc(size_t size)                  { return tb_mem_malloc(&frost_allocator, size); }
+void* FrostRealloc(void* block, size_t size)    { return tb_mem_realloc(&frost_allocator, block, size); }
+void  FrostFree(void* block)                    { tb_mem_free(&frost_allocator, block); }
 
 tb_allocator*   FrostGetAllocator() { return &frost_allocator; }
 size_t          FrostMemGetBytes()  { return frost_mem_trace.allocated; }

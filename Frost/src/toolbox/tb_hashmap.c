@@ -62,18 +62,13 @@ static tb_hashmap_entry* tb_hashmap_entry_get_populated(const tb_hashmap* map, t
 
 tb_hashmap_error tb_hashmap_alloc(tb_hashmap* map, size_t (*hash)(const void*), int (*cmp)(const void*, const void*), size_t initial_capacity)
 {
-    return tb_hashmap_allocf(map, hash, cmp, initial_capacity, calloc);
-}
-
-tb_hashmap_error tb_hashmap_allocf(tb_hashmap* map, size_t(*hash)(const void*), int(*cmp)(const void*, const void*), size_t initial_capacity, void* (*alloc)(size_t, size_t))
-{
     if (!(map && hash && cmp)) return TB_HASHMAP_ERROR;
 
     /* Convert init size to valid table size */
     if (!initial_capacity)  map->capacity = TB_HASHMAP_SIZE_DEFAULT;
     else                    map->capacity = tb_hashmap_table_calc_size(initial_capacity);
 
-    map->table = alloc(map->capacity, sizeof(tb_hashmap_entry));
+    map->table = calloc(map->capacity, sizeof(tb_hashmap_entry));
     map->used = 0;
 
     if (!map->table) return TB_HASHMAP_ALLOC_ERROR;
@@ -110,16 +105,11 @@ static void tb_hashmap_free_values(tb_hashmap* map)
 
 void tb_hashmap_free(tb_hashmap* map)
 {
-    tb_hashmap_freef(map, free);
-}
-
-void tb_hashmap_freef(tb_hashmap* map, void (*free_func)(void*))
-{
     if (!map) return;
 
     tb_hashmap_free_keys(map);
     tb_hashmap_free_values(map);
-    free_func(map->table);
+    free(map->table);
     map->capacity = TB_HASHMAP_SIZE_DEFAULT;
     map->used = 0;
 }

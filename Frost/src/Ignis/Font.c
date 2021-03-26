@@ -24,7 +24,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for char data");
 	}
 
-	GLubyte* bitmap = ignisAlloc(sizeof(GLubyte) * bitmap_width * bitmap_height);
+	GLubyte* bitmap = IGNIS_MALLOC(sizeof(GLubyte) * bitmap_width * bitmap_height);
 	if (!bitmap)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to allocate memory for bitmap");
@@ -37,7 +37,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to read file: %s", path);
 		ignisDeleteFont(font);
-		ignisFree(bitmap);
+		IGNIS_FREE(bitmap);
 		return 0;
 	}
 
@@ -47,7 +47,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Font] Failed to load font info: %s", path);
 		ignisDeleteFont(font);
-		ignisFree(bitmap);
+		IGNIS_FREE(bitmap);
 		return 0;
 	}
 
@@ -61,7 +61,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	float s = stbtt_ScaleForMappingEmToPixels(&info, 1) / stbtt_ScaleForPixelHeight(&info, 1);
 	stbtt_BakeFontBitmap(buffer, 0, size * s, bitmap, bitmap_width, bitmap_height, font->first_char, font->num_chars, font->char_data);
 
-	ignisFree(buffer);
+	IGNIS_FREE(buffer);
 
 	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
 	config.internal_format = GL_R8;
@@ -74,15 +74,13 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 		return 0;
 	}
 
-	ignisFree(bitmap);
+	IGNIS_FREE(bitmap);
 	return 1;
 }
 
 void ignisDeleteFont(IgnisFont* font)
 {
-	if (font->char_data)
-		ignisFree(font->char_data);
-
+	if (font->char_data) IGNIS_FREE(font->char_data);
 	ignisDeleteTexture2D(&font->texture);
 }
 

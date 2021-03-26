@@ -139,8 +139,7 @@ int main()
 	ApplicationDestroy(&app);
 
 	size_t bytes = FrostMemGetBytes();
-	if (bytes != 0)
-		DEBUG_WARN("%llu bytes not freed", bytes);
+	if (bytes != 0) DEBUG_WARN("%llu bytes not freed", bytes);
 
 	return 0;
 }

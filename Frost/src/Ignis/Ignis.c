@@ -85,13 +85,13 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = ignisAlloc(buffer_size + 1);
+	char* buffer = IGNIS_MALLOC(buffer_size + 1);
 	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 
 	s_ignisErrorCallback(level, buffer);
 
-	ignisFree(buffer);
+	IGNIS_FREE(buffer);
 }
 
 GLuint ignisGetOpenGLTypeSize(GLenum type)
@@ -161,7 +161,7 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 	size_t size = ftell(file);
 	rewind(file);
 
-	char* buffer = ignisAlloc(size + 1);
+	char* buffer = IGNIS_MALLOC(size + 1);
 	if (!buffer)
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to allocate memory for file: %s", path);
@@ -171,15 +171,14 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 
 	if (fread(buffer, size, 1, file) != 1)
 	{
-		ignisFree(buffer);
+		IGNIS_FREE(buffer);
 		fclose(file);
 		return NULL;
 	}
 
 	buffer[size] = '\0'; /* zero terminate buffer */
 
-	if (sizeptr)
-		*sizeptr = size + 1;
+	if (sizeptr) *sizeptr = size + 1;
 
 	fclose(file);
 	return buffer;
@@ -189,18 +188,3 @@ const char* ingisGetGLVersion()		{ return glGetString(GL_VERSION); }
 const char* ingisGetGLVendor()		{ return glGetString(GL_VENDOR); }
 const char* ingisGetGLRenderer()	{ return glGetString(GL_RENDERER); }
 const char* ingisGetGLSLVersion()	{ return glGetString(GL_SHADING_LANGUAGE_VERSION); }
-
-void* ignisAlloc(size_t size)
-{
-	return malloc(size);
-}
-
-void* ignisRealloc(void* block, size_t size)
-{
-	return realloc(block, size);
-}
-
-void ignisFree(void* block)
-{
-	free(block);
-}

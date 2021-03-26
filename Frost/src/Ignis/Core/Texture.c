@@ -2,58 +2,47 @@
 
 #include "../Ignis.h"
 
-#define STBI_MALLOC(size)			ignisAlloc(size)
-#define STBI_REALLOC(block, size)	ignisRealloc(block, size)
-#define STBI_FREE(block)			ignisFree(block)
+#define STBI_MALLOC(size)			IGNIS_MALLOC(size)
+#define STBI_REALLOC(block, size)	IGNIS_REALLOC(block, size)
+#define STBI_FREE(block)			IGNIS_FREE(block)
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
 
 int ignisGenerateTexture2D(IgnisTexture2D* texture, int width, int height, void* pixels, IgnisTextureConfig* configptr)
 {
-	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
+	if (!texture) return IGNIS_FAILURE;
 
-	if (configptr)
-		config = *configptr;
+	IgnisTextureConfig config = configptr ? *configptr : IGNIS_DEFAULT_CONFIG;
+	texture->name = ignisGenerateTexture(GL_TEXTURE_2D, width, height, pixels, config);
+	texture->width = width;
+	texture->height = height;
+	texture->rows = 1;
+	texture->cols = 1;
 
-	if (texture)
-	{
-		texture->name = ignisGenerateTexture(GL_TEXTURE_2D, width, height, pixels, config);
-		texture->width = width;
-		texture->height = height;
-		texture->rows = 1;
-		texture->cols = 1;
-
-		return texture->name;
-	}
-
-	return IGNIS_FAILURE;
+	return texture->name;
 }
 
 int ignisGenerateTexStorage2D(IgnisTexture2D* texture, int width, int height, GLenum internal_format)
 {
-	if (texture)
-	{
-		glGenTextures(1, &texture->name);
-		glBindTexture(GL_TEXTURE_2D, texture->name);
-		glTexStorage2D(GL_TEXTURE_2D, 8, internal_format, width, height);
+	if (!texture) return IGNIS_FAILURE;
 
-		texture->width = width;
-		texture->height = height;
-		texture->rows = 1;
-		texture->cols = 1;
+	glGenTextures(1, &texture->name);
+	glBindTexture(GL_TEXTURE_2D, texture->name);
+	glTexStorage2D(GL_TEXTURE_2D, 8, internal_format, width, height);
 
-		return texture->name;
-	}
+	texture->width = width;
+	texture->height = height;
+	texture->rows = 1;
+	texture->cols = 1;
 
-	return IGNIS_FAILURE;
+	return texture->name;
 }
 
 int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows, GLuint columns, int flip_on_load, IgnisTextureConfig* configptr)
 {
 	if (!texture) return IGNIS_FAILURE;
 
-	IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
-	if (configptr) config = *configptr;
+	IgnisTextureConfig config = configptr ? *configptr : IGNIS_DEFAULT_CONFIG;
 
 	stbi_set_flip_vertically_on_load(flip_on_load);
 

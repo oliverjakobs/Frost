@@ -13,15 +13,8 @@ static void* EcsMapKeyAlloc(const void* key)
 	return block;
 }
 
-static int EcsMapCmp(const void* left, const void* right)
-{
-	return *(EcsEntityID*)left - *(EcsEntityID*)right;
-}
-
-static size_t EcsMapHash(const void* key)
-{
-	return tb_hash_uint32(*(uint32_t*)key);
-}
+static int EcsMapCmp(const void* left, const void* right) { return *(EcsEntityID*)left - *(EcsEntityID*)right; }
+static size_t EcsMapHash(const void* key) { return tb_hash_uint32(*(uint32_t*)key); }
 
 int EcsMapAlloc(EcsMap* map, size_t element_size, EcsFreeFunc free)
 {

@@ -10,6 +10,23 @@ extern "C"
 #include <stdio.h>
 #include <stdarg.h>
 
+
+/* Memory */
+#if defined(IGNIS_MALLOC) && defined(IGNIS_FREE) && defined(IGNIS_REALLOC)
+// ok
+#elif !defined(IGNIS_MALLOC) && !defined(IGNIS_FREE) && !defined(IGNIS_REALLOC)
+// ok
+#else
+#error "Must define all or none of IGNIS_MALLOC, IGNIS_FREE, and IGNIS_REALLOC."
+#endif
+
+#ifndef IGNIS_MALLOC
+#define IGNIS_MALLOC(size)			malloc(size)
+#define IGNIS_REALLOC(block,size)	realloc(block,size)
+#define IGNIS_FREE(block)			free(block)
+#endif
+
+
 /* You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h */
 #ifndef IGNIS_ASSERT
 #include <assert.h>
@@ -85,11 +102,6 @@ const char* ingisGetGLVersion();
 const char* ingisGetGLVendor();
 const char* ingisGetGLRenderer();
 const char* ingisGetGLSLVersion();
-
-/* Memory */
-void* ignisAlloc(size_t size);
-void* ignisRealloc(void* block, size_t size);
-void ignisFree(void* block);
 
 #ifdef __cplusplus
 }
