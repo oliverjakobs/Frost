@@ -18,13 +18,13 @@ void* tb_mem_calloc(tb_allocator* allocator, size_t count, size_t size)
 {
     if (!allocator || !allocator->malloc) return calloc(count, size);
 
-    size += sizeof(size_t);
-    size_t* hdr = allocator->malloc(size);
+    size_t s = (size * count) + sizeof(size_t);
+    size_t* hdr = allocator->malloc(s);
 
     if (!hdr) return NULL;
 
-    memset(hdr, 0, size);
-    hdr[0] = size;
+    memset(hdr, 0, s);
+    hdr[0] = s;
     return hdr + 1;
 }
 

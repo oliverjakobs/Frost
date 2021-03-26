@@ -7,6 +7,23 @@
 #include "Application/Logger.h"
 #include "Application/Application.h"
 
+static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
+{
+	entry->key = tb_strdup(key);
+
+	if (!entry->key) return 0;
+
+	entry->value = value;
+
+	return 1;
+}
+
+static void GuiFreeMapEntry(void* allocator, tb_hashmap_entry* entry)
+{
+	free(entry->key);
+	ignisDeleteFont(entry->value);
+}
+
 int GuiInit(GuiManager* gui, float w, float h, const char* path)
 {
 	char* json = tb_file_read(path, "rb");
@@ -21,13 +38,16 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path)
 	gui->arena.ptr = NULL;
 	gui->arena.end = NULL;
 
-	if (tb_hashmap_alloc(&gui->fonts, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
+	gui->fonts.allocator = NULL;
+	gui->fonts.alloc = NULL;
+	gui->fonts.free = NULL;
+	gui->fonts.entry_alloc = GuiAllocMapEntry;
+	gui->fonts.entry_free = GuiFreeMapEntry;
+	if (tb_hashmap_init(&gui->fonts, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
 	{
 		DEBUG_ERROR("[GUI] Failed to allocate hashmap index\n");
 		return 0;
 	}
-
-	tb_hashmap_set_key_alloc_funcs(&gui->fonts, tb_strdup, free);
 
 	/* load fonts */
 	tb_json_element fonts;
@@ -61,9 +81,8 @@ void GuiDestroy(GuiManager* gui)
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&gui->fonts); iter; iter = tb_hashmap_iter_next(&gui->fonts, iter))
 	{
 		IgnisFont* font = tb_hashmap_iter_get_value(iter);
-		ignisDeleteFont(font);
 	}
-	tb_hashmap_free(&gui->fonts);
+	tb_hashmap_destroy(&gui->fonts);
 
 	arena_free(&gui->arena);
 }

@@ -10,7 +10,7 @@ typedef struct
     tb_hashmap textures;	/* <str,IgnisTexture> */
 } Resources;
 
-int ResourcesInit(Resources* res);
+int ResourcesInit(Resources* res, void* allocator);
 void ResourcesDestroy(Resources* res);
 
 void ResourcesClear(Resources* res);

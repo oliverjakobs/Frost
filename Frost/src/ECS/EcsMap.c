@@ -3,14 +3,23 @@
 #include <string.h>
 #include <stdlib.h>
 
-static void* EcsMapKeyAlloc(const void* key)
+#include "toolbox/tb_mem.h"
+
+static int EcsMapAllocEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {
-	size_t size = sizeof(EcsEntityID);
-	void* block = malloc(size);
+	entry->key = EcsMemDup(key, sizeof(EcsEntityID));
 
-	if (block) memcpy(block, key, size);
+	if (!entry->key) return 0;
 
-	return block;
+	entry->value = value;
+
+	return 1;
+}
+
+static void EcsMapFreeEntry(void* allocator, tb_hashmap_entry* entry)
+{
+	EcsMemFree(entry->key);
+	EcsMemFree(entry->value);
 }
 
 static int EcsMapCmp(const void* left, const void* right) { return *(EcsEntityID*)left - *(EcsEntityID*)right; }
@@ -18,19 +27,21 @@ static size_t EcsMapHash(const void* key) { return tb_hash_uint32(*(uint32_t*)ke
 
 int EcsMapAlloc(EcsMap* map, size_t element_size, EcsFreeFunc free)
 {
-	if (tb_hashmap_alloc(&map->map, EcsMapHash, EcsMapCmp, 0) != TB_HASHMAP_OK)
+	map->map.allocator = NULL;
+	map->map.alloc = NULL;
+	map->map.free = NULL;
+	map->map.entry_alloc = EcsMapAllocEntry;
+	map->map.entry_free = EcsMapFreeEntry;
+	if (tb_hashmap_init(&map->map, EcsMapHash, EcsMapCmp, 0) != TB_HASHMAP_OK)
 		return 0;
 
 	map->element_size = element_size;
-
-	tb_hashmap_set_key_alloc_funcs(&map->map, EcsMapKeyAlloc, EcsMemFree);
-	tb_hashmap_set_value_alloc_funcs(&map->map, NULL, free ? free : EcsMemFree);
 	return 1;
 }
 
 void EcsMapFree(EcsMap* map)
 {
-	tb_hashmap_free(&map->map);
+	tb_hashmap_destroy(&map->map);
 }
 
 void EcsMapClear(EcsMap* map)
