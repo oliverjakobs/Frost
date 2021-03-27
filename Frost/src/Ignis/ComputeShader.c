@@ -13,7 +13,7 @@ int ignisCreateComputeShader(IgnisComputeShader* shader, const char* path)
 
 	int status = ignisCreateComputeShaderSrc(shader, src);
 
-	IGNIS_FREE(src);
+	ignisFree(src);
 
 	return IGNIS_SUCCESS;
 }

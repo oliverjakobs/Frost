@@ -3,6 +3,9 @@
 
 #include <stdlib.h>
 
+#define TB_MEM_HDR(block)   ((size_t*)(void*)(block) - 1)
+#define TB_MEM_SIZE(block)  TB_MEM_HDR(block)[0]
+
 typedef void* (*tb_mem_malloc_callback)     (size_t size);
 typedef void* (*tb_mem_realloc_callback)    (void* block, size_t old_size, size_t new_size);
 typedef void  (*tb_mem_free_callback)       (void* block, size_t size);

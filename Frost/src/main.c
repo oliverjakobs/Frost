@@ -21,7 +21,7 @@ int OnInit(Application* app)
 
 	FrostLoadRenderer("config.ini");
 
-	GuiInit(&gui, (float)app->width, (float)app->height, "res/fonts.json");
+	GuiInit(&gui, (float)app->width, (float)app->height, "res/fonts.json", FrostGetAllocator());
 	FontRendererBindFontColor(GuiGetFont(&gui, "gui"), IGNIS_WHITE);
 
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));

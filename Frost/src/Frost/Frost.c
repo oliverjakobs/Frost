@@ -21,6 +21,7 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 {
 	/* ingis initialization */
+	ignisSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_realloc, tb_mem_free);
 	ignisSetErrorCallback(FrostIgnisErrorCallback);
 
 	int debug = 0;
@@ -38,10 +39,10 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	ignisEnableBlend(blend_s, blend_d);
 	ignisSetClearColor(clear_color);
 
-	DEBUG_INFO("[OpenGL] Version: %s", ingisGetGLVersion());
-	DEBUG_INFO("[OpenGL] Vendor: %s", ingisGetGLVendor());
-	DEBUG_INFO("[OpenGL] Renderer: %s", ingisGetGLRenderer());
-	DEBUG_INFO("[OpenGL] GLSL Version: %s", ingisGetGLSLVersion());
+	DEBUG_INFO("[OpenGL] Version: %s",		ignisGetGLVersion());
+	DEBUG_INFO("[OpenGL] Vendor: %s",		ignisGetGLVendor());
+	DEBUG_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
+	DEBUG_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
 
 	return 1;
 }
@@ -58,7 +59,7 @@ int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 
 int FrostLoadRenderer(const char* path)
 {
-	char* config = tb_file_read(path, "rb");
+	char* config = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 
 	char vert[APPLICATION_PATH_LEN];
 	char frag[APPLICATION_PATH_LEN];
@@ -88,7 +89,7 @@ int FrostLoadRenderer(const char* path)
 	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
 	FontRendererInit(vert, frag);
 
-	free(config);
+	FrostFree(config);
 
 	return 1;
 }

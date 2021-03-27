@@ -9,22 +9,23 @@
 
 static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {
-	entry->key = tb_strdup(key);
+	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);
 
 	if (!entry->key) return 0;
 
-	entry->value = value;
+	entry->value = tb_mem_dup(allocator, value, sizeof(IgnisFont));
 
-	return 1;
+	return entry->value != NULL;
 }
 
 static void GuiFreeMapEntry(void* allocator, tb_hashmap_entry* entry)
 {
-	free(entry->key);
+	tb_mem_free(allocator, entry->key);
 	ignisDeleteFont(entry->value);
+	tb_mem_free(allocator, entry->value);
 }
 
-int GuiInit(GuiManager* gui, float w, float h, const char* path)
+int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* allocator)
 {
 	char* json = tb_file_read(path, "rb");
 
@@ -34,13 +35,9 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path)
 		return 0;
 	}
 
-	gui->arena.blocks = NULL;
-	gui->arena.ptr = NULL;
-	gui->arena.end = NULL;
-
-	gui->fonts.allocator = NULL;
-	gui->fonts.alloc = NULL;
-	gui->fonts.free = NULL;
+	gui->fonts.allocator = allocator;
+	gui->fonts.alloc = tb_mem_calloc;
+	gui->fonts.free = tb_mem_free;
 	gui->fonts.entry_alloc = GuiAllocMapEntry;
 	gui->fonts.entry_free = GuiFreeMapEntry;
 	if (tb_hashmap_init(&gui->fonts, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
@@ -78,25 +75,19 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path)
 
 void GuiDestroy(GuiManager* gui)
 {
-	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&gui->fonts); iter; iter = tb_hashmap_iter_next(&gui->fonts, iter))
-	{
-		IgnisFont* font = tb_hashmap_iter_get_value(iter);
-	}
 	tb_hashmap_destroy(&gui->fonts);
-
-	arena_free(&gui->arena);
 }
 
 IgnisFont* GuiAddFont(GuiManager* gui, const char* name, const char* path, float size)
 {
-	IgnisFont* font = arena_alloc(&gui->arena, sizeof(IgnisFont));
-	if (ignisCreateFont(font, path, size))
+	IgnisFont font;
+	if (ignisCreateFont(&font, path, size))
 	{
-		if (tb_hashmap_insert(&gui->fonts, name, font) == font)
-			return font;
+		IgnisFont* entry = tb_hashmap_insert(&gui->fonts, name, &font);
+		if (entry != NULL) return entry;
 
 		DEBUG_ERROR("[GUI] Failed to add font: %s (%s)\n", name, path);
-		ignisDeleteFont(font);
+		ignisDeleteFont(&font);
 	}
 	return NULL;
 }

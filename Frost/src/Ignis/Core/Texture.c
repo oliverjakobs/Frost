@@ -2,9 +2,9 @@
 
 #include "../Ignis.h"
 
-#define STBI_MALLOC(size)			IGNIS_MALLOC(size)
-#define STBI_REALLOC(block, size)	IGNIS_REALLOC(block, size)
-#define STBI_FREE(block)			IGNIS_FREE(block)
+#define STBI_MALLOC(size)			ignisMalloc(size)
+#define STBI_REALLOC(block, size)	ignisRealloc(block, size)
+#define STBI_FREE(block)			ignisFree(block)
 #define STB_IMAGE_IMPLEMENTATION
 #include "../stb/stb_image.h"
 
@@ -52,6 +52,8 @@ int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows,
 	char* buffer = ignisReadFile(path, &buffer_len);
 
 	unsigned char* pixels = stbi_load_from_memory(buffer, buffer_len, &texture->width, &texture->height, &bpp, 4);
+
+	ignisFree(buffer);
 
 	if (pixels)
 	{

@@ -11,22 +11,6 @@ extern "C"
 #include <stdarg.h>
 
 
-/* Memory */
-#if defined(IGNIS_MALLOC) && defined(IGNIS_FREE) && defined(IGNIS_REALLOC)
-// ok
-#elif !defined(IGNIS_MALLOC) && !defined(IGNIS_FREE) && !defined(IGNIS_REALLOC)
-// ok
-#else
-#error "Must define all or none of IGNIS_MALLOC, IGNIS_FREE, and IGNIS_REALLOC."
-#endif
-
-#ifndef IGNIS_MALLOC
-#define IGNIS_MALLOC(size)			malloc(size)
-#define IGNIS_REALLOC(block,size)	realloc(block,size)
-#define IGNIS_FREE(block)			free(block)
-#endif
-
-
 /* You can #define IGNIS_ASSERT(x) before the #include to avoid using assert.h */
 #ifndef IGNIS_ASSERT
 #include <assert.h>
@@ -98,10 +82,21 @@ void ignisClearColorBuffer(IgnisColorRGBA color);
 char* ignisReadFile(const char* path, size_t* sizeptr);
 
 /* Infos */
-const char* ingisGetGLVersion();
-const char* ingisGetGLVendor();
-const char* ingisGetGLRenderer();
-const char* ingisGetGLSLVersion();
+const char* ignisGetGLVersion();
+const char* ignisGetGLVendor();
+const char* ignisGetGLRenderer();
+const char* ignisGetGLSLVersion();
+
+/* Memory */
+typedef void* (*ignisMallocCallback) (void* allocator, size_t size);
+typedef void* (*ignisReallocCallback)(void* allocator, void* block, size_t size);
+typedef void  (*ignisFreeCallback)   (void* allocator, void* block);
+
+void ignisSetAllocator(void* allocator, ignisMallocCallback malloc, ignisReallocCallback realloc, ignisFreeCallback free);
+
+void* ignisMalloc(size_t size);
+void* ignisRealloc(void* block, size_t size);
+void  ignisFree(void* block);
 
 #ifdef __cplusplus
 }

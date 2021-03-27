@@ -28,8 +28,7 @@ static void* FrostAllocatorRealloc(void* block, size_t old_size, size_t new_size
     void* new_block = realloc(block, new_size);
     if (new_block)
     {
-        frost_mem_trace.allocated -= old_size;
-        frost_mem_trace.allocated += new_size;
+        frost_mem_trace.allocated += (new_size - old_size);
         frost_mem_trace.peak = tb_max64(frost_mem_trace.peak, frost_mem_trace.allocated);
     }
     return new_block;
@@ -47,7 +46,7 @@ static void FrostAllocatorFree(void* block, size_t size)
 static tb_allocator frost_allocator = 
 {
     .malloc = FrostAllocatorAlloc,
-    .realloc = NULL,
+    .realloc = FrostAllocatorRealloc,
     .free = FrostAllocatorFree,
 };
 

@@ -85,13 +85,13 @@ void _ignisErrorCallback(ignisErrorLevel level, const char* fmt, ...)
 	va_list args;
 	va_start(args, fmt);
 	size_t buffer_size = vsnprintf(NULL, 0, fmt, args);
-	char* buffer = IGNIS_MALLOC(buffer_size + 1);
+	char* buffer = ignisMalloc(buffer_size + 1);
 	vsnprintf(buffer, buffer_size + 1, fmt, args);
 	va_end(args);
 
 	s_ignisErrorCallback(level, buffer);
 
-	IGNIS_FREE(buffer);
+	ignisFree(buffer);
 }
 
 GLuint ignisGetOpenGLTypeSize(GLenum type)
@@ -161,30 +161,59 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 	size_t size = ftell(file);
 	rewind(file);
 
-	char* buffer = IGNIS_MALLOC(size + 1);
-	if (!buffer)
+	char* buffer = ignisMalloc(size + 1);
+	if (buffer)
+	{
+		if (fread(buffer, size, 1, file) != 1)
+		{
+			_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to read file: %s", path);
+			ignisFree(buffer);
+			fclose(file);
+			return NULL;
+		}
+
+		buffer[size] = '\0'; /* zero terminate buffer */
+		if (sizeptr) *sizeptr = size + 1;
+	}
+	else
 	{
 		_ignisErrorCallback(IGNIS_ERROR, "[Ignis] Failed to allocate memory for file: %s", path);
-		fclose(file);
-		return NULL;
 	}
-
-	if (fread(buffer, size, 1, file) != 1)
-	{
-		IGNIS_FREE(buffer);
-		fclose(file);
-		return NULL;
-	}
-
-	buffer[size] = '\0'; /* zero terminate buffer */
-
-	if (sizeptr) *sizeptr = size + 1;
 
 	fclose(file);
 	return buffer;
 }
 
-const char* ingisGetGLVersion()		{ return glGetString(GL_VERSION); }
-const char* ingisGetGLVendor()		{ return glGetString(GL_VENDOR); }
-const char* ingisGetGLRenderer()	{ return glGetString(GL_RENDERER); }
-const char* ingisGetGLSLVersion()	{ return glGetString(GL_SHADING_LANGUAGE_VERSION); }
+const char* ignisGetGLVersion()		{ return glGetString(GL_VERSION); }
+const char* ignisGetGLVendor()		{ return glGetString(GL_VENDOR); }
+const char* ignisGetGLRenderer()	{ return glGetString(GL_RENDERER); }
+const char* ignisGetGLSLVersion()	{ return glGetString(GL_SHADING_LANGUAGE_VERSION); }
+
+static void* ignis_allocator;
+static ignisMallocCallback  ignis_malloc;
+static ignisReallocCallback ignis_realloc;
+static ignisFreeCallback    ignis_free;
+
+void ignisSetAllocator(void* allocator, ignisMallocCallback malloc, ignisReallocCallback realloc, ignisFreeCallback free)
+{
+	ignis_allocator = allocator;
+	ignis_malloc = malloc;
+	ignis_realloc = realloc;
+	ignis_free = free;
+}
+
+void* ignisMalloc(size_t size)
+{
+	return ignis_malloc ? ignis_malloc(ignis_allocator, size) : malloc(size);
+}
+
+void* ignisRealloc(void* block, size_t size)
+{
+	return ignis_realloc ? ignis_realloc(ignis_allocator, block, size) : realloc(block, size);
+}
+
+void ignisFree(void* block)
+{
+	if (ignis_free) ignis_free(ignis_allocator, block);
+	else			free(block);
+}
