@@ -4,18 +4,18 @@
 
 void* tb_mem_malloc(tb_allocator* allocator, size_t size)
 {
-    size += sizeof(size_t);
-    size_t* hdr = (allocator && allocator->malloc) ? allocator->malloc(size) : malloc(size);
+    size_t s = size + sizeof(size_t);
+    size_t* hdr = (allocator && allocator->malloc) ? allocator->malloc(s) : malloc(s);
 
-    if (hdr) { hdr[0] = size; return hdr + 1; }
+    if (hdr) { hdr[0] = s; return hdr + 1; }
     return NULL;
 }
 
 void* tb_mem_calloc(tb_allocator* allocator, size_t count, size_t size)
 {
-    if (!allocator || !allocator->malloc) return calloc(count, size);
-
     size_t s = (size * count) + sizeof(size_t);
+    if (!allocator || !allocator->malloc) return calloc(1, s);
+
     size_t* hdr = allocator->malloc(s);
 
     if (!hdr) return NULL;
@@ -49,6 +49,5 @@ void tb_mem_free(tb_allocator* allocator, void* block)
 void* tb_mem_dup(tb_allocator* allocator, const void* src, size_t size)
 {
     void* dst = tb_mem_malloc(allocator, size);
-    
     return dst ? memcpy(dst, src, size) : NULL;
 }
