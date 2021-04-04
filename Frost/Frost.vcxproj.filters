@@ -4,9 +4,6 @@
     <Filter Include="res">
       <UniqueIdentifier>{4FA5880B-BBAE-887C-442A-9F7CB032947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="res\animations">
-      <UniqueIdentifier>{51518F66-3D1F-836C-26B3-F39212205FD1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="res\fonts">
       <UniqueIdentifier>{E81E0011-5489-B487-9DC7-652D097192DC}</UniqueIdentifier>
     </Filter>
@@ -34,14 +31,14 @@
     <Filter Include="res\textures\background_2">
       <UniqueIdentifier>{C2B63F24-2E79-73AE-7729-023BE32A4C8C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="res\textures\mario">
+      <UniqueIdentifier>{C995534C-B579-14A2-1EDA-0EF50ADDFE23}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Application">
       <UniqueIdentifier>{701253C7-DC9D-C08B-E5AE-438051B91C8C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Camera">
-      <UniqueIdentifier>{054BA008-F102-E255-5A0A-BBB146E17C46}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Console">
       <UniqueIdentifier>{4F9F6B3D-BB54-E432-4449-DE09B0FDDA36}</UniqueIdentifier>
@@ -57,6 +54,9 @@
     </Filter>
     <Filter Include="src\Frost\Systems">
       <UniqueIdentifier>{714CBC48-DD62-BADE-26DA-4500922F8B66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\GUI">
+      <UniqueIdentifier>{C1782FA9-2D58-AE44-3670-391BA2CE14A6}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
@@ -106,6 +106,9 @@
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Application\Input.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application\Logger.h">
       <Filter>src\Application</Filter>
     </ClInclude>
     <ClInclude Include="src\Application\Timer.h">
@@ -171,7 +174,19 @@
     <ClInclude Include="src\Frost\Frost.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
+    <ClInclude Include="src\Frost\FrostDebugger.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\FrostMem.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
     <ClInclude Include="src\Frost\FrostParser.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\SceneLoader.h">
+      <Filter>src\Frost</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Frost\SceneSaver.h">
       <Filter>src\Frost</Filter>
     </ClInclude>
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h">
@@ -194,6 +209,9 @@
     </ClInclude>
     <ClInclude Include="src\Frost\Systems\RenderSystem.h">
       <Filter>src\Frost\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GUI\Gui.h">
+      <Filter>src\GUI</Filter>
     </ClInclude>
     <ClInclude Include="src\Graphics\Background.h">
       <Filter>src\Graphics</Filter>
@@ -252,6 +270,12 @@
     <ClInclude Include="src\Ignis\stb\stb_truetype.h">
       <Filter>src\Ignis\stb</Filter>
     </ClInclude>
+    <ClInclude Include="src\Scenes\Camera.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scenes\MapEditor.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Scenes\Resources.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
@@ -259,6 +283,9 @@
       <Filter>src\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\Scenes\SceneEditor.h">
+      <Filter>src\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scenes\WorldEditor.h">
       <Filter>src\Scenes</Filter>
     </ClInclude>
     <ClInclude Include="src\math\grid.h">
@@ -291,10 +318,16 @@
     <ClInclude Include="src\tile\tile_renderer.h">
       <Filter>src\tile</Filter>
     </ClInclude>
+    <ClInclude Include="src\toolbox\tb_array.h">
+      <Filter>src\toolbox</Filter>
+    </ClInclude>
     <ClInclude Include="src\toolbox\tb_file.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
     <ClInclude Include="src\toolbox\tb_hashmap.h">
+      <Filter>src\toolbox</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox\tb_ini.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
     <ClInclude Include="src\toolbox\tb_json.h">
@@ -303,34 +336,15 @@
     <ClInclude Include="src\toolbox\tb_jwrite.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
+    <ClInclude Include="src\toolbox\tb_mem.h">
+      <Filter>src\toolbox</Filter>
+    </ClInclude>
     <ClInclude Include="src\toolbox\tb_str.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
     <ClInclude Include="src\toolbox\toolbox.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application\Logger.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\FrostDebugger.h" />
-    <ClInclude Include="src\toolbox\tb_ini.h" />
-    <ClInclude Include="src\GUI\Gui.h" />
-    <ClInclude Include="src\Frost\SceneSaver.h">
-      <Filter>src\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\SceneLoader.h">
-      <Filter>src\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scenes\MapEditor.h" />
-    <ClInclude Include="src\Scenes\WorldEditor.h" />
-    <ClInclude Include="src\toolbox\tb_array.h">
-      <Filter>src\toolbox</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Scenes\Camera.h">
-      <Filter>src\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Frost\FrostMem.h" />
-    <ClInclude Include="src\toolbox\tb_mem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application\Application.c">
@@ -346,6 +360,9 @@
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Input.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application\Logger.c">
       <Filter>src\Application</Filter>
     </ClCompile>
     <ClCompile Include="src\Application\Timer.c">
@@ -411,7 +428,19 @@
     <ClCompile Include="src\Frost\Frost.c">
       <Filter>src\Frost</Filter>
     </ClCompile>
+    <ClCompile Include="src\Frost\FrostDebugger.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\FrostMem.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
     <ClCompile Include="src\Frost\FrostParser.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\SceneLoader.c">
+      <Filter>src\Frost</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Frost\SceneSaver.c">
       <Filter>src\Frost</Filter>
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c">
@@ -434,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="src\Frost\Systems\RenderSystem.c">
       <Filter>src\Frost\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GUI\Gui.c">
+      <Filter>src\GUI</Filter>
     </ClCompile>
     <ClCompile Include="src\Graphics\Background.c">
       <Filter>src\Graphics</Filter>
@@ -483,6 +515,12 @@
     <ClCompile Include="src\Ignis\glad\glad.c">
       <Filter>src\Ignis\glad</Filter>
     </ClCompile>
+    <ClCompile Include="src\Scenes\Camera.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scenes\MapEditor.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scenes\Resources.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
@@ -490,6 +528,9 @@
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\SceneEditor.c">
+      <Filter>src\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scenes\WorldEditor.c">
       <Filter>src\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\main.c">
@@ -522,10 +563,16 @@
     <ClCompile Include="src\tile\tile_renderer.c">
       <Filter>src\tile</Filter>
     </ClCompile>
+    <ClCompile Include="src\toolbox\tb_array.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
     <ClCompile Include="src\toolbox\tb_file.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
     <ClCompile Include="src\toolbox\tb_hashmap.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox\tb_ini.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
     <ClCompile Include="src\toolbox\tb_json.c">
@@ -534,32 +581,18 @@
     <ClCompile Include="src\toolbox\tb_jwrite.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
+    <ClCompile Include="src\toolbox\tb_mem.c">
+      <Filter>src\toolbox</Filter>
+    </ClCompile>
     <ClCompile Include="src\toolbox\tb_str.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
     <ClCompile Include="src\toolbox\toolbox.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
-    <ClCompile Include="src\Frost\FrostDebugger.c" />
-    <ClCompile Include="src\Application\Logger.c" />
-    <ClCompile Include="src\toolbox\tb_ini.c" />
-    <ClCompile Include="src\GUI\Gui.c" />
-    <ClCompile Include="src\Frost\SceneLoader.c">
-      <Filter>src\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Frost\SceneSaver.c">
-      <Filter>src\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scenes\WorldEditor.c" />
-    <ClCompile Include="src\Scenes\MapEditor.c" />
-    <ClCompile Include="src\Scenes\Camera.c">
-      <Filter>src\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="src\toolbox\tb_mem.c" />
-    <ClCompile Include="src\Frost\FrostMem.c" />
-    <ClCompile Include="src\toolbox\tb_array.c" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="config.ini" />
     <None Include="res\fonts.json">
       <Filter>res</Filter>
     </None>
@@ -629,8 +662,6 @@
     <None Include="res\templates\tree.json">
       <Filter>res\templates</Filter>
     </None>
-    <None Include="config.ini" />
-    <None Include="res\frost.ini" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\textures\background\0.png">
@@ -668,6 +699,15 @@
     </Image>
     <Image Include="res\textures\machine.png">
       <Filter>res\textures</Filter>
+    </Image>
+    <Image Include="res\textures\mario\Untitled.png">
+      <Filter>res\textures\mario</Filter>
+    </Image>
+    <Image Include="res\textures\mario\bushes.png">
+      <Filter>res\textures\mario</Filter>
+    </Image>
+    <Image Include="res\textures\mario\tiles.png">
+      <Filter>res\textures\mario</Filter>
     </Image>
     <Image Include="res\textures\player.png">
       <Filter>res\textures</Filter>

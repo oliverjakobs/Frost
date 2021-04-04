@@ -2,6 +2,9 @@
 
 #include <string.h>
 
+#define TB_MEM_HDR(block)   ((size_t*)(void*)(block) - 1)
+#define TB_MEM_SIZE(block)  TB_MEM_HDR(block)[0]
+
 void* tb_mem_malloc(tb_allocator* allocator, size_t size)
 {
     size_t s = size + sizeof(size_t);

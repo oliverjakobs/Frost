@@ -28,6 +28,8 @@ typedef struct
 
 	/* map editor */
 	Tile* tile_hover;
+	int palette_hover;
+	int palette_select;
 } SceneEditor;
 
 void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding, SceneEditMode mode);

@@ -62,6 +62,9 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
 
+	glfwSetErrorCallback(ApplicationGLFWErrorCallback);
+
+	DEBUG_INFO("[GLFW] Created Window (%s) with size %d, %d", app->title, app->width, app->height);
 	/* creating the window */
 	app->window = glfwCreateWindow(width, height, title, NULL, NULL);
 	if (app->window == NULL)
@@ -71,13 +74,13 @@ int ApplicationLoad(Application* app, const char* title, int width, int height, 
 		return 0;
 	}
 
+
 	glfwMakeContextCurrent(app->window);
 	glfwSetWindowUserPointer(app->window, app);
 
 	EventHandlerInit(EVENT_HANDLER_QUEUE_SIZE, ApplicationEventCallback);
 
 	/* Set GLFW callbacks */
-	glfwSetErrorCallback(ApplicationGLFWErrorCallback);
 	glfwSetWindowSizeCallback(app->window, ApplicationGLFWWindowSizeCallback);
 	glfwSetWindowCloseCallback(app->window, ApplicationGLFWWindowCloseCallback);
 	glfwSetKeyCallback(app->window, ApplicationGLFWKeyCallback);

@@ -124,7 +124,7 @@ char* tb_ini_read_element(char* ini, tb_ini_element* element)
     ini = tb_ini_skip_whitespaces(ini);
 
     ini = tb_ini_read_name(ini, element);
-    if (element->type == TB_INI_ERROR) return ini;
+    if (element->error == TB_INI_BAD_NAME) return ini;
 
     ini = tb_ini_skip_whitespaces(ini);
 

@@ -147,6 +147,10 @@ void ignisClearColorBuffer(IgnisColorRGBA color)
 	glClearBufferfv(GL_COLOR, 0, &color.r);
 }
 
+#define IGNIS_FILE_BUFFER_SIZE	1024
+
+static char ignis_file_buffer[IGNIS_FILE_BUFFER_SIZE];
+
 char* ignisReadFile(const char* path, size_t* sizeptr)
 {
 	FILE* file = fopen(path, "rb");
@@ -160,6 +164,7 @@ char* ignisReadFile(const char* path, size_t* sizeptr)
 	fseek(file, 0, SEEK_END);
 	size_t size = ftell(file);
 	rewind(file);
+
 
 	char* buffer = ignisMalloc(size + 1);
 	if (buffer)

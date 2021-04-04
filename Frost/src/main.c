@@ -29,8 +29,6 @@ int OnInit(Application* app)
 
 	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_MAP);
 
-	glViewport(0, 0, app->width, app->height);
-
 	return 1;
 }
 
@@ -114,7 +112,7 @@ void OnRenderDebug(Application* app)
 	FrostDebugRenderSettings(&debugger, app->width - 220.0f, 8.0f);
 
 	/* Debug info */
-	FrostDebugRenderInfo(&debugger, &scene, app->width - 470.0f, 8.0f);
+	FrostDebugRenderInfo(&debugger, &scene, app->width - 480.0f, 8.0f);
 
 	FontRendererFlush();
 

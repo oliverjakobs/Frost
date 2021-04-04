@@ -52,6 +52,8 @@ int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostGetAllocator());
 	FrostLoadEcs(&scene->ecs);
 
+	glViewport(0, 0, w, h);
+
 	SceneChangeActive(scene, start, 0);
 
 	return 1;

@@ -27,6 +27,8 @@ void SceneEditorReset(SceneEditor* editor)
 	editor->hover = ECS_NULL_ENTITY;
 
 	editor->tile_hover = NULL;
+	editor->palette_hover = -1;
+	editor->palette_select = -1;
 }
 
 void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode)

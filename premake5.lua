@@ -5,6 +5,7 @@ workspace "Frost"
 	configurations
 	{
 		"Debug",
+		"OptimizedDebug",
 		"Release"
 	}
 
@@ -28,12 +29,11 @@ project "Frost"
 
 	files
 	{
+		--Config
+		"%{prj.name}/config.ini",
+		--Source
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.c",
-		"%{prj.name}/src/**.hpp",
-		"%{prj.name}/src/**.cpp",
-		--Config
-		"%{prj.name}/config.json",
 		--Resources
 		"%{prj.name}/res/**.json",
 		"%{prj.name}/res/fonts/**.ttf",
@@ -61,6 +61,11 @@ project "Frost"
 	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "On"
+		
+	filter "configurations:OptimizedDebug"
+		runtime "Debug"
+		symbols "On"
+		optimize "On"
 
 	filter "configurations:Release"
 		runtime "Release"

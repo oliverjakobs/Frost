@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="OptimizedDebug|x64">
+      <Configuration>OptimizedDebug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
@@ -24,6 +28,12 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='OptimizedDebug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -36,6 +46,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='OptimizedDebug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -44,6 +57,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\bin\Debug\Frost\</OutDir>
     <IntDir>..\bin-int\Debug\Frost\</IntDir>
+    <TargetName>Frost</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='OptimizedDebug|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\OptimizedDebug\Frost\</OutDir>
+    <IntDir>..\bin-int\OptimizedDebug\Frost\</IntDir>
     <TargetName>Frost</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -70,6 +90,29 @@
       <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='OptimizedDebug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -93,13 +136,11 @@
   <ItemGroup>
     <ClInclude Include="src\Application\Application.h" />
     <ClInclude Include="src\Application\ApplicationCallback.h" />
-    <ClInclude Include="src\Application\Logger.h" />
     <ClInclude Include="src\Application\Event.h" />
     <ClInclude Include="src\Application\EventHandler.h" />
     <ClInclude Include="src\Application\Input.h" />
+    <ClInclude Include="src\Application\Logger.h" />
     <ClInclude Include="src\Application\Timer.h" />
-    <ClInclude Include="src\Frost\FrostMem.h" />
-    <ClInclude Include="src\Scenes\Camera.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
@@ -121,7 +162,10 @@
     <ClInclude Include="src\Frost\Components\Transform.h" />
     <ClInclude Include="src\Frost\Frost.h" />
     <ClInclude Include="src\Frost\FrostDebugger.h" />
+    <ClInclude Include="src\Frost\FrostMem.h" />
     <ClInclude Include="src\Frost\FrostParser.h" />
+    <ClInclude Include="src\Frost\SceneLoader.h" />
+    <ClInclude Include="src\Frost\SceneSaver.h" />
     <ClInclude Include="src\Frost\Systems\AnimationSystem.h" />
     <ClInclude Include="src\Frost\Systems\EntityStateSystem.h" />
     <ClInclude Include="src\Frost\Systems\InteractionSystem.h" />
@@ -129,13 +173,13 @@
     <ClInclude Include="src\Frost\Systems\PhysicsSystem.h" />
     <ClInclude Include="src\Frost\Systems\PlayerSystem.h" />
     <ClInclude Include="src\Frost\Systems\RenderSystem.h" />
+    <ClInclude Include="src\GUI\Gui.h" />
     <ClInclude Include="src\Graphics\Background.h" />
     <ClInclude Include="src\Graphics\BatchRenderer2D.h" />
     <ClInclude Include="src\Graphics\FontRenderer.h" />
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\GUI\Gui.h" />
     <ClInclude Include="src\Ignis\ComputeShader.h" />
     <ClInclude Include="src\Ignis\Core\Buffer.h" />
     <ClInclude Include="src\Ignis\Core\Shader.h" />
@@ -149,31 +193,30 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
-    <ClInclude Include="src\toolbox\tb_mem.h" />
+    <ClInclude Include="src\Scenes\Camera.h" />
     <ClInclude Include="src\Scenes\MapEditor.h" />
     <ClInclude Include="src\Scenes\Resources.h" />
     <ClInclude Include="src\Scenes\Scene.h" />
     <ClInclude Include="src\Scenes\SceneEditor.h" />
-    <ClInclude Include="src\Frost\SceneLoader.h" />
-    <ClInclude Include="src\Frost\SceneSaver.h" />
+    <ClInclude Include="src\Scenes\WorldEditor.h" />
     <ClInclude Include="src\math\grid.h" />
     <ClInclude Include="src\math\mat4.h" />
     <ClInclude Include="src\math\math.h" />
     <ClInclude Include="src\math\vec2.h" />
     <ClInclude Include="src\math\vec3.h" />
     <ClInclude Include="src\memory\arena.h" />
-    <ClInclude Include="src\Scenes\WorldEditor.h" />
     <ClInclude Include="src\tile\tile_body.h" />
     <ClInclude Include="src\tile\tile_collision.h" />
     <ClInclude Include="src\tile\tile_map.h" />
     <ClInclude Include="src\tile\tile_renderer.h" />
+    <ClInclude Include="src\toolbox\tb_array.h" />
     <ClInclude Include="src\toolbox\tb_file.h" />
     <ClInclude Include="src\toolbox\tb_hashmap.h" />
     <ClInclude Include="src\toolbox\tb_ini.h" />
     <ClInclude Include="src\toolbox\tb_json.h" />
     <ClInclude Include="src\toolbox\tb_jwrite.h" />
+    <ClInclude Include="src\toolbox\tb_mem.h" />
     <ClInclude Include="src\toolbox\tb_str.h" />
-    <ClInclude Include="src\toolbox\tb_array.h" />
     <ClInclude Include="src\toolbox\toolbox.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,10 +227,6 @@
     <ClCompile Include="src\Application\Input.c" />
     <ClCompile Include="src\Application\Logger.c" />
     <ClCompile Include="src\Application\Timer.c" />
-    <ClCompile Include="src\Frost\FrostMem.c" />
-    <ClCompile Include="src\toolbox\tb_array.c" />
-    <ClCompile Include="src\toolbox\tb_mem.c" />
-    <ClCompile Include="src\Scenes\Camera.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
@@ -209,7 +248,10 @@
     <ClCompile Include="src\Frost\Components\Transform.c" />
     <ClCompile Include="src\Frost\Frost.c" />
     <ClCompile Include="src\Frost\FrostDebugger.c" />
+    <ClCompile Include="src\Frost\FrostMem.c" />
     <ClCompile Include="src\Frost\FrostParser.c" />
+    <ClCompile Include="src\Frost\SceneLoader.c" />
+    <ClCompile Include="src\Frost\SceneSaver.c" />
     <ClCompile Include="src\Frost\Systems\AnimationSystem.c" />
     <ClCompile Include="src\Frost\Systems\EntityStateSystem.c" />
     <ClCompile Include="src\Frost\Systems\InteractionSystem.c" />
@@ -217,13 +259,13 @@
     <ClCompile Include="src\Frost\Systems\PhysicsSystem.c" />
     <ClCompile Include="src\Frost\Systems\PlayerSystem.c" />
     <ClCompile Include="src\Frost\Systems\RenderSystem.c" />
+    <ClCompile Include="src\GUI\Gui.c" />
     <ClCompile Include="src\Graphics\Background.c" />
     <ClCompile Include="src\Graphics\BatchRenderer2D.c" />
     <ClCompile Include="src\Graphics\FontRenderer.c" />
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
-    <ClCompile Include="src\GUI\Gui.c" />
     <ClCompile Include="src\Ignis\ComputeShader.c" />
     <ClCompile Include="src\Ignis\Core\Buffer.c" />
     <ClCompile Include="src\Ignis\Core\Shader.c" />
@@ -234,28 +276,29 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\Scenes\Camera.c" />
     <ClCompile Include="src\Scenes\MapEditor.c" />
     <ClCompile Include="src\Scenes\Resources.c" />
     <ClCompile Include="src\Scenes\Scene.c" />
     <ClCompile Include="src\Scenes\SceneEditor.c" />
-    <ClCompile Include="src\Frost\SceneLoader.c" />
-    <ClCompile Include="src\Frost\SceneSaver.c" />
+    <ClCompile Include="src\Scenes\WorldEditor.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\math\grid.c" />
     <ClCompile Include="src\math\mat4.c" />
     <ClCompile Include="src\math\vec2.c" />
     <ClCompile Include="src\math\vec3.c" />
     <ClCompile Include="src\memory\arena.c" />
-    <ClCompile Include="src\Scenes\WorldEditor.c" />
     <ClCompile Include="src\tile\tile_body.c" />
     <ClCompile Include="src\tile\tile_collision.c" />
     <ClCompile Include="src\tile\tile_map.c" />
     <ClCompile Include="src\tile\tile_renderer.c" />
+    <ClCompile Include="src\toolbox\tb_array.c" />
     <ClCompile Include="src\toolbox\tb_file.c" />
     <ClCompile Include="src\toolbox\tb_hashmap.c" />
     <ClCompile Include="src\toolbox\tb_ini.c" />
     <ClCompile Include="src\toolbox\tb_json.c" />
     <ClCompile Include="src\toolbox\tb_jwrite.c" />
+    <ClCompile Include="src\toolbox\tb_mem.c" />
     <ClCompile Include="src\toolbox\tb_str.c" />
     <ClCompile Include="src\toolbox\toolbox.c" />
   </ItemGroup>
@@ -264,7 +307,6 @@
     <None Include="res\fonts.json" />
     <None Include="res\fonts\OpenSans.ttf" />
     <None Include="res\fonts\ProggyTiny.ttf" />
-    <None Include="res\frost.ini" />
     <None Include="res\maps\map.json" />
     <None Include="res\saves\save.json" />
     <None Include="res\scenes\scene.json" />
@@ -299,6 +341,9 @@
     <Image Include="res\textures\floor.png" />
     <Image Include="res\textures\items.png" />
     <Image Include="res\textures\machine.png" />
+    <Image Include="res\textures\mario\Untitled.png" />
+    <Image Include="res\textures\mario\bushes.png" />
+    <Image Include="res\textures\mario\tiles.png" />
     <Image Include="res\textures\player.png" />
     <Image Include="res\textures\tiles.png" />
     <Image Include="res\textures\trees.png" />
