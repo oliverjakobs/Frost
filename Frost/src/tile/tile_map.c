@@ -33,6 +33,12 @@ static vec2 TileMapGetTilePos(const TileMap* map, size_t index)
 	return (vec2){ col * map->tile_size, (map->rows - row) * map->tile_size };
 }
 
+static void TileMapSetTile(const TileMap* map, size_t index, TileID id)
+{
+	map->tiles[index].id = id;
+	map->tiles[index].type = TileMapGetType(map, id);
+}
+
 int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_count)
 {
 	map->types = tb_mem_dup(map->allocator, types, sizeof(TileType) * types_count);
@@ -42,9 +48,8 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 
 	for (size_t index = 0; index < (map->rows * map->cols); ++index)
 	{
-		map->tiles[index].id = tiles[index];
+		TileMapSetTile(map, index, tiles[index]);
 		map->tiles[index].pos = TileMapGetTilePos(map, index);
-		map->tiles[index].type = TileMapGetType(map, tiles[index]);
 	}
 
 	return 1;
@@ -88,37 +93,41 @@ int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType
 	return 1;
 }
 
+size_t TileMapGetIndex(const TileMap* map, size_t row, size_t col)
+{
+	return (map->rows - row - 1) * map->cols + col;
+}
+
 const Tile* TileMapAt(const TileMap* map, size_t row, size_t col)
 {
-	if (row < 0 || col < 0) return NULL;
-	if (row >= map->rows || col >= map->cols) return NULL;
-
-    return &map->tiles[(map->rows - row - 1) * map->cols + col];
+	if (row < 0 || col < 0 || row >= map->rows || col >= map->cols) return NULL;
+    return &map->tiles[TileMapGetIndex(map, row, col)];
 }
 
 const Tile* TileMapAtPos(const TileMap* map, vec2 pos)
 {
-	size_t col = TileMapClamp(map, pos.x);
-	size_t row = TileMapClamp(map, pos.y);
-
-	return TileMapAt(map, row, col);
+	return TileMapAt(map, TileMapClamp(map, pos.y), TileMapClamp(map, pos.x));
 }
 
-void TileMapSetAt(TileMap* map, size_t row, size_t col, TileID id)
+void TileMapSetAt(TileMap* map, size_t row, size_t col, TileID id, TileSetMode mode)
 {
-	if (row < 0 || col < 0) return;
-	if (row >= map->rows || col >= map->cols) return;
+	if (row < 0 || col < 0 || row >= map->rows || col >= map->cols) return;
 
-	map->tiles[(map->rows - row - 1) * map->cols + col].id = id;
-	map->tiles[(map->rows - row - 1) * map->cols + col].type = TileMapGetType(map, id);
+	size_t index = TileMapGetIndex(map, row, col);
+	switch (mode)
+	{
+	/* insert cases */
+	case TILE_INSERT:	if (map->tiles[index].id != 0) break;
+	case TILE_REPLACE:	TileMapSetTile(map, index, id); break;
+	/* remove cases */
+	case TILE_DELETE_MATCH: if (map->tiles[index].id != id) break;
+	case TILE_DELETE:		TileMapSetTile(map, index, 0); break;
+	}
 }
 
-void TileMapSetAtPos(TileMap* map, vec2 pos, TileID id)
+void TileMapSetAtPos(TileMap* map, vec2 pos, TileID id, TileSetMode mode)
 {
-	size_t col = TileMapClamp(map, pos.x);
-	size_t row = TileMapClamp(map, pos.y);
-
-	TileMapSetAt(map, row, col, id);
+	TileMapSetAt(map, TileMapClamp(map, pos.y), TileMapClamp(map, pos.x), id, mode);
 }
 
 int TileMapCheckType(const TileMap* map, vec2 pos, TileType type)

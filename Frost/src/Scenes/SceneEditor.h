@@ -3,6 +3,9 @@
 
 #include "Scene.h"
 
+#include "MapEditor.h"
+#include "WorldEditor.h"
+
 typedef enum
 {
 	SCENE_EDIT_NONE,
@@ -12,7 +15,6 @@ typedef enum
 
 typedef struct
 {
-	SceneEditMode mode;
 	Scene* scene;
 
 	int showgrid;
@@ -20,23 +22,11 @@ typedef struct
 	float cameraspeed;
 	float padding;
 	
+	SceneEditMode mode;
 	union
 	{
-		/* world editor */
-		struct
-		{
-			vec2 offset;
-			EcsEntityID hover;
-			int clicked;
-		};
-
-		/* map editor */
-		struct
-		{
-			const Tile* tile_hover;
-			int palette_hover;
-			int palette_select;
-		};
+		WorldEditor world;
+		MapEditor	map;
 	};
 } SceneEditor;
 
@@ -51,7 +41,7 @@ void SceneEditorToggleGrid(SceneEditor* editor);
 
 int SceneEditorIsActive(const SceneEditor* editor);
 
-void SceneEditorRenderGrid(const SceneEditor* editor);
+void SceneEditorRenderGrid(const Scene* scene, float padding);
 
 void SceneEditorOnEvent(SceneEditor* editor, Event e);
 void SceneEditorOnUpdate(SceneEditor* editor, float deltatime);

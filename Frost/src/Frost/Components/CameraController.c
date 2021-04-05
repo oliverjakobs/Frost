@@ -38,5 +38,5 @@ void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, flo
 	center.x = tb_clampf(center.x, constraint.x, controller->scene_size.x - constraint.x);
 	center.y = tb_clampf(center.y, constraint.y, controller->scene_size.y - constraint.y);
 
-	CameraSetCenter(controller->camera, center);
+	CameraSetCenterOrtho(controller->camera, center);
 }

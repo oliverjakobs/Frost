@@ -24,6 +24,14 @@ typedef enum
 	TILE_CEIL_RIGHT
 } TileType;
 
+typedef enum
+{
+	TILE_REPLACE,		/* Sets tile at pos, overriding previous tiles */
+	TILE_INSERT,		/* Sets tile at pos, if tile is currently empty (id == 0) */
+	TILE_DELETE,		/* Deletes any tile at pos */
+	TILE_DELETE_MATCH	/* Deletes tile at pos if it matches the specified tile */
+} TileSetMode;
+
 typedef uint32_t TileID;
 
 typedef struct
@@ -58,11 +66,12 @@ void TileMapDestroy(TileMap* map);
 int TileMapStreamTiles(TileMap* map, void* stream, void*(*next)(void*, TileID*), size_t len);
 int TileMapStreamTypes(TileMap* map, void* stream, void*(*next)(void*, TileType*), size_t len);
 
+size_t TileMapGetIndex(const TileMap* map, size_t row, size_t col);
 const Tile* TileMapAt(const TileMap* map, size_t row, size_t col);
 const Tile* TileMapAtPos(const TileMap* map, vec2 pos);
 
-void TileMapSetAt(TileMap* map, size_t row, size_t col, TileID id);
-void TileMapSetAtPos(TileMap* map, vec2 pos, TileID id);
+void TileMapSetAt(TileMap* map, size_t row, size_t col, TileID id, TileSetMode mode);
+void TileMapSetAtPos(TileMap* map, vec2 pos, TileID id, TileSetMode mode);
 
 int TileMapCheckType(const TileMap* map, vec2 pos, TileType type);
 TileType TileMapGetType(const TileMap* map, TileID id);
