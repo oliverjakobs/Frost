@@ -51,7 +51,7 @@ int ignisCreateTexture2D(IgnisTexture2D* texture, const char* path, GLuint rows,
 	size_t buffer_len;
 	char* buffer = ignisReadFile(path, &buffer_len);
 
-	unsigned char* pixels = stbi_load_from_memory(buffer, buffer_len, &texture->width, &texture->height, &bpp, 4);
+	unsigned char* pixels = stbi_load_from_memory(buffer, (int)buffer_len, &texture->width, &texture->height, &bpp, 4);
 
 	ignisFree(buffer);
 

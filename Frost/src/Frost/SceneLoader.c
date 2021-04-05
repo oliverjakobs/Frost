@@ -195,8 +195,8 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 	tb_json_element types;
 	tb_json_read(json, &types, "{'tile_types'");
 
-	if (!(tb_json_is_type(&types, TB_JSON_ARRAY) 
-		&& TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements)))
+	if (!tb_json_is_type(&types, TB_JSON_ARRAY) || 
+		!TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements))
 	{
 		TileMapDestroy(&scene->map);
 		return SCENE_LOAD_STREAM_TYPES_ERROR;
@@ -205,8 +205,8 @@ SceneLoadError SceneLoadMap(Scene* scene, char* json)
 	tb_json_element tiles;
 	tb_json_read(json, &tiles, "{'tiles'");
 
-	if (!(tb_json_is_type(&tiles, TB_JSON_ARRAY)
-		&& TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements)))
+	if (!tb_json_is_type(&tiles, TB_JSON_ARRAY) || 
+		!TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements))
 	{
 		TileMapDestroy(&scene->map);
 		return SCENE_LOAD_STREAM_MAP_ERROR;

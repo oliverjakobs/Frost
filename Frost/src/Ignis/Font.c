@@ -58,7 +58,7 @@ int ignisCreateFontConfig(IgnisFont* font, const char* path, float size, int fir
 	int ascent, descent, linegap;
 	stbtt_GetFontVMetrics(&info, &ascent, &descent, &linegap);
 	float scale = stbtt_ScaleForMappingEmToPixels(&info, size);
-	font->height = (ascent - descent + linegap) * scale + 0.5;
+	font->height = (ascent - descent + linegap) * scale + 0.5f;
 
 	/* load glyphs */
 	float s = stbtt_ScaleForMappingEmToPixels(&info, 1) / stbtt_ScaleForPixelHeight(&info, 1);

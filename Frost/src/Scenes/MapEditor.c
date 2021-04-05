@@ -1,8 +1,8 @@
 #include "MapEditor.h"
 
-const float PALETTE_HEIGHT = 100.0f;
-const float PALETTE_TILE_SIZE = 32.0f;
-const float PALETTE_PADDING = 20.0f;
+#define PALETTE_TILE_SIZE	32.0f
+#define PALETTE_PADDING		20.0f
+#define PALETTE_HEIGHT		((2 * PALETTE_PADDING) + PALETTE_TILE_SIZE)
 
 /* TODO insertion mode: REPLACE, INSERT(if not empty), DELETE, DELETEMATCH(if tile matches selected delete it) */
 void MapEditorOnEvent(SceneEditor* editor, Event e)
@@ -14,24 +14,34 @@ void MapEditorOnUpdate(SceneEditor* editor, float deltatime)
 	vec2 mouse = CameraGetMousePosView(&editor->scene->camera, InputMousePositionVec2());
 
 	if (mouse.y > (editor->scene->camera.position.y + PALETTE_HEIGHT))
+	{
 		editor->tile_hover = TileMapAtPos(&editor->scene->map, mouse);
+
+		if (editor->tile_hover && InputMousePressed(MOUSE_BUTTON_LEFT))
+		{
+			TileMapSetAtPos(&editor->scene->map, mouse, editor->palette_select);
+			TileRendererUpdateBuffers(&editor->scene->renderer, &editor->scene->map);
+		}
+	}
 	else
 	{
 		editor->tile_hover = NULL;
 		
-		/* TODO select palette with mouse */
-	}
+		mouse.x -= PALETTE_PADDING;
+		mouse.y -= PALETTE_PADDING;
+		if (mouse.x >= 0.0f && mouse.x <= (editor->scene->map.types_count * PALETTE_TILE_SIZE) &&
+			mouse.y >= 0.0f && mouse.y <= PALETTE_TILE_SIZE)
+		{
+			editor->palette_hover = (int)floorf(mouse.x / PALETTE_TILE_SIZE);
+		}
+		else
+		{
+			editor->palette_hover = -1;
+		}
 
-	if (InputKeyPressed(KEY_1)) editor->palette_select = 0;
-	if (InputKeyPressed(KEY_2)) editor->palette_select = 1;
-	if (InputKeyPressed(KEY_3)) editor->palette_select = 2;
-	if (InputKeyPressed(KEY_4)) editor->palette_select = 3;
-	if (InputKeyPressed(KEY_5)) editor->palette_select = 4;
-	if (InputKeyPressed(KEY_6)) editor->palette_select = 5;
-	if (InputKeyPressed(KEY_7)) editor->palette_select = 6;
-	if (InputKeyPressed(KEY_8)) editor->palette_select = 7;
-	if (InputKeyPressed(KEY_9)) editor->palette_select = 8;
-	if (InputKeyPressed(KEY_0)) editor->palette_select = 9;
+		if (editor->palette_hover >= 0 && InputMousePressed(MOUSE_BUTTON_LEFT))
+			editor->palette_select = editor->palette_hover;
+	}
 }
 
 void MapEditorOnRender(const SceneEditor* editor)
@@ -61,7 +71,7 @@ void MapEditorOnRender(const SceneEditor* editor)
 	for (size_t i = 0; i < editor->scene->map.types_count; ++i)
 	{
 		float x = PALETTE_PADDING + (i * PALETTE_TILE_SIZE);
-		float y = PALETTE_HEIGHT - (PALETTE_TILE_SIZE + PALETTE_PADDING);
+		float y = PALETTE_PADDING;
 		float w = PALETTE_TILE_SIZE;
 		float h = PALETTE_TILE_SIZE;
 
@@ -76,15 +86,23 @@ void MapEditorOnRender(const SceneEditor* editor)
 	/* UI Overlay */
 	Primitives2DStart(CameraGetProjectionPtr(&editor->scene->camera));
 
-	if (editor->palette_select >= 0)
+	if (editor->palette_hover >= 0)
 	{
-		float x = PALETTE_PADDING + (editor->palette_select * PALETTE_TILE_SIZE);
-		float y = PALETTE_HEIGHT - (PALETTE_TILE_SIZE + PALETTE_PADDING);
+		float x = PALETTE_PADDING + (editor->palette_hover * PALETTE_TILE_SIZE);
+		float y = PALETTE_PADDING;
 
 		IgnisColorRGBA color = IGNIS_WHITE;
 		ignisBlendColorRGBA(&color, 0.2f);
 
 		Primitives2DFillRect(x, y, PALETTE_TILE_SIZE, PALETTE_TILE_SIZE, color);
+	}
+
+	if (editor->palette_select >= 0)
+	{
+		float x = PALETTE_PADDING + (editor->palette_select * PALETTE_TILE_SIZE);
+		float y = PALETTE_PADDING;
+
+		Primitives2DRenderRect(x, y, PALETTE_TILE_SIZE, PALETTE_TILE_SIZE, IGNIS_WHITE);
 	}
 
 	Primitives2DFlush();

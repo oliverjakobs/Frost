@@ -19,17 +19,25 @@ typedef struct
 
 	float cameraspeed;
 	float padding;
+	
+	union
+	{
+		/* world editor */
+		struct
+		{
+			vec2 offset;
+			EcsEntityID hover;
+			int clicked;
+		};
 
-	int clicked;
-
-	/* world editor */
-	vec2 offset;
-	EcsEntityID hover;
-
-	/* map editor */
-	Tile* tile_hover;
-	int palette_hover;
-	int palette_select;
+		/* map editor */
+		struct
+		{
+			const Tile* tile_hover;
+			int palette_hover;
+			int palette_select;
+		};
+	};
 } SceneEditor;
 
 void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding, SceneEditMode mode);

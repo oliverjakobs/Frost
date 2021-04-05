@@ -58,8 +58,11 @@ void TileMapDestroy(TileMap* map);
 int TileMapStreamTiles(TileMap* map, void* stream, void*(*next)(void*, TileID*), size_t len);
 int TileMapStreamTypes(TileMap* map, void* stream, void*(*next)(void*, TileType*), size_t len);
 
-Tile* TileMapAt(const TileMap* map, size_t row, size_t col);
-Tile* TileMapAtPos(const TileMap* map, vec2 pos);
+const Tile* TileMapAt(const TileMap* map, size_t row, size_t col);
+const Tile* TileMapAtPos(const TileMap* map, vec2 pos);
+
+void TileMapSetAt(TileMap* map, size_t row, size_t col, TileID id);
+void TileMapSetAtPos(TileMap* map, vec2 pos, TileID id);
 
 int TileMapCheckType(const TileMap* map, vec2 pos, TileType type);
 TileType TileMapGetType(const TileMap* map, TileID id);

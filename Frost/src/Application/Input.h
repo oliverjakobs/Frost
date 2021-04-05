@@ -162,12 +162,15 @@ int InputKeyPressed(Key keycode);
 int InputKeyReleased(Key keycode);
 
 int InputKeyHit(Key keycode);
-
 int InputKeyDown(Key keycode);
 int InputKeyUp(Key keycode);
 
 int InputMousePressed(MouseButton button);
 int InputMouseReleased(MouseButton button);
+
+int InputMouseHit(MouseButton button);
+int InputMouseDown(MouseButton button);
+int InputMouseUp(MouseButton button);
 
 void InputMousePosition(float* x, float* y);
 float InputMouseX();

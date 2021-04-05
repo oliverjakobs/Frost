@@ -12,6 +12,6 @@ typedef enum
 
 int SceneSave(Scene* scene, const char* path);
 
-int SceneSaveMap(Scene* scene, tb_jwrite_control* jwc);
+SceneSaveError SceneSaveMap(Scene* scene, tb_jwrite_control* jwc);
 
 #endif /* !SCENE_SAVER_H */

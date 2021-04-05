@@ -1,109 +1,57 @@
 #include "SceneSaver.h"
 
-#include "Frost/FrostParser.h"
+#include "FrostParser.h"
+#include "FrostMem.h"
 
-int SceneSave(Scene* scene, const char* path)
+#include "toolbox/tb_file.h"
+
+static int SceneSaveToFile(Scene* scene, const char* path, SceneSaveError(*save_func)(Scene*, tb_jwrite_control*))
 {
-	char* temp_ext = ".temp";
-	char* temp_path = malloc(strlen(path) + strlen(temp_ext));
-
-	if (!temp_path)
-	{
-		DEBUG_ERROR("[Scenes] Failed to allocate memory for temp path");
-		return 0;
-	}
-
-	strcpy(temp_path, path);
-	strcat(temp_path, temp_ext);
-
 	tb_jwrite_control jwc;
-	tb_jwrite_open(&jwc, temp_path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
+	tb_jwrite_open(&jwc, path, TB_JWRITE_OBJECT, TB_JWRITE_NEWLINE);
 	tb_jwrite_set_float_prec(&jwc, 2);
 
-	/* background 
-	tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	tb_jwrite_array(&jwc, "background");
+	SceneSaveError error = save_func(scene, &jwc);
 
-	for (int i = 0; i < scene->background.layer_count; ++i)
+	tb_jwrite_error jwrite_error = tb_jwrite_close(&jwc);
+
+	if (jwrite_error != TB_JWRITE_OK)
 	{
-		BackgroundLayer* bg = &scene->background.layers[i];
-
-		tb_jwrite_array_array(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-		tb_jwrite_array_string(&jwc, SceneGetTexture2DName(scene, bg->texture));
-
-		tb_jwrite_array_float(&jwc, bg->startpos);
-		tb_jwrite_array_float(&jwc, bg->pos_y);
-		tb_jwrite_array_float(&jwc, bg->width);
-		tb_jwrite_array_float(&jwc, bg->height);
-		tb_jwrite_array_float(&jwc, bg->parallax);
-		tb_jwrite_end(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	}
-
-	tb_jwrite_end(&jwc);
-	*/
-
-	/* templates */
-	tb_jwrite_array(&jwc, "templates");
-
-	EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
-	for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
-	{
-		tb_jwrite_array_array(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_INLINE);
-
-		const char** templ = EcsListNodeComponent(it);
-
-		/* template */
-		tb_jwrite_array_string(&jwc, *templ);
-
-		/* pos */
-		vec2 pos = GetEntityPosition(&scene->ecs, EcsListNodeEntity(it));
-
-		tb_jwrite_array_array(&jwc);
-		tb_jwrite_array_float(&jwc, pos.x);
-		tb_jwrite_array_float(&jwc, pos.y);
-		tb_jwrite_end(&jwc);
-
-		/* z_index */
-		tb_jwrite_array_int(&jwc, EntityGetZIndex(&scene->ecs, EcsListNodeEntity(it)));
-
-		tb_jwrite_end(&jwc);
-
-		tb_jwrite_set_style(&jwc, TB_JWRITE_NEWLINE);
-	}
-
-	tb_jwrite_end(&jwc);
-
-	tb_jwrite_error err = tb_jwrite_close(&jwc);
-
-	if (err != TB_JWRITE_OK)
-	{
-		DEBUG_ERROR("[JWRITE] Error: %s at function call %d", tb_jwrite_error_string(err), tb_jwrite_error_pos(&jwc));
+		DEBUG_ERROR("[JWRITE] Error: %s at function call %d", tb_jwrite_error_string(jwrite_error), tb_jwrite_error_pos(&jwc));
 		return 0;
 	}
 
-	if (remove(path) != 0)
+	if (error != SCENE_LOAD_OK)
 	{
-		DEBUG_ERROR("[Scenes] Failed to remove old save file (%s)", path);
-		return 0;
-	}
-
-	if (rename(temp_path, path) != 0)
-	{
-		DEBUG_ERROR("[Scenes] Failed to rename temp save file (%s)", temp_path);
+		DEBUG_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
 		return 0;
 	}
 
 	return 1;
 }
 
-/* TODO: implement map saving */
-int SceneSaveMap(Scene* scene, tb_jwrite_control* jwc)
+int SceneSave(Scene* scene, const char* path)
 {
-	return 0;
+	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+
+	if (!json)
+	{
+		DEBUG_ERROR("[Scenes] Couldn't read scene template: %s", path);
+		return 0;
+	}
+
+	/* get map path */
+	char map_path[APPLICATION_PATH_LEN];
+	tb_json_string(json, "{'map'", map_path, APPLICATION_PATH_LEN, NULL);
+
+	if (!SceneSaveToFile(scene, map_path, SceneSaveMap))
+		return 0;
+
+	return 1;
+}
+
+/* TODO: implement map saving */
+SceneSaveError SceneSaveMap(Scene* scene, tb_jwrite_control* jwc)
+{
+	return SCENE_SAVE_OK;
 }

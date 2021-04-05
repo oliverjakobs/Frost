@@ -22,18 +22,24 @@ void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int p
 
 void SceneEditorReset(SceneEditor* editor)
 {
-	editor->clicked = 0;
-	editor->offset = vec2_zero();
-	editor->hover = ECS_NULL_ENTITY;
-
-	editor->tile_hover = NULL;
-	editor->palette_hover = -1;
-	editor->palette_select = -1;
+	if (editor->mode == SCENE_EDIT_WORLD)
+	{
+		editor->clicked = 0;
+		editor->offset = vec2_zero();
+		editor->hover = ECS_NULL_ENTITY;
+	}
+	else if (editor->mode == SCENE_EDIT_MAP)
+	{
+		editor->tile_hover = NULL;
+		editor->palette_hover = -1;
+		editor->palette_select = 0;
+	}
 }
 
 void SceneEditorSetMode(SceneEditor* editor, SceneEditMode mode)
 {
 	editor->mode = mode;
+	SceneEditorReset(editor);
 }
 
 void SceneEditorToggleWorldMode(SceneEditor* editor)
@@ -42,6 +48,7 @@ void SceneEditorToggleWorldMode(SceneEditor* editor)
 		editor->mode = SCENE_EDIT_NONE;
 	else
 		editor->mode = SCENE_EDIT_WORLD;
+	SceneEditorReset(editor);
 }
 
 void SceneEditorToggleMapMode(SceneEditor* editor)
@@ -50,6 +57,7 @@ void SceneEditorToggleMapMode(SceneEditor* editor)
 		editor->mode = SCENE_EDIT_NONE;
 	else
 		editor->mode = SCENE_EDIT_MAP;
+	SceneEditorReset(editor);
 }
 
 void SceneEditorToggleGrid(SceneEditor* editor)

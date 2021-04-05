@@ -24,7 +24,7 @@ int TileCheckBottom(TileBody* body, const TileMap* map, vec2 pos, vec2 old_pos, 
 		TileType collision_type = TILE_EMPTY;
 		for (int32_t col = start_col; col <= end_col; ++col)
 		{
-			Tile* tile = TileMapAt(map, row, col);
+			const Tile* tile = TileMapAt(map, row, col);
 			if (!tile || (collision_type != TILE_EMPTY && collision_type <= tile->type)) continue;
 
 			switch (tile->type)
@@ -87,7 +87,7 @@ int TileCheckTop(TileBody* body, const TileMap* map, vec2 pos, vec2 old_pos, flo
 	{
 		for (int32_t col = start_col; col <= end_col; ++col)
 		{
-			Tile* tile = TileMapAt(map, row, col);
+			const Tile* tile = TileMapAt(map, row, col);
 			if (tile && tile->type == TILE_SOLID)
 			{
 				*ground_y = tile->pos.y;
@@ -120,7 +120,7 @@ int TileCheckLeft(TileBody* body, const TileMap* map, vec2 pos, vec2 old_pos, fl
 	{
 		for (int32_t row = start_row; row <= end_row; ++row)
 		{
-			Tile* tile = TileMapAt(map, row, col);
+			const Tile* tile = TileMapAt(map, row, col);
 			if (tile && tile->type == TILE_SOLID)
 			{
 				*wall_x = tile->pos.x + map->tile_size;
@@ -153,7 +153,7 @@ int TileCheckRight(TileBody* body, const TileMap* map, vec2 pos, vec2 old_pos, f
 	{
 		for (int32_t row = start_row; row <= end_row; ++row)
 		{
-			Tile* tile = TileMapAt(map, row, col);
+			const Tile* tile = TileMapAt(map, row, col);
 			if (tile && tile->type == TILE_SOLID)
 			{
 				*wall_x = tile->pos.x;
