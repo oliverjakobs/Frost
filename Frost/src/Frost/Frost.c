@@ -1,7 +1,5 @@
 #include "Frost.h"
 
-#include "Application/Logger.h"
-
 #include "ECS/EcsLoader.h"
 
 #include "toolbox/tb_ini.h"
@@ -12,9 +10,9 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
 	switch (level)
 	{
-	case IGNIS_WARN:		DEBUG_WARN("%s", desc); break;
-	case IGNIS_ERROR:		DEBUG_ERROR("%s", desc); break;
-	case IGNIS_CRITICAL:	DEBUG_CRITICAL("%s", desc); break;
+	case IGNIS_WARN:		MINIMAL_WARN("%s", desc); break;
+	case IGNIS_ERROR:		MINIMAL_ERROR("%s", desc); break;
+	case IGNIS_CRITICAL:	MINIMAL_CRITICAL("%s", desc); break;
 	}
 }
 
@@ -31,7 +29,7 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 
 	if (!ignisInit(debug))
 	{
-		DEBUG_ERROR("[IGNIS] Failed to initialize Ignis");
+		MINIMAL_ERROR("[IGNIS] Failed to initialize Ignis");
 		glfwTerminate();
 		return 0;
 	}
@@ -39,10 +37,10 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	ignisEnableBlend(blend_s, blend_d);
 	ignisSetClearColor(clear_color);
 
-	DEBUG_INFO("[OpenGL] Version: %s",		ignisGetGLVersion());
-	DEBUG_INFO("[OpenGL] Vendor: %s",		ignisGetGLVendor());
-	DEBUG_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
-	DEBUG_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
+	MINIMAL_INFO("[OpenGL] Version: %s",		ignisGetGLVersion());
+	MINIMAL_INFO("[OpenGL] Vendor: %s",		ignisGetGLVendor());
+	MINIMAL_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
+	MINIMAL_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
 
 	return 1;
 }

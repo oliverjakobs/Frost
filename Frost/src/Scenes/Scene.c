@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "Application/Logger.h"
+#include "Minimal/MinimalLogger.h"
 
 #include "toolbox/tb_str.h"
 
@@ -43,13 +43,13 @@ void SceneChangeActive(Scene* scene, const char* path, int reload)
 		if (scene->path[0] != '\0')
 		{
 			if (scene->save && !scene->save(scene, scene->path))
-				DEBUG_ERROR("[Scenes] Failed to save scene: %s", scene->path);
+				MINIMAL_ERROR("[Scenes] Failed to save scene: %s", scene->path);
 			SceneClearActive(scene);
 		}
 
 		/* Enter new scene */
 		if (scene->load && !scene->load(scene, path))
-			DEBUG_ERROR("[Scenes] Failed to load new scene: %s", path);
+			MINIMAL_ERROR("[Scenes] Failed to load new scene: %s", path);
 
 		tb_strlcpy(scene->path, path, APPLICATION_PATH_LEN);
 	}

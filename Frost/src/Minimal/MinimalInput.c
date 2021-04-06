@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "MinimalInput.h"
 
 typedef struct
 {

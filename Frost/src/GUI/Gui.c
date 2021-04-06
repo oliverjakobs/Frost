@@ -4,8 +4,8 @@
 #include "toolbox/tb_file.h"
 #include "toolbox/tb_str.h"
 
-#include "Application/Logger.h"
-#include "Application/Application.h"
+#include "Minimal/Minimal.h"
+#include "Minimal/MinimalLogger.h"
 
 static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {
@@ -31,7 +31,7 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* a
 
 	if (!json)
 	{
-		DEBUG_ERROR("[GUI] Failed to read index (%s)\n", path);
+		MINIMAL_ERROR("[GUI] Failed to read index (%s)\n", path);
 		return 0;
 	}
 
@@ -42,7 +42,7 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* a
 	gui->fonts.entry_free = GuiFreeMapEntry;
 	if (tb_hashmap_init(&gui->fonts, tb_hash_string, strcmp, 0) != TB_HASHMAP_OK)
 	{
-		DEBUG_ERROR("[GUI] Failed to allocate hashmap index\n");
+		MINIMAL_ERROR("[GUI] Failed to allocate hashmap index\n");
 		return 0;
 	}
 
@@ -86,7 +86,7 @@ IgnisFont* GuiAddFont(GuiManager* gui, const char* name, const char* path, float
 		IgnisFont* entry = tb_hashmap_insert(&gui->fonts, name, &font);
 		if (entry != NULL) return entry;
 
-		DEBUG_ERROR("[GUI] Failed to add font: %s (%s)\n", name, path);
+		MINIMAL_ERROR("[GUI] Failed to add font: %s (%s)\n", name, path);
 		ignisDeleteFont(&font);
 	}
 	return NULL;
@@ -95,7 +95,7 @@ IgnisFont* GuiAddFont(GuiManager* gui, const char* name, const char* path, float
 IgnisFont* GuiGetFont(const GuiManager* gui, const char* name)
 {
 	IgnisFont* font = tb_hashmap_find(&gui->fonts, name);
-	if (!font) DEBUG_WARN("[GUI] Could not find font: %s\n", name);
+	if (!font) MINIMAL_WARN("[GUI] Could not find font: %s\n", name);
 	return font;
 }
 

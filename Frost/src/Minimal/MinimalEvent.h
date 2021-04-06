@@ -1,5 +1,5 @@
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef MINIMAL_EVENT_H
+#define MINIMAL_EVENT_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -71,4 +71,4 @@ int32_t EventKeyReleased(const Event* e);
 
 char EventKeyTyped(const Event* e);
 
-#endif // !EVENT_H
+#endif // !MINIMAL_EVENT_H

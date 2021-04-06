@@ -3,7 +3,7 @@
 #include "toolbox/tb_str.h"
 #include "toolbox/tb_mem.h"
 
-#include "Application/Logger.h"
+#include "Minimal/MinimalLogger.h"
 
 static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {
@@ -52,7 +52,7 @@ IgnisTexture2D* ResourcesAddTexture2D(Resources* res, const char* name, const ch
 		IgnisTexture2D* entry = tb_hashmap_insert(&res->textures, name, &texture);
 		if (entry != NULL) return entry;
 
-		DEBUG_ERROR("[Scenes] Failed to add texture: %s (%s)", name, path);
+		MINIMAL_ERROR("[Scenes] Failed to add texture: %s (%s)", name, path);
 		ignisDeleteTexture2D(&texture);
 	}
 
@@ -63,7 +63,7 @@ IgnisTexture2D* ResourcesGetTexture2D(const Resources* res, const char* name)
 {
 	IgnisTexture2D* tex = tb_hashmap_find(&res->textures, name);
 
-	if (!tex) DEBUG_WARN("[Scenes] Could not find texture: %s", name);
+	if (!tex) MINIMAL_WARN("[Scenes] Could not find texture: %s", name);
 
 	return tex;
 }

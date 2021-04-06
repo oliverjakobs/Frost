@@ -1,7 +1,7 @@
-#ifndef EVENT_HANDLER_H
-#define EVENT_HANDLER_H
+#ifndef MINIMAL_EVENT_HANDLER_H
+#define MINIMAL_EVENT_HANDLER_H
 
-#include "Event.h"
+#include "MinimalEvent.h"
 
 uint8_t EventHandlerInit(size_t queue_size, void (*callback)(void*, Event));
 void EventHandlerDestroy();
@@ -14,4 +14,4 @@ void EventHandlerThrowConsoleEvent(EventType type, const char* cmd);
 
 void EventHandlerPoll(void* context);
 
-#endif /* !EVENT_HANDLER_H */
+#endif /* !MINIMAL_EVENT_HANDLER_H */

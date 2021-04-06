@@ -7,8 +7,8 @@
 #include "Scenes/Scene.h"
 #include "Scenes/SceneEditor.h"
 
-#include "Application/Logger.h"
-#include "Application/Application.h"
+#include "Minimal/Minimal.h"
+#include "Minimal/MinimalLogger.h"
 
 int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d);
 int FrostLoadScene(Scene* scene, float w, float h, const char* start);

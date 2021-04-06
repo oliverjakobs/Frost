@@ -4,7 +4,7 @@
 #include "Graphics/Primitives2D.h"
 
 #include "toolbox/toolbox.h"
-#include "Application/Input.h"
+#include "Minimal/MinimalInput.h"
 
 const float CONSOLE_CURSOR_ON = 1.0f;
 const float CONSOLE_CURSOR_CYCLE = 1.2f;

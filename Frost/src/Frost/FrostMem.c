@@ -1,6 +1,6 @@
 #include "FrostMem.h"
 
-#include "Application/Logger.h"
+#include "Minimal/MinimalLogger.h"
 
 #include "toolbox/toolbox.h"
 
@@ -37,7 +37,7 @@ static void* FrostAllocatorRealloc(void* block, size_t old_size, size_t new_size
 static void FrostAllocatorFree(void* block, size_t size)
 {
     if (size > frost_mem_trace.allocated)
-        DEBUG_WARN("Freeing %llu unallocated bytes", size - frost_mem_trace.allocated);
+        MINIMAL_WARN("Freeing %llu unallocated bytes", size - frost_mem_trace.allocated);
 
     free(block);
     frost_mem_trace.allocated -= size;

@@ -13,7 +13,7 @@ FrostDebugger debugger;
 
 GuiManager gui;
 
-int OnInit(Application* app)
+int OnInit(MinimalApp* app)
 {
 	/* ---------------| Config |------------------------------------------ */
 	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -32,7 +32,7 @@ int OnInit(Application* app)
 	return 1;
 }
 
-void OnDestroy(Application* app)
+void OnDestroy(MinimalApp* app)
 {
 	SceneDestroy(&scene);
 
@@ -44,7 +44,7 @@ void OnDestroy(Application* app)
 	GuiDestroy(&gui);
 }
 
-void OnEvent(Application* app, Event e)
+void OnEvent(MinimalApp* app, Event e)
 {
 	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
 	{
@@ -54,23 +54,23 @@ void OnEvent(Application* app, Event e)
 
 	switch (EventKeyPressed(&e))
 	{
-	case KEY_ESCAPE:	ApplicationClose(app); break;
+	case KEY_ESCAPE:	MinimalClose(app); break;
 	case KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
 	case KEY_F2:		SceneEditorToggleMapMode(&scene_editor); break;
 	case KEY_F3:		ConsoleToggleFocus(&debugger.console); break;
-	case KEY_F5:		ApplicationPause(app); break;
-	case KEY_F6:		ApplicationToggleVsync(app); break;
-	case KEY_F7:		ApplicationToggleDebug(app); break;
+	case KEY_F5:		MinimalPause(app); break;
+	case KEY_F6:		MinimalToggleVsync(app); break;
+	case KEY_F7:		MinimalToggleDebug(app); break;
 	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
 	case KEY_F9:		FrostDebuggerToggleInfo(&debugger); break;
 	}
 
 	if (scene_editor.mode == SCENE_EDIT_MAP)
-		ApplicationSetWindowTitleFormat(app, "%s | Map Editor", app->title);
+		MinimalSetWindowTitleFormat(app, "%s | Map Editor", app->title);
 	else if (scene_editor.mode == SCENE_EDIT_WORLD)
-		ApplicationSetWindowTitleFormat(app, "%s | World Editor", app->title);
+		MinimalSetWindowTitleFormat(app, "%s | World Editor", app->title);
 	else if (!app->paused)
-		ApplicationSetWindowTitle(app, app->title);
+		MinimalSetWindowTitle(app, app->title);
 
 	FrostDebuggerOnEvent(&debugger, e);
 
@@ -79,27 +79,23 @@ void OnEvent(Application* app, Event e)
 	SceneEditorOnEvent(&scene_editor, e);
 }
 
-void OnUpdate(Application* app, float deltatime)
+void OnUpdate(MinimalApp* app, float deltatime)
 {
-	if (debugger.console.focus)
-		FrostDebuggerOnUpdate(&debugger, deltatime);
-	else if (SceneEditorIsActive(&scene_editor))
-		SceneEditorOnUpdate(&scene_editor, deltatime);
-	else
-		SceneOnUpdate(&scene, deltatime);
+	if (debugger.console.focus)						FrostDebuggerOnUpdate(&debugger, deltatime);
+	else if (SceneEditorIsActive(&scene_editor))	SceneEditorOnUpdate(&scene_editor, deltatime);
+	else											SceneOnUpdate(&scene, deltatime);
 }
 
-void OnRender(Application* app)
+void OnRender(MinimalApp* app)
 {
 	SceneOnRender(&scene);
 
 	SceneEditorOnRender(&scene_editor);
 
-	if (scene_editor.mode != SCENE_EDIT_MAP)
-		SceneOnRenderUI(&scene);
+	if (scene_editor.mode != SCENE_EDIT_MAP) SceneOnRenderUI(&scene);
 }
 
-void OnRenderDebug(Application* app)
+void OnRenderDebug(MinimalApp* app)
 {
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
 
@@ -121,23 +117,23 @@ void OnRenderDebug(Application* app)
 
 int main()
 {
-	Application app;
+	MinimalApp app;
 
-	ApplicationSetOnInitCallback(&app, OnInit);
-	ApplicationSetOnDestroyCallback(&app, OnDestroy);
-	ApplicationSetOnEventCallback(&app, OnEvent);
-	ApplicationSetOnUpdateCallback(&app, OnUpdate);
-	ApplicationSetOnRenderCallback(&app, OnRender);
-	ApplicationSetOnRenderDebugCallback(&app, OnRenderDebug);
+	MinimalSetOnInitCallback(&app, OnInit);
+	MinimalSetOnDestroyCallback(&app, OnDestroy);
+	MinimalSetOnEventCallback(&app, OnEvent);
+	MinimalSetOnUpdateCallback(&app, OnUpdate);
+	MinimalSetOnRenderCallback(&app, OnRender);
+	MinimalSetOnRenderDebugCallback(&app, OnRenderDebug);
 
-	ApplicationLoadConfig(&app, "config.ini");
+	MinimalLoadConfig(&app, "config.ini");
 
-	ApplicationRun(&app);
+	MinimalRun(&app);
 
-	ApplicationDestroy(&app);
+	MinimalDestroy(&app);
 
 	size_t bytes = FrostMemGetBytes();
-	if (bytes != 0) DEBUG_WARN("%llu bytes not freed", bytes);
+	if (bytes != 0) MINIMAL_WARN("%llu bytes not freed", bytes);
 
 	return 0;
 }

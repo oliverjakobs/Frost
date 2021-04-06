@@ -2,14 +2,12 @@
 
 #include "Frost/FrostParser.h"
 
-#include "Application/Logger.h"
-
 void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
 	{
-		DEBUG_ERROR("[ECS] Sprite requires Transform");
+		MINIMAL_ERROR("[ECS] Sprite requires Transform");
 		return;
 	}
 
@@ -36,7 +34,7 @@ void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, 
 		}
 		else
 		{
-			DEBUG_ERROR("[Scenes] Found sprite but couldn't find texture");
+			MINIMAL_ERROR("[Scenes] Found sprite but couldn't find texture");
 		}
 	}
 }

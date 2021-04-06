@@ -1,4 +1,4 @@
- #include "EventHandler.h"
+ #include "MinimalEventHandler.h"
 
 #include <stdlib.h>
 

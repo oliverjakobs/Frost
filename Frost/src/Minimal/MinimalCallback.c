@@ -1,9 +1,9 @@
-#include "ApplicationCallback.h"
+#include "MinimalCallback.h"
 
-#include "Application.h"
-#include "Logger.h"
+#include "Minimal.h"
+#include "MinimalLogger.h"
 
-void ApplicationEventCallback(Application* app, Event e)
+void MinimalEventCallback(MinimalApp* app, Event e)
 {
 	switch (e.type)
 	{
@@ -12,14 +12,14 @@ void ApplicationEventCallback(Application* app, Event e)
 	}
 }
 
-void ApplicationGLFWErrorCallback(int error, const char* desc)
+void MinimalGLFWErrorCallback(int error, const char* desc)
 {
-	DEBUG_ERROR("[GLFW] (%d) %s", error, desc);
+	MINIMAL_ERROR("[GLFW] (%d) %s", error, desc);
 }
 
-void ApplicationGLFWWindowSizeCallback(GLFWwindow* window, int width, int height)
+void MinimalGLFWWindowSizeCallback(GLFWwindow* window, int width, int height)
 {
-	Application* app = (Application*)glfwGetWindowUserPointer(window);
+	MinimalApp* app = (MinimalApp*)glfwGetWindowUserPointer(window);
 
 	app->width = width;
 	app->height = height;
@@ -27,12 +27,12 @@ void ApplicationGLFWWindowSizeCallback(GLFWwindow* window, int width, int height
 	EventHandlerThrowWindowEvent(EVENT_WINDOW_RESIZE, width, height);
 }
 
-void ApplicationGLFWWindowCloseCallback(GLFWwindow* window)
+void MinimalGLFWWindowCloseCallback(GLFWwindow* window)
 {
 	EventHandlerThrowWindowEvent(EVENT_WINDOW_CLOSE, 0, 0);
 }
 
-void ApplicationGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void MinimalGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	switch (action)
 	{
@@ -42,12 +42,12 @@ void ApplicationGLFWKeyCallback(GLFWwindow* window, int key, int scancode, int a
 	}
 }
 
-void ApplicationGLFWCharCallback(GLFWwindow* window, unsigned int keycode)
+void MinimalGLFWCharCallback(GLFWwindow* window, unsigned int keycode)
 {
 	EventHandlerThrowKeyEvent(EVENT_KEY_TYPED, keycode, 0);
 }
 
-void ApplicationGLFWMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
+void MinimalGLFWMouseButtonCallback(GLFWwindow* window, int button, int action, int mods)
 {
 	switch (action)
 	{
@@ -56,12 +56,12 @@ void ApplicationGLFWMouseButtonCallback(GLFWwindow* window, int button, int acti
 	}
 }
 
-void ApplicationGLFWScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
+void MinimalGLFWScrollCallback(GLFWwindow* window, double xOffset, double yOffset)
 {
 	EventHandlerThrowMouseEvent(EVENT_MOUSE_SCROLLED, (float)xOffset, (float)yOffset);
 }
 
-void ApplicationGLFWCursorPosCallback(GLFWwindow* window, double xPos, double yPos)
+void MinimalGLFWCursorPosCallback(GLFWwindow* window, double xPos, double yPos)
 {
 	EventHandlerThrowMouseEvent(EVENT_MOUSE_MOVED, (float)xPos, (float)yPos);
 }

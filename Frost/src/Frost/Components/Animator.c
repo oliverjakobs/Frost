@@ -1,7 +1,6 @@
 #include "Animator.h"
 
 #include "Frost/FrostParser.h"
-#include "Application/Logger.h"
 
 #include <stdlib.h>
 

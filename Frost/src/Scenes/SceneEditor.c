@@ -2,8 +2,6 @@
 
 #include "Frost/Frost.h"
 
-#include "Application/Logger.h"
-
 #include "MapEditor.h"
 #include "WorldEditor.h"
 

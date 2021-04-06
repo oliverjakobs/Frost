@@ -93,27 +93,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application\Application.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\ApplicationCallback.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\Event.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\EventHandler.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\Input.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\Logger.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Application\Timer.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
     <ClInclude Include="src\Console\Command.h">
       <Filter>src\Console</Filter>
     </ClInclude>
@@ -345,29 +324,29 @@
     <ClInclude Include="src\toolbox\toolbox.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
+    <ClInclude Include="src\Minimal\Minimal.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalLogger.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalTimer.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalInput.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalEventHandler.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalEvent.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minimal\MinimalCallback.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application\Application.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\ApplicationCallback.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\Event.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\EventHandler.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\Input.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\Logger.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Application\Timer.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
     <ClCompile Include="src\Console\Command.c">
       <Filter>src\Console</Filter>
     </ClCompile>
@@ -589,6 +568,27 @@
     </ClCompile>
     <ClCompile Include="src\toolbox\toolbox.c">
       <Filter>src\toolbox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\Minimal.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalLogger.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalTimer.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalInput.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalEventHandler.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalEvent.c">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minimal\MinimalCallback.c">
+      <Filter>src\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

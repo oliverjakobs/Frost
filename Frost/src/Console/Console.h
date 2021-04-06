@@ -7,7 +7,7 @@
 #define CONSOLE_OUT_ROW_SIZE	64
 
 #include "Ignis/Ignis.h"
-#include "Application/Application.h"
+#include "Minimal/Minimal.h"
 
 typedef struct
 {

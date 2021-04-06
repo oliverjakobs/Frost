@@ -10,7 +10,7 @@ static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*loa
 	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 	if (!json)
 	{
-		DEBUG_ERROR("[Scenes] Failed to read file (%s).", path);
+		MINIMAL_ERROR("[Scenes] Failed to read file (%s).", path);
 		return 0;
 	}
 
@@ -19,7 +19,7 @@ static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*loa
 
 	if (error != SCENE_LOAD_OK)
 	{
-		DEBUG_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
+		MINIMAL_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
 		return 0;
 	}
 
@@ -45,7 +45,7 @@ int SceneLoad(Scene* scene, const char* path)
 
 	if (!json)
 	{
-		DEBUG_ERROR("[Scenes] Couldn't read scene template: %s", path);
+		MINIMAL_ERROR("[Scenes] Couldn't read scene template: %s", path);
 		return 0;
 	}
 
@@ -66,12 +66,12 @@ int SceneLoad(Scene* scene, const char* path)
 	tb_json_element element;
 	tb_json_read(json, &element, "{'item_atlas'");
 	if (!SceneLoadTexture2D(element.value, &scene->item_atlas))
-		DEBUG_WARN("[Scenes] Could not load item atlas.");
+		MINIMAL_WARN("[Scenes] Could not load item atlas.");
 
 	/* load tile set */
 	tb_json_read(json, &element, "{'tile_set'");
 	if (!SceneLoadTexture2D(element.value, &scene->tile_set)) 
-		DEBUG_WARN("[Scenes] Could not load item atlas.");
+		MINIMAL_WARN("[Scenes] Could not load item atlas.");
 
 	/* load textures */
 	tb_json_read(json, &element, "{'textures'");
@@ -134,11 +134,11 @@ int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, in
 	char json[FROST_TEMPLATE_SIZE];
 	size_t size = tb_file_read_buf(templ, "rb", json, FROST_TEMPLATE_SIZE);
 	if (size == FROST_TEMPLATE_SIZE)
-		DEBUG_WARN("[Scenes] Template buffer may be too small");
+		MINIMAL_WARN("[Scenes] Template buffer may be too small");
 
 	if (size == 0)
 	{
-		DEBUG_WARN("[Scenes] Couldn't read template (%s)", templ);
+		MINIMAL_WARN("[Scenes] Couldn't read template (%s)", templ);
 		return 0;
 	}
 
@@ -247,7 +247,7 @@ SceneLoadError SceneLoadSaveState(Scene* scene, char* json)
 			/* Load Template */
 			if (!SceneLoadTemplate(scene, templ, pos, z_index, variant))
 			{
-				DEBUG_ERROR("[Scenes] Failed to load template %s", templ);
+				MINIMAL_ERROR("[Scenes] Failed to load template %s", templ);
 			}
 		}
 	}

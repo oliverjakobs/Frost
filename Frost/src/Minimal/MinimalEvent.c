@@ -1,6 +1,6 @@
-#include "Event.h"
+#include "MinimalEvent.h"
 
-#include "Input.h"
+#include "MinimalInput.h"
 
 void EventReset(Event* e)
 {

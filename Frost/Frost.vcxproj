@@ -134,13 +134,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Application\Application.h" />
-    <ClInclude Include="src\Application\ApplicationCallback.h" />
-    <ClInclude Include="src\Application\Event.h" />
-    <ClInclude Include="src\Application\EventHandler.h" />
-    <ClInclude Include="src\Application\Input.h" />
-    <ClInclude Include="src\Application\Logger.h" />
-    <ClInclude Include="src\Application\Timer.h" />
+    <ClInclude Include="src\Minimal\Minimal.h" />
+    <ClInclude Include="src\Minimal\MinimalCallback.h" />
+    <ClInclude Include="src\Minimal\MinimalEvent.h" />
+    <ClInclude Include="src\Minimal\MinimalEventHandler.h" />
+    <ClInclude Include="src\Minimal\MinimalInput.h" />
+    <ClInclude Include="src\Minimal\MinimalLogger.h" />
+    <ClInclude Include="src\Minimal\MinimalTimer.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
@@ -220,13 +220,13 @@
     <ClInclude Include="src\toolbox\toolbox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Application\Application.c" />
-    <ClCompile Include="src\Application\ApplicationCallback.c" />
-    <ClCompile Include="src\Application\Event.c" />
-    <ClCompile Include="src\Application\EventHandler.c" />
-    <ClCompile Include="src\Application\Input.c" />
-    <ClCompile Include="src\Application\Logger.c" />
-    <ClCompile Include="src\Application\Timer.c" />
+    <ClCompile Include="src\Minimal\Minimal.c" />
+    <ClCompile Include="src\Minimal\MinimalCallback.c" />
+    <ClCompile Include="src\Minimal\MinimalEvent.c" />
+    <ClCompile Include="src\Minimal\MinimalEventHandler.c" />
+    <ClCompile Include="src\Minimal\MinimalInput.c" />
+    <ClCompile Include="src\Minimal\MinimalLogger.c" />
+    <ClCompile Include="src\Minimal\MinimalTimer.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />

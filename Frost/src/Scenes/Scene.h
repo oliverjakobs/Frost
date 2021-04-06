@@ -5,7 +5,7 @@
 #include "Resources.h"
 
 #include "Graphics/Background.h"
-#include "Application/Application.h"
+#include "Minimal/Minimal.h"
 
 #include "ECS/Ecs.h"
 #include "tile/tile_map.h"

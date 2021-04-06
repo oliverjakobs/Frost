@@ -1,6 +1,6 @@
-#include "Timer.h"
+#include "MinimalTimer.h"
 
-void TimerReset(Timer* timer)
+void MinimalTimerReset(MinimalTimer* timer)
 {
 	timer->seconds = 0.0;
 	timer->frames = 0;
@@ -10,13 +10,13 @@ void TimerReset(Timer* timer)
 	timer->lastframe = 0.0;
 }
 
-void TimerStart(Timer* timer, double seconds)
+void MinimalTimerStart(MinimalTimer* timer, double seconds)
 {
 	timer->deltatime = seconds - timer->lastframe;
 	timer->lastframe = seconds;
 }
 
-void TimerEnd(Timer* timer, double seconds)
+void MinimalTimerEnd(MinimalTimer* timer, double seconds)
 {
 	timer->frames++;
 	if ((seconds - timer->seconds) > 1.0)

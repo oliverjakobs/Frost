@@ -17,13 +17,13 @@ static int SceneSaveToFile(Scene* scene, const char* path, SceneSaveError(*save_
 
 	if (jwrite_error != TB_JWRITE_OK)
 	{
-		DEBUG_ERROR("[JWRITE] Error: %s at function call %d", tb_jwrite_error_string(jwrite_error), tb_jwrite_error_pos(&jwc));
+		MINIMAL_ERROR("[JWRITE] Error: %s at function call %d", tb_jwrite_error_string(jwrite_error), tb_jwrite_error_pos(&jwc));
 		return 0;
 	}
 
 	if (error != SCENE_LOAD_OK)
 	{
-		DEBUG_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
+		MINIMAL_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
 		return 0;
 	}
 
@@ -36,7 +36,7 @@ int SceneSave(Scene* scene, const char* path)
 
 	if (!json)
 	{
-		DEBUG_ERROR("[Scenes] Couldn't read scene template: %s", path);
+		MINIMAL_ERROR("[Scenes] Couldn't read scene template: %s", path);
 		return 0;
 	}
 
@@ -44,9 +44,7 @@ int SceneSave(Scene* scene, const char* path)
 	char map_path[APPLICATION_PATH_LEN];
 	tb_json_string(json, "{'map'", map_path, APPLICATION_PATH_LEN, NULL);
 
-	if (!SceneSaveToFile(scene, map_path, SceneSaveMap))
-		return 0;
-
+	if (!SceneSaveToFile(scene, map_path, SceneSaveMap)) return 0;
 	return 1;
 }
 
