@@ -6,6 +6,8 @@
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
 
+#include "Event/EventCallback.h"
+
 static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
 	switch (level)
@@ -14,6 +16,62 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 	case IGNIS_ERROR:		MINIMAL_ERROR("%s", desc); break;
 	case IGNIS_CRITICAL:	MINIMAL_CRITICAL("%s", desc); break;
 	}
+}
+
+int FrostLoadMinimal(MinimalApp* app, const char* path)
+{
+	char* config = tb_file_read(path, "rb");
+
+	if (!config)
+	{
+		MINIMAL_ERROR("Failed to read config (%s)", path);
+		return 0;
+	}
+
+	tb_ini_element section;
+	tb_ini_query(config, "app", &section);
+
+	if (section.type == TB_INI_ERROR)
+	{
+		MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
+		return 0;
+	}
+
+	char title[APPLICATION_STR_LEN];
+	tb_ini_query_string(section.start, ".title", title, APPLICATION_STR_LEN);
+
+	int w = tb_ini_query_int(section.start, ".width", 0);
+	int h = tb_ini_query_int(section.start, ".height", 0);
+
+	char gl_version[APPLICATION_VER_STR_LEN];
+	tb_ini_query_string(section.start, ".opengl", gl_version, APPLICATION_VER_STR_LEN);
+
+	MinimalBool status = MinimalLoad(app, title, w, h, gl_version);
+	if (status)
+	{
+		/* apply settings */
+		tb_ini_query(config, "options", &section);
+		if (section.type != TB_INI_ERROR)
+		{
+			MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
+			MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
+		}
+
+		/* set callbacks */
+		MinimalSetSizeCallback		(app->window, MinimalWindowSizeCallback);
+		MinimalSetCloseCallback		(app->window, MinimalWindowCloseCallback);
+		MinimalSetKeyCallback		(app->window, MinimalKeyCallback);
+		MinimalSetCharCallback		(app->window, MinimalCharCallback);
+		MinimalSetMButtonCallback	(app->window, MinimalMouseButtonCallback);
+		MinimalSetScrollCallback	(app->window, MinimalScrollCallback);
+		MinimalSetCursorPosCallback (app->window, MinimalCursorPosCallback);
+
+		MINIMAL_INFO("[Minimal] Version: %s", MinimalGetVersionString());
+	}
+
+	free(config);
+
+	return status;
 }
 
 int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
@@ -30,7 +88,6 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	if (!ignisInit(debug))
 	{
 		MINIMAL_ERROR("[IGNIS] Failed to initialize Ignis");
-		glfwTerminate();
 		return 0;
 	}
 
@@ -38,7 +95,7 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	ignisSetClearColor(clear_color);
 
 	MINIMAL_INFO("[OpenGL] Version: %s",		ignisGetGLVersion());
-	MINIMAL_INFO("[OpenGL] Vendor: %s",		ignisGetGLVendor());
+	MINIMAL_INFO("[OpenGL] Vendor: %s",			ignisGetGLVendor());
 	MINIMAL_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
 	MINIMAL_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
 

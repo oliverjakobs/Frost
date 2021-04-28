@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "Minimal/MinimalLogger.h"
+#include "Minimal/Minimal.h"
 
 #include "toolbox/tb_str.h"
 

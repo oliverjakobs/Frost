@@ -3,7 +3,7 @@
 #include "toolbox/tb_str.h"
 #include "toolbox/tb_mem.h"
 
-#include "Minimal/MinimalLogger.h"
+#include "Minimal/Minimal.h"
 
 static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {

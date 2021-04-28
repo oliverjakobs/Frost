@@ -14,17 +14,19 @@ void WorldEditorReset(WorldEditor* editor)
 
 void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, Event e)
 {
-	if (EventMouseButtonPressed(&e) == MOUSE_BUTTON_LEFT)
+	if (EventMouseButtonPressed(&e) == MINIMAL_MOUSE_BUTTON_LEFT)
 	{
 		if (editor->hover != ECS_NULL_ENTITY)
 		{
-			vec2 mouse = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
+			vec2 mouse = { 0 };
+			MinimalGetCursorPos(&mouse.x, &mouse.y);
+			mouse = CameraGetMousePos(&scene->camera, mouse);
 			editor->offset = vec2_sub(mouse, GetEntityPosition(&scene->ecs, editor->hover));
 			editor->clicked = 1;
 		}
 	}
 
-	if (EventMouseButtonReleased(&e) == MOUSE_BUTTON_LEFT)
+	if (EventMouseButtonReleased(&e) == MINIMAL_MOUSE_BUTTON_LEFT)
 	{
 		editor->offset = vec2_zero();
 		editor->clicked = 0;
@@ -33,7 +35,9 @@ void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, Event e)
 
 void WorldEditorOnUpdate(WorldEditor* editor, Scene* scene, float deltatime)
 {
-	vec2 mouse = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
+	vec2 mouse = { 0 };
+	MinimalGetCursorPos(&mouse.x, &mouse.y);
+	mouse = CameraGetMousePos(&scene->camera, mouse);
 	float gridsize = scene->map.tile_size;
 
 	if (editor->clicked)

@@ -1,4 +1,4 @@
- #include "MinimalEventHandler.h"
+ #include "EventHandler.h"
 
 #include <stdlib.h>
 
@@ -6,7 +6,7 @@ typedef struct
 {
 	Event* queue;
 	size_t queue_size;
-	void (*callback)(void*, Event);
+	void (*callback)(MinimalApp*, Event);
 } EventHandler;
 
 static EventHandler event_handler;
@@ -23,7 +23,7 @@ static Event* _EventHandlerGetNext()
 	return NULL;
 }
 
-uint8_t EventHandlerInit(size_t queue_size, void (*callback)(void*, Event))
+uint8_t EventHandlerInit(size_t queue_size, void (*callback)(MinimalApp*, Event))
 {
 	event_handler.queue = calloc(queue_size, sizeof(Event));
 
@@ -88,14 +88,18 @@ void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
 	e->console.cmd = cmd;
 }
 
-void EventHandlerPoll(void* context)
+void EventHandlerPoll(MinimalApp* app)
 {
 	for (size_t i = 0; i < event_handler.queue_size; ++i)
 	{
-		if (event_handler.queue[i].type != EVENT_UNKOWN)
+		switch (event_handler.queue[i].type)
 		{
-			event_handler.callback(context, event_handler.queue[i]);
+		case EVENT_UNKOWN:		 continue;
+		case EVENT_WINDOW_CLOSE: MinimalClose(app); break;
+		default:
+			event_handler.callback(app, event_handler.queue[i]);
 			EventReset(&event_handler.queue[i]);
+			break;
 		}
 	}
 }

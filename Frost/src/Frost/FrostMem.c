@@ -1,6 +1,6 @@
 #include "FrostMem.h"
 
-#include "Minimal/MinimalLogger.h"
+#include "Minimal/Minimal.h"
 
 #include "toolbox/toolbox.h"
 

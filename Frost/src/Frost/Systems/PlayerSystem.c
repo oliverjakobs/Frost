@@ -14,15 +14,15 @@ void PlayerSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		ECS_OPTIONAL_MAP(CameraController, ecs, camera, iter, COMPONENT_CAMERA);
 
 		vec2 velocity;
-		velocity.x = (-InputKeyPressed(player->move_left) + InputKeyPressed(player->move_right)) * movement->speed;
+		velocity.x = (-MinimalKeyDown(player->move_left) + MinimalKeyDown(player->move_right)) * movement->speed;
 		velocity.y = body->body.velocity.y;
 
-		if (InputKeyPressed(player->jump) && body->body.collision_state[TILE_BOTTOM])
+		if (MinimalKeyDown(player->jump) && body->body.collision_state[TILE_BOTTOM])
 			velocity.y = movement->jump_power;
-		else if (InputKeyReleased(player->jump) && (velocity.y > 0.0f))
+		else if (!MinimalKeyDown(player->jump) && (velocity.y > 0.0f))
 			velocity.y *= 0.5f;
 
-		if (InputKeyPressed(KEY_S))
+		if (MinimalKeyPressed(MINIMAL_KEY_S))
 			body->body.drop = 1;
 
 		if (velocity.x > 0.0f)

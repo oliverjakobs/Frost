@@ -6,6 +6,11 @@
 
 #include "Graphics/Background.h"
 #include "Minimal/Minimal.h"
+#include "Event/EventHandler.h"
+
+#define APPLICATION_STR_LEN		32
+#define APPLICATION_PATH_LEN	64
+#define APPLICATION_VER_STR_LEN 8
 
 #include "ECS/Ecs.h"
 #include "tile/tile_map.h"

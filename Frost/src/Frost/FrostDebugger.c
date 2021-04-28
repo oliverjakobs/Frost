@@ -177,7 +177,9 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 				break;
 			}
 
-			vec2 pos = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
+			vec2 mouse = { 0 };
+			MinimalGetCursorPos(&mouse.x, &mouse.y);
+			vec2 pos = CameraGetMousePosView(&scene->camera, mouse);
 
 			if (SceneLoadTemplate(scene, args[0], pos, atoi(args[1]), 0))
 				ConsoleOut(console, "Created entity with template %s", args[0]);

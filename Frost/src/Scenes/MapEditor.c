@@ -21,13 +21,16 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, Event e)
 
 void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime)
 {
-	vec2 mouse = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
+	/* TODO: fix mouse pos with camera movement */
+	vec2 mouse = { 0 };
+	MinimalGetCursorPos(&mouse.x, &mouse.y);
+	mouse = CameraGetMousePosView(&scene->camera, mouse);
 
 	if (mouse.y > (scene->camera.position.y + PALETTE_HEIGHT))
 	{
 		editor->tile_hover = TileMapAtPos(&scene->map, mouse);
 
-		if (editor->tile_hover && InputMousePressed(MOUSE_BUTTON_LEFT))
+		if (editor->tile_hover && MinimalMouseButtonPressed(MINIMAL_MOUSE_BUTTON_LEFT))
 		{
 			TileMapSetAtPos(&scene->map, mouse, editor->palette_select, editor->set_mode);
 			TileRendererUpdateBuffers(&scene->renderer, &scene->map);
@@ -49,7 +52,7 @@ void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime)
 			editor->palette_hover = -1;
 		}
 
-		if (editor->palette_hover >= 0 && InputMousePressed(MOUSE_BUTTON_LEFT))
+		if (editor->palette_hover >= 0 && MinimalMouseButtonPressed(MINIMAL_MOUSE_BUTTON_LEFT))
 			editor->palette_select = editor->palette_hover;
 	}
 }
@@ -69,14 +72,17 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
 		Primitives2DRenderRect(pos.x,pos.y, tile_size, tile_size, IGNIS_GREEN);
 	}
 
+	Primitives2DFlush();
+
 	/* UI */
+	Primitives2DStart(CameraGetProjectionPtr(&scene->camera));
 
 	Primitives2DFillRect(0.0f, 0.0f, scene->camera.size.x, PALETTE_HEIGHT, IGNIS_LIGHT_GREY);
 
 	Primitives2DFlush();
 
 	/* Palette */
-	BatchRenderer2DStart(CameraGetViewProjectionPtr(&scene->camera));
+	BatchRenderer2DStart(CameraGetProjectionPtr(&scene->camera));
 
 	for (size_t i = 0; i < scene->map.types_count; ++i)
 	{

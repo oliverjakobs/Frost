@@ -22,12 +22,12 @@ void InteractionSystem(Ecs* ecs, const Scene* scene, float deltatime)
 			float distance = vec2_distance(center, p_center);
 			if (interactable->type == INTERACTION_TYPE_TOGGLE)
 			{
-				if (tb_betweenf(interactable->range_min, interactable->range_max, distance) && InputKeyUp(interactable->key))
+				if (tb_betweenf(interactable->range_min, interactable->range_max, distance) && MinimalKeyReleased(interactable->key))
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
 			}
 			else if (interactable->type == INTERACTION_TYPE_RANGED)
 			{
-				if (distance <= interactable->range_min && InputKeyUp(interactable->key))
+				if (distance <= interactable->range_min && MinimalKeyReleased(interactable->key))
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 1);
 				else if (distance >= interactable->range_max)
 					DispatchInteraction(ecs, interactable_entity, interactable->interaction, 0);

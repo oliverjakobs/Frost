@@ -5,7 +5,8 @@
 #include "toolbox/tb_str.h"
 
 #include "Minimal/Minimal.h"
-#include "Minimal/MinimalLogger.h"
+
+#include "Scenes/Scene.h"
 
 static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
 {

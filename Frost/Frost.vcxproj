@@ -134,13 +134,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Minimal\Minimal.h" />
-    <ClInclude Include="src\Minimal\MinimalCallback.h" />
-    <ClInclude Include="src\Minimal\MinimalEvent.h" />
-    <ClInclude Include="src\Minimal\MinimalEventHandler.h" />
-    <ClInclude Include="src\Minimal\MinimalInput.h" />
-    <ClInclude Include="src\Minimal\MinimalLogger.h" />
-    <ClInclude Include="src\Minimal\MinimalTimer.h" />
+    <ClInclude Include="src\Event\EventCallback.h" />
+    <ClInclude Include="src\Event\Event.h" />
+    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
@@ -193,6 +189,10 @@
     <ClInclude Include="src\Ignis\glad\glad.h" />
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
+    <ClInclude Include="src\Minimal\Minimal.h" />
+    <ClInclude Include="src\Minimal\MinimalUtil.h" />
+    <ClInclude Include="src\Minimal\MinimalWGL.h" />
+    <ClInclude Include="src\Minimal\MinimalWindow.h" />
     <ClInclude Include="src\Scenes\Camera.h" />
     <ClInclude Include="src\Scenes\MapEditor.h" />
     <ClInclude Include="src\Scenes\Resources.h" />
@@ -220,13 +220,9 @@
     <ClInclude Include="src\toolbox\toolbox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Minimal\Minimal.c" />
-    <ClCompile Include="src\Minimal\MinimalCallback.c" />
-    <ClCompile Include="src\Minimal\MinimalEvent.c" />
-    <ClCompile Include="src\Minimal\MinimalEventHandler.c" />
-    <ClCompile Include="src\Minimal\MinimalInput.c" />
-    <ClCompile Include="src\Minimal\MinimalLogger.c" />
-    <ClCompile Include="src\Minimal\MinimalTimer.c" />
+    <ClCompile Include="src\Event\EventCallback.c" />
+    <ClCompile Include="src\Event\Event.c" />
+    <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
@@ -276,6 +272,10 @@
     <ClCompile Include="src\Ignis\Quad.c" />
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
+    <ClCompile Include="src\Minimal\Minimal.c" />
+    <ClCompile Include="src\Minimal\MinimalUtil.c" />
+    <ClCompile Include="src\Minimal\MinimalWGL.c" />
+    <ClCompile Include="src\Minimal\MinimalWindow.c" />
     <ClCompile Include="src\Scenes\Camera.c" />
     <ClCompile Include="src\Scenes\MapEditor.c" />
     <ClCompile Include="src\Scenes\Resources.c" />

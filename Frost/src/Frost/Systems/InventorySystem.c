@@ -30,7 +30,9 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 
 	Inventory* inv_hover = NULL;
 	Inventory* inv_dragged = NULL;
-	vec2 mouse = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
+	vec2 mouse = { 0 };
+	MinimalGetCursorPos(&mouse.x, &mouse.y);
+	mouse = CameraGetMousePos(&scene->camera, mouse);
 
 	/* update hover cell */
 	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_INVENTORY);
@@ -54,11 +56,11 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 	}
 
 	/* update dragged item/cell */
-	if (InputMousePressed(MOUSE_BUTTON_LEFT) && dragged.cell < 0)
+	if (MinimalMouseButtonPressed(MINIMAL_MOUSE_BUTTON_LEFT) && dragged.cell < 0)
 	{
 		InventoryCellIDSet(&dragged, hover.entity, hover.cell);
 	}
-	else if (InputMouseReleased(MOUSE_BUTTON_LEFT) && inv_dragged && dragged.cell >= 0)
+	else if (MinimalMouseButtonReleased(MINIMAL_MOUSE_BUTTON_LEFT) && inv_dragged && dragged.cell >= 0)
 	{
 		if (inv_hover && InventoryGetCellContent(inv_hover, hover.cell) == NULL_ITEM)
 		{
@@ -66,7 +68,9 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 		}
 		else if (!inv_hover && InventoryGetCellContent(inv_dragged, dragged.cell) != NULL_ITEM)
 		{
-			vec2 drop_pos = CameraGetMousePosView(&scene->camera, InputMousePositionVec2());
+			vec2 mouse = {0};
+			MinimalGetCursorPos(&mouse.x, &mouse.y);
+			vec2 drop_pos = CameraGetMousePosView(&scene->camera, mouse);
 			ItemID id = inv_dragged->cells[dragged.cell];
 			if (SceneLoadTemplate(scene, "res/templates/item.json", drop_pos, 0, id))
 				InventorySetCellContent(inv_dragged, dragged.cell, NULL_ITEM);
@@ -141,7 +145,9 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 	/* render dragged item */
 	if (dragged_inv && dragged.cell >= 0)
 	{
-		vec2 mouse_pos = CameraGetMousePos(&scene->camera, InputMousePositionVec2());
+		vec2 mouse_pos = { 0 };
+		MinimalGetCursorPos(&mouse_pos.x, &mouse_pos.y);
+		mouse_pos = CameraGetMousePos(&scene->camera, mouse_pos);
 		float size = dragged_inv->cell_size;
 		float x = mouse_pos.x - (size * 0.5f);
 		float y = mouse_pos.y - (size * 0.5f);

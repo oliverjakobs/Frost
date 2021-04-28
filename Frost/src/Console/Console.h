@@ -8,6 +8,7 @@
 
 #include "Ignis/Ignis.h"
 #include "Minimal/Minimal.h"
+#include "Event/EventHandler.h"
 
 typedef struct
 {

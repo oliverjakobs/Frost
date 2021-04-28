@@ -4,7 +4,6 @@
 #include "Graphics/Primitives2D.h"
 
 #include "toolbox/toolbox.h"
-#include "Minimal/MinimalInput.h"
 
 const float CONSOLE_CURSOR_ON = 1.0f;
 const float CONSOLE_CURSOR_CYCLE = 1.2f;
@@ -38,11 +37,11 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 	switch (EventKeyPressed(e))
 	{
-	case KEY_BACKSPACE:
+	case MINIMAL_KEY_BACKSPACE:
 		ConsoleCharRemoveLast(console);
 		e->handled = 1;
 		break;
-	case KEY_ENTER:
+	case MINIMAL_KEY_ENTER:
 		ConsoleExecuteCmd(console);
 		e->handled = 1;
 		break;
@@ -50,7 +49,7 @@ void ConsoleOnEvent(Console* console, Event* e)
 
 	/* block key events */
 	int32_t key = EventKey(e);
-	if (tb_between32(KEY_SPACE, KEY_WORLD_2, key))
+	if (MinimalKeycodeValid(key))
 		e->handled = 1;
 }
 

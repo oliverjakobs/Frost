@@ -13,15 +13,15 @@ FrostDebugger debugger;
 
 GuiManager gui;
 
-int OnInit(MinimalApp* app)
+MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
 	/* ---------------| Config |------------------------------------------ */
 	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	FrostLoadScene(&scene, (float)app->width, (float)app->height, "res/scenes/scene.json");
+	FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.json");
 
 	FrostLoadRenderer("config.ini");
 
-	GuiInit(&gui, (float)app->width, (float)app->height, "res/fonts.json", FrostGetAllocator());
+	GuiInit(&gui, (float)w, (float)h, "res/fonts.json", FrostGetAllocator());
 	FontRendererBindFontColor(GuiGetFont(&gui, "gui"), IGNIS_WHITE);
 
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));
@@ -54,23 +54,20 @@ void OnEvent(MinimalApp* app, Event e)
 
 	switch (EventKeyPressed(&e))
 	{
-	case KEY_ESCAPE:	MinimalClose(app); break;
-	case KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
-	case KEY_F2:		SceneEditorToggleMapMode(&scene_editor); break;
-	case KEY_F3:		ConsoleToggleFocus(&debugger.console); break;
-	case KEY_F5:		MinimalPause(app); break;
-	case KEY_F6:		MinimalToggleVsync(app); break;
-	case KEY_F7:		MinimalToggleDebug(app); break;
-	case KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
-	case KEY_F9:		FrostDebuggerToggleInfo(&debugger); break;
+	case MINIMAL_KEY_ESCAPE:	MinimalClose(app); break;
+	case MINIMAL_KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
+	case MINIMAL_KEY_F2:		SceneEditorToggleMapMode(&scene_editor); break;
+	case MINIMAL_KEY_F3:		ConsoleToggleFocus(&debugger.console); break;
+	// case MINIMAL_KEY_F5:		MinimalPause(app); break;
+	case MINIMAL_KEY_F6:		MinimalToggleVsync(app); break;
+	case MINIMAL_KEY_F7:		MinimalToggleDebug(app); break;
+	case MINIMAL_KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
+	case MINIMAL_KEY_F9:		FrostDebuggerToggleInfo(&debugger); break;
 	}
 
-	if (scene_editor.mode == SCENE_EDIT_MAP)
-		MinimalSetWindowTitleFormat(app, "%s | Map Editor", app->title);
-	else if (scene_editor.mode == SCENE_EDIT_WORLD)
-		MinimalSetWindowTitleFormat(app, "%s | World Editor", app->title);
-	else if (!app->paused)
-		MinimalSetWindowTitle(app, app->title);
+	if (scene_editor.mode == SCENE_EDIT_MAP)		MinimalSetTitle(app, "Frost | Map Editor");
+	else if (scene_editor.mode == SCENE_EDIT_WORLD)	MinimalSetTitle(app, "Frost | World Editor");
+	else											MinimalSetTitle(app, "Frost");
 
 	FrostDebuggerOnEvent(&debugger, e);
 
@@ -81,6 +78,8 @@ void OnEvent(MinimalApp* app, Event e)
 
 void OnUpdate(MinimalApp* app, float deltatime)
 {
+	EventHandlerPoll(app);
+
 	if (debugger.console.focus)						FrostDebuggerOnUpdate(&debugger, deltatime);
 	else if (SceneEditorIsActive(&scene_editor))	SceneEditorOnUpdate(&scene_editor, deltatime);
 	else											SceneOnUpdate(&scene, deltatime);
@@ -99,36 +98,44 @@ void OnRenderDebug(MinimalApp* app)
 {
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
 
+	float width = (float)MinimalGetWindowWidth(app->window);
+	float height = (float)MinimalGetWindowWidth(app->window);
+
 	FontRendererStart(GuiGetScreenProjPtr(&gui));
 	
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
 
 	/* Settings */
-	FrostDebugRenderSettings(&debugger, app->width - 220.0f, 8.0f);
+	FrostDebugRenderSettings(&debugger, width - 220.0f, 8.0f);
 
 	/* Debug info */
-	FrostDebugRenderInfo(&debugger, &scene, app->width - 480.0f, 8.0f);
+	FrostDebugRenderInfo(&debugger, &scene, width - 480.0f, 8.0f);
 
 	FontRendererFlush();
 
-	FrostDebugRenderConsole(&debugger, (float)app->width, (float)app->height, GuiGetScreenProjPtr(&gui));
+	FrostDebugRenderConsole(&debugger, width, height, GuiGetScreenProjPtr(&gui));
 }
+
+static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }
 
 int main()
 {
-	MinimalApp app;
+	MinimalApp app = { 0 };
 
-	MinimalSetOnInitCallback(&app, OnInit);
-	MinimalSetOnDestroyCallback(&app, OnDestroy);
-	MinimalSetOnEventCallback(&app, OnEvent);
-	MinimalSetOnUpdateCallback(&app, OnUpdate);
-	MinimalSetOnRenderCallback(&app, OnRender);
-	MinimalSetOnRenderDebugCallback(&app, OnRenderDebug);
+	MinimalSetLoadCallback(&app, OnLoad);
+	MinimalSetDestroyCallback(&app, OnDestroy);
+	MinimalSetUpdateCallback(&app, OnUpdate);
+	MinimalSetRenderCallback(&app, OnRender);
+	MinimalSetRenderDebugCallback(&app, OnRenderDebug);
 
-	MinimalLoadConfig(&app, "config.ini");
+	FrostLoadMinimal(&app, "config.ini");
 
-	MinimalRun(&app);
+	EventHandlerInit(64, OnEvent);
+
+	MinimalRun(&app, ClearBuffer);
+
+	EventHandlerDestroy();
 
 	MinimalDestroy(&app);
 

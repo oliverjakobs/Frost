@@ -1,69 +1,84 @@
-#ifndef MINIMAL_APPLICATION_H
-#define MINIMAL_APPLICATION_H
+#ifndef MINIMAL_H
+#define MINIMAL_H
 
-#include "MinimalTimer.h"
-#include "MinimalEventHandler.h"
+#include "MinimalWindow.h"
 
-#include "MinimalInput.h"
+/* minimal version numbers */
+#define MINIMAL_VERSION_MAJOR       1
+#define MINIMAL_VERSION_MINOR       1
+#define MINIMAL_VERSION_REVISION    0
 
-#define APPLICATION_VER_STR_LEN 8
-#define APPLICATION_STR_LEN		32
-#define APPLICATION_PATH_LEN	64
+MinimalBool MinimalInit();
+void MinimalTerminate();
 
-#define EVENT_HANDLER_QUEUE_SIZE	64
+double MinimalGetTime();
 
+void MinimalMakeContextCurrent(MinimalWindow* context);
+MinimalWindow* MinimalGetCurrentContext();
+
+void MinimalGetVersion(int* major, int* minor, int* rev);
+const char* MinimalGetVersionString(void);
+
+/* --------------------------| minimal app |----------------------------- */
 typedef struct MinimalApp MinimalApp;
+
+typedef MinimalBool (*MinimalLoadCB)    (MinimalApp* app, uint32_t w, uint32_t h);
+typedef void        (*MinimalDestroyCB) (MinimalApp* app);
+
+typedef void        (*MinimalUpdateCB)  (MinimalApp* app, float deltatime);
+typedef void        (*MinimalRenderCB)  (MinimalApp* app);
+
 struct MinimalApp
 {
-	GLFWwindow* window;
+    MinimalWindow* window;
 
-	char* title;
+    MinimalLoadCB    on_load;
+    MinimalDestroyCB on_destroy;
 
-	int width;
-	int height;
+    MinimalUpdateCB on_update;
+    MinimalRenderCB on_render;
+    MinimalRenderCB on_render_debug;
+    MinimalRenderCB on_render_gui;
 
-	int running;
-	int paused;
+    MinimalBool debug;
+    MinimalBool vsync;
 
-	int debug;
-	int vsync;
-
-	MinimalTimer timer;
-
-	int (*on_init)(MinimalApp*);
-	void (*on_destroy)(MinimalApp*);
-
-	void (*on_event)(MinimalApp*, Event);
-	void (*on_update)(MinimalApp*, float);
-	void (*on_render)(MinimalApp*);
-	void (*on_render_debug)(MinimalApp*);
-	void (*on_render_gui)(MinimalApp*);
+    MinimalTimer timer;
 };
 
-int MinimalLoad(MinimalApp* app, const char* title, int width, int height, char* gl_version);
-int MinimalLoadConfig(MinimalApp* app, const char* path);
+MinimalBool MinimalLoad(MinimalApp* app, const char* title, uint32_t w, uint32_t h, const char* gl);
 void MinimalDestroy(MinimalApp* app);
 
-/* --------------------------| Game Loop |------------------------------- */
-void MinimalRun(MinimalApp* app);
-void MinimalPause(MinimalApp* app);
+/* --------------------------| game loop |------------------------------- */
+void MinimalRun(MinimalApp* app, void(*clear_buffer)());
 void MinimalClose(MinimalApp* app);
 
-void MinimalSetOnInitCallback(MinimalApp* app, int (*callback)(MinimalApp*));
-void MinimalSetOnDestroyCallback(MinimalApp* app, void (*callback)(MinimalApp*));
-void MinimalSetOnEventCallback(MinimalApp* app, void (*callback)(MinimalApp*, Event));
-void MinimalSetOnUpdateCallback(MinimalApp* app, void (*callback)(MinimalApp*, float));
-void MinimalSetOnRenderCallback(MinimalApp* app, void (*callback)(MinimalApp*));
-void MinimalSetOnRenderDebugCallback(MinimalApp* app, void (*callback)(MinimalApp*));
+void MinimalSetLoadCallback(MinimalApp* app, MinimalLoadCB callback);
+void MinimalSetDestroyCallback(MinimalApp* app, MinimalDestroyCB callback);
+void MinimalSetUpdateCallback(MinimalApp* app, MinimalUpdateCB callback);
+void MinimalSetRenderCallback(MinimalApp* app, MinimalRenderCB callback);
+void MinimalSetRenderDebugCallback(MinimalApp* app, MinimalRenderCB callback);
+void MinimalSetRenderGUICallback(MinimalApp* app, MinimalRenderCB callback);
 
-/* --------------------------| Settings |-------------------------------- */
-void MinimalEnableDebug(MinimalApp* app, int b);
-void MinimalEnableVsync(MinimalApp* app, int b);
+/* --------------------------| settings |-------------------------------- */
+void MinimalSetTitle(MinimalApp* app, const char* title);
+
+void MinimalEnableDebug(MinimalApp* app, MinimalBool b);
+void MinimalEnableVsync(MinimalApp* app, MinimalBool b);
 
 void MinimalToggleDebug(MinimalApp* app);
 void MinimalToggleVsync(MinimalApp* app);
 
-void MinimalSetWindowTitle(MinimalApp* app, const char* title);
-void MinimalSetWindowTitleFormat(MinimalApp* app, const char* fmt, ...);
+uint32_t MinimalGetFps(const MinimalApp* app);
 
-#endif /* !MINIMAL_APPLICATION_H */
+/* --------------------------| input |----------------------------------- */
+MinimalBool MinimalKeyPressed(uint32_t keycode);
+MinimalBool MinimalKeyReleased(uint32_t  keycode);
+MinimalBool MinimalKeyDown(uint32_t  keycode);
+
+MinimalBool MinimalMouseButtonPressed(uint32_t button);
+MinimalBool MinimalMouseButtonReleased(uint32_t  button);
+
+void MinimalGetCursorPos(float* x, float* y);
+
+#endif // !MINIMAL_H

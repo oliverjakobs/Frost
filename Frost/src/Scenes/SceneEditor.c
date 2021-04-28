@@ -80,14 +80,10 @@ void SceneEditorOnUpdate(SceneEditor* editor, float deltatime)
 
 	vec2 position = editor->scene->camera.position;
 
-	if (InputKeyPressed(KEY_A))
-		position.x -= editor->cameraspeed * deltatime;
-	if (InputKeyPressed(KEY_D))
-		position.x += editor->cameraspeed * deltatime;
-	if (InputKeyPressed(KEY_S))
-		position.y -= editor->cameraspeed * deltatime;
-	if (InputKeyPressed(KEY_W))
-		position.y += editor->cameraspeed * deltatime;
+	if (MinimalKeyDown(MINIMAL_KEY_A))	position.x -= editor->cameraspeed * deltatime;
+	if (MinimalKeyDown(MINIMAL_KEY_D))	position.x += editor->cameraspeed * deltatime;
+	if (MinimalKeyDown(MINIMAL_KEY_S))	position.y -= editor->cameraspeed * deltatime;
+	if (MinimalKeyDown(MINIMAL_KEY_W))	position.y += editor->cameraspeed * deltatime;
 
 	CameraSetPositionOrtho(&editor->scene->camera, position);
 
