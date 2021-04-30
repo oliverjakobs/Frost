@@ -11,7 +11,7 @@ void MinimalEventCallback(MinimalApp* app, Event e)
 	}
 }
 
-void MinimalWindowSizeCallback(MinimalWindow* window, long width, long height)
+void MinimalWindowSizeCallback(MinimalWindow* window, uint32_t width, uint32_t height)
 {
 	EventHandlerThrowWindowEvent(EVENT_WINDOW_RESIZE, width, height);
 }
@@ -30,9 +30,9 @@ void MinimalKeyCallback(MinimalWindow* window, UINT keycode, UINT scancode, UINT
 	}
 }
 
-void MinimalCharCallback(MinimalWindow* window, UINT keycode)
+void MinimalCharCallback(MinimalWindow* window, UINT codepoint, UINT mods)
 {
-	EventHandlerThrowKeyEvent(EVENT_KEY_TYPED, keycode, 0);
+	EventHandlerThrowKeyEvent(EVENT_KEY_TYPED, codepoint, 0);
 }
 
 void MinimalMouseButtonCallback(MinimalWindow* window, UINT button, UINT action, UINT mods)

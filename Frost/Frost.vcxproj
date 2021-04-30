@@ -190,6 +190,7 @@
     <ClInclude Include="src\Ignis\stb\stb_image.h" />
     <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Minimal\Minimal.h" />
+    <ClInclude Include="src\Minimal\MinimalEvent.h" />
     <ClInclude Include="src\Minimal\MinimalUtil.h" />
     <ClInclude Include="src\Minimal\MinimalWGL.h" />
     <ClInclude Include="src\Minimal\MinimalWindow.h" />

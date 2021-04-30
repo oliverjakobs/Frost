@@ -99,7 +99,7 @@ void OnRenderDebug(MinimalApp* app)
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
 
 	float width = (float)MinimalGetWindowWidth(app->window);
-	float height = (float)MinimalGetWindowWidth(app->window);
+	float height = (float)MinimalGetWindowHeigth(app->window);
 
 	FontRendererStart(GuiGetScreenProjPtr(&gui));
 	

@@ -17,13 +17,15 @@ MinimalBool MinimalCreateHelperWindow();
 MinimalBool MinimalDestroyHelperWindow();
 HWND MinimalGetHelperWindow();
 
-typedef void (*MinimalSizeCB)       (MinimalWindow* wnd, long w, long h);
+typedef void (*MinimalSizeCB)       (MinimalWindow* wnd, uint32_t w, uint32_t h);
 typedef void (*MinimalCloseCB)      (MinimalWindow* wnd);
 typedef void (*MinimalKeyCB)        (MinimalWindow* wnd, UINT keycode, UINT scancode, UINT action, UINT mods);
-typedef void (*MinimalCharCB)       (MinimalWindow* wnd, UINT keycode);
+typedef void (*MinimalCharCB)       (MinimalWindow* wnd, UINT codepoint, UINT mods);
 typedef void (*MinimalMButtonCB)    (MinimalWindow* wnd, UINT keycode, UINT action, UINT mods);
-typedef void (*MinimalScrollCB)     (MinimalWindow* wnd, float x_offset, float y_offset);
-typedef void (*MinimalCursorPosCB)  (MinimalWindow* wnd, float x_pos, float y_pos);
+typedef void (*MinimalScrollCB)     (MinimalWindow* wnd, float h, float v);
+typedef void (*MinimalCursorPosCB)  (MinimalWindow* wnd, float x, float y);
+typedef void (*MinimalMaximizeCB)   (MinimalWindow* wnd, MinimalBool maximized);
+typedef void (*MinimalIconifyCB)    (MinimalWindow* wnd, MinimalBool iconified);
 
 typedef struct
 {

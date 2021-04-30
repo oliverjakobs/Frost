@@ -15,6 +15,11 @@ struct MinimalWindow
     uint8_t mouse_buttons[MINIMAL_MOUSE_BUTTON_LAST + 1];
 
     MinimalBool should_close;
+    MinimalBool maximized;
+    MinimalBool iconified;
+
+    uint32_t width;
+    uint32_t height;
 
     /* callbacks */
     struct
@@ -26,6 +31,8 @@ struct MinimalWindow
         MinimalMButtonCB    m_button;
         MinimalScrollCB     scroll;
         MinimalCursorPosCB  cursor_pos;
+        MinimalMaximizeCB   maximize;
+        MinimalIconifyCB    iconify;
     } callbacks;
 };
 
@@ -46,8 +53,7 @@ static uint8_t MinimalCheckMouseButtons(MinimalWindow* window)
     uint8_t i;
     for (i = 0; i <= MINIMAL_MOUSE_BUTTON_LAST; i++)
     {
-        if (window->mouse_buttons[i] == MINIMAL_PRESS)
-            break;
+        if (window->mouse_buttons[i] == MINIMAL_PRESS) break;
     }
     return i;
 }
@@ -61,26 +67,57 @@ static UINT MinimalGetMouseButton(UINT msg, WPARAM wParam)
     return MINIMAL_MOUSE_BUTTON_5;
 }
 
-static void MinimalUpdateKey(MinimalWindow* window, UINT key, UINT scancode, UINT action, UINT mods)
+static void MinimalInputChar(MinimalWindow* window, UINT codepoint, UINT mods)
+{
+    if (window->callbacks.character) window->callbacks.character(window, codepoint, mods);
+}
+
+static void MinimalInputKey(MinimalWindow* window, UINT key, UINT scancode, UINT action, UINT mods)
 {
     if (MinimalKeycodeValid(key)) window->key_state[key].action = (uint8_t)action;
     if (window->callbacks.key) window->callbacks.key(window, key, scancode, action, mods);
 }
 
-static void MinimalUpdateMouseButton(MinimalWindow* window, UINT button, UINT action, UINT mods)
+static void MinimalInputMouseButton(MinimalWindow* window, UINT button, UINT action, UINT mods)
 {
     if (MinimalMouseButtonValid(button)) window->mouse_buttons[button] = (uint8_t)action;
     if (window->callbacks.m_button) window->callbacks.m_button(window, button, action, mods);
 }
 
-static void MinimalUpdateCursorPos(MinimalWindow* window, float x, float y)
+static void MinimalInputCursorPos(MinimalWindow* window, float x, float y)
 {
     if (window->callbacks.cursor_pos) window->callbacks.cursor_pos(window, x, y);
+}
+
+static void MinimalInputMouseScroll(MinimalWindow* window, float h, float v)
+{
+    if (window->callbacks.scroll) window->callbacks.scroll(window, h, v);
+}
+
+static void MinimalInputWindowSize(MinimalWindow* window, uint32_t w, uint32_t h)
+{
+    window->width = w;
+    window->height = h;
+
+    if (window->callbacks.size) window->callbacks.size(window, w, h);
+}
+
+static void MinimalInputWindowIconify(MinimalWindow* window, MinimalBool iconified)
+{
+    if (window->callbacks.iconify) window->callbacks.iconify(window, iconified);
+    window->iconified = iconified;
+}
+
+static void MinimalInputWindowMaximize(MinimalWindow* window, MinimalBool maximized)
+{
+    if (window->callbacks.maximize) window->callbacks.maximize(window, maximized);
+    window->maximized = maximized;
 }
 
 static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     MinimalWindow* window = GetPropW(hwnd, L"Minimal");
+    if (!window) return DefWindowProcW(hwnd, msg, wParam, lParam);
     switch (msg)
     {
     case WM_DESTROY:
@@ -95,9 +132,7 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     case WM_SYSCHAR:
     case WM_UNICHAR:
     {
-        const uint8_t plain = (msg != WM_SYSCHAR);
-
-        // _glfwInputChar(window, (unsigned int)wParam, getKeyMods(), plain);
+        MinimalInputChar(window, (UINT)wParam, MinimalGetKeyMods());
         return 0;
     }
     case WM_KEYDOWN:
@@ -110,7 +145,7 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
         const UINT action = ((lParam >> 31) & 1) ? MINIMAL_RELEASE : MINIMAL_PRESS;
         const UINT mods = MinimalGetKeyMods();
 
-        MinimalUpdateKey(window, keycode, scancode, action, mods);
+        MinimalInputKey(window, keycode, scancode, action, mods);
         return 0;
     }
     case WM_LBUTTONDOWN:
@@ -129,7 +164,7 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) SetCapture(hwnd);
 
-        MinimalUpdateMouseButton(window, button, action, mods);
+        MinimalInputMouseButton(window, button, action, mods);
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) ReleaseCapture();
 
@@ -140,7 +175,28 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
         const int x = GET_X_LPARAM(lParam);
         const int y = GET_Y_LPARAM(lParam);
 
-        MinimalUpdateCursorPos(window, (float)x, (float)y);
+        MinimalInputCursorPos(window, (float)x, (float)y);
+        return 0;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        MinimalInputMouseScroll(window, 0.0f, (SHORT)HIWORD(wParam) / (float)WHEEL_DELTA);
+        return 0;
+    }
+    case WM_MOUSEHWHEEL:
+    {
+        MinimalInputMouseScroll(window, ((SHORT)HIWORD(wParam) / (float)WHEEL_DELTA), 0.0f);
+        return 0;
+    }
+    case WM_SIZE:
+    {
+        const MinimalBool iconified = wParam == SIZE_MINIMIZED;
+        const MinimalBool maximized = wParam == SIZE_MAXIMIZED || (window->maximized && wParam != SIZE_RESTORED);
+
+        if (window->iconified != iconified) MinimalInputWindowIconify(window, iconified);
+        if (window->maximized != maximized) MinimalInputWindowMaximize(window, maximized);
+
+        MinimalInputWindowSize(window, LOWORD(lParam), HIWORD(lParam));
         return 0;
     }
     default: return DefWindowProcW(hwnd, msg, wParam, lParam);
@@ -226,6 +282,8 @@ MinimalWindow* MinimalCreateWindow(const char* title, uint32_t w, uint32_t h, co
     MinimalWindow* wnd = MinimalAlloc(sizeof(MinimalWindow));
 
     wnd->instance = GetModuleHandleW(NULL);
+    wnd->width = w;
+    wnd->height = h;
 
     RECT rect = { .right = w, .bottom = h };
     DWORD style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
@@ -287,27 +345,11 @@ void MinimalPollEvent(MinimalWindow* wnd)
     }
 }
 
-void MinimalSwapBuffer(MinimalWindow* wnd)
-{
-    SwapBuffers(wnd->device_context);
-}
+void MinimalSwapBuffer(MinimalWindow* wnd)                      { SwapBuffers(wnd->device_context); }
+void MinimalSetWindowTitle(MinimalWindow* wnd, const char* str) { SetWindowTextA(wnd->handle, str); }
 
-void MinimalSetWindowTitle(MinimalWindow* wnd, const char* str)
-{
-    SetWindowTextA(wnd->handle, str);
-}
-
-uint32_t MinimalGetWindowWidth(const MinimalWindow* wnd)
-{
-    RECT rect;
-    return GetWindowRect(wnd->handle, &rect) ? rect.right - rect.left : 0;
-}
-
-uint32_t MinimalGetWindowHeigth(const MinimalWindow* wnd)
-{
-    RECT rect;
-    return GetWindowRect(wnd->handle, &rect) ? rect.bottom - rect.top : 0;
-}
+uint32_t MinimalGetWindowWidth(const MinimalWindow* wnd)    { return wnd->width; }
+uint32_t MinimalGetWindowHeigth(const MinimalWindow* wnd)   { return wnd->height; }
 
 uint8_t MinimalShouldCloseWindow(const MinimalWindow* wnd)  { return wnd->should_close; }
 void MinimalCloseWindow(MinimalWindow* wnd)                 { wnd->should_close = 1; }

@@ -337,6 +337,7 @@
     <ClInclude Include="src\Minimal\MinimalUtil.h" />
     <ClInclude Include="src\Minimal\MinimalWGL.h" />
     <ClInclude Include="src\Minimal\MinimalWindow.h" />
+    <ClInclude Include="src\Minimal\MinimalEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console\Command.c">

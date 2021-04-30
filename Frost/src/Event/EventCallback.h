@@ -11,10 +11,10 @@
 void MinimalEventCallback(MinimalApp* app, Event e);
 
 /* Translates GLFW events to internal events */
-void MinimalWindowSizeCallback  (MinimalWindow* wnd, long w, long h);
+void MinimalWindowSizeCallback  (MinimalWindow* wnd, uint32_t w, uint32_t h);
 void MinimalWindowCloseCallback (MinimalWindow* wnd);
 void MinimalKeyCallback         (MinimalWindow* wnd, UINT keycode, UINT scancode, UINT action, UINT mods);
-void MinimalCharCallback        (MinimalWindow* wnd, UINT keycode);
+void MinimalCharCallback        (MinimalWindow* wnd, UINT codepoint, UINT mods);
 void MinimalMouseButtonCallback (MinimalWindow* wnd, UINT button, UINT action, UINT mods);
 void MinimalScrollCallback      (MinimalWindow* wnd, float x_offset, float y_offset);
 void MinimalCursorPosCallback   (MinimalWindow* wnd, float x_pos, float y_pos);
