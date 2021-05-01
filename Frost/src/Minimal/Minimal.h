@@ -2,6 +2,7 @@
 #define MINIMAL_H
 
 #include "MinimalWindow.h"
+#include "MinimalEvent.h"
 
 /* minimal version numbers */
 #define MINIMAL_VERSION_MAJOR       1
@@ -25,6 +26,7 @@ typedef struct MinimalApp MinimalApp;
 typedef MinimalBool (*MinimalLoadCB)    (MinimalApp* app, uint32_t w, uint32_t h);
 typedef void        (*MinimalDestroyCB) (MinimalApp* app);
 
+typedef MinimalBool (*MinimalEventCB)   (MinimalApp* app, const MinimalEvent* event);
 typedef void        (*MinimalUpdateCB)  (MinimalApp* app, float deltatime);
 typedef void        (*MinimalRenderCB)  (MinimalApp* app);
 
@@ -70,6 +72,10 @@ void MinimalToggleDebug(MinimalApp* app);
 void MinimalToggleVsync(MinimalApp* app);
 
 uint32_t MinimalGetFps(const MinimalApp* app);
+
+/* --------------------------| event |----------------------------------- */
+void MinimalDispatchEvent(const MinimalApp* app, uint64_t data);
+
 
 /* --------------------------| input |----------------------------------- */
 MinimalBool MinimalKeyPressed(uint32_t keycode);

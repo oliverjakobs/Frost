@@ -69,7 +69,7 @@ void EventHandlerThrowMouseButtonEvent(EventType type, int32_t button)
 	e->mousebutton.buttoncode = button;
 }
 
-void EventHandlerThrowMouseEvent(EventType type, float x, float y)
+void EventHandlerThrowMouseEvent(EventType type, int32_t x, int32_t y)
 {
 	Event* e = _EventHandlerGetNext();
 	if (!e) return;
@@ -77,15 +77,6 @@ void EventHandlerThrowMouseEvent(EventType type, float x, float y)
 	e->type = type;
 	e->mouse.x = x;
 	e->mouse.y = y;
-}
-
-void EventHandlerThrowConsoleEvent(EventType type, const char* cmd)
-{
-	Event* e = _EventHandlerGetNext();
-	if (!e) return;
-
-	e->type = type;
-	e->console.cmd = cmd;
 }
 
 void EventHandlerPoll(MinimalApp* app)

@@ -44,12 +44,13 @@ void MinimalMouseButtonCallback(MinimalWindow* window, UINT button, UINT action,
 	}
 }
 
-void MinimalScrollCallback(MinimalWindow* window, float xOffset, float yOffset)
+void MinimalScrollCallback(MinimalWindow* window, INT xOffset, INT yOffset)
 {
 	EventHandlerThrowMouseEvent(EVENT_MOUSE_SCROLLED, xOffset, yOffset);
 }
 
-void MinimalCursorPosCallback(MinimalWindow* window, float xPos, float yPos)
+void MinimalCursorPosCallback(MinimalWindow* window, INT xPos, INT yPos)
 {
+	MINIMAL_INFO("%d, %d", xPos, yPos);
 	EventHandlerThrowMouseEvent(EVENT_MOUSE_MOVED, xPos, yPos);
 }

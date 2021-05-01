@@ -22,10 +22,12 @@ typedef void (*MinimalCloseCB)      (MinimalWindow* wnd);
 typedef void (*MinimalKeyCB)        (MinimalWindow* wnd, UINT keycode, UINT scancode, UINT action, UINT mods);
 typedef void (*MinimalCharCB)       (MinimalWindow* wnd, UINT codepoint, UINT mods);
 typedef void (*MinimalMButtonCB)    (MinimalWindow* wnd, UINT keycode, UINT action, UINT mods);
-typedef void (*MinimalScrollCB)     (MinimalWindow* wnd, float h, float v);
-typedef void (*MinimalCursorPosCB)  (MinimalWindow* wnd, float x, float y);
+typedef void (*MinimalScrollCB)     (MinimalWindow* wnd, INT h, INT v);
+typedef void (*MinimalCursorPosCB)  (MinimalWindow* wnd, INT x, INT y);
 typedef void (*MinimalMaximizeCB)   (MinimalWindow* wnd, MinimalBool maximized);
 typedef void (*MinimalIconifyCB)    (MinimalWindow* wnd, MinimalBool iconified);
+
+typedef MinimalBool (*MinimalDispatchEventCB)(void* handler, uint64_t data);
 
 typedef struct
 {

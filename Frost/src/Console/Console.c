@@ -10,7 +10,7 @@ const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
 const char* CONSOLE_PROMPT = "> ";
 
-void ConsoleInit(Console* console, IgnisFont* font)
+void ConsoleInit(Console* console, void* user_data, void(*execute)(void*, const char*), IgnisFont* font)
 {
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
 	console->cusor_pos = 0;
@@ -19,6 +19,9 @@ void ConsoleInit(Console* console, IgnisFont* font)
 
 	console->cursor_size = 2.0f;
 	console->cursor_tick = 0.0f;
+
+	console->user_data = user_data;
+	console->execute = execute;
 
 	console->font = font;
 	console->font_color = IGNIS_WHITE;
@@ -80,7 +83,7 @@ void ConsoleExecuteCmd(Console* console)
 	/* NULL-terminate cmd */
 	ConsoleCharTyped(console, '\0');
 
-	EventHandlerThrowConsoleEvent(EVENT_CONSOLE_EXEC, console->cmd_buffer);
+	console->execute(console->user_data, console->cmd_buffer);
 
 	/* reset cmd-buffer */
 	ConsoleResetCursor(console);

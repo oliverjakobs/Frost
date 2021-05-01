@@ -1,8 +1,14 @@
 #include "MinimalWindow.h"
 
-#include <windowsx.h>
-
 #include "MinimalWGL.h"
+
+#define MINIMAL_GET_X_LPARAM(lp)    ((INT)(SHORT)LOWORD(lp))
+#define MINIMAL_GET_Y_LPARAM(lp)    ((INT)(SHORT)HIWORD(lp))
+
+#define MINIMAL_GET_SCROLL(wp)      ((INT)((SHORT)HIWORD(wp) / (float)WHEEL_DELTA))
+
+#define MINIMAL_MSG_BUTTON_DOWN(msg) \
+    (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN || msg == WM_XBUTTONDOWN)
 
 struct MinimalWindow
 {
@@ -21,7 +27,11 @@ struct MinimalWindow
     uint32_t width;
     uint32_t height;
 
-    /* callbacks */
+    /* events */
+    void* event_handler;
+    MinimalDispatchEventCB dispatch;
+
+    /* window callbacks */
     struct
     {
         MinimalSizeCB       size;
@@ -64,7 +74,7 @@ static UINT MinimalGetMouseButton(UINT msg, WPARAM wParam)
     if (msg == WM_RBUTTONDOWN || msg == WM_RBUTTONUP)   return MINIMAL_MOUSE_BUTTON_RIGHT;
     if (msg == WM_MBUTTONDOWN || msg == WM_MBUTTONUP)   return MINIMAL_MOUSE_BUTTON_MIDDLE;
     if (GET_XBUTTON_WPARAM(wParam) == XBUTTON1)         return MINIMAL_MOUSE_BUTTON_4;
-    return MINIMAL_MOUSE_BUTTON_5;
+    else                                                return MINIMAL_MOUSE_BUTTON_5;
 }
 
 static void MinimalCallChar(MinimalWindow* window, UINT codepoint, UINT mods)
@@ -84,12 +94,12 @@ static void MinimalCallMouseButton(MinimalWindow* window, UINT button, UINT acti
     if (window->callbacks.m_button) window->callbacks.m_button(window, button, action, mods);
 }
 
-static void MinimalCallCursorPos(MinimalWindow* window, float x, float y)
+static void MinimalCallCursorPos(MinimalWindow* window, UINT x, UINT y)
 {
     if (window->callbacks.cursor_pos) window->callbacks.cursor_pos(window, x, y);
 }
 
-static void MinimalCallMouseScroll(MinimalWindow* window, float h, float v)
+static void MinimalCallMouseScroll(MinimalWindow* window, INT h, INT v)
 {
     if (window->callbacks.scroll) window->callbacks.scroll(window, h, v);
 }
@@ -158,8 +168,7 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
     case WM_XBUTTONUP:
     {
         const UINT button = MinimalGetMouseButton(msg, wParam);
-        const UINT action = (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || 
-                             msg == WM_MBUTTONDOWN || msg == WM_XBUTTONDOWN) ? MINIMAL_PRESS : MINIMAL_RELEASE;
+        const UINT action = MINIMAL_MSG_BUTTON_DOWN(msg) ? MINIMAL_PRESS : MINIMAL_RELEASE;
         const UINT mods = MinimalGetKeyMods();
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) SetCapture(hwnd);
@@ -168,24 +177,22 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) ReleaseCapture();
 
+        printf("Clicked: %d, %d\n", MINIMAL_GET_X_LPARAM(lParam), MINIMAL_GET_Y_LPARAM(lParam));
         return msg == WM_XBUTTONDOWN || msg == WM_XBUTTONUP;
     }
     case WM_MOUSEMOVE:
     {
-        const int x = GET_X_LPARAM(lParam);
-        const int y = GET_Y_LPARAM(lParam);
-
-        MinimalCallCursorPos(window, (float)x, (float)y);
+        MinimalCallCursorPos(window, MINIMAL_GET_X_LPARAM(lParam), MINIMAL_GET_Y_LPARAM(lParam));
         return 0;
     }
     case WM_MOUSEWHEEL:
     {
-        MinimalCallMouseScroll(window, 0.0f, (SHORT)HIWORD(wParam) / (float)WHEEL_DELTA);
+        MinimalCallMouseScroll(window, 0, MINIMAL_GET_SCROLL(wParam));
         return 0;
     }
     case WM_MOUSEHWHEEL:
     {
-        MinimalCallMouseScroll(window, ((SHORT)HIWORD(wParam) / (float)WHEEL_DELTA), 0.0f);
+        MinimalCallMouseScroll(window, MINIMAL_GET_SCROLL(wParam), 0);
         return 0;
     }
     case WM_SIZE:

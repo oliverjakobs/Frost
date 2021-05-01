@@ -20,12 +20,15 @@ typedef struct
 	float cursor_size;
 	float cursor_tick;
 
+	void* user_data;
+	void (*execute)(void*, const char*);
+
 	IgnisFont* font;
 	IgnisColorRGBA font_color;
 	IgnisColorRGBA bg_color;
 } Console;
 
-void ConsoleInit(Console* console, IgnisFont* font);
+void ConsoleInit(Console* console, void* user_data, void (*execute)(void*, const char*), IgnisFont* font);
 
 void ConsoleOnEvent(Console* console, Event* e);
 void ConsoleOnUpdate(Console* console, float deltatime);

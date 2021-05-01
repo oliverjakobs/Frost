@@ -5,7 +5,7 @@
 void FrostDebuggerInit(FrostDebugger* debugger, int show_info, IgnisFont* font)
 {
 	debugger->show_info = show_info;
-	ConsoleInit(&debugger->console, font);
+	ConsoleInit(&debugger->console, debugger, FrostExecuteConsoleCommand, font);
 }
 
 void FrostDebuggerBindScene(FrostDebugger* debugger, Scene* scene, SceneEditor* editor)
@@ -26,9 +26,6 @@ void FrostDebuggerToggleInfo(FrostDebugger* debugger)
 
 void FrostDebuggerOnEvent(FrostDebugger* debugger, Event e)
 {
-	if (EventCheckType(&e, EVENT_CONSOLE_EXEC))
-		FrostExecuteConsoleCommand(debugger, e.console.cmd);
-
 	ConsoleOnEvent(&debugger->console, &e);
 }
 

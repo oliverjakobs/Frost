@@ -16,7 +16,7 @@ void MinimalWindowCloseCallback (MinimalWindow* wnd);
 void MinimalKeyCallback         (MinimalWindow* wnd, UINT keycode, UINT scancode, UINT action, UINT mods);
 void MinimalCharCallback        (MinimalWindow* wnd, UINT codepoint, UINT mods);
 void MinimalMouseButtonCallback (MinimalWindow* wnd, UINT button, UINT action, UINT mods);
-void MinimalScrollCallback      (MinimalWindow* wnd, float x_offset, float y_offset);
-void MinimalCursorPosCallback   (MinimalWindow* wnd, float x_pos, float y_pos);
+void MinimalScrollCallback      (MinimalWindow* wnd, INT x_offset, INT y_offset);
+void MinimalCursorPosCallback   (MinimalWindow* wnd, INT x_pos, INT y_pos);
 
 #endif /* !MINIMAL_CALLBACK_H */

@@ -1,5 +1,5 @@
-#ifndef MINIMAL_EVENT_H
-#define MINIMAL_EVENT_H
+#ifndef EVENT_H
+#define EVENT_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -21,9 +21,7 @@ typedef enum
 	EVENT_MOUSE_BUTTON_PRESSED,
 	EVENT_MOUSE_BUTTON_RELEASED,
 	EVENT_MOUSE_MOVED,
-	EVENT_MOUSE_SCROLLED,
-	/* console events */
-	EVENT_CONSOLE_EXEC
+	EVENT_MOUSE_SCROLLED
 } EventType;
 
 typedef struct
@@ -38,7 +36,7 @@ typedef struct
 		} key;
 		struct
 		{
-			float x, y;
+			int32_t x, y;
 		} mouse;
 		struct
 		{
@@ -48,10 +46,6 @@ typedef struct
 		{
 			uint32_t width, height;
 		} window;
-		struct
-		{
-			const char* cmd;
-		} console;
 	};
 	uint8_t handled;
 } Event;
