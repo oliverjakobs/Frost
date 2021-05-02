@@ -77,31 +77,42 @@ static UINT MinimalGetMouseButton(UINT msg, WPARAM wParam)
     else                                                return MINIMAL_MOUSE_BUTTON_5;
 }
 
+
+static void MinimalWindowDispatchEvent(MinimalWindow* window, UINT type, UINT uParam, INT lParam, INT rParam)
+{
+    if (window->dispatch) window->dispatch(window->event_handler, type, uParam, lParam, rParam);
+}
+
 static void MinimalCallChar(MinimalWindow* window, UINT codepoint, UINT mods)
 {
     if (window->callbacks.character) window->callbacks.character(window, codepoint, mods);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_CHAR, codepoint, 0, mods);
 }
 
 static void MinimalCallKey(MinimalWindow* window, UINT key, UINT scancode, UINT action, UINT mods)
 {
     if (MinimalKeycodeValid(key)) window->key_state[key].action = (uint8_t)action;
     if (window->callbacks.key) window->callbacks.key(window, key, scancode, action, mods);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_KEY, key, action, mods);
 }
 
-static void MinimalCallMouseButton(MinimalWindow* window, UINT button, UINT action, UINT mods)
+static void MinimalCallMouseButton(MinimalWindow* window, UINT button, UINT action, UINT mods, INT x, INT y)
 {
     if (MinimalMouseButtonValid(button)) window->mouse_buttons[button] = (uint8_t)action;
-    if (window->callbacks.m_button) window->callbacks.m_button(window, button, action, mods);
+    if (window->callbacks.m_button) window->callbacks.m_button(window, button, action, mods, x, y);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_MOUSE_BUTTON, MINIMAL_MAKE_MOUSE_U(button, action), x, y);
 }
 
 static void MinimalCallCursorPos(MinimalWindow* window, UINT x, UINT y)
 {
     if (window->callbacks.cursor_pos) window->callbacks.cursor_pos(window, x, y);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_MOUSE_MOVED, 0, x, y);
 }
 
 static void MinimalCallMouseScroll(MinimalWindow* window, INT h, INT v)
 {
     if (window->callbacks.scroll) window->callbacks.scroll(window, h, v);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_MOUSE_SCROLLED, 0, h, v);
 }
 
 static void MinimalCallWindowSize(MinimalWindow* window, uint32_t w, uint32_t h)
@@ -110,6 +121,7 @@ static void MinimalCallWindowSize(MinimalWindow* window, uint32_t w, uint32_t h)
     window->height = h;
 
     if (window->callbacks.size) window->callbacks.size(window, w, h);
+    MinimalWindowDispatchEvent(window, MINIMAL_EVENT_WINDOW_SIZE, 0, w, h);
 }
 
 static void MinimalCallWindowIconify(MinimalWindow* window, MinimalBool iconified)
@@ -170,14 +182,15 @@ static LRESULT MinimalWindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
         const UINT button = MinimalGetMouseButton(msg, wParam);
         const UINT action = MINIMAL_MSG_BUTTON_DOWN(msg) ? MINIMAL_PRESS : MINIMAL_RELEASE;
         const UINT mods = MinimalGetKeyMods();
+        const INT x = MINIMAL_GET_X_LPARAM(lParam);
+        const INT y = MINIMAL_GET_Y_LPARAM(lParam);
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) SetCapture(hwnd);
 
-        MinimalCallMouseButton(window, button, action, mods);
+        MinimalCallMouseButton(window, button, action, mods, x, y);
 
         if (MinimalCheckMouseButtons(window) > MINIMAL_MOUSE_BUTTON_LAST) ReleaseCapture();
 
-        printf("Clicked: %d, %d\n", MINIMAL_GET_X_LPARAM(lParam), MINIMAL_GET_Y_LPARAM(lParam));
         return msg == WM_XBUTTONDOWN || msg == WM_XBUTTONUP;
     }
     case WM_MOUSEMOVE:
@@ -354,6 +367,12 @@ void MinimalPollEvent(MinimalWindow* wnd)
 
 void MinimalSwapBuffer(MinimalWindow* wnd)                      { SwapBuffers(wnd->device_context); }
 void MinimalSetWindowTitle(MinimalWindow* wnd, const char* str) { SetWindowTextA(wnd->handle, str); }
+
+void MinimalSetEventDispatch(MinimalWindow* wnd, void* handler, MinimalDispatchEventCB dispatch)
+{
+    wnd->event_handler = handler;
+    wnd->dispatch = dispatch;
+}
 
 uint32_t MinimalGetWindowWidth(const MinimalWindow* wnd)    { return wnd->width; }
 uint32_t MinimalGetWindowHeigth(const MinimalWindow* wnd)   { return wnd->height; }

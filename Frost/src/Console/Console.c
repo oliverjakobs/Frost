@@ -28,32 +28,25 @@ void ConsoleInit(Console* console, void* user_data, void(*execute)(void*, const 
 	console->bg_color = (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f };
 }
 
-void ConsoleOnEvent(Console* console, Event* e)
+MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e)
 {
-	if (!console->focus) return;
+	if (!console->focus) return 0;
 
-	if (EventCheckType(e, EVENT_KEY_TYPED))
+	if (MinimalCheckEventType(e, MINIMAL_EVENT_CHAR))
 	{
-		ConsoleCharTyped(console, (char)e->key.keycode);
-		e->handled = 1;
+		ConsoleCharTyped(console, MinimalEventChar(e));
+		return 1;
 	}
 
-	switch (EventKeyPressed(e))
+	switch (MinimalEventKeyPressed(e))
 	{
-	case MINIMAL_KEY_BACKSPACE:
-		ConsoleCharRemoveLast(console);
-		e->handled = 1;
-		break;
-	case MINIMAL_KEY_ENTER:
-		ConsoleExecuteCmd(console);
-		e->handled = 1;
-		break;
+	case MINIMAL_KEY_BACKSPACE:	ConsoleCharRemoveLast(console); return 1;
+	case MINIMAL_KEY_ENTER:		ConsoleExecuteCmd(console);		return 1;
 	}
 
 	/* block key events */
-	int32_t key = EventKey(e);
-	if (MinimalKeycodeValid(key))
-		e->handled = 1;
+	int32_t key = MinimalEventKey(e);
+	return MinimalKeycodeValid(key);
 }
 
 void ConsoleOnUpdate(Console* console, float deltatime)

@@ -68,10 +68,10 @@ void SceneClearActive(Scene* scene)
 	ignisDeleteTexture2D(&scene->tile_set);
 }
 
-void SceneOnEvent(Scene* scene, Event e)
+void SceneOnEvent(Scene* scene, const MinimalEvent* e)
 {
-	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
-		CameraSetProjectionOrtho(&scene->camera, (float)e.window.width, (float)e.window.height);
+	if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
+		CameraSetProjectionOrtho(&scene->camera, (float)e->lParam, (float)e->rParam);
 }
 
 void SceneOnUpdate(Scene* scene, float deltatime)

@@ -15,7 +15,7 @@ void MapEditorReset(MapEditor* editor)
 }
 
 /* TODO insertion mode: REPLACE, INSERT(if not empty), DELETE, DELETEMATCH(if tile matches selected delete it) */
-void MapEditorOnEvent(MapEditor* editor, Scene* scene, Event e)
+void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
 {
 }
 

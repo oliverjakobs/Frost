@@ -13,7 +13,7 @@ typedef struct
 
 void MapEditorReset(MapEditor* editor);
 
-void MapEditorOnEvent(MapEditor* editor, Scene* scene, Event e);
+void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e);
 void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime);
 void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, float padding);
 

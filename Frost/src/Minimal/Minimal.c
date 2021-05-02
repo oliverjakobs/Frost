@@ -110,6 +110,8 @@ MinimalBool MinimalLoad(MinimalApp* app, const char* title, uint32_t w, uint32_t
 		return MINIMAL_FAIL;
 	}
 
+	MinimalSetEventDispatch(app->window, app, MinimalDispatchEvent);
+
 	MinimalMakeContextCurrent(app->window);
 	MinimalTimerReset(&app->timer);
 
@@ -148,6 +150,7 @@ void MinimalClose(MinimalApp* app) { MinimalCloseWindow(app->window); }
 
 void MinimalSetLoadCallback(MinimalApp* app, MinimalLoadCB cb)			{ app->on_load = cb; }
 void MinimalSetDestroyCallback(MinimalApp* app, MinimalDestroyCB cb)	{ app->on_destroy = cb; }
+void MinimalSetEventCallback(MinimalApp* app, MinimalEventCB cb)		{ app->on_event = cb; }
 void MinimalSetUpdateCallback(MinimalApp* app, MinimalUpdateCB cb)		{ app->on_update = cb; }
 void MinimalSetRenderCallback(MinimalApp* app, MinimalRenderCB cb)		{ app->on_render = cb; }
 void MinimalSetRenderDebugCallback(MinimalApp* app, MinimalRenderCB cb) { app->on_render_debug = cb; }
@@ -162,6 +165,12 @@ void MinimalToggleDebug(MinimalApp* app) { MinimalEnableDebug(app, !app->debug);
 void MinimalToggleVsync(MinimalApp* app) { MinimalEnableVsync(app, !app->vsync); }
 
 uint32_t MinimalGetFps(const MinimalApp* app)	{ return app->timer.fps; }
+
+void MinimalDispatchEvent(MinimalApp* app, UINT type, UINT uParam, INT lParam, INT rParam)
+{
+	MinimalEvent e = { .type = type, .uParam = uParam, .lParam = lParam, .rParam = rParam };
+	if (app->on_event) app->on_event(app, &e);
+}
 
 /* --------------------------| input |----------------------------------- */
 MinimalBool MinimalKeyPressed(uint32_t keycode)

@@ -37,6 +37,7 @@ struct MinimalApp
     MinimalLoadCB    on_load;
     MinimalDestroyCB on_destroy;
 
+    MinimalEventCB  on_event;
     MinimalUpdateCB on_update;
     MinimalRenderCB on_render;
     MinimalRenderCB on_render_debug;
@@ -57,6 +58,7 @@ void MinimalClose(MinimalApp* app);
 
 void MinimalSetLoadCallback(MinimalApp* app, MinimalLoadCB callback);
 void MinimalSetDestroyCallback(MinimalApp* app, MinimalDestroyCB callback);
+void MinimalSetEventCallback(MinimalApp* app, MinimalEventCB callback);
 void MinimalSetUpdateCallback(MinimalApp* app, MinimalUpdateCB callback);
 void MinimalSetRenderCallback(MinimalApp* app, MinimalRenderCB callback);
 void MinimalSetRenderDebugCallback(MinimalApp* app, MinimalRenderCB callback);
@@ -74,8 +76,7 @@ void MinimalToggleVsync(MinimalApp* app);
 uint32_t MinimalGetFps(const MinimalApp* app);
 
 /* --------------------------| event |----------------------------------- */
-void MinimalDispatchEvent(const MinimalApp* app, uint64_t data);
-
+void MinimalDispatchEvent(MinimalApp* app, UINT type, UINT uParam, INT lParam, INT rParam);
 
 /* --------------------------| input |----------------------------------- */
 MinimalBool MinimalKeyPressed(uint32_t keycode);

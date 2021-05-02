@@ -324,15 +324,6 @@
     <ClInclude Include="src\toolbox\toolbox.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Event\Event.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\EventHandler.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Event\EventCallback.h">
-      <Filter>src\Application</Filter>
-    </ClInclude>
     <ClInclude Include="src\Minimal\Minimal.h" />
     <ClInclude Include="src\Minimal\MinimalUtil.h" />
     <ClInclude Include="src\Minimal\MinimalWGL.h" />
@@ -562,19 +553,11 @@
     <ClCompile Include="src\toolbox\toolbox.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
-    <ClCompile Include="src\Event\Event.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Event\EventHandler.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Event\EventCallback.c">
-      <Filter>src\Application</Filter>
-    </ClCompile>
     <ClCompile Include="src\Minimal\Minimal.c" />
     <ClCompile Include="src\Minimal\MinimalUtil.c" />
     <ClCompile Include="src\Minimal\MinimalWGL.c" />
     <ClCompile Include="src\Minimal\MinimalWindow.c" />
+    <ClCompile Include="src\Minimal\MinimalEvent.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />

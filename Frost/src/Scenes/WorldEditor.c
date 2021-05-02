@@ -12,21 +12,20 @@ void WorldEditorReset(WorldEditor* editor)
 	editor->hover = ECS_NULL_ENTITY;
 }
 
-void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, Event e)
+void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e)
 {
-	if (EventMouseButtonPressed(&e) == MINIMAL_MOUSE_BUTTON_LEFT)
+	vec2 mouse = { 0 };
+	if (MinimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
 	{
 		if (editor->hover != ECS_NULL_ENTITY)
 		{
-			vec2 mouse = { 0 };
-			MinimalGetCursorPos(&mouse.x, &mouse.y);
 			mouse = CameraGetMousePos(&scene->camera, mouse);
 			editor->offset = vec2_sub(mouse, GetEntityPosition(&scene->ecs, editor->hover));
 			editor->clicked = 1;
 		}
 	}
 
-	if (EventMouseButtonReleased(&e) == MINIMAL_MOUSE_BUTTON_LEFT)
+	if (MinimalEventMouseButtonReleased(e, NULL, NULL) == MINIMAL_MOUSE_BUTTON_LEFT)
 	{
 		editor->offset = vec2_zero();
 		editor->clicked = 0;

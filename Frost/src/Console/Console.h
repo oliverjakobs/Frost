@@ -8,7 +8,6 @@
 
 #include "Ignis/Ignis.h"
 #include "Minimal/Minimal.h"
-#include "Event/EventHandler.h"
 
 typedef struct
 {
@@ -30,7 +29,7 @@ typedef struct
 
 void ConsoleInit(Console* console, void* user_data, void (*execute)(void*, const char*), IgnisFont* font);
 
-void ConsoleOnEvent(Console* console, Event* e);
+MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e);
 void ConsoleOnUpdate(Console* console, float deltatime);
 
 void ConsoleToggleFocus(Console* console);

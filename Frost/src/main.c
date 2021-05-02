@@ -44,15 +44,15 @@ void OnDestroy(MinimalApp* app)
 	GuiDestroy(&gui);
 }
 
-void OnEvent(MinimalApp* app, Event e)
+void OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
-	if (EventCheckType(&e, EVENT_WINDOW_RESIZE))
+	if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
 	{
-		GuiSetViewport(&gui, (float)e.window.width, (float)e.window.height);
-		glViewport(0, 0, e.window.width, e.window.height);
+		GuiSetViewport(&gui, (float)e->lParam, (float)e->rParam);
+		glViewport(0, 0, e->lParam, e->rParam);
 	}
 
-	switch (EventKeyPressed(&e))
+	switch (MinimalEventKeyPressed(e))
 	{
 	case MINIMAL_KEY_ESCAPE:	MinimalClose(app); break;
 	case MINIMAL_KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
@@ -69,7 +69,7 @@ void OnEvent(MinimalApp* app, Event e)
 	else if (scene_editor.mode == SCENE_EDIT_WORLD)	MinimalSetTitle(app, "Frost | World Editor");
 	else											MinimalSetTitle(app, "Frost");
 
-	FrostDebuggerOnEvent(&debugger, e);
+	if (FrostDebuggerOnEvent(&debugger, e)) return;
 
 	SceneOnEvent(&scene, e);
 
@@ -78,8 +78,6 @@ void OnEvent(MinimalApp* app, Event e)
 
 void OnUpdate(MinimalApp* app, float deltatime)
 {
-	EventHandlerPoll(app);
-
 	if (debugger.console.focus)						FrostDebuggerOnUpdate(&debugger, deltatime);
 	else if (SceneEditorIsActive(&scene_editor))	SceneEditorOnUpdate(&scene_editor, deltatime);
 	else											SceneOnUpdate(&scene, deltatime);
@@ -125,17 +123,14 @@ int main()
 
 	MinimalSetLoadCallback(&app, OnLoad);
 	MinimalSetDestroyCallback(&app, OnDestroy);
+	MinimalSetEventCallback(&app, OnEvent);
 	MinimalSetUpdateCallback(&app, OnUpdate);
 	MinimalSetRenderCallback(&app, OnRender);
 	MinimalSetRenderDebugCallback(&app, OnRenderDebug);
 
 	FrostLoadMinimal(&app, "config.ini");
 
-	EventHandlerInit(64, OnEvent);
-
 	MinimalRun(&app, ClearBuffer);
-
-	EventHandlerDestroy();
 
 	MinimalDestroy(&app);
 

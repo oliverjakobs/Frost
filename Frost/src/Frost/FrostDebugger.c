@@ -24,9 +24,9 @@ void FrostDebuggerToggleInfo(FrostDebugger* debugger)
 	debugger->show_info = !debugger->show_info;
 }
 
-void FrostDebuggerOnEvent(FrostDebugger* debugger, Event e)
+MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e)
 {
-	ConsoleOnEvent(&debugger->console, &e);
+	return ConsoleOnEvent(&debugger->console, e);
 }
 
 void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime)

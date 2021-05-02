@@ -6,7 +6,6 @@
 
 #include "Graphics/Background.h"
 #include "Minimal/Minimal.h"
-#include "Event/EventHandler.h"
 
 #define APPLICATION_STR_LEN		32
 #define APPLICATION_PATH_LEN	64
@@ -53,7 +52,7 @@ void SceneDestroy(Scene* scene);
 void SceneChangeActive(Scene* scene, const char* path, int reload);
 void SceneClearActive(Scene* scene);
 
-void SceneOnEvent(Scene* scene, Event e);
+void SceneOnEvent(Scene* scene, const MinimalEvent* e);
 void SceneOnUpdate(Scene* scene, float deltatime);
 void SceneOnRender(Scene* scene);
 void SceneOnRenderUI(Scene* scene);

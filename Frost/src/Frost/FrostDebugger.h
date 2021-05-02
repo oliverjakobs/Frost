@@ -20,7 +20,7 @@ void FrostDebuggerBindScene(FrostDebugger* debugger, Scene* scene, SceneEditor* 
 void ForstDebuggerShowInfo(FrostDebugger* debugger, int b);
 void FrostDebuggerToggleInfo(FrostDebugger* debugger);
 
-void FrostDebuggerOnEvent(FrostDebugger* debugger, Event e);
+MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e);
 void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime);
 
 void FrostDebugRenderSettings(const FrostDebugger* debugger, float x, float y);

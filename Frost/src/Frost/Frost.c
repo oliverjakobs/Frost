@@ -6,8 +6,6 @@
 #include "toolbox/tb_json.h"
 #include "toolbox/tb_file.h"
 
-#include "Event/EventCallback.h"
-
 static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
 	switch (level)
@@ -56,15 +54,6 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 			MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
 			MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
 		}
-
-		/* set callbacks */
-		MinimalSetSizeCallback		(app->window, MinimalWindowSizeCallback);
-		MinimalSetCloseCallback		(app->window, MinimalWindowCloseCallback);
-		MinimalSetKeyCallback		(app->window, MinimalKeyCallback);
-		MinimalSetCharCallback		(app->window, MinimalCharCallback);
-		MinimalSetMButtonCallback	(app->window, MinimalMouseButtonCallback);
-		MinimalSetScrollCallback	(app->window, MinimalScrollCallback);
-		MinimalSetCursorPosCallback (app->window, MinimalCursorPosCallback);
 
 		MINIMAL_INFO("[Minimal] Version: %s", MinimalGetVersionString());
 	}

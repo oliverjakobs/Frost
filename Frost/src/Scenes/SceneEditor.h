@@ -43,7 +43,7 @@ int SceneEditorIsActive(const SceneEditor* editor);
 
 void SceneEditorRenderGrid(const Scene* scene, float padding);
 
-void SceneEditorOnEvent(SceneEditor* editor, Event e);
+void SceneEditorOnEvent(SceneEditor* editor, const MinimalEvent* e);
 void SceneEditorOnUpdate(SceneEditor* editor, float deltatime);
 void SceneEditorOnRender(const SceneEditor* editor);
 

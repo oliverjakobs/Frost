@@ -134,9 +134,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Event\EventCallback.h" />
-    <ClInclude Include="src\Event\Event.h" />
-    <ClInclude Include="src\Event\EventHandler.h" />
     <ClInclude Include="src\Console\Command.h" />
     <ClInclude Include="src\Console\Console.h" />
     <ClInclude Include="src\ECS\Ecs.h" />
@@ -221,9 +218,6 @@
     <ClInclude Include="src\toolbox\toolbox.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Event\EventCallback.c" />
-    <ClCompile Include="src\Event\Event.c" />
-    <ClCompile Include="src\Event\EventHandler.c" />
     <ClCompile Include="src\Console\Command.c" />
     <ClCompile Include="src\Console\Console.c" />
     <ClCompile Include="src\ECS\Ecs.c" />
@@ -274,6 +268,7 @@
     <ClCompile Include="src\Ignis\VertexArray.c" />
     <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Minimal\Minimal.c" />
+    <ClCompile Include="src\Minimal\MinimalEvent.c" />
     <ClCompile Include="src\Minimal\MinimalUtil.c" />
     <ClCompile Include="src\Minimal\MinimalWGL.c" />
     <ClCompile Include="src\Minimal\MinimalWindow.c" />

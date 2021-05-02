@@ -12,7 +12,7 @@ typedef struct
 
 void WorldEditorReset(WorldEditor* editor);
 
-void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, Event e);
+void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e);
 void WorldEditorOnUpdate(WorldEditor* editor, Scene* scene, float deltatime);
 void WorldEditorOnRender(const WorldEditor* editor, Scene* scene, int show_grid, float padding);
 

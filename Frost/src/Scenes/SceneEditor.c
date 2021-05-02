@@ -68,7 +68,7 @@ void SceneEditorRenderGrid(const Scene* scene, float padding)
 		Primitives2DRenderLine(-padding, y, SceneGetWidth(scene) + padding, y, color);
 }
 
-void SceneEditorOnEvent(SceneEditor* editor, Event e)
+void SceneEditorOnEvent(SceneEditor* editor, const MinimalEvent* e)
 {
 	if (editor->mode == SCENE_EDIT_WORLD)		WorldEditorOnEvent(&editor->world, editor->scene, e);
 	else if (editor->mode == SCENE_EDIT_MAP)	MapEditorOnEvent(&editor->map, editor->scene, e);
