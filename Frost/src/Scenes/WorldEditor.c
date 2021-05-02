@@ -30,19 +30,21 @@ void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e
 		editor->offset = vec2_zero();
 		editor->clicked = 0;
 	}
+
+	if (MinimalEventMouseMoved(e, &mouse.x, &mouse.y))
+	{
+		mouse = vec2_sub(CameraGetMousePos(&scene->camera, mouse), editor->offset);
+
+		if (editor->clicked)
+			SetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(scene->map.tile_size, mouse));
+		else
+			editor->hover = GetEntityAt(&scene->ecs, mouse);
+	}
 }
 
 void WorldEditorOnUpdate(WorldEditor* editor, Scene* scene, float deltatime)
 {
-	vec2 mouse = { 0 };
-	MinimalGetCursorPos(&mouse.x, &mouse.y);
-	mouse = CameraGetMousePos(&scene->camera, mouse);
-	float gridsize = scene->map.tile_size;
 
-	if (editor->clicked)
-		SetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(gridsize, vec2_sub(mouse, editor->offset)));
-	else
-		editor->hover = GetEntityAt(&scene->ecs, mouse);
 }
 
 void WorldEditorOnRender(const WorldEditor* editor, Scene* scene, int show_grid, float padding)

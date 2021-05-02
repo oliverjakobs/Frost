@@ -26,7 +26,7 @@ typedef struct MinimalApp MinimalApp;
 typedef MinimalBool (*MinimalLoadCB)    (MinimalApp* app, uint32_t w, uint32_t h);
 typedef void        (*MinimalDestroyCB) (MinimalApp* app);
 
-typedef MinimalBool (*MinimalEventCB)   (MinimalApp* app, const MinimalEvent* event);
+typedef MinimalBool (*MinimalEventCB)   (MinimalApp* app, const MinimalEvent* e);
 typedef void        (*MinimalUpdateCB)  (MinimalApp* app, float deltatime);
 typedef void        (*MinimalRenderCB)  (MinimalApp* app);
 
@@ -76,7 +76,7 @@ void MinimalToggleVsync(MinimalApp* app);
 uint32_t MinimalGetFps(const MinimalApp* app);
 
 /* --------------------------| event |----------------------------------- */
-void MinimalDispatchEvent(MinimalApp* app, UINT type, UINT uParam, INT lParam, INT rParam);
+void MinimalDispatchEvent(MinimalApp* app, uint32_t type, uint32_t uParam, int32_t lParam, int32_t rParam);
 
 /* --------------------------| input |----------------------------------- */
 MinimalBool MinimalKeyPressed(uint32_t keycode);

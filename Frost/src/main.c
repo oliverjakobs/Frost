@@ -44,7 +44,7 @@ void OnDestroy(MinimalApp* app)
 	GuiDestroy(&gui);
 }
 
-void OnEvent(MinimalApp* app, const MinimalEvent* e)
+MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
 	if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
 	{
@@ -69,11 +69,12 @@ void OnEvent(MinimalApp* app, const MinimalEvent* e)
 	else if (scene_editor.mode == SCENE_EDIT_WORLD)	MinimalSetTitle(app, "Frost | World Editor");
 	else											MinimalSetTitle(app, "Frost");
 
-	if (FrostDebuggerOnEvent(&debugger, e)) return;
+	if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 
 	SceneOnEvent(&scene, e);
 
 	SceneEditorOnEvent(&scene_editor, e);
+	return MINIMAL_OK;
 }
 
 void OnUpdate(MinimalApp* app, float deltatime)

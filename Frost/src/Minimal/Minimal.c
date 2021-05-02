@@ -166,7 +166,7 @@ void MinimalToggleVsync(MinimalApp* app) { MinimalEnableVsync(app, !app->vsync);
 
 uint32_t MinimalGetFps(const MinimalApp* app)	{ return app->timer.fps; }
 
-void MinimalDispatchEvent(MinimalApp* app, UINT type, UINT uParam, INT lParam, INT rParam)
+void MinimalDispatchEvent(MinimalApp* app, uint32_t type, uint32_t uParam, int32_t lParam, int32_t rParam)
 {
 	MinimalEvent e = { .type = type, .uParam = uParam, .lParam = lParam, .rParam = rParam };
 	if (app->on_event) app->on_event(app, &e);

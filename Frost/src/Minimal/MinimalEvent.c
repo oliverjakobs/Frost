@@ -31,6 +31,16 @@ int32_t MinimalEventMouseButtonReleased(const MinimalEvent* e, float* x, float* 
     return (MINIMAL_LOWORD(e->uParam) == MINIMAL_RELEASE) ? buttoncode : MINIMAL_MOUSE_BUTTON_UNKNOWN;
 }
 
+MinimalBool MinimalEventMouseMoved(const MinimalEvent* e, float* x, float* y)
+{
+    if (e->type != MINIMAL_EVENT_MOUSE_MOVED) return MINIMAL_FALSE;
+
+    if (x) *x = (float)e->lParam;
+    if (y) *y = (float)e->rParam;
+
+    return MINIMAL_TRUE;
+}
+
 int32_t MinimalEventKey(const MinimalEvent* e)
 {
     return (e->type == MINIMAL_EVENT_KEY) ? e->uParam : MINIMAL_KEY_UNKNOWN;
