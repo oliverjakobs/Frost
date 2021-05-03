@@ -5,7 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Frost", "Frost\Frost.vcxpro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{6B455E7F-5713-5285-40A7-C2AB2C142EEA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Frost\packages\glfw\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ignis", "Frost\packages\Ignis\Ignis.vcxproj", "{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,17 +20,17 @@ Global
 		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.OptimizedDebug|x64.Build.0 = OptimizedDebug|x64
 		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Release|x64.ActiveCfg = Release|x64
 		{131E320D-7F32-5ABE-48B4-FD1DB48756EF}.Release|x64.Build.0 = Release|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|x64.ActiveCfg = Debug|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.Debug|x64.Build.0 = Debug|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.OptimizedDebug|x64.ActiveCfg = OptimizedDebug|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.OptimizedDebug|x64.Build.0 = OptimizedDebug|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.Release|x64.ActiveCfg = Release|x64
-		{154B857C-0182-860D-AA6E-6C109684020F}.Release|x64.Build.0 = Release|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Debug|x64.ActiveCfg = Debug|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Debug|x64.Build.0 = Debug|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.OptimizedDebug|x64.ActiveCfg = OptimizedDebug|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.OptimizedDebug|x64.Build.0 = OptimizedDebug|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Release|x64.ActiveCfg = Release|x64
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{154B857C-0182-860D-AA6E-6C109684020F} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
+		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
 	EndGlobalSection
 EndGlobal

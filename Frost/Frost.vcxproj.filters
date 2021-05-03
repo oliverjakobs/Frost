@@ -37,9 +37,6 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Application">
-      <UniqueIdentifier>{701253C7-DC9D-C08B-E5AE-438051B91C8C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Console">
       <UniqueIdentifier>{4F9F6B3D-BB54-E432-4449-DE09B0FDDA36}</UniqueIdentifier>
     </Filter>
@@ -61,20 +58,8 @@
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Ignis">
-      <UniqueIdentifier>{36681FB3-A2D2-D329-EB10-85CF57BAB17E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\Core">
-      <UniqueIdentifier>{4E1E7098-3AEC-639E-2380-D4C40FED3F03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\glad">
-      <UniqueIdentifier>{FDCC8398-E99A-779E-D22E-E8C4BE9B5303}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\glad\KHR">
-      <UniqueIdentifier>{F111879F-DDF5-47F5-4656-424832593277}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Ignis\stb">
-      <UniqueIdentifier>{8E518088-FA11-FCBE-C34C-453C2FCC409B}</UniqueIdentifier>
+    <Filter Include="src\Minimal">
+      <UniqueIdentifier>{63852D31-CF3A-A626-582F-A0FDC4E39C2A}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Scenes">
       <UniqueIdentifier>{BDC7122E-A97F-547B-1287-2DD7FE5DEF6B}</UniqueIdentifier>
@@ -210,44 +195,20 @@
     <ClInclude Include="src\Graphics\Renderer2D.h">
       <Filter>src\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\ComputeShader.h">
-      <Filter>src\Ignis</Filter>
+    <ClInclude Include="src\Minimal\Minimal.h">
+      <Filter>src\Minimal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Buffer.h">
-      <Filter>src\Ignis\Core</Filter>
+    <ClInclude Include="src\Minimal\MinimalEvent.h">
+      <Filter>src\Minimal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Shader.h">
-      <Filter>src\Ignis\Core</Filter>
+    <ClInclude Include="src\Minimal\MinimalUtil.h">
+      <Filter>src\Minimal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Core\Texture.h">
-      <Filter>src\Ignis\Core</Filter>
+    <ClInclude Include="src\Minimal\MinimalWGL.h">
+      <Filter>src\Minimal</Filter>
     </ClInclude>
-    <ClInclude Include="src\Ignis\Font.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Framebuffer.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Ignis.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\Quad.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\VertexArray.h">
-      <Filter>src\Ignis</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h">
-      <Filter>src\Ignis\glad\KHR</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\glad\glad.h">
-      <Filter>src\Ignis\glad</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\stb\stb_image.h">
-      <Filter>src\Ignis\stb</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Ignis\stb\stb_truetype.h">
-      <Filter>src\Ignis\stb</Filter>
+    <ClInclude Include="src\Minimal\MinimalWindow.h">
+      <Filter>src\Minimal</Filter>
     </ClInclude>
     <ClInclude Include="src\Scenes\Camera.h">
       <Filter>src\Scenes</Filter>
@@ -324,11 +285,6 @@
     <ClInclude Include="src\toolbox\toolbox.h">
       <Filter>src\toolbox</Filter>
     </ClInclude>
-    <ClInclude Include="src\Minimal\Minimal.h" />
-    <ClInclude Include="src\Minimal\MinimalUtil.h" />
-    <ClInclude Include="src\Minimal\MinimalWGL.h" />
-    <ClInclude Include="src\Minimal\MinimalWindow.h" />
-    <ClInclude Include="src\Minimal\MinimalEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Console\Command.c">
@@ -448,35 +404,20 @@
     <ClCompile Include="src\Graphics\Renderer2D.c">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\ComputeShader.c">
-      <Filter>src\Ignis</Filter>
+    <ClCompile Include="src\Minimal\Minimal.c">
+      <Filter>src\Minimal</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Buffer.c">
-      <Filter>src\Ignis\Core</Filter>
+    <ClCompile Include="src\Minimal\MinimalEvent.c">
+      <Filter>src\Minimal</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Shader.c">
-      <Filter>src\Ignis\Core</Filter>
+    <ClCompile Include="src\Minimal\MinimalUtil.c">
+      <Filter>src\Minimal</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Core\Texture.c">
-      <Filter>src\Ignis\Core</Filter>
+    <ClCompile Include="src\Minimal\MinimalWGL.c">
+      <Filter>src\Minimal</Filter>
     </ClCompile>
-    <ClCompile Include="src\Ignis\Font.c">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Framebuffer.c">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Ignis.c">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\Quad.c">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\VertexArray.c">
-      <Filter>src\Ignis</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Ignis\glad\glad.c">
-      <Filter>src\Ignis\glad</Filter>
+    <ClCompile Include="src\Minimal\MinimalWindow.c">
+      <Filter>src\Minimal</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\Camera.c">
       <Filter>src\Scenes</Filter>
@@ -553,11 +494,6 @@
     <ClCompile Include="src\toolbox\toolbox.c">
       <Filter>src\toolbox</Filter>
     </ClCompile>
-    <ClCompile Include="src\Minimal\Minimal.c" />
-    <ClCompile Include="src\Minimal\MinimalUtil.c" />
-    <ClCompile Include="src\Minimal\MinimalWGL.c" />
-    <ClCompile Include="src\Minimal\MinimalWindow.c" />
-    <ClCompile Include="src\Minimal\MinimalEvent.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config.ini" />

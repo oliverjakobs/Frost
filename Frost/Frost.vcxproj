@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -96,7 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -118,7 +118,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\glfw\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -173,19 +173,6 @@
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\Ignis\ComputeShader.h" />
-    <ClInclude Include="src\Ignis\Core\Buffer.h" />
-    <ClInclude Include="src\Ignis\Core\Shader.h" />
-    <ClInclude Include="src\Ignis\Core\Texture.h" />
-    <ClInclude Include="src\Ignis\Font.h" />
-    <ClInclude Include="src\Ignis\Framebuffer.h" />
-    <ClInclude Include="src\Ignis\Ignis.h" />
-    <ClInclude Include="src\Ignis\Quad.h" />
-    <ClInclude Include="src\Ignis\VertexArray.h" />
-    <ClInclude Include="src\Ignis\glad\KHR\khrplatform.h" />
-    <ClInclude Include="src\Ignis\glad\glad.h" />
-    <ClInclude Include="src\Ignis\stb\stb_image.h" />
-    <ClInclude Include="src\Ignis\stb\stb_truetype.h" />
     <ClInclude Include="src\Minimal\Minimal.h" />
     <ClInclude Include="src\Minimal\MinimalEvent.h" />
     <ClInclude Include="src\Minimal\MinimalUtil.h" />
@@ -257,16 +244,6 @@
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
-    <ClCompile Include="src\Ignis\ComputeShader.c" />
-    <ClCompile Include="src\Ignis\Core\Buffer.c" />
-    <ClCompile Include="src\Ignis\Core\Shader.c" />
-    <ClCompile Include="src\Ignis\Core\Texture.c" />
-    <ClCompile Include="src\Ignis\Font.c" />
-    <ClCompile Include="src\Ignis\Framebuffer.c" />
-    <ClCompile Include="src\Ignis\Ignis.c" />
-    <ClCompile Include="src\Ignis\Quad.c" />
-    <ClCompile Include="src\Ignis\VertexArray.c" />
-    <ClCompile Include="src\Ignis\glad\glad.c" />
     <ClCompile Include="src\Minimal\Minimal.c" />
     <ClCompile Include="src\Minimal\MinimalEvent.c" />
     <ClCompile Include="src\Minimal\MinimalUtil.c" />
@@ -345,8 +322,8 @@
     <Image Include="res\textures\trees.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="packages\glfw\GLFW.vcxproj">
-      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    <ProjectReference Include="packages\Ignis\Ignis.vcxproj">
+      <Project>{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
