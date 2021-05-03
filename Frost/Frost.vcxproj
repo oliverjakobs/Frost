@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Minimal\src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -96,7 +96,7 @@
       <WarningLevel>Level3</WarningLevel>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Minimal\src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -118,7 +118,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;packages\Minimal\src;packages\Ignis\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -173,11 +173,6 @@
     <ClInclude Include="src\Graphics\Primitives2D.h" />
     <ClInclude Include="src\Graphics\Renderer.h" />
     <ClInclude Include="src\Graphics\Renderer2D.h" />
-    <ClInclude Include="src\Minimal\Minimal.h" />
-    <ClInclude Include="src\Minimal\MinimalEvent.h" />
-    <ClInclude Include="src\Minimal\MinimalUtil.h" />
-    <ClInclude Include="src\Minimal\MinimalWGL.h" />
-    <ClInclude Include="src\Minimal\MinimalWindow.h" />
     <ClInclude Include="src\Scenes\Camera.h" />
     <ClInclude Include="src\Scenes\MapEditor.h" />
     <ClInclude Include="src\Scenes\Resources.h" />
@@ -244,11 +239,6 @@
     <ClCompile Include="src\Graphics\Primitives2D.c" />
     <ClCompile Include="src\Graphics\Renderer.c" />
     <ClCompile Include="src\Graphics\Renderer2D.c" />
-    <ClCompile Include="src\Minimal\Minimal.c" />
-    <ClCompile Include="src\Minimal\MinimalEvent.c" />
-    <ClCompile Include="src\Minimal\MinimalUtil.c" />
-    <ClCompile Include="src\Minimal\MinimalWGL.c" />
-    <ClCompile Include="src\Minimal\MinimalWindow.c" />
     <ClCompile Include="src\Scenes\Camera.c" />
     <ClCompile Include="src\Scenes\MapEditor.c" />
     <ClCompile Include="src\Scenes\Resources.c" />
@@ -322,6 +312,9 @@
     <Image Include="res\textures\trees.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="packages\Minimal\Minimal.vcxproj">
+      <Project>{4C85F327-B864-72C3-C17C-FD992DDBD824}</Project>
+    </ProjectReference>
     <ProjectReference Include="packages\Ignis\Ignis.vcxproj">
       <Project>{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}</Project>
     </ProjectReference>

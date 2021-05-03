@@ -58,9 +58,6 @@
     <Filter Include="src\Graphics">
       <UniqueIdentifier>{0D564864-F9B8-D708-A23E-10BF8E80A38B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Minimal">
-      <UniqueIdentifier>{63852D31-CF3A-A626-582F-A0FDC4E39C2A}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Scenes">
       <UniqueIdentifier>{BDC7122E-A97F-547B-1287-2DD7FE5DEF6B}</UniqueIdentifier>
     </Filter>
@@ -194,21 +191,6 @@
     </ClInclude>
     <ClInclude Include="src\Graphics\Renderer2D.h">
       <Filter>src\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Minimal\Minimal.h">
-      <Filter>src\Minimal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Minimal\MinimalEvent.h">
-      <Filter>src\Minimal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Minimal\MinimalUtil.h">
-      <Filter>src\Minimal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Minimal\MinimalWGL.h">
-      <Filter>src\Minimal</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Minimal\MinimalWindow.h">
-      <Filter>src\Minimal</Filter>
     </ClInclude>
     <ClInclude Include="src\Scenes\Camera.h">
       <Filter>src\Scenes</Filter>
@@ -403,21 +385,6 @@
     </ClCompile>
     <ClCompile Include="src\Graphics\Renderer2D.c">
       <Filter>src\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Minimal\Minimal.c">
-      <Filter>src\Minimal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Minimal\MinimalEvent.c">
-      <Filter>src\Minimal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Minimal\MinimalUtil.c">
-      <Filter>src\Minimal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Minimal\MinimalWGL.c">
-      <Filter>src\Minimal</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Minimal\MinimalWindow.c">
-      <Filter>src\Minimal</Filter>
     </ClCompile>
     <ClCompile Include="src\Scenes\Camera.c">
       <Filter>src\Scenes</Filter>

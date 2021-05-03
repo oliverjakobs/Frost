@@ -14,6 +14,7 @@ outputDir = "%{cfg.buildcfg}"
 group "Packages"
 
 include "Frost/packages/Ignis"
+include "Frost/packages/Minimal"
 
 group ""
 
@@ -44,6 +45,7 @@ project "Frost"
 
 	links
 	{
+		"Minimal",
 		"Ignis",
 		"opengl32"
 	}
@@ -51,6 +53,7 @@ project "Frost"
 	includedirs
 	{
 		"%{prj.name}/src",
+		"%{prj.name}/packages/Minimal/src",
 		"%{prj.name}/packages/Ignis/src"
 	}
 

@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{6B
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ignis", "Frost\packages\Ignis\Ignis.vcxproj", "{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Minimal", "Frost\packages\Minimal\Minimal.vcxproj", "{4C85F327-B864-72C3-C17C-FD992DDBD824}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -26,11 +28,18 @@ Global
 		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.OptimizedDebug|x64.Build.0 = OptimizedDebug|x64
 		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Release|x64.ActiveCfg = Release|x64
 		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF}.Release|x64.Build.0 = Release|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.Debug|x64.ActiveCfg = Debug|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.Debug|x64.Build.0 = Debug|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.OptimizedDebug|x64.ActiveCfg = OptimizedDebug|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.OptimizedDebug|x64.Build.0 = OptimizedDebug|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.Release|x64.ActiveCfg = Release|x64
+		{4C85F327-B864-72C3-C17C-FD992DDBD824}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DF59620D-4B6E-8ABE-14F0-2D1E80C386EF} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
+		{4C85F327-B864-72C3-C17C-FD992DDBD824} = {6B455E7F-5713-5285-40A7-C2AB2C142EEA}
 	EndGlobalSection
 EndGlobal
