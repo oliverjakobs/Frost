@@ -1,6 +1,0 @@
-[submodule "packages/Ignis"]
-	path = packages/Ignis
-	url = https://github.com/oliverjakobs/Ignis
-[submodule "packages/Minimal"]
-	path = packages/Minimal
-	url = https://github.com/oliverjakobs/Minimal
