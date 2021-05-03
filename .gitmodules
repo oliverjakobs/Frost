@@ -1,6 +1,6 @@
-[submodule "Frost/packages/Ignis"]
-	path = Frost/packages/Ignis
+[submodule "packages/Ignis"]
+	path = packages/Ignis
 	url = https://github.com/oliverjakobs/Ignis
-[submodule "Frost/packages/Minimal"]
-	path = Frost/packages/Minimal
+[submodule "packages/Minimal"]
+	path = packages/Minimal
 	url = https://github.com/oliverjakobs/Minimal

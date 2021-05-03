@@ -9,38 +9,37 @@ workspace "Frost"
 		"Release"
 	}
 
-outputDir = "%{cfg.buildcfg}"
+output_dir = "%{cfg.buildcfg}"
 
 group "Packages"
 
-include "Frost/packages/Ignis"
-include "Frost/packages/Minimal"
+include "packages/Ignis"
+include "packages/Minimal"
 
 group ""
 
 project "Frost"
-	location "Frost"
 	kind "ConsoleApp"
 	language "C"
 	cdialect "C99"
 	staticruntime "On"
 	
-	targetdir ("bin/" .. outputDir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
+	targetdir ("build/bin/" .. output_dir .. "/%{prj.name}")
+	objdir ("build/bin-int/" .. output_dir .. "/%{prj.name}")
 
 	files
 	{
 		--Config
-		"%{prj.name}/config.ini",
+		"config.ini",
 		--Source
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.c",
+		"src/**.h",
+		"src/**.c",
 		--Resources
-		"%{prj.name}/res/**.json",
-		"%{prj.name}/res/fonts/**.ttf",
-		"%{prj.name}/res/shaders/**.vert",
-		"%{prj.name}/res/shaders/**.frag",
-		"%{prj.name}/res/textures/**.png"
+		"res/**.json",
+		"res/fonts/**.ttf",
+		"res/shaders/**.vert",
+		"res/shaders/**.frag",
+		"res/textures/**.png"
 	}
 
 	links
@@ -52,9 +51,9 @@ project "Frost"
 
 	includedirs
 	{
-		"%{prj.name}/src",
-		"%{prj.name}/packages/Minimal/src",
-		"%{prj.name}/packages/Ignis/src"
+		"src",
+		"packages/Minimal/src",
+		"packages/Ignis/src"
 	}
 
 	filter "system:windows"
