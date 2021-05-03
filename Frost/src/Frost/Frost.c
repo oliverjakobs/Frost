@@ -87,6 +87,7 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	MINIMAL_INFO("[OpenGL] Vendor: %s",			ignisGetGLVendor());
 	MINIMAL_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
 	MINIMAL_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
+	MINIMAL_INFO("[Ignis] Version: %s",			IgnisGetVersionString());
 
 	return 1;
 }
