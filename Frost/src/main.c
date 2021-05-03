@@ -71,9 +71,9 @@ MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 
 	if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 
+	SceneEditorOnEvent(&scene_editor, e);
 	SceneOnEvent(&scene, e);
 
-	SceneEditorOnEvent(&scene_editor, e);
 	return MINIMAL_OK;
 }
 

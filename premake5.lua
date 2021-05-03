@@ -9,11 +9,11 @@ workspace "Frost"
 		"Release"
 	}
 
-outputDir = "%{cfg.buildcfg}"   
+outputDir = "%{cfg.buildcfg}"
 
 group "Packages"
 
-include "Frost/packages/glfw"
+include "Frost/packages/Ignis"
 
 group ""
 
@@ -44,14 +44,14 @@ project "Frost"
 
 	links
 	{
-		"GLFW",
+		"Ignis",
 		"opengl32"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/src",
-		"%{prj.name}/packages/glfw/include"
+		"%{prj.name}/packages/Ignis/src"
 	}
 
 	filter "system:windows"
