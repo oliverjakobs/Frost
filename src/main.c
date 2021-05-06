@@ -115,7 +115,7 @@ void OnRenderDebug(MinimalApp* app)
 
 void OnRenderUI(MinimalApp* app)
 {
-	if (scene_editor.mode == SCENE_EDIT_NONE) SceneOnRenderUI(&scene);
+	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderUI(&scene);
 }
 
 static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }

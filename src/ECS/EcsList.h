@@ -32,5 +32,4 @@ EcsEntityID EcsListEntityAt(const EcsList* list, size_t index);
 void* EcsListComponentAt(const EcsList* list, size_t index);
 size_t EcsListSize(const EcsList* list);
 
-
 #endif /* !ECS_LIST_H */

@@ -23,6 +23,11 @@ static void EcsListEntryClear(const EcsList* list, EcsListEntry* entry)
 	EcsMemFree(entry->component);
 }
 
+static int EcsListEntryCmpID(const EcsListEntry* left, const EcsListEntry* right)
+{
+	return left->entity - right->entity;
+}
+
 static int EcsListEntryCmp(const EcsListEntry* left, const EcsListEntry* right, EcsCmpFunc cmp)
 {
 	if (cmp) return cmp(left->component, right->component);
@@ -81,12 +86,13 @@ void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
 			return NULL;
 	}
 
-	size_t index = 0;
+	/* create new entry */
 	EcsListEntry entry;
 	if (!EcsListEntryFill(&entry, component, entity, list->component_size))
 		return NULL;
 
 	/* find location for the new element */
+	size_t index = 0;
 	while (index < list->entry_count && EcsListEntryCmp(&list->entries[index], &entry, list->cmp) < 0)
 		++index;
 
@@ -107,7 +113,14 @@ void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
 
 static size_t EcsListFindIndex(const EcsList* list, EcsEntityID entity)
 {
-	/* TODO special case for id sorted lists */
+	/* special case if component is sorted by id */
+	if (!list->cmp)
+	{
+		size_t size = sizeof(EcsListEntry);
+		EcsListEntry dummy = { .entity = entity };
+		EcsListEntry* entry = bsearch(&dummy, list->entries, list->entry_count, size, EcsListEntryCmpID);
+		return entry - list->entries;
+	}
 
 	for (size_t i = 0; i < list->entry_count; ++i)
 	{
