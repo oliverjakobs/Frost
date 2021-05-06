@@ -19,7 +19,7 @@ void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e
 	{
 		if (editor->hover != ECS_NULL_ENTITY)
 		{
-			mouse = CameraGetMousePos(&scene->camera, mouse);
+			mouse = CameraGetMousePosView(&scene->camera, mouse);
 			editor->offset = vec2_sub(mouse, GetEntityPosition(&scene->ecs, editor->hover));
 			editor->clicked = 1;
 		}

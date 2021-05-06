@@ -14,47 +14,53 @@ void MapEditorReset(MapEditor* editor)
 	editor->set_mode = TILE_REPLACE;
 }
 
+static int MapEditorPaletteGetHover(vec2 m, size_t palette_size)
+{
+	m.x -= PALETTE_PADDING;
+	m.y -= PALETTE_PADDING;
+
+	if (m.x >= 0.0f && m.x <= (palette_size * PALETTE_TILE_SIZE) && m.y >= 0.0f && m.y <= PALETTE_TILE_SIZE)
+		return (int)floorf(m.x / PALETTE_TILE_SIZE);
+
+	return -1;
+}
+
 /* TODO insertion mode: REPLACE, INSERT(if not empty), DELETE, DELETEMATCH(if tile matches selected delete it) */
 void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
 {
+	vec2 mouse = { 0 };
+	if (MinimalEventMouseMoved(e, &mouse.x, &mouse.y))
+	{
+		mouse = CameraGetMousePos(&scene->camera, mouse);
+		if (mouse.y > PALETTE_HEIGHT)
+		{
+			editor->tile_hover = TileMapAtPos(&scene->map, vec2_add(mouse, scene->camera.position));
+			editor->palette_hover = -1;
+		}
+		else
+		{
+			editor->tile_hover = NULL;
+			editor->palette_hover = MapEditorPaletteGetHover(mouse, scene->map.types_count);
+		}
+	}
+
+	if (MinimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
+	{
+		if (editor->tile_hover)
+		{
+			mouse = CameraGetMousePos(&scene->camera, mouse);
+			TileMapSetAtPos(&scene->map, mouse, editor->palette_select, editor->set_mode);
+			TileRendererUpdateBuffers(&scene->renderer, &scene->map);
+		}
+
+		if (editor->palette_hover >= 0)
+			editor->palette_select = editor->palette_hover;
+	}
 }
 
 void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime)
 {
-	/* TODO: fix mouse pos with camera movement */
-	vec2 mouse = { 0 };
-	MinimalGetCursorPos(&mouse.x, &mouse.y);
-	mouse = CameraGetMousePosView(&scene->camera, mouse);
-
-	if (mouse.y > (scene->camera.position.y + PALETTE_HEIGHT))
-	{
-		editor->tile_hover = TileMapAtPos(&scene->map, mouse);
-
-		if (editor->tile_hover && MinimalMouseButtonPressed(MINIMAL_MOUSE_BUTTON_LEFT))
-		{
-			TileMapSetAtPos(&scene->map, mouse, editor->palette_select, editor->set_mode);
-			TileRendererUpdateBuffers(&scene->renderer, &scene->map);
-		}
-	}
-	else
-	{
-		editor->tile_hover = NULL;
-		
-		mouse.x -= PALETTE_PADDING;
-		mouse.y -= PALETTE_PADDING;
-		if (mouse.x >= 0.0f && mouse.x <= (scene->map.types_count * PALETTE_TILE_SIZE) &&
-			mouse.y >= 0.0f && mouse.y <= PALETTE_TILE_SIZE)
-		{
-			editor->palette_hover = (int)floorf(mouse.x / PALETTE_TILE_SIZE);
-		}
-		else
-		{
-			editor->palette_hover = -1;
-		}
-
-		if (editor->palette_hover >= 0 && MinimalMouseButtonPressed(MINIMAL_MOUSE_BUTTON_LEFT))
-			editor->palette_select = editor->palette_hover;
-	}
+	
 }
 
 void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, float padding)
