@@ -9,6 +9,7 @@
 
 typedef struct
 {
+	float width, height;
 	mat4 screen_projection;
 	
 	tb_hashmap fonts;	/* <str,IgnisFont> */

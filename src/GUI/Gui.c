@@ -113,6 +113,8 @@ const char* GuiGetFontName(const GuiManager* gui, const IgnisFont* font)
 
 void GuiSetViewport(GuiManager* gui, float w, float h)
 {
+	gui->width = w;
+	gui->height = h;
     gui->screen_projection = mat4_ortho(0.0f, w, h, 0.0f, -1.0f, 1.0f);
 }
 

@@ -34,28 +34,11 @@ void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime)
 	ConsoleOnUpdate(&debugger->console, deltatime);
 }
 
-void FrostDebugRenderSettings(const FrostDebugger* debugger, float x, float y)
+static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, float x, float y)
 {
-	if (!debugger->show_info) return;
-
 	FontRendererTextFieldBegin(x, y, 8.0f);
 
-	FontRendererTextFieldLine("F1: Toggle edit mode");
-	FontRendererTextFieldLine("F2: Toggle map edit mode");
-	FontRendererTextFieldLine("F3: Open console");
-	FontRendererTextFieldLine("F6: Toggle Vsync");
-	FontRendererTextFieldLine("F7: Toggle debug mode");
-	FontRendererTextFieldLine("F8: Toggle editor grid");
-	FontRendererTextFieldLine("F9: Toggle overlay");
-}
-
-void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, float x, float y)
-{
-	if (!debugger->show_info) return;
-
-	FontRendererTextFieldBegin(x, y, 8.0f);
-
-	FontRendererTextFieldLine("Memory: %llu bytes",		FrostMemGetBytes());
+	FontRendererTextFieldLine("Memory: %llu bytes", FrostMemGetBytes());
 	// FontRendererTextFieldLine("Peak: %llu bytes",		FrostMemGetPeak());
 	FontRendererTextFieldLine("------------------------");
 
@@ -76,12 +59,35 @@ void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, flo
 	FontRendererTextFieldLine("Position: %4.2f, %4.2f", scene->camera.position.x, scene->camera.position.y);
 }
 
-void FrostDebugRenderConsole(const FrostDebugger* debugger, float w, float h, const float* proj)
+void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app, const GuiManager* gui)
 {
-	ConsoleRenderBackground(&debugger->console, 0.0f, h, w, 32.0f, proj);
-	ConsoleRender(&debugger->console, 0.0f, h, 8.0f, proj);
-}
+	FontRendererStart(GuiGetScreenProjPtr(gui));
 
+	/* fps */
+	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
+
+	if (debugger->show_info)
+	{
+		/* Settings */
+		FontRendererTextFieldBegin(gui->width - 220.0f, 8.0f, 8.0f);
+
+		FontRendererTextFieldLine("F1: Toggle edit mode");
+		FontRendererTextFieldLine("F2: Toggle map edit mode");
+		FontRendererTextFieldLine("F3: Open console");
+		FontRendererTextFieldLine("F6: Toggle Vsync");
+		FontRendererTextFieldLine("F7: Toggle debug mode");
+		FontRendererTextFieldLine("F8: Toggle editor grid");
+		FontRendererTextFieldLine("F9: Toggle overlay");
+
+		/* Debug info */
+		FrostDebugRenderInfo(debugger, debugger->scene, gui->width - 480.0f, 8.0f);
+	}
+
+	FontRendererFlush();
+
+	ConsoleRenderBackground(&debugger->console, 0.0f, gui->height, gui->width, 32.0f, GuiGetScreenProjPtr(gui));
+	ConsoleRender(&debugger->console, 0.0f, gui->height, 8.0f, GuiGetScreenProjPtr(gui));
+}
 
 typedef enum
 {

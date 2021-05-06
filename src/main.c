@@ -4,8 +4,6 @@
 #include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
 
-#include "GUI/Gui.h"
-
 Scene scene;
 SceneEditor scene_editor;
 
@@ -86,36 +84,19 @@ void OnUpdate(MinimalApp* app, float deltatime)
 void OnRender(MinimalApp* app)
 {
 	SceneOnRender(&scene);
-
 	SceneEditorOnRender(&scene_editor);
 }
 
 void OnRenderDebug(MinimalApp* app)
 {
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
-
-	float width = (float)MinimalGetWindowWidth(app->window);
-	float height = (float)MinimalGetWindowHeigth(app->window);
-
-	FontRendererStart(GuiGetScreenProjPtr(&gui));
-	
-	/* fps */
-	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
-
-	/* Settings */
-	FrostDebugRenderSettings(&debugger, width - 220.0f, 8.0f);
-
-	/* Debug info */
-	FrostDebugRenderInfo(&debugger, &scene, width - 480.0f, 8.0f);
-
-	FontRendererFlush();
-
-	FrostDebugRenderConsole(&debugger, width, height, GuiGetScreenProjPtr(&gui));
 }
 
 void OnRenderUI(MinimalApp* app)
 {
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderUI(&scene);
+
+	FrostDebuggerOnRenderUI(&debugger, app, &gui);
 }
 
 static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }
