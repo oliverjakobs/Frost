@@ -8,12 +8,12 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 	BatchRenderer2DStart(mat_view_proj);
 
 	EcsList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
-	for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
+	for (size_t index = 0; index < EcsListSize(list); ++index)
 	{
-		ZIndex* indexed = EcsListNodeComponent(it);
-		ECS_REQUIRE_LIST(Sprite, ecs, sprite, it, COMPONENT_SPRITE);
+		ZIndex* indexed = EcsListComponentAt(list, index);
+		ECS_REQUIRE_LIST(Sprite, ecs, sprite, list, index, COMPONENT_SPRITE);
 
-		vec2 pos = GetEntityPosition(ecs, EcsListNodeEntity(it));
+		vec2 pos = GetEntityPosition(ecs, EcsListEntityAt(list, index));
 
 		float x = pos.x - sprite->width / 2.0f;
 		float y = pos.y;

@@ -11,12 +11,12 @@
 #define ECS_OPTIONAL_MAP(Comp, ecs, var, iter, type) \
 	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type)
 
-#define ECS_REQUIRE_LIST(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsListNodeEntity(iter), type); \
+#define ECS_REQUIRE_LIST(Comp, ecs, var, list, index, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type); \
 	if (!var) continue
 
-#define ECS_OPTIONAL_LIST(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsListNodeEntity(iter), type)
+#define ECS_OPTIONAL_LIST(Comp, ecs, var, list, index, type) \
+	Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type)
 
 typedef struct
 {

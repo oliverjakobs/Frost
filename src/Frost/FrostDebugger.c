@@ -43,7 +43,6 @@ void FrostDebugRenderSettings(const FrostDebugger* debugger, float x, float y)
 	FontRendererTextFieldLine("F1: Toggle edit mode");
 	FontRendererTextFieldLine("F2: Toggle map edit mode");
 	FontRendererTextFieldLine("F3: Open console");
-	FontRendererTextFieldLine("F5: Pause/Unpause");
 	FontRendererTextFieldLine("F6: Toggle Vsync");
 	FontRendererTextFieldLine("F7: Toggle debug mode");
 	FontRendererTextFieldLine("F8: Toggle editor grid");
@@ -194,10 +193,10 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 		if (strcmp(spec, "entities") == 0)
 		{
 			EcsList* list = EcsGetComponentList(&scene->ecs, COMPONENT_TEMPLATE);
-			for (EcsListNode* it = list->first; it; it = EcsListNodeNext(it))
+			for (size_t index = 0; index < EcsListSize(list); ++index)
 			{
-				const char** templ = EcsListNodeComponent(it);
-				ConsoleOut(console, " - %d \t | %s", EcsListNodeEntity(it), *templ);
+				const char** templ = EcsListComponentAt(list, index);
+				ConsoleOut(console, " - %d \t | %s", EcsListEntityAt(list, index), *templ);
 			}
 		}
 		/*

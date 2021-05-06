@@ -58,7 +58,6 @@ MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 	case MINIMAL_KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
 	case MINIMAL_KEY_F2:		SceneEditorToggleMapMode(&scene_editor); break;
 	case MINIMAL_KEY_F3:		ConsoleToggleFocus(&debugger.console); break;
-	// case MINIMAL_KEY_F5:		MinimalPause(app); break;
 	case MINIMAL_KEY_F6:		MinimalToggleVsync(app); break;
 	case MINIMAL_KEY_F7:		MinimalToggleDebug(app); break;
 	case MINIMAL_KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
@@ -89,8 +88,6 @@ void OnRender(MinimalApp* app)
 	SceneOnRender(&scene);
 
 	SceneEditorOnRender(&scene_editor);
-
-	if (scene_editor.mode != SCENE_EDIT_MAP) SceneOnRenderUI(&scene);
 }
 
 void OnRenderDebug(MinimalApp* app)
@@ -116,6 +113,11 @@ void OnRenderDebug(MinimalApp* app)
 	FrostDebugRenderConsole(&debugger, width, height, GuiGetScreenProjPtr(&gui));
 }
 
+void OnRenderUI(MinimalApp* app)
+{
+	if (scene_editor.mode == SCENE_EDIT_NONE) SceneOnRenderUI(&scene);
+}
+
 static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }
 
 int main()
@@ -128,6 +130,7 @@ int main()
 	MinimalSetUpdateCallback(&app, OnUpdate);
 	MinimalSetRenderCallback(&app, OnRender);
 	MinimalSetRenderDebugCallback(&app, OnRenderDebug);
+	MinimalSetRenderUICallback(&app, OnRenderUI);
 
 	FrostLoadMinimal(&app, "config.ini");
 
