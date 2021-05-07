@@ -18,12 +18,12 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 
 int FrostLoadMinimal(MinimalApp* app, const char* path)
 {
-	char* config = tb_file_read(path, "rb");
+	char* config = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 
 	if (!config)
 	{
 		MINIMAL_ERROR("Failed to read config (%s)", path);
-		return 0;
+		return MINIMAL_FAIL;
 	}
 
 	tb_ini_element section;
@@ -32,7 +32,8 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	if (section.type == TB_INI_ERROR)
 	{
 		MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
-		return 0;
+		MinimalFree(config);
+		return MINIMAL_FAIL;
 	}
 
 	char title[APPLICATION_STR_LEN];
@@ -44,23 +45,32 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	char gl_version[APPLICATION_VER_STR_LEN];
 	tb_ini_query_string(section.start, ".opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-	MinimalBool status = MinimalLoad(app, title, w, h, gl_version);
-	if (status)
+	MinimalSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_free);
+	if (!MinimalLoad(app, title, w, h, gl_version))
 	{
-		/* apply settings */
-		tb_ini_query(config, "options", &section);
-		if (section.type != TB_INI_ERROR)
-		{
-			MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
-			MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
-		}
-
-		MINIMAL_INFO("[Minimal] Version: %s", MinimalGetVersionString());
+		MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
+		MinimalFree(config);
+		return MINIMAL_FAIL;
 	}
 
-	free(config);
+	/* apply settings */
+	tb_ini_query(config, "options", &section);
+	if (section.type != TB_INI_ERROR)
+	{
+		MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
+		MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
+	}
 
-	return status;
+	FrostFree(config);
+
+	MINIMAL_INFO("[Minimal] Version: %s", MinimalGetVersionString());
+	MINIMAL_INFO("[OpenGL] Version: %s", ignisGetGLVersion());
+	MINIMAL_INFO("[OpenGL] Vendor: %s", ignisGetGLVendor());
+	MINIMAL_INFO("[OpenGL] Renderer: %s", ignisGetGLRenderer());
+	MINIMAL_INFO("[OpenGL] GLSL Version: %s", ignisGetGLSLVersion());
+	MINIMAL_INFO("[Ignis] Version: %s", IgnisGetVersionString());
+
+	return MINIMAL_OK;
 }
 
 int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
@@ -77,41 +87,29 @@ int FrostLoadIgnis(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 	if (!ignisInit(debug))
 	{
 		MINIMAL_ERROR("[IGNIS] Failed to initialize Ignis");
-		return 0;
+		return MINIMAL_FAIL;
 	}
 
 	ignisEnableBlend(blend_s, blend_d);
 	ignisSetClearColor(clear_color);
 
-	MINIMAL_INFO("[OpenGL] Version: %s",		ignisGetGLVersion());
-	MINIMAL_INFO("[OpenGL] Vendor: %s",			ignisGetGLVendor());
-	MINIMAL_INFO("[OpenGL] Renderer: %s",		ignisGetGLRenderer());
-	MINIMAL_INFO("[OpenGL] GLSL Version: %s",	ignisGetGLSLVersion());
-	MINIMAL_INFO("[Ignis] Version: %s",			IgnisGetVersionString());
-
-	return 1;
-}
-
-int FrostLoadScene(Scene* scene, float w, float h, const char* start)
-{
-	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostGetAllocator());
-	FrostLoadEcs(&scene->ecs);
-
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-
-	SceneChangeActive(scene, start, 0);
-
-	return 1;
+	return MINIMAL_OK;
 }
 
 int FrostLoadRenderer(const char* path)
 {
-	char* config = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
-
+	tb_ini_element section;
 	char vert[APPLICATION_PATH_LEN];
 	char frag[APPLICATION_PATH_LEN];
 
-	tb_ini_element section;
+	char* config = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+
+	if (!config)
+	{
+		MINIMAL_ERROR("Failed to read config (%s)", path);
+		return MINIMAL_FAIL;
+	}
+
 	/* renderer2D */
 	tb_ini_query(config, "renderer2D", &section);
 	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
@@ -137,6 +135,18 @@ int FrostLoadRenderer(const char* path)
 	FontRendererInit(vert, frag);
 
 	FrostFree(config);
+
+	return MINIMAL_OK;
+}
+
+int FrostLoadScene(Scene* scene, float w, float h, const char* start)
+{
+	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostGetAllocator());
+	FrostLoadEcs(&scene->ecs);
+
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+
+	SceneChangeActive(scene, start, 0);
 
 	return 1;
 }

@@ -15,9 +15,8 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
 	/* ---------------| Config |------------------------------------------ */
 	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.json");
-
 	FrostLoadRenderer("config.ini");
+	FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.json");
 
 	GuiInit(&gui, (float)w, (float)h, "res/fonts.json", FrostGetAllocator());
 	FontRendererBindFontColor(GuiGetFont(&gui, "gui"), IGNIS_WHITE);
@@ -25,7 +24,7 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));
 	FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
-	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_MAP);
+	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_NONE);
 
 	return 1;
 }
@@ -113,9 +112,8 @@ int main()
 	MinimalSetRenderDebugCallback(&app, OnRenderDebug);
 	MinimalSetRenderUICallback(&app, OnRenderUI);
 
-	FrostLoadMinimal(&app, "config.ini");
-
-	MinimalRun(&app, ClearBuffer);
+	if (FrostLoadMinimal(&app, "config.ini"))
+		MinimalRun(&app, ClearBuffer);
 
 	MinimalDestroy(&app);
 
