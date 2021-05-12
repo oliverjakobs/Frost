@@ -5,8 +5,7 @@
 
 
 /* Table sizes must be powers of 2 */
-#define ECS_MAP_SIZE_MIN               (1 << 5)    /* 32 */
-#define ECS_MAP_SIZE_DEFAULT           (1 << 8)    /* 256 */
+#define ECS_MAP_SIZE_MIN               (1 << 3)    /* 8 */
 #define ECS_MAP_SIZE_MOD(val, cap)     ((val) & ((cap) - 1))
 
 /* Limit for probing is 1/2 of table_size */
@@ -33,21 +32,15 @@ static size_t EcsMapCalcSize(size_t num_entries)
 }
 
 /* ------------------------------------------------------------------------------------------- */
-
-static size_t EcsMapHash(EcsEntityID id)
+/* Get a valid hash table index from a key. */
+static inline size_t EcsMapCalcIndex(const EcsMap* map, EcsEntityID id)
 {
 	uint32_t hash = id;
 	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
 	hash = ((hash >> 16) ^ hash) * 0x45d9f3b;
 	hash = (hash >> 16) ^ hash;
-	return hash;
-}
-/*
- * Get a valid hash table index from a key.
- */
-static inline size_t EcsMapCalcIndex(const EcsMap* map, EcsEntityID id)
-{
-	return ECS_MAP_SIZE_MOD(EcsMapHash(id), map->capacity);
+
+	return ECS_MAP_SIZE_MOD(hash, map->capacity);
 }
 
 /*
@@ -67,15 +60,15 @@ static EcsEntry* EcsMapGetPopulatedEntry(const EcsMap* map, EcsEntry* entry)
 
 
 /* ------------------------------------------------------------------------------------------- */
-int EcsMapAlloc(EcsMap* map, size_t element_size, EcsReleaseFunc release)
+int EcsMapAlloc(EcsMap* map, size_t component_size, size_t initial_size, EcsReleaseFunc release)
 {
-	map->capacity = ECS_MAP_SIZE_DEFAULT;
+	map->capacity = EcsMapCalcSize(initial_size);
 	map->count = 0;
 
-	map->table = calloc(map->capacity, sizeof(EcsEntry));
+	map->table = EcsMemCalloc(map->capacity, sizeof(EcsEntry));
 	if (!map->table) return 0;
 
-	map->component_size = element_size;
+	map->component_size = component_size;
 	map->release = release;
 	return 1;
 }
@@ -84,9 +77,8 @@ void EcsMapFree(EcsMap* map)
 {
 	EcsMapClear(map);
 
-	free(map->table);
+	EcsMemFree(map->table);
 	map->capacity = 0;
-	map->count = 0;
 }
 
 void EcsMapClear(EcsMap* map)
@@ -106,10 +98,8 @@ static EcsEntry* EcsMapFindEntry(const EcsMap* map, EcsEntityID entity, int find
 	for (size_t i = 0; i < probe_len; ++i)
 	{
 		EcsEntry* entry = &map->table[index];
-		if (entry->entity == ECS_NULL_ENTITY) return find_empty ? entry : NULL;
-
-		if (entity - entry->entity == 0)
-			return entry;
+		if (entry->entity == ECS_NULL_ENTITY)	return find_empty ? entry : NULL;
+		if (entity - entry->entity == 0)		return entry;
 
 		index = ECS_MAP_PROBE_NEXT(index, map->capacity);
 	}
@@ -150,7 +140,7 @@ static int EcsMapRehash(EcsMap* map, size_t new_capacity)
 {
 	if ((new_capacity >= ECS_MAP_SIZE_MIN) || ((new_capacity & (new_capacity - 1)) == 0)) return 0;
 
-	EcsEntry* new_table = calloc(new_capacity, sizeof(EcsEntry));
+	EcsEntry* new_table = EcsMemCalloc(new_capacity, sizeof(EcsEntry));
 	if (!new_table) return 0;
 
 	/* Backup old elements in case of rehash failure */
@@ -171,7 +161,7 @@ static int EcsMapRehash(EcsMap* map, size_t new_capacity)
 			/* Load factor is too high with the new table size, or a poor hash function was used. */
 			map->capacity = old_capacity;
 			map->table = old_table;
-			free(new_table);
+			EcsMemFree(new_table);
 			return 0;
 		}
 
@@ -180,7 +170,7 @@ static int EcsMapRehash(EcsMap* map, size_t new_capacity)
 		new_entry->data = entry->data;
 	}
 
-	free(old_table);
+	EcsMemFree(old_table);
 	return 1;
 }
 
@@ -226,28 +216,21 @@ EcsMapIter* EcsMapIterator(const EcsMap* map)
 	return (EcsMapIter*)EcsMapGetPopulatedEntry(map, map->table);
 }
 
-EcsMapIter* EcsMapIterNext(const EcsMap* map, const EcsMapIter* iter)
+EcsMapIter* EcsMapIterNext(const EcsMap* map, const EcsMapIter* it)
 {
-	return iter ? (EcsMapIter*)EcsMapGetPopulatedEntry(map, ((EcsEntry*)iter) + 1) : NULL;
+	return it ? (EcsMapIter*)EcsMapGetPopulatedEntry(map, ((EcsEntry*)it) + 1) : NULL;
 }
 
-EcsMapIter* EcsMapIterRemove(EcsMap* map, const EcsMapIter* iter)
+EcsMapIter* EcsMapIterRemove(EcsMap* map, const EcsMapIter* it)
 {
-	EcsEntry* entry = (EcsEntry*)iter;
+	EcsEntry* entry = (EcsEntry*)it;
 
 	/* Iterator is invalid, so just return the next valid entry */
-	if (!entry || entry->entity == ECS_NULL_ENTITY) return EcsMapIterNext(map, iter);
+	if (!entry || entry->entity == ECS_NULL_ENTITY) return EcsMapIterNext(map, it);
 
 	EcsMapRemoveEntry(map, entry);
 	return (EcsMapIter*)EcsMapGetPopulatedEntry(map, entry);
 }
 
-EcsEntityID EcsMapIterKey(const EcsMapIter* iter)
-{
-	return iter ? ((EcsEntry*)iter)->entity : ECS_NULL_ENTITY;
-}
-
-void* EcsMapIterValue(const EcsMapIter* iter)
-{
-	return iter ? ((EcsEntry*)iter)->data : NULL;
-}
+EcsEntityID EcsMapIterKey(const EcsMapIter* it)	  { return it ? ((EcsEntry*)it)->entity : ECS_NULL_ENTITY; }
+void*		EcsMapIterValue(const EcsMapIter* it) { return it ? ((EcsEntry*)it)->data : NULL; }

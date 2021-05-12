@@ -13,7 +13,7 @@ typedef struct
     EcsReleaseFunc release;
 } EcsMap;
 
-int EcsMapAlloc(EcsMap* map, size_t element_size, EcsReleaseFunc release);
+int EcsMapAlloc(EcsMap* map, size_t component_size, size_t initial_size, EcsReleaseFunc release);
 void EcsMapFree(EcsMap* map);
 
 void EcsMapClear(EcsMap* map);
@@ -27,11 +27,11 @@ struct EcsMapIter;
 typedef struct EcsMapIter EcsMapIter;
 
 EcsMapIter* EcsMapIterator(const EcsMap* map);
-EcsMapIter* EcsMapIterNext(const EcsMap* map, const EcsMapIter* iter);
-EcsMapIter* EcsMapIterRemove(EcsMap* map, const EcsMapIter* iter);
+EcsMapIter* EcsMapIterNext(const EcsMap* map, const EcsMapIter* it);
+EcsMapIter* EcsMapIterRemove(EcsMap* map, const EcsMapIter* it);
 
-EcsEntityID EcsMapIterKey(const EcsMapIter* iter);
-void* EcsMapIterValue(const EcsMapIter* iter);
+EcsEntityID EcsMapIterKey(const EcsMapIter* it);
+void*       EcsMapIterValue(const EcsMapIter* it);
 
 #endif /* !ECS_MAP_H */
 

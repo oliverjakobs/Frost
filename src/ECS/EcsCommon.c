@@ -31,9 +31,14 @@ int EcsEntryCmp(const EcsEntry* left, const EcsEntry* right, EcsCmpFunc cmp)
 	return cmp ? cmp(left->data, right->data) : left->entity - right->entity;
 }
 
-void* EcsMemAlloc(size_t size)
+void* EcsMemMalloc(size_t size)
 {
 	return malloc(size);
+}
+
+void* EcsMemCalloc(size_t count, size_t size)
+{
+	return calloc(count, size);
 }
 
 void* EcsMemRealloc(void* block, size_t size)
@@ -43,7 +48,7 @@ void* EcsMemRealloc(void* block, size_t size)
 
 void* EcsMemDup(const void* block, size_t size)
 {
-	void* dup = EcsMemAlloc(size);
+	void* dup = EcsMemMalloc(size);
 	if (dup) memcpy(dup, block, size);
 
 	return dup;

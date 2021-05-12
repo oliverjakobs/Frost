@@ -94,7 +94,7 @@ EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsReleaseFunc release)
 {
 	EcsMap comp;
-	if (EcsMapAlloc(&comp, elem_size, release))
+	if (EcsMapAlloc(&comp, elem_size, 0, release))
 	{
 		tb_array_push(ecs->data_components, comp);
 		return 1;
