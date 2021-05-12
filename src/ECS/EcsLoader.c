@@ -5,7 +5,7 @@ void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size
     for (size_t i = 0; i < size; ++i)
     {
         EcsDataComponentLoader* comp = &loader[i];
-        if (comp) EcsRegisterDataComponent(ecs, comp->element_size, comp->release);
+        if (comp) EcsRegisterDataComponent(ecs, comp->size, comp->initial, comp->release);
     }
 }
 
@@ -14,7 +14,7 @@ void EcsLoadOrderComponents(Ecs* ecs, EcsOrderComponentLoader* loader, size_t si
     for (size_t i = 0; i < size; ++i)
     {
         EcsOrderComponentLoader* comp = &loader[i];
-        if (comp) EcsRegisterOrderComponent(ecs, comp->element_size, comp->release, comp->cmp);
+        if (comp) EcsRegisterOrderComponent(ecs, comp->size, comp->initial, comp->release, comp->cmp);
     }
 }
 

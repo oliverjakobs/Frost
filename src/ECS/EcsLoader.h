@@ -7,7 +7,8 @@
 
 typedef struct
 {
-    size_t element_size;
+    size_t initial;
+    size_t size;
     EcsReleaseFunc release;
 } EcsDataComponentLoader;
 
@@ -15,7 +16,8 @@ void EcsLoadDataComponents(Ecs* ecs, EcsDataComponentLoader* loader, size_t size
 
 typedef struct
 {
-    size_t element_size;
+    size_t initial;
+    size_t size;
     EcsReleaseFunc release;
     EcsCmpFunc cmp;
 } EcsOrderComponentLoader;

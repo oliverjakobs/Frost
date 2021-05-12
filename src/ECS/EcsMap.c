@@ -60,9 +60,9 @@ static EcsEntry* EcsMapGetPopulatedEntry(const EcsMap* map, EcsEntry* entry)
 
 
 /* ------------------------------------------------------------------------------------------- */
-int EcsMapAlloc(EcsMap* map, size_t component_size, size_t initial_size, EcsReleaseFunc release)
+int EcsMapAlloc(EcsMap* map, size_t component_size, size_t initial, EcsReleaseFunc release)
 {
-	map->capacity = EcsMapCalcSize(initial_size);
+	map->capacity = EcsMapCalcSize(initial);
 	map->count = 0;
 
 	map->table = EcsMemCalloc(map->capacity, sizeof(EcsEntry));
@@ -91,6 +91,8 @@ void EcsMapClear(EcsMap* map)
 
 static EcsEntry* EcsMapFindEntry(const EcsMap* map, EcsEntityID entity, int find_empty)
 {
+	if (!map) return NULL;
+
 	size_t probe_len = ECS_MAP_PROBE_LEN(map->capacity);
 	size_t index = EcsMapCalcIndex(map, entity);
 
@@ -176,6 +178,8 @@ static int EcsMapRehash(EcsMap* map, size_t new_capacity)
 
 void* EcsMapInsert(EcsMap* map, EcsEntityID entity, const void* component)
 {
+	if (!map) return NULL;
+
 	/* Rehash with 2x capacity if load factor is approaching 0.75 */
 	if (map->capacity <= EcsMapCalcMinSize(map->count))
 		EcsMapRehash(map, map->capacity << 1);

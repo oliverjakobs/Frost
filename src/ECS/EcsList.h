@@ -18,7 +18,7 @@ typedef struct
     EcsCmpFunc cmp;
 } EcsList;
 
-int EcsListAlloc(EcsList* list, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp);
+int EcsListAlloc(EcsList* list, size_t component_size, size_t initial, EcsReleaseFunc release, EcsCmpFunc cmp);
 void EcsListFree(EcsList* list);
 
 void EcsListClear(EcsList* list);

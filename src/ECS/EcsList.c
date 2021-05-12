@@ -6,7 +6,6 @@
 static int EcsListGrow(EcsList* list, size_t new_size)
 {
 	EcsEntry* entries = EcsMemRealloc(list->entries, new_size * sizeof(EcsEntry));
-
 	if (!entries) return 0;
 
 	list->entries = entries;
@@ -14,12 +13,20 @@ static int EcsListGrow(EcsList* list, size_t new_size)
 	return 1;
 }
 
-int EcsListAlloc(EcsList* list, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp)
+int EcsListAlloc(EcsList* list, size_t component_size, size_t initial, EcsReleaseFunc release, EcsCmpFunc cmp)
 {
 	list->entries = NULL;
+	list->capacity = initial;
 	list->count = 0;
-	list->capacity = 0;
-	list->component_size = elem_size;
+
+	if (initial > 0)
+	{
+		list->entries = EcsMemCalloc(initial, sizeof(EcsEntry));
+		if (!list->entries) return 0;
+	}
+	
+	list->component_size = component_size;
+
 	list->release = release;
 	list->cmp = cmp;
 
@@ -47,6 +54,8 @@ void EcsListClear(EcsList* list)
 
 void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
 {
+	if (!list) return NULL;
+
 	/* list needs to grow */
 	if (list->count >= list->capacity)
 	{
@@ -96,6 +105,8 @@ static size_t EcsListFindIndex(const EcsList* list, EcsEntityID entity)
 
 void EcsListRemove(EcsList* list, EcsEntityID entity)
 {
+	if (!list) return;
+
 	size_t index = EcsListFindIndex(list, entity);
 	if (index >= list->count) return;
 
@@ -109,6 +120,8 @@ void EcsListRemove(EcsList* list, EcsEntityID entity)
 
 void* EcsListFind(const EcsList* list, EcsEntityID entity)
 {
+	if (!list) return NULL;
+
 	size_t index = EcsListFindIndex(list, entity);
 	return (index < list->count) ? list->entries[index].data : NULL;
 }

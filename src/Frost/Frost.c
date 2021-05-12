@@ -153,23 +153,23 @@ int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 
 EcsDataComponentLoader data_comps[] =
 {
-	[COMPONENT_TRANSFORM] =		{ sizeof(Transform),		NULL },
-	[COMPONENT_RIGID_BODY] =	{ sizeof(RigidBody),		NULL },
-	[COMPONENT_STATE] =			{ sizeof(EntityState),		NULL },
-	[COMPONENT_MOVEMENT] =		{ sizeof(Movement),			NULL },
-	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
-	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorRelease },
-	[COMPONENT_CAMERA] =		{ sizeof(CameraController),	NULL },
-	[COMPONENT_PLAYER] =		{ sizeof(Player),			NULL },
-	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryRelease },
-	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL },
-	[COMPONENT_ITEM] =			{ sizeof(Item),				NULL }
+	[COMPONENT_TRANSFORM] =		{ 0, sizeof(Transform),			NULL },
+	[COMPONENT_RIGID_BODY] =	{ 0, sizeof(RigidBody),			NULL },
+	[COMPONENT_STATE] =			{ 0, sizeof(EntityState),		NULL },
+	[COMPONENT_MOVEMENT] =		{ 0, sizeof(Movement),			NULL },
+	[COMPONENT_SPRITE] =		{ 0, sizeof(Sprite),			NULL },
+	[COMPONENT_ANIMATOR] =		{ 0, sizeof(Animator),			AnimatorRelease },
+	[COMPONENT_CAMERA] =		{ 0, sizeof(CameraController),	NULL },
+	[COMPONENT_PLAYER] =		{ 0, sizeof(Player),			NULL },
+	[COMPONENT_INVENTORY] =		{ 0, sizeof(Inventory),			InventoryRelease },
+	[COMPONENT_INTERACTABLE] =	{ 0, sizeof(Interactable),		NULL },
+	[COMPONENT_ITEM] =			{ 0, sizeof(Item),				NULL }
 };
 
 EcsOrderComponentLoader order_comps[] =
 {
-	[COMPONENT_TEMPLATE] =	{ sizeof(const char*),	NULL,	NULL },
-	[COMPONENT_Z_INDEX] =	{ sizeof(ZIndex),		NULL,	ZIndexCmp }
+	[COMPONENT_TEMPLATE] =	{ 0, sizeof(const char*),	NULL,	NULL },
+	[COMPONENT_Z_INDEX] =	{ 0, sizeof(ZIndex),		NULL,	ZIndexCmp }
 };
 
 EcsUpdateSystem update_systems[] =

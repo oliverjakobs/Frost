@@ -8,29 +8,6 @@ const float INV_CELL_SIZE = 64.0f;
 const float INV_PADDING = 8.0f;
 const float INV_SPACING = 8.0f;
 
-static int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols)
-{
-	size_t size = sizeof(ItemID) * (size_t)rows * (size_t)cols;
-	inv->cells = malloc(size);
-	if (!inv->cells) return 0;
-
-	memset(inv->cells, NULL_ITEM, size);
-
-	inv->state = state;
-	inv->pos = pos;
-	inv->rows = rows;
-	inv->cols = cols;
-
-	return 1;
-}
-
-static void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing)
-{
-	inv->cell_size = cell_size;
-	inv->padding = padding;
-	inv->spacing = spacing;
-}
-
 static void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size)
 {
 	float width = InventoryGetWidth(inv);
@@ -66,17 +43,24 @@ void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 	{
 		Inventory inv;
 
-		vec2 pos;
-		pos.x = tb_json_float(element.value, "{'position'[0", NULL, 0.0f);
-		pos.y = tb_json_float(element.value, "{'position'[1", NULL, 0.0f);
+		inv.pos.x = tb_json_float(element.value, "{'position'[0", NULL, 0.0f);
+		inv.pos.y = tb_json_float(element.value, "{'position'[1", NULL, 0.0f);
 
-		int rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
-		int cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
+		inv.rows = tb_json_int(element.value, "{'grid'[0", NULL, 1);
+		inv.cols = tb_json_int(element.value, "{'grid'[1", NULL, 1);
 
-		InventoryState state = tb_json_parse(element.value, "{'state'", NULL, FrostParseInventoryState);
-		
-		InventoryCreate(&inv, state, pos, rows, cols);
-		InventorySetLayout(&inv, INV_CELL_SIZE, INV_PADDING, INV_SPACING);
+		inv.state = tb_json_parse(element.value, "{'state'", NULL, FrostParseInventoryState);
+
+		size_t size = sizeof(ItemID) * (size_t)inv.rows * (size_t)inv.cols;
+		inv.cells = malloc(size);
+		if (!inv.cells) return;
+
+		memset(inv.cells, NULL_ITEM, size);
+
+		/* set layout */
+		inv.cell_size = INV_CELL_SIZE;
+		inv.padding = INV_PADDING;
+		inv.spacing = INV_SPACING;
 
 		tb_json_element align;
 		tb_json_read(element.value, &align, "{'align'");

@@ -91,25 +91,18 @@ EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 	return type < tb_array_len(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
 
-int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsReleaseFunc release)
+int EcsRegisterDataComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFunc release)
 {
 	EcsMap comp;
-	if (EcsMapAlloc(&comp, elem_size, 0, release))
-	{
-		tb_array_push(ecs->data_components, comp);
-		return 1;
-	}
+	if (!EcsMapAlloc(&comp, size, initial, release)) return 0;
 
-	return 0;
+	tb_array_push(ecs->data_components, comp);
+	return 1;
 }
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
 {
-	EcsMap* map = EcsGetComponentMap(ecs, type);
-
-	if (!map) return NULL;
-
-	return EcsMapInsert(map, entity, component);
+	return EcsMapInsert(EcsGetComponentMap(ecs, type), entity, component);
 }
 
 void* EcsGetDataComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
@@ -122,25 +115,18 @@ void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 	EcsMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
-int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp)
+int EcsRegisterOrderComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFunc release, EcsCmpFunc cmp)
 {
 	EcsList comp;
-	if (EcsListAlloc(&comp, elem_size, release, cmp))
-	{
-		tb_array_push(ecs->order_components, comp);
-		return 1;
-	}
+	if (!EcsListAlloc(&comp, size, initial, release, cmp)) return 0;
 
-	return 0;
+	tb_array_push(ecs->order_components, comp);
+	return 1;
 }
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
 {
-	EcsList* list = EcsGetComponentList(ecs, type);
-
-	if (!list) return NULL;
-
-	return EcsListInsert(list, entity, component);
+	return EcsListInsert(EcsGetComponentList(ecs, type), entity, component);
 }
 
 void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type)
