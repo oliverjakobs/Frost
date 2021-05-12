@@ -8,6 +8,56 @@ const float INV_CELL_SIZE = 64.0f;
 const float INV_PADDING = 8.0f;
 const float INV_SPACING = 8.0f;
 
+static int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols)
+{
+	size_t size = sizeof(ItemID) * (size_t)rows * (size_t)cols;
+	inv->cells = malloc(size);
+	if (!inv->cells) return 0;
+
+	memset(inv->cells, NULL_ITEM, size);
+
+	inv->state = state;
+	inv->pos = pos;
+	inv->rows = rows;
+	inv->cols = cols;
+
+	return 1;
+}
+
+static void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing)
+{
+	inv->cell_size = cell_size;
+	inv->padding = padding;
+	inv->spacing = spacing;
+}
+
+static void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size)
+{
+	float width = InventoryGetWidth(inv);
+	float height = InventoryGetHeight(inv);
+
+	switch (h_align)
+	{
+	case INV_HALIGN_LEFT:	inv->pos.x = 0.0f; break;
+	case INV_HALIGN_CENTER:	inv->pos.x = (screen_size.x - width) * 0.5f; break;
+	case INV_HALIGN_RIGHT:	inv->pos.x = screen_size.x - width; break;
+	}
+
+	switch (v_align)
+	{
+	case INV_VALIGN_TOP:	inv->pos.y = screen_size.y - height; break;
+	case INV_VALIGN_CENTER:	inv->pos.y = (screen_size.y - height) * 0.5f; break;
+	case INV_VALIGN_BOTTOM:	inv->pos.y = 0.0f; break;
+	}
+}
+
+static void InventoryLoadContent(Inventory* inv, const char* path)
+{
+	/* TODO load inv content from file */
+	InventorySetCellContent(inv, 0, 3);
+	InventorySetCellContent(inv, 1, 1);
+}
+
 void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 {
 	tb_json_element element;
@@ -43,60 +93,7 @@ void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 	}
 }
 
-void InventoryLoadContent(Inventory* inv, const char* path)
-{
-	/* TODO load inv content from file */
-	InventorySetCellContent(inv, 0, 3);
-	InventorySetCellContent(inv, 1, 1);
-}
-
-int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols)
-{
-	size_t size = sizeof(ItemID) * (size_t)rows * (size_t)cols;
-	inv->cells = malloc(size);
-
-	if (!inv->cells) return 0;
-
-	memset(inv->cells, NULL_ITEM, size);
-
-	inv->state = state;
-
-	inv->pos = pos;
-
-	inv->rows = rows;
-	inv->cols = cols;
-
-	return 1;
-}
-
-void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing)
-{
-	inv->cell_size = cell_size;
-	inv->padding = padding;
-	inv->spacing = spacing;
-}
-
-void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size)
-{
-	float width = InventoryGetWidth(inv);
-	float height = InventoryGetHeight(inv);
-
-	switch (h_align)
-	{
-	case INV_HALIGN_LEFT:	inv->pos.x = 0.0f; break;
-	case INV_HALIGN_CENTER:	inv->pos.x = (screen_size.x - width) * 0.5f; break;
-	case INV_HALIGN_RIGHT:	inv->pos.x = screen_size.x - width; break;
-	}
-
-	switch (v_align)
-	{
-	case INV_VALIGN_TOP:	inv->pos.y = screen_size.y - height; break;
-	case INV_VALIGN_CENTER:	inv->pos.y = (screen_size.y - height) * 0.5f; break;
-	case INV_VALIGN_BOTTOM:	inv->pos.y = 0.0f; break;
-	}
-}
-
-void InventoryFree(Inventory* inv)
+void InventoryRelease(Inventory* inv)
 {
 	if (inv->cells) free(inv->cells);
 	inv->cells = NULL;

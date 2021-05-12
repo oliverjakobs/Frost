@@ -5,9 +5,9 @@
 #include <stdlib.h>
 
 /* kept for when storage is improved */
-void AnimatorFree(void* block)
+void AnimatorRelease(Animator* block)
 {
-	free(block);
+	// free(block);
 }
 
 void AnimatorStart(Animator* animator, int start)

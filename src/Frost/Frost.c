@@ -158,10 +158,10 @@ EcsDataComponentLoader data_comps[] =
 	[COMPONENT_STATE] =			{ sizeof(EntityState),		NULL },
 	[COMPONENT_MOVEMENT] =		{ sizeof(Movement),			NULL },
 	[COMPONENT_SPRITE] =		{ sizeof(Sprite),			NULL },
-	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorFree },
+	[COMPONENT_ANIMATOR] =		{ sizeof(Animator),			AnimatorRelease },
 	[COMPONENT_CAMERA] =		{ sizeof(CameraController),	NULL },
 	[COMPONENT_PLAYER] =		{ sizeof(Player),			NULL },
-	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryFree },
+	[COMPONENT_INVENTORY] =		{ sizeof(Inventory),		InventoryRelease },
 	[COMPONENT_INTERACTABLE] =	{ sizeof(Interactable),		NULL },
 	[COMPONENT_ITEM] =			{ sizeof(Item),				NULL }
 };

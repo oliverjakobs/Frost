@@ -1,17 +1,19 @@
 #ifndef ECS_MAP_H
 #define ECS_MAP_H
 
-#include "toolbox/tb_hashmap.h"
-
 #include "EcsCommon.h"
 
 typedef struct
 {
-	tb_hashmap map;
-	size_t element_size;
+    EcsEntry* table;
+    size_t capacity;
+    size_t count;
+    size_t component_size;
+
+    EcsReleaseFunc release;
 } EcsMap;
 
-int EcsMapAlloc(EcsMap* map, size_t element_size, EcsFreeFunc free);
+int EcsMapAlloc(EcsMap* map, size_t element_size, EcsReleaseFunc release);
 void EcsMapFree(EcsMap* map);
 
 void EcsMapClear(EcsMap* map);
@@ -26,6 +28,7 @@ typedef struct EcsMapIter EcsMapIter;
 
 EcsMapIter* EcsMapIterator(const EcsMap* map);
 EcsMapIter* EcsMapIterNext(const EcsMap* map, const EcsMapIter* iter);
+EcsMapIter* EcsMapIterRemove(EcsMap* map, const EcsMapIter* iter);
 
 EcsEntityID EcsMapIterKey(const EcsMapIter* iter);
 void* EcsMapIterValue(const EcsMapIter* iter);

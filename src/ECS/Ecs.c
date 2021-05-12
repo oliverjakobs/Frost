@@ -91,10 +91,10 @@ EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 	return type < tb_array_len(ecs->order_components) ? &ecs->order_components[type] : NULL;
 }
 
-int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free)
+int EcsRegisterDataComponent(Ecs* ecs, size_t elem_size, EcsReleaseFunc release)
 {
 	EcsMap comp;
-	if (EcsMapAlloc(&comp, elem_size, free))
+	if (EcsMapAlloc(&comp, elem_size, release))
 	{
 		tb_array_push(ecs->data_components, comp);
 		return 1;
@@ -122,10 +122,10 @@ void EcsRemoveDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type)
 	EcsMapRemove(EcsGetComponentMap(ecs, type), entity);
 }
 
-int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, EcsFreeFunc free, EcsCmpFunc cmp)
+int EcsRegisterOrderComponent(Ecs* ecs, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp)
 {
 	EcsList comp;
-	if (EcsListAlloc(&comp, elem_size, free, cmp))
+	if (EcsListAlloc(&comp, elem_size, release, cmp))
 	{
 		tb_array_push(ecs->order_components, comp);
 		return 1;

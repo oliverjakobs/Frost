@@ -42,12 +42,7 @@ typedef struct
 } Inventory;
 
 void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
-void InventoryLoadContent(Inventory* inv, const char* path);
-
-int InventoryCreate(Inventory* inv, InventoryState state, vec2 pos, int rows, int cols);
-void InventorySetLayout(Inventory* inv, float cell_size, float padding, float spacing);
-void InventoryAlign(Inventory* inv, InvHAlign h_align, InvVAlign v_align, vec2 screen_size);
-void InventoryFree(Inventory* inv);
+void InventoryRelease(Inventory* inv);
 
 void InventoryToggle(Inventory* inv);
 

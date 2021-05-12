@@ -21,7 +21,7 @@ typedef struct
 	float clock;
 } Animator;
 
-void AnimatorFree(void* block);
+void AnimatorRelease(Animator* animator);
 
 void AnimatorStart(Animator* animator, int start);
 

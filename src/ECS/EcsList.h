@@ -9,16 +9,16 @@ typedef struct EcsListEntry EcsListEntry;
 
 typedef struct
 {
-    EcsListEntry* entries;
-    size_t entry_count;
-    size_t entry_capacity;
+    EcsEntry* entries;
+    size_t capacity;
+    size_t count;
     size_t component_size;
 
-    EcsFreeFunc free;
+    EcsReleaseFunc release;
     EcsCmpFunc cmp;
 } EcsList;
 
-int EcsListAlloc(EcsList* list, size_t elem_size, EcsFreeFunc free, EcsCmpFunc cmp);
+int EcsListAlloc(EcsList* list, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp);
 void EcsListFree(EcsList* list);
 
 void EcsListClear(EcsList* list);

@@ -3,53 +3,24 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct EcsListEntry
-{
-	EcsEntityID entity;
-	void* component;
-};
-
-static int EcsListEntryFill(EcsListEntry* entry, const void* component, EcsEntityID entity, size_t size)
-{
-	entry->entity = entity;
-	entry->component = EcsMemDup(component, size);
-	return entry->component != NULL;
-}
-
-static void EcsListEntryClear(const EcsList* list, EcsListEntry* entry)
-{
-	if (list->free) list->free(entry->component);
-	EcsMemFree(entry->component);
-}
-
-static int EcsListEntryCmpID(const EcsListEntry* left, const EcsListEntry* right)
-{
-	return left->entity - right->entity;
-}
-
-static int EcsListEntryCmp(const EcsListEntry* left, const EcsListEntry* right, EcsCmpFunc cmp)
-{
-	return cmp ? cmp(left->component, right->component) : left->entity - right->entity;
-}
-
 static int EcsListGrow(EcsList* list, size_t new_size)
 {
-	EcsListEntry* entries = EcsMemRealloc(list->entries, new_size * sizeof(EcsListEntry));
+	EcsEntry* entries = EcsMemRealloc(list->entries, new_size * sizeof(EcsEntry));
 
 	if (!entries) return 0;
 
 	list->entries = entries;
-	list->entry_capacity = new_size;
+	list->capacity = new_size;
 	return 1;
 }
 
-int EcsListAlloc(EcsList* list, size_t elem_size, EcsFreeFunc free, EcsCmpFunc cmp)
+int EcsListAlloc(EcsList* list, size_t elem_size, EcsReleaseFunc release, EcsCmpFunc cmp)
 {
 	list->entries = NULL;
-	list->entry_count = 0;
-	list->entry_capacity = 0;
+	list->count = 0;
+	list->capacity = 0;
 	list->component_size = elem_size;
-	list->free = free;
+	list->release = release;
 	list->cmp = cmp;
 
 	return 1;
@@ -59,50 +30,50 @@ void EcsListFree(EcsList* list)
 {
 	EcsListClear(list);
 	EcsMemFree(list->entries);
-	list->entry_capacity = 0;
+	list->capacity = 0;
 
 	list->component_size = 0;
-	list->free = NULL;
+	list->release = NULL;
 	list->cmp = NULL;
 }
 
 void EcsListClear(EcsList* list)
 {
-	for (size_t i = 0; i < list->entry_count; ++i)
-		EcsListEntryClear(list, &list->entries[i]);
+	for (size_t i = 0; i < list->count; ++i)
+		EcsEntryClear(&list->entries[i], list->release);
 
-	list->entry_count = 0;
+	list->count = 0;
 }
 
 void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
 {
 	/* list needs to grow */
-	if (list->entry_count >= list->entry_capacity)
+	if (list->count >= list->capacity)
 	{
-		size_t capacity = (list->entry_capacity > 0) ? (size_t)(list->entry_capacity * ECS_LIST_GROWTH) : 1;
+		size_t capacity = (list->capacity > 0) ? (size_t)(list->capacity * ECS_LIST_GROWTH) : 1;
 		if (!EcsListGrow(list, capacity))
 			return NULL;
 	}
 
 	/* create new entry */
-	EcsListEntry entry;
-	if (!EcsListEntryFill(&entry, component, entity, list->component_size))
+	EcsEntry entry;
+	if (!EcsEntryFill(&entry, entity, component, list->component_size))
 		return NULL;
 
 	/* find location for the new element */
 	size_t index = 0;
-	while (index < list->entry_count && EcsListEntryCmp(&list->entries[index], &entry, list->cmp) < 0)
+	while (index < list->count && EcsEntryCmp(&list->entries[index], &entry, list->cmp) < 0)
 		++index;
 
 	/* move entries back to make space for new element if index is not at the end */
-	if (index < list->entry_count)
+	if (index < list->count)
 	{
-		size_t size = (list->entry_count - index) * sizeof(EcsListEntry);
+		size_t size = (list->count - index) * sizeof(EcsEntry);
 		memcpy(list->entries + (index + 1), list->entries + index, size);
 	}
 
-	list->entry_count++;
-	return memcpy(list->entries + index, &entry, sizeof(EcsListEntry));
+	list->count++;
+	return memcpy(list->entries + index, &entry, sizeof(EcsEntry));
 }
 
 static size_t EcsListFindIndex(const EcsList* list, EcsEntityID entity)
@@ -110,38 +81,38 @@ static size_t EcsListFindIndex(const EcsList* list, EcsEntityID entity)
 	/* special case if component is sorted by id */
 	if (!list->cmp)
 	{
-		size_t size = sizeof(EcsListEntry);
-		EcsListEntry dummy = { .entity = entity };
-		EcsListEntry* entry = bsearch(&dummy, list->entries, list->entry_count, size, EcsListEntryCmpID);
+		size_t size = sizeof(EcsEntry);
+		EcsEntry dummy = { .entity = entity };
+		EcsEntry* entry = bsearch(&dummy, list->entries, list->count, size, EcsEntryCmpID);
 		return entry - list->entries;
 	}
 
-	for (size_t i = 0; i < list->entry_count; ++i)
+	for (size_t i = 0; i < list->count; ++i)
 	{
 		if (entity == list->entries[i].entity) return i;
 	}
-	return list->entry_count;
+	return list->count;
 }
 
 void EcsListRemove(EcsList* list, EcsEntityID entity)
 {
 	size_t index = EcsListFindIndex(list, entity);
-	if (index >= list->entry_count) return;
+	if (index >= list->count) return;
 
-	EcsListEntryClear(list, &list->entries[index]);
+	EcsEntryClear(&list->entries[index], list->release);
 
-	size_t size = (list->entry_count - (index + 1)) * sizeof(EcsListEntry);
+	size_t size = (list->count - (index + 1)) * sizeof(EcsEntry);
 	memcpy(list->entries + index, list->entries + (index + 1), size);
 
-	list->entry_count--;
+	list->count--;
 }
 
 void* EcsListFind(const EcsList* list, EcsEntityID entity)
 {
 	size_t index = EcsListFindIndex(list, entity);
-	return (index < list->entry_count) ? list->entries[index].component : NULL;
+	return (index < list->count) ? list->entries[index].data : NULL;
 }
 
 EcsEntityID EcsListEntityAt(const EcsList* list, size_t index)	{ return list->entries[index].entity; }
-void* EcsListComponentAt(const EcsList* list, size_t index)		{ return list->entries[index].component; }
-size_t EcsListSize(const EcsList* list)							{ return list->entry_count; }
+void* EcsListComponentAt(const EcsList* list, size_t index)		{ return list->entries[index].data; }
+size_t EcsListSize(const EcsList* list)							{ return list->count; }
