@@ -29,7 +29,7 @@
 #define tb_array_sizeof(b)  (tb_array_len(b) * sizeof(*(b)))
 
 void* tb_array__resize(void* buf, size_t new_cap, size_t elem_size);
-void* tb_array__grow(void* buf, size_t increment, size_t elem_size);
 void* tb_array__reserve(void* buf, size_t reserve, size_t elem_size);
+void* tb_array__grow(void* buf, size_t increment, size_t elem_size);
 
 #endif /* !TB_ARRAY_H */

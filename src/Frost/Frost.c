@@ -29,7 +29,7 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	tb_ini_element section;
 	tb_ini_query(config, "app", &section);
 
-	if (section.type == TB_INI_ERROR)
+	if (section.error != TB_INI_OK)
 	{
 		MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
 		MinimalFree(config);
@@ -48,14 +48,14 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	MinimalSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_free);
 	if (!MinimalLoad(app, title, w, h, gl_version))
 	{
-		MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
+		MINIMAL_ERROR("Failed to load minimal");
 		MinimalFree(config);
 		return MINIMAL_FAIL;
 	}
 
 	/* apply settings */
 	tb_ini_query(config, "options", &section);
-	if (section.type != TB_INI_ERROR)
+	if (section.error == TB_INI_OK)
 	{
 		MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
 		MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
