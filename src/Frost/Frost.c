@@ -27,7 +27,7 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	}
 
 	tb_ini_element section;
-	tb_ini_query(config, "app", &section);
+	tb_ini_query(config, "app", NULL, &section);
 
 	if (section.error != TB_INI_OK)
 	{
@@ -37,13 +37,13 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	}
 
 	char title[APPLICATION_STR_LEN];
-	tb_ini_query_string(section.start, ".title", title, APPLICATION_STR_LEN);
+	tb_ini_query_string(section.start, NULL, "title", title, APPLICATION_STR_LEN);
 
-	int w = tb_ini_query_int(section.start, ".width", 0);
-	int h = tb_ini_query_int(section.start, ".height", 0);
+	int w = tb_ini_query_int(section.start, NULL, "width", 0);
+	int h = tb_ini_query_int(section.start, NULL, "height", 0);
 
 	char gl_version[APPLICATION_VER_STR_LEN];
-	tb_ini_query_string(section.start, ".opengl", gl_version, APPLICATION_VER_STR_LEN);
+	tb_ini_query_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
 	MinimalSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_free);
 	if (!MinimalLoad(app, title, w, h, gl_version))
@@ -54,11 +54,11 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	}
 
 	/* apply settings */
-	tb_ini_query(config, "options", &section);
+	tb_ini_query(config, NULL, "options", &section);
 	if (section.error == TB_INI_OK)
 	{
-		MinimalEnableDebug(app, tb_ini_query_bool(section.start, ".debug", 0));
-		MinimalEnableVsync(app, tb_ini_query_bool(section.start, ".vsync", 0));
+		MinimalEnableDebug(app, tb_ini_query_bool(section.start, NULL, "debug", 0));
+		MinimalEnableVsync(app, tb_ini_query_bool(section.start, NULL, "vsync", 0));
 	}
 
 	FrostFree(config);
@@ -69,7 +69,7 @@ int FrostLoadMinimal(MinimalApp* app, const char* path)
 	MINIMAL_INFO("[OpenGL] Renderer: %s", ignisGetGLRenderer());
 	MINIMAL_INFO("[OpenGL] GLSL Version: %s", ignisGetGLSLVersion());
 	MINIMAL_INFO("[Ignis] Version: %s", IgnisGetVersionString());
-
+	
 	return MINIMAL_OK;
 }
 
@@ -111,27 +111,27 @@ int FrostLoadRenderer(const char* path)
 	}
 
 	/* renderer2D */
-	tb_ini_query(config, "renderer2D", &section);
-	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
-	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	tb_ini_query(config, "renderer2D", NULL, &section);
+	tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
 	Renderer2DInit(vert, frag);
 
 	/* primitives2D */
-	tb_ini_query(config, "primitives2D", &section);
-	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
-	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	tb_ini_query(config, "primitives2D", NULL, &section);
+	tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
 	Primitives2DInit(vert, frag);
 
 	/* batchrenderer2D */
-	tb_ini_query(config, "batchrenderer2D", &section);
-	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
-	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	tb_ini_query(config, "batchrenderer2D", NULL, &section);
+	tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
 	BatchRenderer2DInit(vert, frag);
 
 	/* fontrenderer */
-	tb_ini_query(config, "fontrenderer", &section);
-	tb_ini_query_string(section.start, ".vert", vert, APPLICATION_PATH_LEN);
-	tb_ini_query_string(section.start, ".frag", frag, APPLICATION_PATH_LEN);
+	tb_ini_query(config, "fontrenderer", NULL, &section);
+	tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+	tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
 	FontRendererInit(vert, frag);
 
 	FrostFree(config);

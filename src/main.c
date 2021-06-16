@@ -18,7 +18,7 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 	FrostLoadRenderer("config.ini");
 	FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.json");
 
-	GuiInit(&gui, (float)w, (float)h, "res/fonts.json", FrostGetAllocator());
+	GuiInit(&gui, (float)w, (float)h, "config.ini", FrostGetAllocator());
 	FontRendererBindFontColor(GuiGetFont(&gui, "gui"), IGNIS_WHITE);
 
 	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));

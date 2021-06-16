@@ -25,14 +25,18 @@ typedef struct
     tb_ini_error error;
 } tb_ini_element;
 
-char* tb_ini_query(char* ini, char* query, tb_ini_element* element);
-char* tb_ini_query_section(char* section, char* query, tb_ini_element* element);
-char* tb_ini_query_group(char* ini, char* group, tb_ini_element* element);
+char* tb_ini_query(char* ini, const char* section, const char* prop, tb_ini_element* element);
 
-uint8_t tb_ini_query_bool(char* ini, char* query, uint8_t def);
-int32_t tb_ini_query_int(char* ini, char* query, int32_t def);
-float tb_ini_query_float(char* ini, char* query, float def);
-size_t tb_ini_query_string(char* ini, char* query, char* dst, size_t dst_len);
+/* searches for the given property in the current section (until '[' is reached) */
+char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* element);
+
+/* returns the next section in the group */
+char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element);
+
+uint8_t tb_ini_query_bool(char* ini, const char* section, const char* prop, uint8_t def);
+int32_t tb_ini_query_int(char* ini, const char* section, const char* prop, int32_t def);
+float tb_ini_query_float(char* ini, const char* section, const char* prop, float def);
+size_t tb_ini_query_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len);
 
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
 

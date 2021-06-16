@@ -15,7 +15,6 @@ typedef struct
 	tb_hashmap fonts;	/* <str,IgnisFont> */
 } GuiManager;
 
-
 int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* allocator);
 void GuiDestroy(GuiManager* gui);
 

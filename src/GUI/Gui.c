@@ -1,6 +1,7 @@
 #include "Gui.h"
 
 #include "toolbox/tb_json.h"
+#include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
 #include "toolbox/tb_str.h"
 
@@ -28,11 +29,10 @@ static void GuiFreeMapEntry(void* allocator, tb_hashmap_entry* entry)
 
 int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* allocator)
 {
-	char* json = tb_file_read(path, "rb");
-
-	if (!json)
+	char* config = tb_file_read(path, "rb");
+	if (!config)
 	{
-		MINIMAL_ERROR("[GUI] Failed to read index (%s)\n", path);
+		MINIMAL_ERROR("[GUI] Failed to read config (%s)\n", path);
 		return 0;
 	}
 
@@ -48,26 +48,21 @@ int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* a
 	}
 
 	/* load fonts */
-	tb_json_element fonts;
-	tb_json_read(json, &fonts, NULL);
-
-	for (int i = 0; i < fonts.elements; i++)
+	tb_ini_element font;
+	char* cursor = config;
+	while ((cursor = tb_ini_query_group(cursor, "font", &font)) != NULL)
 	{
 		char font_name[APPLICATION_STR_LEN];
-		tb_json_string(fonts.value, "{*", font_name, APPLICATION_STR_LEN, &i);
-
-		tb_json_element font;
-		tb_json_read_format(fonts.value, &font, "{'%s'", font_name);
+		tb_ini_name(&font, font_name, APPLICATION_STR_LEN);
 
 		char font_path[APPLICATION_PATH_LEN];
-		tb_json_string(font.value, "{'path'", font_path, APPLICATION_PATH_LEN, NULL);
+		tb_ini_query_string(font.start, NULL, "path", font_path, APPLICATION_STR_LEN);
 
-		float font_size = tb_json_float(font.value, "{'size'", NULL, 0.0f);
-
+		float font_size = tb_ini_query_float(font.start, NULL, "size", 0.0f);
 		GuiAddFont(gui, font_name, font_path, font_size);
 	}
 
-	free(json);
+	free(config);
 
 	GuiSetViewport(gui, w, h);
 
