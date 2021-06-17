@@ -39,7 +39,6 @@ size_t tb_ini_query_string(char* ini, const char* section, const char* prop, cha
 
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
 
-void tb_ini_print_element(tb_ini_element* element);
 const char* tb_ini_get_error_desc(tb_ini_error error);
 
 #endif /* !TB_INI_H */

@@ -76,7 +76,7 @@ char* tb_ini_read_value(char* ini, tb_ini_element* element)
 
     /* check if line is empty after value */
     char* check = tb_ini_skip_whitespaces(ini);
-    if (*check != '\n' && *check != '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, ini);
+    // if (*check != '\n' && *check != '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, ini);
 
     return tb_ini_make_element(element, start, ini);
 }
@@ -112,36 +112,47 @@ char* tb_ini_read_element(char* ini, tb_ini_element* element)
     return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
 }
 
-char* tb_ini_find_section(char* ini, const char* name, tb_ini_element* element)
+char* tb_ini_read_section(char* ini, const char* name, size_t len, tb_ini_element* element)
 {
-    if (!name) return ini;
+    char* start = ini;
 
-    size_t name_len = strlen(name);
-    while (*ini != '\0')
+    /* check if its the complete name */
+    ini = tb_ini_skip_whitespaces(ini + len);
+
+    if (*ini == ']')
     {
-        if (*ini != '[') ini++;
-        else if (strncmp(++ini, name, name_len) == 0)
-        {
-            char* start = ini;
-            
-            /* check if its the complete name */
-            ini = tb_ini_skip_whitespaces(ini + name_len);
-
-            if (*ini == ']')
-            {
-                element->name = start;
-                element->name_len = name_len;
-                return tb_ini_skip_whitespaces(++ini);
-            }
-        }
+        element->name = start;
+        element->name_len = len;
+        return tb_ini_skip_whitespaces(++ini);
     }
 
-    return NULL;
+    return ini;
 }
 
-char* tb_ini_find_group(char* ini, const char* name, tb_ini_element* element)
+char* tb_ini_read_group(char* ini, const char* name, size_t len, tb_ini_element* element)
+{
+    ini += len;
+    if (*ini == '.')
+    {
+        /* get section name */
+        char* start = ++ini;
+        while (*ini != ']' && *ini != '\0') ini++;
+
+        if (*ini == '\0') return NULL;
+
+        element->name = start;
+        element->name_len = ini - start;
+
+        return tb_ini_skip_whitespaces(++ini);
+    }
+    return ini;
+}
+
+char* tb_ini_find_section(char* ini, const char* name, uint8_t group, tb_ini_element* element)
 {
     if (!name) return ini;
+    element->name = NULL;
+    element->name_len = 0;
 
     size_t name_len = strlen(name);
     while (*ini != '\0')
@@ -149,20 +160,10 @@ char* tb_ini_find_group(char* ini, const char* name, tb_ini_element* element)
         if (*ini != '[') ini++;
         else if (strncmp(++ini, name, name_len) == 0)
         {
-            ini += name_len;
-            if (*ini == '.')
-            {
-                /* get section name */
-                char* start = ++ini;
-                while (*ini != ']')
-                {
-                    if (*ini == '\0') return NULL;
-                    ini++;
-                }
-                element->name = start;
-                element->name_len = ini - start;
-                return tb_ini_skip_whitespaces(++ini);
-            }
+            if (group)  ini = tb_ini_read_group(ini, name, name_len, element);
+            else        ini = tb_ini_read_section(ini, name, name_len, element);
+            if (!ini) break;
+            if (element->name_len > 0) return ini;
         }
     }
 
@@ -171,7 +172,7 @@ char* tb_ini_find_group(char* ini, const char* name, tb_ini_element* element)
 
 char* tb_ini_query(char* ini, const char* section, const char* prop, tb_ini_element* element)
 {
-    char* section_start = tb_ini_find_section(ini, section, element);
+    char* section_start = tb_ini_find_section(ini, section, 0, element);
 
     if (!section_start) return tb_ini_make_error(element, TB_INI_BAD_SECTION, NULL);
     if (!prop)          return tb_ini_make_section(element, section_start);
@@ -203,7 +204,7 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
 char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element)
 {
     if (!group) return NULL;
-    char* start = tb_ini_find_group(ini, group, element);
+    char* start = tb_ini_find_section(ini, group, 1, element);
 
     if (!start) return tb_ini_make_error(element, TB_INI_BAD_SECTION, NULL);
     return tb_ini_make_section(element, start);
