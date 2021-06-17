@@ -11,7 +11,6 @@ typedef enum
     TB_INI_BAD_VALUE,
     TB_INI_BAD_SECTION,
     TB_INI_BAD_PROPERTY,
-    TB_INI_UNTERMINATED_STR,
     TB_INI_UNKOWN_ERROR
 } tb_ini_error;
 

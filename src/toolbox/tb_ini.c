@@ -8,7 +8,7 @@
 
 char* tb_ini_skip_whitespaces(char* cursor)
 {
-    while ((*cursor != '\0') && isspace(*cursor)) cursor++;
+    while (cursor && *cursor != '\0' && isspace(*cursor)) cursor++;
     return cursor;
 }
 
@@ -37,23 +37,22 @@ char* tb_ini_make_error(tb_ini_element* element, tb_ini_error error, char* pos)
     return pos;
 }
 
-/* TODO: make last section */
 char* tb_ini_make_section(tb_ini_element* element, char* start)
 {
     element->start = start;
     element->len = 0;
-    while (*start != '\0' && *start != '[')
+    while (start && *start != '\0' && *start != '[')
     {
         uint8_t not_blank = 0;
-        while (*start != '\0' && *start != '\n')
+        while (start && *start != '\0' && *start != '\n')
         {
             if (!isspace(*start)) not_blank = 1;
 
-            if (not_blank)  start = strchr(start, '\n');
+            if (not_blank)  start = strpbrk(start, "\n\0");
             else            start++;
         }
         element->len += not_blank;
-        if (*start != '\0') start++;
+        if (start && *start != '\0') start++;
     }
     element->error = TB_INI_OK;
     return element->start;
@@ -62,20 +61,22 @@ char* tb_ini_make_section(tb_ini_element* element, char* start)
 char* tb_ini_read_value(char* ini, tb_ini_element* element)
 {
     char* start = ini;
+    /* read quoted value */
     if (*ini == '\"')
     {
         while (*ini != '\0' && *ini != '\n' && *ini != '\"') ini++;
 
-        if (*ini++ != '\"') return tb_ini_make_error(element, TB_INI_UNTERMINATED_STR, start);
+        if (*ini++ != '\"') return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
 
         return tb_ini_make_element(element, start, ini);
     }
 
-    while (!isspace(*ini))
-    {
-        if (*ini == '\n' || *ini == '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, ini);
-        ini++;
-    }
+    /* read standard value */
+    while (!isspace(*ini) && *ini != '\n' && *ini != '\0') ini++;
+
+    /* check if line is empty after value */
+    char* check = tb_ini_skip_whitespaces(ini);
+    if (*check != '\n' && *check != '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, ini);
 
     return tb_ini_make_element(element, start, ini);
 }
@@ -185,14 +186,14 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
 
     if (query_len == 0) return tb_ini_read_element(section, element);
 
-    while (*section != '\0' && *section != '[')
+    while (section && *section != '\0' && *section != '[')
     {
         /* compare key */
         if (strncmp(section, prop, query_len) == 0)
             return tb_ini_read_element(section, element);
 
         /* skip to next property */
-        section = strchr(section, '\n');
+        section = strpbrk(section, "\n\0");
         section = tb_ini_skip_whitespaces(section);
     }
     return NULL;
@@ -256,7 +257,6 @@ const char* tb_ini_get_error_desc(tb_ini_error error)
     case TB_INI_BAD_VALUE:          return "bad value";
     case TB_INI_BAD_SECTION:        return "bad section";
     case TB_INI_BAD_PROPERTY:       return "bad property";
-    case TB_INI_UNTERMINATED_STR:   return "unterminated string";
     default:                        return "unkown error";
     }
 }
