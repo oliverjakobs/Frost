@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include <stdio.h>
-
 char* tb_ini_skip_whitespaces(char* cursor)
 {
     while (cursor && *cursor != '\0' && isspace(*cursor)) cursor++;
@@ -72,11 +70,15 @@ char* tb_ini_read_value(char* ini, tb_ini_element* element)
     }
 
     /* read standard value */
-    while (!isspace(*ini) && *ini != '\n' && *ini != '\0') ini++;
+    while (!isspace(*ini) && *ini != '\0') ini++;
 
     /* check if line is empty after value */
-    char* check = tb_ini_skip_whitespaces(ini);
-    // if (*check != '\n' && *check != '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, ini);
+    char* check = ini;
+    while (*check != '\n' && *check != '\0')
+    {
+        if (!isspace(*check)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, check);
+        check++;
+    }
 
     return tb_ini_make_element(element, start, ini);
 }
@@ -162,8 +164,7 @@ char* tb_ini_find_section(char* ini, const char* name, uint8_t group, tb_ini_ele
         {
             if (group)  ini = tb_ini_read_group(ini, name, name_len, element);
             else        ini = tb_ini_read_section(ini, name, name_len, element);
-            if (!ini) break;
-            if (element->name_len > 0) return ini;
+            if (!ini || element->name_len > 0) return ini;
         }
     }
 
