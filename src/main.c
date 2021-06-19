@@ -9,43 +9,30 @@ SceneEditor scene_editor;
 
 FrostDebugger debugger;
 
-GuiManager gui;
-
 MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
-	/* ---------------| Config |------------------------------------------ */
-	FrostLoadIgnis(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	FrostLoadRenderer("config.ini");
+	FontRendererBindFontColor(GuiGetFont("gui"), IGNIS_WHITE);
+
 	FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.json");
-
-	GuiInit(&gui, (float)w, (float)h, "config.ini", FrostGetAllocator());
-	FontRendererBindFontColor(GuiGetFont(&gui, "gui"), IGNIS_WHITE);
-
-	FrostDebuggerInit(&debugger, 1, GuiGetFont(&gui, "gui"));
+	FrostDebuggerInit(&debugger, 1, GuiGetFont("gui"));
 	FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
 	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_NONE);
 
-	return 1;
+	return MINIMAL_OK;
 }
 
 void OnDestroy(MinimalApp* app)
 {
 	SceneDestroy(&scene);
-
-	FontRendererDestroy();
-	Primitives2DDestroy();
-	BatchRenderer2DDestroy();
-	Renderer2DDestroy();
-
-	GuiDestroy(&gui);
+	FrostDestroy(app);
 }
 
 MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
 	if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
 	{
-		GuiSetViewport(&gui, (float)e->lParam, (float)e->rParam);
+		GuiSetViewport((float)e->lParam, (float)e->rParam);
 		glViewport(0, 0, e->lParam, e->rParam);
 	}
 
@@ -95,7 +82,7 @@ void OnRenderUI(MinimalApp* app)
 {
 	if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderUI(&scene);
 
-	FrostDebuggerOnRenderUI(&debugger, app, &gui);
+	FrostDebuggerOnRenderUI(&debugger, app);
 }
 
 static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }
@@ -112,7 +99,7 @@ int main()
 	MinimalSetRenderDebugCallback(&app, OnRenderDebug);
 	MinimalSetRenderUICallback(&app, OnRenderUI);
 
-	if (FrostLoadMinimal(&app, "config.ini"))
+	if (FrostLoad(&app, "config.ini"))
 		MinimalRun(&app, ClearBuffer);
 
 	MinimalDestroy(&app);

@@ -3,7 +3,6 @@
 
 #include "Frost.h"
 
-#include "GUI/Gui.h"
 #include "Console/Console.h"
 
 typedef struct
@@ -23,7 +22,7 @@ void FrostDebuggerToggleInfo(FrostDebugger* debugger);
 
 MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e);
 void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime);
-void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app, const GuiManager* gui);
+void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app);
 
 void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer);
 

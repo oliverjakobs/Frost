@@ -5,25 +5,19 @@
 #include "Ignis/Ignis.h"
 
 #include "toolbox/tb_mem.h"
-#include "toolbox/tb_hashmap.h"
 
-typedef struct
-{
-	float width, height;
-	mat4 screen_projection;
-	
-	tb_hashmap fonts;	/* <str,IgnisFont> */
-} GuiManager;
+int GuiInit(float w, float h, tb_allocator* allocator);
+void GuiDestroy();
 
-int GuiInit(GuiManager* gui, float w, float h, const char* path, tb_allocator* allocator);
-void GuiDestroy(GuiManager* gui);
+IgnisFont* GuiAddFont(const char* name, const char* path, float size);
 
-IgnisFont* GuiAddFont(GuiManager* gui, const char* name, const char* path, float size);
+IgnisFont* GuiGetFont(const char* name);
+const char* GuiGetFontName(const IgnisFont* font);
 
-IgnisFont* GuiGetFont(const GuiManager* gui, const char* name);
-const char* GuiGetFontName(const GuiManager* gui, const IgnisFont* font);
+void GuiSetViewport(float w, float h);
 
-void GuiSetViewport(GuiManager* gui, float w, float h);
-const float* GuiGetScreenProjPtr(const GuiManager* gui);
+float GuiGetScreenWidth();
+float GuiGetScreenHeight();
+const float* GuiGetScreenProjPtr();
 
 #endif // !GUI_H

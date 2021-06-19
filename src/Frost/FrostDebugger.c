@@ -59,9 +59,9 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 	FontRendererTextFieldLine("Position: %4.2f, %4.2f", scene->camera.position.x, scene->camera.position.y);
 }
 
-void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app, const GuiManager* gui)
+void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 {
-	FontRendererStart(GuiGetScreenProjPtr(gui));
+	FontRendererStart(GuiGetScreenProjPtr());
 
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
@@ -69,7 +69,7 @@ void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app, con
 	if (debugger->show_info)
 	{
 		/* Settings */
-		FontRendererTextFieldBegin(gui->width - 220.0f, 8.0f, 8.0f);
+		FontRendererTextFieldBegin(GuiGetScreenWidth() - 220.0f, 8.0f, 8.0f);
 
 		FontRendererTextFieldLine("F1: Toggle edit mode");
 		FontRendererTextFieldLine("F2: Toggle map edit mode");
@@ -80,13 +80,13 @@ void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app, con
 		FontRendererTextFieldLine("F9: Toggle overlay");
 
 		/* Debug info */
-		FrostDebugRenderInfo(debugger, debugger->scene, gui->width - 480.0f, 8.0f);
+		FrostDebugRenderInfo(debugger, debugger->scene, GuiGetScreenWidth() - 480.0f, 8.0f);
 	}
 
 	FontRendererFlush();
 
-	ConsoleRenderBackground(&debugger->console, 0.0f, gui->height, gui->width, 32.0f, GuiGetScreenProjPtr(gui));
-	ConsoleRender(&debugger->console, 0.0f, gui->height, 8.0f, GuiGetScreenProjPtr(gui));
+	ConsoleRenderBackground(&debugger->console, 0.0f, GuiGetScreenHeight(), GuiGetScreenWidth(), 32.0f, GuiGetScreenProjPtr());
+	ConsoleRender(&debugger->console, 0.0f, GuiGetScreenHeight(), 8.0f, GuiGetScreenProjPtr());
 }
 
 typedef enum
