@@ -19,7 +19,7 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 {
 	/* ingis initialization */
-	ignisSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_realloc, tb_mem_free);
+	ignisSetAllocator(DebugMemoryGetAllocator(), tb_mem_malloc, tb_mem_realloc, tb_mem_free);
 	ignisSetErrorCallback(FrostIgnisErrorCallback);
 
 	int debug = 0;
@@ -69,7 +69,7 @@ int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLe
 
 int FrostLoadGui(char* config, float w, float h)
 {
-	if (!GuiInit(w, h, FrostGetAllocator())) return MINIMAL_FAIL;
+	if (!GuiInit(w, h, DebugMemoryGetAllocator())) return MINIMAL_FAIL;
 
 	tb_ini_element font;
 	while ((config = tb_ini_query_group(config, "font", &font)) != NULL)
@@ -89,7 +89,7 @@ int FrostLoadGui(char* config, float w, float h)
 
 int FrostLoad(MinimalApp* app, const char* path)
 {
-	char* config = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+	char* config = tb_file_read_alloc(path, "rb", DebugMalloc, DebugFree);
 
 	if (!config)
 	{
@@ -116,7 +116,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 	char gl_version[APPLICATION_VER_STR_LEN];
 	tb_ini_query_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-	MinimalSetAllocator(FrostGetAllocator(), tb_mem_malloc, tb_mem_free);
+	MinimalSetAllocator(DebugMemoryGetAllocator(), tb_mem_malloc, tb_mem_free);
 	MinimalLoadCB load = MinimalSetLoadCallback(app, NULL);
 	if (!MinimalLoad(app, title, w, h, gl_version))
 	{
@@ -141,7 +141,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 		MinimalEnableVsync(app, tb_ini_query_bool(section.start, NULL, "vsync", 0));
 	}
 
-	FrostFree(config);
+	DebugFree(config);
 
 	MINIMAL_INFO("[Minimal] Version: %s", MinimalGetVersionString());
 	MINIMAL_INFO("[OpenGL] Version: %s", ignisGetGLVersion());
@@ -165,7 +165,7 @@ void FrostDestroy(MinimalApp* app)
 
 int FrostLoadScene(Scene* scene, float w, float h, const char* start)
 {
-	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostGetAllocator());
+	SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, DebugMemoryGetAllocator());
 	FrostLoadEcs(&scene->ecs);
 
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
@@ -229,6 +229,6 @@ int FrostLoadEcs(Ecs* ecs)
 	EcsLoadDataComponents(ecs, data_comps, data_size);
 	EcsLoadOrderComponents(ecs, order_comps, order_size);
 
-	return 1;
+	return MINIMAL_OK;
 }
 

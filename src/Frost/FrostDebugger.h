@@ -3,7 +3,7 @@
 
 #include "Frost.h"
 
-#include "Console/Console.h"
+#include "Debug/Console.h"
 
 typedef struct
 {

@@ -1,13 +1,13 @@
 #include "SceneLoader.h"
 
 #include "FrostParser.h"
-#include "FrostMem.h"
+#include "Debug/Memory.h"
 
 #include "toolbox/tb_file.h"
 
 static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*load_func)(Scene*, char*))
 {
-	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+	char* json = tb_file_read_alloc(path, "rb", DebugMalloc, DebugFree);
 	if (!json)
 	{
 		MINIMAL_ERROR("[Scenes] Failed to read file (%s).", path);
@@ -15,7 +15,7 @@ static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*loa
 	}
 
 	SceneLoadError error = load_func(scene, json);
-	FrostFree(json);
+	DebugFree(json);
 
 	if (error != SCENE_LOAD_OK)
 	{
@@ -41,7 +41,7 @@ int SceneLoad(Scene* scene, const char* path)
 {
 	if (!scene) return 0;
 
-	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+	char* json = tb_file_read_alloc(path, "rb", DebugMalloc, DebugFree);
 
 	if (!json)
 	{
@@ -55,7 +55,7 @@ int SceneLoad(Scene* scene, const char* path)
 
 	if (!SceneLoadFromFile(scene, map_path, SceneLoadMap))
 	{
-		FrostFree(json);
+		DebugFree(json);
 		return 0;
 	}
 
@@ -124,7 +124,7 @@ int SceneLoad(Scene* scene, const char* path)
 	char save_path[APPLICATION_PATH_LEN];
 	tb_json_string(json, "{'save'", save_path, APPLICATION_PATH_LEN, NULL);
 
-	FrostFree(json);
+	DebugFree(json);
 
 	return SceneLoadFromFile(scene, save_path, SceneLoadSaveState);
 }

@@ -1,7 +1,5 @@
 #include "FrostDebugger.h"
 
-#include "Console/Command.h"
-
 void FrostDebuggerInit(FrostDebugger* debugger, int show_info, IgnisFont* font)
 {
 	debugger->show_info = show_info;
@@ -38,7 +36,7 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 {
 	FontRendererTextFieldBegin(x, y, 8.0f);
 
-	FontRendererTextFieldLine("Memory: %llu bytes", FrostMemGetBytes());
+	FontRendererTextFieldLine("Memory: %llu bytes", DebugMemoryGetBytes());
 	// FontRendererTextFieldLine("Peak: %llu bytes",		FrostMemGetPeak());
 	FontRendererTextFieldLine("------------------------");
 
@@ -111,16 +109,16 @@ static ConsoleCmd _CmdGetType(const char* buffer)
 		if (cmd_length > 1)
 			switch (buffer[1])
 			{
-			case 'h': cmd = cmd_check_keyword(buffer, "change", CONSOLE_CMD_CHANGE); break;
-			case 'r': cmd = cmd_check_keyword(buffer, "create", CONSOLE_CMD_CREATE); break;
+			case 'h': cmd = ConsoleCheckCMDKeyword(buffer, "change", CONSOLE_CMD_CHANGE); break;
+			case 'r': cmd = ConsoleCheckCMDKeyword(buffer, "create", CONSOLE_CMD_CREATE); break;
 			}
 		break;
-	case 'l': cmd = cmd_check_keyword(buffer, "list", CONSOLE_CMD_LIST); break;
+	case 'l': cmd = ConsoleCheckCMDKeyword(buffer, "list", CONSOLE_CMD_LIST); break;
 	case 'r':
-		if (cmd = cmd_check_keyword(buffer, "remove", CONSOLE_CMD_REMOVE)) break;
-		if (cmd = cmd_check_keyword(buffer, "reload", CONSOLE_CMD_RELOAD)) break;
+		if (cmd = ConsoleCheckCMDKeyword(buffer, "remove", CONSOLE_CMD_REMOVE)) break;
+		if (cmd = ConsoleCheckCMDKeyword(buffer, "reload", CONSOLE_CMD_RELOAD)) break;
 		break;
-	case 's': cmd = cmd_check_keyword(buffer, "save", CONSOLE_CMD_SAVE); break;
+	case 's': cmd = ConsoleCheckCMDKeyword(buffer, "save", CONSOLE_CMD_SAVE); break;
 	}
 
 	return cmd;
@@ -139,7 +137,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 	case CONSOLE_CMD_CHANGE:
 	{
 		char* args[1];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 1);
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 6, args, 1);
 
 		if (!spec) break;
 
@@ -153,7 +151,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 	}
 	case CONSOLE_CMD_RELOAD:
 	{
-		char* spec = cmd_get_args(cmd_buffer, 6, NULL, 0);
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 6, NULL, 0);
 		if (!spec) break;
 
 		if (strcmp(spec, "scene") == 0)
@@ -167,7 +165,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 	case CONSOLE_CMD_CREATE:
 	{
 		char* args[2];
-		char* spec = cmd_get_args(cmd_buffer, 6, args, 2);
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 6, args, 2);
 
 		if (!spec) break;
 
@@ -190,7 +188,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 	}
 	case CONSOLE_CMD_LIST:
 	{
-		char* spec = cmd_get_args(cmd_buffer, 4, NULL, 0);
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 4, NULL, 0);
 
 		if (!spec) break;
 
@@ -228,7 +226,7 @@ void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
 		break;
 	case CONSOLE_CMD_SAVE:
 	{
-		char* spec = cmd_get_args(cmd_buffer, 4, NULL, 0);
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 4, NULL, 0);
 
 		if (!spec) break;
 
