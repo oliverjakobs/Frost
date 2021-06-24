@@ -134,7 +134,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 	int status = load ? load(app, w, h) : MINIMAL_OK;
 
 	/* apply settings */
-	tb_ini_query(config, NULL, "options", &section);
+	tb_ini_query(config, "options", NULL, &section);
 	if (section.error == TB_INI_OK)
 	{
 		MinimalEnableDebug(app, tb_ini_query_bool(section.start, NULL, "debug", 0));

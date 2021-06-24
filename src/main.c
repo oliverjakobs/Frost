@@ -19,6 +19,10 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 
 	SceneEditorInit(&scene_editor, &scene, 400.0f, 4, SCENE_EDIT_NONE);
 
+	/* temp event registration */
+	EcsEventSubscribe(INTERACTION_TOGGLE_DOOR, InteractionToggleDoor);
+	EcsEventSubscribe(INTERACTION_OPEN_INVENTORY, InteractionOpenInventory);
+
 	return MINIMAL_OK;
 }
 

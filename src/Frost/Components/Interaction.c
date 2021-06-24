@@ -2,6 +2,8 @@
 
 #include "Frost/FrostParser.h"
 
+#include "toolbox/toolbox.h"
+
 void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
 {
 	if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
@@ -31,7 +33,7 @@ void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
 	}
 }
 
-int InteractionToggleDoor(Ecs* ecs, EcsEntityID entity)
+int InteractionToggleDoor(Ecs* ecs, EcsEntityID entity, int i)
 {
 	RigidBody* body = EcsGetDataComponent(ecs, entity, COMPONENT_RIGID_BODY);
 	if (!body) return 0;
@@ -54,12 +56,18 @@ int InteractionOpenInventory(Ecs* ecs, EcsEntityID entity, int active)
 	return 1;
 }
 
-int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active)
+void DispatchInteraction(Ecs* ecs, EcsEntityID entity, const Interactable* interactable, float distance)
 {
-	switch (interaction)
+	if (interactable->type == INTERACTION_TYPE_TOGGLE)
 	{
-	case INTERACTION_TOGGLE_DOOR:		return InteractionToggleDoor(ecs, entity);
-	case INTERACTION_OPEN_INVENTORY:	return InteractionOpenInventory(ecs, entity, active);
-	default: return 0;
+		if (tb_betweenf(interactable->range_min, interactable->range_max, distance) && MinimalKeyReleased(interactable->key))
+			EcsEventThrow(ecs, interactable->interaction, entity, 1);
+	}
+	else if (interactable->type == INTERACTION_TYPE_RANGED)
+	{
+		if (distance <= interactable->range_min && MinimalKeyReleased(interactable->key))
+			EcsEventThrow(ecs, interactable->interaction, entity, 1);
+		else if (distance >= interactable->range_max)
+			EcsEventThrow(ecs, interactable->interaction, entity, 0);
 	}
 }

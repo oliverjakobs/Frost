@@ -4,6 +4,8 @@
 #include "EcsMap.h"
 #include "EcsList.h"
 
+#include "EcsEvent.h"
+
 #define ECS_REQUIRE_MAP(Comp, ecs, var, iter, type) \
 	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type); \
 	if (!var) continue

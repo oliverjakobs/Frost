@@ -63,6 +63,9 @@ typedef struct
 
 void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity);
 
-int DispatchInteraction(Ecs* ecs, EcsEntityID entity, Interaction interaction, int active);
+int InteractionToggleDoor(Ecs* ecs, EcsEntityID entity, int i);
+int InteractionOpenInventory(Ecs* ecs, EcsEntityID entity, int active);
+
+void DispatchInteraction(Ecs* ecs, EcsEntityID entity, const Interactable* interactable, float distance);
 
 #endif /* !INTERACTION_H */
