@@ -5,22 +5,22 @@
 
 #include "Minimal/Minimal.h"
 
-static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
+static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, const void* key, void* value)
 {
 	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);
 
 	if (!entry->key) return 0;
 
-	entry->value = tb_mem_dup(allocator, value, sizeof(IgnisTexture2D));
+	entry->val = tb_mem_dup(allocator, value, sizeof(IgnisTexture2D));
 
-	return entry->value != NULL;
+	return entry->val != NULL;
 }
 
 static void ResourcesFreeEntry(void* allocator, tb_hashmap_entry* entry)
 {
-	tb_mem_free(allocator, entry->key);
-	ignisDeleteTexture2D(entry->value);
-	tb_mem_free(allocator, entry->value);
+	tb_mem_constfree(allocator, entry->key);
+	ignisDeleteTexture2D(entry->val);
+	tb_mem_free(allocator, entry->val);
 }
 
 int ResourcesInit(Resources* res, void* allocator)
@@ -72,7 +72,7 @@ const char* ResourcesGetTexture2DName(const Resources* res, const IgnisTexture2D
 {
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&res->textures); iter; iter = tb_hashmap_iter_next(&res->textures, iter))
 	{
-		if (texture == tb_hashmap_iter_get_value(iter))
+		if (texture == tb_hashmap_iter_get_val(iter))
 			return tb_hashmap_iter_get_key(iter);
 	}
 

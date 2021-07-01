@@ -49,6 +49,11 @@ void tb_mem_free(tb_allocator* allocator, void* block)
     else                                free(hdr);
 }
 
+void tb_mem_constfree(tb_allocator* allocator, const void* block)
+{
+    tb_mem_free(allocator, (void*)block);
+}
+
 void* tb_mem_dup(tb_allocator* allocator, const void* src, size_t size)
 {
     void* dst = tb_mem_malloc(allocator, size);

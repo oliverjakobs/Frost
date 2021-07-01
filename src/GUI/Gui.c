@@ -17,22 +17,22 @@ typedef struct
 
 static GuiManager _gui;
 
-static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, void* key, void* value)
+static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, const void* key, void* value)
 {
 	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);
 
 	if (!entry->key) return 0;
 
-	entry->value = tb_mem_dup(allocator, value, sizeof(IgnisFont));
+	entry->val = tb_mem_dup(allocator, value, sizeof(IgnisFont));
 
-	return entry->value != NULL;
+	return entry->val != NULL;
 }
 
 static void GuiFreeMapEntry(void* allocator, tb_hashmap_entry* entry)
 {
-	tb_mem_free(allocator, entry->key);
-	ignisDeleteFont(entry->value);
-	tb_mem_free(allocator, entry->value);
+	tb_mem_constfree(allocator, entry->key);
+	ignisDeleteFont(entry->val);
+	tb_mem_free(allocator, entry->val);
 }
 
 int GuiInit(float w, float h, tb_allocator* allocator)
@@ -83,7 +83,7 @@ const char* GuiGetFontName(const IgnisFont* font)
 {
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&_gui.fonts); iter; iter = tb_hashmap_iter_next(&_gui.fonts, iter))
 	{
-		if (font == tb_hashmap_iter_get_value(iter)) return tb_hashmap_iter_get_key(iter);
+		if (font == tb_hashmap_iter_get_val(iter)) return tb_hashmap_iter_get_key(iter);
 	}
 
 	return NULL;

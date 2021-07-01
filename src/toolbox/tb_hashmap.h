@@ -5,9 +5,17 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct _tb_hashmap_iter tb_hashmap_iter;
+typedef struct tb_hashmap_iter tb_hashmap_iter;
+typedef struct tb_hashmap_entry tb_hashmap_entry;
 
-#define TB_HASHMAP_INSERT(map, key, value) 
+typedef size_t (*tb_hashmap_hash) (const void* key);
+typedef int    (*tb_hashmap_cmp)  (const void* left, const void* right);
+
+typedef void* (*tb_hashmap_alloc)(void* allocator, size_t count, size_t size);
+typedef void  (*tb_hashmap_free) (void* allocator, void* block);
+
+typedef int  (*tb_hashmap_entry_alloc)(void* allocator, tb_hashmap_entry* entry, const void* key, void* value);
+typedef void (*tb_hashmap_entry_free) (void* allocator, tb_hashmap_entry* entry);
 
 typedef enum
 {
@@ -18,26 +26,20 @@ typedef enum
     TB_HASHMAP_KEY_NOT_FOUND
 } tb_hashmap_error;
 
-typedef struct
+struct tb_hashmap_entry
 {
-    void* key;
-    void* value;
-} tb_hashmap_entry;
-
-
-typedef void* (*tb_hashmap_alloc)(void* allocator, size_t count, size_t size);
-typedef void  (*tb_hashmap_free) (void* allocator, void* block);
-
-typedef int  (*tb_hashmap_entry_alloc)(void* allocator, tb_hashmap_entry* entry, void* key, void* value);
-typedef void (*tb_hashmap_entry_free) (void* allocator, tb_hashmap_entry* entry);
+    const void* key;
+    void* val;
+};
 
 typedef struct
 {
     tb_hashmap_entry* table;
     size_t capacity;
     size_t used;
-    size_t  (*hash)(const void*);
-    int     (*key_cmp)(const void*, const void*);
+
+    tb_hashmap_hash hash;
+    tb_hashmap_cmp  cmp;
 
     /* memory */
     void* allocator;
@@ -62,14 +64,13 @@ typedef struct
  *
  * Returns TB_HASHMAP_OK on success and tb_hashmap_error on failure.
  */
-tb_hashmap_error tb_hashmap_init(tb_hashmap* map, size_t(*hash)(const void*), int (*cmp)(const void*, const void*), size_t initial_capacity);
+tb_hashmap_error tb_hashmap_init(tb_hashmap* map, tb_hashmap_hash hash, tb_hashmap_cmp cmp, size_t initial_capacity);
 
-/*
- * Free the hashmap and all associated memory.
- */
+/* Free the hashmap and all associated memory. */
 void tb_hashmap_destroy(tb_hashmap* map);
 
-tb_hashmap_error tb_hashmap_rehash(tb_hashmap* map, size_t new_capacity);
+/* Remove all entries. */
+void tb_hashmap_clear(tb_hashmap* map);
 
 /*
  * Insert an entry to the hashmap.  
@@ -85,33 +86,8 @@ void* tb_hashmap_insert(tb_hashmap* map, const void* key, void* value);
  */
 tb_hashmap_error tb_hashmap_remove(tb_hashmap* map, const void *key);
 
-/*
- * Remove all entries.
- */
-void tb_hashmap_clear(tb_hashmap* map);
-
-/*
- * Return the value pointer, or NULL if no entry was found.
- */
+/* Return the value pointer, or NULL if no entry was found. */
 void* tb_hashmap_find(const tb_hashmap* map, const void* key);
-
-/*
- * Return the key pointer, or NULL if no entry was found.
- */
-const void* tb_hashmap_get_key_ptr(const tb_hashmap* map, const void* key);
-
-/*
- * Find the hashmap entry with the specified key, or an empty slot.
- * Returns NULL if the entire table has been searched without finding a match.
- */
-tb_hashmap_entry* tb_hashmap_entry_find(const tb_hashmap* map, const void* key, int find_empty);
-
-
-/*
- * Removes the specified entry and processes the proceeding entries to reduce the load factor and keep the 
- * chain continuous. This is a required step for hash maps using linear probing.
- */
-void tb_hashmap_entry_remove(tb_hashmap* map, tb_hashmap_entry* removed_entry);
 
 /*
  * Get a new hashmap iterator.
@@ -133,19 +109,13 @@ tb_hashmap_iter* tb_hashmap_iter_next(const tb_hashmap* map, const tb_hashmap_it
  */
 tb_hashmap_iter* tb_hashmap_iter_remove(tb_hashmap* map, const tb_hashmap_iter* iter);
 
-/*
- * Return the key of the entry pointed to by the iterator.
- */
+/* Return the key of the entry pointed to by the iterator. */
 const void* tb_hashmap_iter_get_key(const tb_hashmap_iter* iter);
 
-/*
- * Return the value of the entry pointed to by the iterator.
- */
-void* tb_hashmap_iter_get_value(const tb_hashmap_iter* iter);
+/* Return the value of the entry pointed to by the iterator. */
+void* tb_hashmap_iter_get_val(const tb_hashmap_iter* iter);
 
-/* 
- * Hash functions
- */
+/* Hash utilities */
 size_t tb_hash_string(const char* str);
 
 uint32_t tb_hash_uint32(uint32_t i);

@@ -18,6 +18,7 @@ void* tb_mem_malloc(tb_allocator* allocator, size_t size);
 void* tb_mem_calloc(tb_allocator* allocator, size_t count, size_t size);
 void* tb_mem_realloc(tb_allocator* allocator, void* block, size_t size);
 void  tb_mem_free(tb_allocator* allocator, void* block);
+void  tb_mem_constfree(tb_allocator* allocator, const void* block);
 
 void* tb_mem_dup(tb_allocator* allocator, const void* src, size_t size);
 
