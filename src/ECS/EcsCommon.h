@@ -10,13 +10,13 @@ void EcsEntityResetIDCounter();
 EcsEntityID EcsEntityGetNextID();
 
 typedef void (*EcsReleaseFunc)(void*);
-typedef int (*EcsCmpFunc)(const void*, const void*);
+typedef int  (*EcsCmpFunc)(const void*, const void*);
 
 typedef uint32_t EcsComponentType;
 typedef struct
 {
-	EcsEntityID entity;
-	void* data;
+    EcsEntityID entity;
+    void* data;
 } EcsEntry;
 
 int EcsEntryFill(EcsEntry* comp, EcsEntityID entity, const void* data, size_t size);
@@ -26,6 +26,9 @@ int EcsEntryCmpID(const EcsEntry* left, const EcsEntry* right);
 int EcsEntryCmp(const EcsEntry* left, const EcsEntry* right, EcsCmpFunc cmp);
 
 typedef struct Ecs Ecs;
+
+typedef uint32_t EcsEventType;
+typedef void (*EcsEventCallback)(Ecs*, EcsEntityID, int);
 
 typedef void (*EcsUpdateCallback)(Ecs*, void*, float);
 typedef void (*EcsRenderCallback)(const Ecs*, const void*, const float*);

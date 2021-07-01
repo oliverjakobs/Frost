@@ -4,47 +4,50 @@
 #include "EcsMap.h"
 #include "EcsList.h"
 
-#include "EcsEvent.h"
-
 #define ECS_REQUIRE_MAP(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type); \
-	if (!var) continue
+    Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type); \
+    if (!var) continue
 
 #define ECS_OPTIONAL_MAP(Comp, ecs, var, iter, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type)
+    Comp* var = EcsGetDataComponent(ecs, EcsMapIterKey(iter), type)
 
 #define ECS_REQUIRE_LIST(Comp, ecs, var, list, index, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type); \
-	if (!var) continue
+    Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type); \
+    if (!var) continue
 
 #define ECS_OPTIONAL_LIST(Comp, ecs, var, list, index, type) \
-	Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type)
+    Comp* var = EcsGetDataComponent(ecs, EcsListEntityAt(list, index), type)
+
+#define ECS_MAX_EVENTS 8
 
 typedef struct
 {
-	EcsUpdateCallback update;
+    EcsUpdateCallback update;
 } EcsUpdateSystem;
 
 typedef enum
 {
-	ECS_RENDER_STAGE_PRIMARY,
-	ECS_RENDER_STAGE_DEBUG,
-	ECS_RENDER_STAGE_UI
+    ECS_RENDER_STAGE_PRIMARY,
+    ECS_RENDER_STAGE_DEBUG,
+    ECS_RENDER_STAGE_UI
 } EcsRenderStage;
 
 typedef struct
 {
-	EcsRenderStage stage;
-	EcsRenderCallback render;
+    EcsRenderStage stage;
+    EcsRenderCallback render;
 } EcsRenderSystem;
 
 struct Ecs
 {
-	EcsUpdateSystem* systems_update;
-	EcsRenderSystem* systems_render;
+    EcsUpdateSystem* systems_update;
+    EcsRenderSystem* systems_render;
 
-	EcsMap* data_components;
-	EcsList* order_components;
+    EcsMap* data_components;
+    EcsList* order_components;
+
+    /* Events */
+    EcsEventCallback subscriptions[ECS_MAX_EVENTS];
 };
 
 void EcsInit(Ecs* ecs);
@@ -81,5 +84,9 @@ void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, 
 void* EcsGetOrderComponent(const Ecs* ecs, EcsEntityID entity, EcsComponentType type);
 
 void EcsRemoveOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type);
+
+/* Events */
+void EcsEventSubscribe(Ecs* ecs, EcsEventType type, EcsEventCallback callback);
+void EcsEventThrow(Ecs* ecs, EcsEventType type, EcsEntityID id, int i);
 
 #endif /* !ECS_H */
