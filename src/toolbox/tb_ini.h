@@ -2,7 +2,6 @@
 #define TB_INI_H
 
 #include <stddef.h>
-#include <stdint.h>
 
 typedef enum
 {
@@ -39,10 +38,10 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
 char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element);
 
 /* utility functions to directly convert query to different types */
-uint8_t tb_ini_query_bool(char* ini, const char* section, const char* prop, uint8_t def);
-int32_t tb_ini_query_int(char* ini, const char* section, const char* prop, int32_t def);
-float tb_ini_query_float(char* ini, const char* section, const char* prop, float def);
-size_t tb_ini_query_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len);
+int     tb_ini_query_bool(char* ini, const char* section, const char* prop, int def);
+int     tb_ini_query_int(char* ini, const char* section, const char* prop, int def);
+float   tb_ini_query_float(char* ini, const char* section, const char* prop, float def);
+size_t  tb_ini_query_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len);
 
 /* copies the name of the element into the dst buffer (copies at most dst_len bytes)*/
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
