@@ -13,13 +13,12 @@ typedef enum
     TB_INI_UNKOWN_ERROR
 } tb_ini_error;
 
-/* in place query functions */
 typedef struct
 {
     char* name;
     size_t name_len;    /* bytelen of name */
     char* start;
-    size_t len;         /* bytelen of value or num of properites if it is a section */
+    size_t len;         /* bytelen of value or num of properites for sections */
     tb_ini_error error;
 } tb_ini_element;
 
@@ -46,6 +45,7 @@ size_t  tb_ini_query_string(char* ini, const char* section, const char* prop, ch
 /* copies the name of the element into the dst buffer (copies at most dst_len bytes)*/
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
 
+/* returns a string describing the error */
 const char* tb_ini_get_error_desc(tb_ini_error error);
 
 #endif /* !TB_INI_H */
