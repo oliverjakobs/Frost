@@ -22,42 +22,19 @@ void EcsEntryClear(EcsEntry* comp, EcsReleaseFunc release)
     EcsMemFree(comp->data);
 }
 
-int EcsEntryCmpID(const EcsEntry* left, const EcsEntry* right)
-{
-    return left->entity - right->entity;
-}
+int EcsEntryCmpID(const EcsEntry* l, const EcsEntry* r)               { return l->entity - r->entity; }
+int EcsEntryCmp(const EcsEntry* l, const EcsEntry* r, EcsCmpFunc cmp) { return cmp ? cmp(l->data, r->data) : l->entity - r->entity; }
 
-int EcsEntryCmp(const EcsEntry* left, const EcsEntry* right, EcsCmpFunc cmp)
-{
-    return cmp ? cmp(left->data, right->data) : left->entity - right->entity;
-}
-
-void* EcsMemMalloc(size_t size)
-{
-    return malloc(size);
-}
-
-void* EcsMemCalloc(size_t count, size_t size)
-{
-    return calloc(count, size);
-}
-
-void* EcsMemRealloc(void* block, size_t size)
-{
-    return realloc(block, size);
-}
+void* EcsMemMalloc(size_t size)               { return malloc(size); }
+void* EcsMemCalloc(size_t count, size_t size) { return calloc(count, size); }
+void* EcsMemRealloc(void* block, size_t size) { return realloc(block, size); }
+void  EcsMemFree(void* block)                 { free(block); }
 
 void* EcsMemDup(const void* block, size_t size)
 {
     void* dup = EcsMemMalloc(size);
     if (dup) memcpy(dup, block, size);
-
     return dup;
-}
-
-void EcsMemFree(void* block)
-{
-    free(block);
 }
 
 void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap)

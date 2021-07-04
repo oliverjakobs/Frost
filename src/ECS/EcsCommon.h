@@ -37,8 +37,8 @@ typedef void (*EcsRenderCallback)(const Ecs*, const void*, const float*);
 void* EcsMemMalloc(size_t size);
 void* EcsMemCalloc(size_t count, size_t size);
 void* EcsMemRealloc(void* block, size_t size);
+void  EcsMemFree(void* block);
 void* EcsMemDup(const void* block, size_t size);
-void EcsMemFree(void* block);
 
 #define ECS_ARRAY_GROWTH 2.0
 
