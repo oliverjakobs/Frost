@@ -40,11 +40,25 @@ typedef struct
 
 struct Ecs
 {
-    EcsUpdateSystem* systems_update;
-    EcsRenderSystem* systems_render;
+    /* Update systems */
+    EcsUpdateSystem* update_systems;
+    size_t update_sys_cap;
+    size_t update_sys_len;
 
+    /* Render systems */
+    EcsRenderSystem* render_systems;
+    size_t render_sys_cap;
+    size_t render_sys_len;
+
+    /* Data components */
     EcsMap* data_components;
+    size_t data_comp_cap;
+    size_t data_comp_len;
+
+    /* Order components */
     EcsList* order_components;
+    size_t order_comp_cap;
+    size_t order_comp_len;
 
     /* Events */
     EcsEventCallback subscriptions[ECS_MAX_EVENTS];
