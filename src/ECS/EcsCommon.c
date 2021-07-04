@@ -60,13 +60,10 @@ void EcsMemFree(void* block)
     free(block);
 }
 
-void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap, float growth)
+void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap)
 {
-    size_t new_cap = (arr && *cap > 0) ? (size_t)ceil(*cap * (double)growth) : 1;
-
+    size_t new_cap = (arr && *cap > 0) ? (size_t)ceil(*cap * ECS_ARRAY_GROWTH) : 1;
     arr = EcsMemRealloc(arr, new_cap);
-
     if (arr) *cap = new_cap;
-
     return arr;
 }

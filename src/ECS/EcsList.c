@@ -59,7 +59,7 @@ void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
     /* list needs to grow */
     if (list->count >= list->capacity)
     {
-        size_t capacity = (list->capacity > 0) ? (size_t)(list->capacity * ECS_LIST_GROWTH) : 1;
+        size_t capacity = (list->capacity > 0) ? (size_t)(list->capacity * ECS_ARRAY_GROWTH) : 1;
         if (!EcsListGrow(list, capacity))
             return NULL;
     }

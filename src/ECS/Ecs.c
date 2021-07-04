@@ -77,7 +77,7 @@ void EcsClear(Ecs* ecs)
 void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update)
 {
     if (ecs->update_sys_len >= ecs->update_sys_cap)
-        ecs->update_systems = EcsArrayGrow(ecs->update_systems, sizeof(EcsUpdateSystem), &ecs->update_sys_cap, 2.0f);
+        ecs->update_systems = EcsArrayGrow(ecs->update_systems, sizeof(EcsUpdateSystem), &ecs->update_sys_cap);
 
     if (ecs->update_systems) ecs->update_systems[ecs->update_sys_len++] = ((EcsUpdateSystem) { update });
 }
@@ -85,7 +85,7 @@ void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update)
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render)
 {
     if (ecs->render_sys_len >= ecs->render_sys_cap)
-        ecs->render_systems = EcsArrayGrow(ecs->render_systems, sizeof(EcsRenderSystem), &ecs->render_sys_cap, 2.0f);
+        ecs->render_systems = EcsArrayGrow(ecs->render_systems, sizeof(EcsRenderSystem), &ecs->render_sys_cap);
 
     if (ecs->render_systems) ecs->render_systems[ecs->render_sys_len++] = ((EcsRenderSystem) { stage, render });
 }
@@ -124,7 +124,7 @@ int EcsRegisterDataComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFu
     if (!EcsMapAlloc(&comp, size, initial, release)) return 0;
 
     if (ecs->data_comp_len >= ecs->data_comp_cap)
-        ecs->data_components = EcsArrayGrow(ecs->data_components, sizeof(EcsMap), &ecs->data_comp_cap, 2.0f);
+        ecs->data_components = EcsArrayGrow(ecs->data_components, sizeof(EcsMap), &ecs->data_comp_cap);
 
     if (!ecs->data_components) return 0;
 
@@ -153,7 +153,7 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseF
     if (!EcsListAlloc(&comp, size, initial, release, cmp)) return 0;
 
     if (ecs->order_comp_len >= ecs->order_comp_cap)
-        ecs->order_components = EcsArrayGrow(ecs->order_components, sizeof(EcsList), &ecs->order_comp_cap, 2.0f);
+        ecs->order_components = EcsArrayGrow(ecs->order_components, sizeof(EcsList), &ecs->order_comp_cap);
 
     if (!ecs->order_components) return 0;
 

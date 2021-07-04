@@ -40,6 +40,8 @@ void* EcsMemRealloc(void* block, size_t size);
 void* EcsMemDup(const void* block, size_t size);
 void EcsMemFree(void* block);
 
-void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap, float growth);
+#define ECS_ARRAY_GROWTH 2.0
+
+void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap);
 
 #endif /* !ECS_COMMON_H */

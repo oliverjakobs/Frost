@@ -3,8 +3,6 @@
 
 #include "EcsCommon.h"
 
-#define ECS_LIST_GROWTH 2.0
-
 typedef struct EcsListEntry EcsListEntry;
 
 typedef struct
