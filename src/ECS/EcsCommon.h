@@ -34,14 +34,21 @@ typedef void (*EcsUpdateCallback)(Ecs*, void*, float);
 typedef void (*EcsRenderCallback)(const Ecs*, const void*, const float*);
 
 /* Memory */
+typedef void* (*EcsMallocCallback) (void* allocator, size_t size);
+typedef void* (*EcsReallocCallback)(void* allocator, void* block, size_t size);
+typedef void  (*EcsFreeCallback)   (void* allocator, void* block);
+
+void EcsMemSetAllocator(void* allocator, EcsMallocCallback malloc, EcsReallocCallback realloc, EcsFreeCallback free);
+
 void* EcsMemMalloc(size_t size);
-void* EcsMemCalloc(size_t count, size_t size);
 void* EcsMemRealloc(void* block, size_t size);
 void  EcsMemFree(void* block);
+
+void* EcsMemCalloc(size_t count, size_t size);
 void* EcsMemDup(const void* block, size_t size);
 
 #define ECS_ARRAY_GROWTH 2.0
 
-void* EcsArrayGrow(void* arr, size_t elem_size, size_t* cap);
+size_t EcsMemArrayGrow(void** arr, size_t elem_size, size_t cap);
 
 #endif /* !ECS_COMMON_H */

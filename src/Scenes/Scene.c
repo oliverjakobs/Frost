@@ -20,6 +20,7 @@ int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, tb_al
 	memset(scene->path, '\0', APPLICATION_PATH_LEN);
 
 	EcsInit(&scene->ecs);
+	EcsMemSetAllocator(allocator, tb_mem_malloc, tb_mem_realloc, tb_mem_free);
 	return 1;
 }
 

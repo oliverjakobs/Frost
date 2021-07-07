@@ -74,19 +74,20 @@ void EcsClear(Ecs* ecs)
     EcsEntityResetIDCounter();
 }
 
+static size_t EcsArrayPush(void** arr, size_t element_size, size_t cap, size_t len)
+{
+    return (len >= cap) ? EcsMemArrayGrow(arr, element_size, cap) : cap;
+}
+
 void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update)
 {
-    if (ecs->update_sys_len >= ecs->update_sys_cap)
-        ecs->update_systems = EcsArrayGrow(ecs->update_systems, sizeof(EcsUpdateSystem), &ecs->update_sys_cap);
-
+    ecs->update_sys_cap = EcsArrayPush(&ecs->update_systems, sizeof(EcsUpdateSystem), ecs->update_sys_cap, ecs->update_sys_len);
     if (ecs->update_systems) ecs->update_systems[ecs->update_sys_len++] = ((EcsUpdateSystem) { update });
 }
 
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render)
 {
-    if (ecs->render_sys_len >= ecs->render_sys_cap)
-        ecs->render_systems = EcsArrayGrow(ecs->render_systems, sizeof(EcsRenderSystem), &ecs->render_sys_cap);
-
+    ecs->render_sys_cap = EcsArrayPush(&ecs->render_systems, sizeof(EcsUpdateSystem), ecs->render_sys_cap, ecs->render_sys_len);
     if (ecs->render_systems) ecs->render_systems[ecs->render_sys_len++] = ((EcsRenderSystem) { stage, render });
 }
 
@@ -123,13 +124,10 @@ int EcsRegisterDataComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFu
     EcsMap comp;
     if (!EcsMapAlloc(&comp, size, initial, release)) return 0;
 
-    if (ecs->data_comp_len >= ecs->data_comp_cap)
-        ecs->data_components = EcsArrayGrow(ecs->data_components, sizeof(EcsMap), &ecs->data_comp_cap);
+    ecs->data_comp_cap = EcsArrayPush(&ecs->data_components, sizeof(EcsMap), ecs->data_comp_cap, ecs->data_comp_len);
+    if (ecs->data_components) ecs->data_components[ecs->data_comp_len++] = comp;
 
-    if (!ecs->data_components) return 0;
-
-    ecs->data_components[ecs->data_comp_len++] = comp;
-    return 1;
+    return ecs->data_comp_cap > 0;
 }
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
@@ -152,13 +150,10 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseF
     EcsList comp;
     if (!EcsListAlloc(&comp, size, initial, release, cmp)) return 0;
 
-    if (ecs->order_comp_len >= ecs->order_comp_cap)
-        ecs->order_components = EcsArrayGrow(ecs->order_components, sizeof(EcsList), &ecs->order_comp_cap);
+    ecs->order_comp_cap = EcsArrayPush(&ecs->order_components, sizeof(EcsList), ecs->order_comp_cap, ecs->order_comp_len);
+    if (ecs->order_components) ecs->order_components[ecs->order_comp_len++] = comp;
 
-    if (!ecs->order_components) return 0;
-
-    ecs->order_components[ecs->order_comp_len++] = comp;
-    return 1;
+    return ecs->order_comp_cap > 0;
 }
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
