@@ -97,9 +97,8 @@ int SceneLoad(Scene* scene, const char* path)
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
 		char* value = element.value;
-		Background* background = &scene->background;
 
-		BackgroundInit(background, element.elements);
+		scene->background = BackgroundInit(element.elements);
 		for (int i = 0; i < element.elements; i++)
 		{
 			tb_json_element entity;
@@ -116,7 +115,7 @@ int SceneLoad(Scene* scene, const char* path)
 
 			float parallax = tb_json_float(entity.value, "[5", NULL, 0.0f);
 
-			BackgroundPushLayer(background, path, x, y, w, h, parallax);
+			BackgroundPushLayer(&scene->background, path, x, y, w, h, parallax);
 		}
 	}
 

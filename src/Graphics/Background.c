@@ -21,21 +21,22 @@ static void BackgroundLayerRender(const BackgroundLayer* layer)
 	BatchRenderer2DRenderTexture(&layer->texture, layer->pos_x + layer->width, layer->pos_y, layer->width, layer->height);
 }
 
-void BackgroundInit(Background* background, size_t initial)
+BackgroundLayer* BackgroundInit(size_t initial)
 {
-	background->layers = NULL;
-	tb_array_reserve(background->layers, initial);
+	BackgroundLayer* background = NULL;
+	if (initial > 0) tb_array_reserve(background, initial);
+	return background;
 }
 
-void BackgroundDestroy(Background* background)
+void BackgroundDestroy(BackgroundLayer* background)
 {
-	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
-		ignisDeleteTexture2D(&background->layers[i].texture);
+	for (size_t i = 0; i < tb_array_len(background); ++i)
+		ignisDeleteTexture2D(&background[i].texture);
 
-	tb_array_free(background->layers);
+	tb_array_free(background);
 }
 
-size_t BackgroundPushLayer(Background* background, const char* path, float x, float y, float w, float h, float parallax)
+size_t BackgroundPushLayer(BackgroundLayer** background, const char* path, float x, float y, float w, float h, float parallax)
 {
 	BackgroundLayer layer = (BackgroundLayer){
 		.startpos = x,
@@ -48,23 +49,23 @@ size_t BackgroundPushLayer(Background* background, const char* path, float x, fl
 
 	if (!ignisCreateTexture2D(&layer.texture, path, 1, 1, 1, NULL)) return 0;
 
-	tb_array_push(background->layers, layer);
+	tb_array_push(*background, layer);
 
-	return background->layers != NULL;
+	return *background != NULL;
 }
 
-void BackgroundUpdate(Background* background, float x, float deltatime)
+void BackgroundUpdate(BackgroundLayer* background, float x, float deltatime)
 {
-	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
-		BackgroundLayerUpdate(&background->layers[i], x, deltatime);
+	for (size_t i = 0; i < tb_array_len(background); ++i)
+		BackgroundLayerUpdate(&background[i], x, deltatime);
 }
 
-void BackgroundRender(const Background* background, const float* mat_view_proj)
+void BackgroundRender(const BackgroundLayer* background, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
-		BackgroundLayerRender(&background->layers[i]);
+	for (size_t i = 0; i < tb_array_len(background); ++i)
+		BackgroundLayerRender(&background[i]);
 
 	BatchRenderer2DFlush();
 }

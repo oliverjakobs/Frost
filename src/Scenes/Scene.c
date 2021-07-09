@@ -58,7 +58,9 @@ void SceneChangeActive(Scene* scene, const char* path, int reload)
 
 void SceneClearActive(Scene* scene)
 {
-	BackgroundDestroy(&scene->background);
+	BackgroundDestroy(scene->background);
+	scene->background = NULL;
+
 	TileRendererClear(&scene->renderer);
 
 	EcsClear(&scene->ecs);
@@ -77,14 +79,14 @@ void SceneOnEvent(Scene* scene, const MinimalEvent* e)
 
 void SceneOnUpdate(Scene* scene, float deltatime)
 {
-	BackgroundUpdate(&scene->background, scene->camera.position.x - scene->camera.size.x * .5f, deltatime);
+	BackgroundUpdate(scene->background, scene->camera.position.x - scene->camera.size.x * .5f, deltatime);
 
 	EcsOnUpdate(&scene->ecs, scene, deltatime);
 }
 
 void SceneOnRender(Scene* scene)
 {
-	BackgroundRender(&scene->background, CameraGetViewProjectionPtr(&scene->camera));
+	BackgroundRender(scene->background, CameraGetViewProjectionPtr(&scene->camera));
 
 	TileMapRender(&scene->renderer, &scene->tile_set, scene->camera.viewProjection);
 

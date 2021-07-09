@@ -21,18 +21,13 @@ typedef struct
 	float parallax;
 } BackgroundLayer;
 
-typedef struct
-{
-	BackgroundLayer* layers;
-} Background;
+BackgroundLayer* BackgroundInit(size_t initial);
+void BackgroundDestroy(BackgroundLayer* background);
 
-void BackgroundInit(Background* background, size_t initial);
-void BackgroundDestroy(Background* background);
+size_t BackgroundPushLayer(BackgroundLayer** background, const char* path, float x, float y, float w, float h, float parallax);
 
-size_t BackgroundPushLayer(Background* background, const char* path, float x, float y, float w, float h, float parallax);
-
-void BackgroundUpdate(Background* background, float x, float deltatime);
-void BackgroundRender(const Background* background, const float* mat_view_proj);
+void BackgroundUpdate(BackgroundLayer* background, float x, float deltatime);
+void BackgroundRender(const BackgroundLayer* background, const float* mat_view_proj);
 
 #ifdef __cplusplus
 }

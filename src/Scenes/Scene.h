@@ -43,7 +43,7 @@ struct Scene
 	IgnisTexture2D item_atlas;
 	IgnisTexture2D tile_set;
 
-	Background background;
+	BackgroundLayer* background;
 };
 
 int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator);
