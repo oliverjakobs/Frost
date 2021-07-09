@@ -58,7 +58,7 @@ void SceneChangeActive(Scene* scene, const char* path, int reload)
 
 void SceneClearActive(Scene* scene)
 {
-	BackgroundFree(&scene->background);
+	BackgroundDestroy(&scene->background);
 	TileRendererClear(&scene->renderer);
 
 	EcsClear(&scene->ecs);

@@ -24,13 +24,10 @@ typedef struct
 typedef struct
 {
 	BackgroundLayer* layers;
-
-	size_t layer_count;
-	size_t max_layers;
 } Background;
 
-int BackgroundAlloc(Background* background, size_t max_layers);
-void BackgroundFree(Background* background);
+void BackgroundInit(Background* background, size_t initial);
+void BackgroundDestroy(Background* background);
 
 size_t BackgroundPushLayer(Background* background, const char* path, float x, float y, float w, float h, float parallax);
 

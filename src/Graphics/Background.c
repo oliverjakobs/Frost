@@ -1,5 +1,7 @@
 #include "Background.h"
 
+#include "toolbox/tb_array.h"
+
 #include "Graphics/Renderer.h"
 
 static void BackgroundLayerUpdate(BackgroundLayer* layer, float x, float deltatime)
@@ -19,30 +21,23 @@ static void BackgroundLayerRender(const BackgroundLayer* layer)
 	BatchRenderer2DRenderTexture(&layer->texture, layer->pos_x + layer->width, layer->pos_y, layer->width, layer->height);
 }
 
-int BackgroundAlloc(Background* background, size_t max_layers)
+void BackgroundInit(Background* background, size_t initial)
 {
-	background->layers = malloc(sizeof(BackgroundLayer) * max_layers);
-	background->layer_count = 0;
-	background->max_layers = max_layers;
-
-	return background->layers != NULL;
+	background->layers = NULL;
+	tb_array_reserve(background->layers, initial);
 }
 
-void BackgroundFree(Background* background)
+void BackgroundDestroy(Background* background)
 {
-	for (size_t i = 0; i < background->layer_count; ++i)
+	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
 		ignisDeleteTexture2D(&background->layers[i].texture);
 
-	free(background->layers);
-	background->layer_count = 0;
-	background->max_layers = 0;
+	tb_array_free(background->layers);
 }
 
 size_t BackgroundPushLayer(Background* background, const char* path, float x, float y, float w, float h, float parallax)
 {
-	if (background->layer_count >= background->max_layers) return 0;
-
-	background->layers[background->layer_count] = (BackgroundLayer){
+	BackgroundLayer layer = (BackgroundLayer){
 		.startpos = x,
 		.pos_x = x,
 		.pos_y = y,
@@ -51,15 +46,16 @@ size_t BackgroundPushLayer(Background* background, const char* path, float x, fl
 		.parallax = parallax,
 	};
 
-	if (!ignisCreateTexture2D(&background->layers[background->layer_count].texture, path, 1, 1, 1, NULL))
-		return 0;
+	if (!ignisCreateTexture2D(&layer.texture, path, 1, 1, 1, NULL)) return 0;
 
-	return background->layer_count++;
+	tb_array_push(background->layers, layer);
+
+	return background->layers != NULL;
 }
 
 void BackgroundUpdate(Background* background, float x, float deltatime)
 {
-	for (size_t i = 0; i < background->layer_count; ++i)
+	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
 		BackgroundLayerUpdate(&background->layers[i], x, deltatime);
 }
 
@@ -67,7 +63,7 @@ void BackgroundRender(const Background* background, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (size_t i = 0; i < background->layer_count; ++i)
+	for (size_t i = 0; i < tb_array_len(background->layers); ++i)
 		BackgroundLayerRender(&background->layers[i]);
 
 	BatchRenderer2DFlush();

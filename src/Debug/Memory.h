@@ -7,6 +7,8 @@ void* DebugMalloc(size_t size);
 void* DebugRealloc(void* block, size_t size);
 void  DebugFree(void* block);
 
+void* DebugArrayAlloc(void* block, size_t size);
+
 tb_allocator* DebugMemoryGetAllocator();
 
 size_t DebugMemoryGetBytes();

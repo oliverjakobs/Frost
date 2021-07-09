@@ -54,6 +54,24 @@ void* DebugMalloc(size_t size)               { return tb_mem_malloc(&debug_alloc
 void* DebugRealloc(void* block, size_t size) { return tb_mem_realloc(&debug_allocator, block, size); }
 void  DebugFree(void* block)                 { tb_mem_free(&debug_allocator, block); }
 
+void* DebugArrayAlloc(void* block, size_t size)
+{
+    if (!block)
+    {
+        MINIMAL_INFO("Array Alloc: %d", size);
+    } 
+    else if (size == 0)
+    {
+        MINIMAL_INFO("Array Free: %d", size);
+    }
+    else
+    {
+        MINIMAL_INFO("Array Realloc: %d", size);
+    }
+
+    return realloc(block, size);
+}
+
 tb_allocator* DebugMemoryGetAllocator() { return &debug_allocator; }
 size_t        DebugMemoryGetBytes()     { return _memory_trace.allocated; }
 size_t        DebugMemoryGetPeak()      { return _memory_trace.peak; }

@@ -25,7 +25,6 @@ void EcsEntryClear(EcsEntry* comp, EcsReleaseFunc release)
 int EcsEntryCmpID(const EcsEntry* l, const EcsEntry* r)               { return l->entity - r->entity; }
 int EcsEntryCmp(const EcsEntry* l, const EcsEntry* r, EcsCmpFunc cmp) { return cmp ? cmp(l->data, r->data) : l->entity - r->entity; }
 
-
 static void* ecs_allocator;
 static EcsMallocCallback  ecs_malloc;
 static EcsReallocCallback ecs_realloc;
@@ -46,15 +45,16 @@ void  EcsMemFree(void* block)                 { ecs_free ? ecs_free(ecs_allocato
 void* EcsMemCalloc(size_t count, size_t size)
 { 
     if (!ecs_malloc) return calloc(count, size);
+
     void* block = ecs_malloc(ecs_allocator, count * size);
     return block ? memset(block, 0, count * size) : NULL;
 }
 
 void* EcsMemDup(const void* block, size_t size)
 {
-    void* dup = EcsMemMalloc(size);
-    if (dup) memcpy(dup, block, size);
-    return dup;
+    void* new_block = EcsMemMalloc(size);
+    if (new_block) memcpy(new_block, block, size);
+    return new_block;
 }
 
 size_t EcsMemArrayGrow(void** arr, size_t elem_size, size_t cap)

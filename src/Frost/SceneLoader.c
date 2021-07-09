@@ -99,7 +99,7 @@ int SceneLoad(Scene* scene, const char* path)
 		char* value = element.value;
 		Background* background = &scene->background;
 
-		BackgroundAlloc(background, element.elements);
+		BackgroundInit(background, element.elements);
 		for (int i = 0; i < element.elements; i++)
 		{
 			tb_json_element entity;

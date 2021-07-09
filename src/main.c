@@ -1,9 +1,6 @@
 #include "Frost/Frost.h"
 #include "Frost/FrostDebugger.h"
 
-#include "toolbox/tb_ini.h"
-#include "toolbox/tb_file.h"
-
 Scene scene;
 SceneEditor scene_editor;
 
@@ -42,19 +39,19 @@ MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 
     switch (MinimalEventKeyPressed(e))
     {
-    case MINIMAL_KEY_ESCAPE:	MinimalClose(app); break;
-    case MINIMAL_KEY_F1:		SceneEditorToggleWorldMode(&scene_editor); break;
-    case MINIMAL_KEY_F2:		SceneEditorToggleMapMode(&scene_editor); break;
-    case MINIMAL_KEY_F3:		ConsoleToggleFocus(&debugger.console); break;
-    case MINIMAL_KEY_F6:		MinimalToggleVsync(app); break;
-    case MINIMAL_KEY_F7:		MinimalToggleDebug(app); break;
-    case MINIMAL_KEY_F8:		SceneEditorToggleGrid(&scene_editor); break;
-    case MINIMAL_KEY_F9:		FrostDebuggerToggleInfo(&debugger); break;
+    case MINIMAL_KEY_ESCAPE:    MinimalClose(app); break;
+    case MINIMAL_KEY_F1:        SceneEditorToggleWorldMode(&scene_editor); break;
+    case MINIMAL_KEY_F2:        SceneEditorToggleMapMode(&scene_editor); break;
+    case MINIMAL_KEY_F3:        ConsoleToggleFocus(&debugger.console); break;
+    case MINIMAL_KEY_F6:        MinimalToggleVsync(app); break;
+    case MINIMAL_KEY_F7:        MinimalToggleDebug(app); break;
+    case MINIMAL_KEY_F8:        SceneEditorToggleGrid(&scene_editor); break;
+    case MINIMAL_KEY_F9:        FrostDebuggerToggleInfo(&debugger); break;
     }
 
-    if (scene_editor.mode == SCENE_EDIT_MAP)		MinimalSetTitle(app, "Frost | Map Editor");
-    else if (scene_editor.mode == SCENE_EDIT_WORLD)	MinimalSetTitle(app, "Frost | World Editor");
-    else											MinimalSetTitle(app, "Frost");
+    if (scene_editor.mode == SCENE_EDIT_MAP)        MinimalSetTitle(app, "Frost | Map Editor");
+    else if (scene_editor.mode == SCENE_EDIT_WORLD) MinimalSetTitle(app, "Frost | World Editor");
+    else                                            MinimalSetTitle(app, "Frost");
 
     if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 
@@ -66,9 +63,9 @@ MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 
 void OnUpdate(MinimalApp* app, float deltatime)
 {
-    if (debugger.console.focus)						FrostDebuggerOnUpdate(&debugger, deltatime);
-    else if (SceneEditorIsActive(&scene_editor))	SceneEditorOnUpdate(&scene_editor, deltatime);
-    else											SceneOnUpdate(&scene, deltatime);
+    if (debugger.console.focus)                     FrostDebuggerOnUpdate(&debugger, deltatime);
+    else if (SceneEditorIsActive(&scene_editor))    SceneEditorOnUpdate(&scene_editor, deltatime);
+    else                                            SceneOnUpdate(&scene, deltatime);
 }
 
 void OnRender(MinimalApp* app)
