@@ -4,23 +4,6 @@
 
 #include "Graphics/Renderer.h"
 
-static void BackgroundLayerUpdate(BackgroundLayer* layer, float x, float deltatime)
-{
-	float rel_dist = x * (1 - layer->parallax);
-
-	layer->pos_x = layer->startpos + (x * layer->parallax);
-
-	if (rel_dist > layer->startpos + layer->width) layer->startpos += layer->width;
-	else if (rel_dist < layer->startpos - layer->width) layer->startpos -= layer->width;
-}
-
-static void BackgroundLayerRender(const BackgroundLayer* layer)
-{
-	BatchRenderer2DRenderTexture(&layer->texture, layer->pos_x - layer->width, layer->pos_y, layer->width, layer->height);
-	BatchRenderer2DRenderTexture(&layer->texture, layer->pos_x, layer->pos_y, layer->width, layer->height);
-	BatchRenderer2DRenderTexture(&layer->texture, layer->pos_x + layer->width, layer->pos_y, layer->width, layer->height);
-}
-
 BackgroundLayer* BackgroundInit(size_t initial)
 {
 	BackgroundLayer* background = NULL;
@@ -28,44 +11,42 @@ BackgroundLayer* BackgroundInit(size_t initial)
 	return background;
 }
 
-void BackgroundDestroy(BackgroundLayer* background)
+void BackgroundDestroy(BackgroundLayer* bg)
 {
-	for (size_t i = 0; i < tb_array_len(background); ++i)
-		ignisDeleteTexture2D(&background[i].texture);
-
-	tb_array_free(background);
+	for (BackgroundLayer* it = bg; it != tb_array_last(bg); it++) ignisDeleteTexture2D(&it->texture);
+	tb_array_free(bg);
 }
 
-size_t BackgroundPushLayer(BackgroundLayer** background, const char* path, float x, float y, float w, float h, float parallax)
+BackgroundLayer* BackgroundPushLayer(BackgroundLayer* bg, IgnisTexture2D tex, float x, float y, float w, float h, float parallax)
 {
-	BackgroundLayer layer = (BackgroundLayer){
-		.startpos = x,
-		.pos_x = x,
-		.pos_y = y,
-		.width = w,
-		.height = h,
-		.parallax = parallax,
-	};
-
-	if (!ignisCreateTexture2D(&layer.texture, path, 1, 1, 1, NULL)) return 0;
-
-	tb_array_push(*background, layer);
-
-	return *background != NULL;
+	BackgroundLayer layer = (BackgroundLayer){ tex, x, x, y, w, h, parallax };
+	tb_array_push(bg, layer);
+	return bg;
 }
 
-void BackgroundUpdate(BackgroundLayer* background, float x, float deltatime)
+void BackgroundUpdate(BackgroundLayer* bg, float x, float deltatime)
 {
-	for (size_t i = 0; i < tb_array_len(background); ++i)
-		BackgroundLayerUpdate(&background[i], x, deltatime);
+	for (BackgroundLayer* layer = bg; layer != tb_array_last(bg); layer++)
+	{
+		float rel_dist = x * (1 - layer->parallax);
+
+		layer->x = layer->startpos + (x * layer->parallax);
+
+		if (rel_dist > layer->startpos + layer->w)		layer->startpos += layer->w;
+		else if (rel_dist < layer->startpos - layer->w) layer->startpos -= layer->w;
+	}
 }
 
-void BackgroundRender(const BackgroundLayer* background, const float* mat_view_proj)
+void BackgroundRender(const BackgroundLayer* bg, const float* mat_view_proj)
 {
 	BatchRenderer2DStart(mat_view_proj);
 
-	for (size_t i = 0; i < tb_array_len(background); ++i)
-		BackgroundLayerRender(&background[i]);
+	for (const BackgroundLayer* layer = bg; layer != tb_array_last(bg); layer++)
+	{
+		BatchRenderer2DRenderTexture(&layer->texture, layer->x - layer->w, layer->y, layer->w, layer->h);
+		BatchRenderer2DRenderTexture(&layer->texture, layer->x, layer->y, layer->w, layer->h);
+		BatchRenderer2DRenderTexture(&layer->texture, layer->x + layer->w, layer->y, layer->w, layer->h);
+	}
 
 	BatchRenderer2DFlush();
 }

@@ -97,25 +97,31 @@ int SceneLoad(Scene* scene, const char* path)
 	if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
 	{
 		char* value = element.value;
-
 		scene->background = BackgroundInit(element.elements);
 		for (int i = 0; i < element.elements; i++)
 		{
-			tb_json_element entity;
-			value = tb_json_array_step(value, &entity);
+			tb_json_element layer;
+			value = tb_json_array_step(value, &layer);
 
 			char path[APPLICATION_PATH_LEN];
-			tb_json_string(entity.value, "[0", path, APPLICATION_PATH_LEN, NULL);
+			tb_json_string(layer.value, "[0", path, APPLICATION_PATH_LEN, NULL);
 
-			float x = tb_json_float(entity.value, "[1", NULL, 0.0f);
-			float y = tb_json_float(entity.value, "[2", NULL, 0.0f);
+			IgnisTexture2D texture;
+			if (!ignisCreateTexture2D(&texture, path, 1, 1, 1, NULL))
+			{
+				MINIMAL_WARN("Failed to load background layer %d (%s)", i, path);
+				continue;
+			}
 
-			float w = tb_json_float(entity.value, "[3", NULL, 0.0f);
-			float h = tb_json_float(entity.value, "[4", NULL, 0.0f);
+			float x = tb_json_float(layer.value, "[1", NULL, 0.0f);
+			float y = tb_json_float(layer.value, "[2", NULL, 0.0f);
 
-			float parallax = tb_json_float(entity.value, "[5", NULL, 0.0f);
+			float w = tb_json_float(layer.value, "[3", NULL, 0.0f);
+			float h = tb_json_float(layer.value, "[4", NULL, 0.0f);
 
-			BackgroundPushLayer(&scene->background, path, x, y, w, h, parallax);
+			float parallax = tb_json_float(layer.value, "[5", NULL, 0.0f);
+
+			scene->background = BackgroundPushLayer(scene->background, texture, x, y, w, h, parallax);
 		}
 	}
 

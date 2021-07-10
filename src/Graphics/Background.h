@@ -13,21 +13,19 @@ typedef struct
 	IgnisTexture2D texture;
 
 	float startpos;
-	float pos_x;
-	float pos_y;
-	float width;
-	float height;
+	float x, y;
+	float w, h;
 
 	float parallax;
 } BackgroundLayer;
 
 BackgroundLayer* BackgroundInit(size_t initial);
-void BackgroundDestroy(BackgroundLayer* background);
+void BackgroundDestroy(BackgroundLayer* bg);
 
-size_t BackgroundPushLayer(BackgroundLayer** background, const char* path, float x, float y, float w, float h, float parallax);
+BackgroundLayer* BackgroundPushLayer(BackgroundLayer* bg, IgnisTexture2D tex, float x, float y, float w, float h, float parallax);
 
-void BackgroundUpdate(BackgroundLayer* background, float x, float deltatime);
-void BackgroundRender(const BackgroundLayer* background, const float* mat_view_proj);
+void BackgroundUpdate(BackgroundLayer* bg, float x, float deltatime);
+void BackgroundRender(const BackgroundLayer* bg, const float* mat_view_proj);
 
 #ifdef __cplusplus
 }
