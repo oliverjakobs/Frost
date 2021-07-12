@@ -50,19 +50,19 @@ void BatchRenderer2DInit(const char* vert, const char* frag)
 
 	_render_data.uniform_location_view_proj = ignisGetUniformLocation(&_render_data.shader, "u_ViewProjection");
 
-	_render_data.vertices = malloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
+	_render_data.vertices = ignisMalloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 
-	_render_data.texture_slots = malloc(BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
+	_render_data.texture_slots = ignisMalloc(BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
 	if (_render_data.texture_slots) memset(_render_data.texture_slots, 0, BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
 	_render_data.texture_slot_index = 0;
 }
 
 void BatchRenderer2DDestroy()
 {
-	free(_render_data.vertices);
-	free(_render_data.texture_slots);
+	ignisFree(_render_data.vertices);
+	ignisFree(_render_data.texture_slots);
 
 	ignisDeleteShader(&_render_data.shader);
 	ignisDeleteVertexArray(&_render_data.vao);
@@ -75,8 +75,7 @@ void BatchRenderer2DStart(const float* mat_view_proj)
 
 void BatchRenderer2DFlush()
 {
-	if (_render_data.vertex_index == 0)
-		return;
+	if (_render_data.vertex_index == 0) return;
 
 	ignisBindVertexArray(&_render_data.vao);
 	ignisBufferSubData(&_render_data.vao.array_buffers[0], 0, _render_data.vertex_index * sizeof(float), _render_data.vertices);

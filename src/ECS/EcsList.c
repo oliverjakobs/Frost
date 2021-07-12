@@ -60,19 +60,16 @@ void* EcsListInsert(EcsList* list, EcsEntityID entity, const void* component)
     if (list->count >= list->capacity)
     {
         size_t capacity = (list->capacity > 0) ? (size_t)(list->capacity * ECS_ARRAY_GROWTH) : 1;
-        if (!EcsListGrow(list, capacity))
-            return NULL;
+        if (!EcsListGrow(list, capacity)) return NULL;
     }
 
     /* create new entry */
     EcsEntry entry;
-    if (!EcsEntryFill(&entry, entity, component, list->component_size))
-        return NULL;
+    if (!EcsEntryFill(&entry, entity, component, list->component_size)) return NULL;
 
     /* find location for the new element */
     size_t index = 0;
-    while (index < list->count && EcsEntryCmp(&list->entries[index], &entry, list->cmp) < 0)
-        ++index;
+    while (index < list->count && EcsEntryCmp(&list->entries[index], &entry, list->cmp) < 0) ++index;
 
     /* move entries back to make space for new element if index is not at the end */
     if (index < list->count)

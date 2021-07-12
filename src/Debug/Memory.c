@@ -50,9 +50,16 @@ static tb_allocator debug_allocator =
     .free = DebugAllocatorFree,
 };
 
-void* DebugMalloc(size_t size)               { return tb_mem_malloc(&debug_allocator, size); }
-void* DebugRealloc(void* block, size_t size) { return tb_mem_realloc(&debug_allocator, block, size); }
-void  DebugFree(void* block)                 { tb_mem_free(&debug_allocator, block); }
+void* DebugMalloc(size_t size)                  { return tb_mem_malloc(&debug_allocator, size); }
+void* DebugRealloc(void* block, size_t size)    { return tb_mem_realloc(&debug_allocator, block, size); }
+void* DebugMemDup(const void* src, size_t size) { return tb_mem_dup(&debug_allocator, src, size); }
+void  DebugFree(void* block)                    { tb_mem_free(&debug_allocator, block); }
+void  DebugConstFree(const void* block)         { tb_mem_constfree(&debug_allocator, block); }
+
+void* DebugStrDup(const char* src, size_t len)
+{
+    return NULL;
+}
 
 void* DebugArrayAlloc(void* block, size_t size)
 {

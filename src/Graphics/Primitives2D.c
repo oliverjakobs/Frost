@@ -19,7 +19,7 @@ static int Primitives2DLinesCreate(Primitives2DLines* lines, const char* vert, c
 	ignisGenerateVertexArray(&lines->vao);
 	ignisAddArrayBufferLayout(&lines->vao, PRIMITIVES2D_LINES_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, 0, layout, layout_size);
 
-	lines->vertices = (float*)malloc(PRIMITIVES2D_LINES_BUFFER_SIZE * sizeof(float));
+	lines->vertices = ignisMalloc(PRIMITIVES2D_LINES_BUFFER_SIZE * sizeof(float));
 	lines->vertex_count = 0;
 
 	ignisCreateShadervf(&lines->shader, vert, frag);
@@ -32,7 +32,7 @@ static void Primitives2DLinesDestroy(Primitives2DLines* lines)
 	ignisDeleteShader(&lines->shader);
 	ignisDeleteVertexArray(&lines->vao);
 
-	free(lines->vertices);
+	ignisFree(lines->vertices);
 }
 
 static void Primitives2DLinesStart(Primitives2DLines* lines, const float* mat_view_proj)
@@ -42,8 +42,7 @@ static void Primitives2DLinesStart(Primitives2DLines* lines, const float* mat_vi
 
 static void Primitives2DLinesFlush(Primitives2DLines* lines)
 {
-	if (lines->vertex_count == 0)
-		return;
+	if (lines->vertex_count == 0) return;
 
 	ignisBindVertexArray(&lines->vao);
 	ignisBufferSubData(&lines->vao.array_buffers[0], 0, lines->vertex_count * sizeof(float), lines->vertices);
@@ -57,8 +56,7 @@ static void Primitives2DLinesFlush(Primitives2DLines* lines)
 
 static void Primitives2DLinesVertex(Primitives2DLines* lines, float x, float y, const IgnisColorRGBA color)
 {
-	if (lines->vertex_count >= PRIMITIVES2D_LINES_BUFFER_SIZE)
-		Primitives2DLinesFlush(lines);
+	if (lines->vertex_count >= PRIMITIVES2D_LINES_BUFFER_SIZE) Primitives2DLinesFlush(lines);
 
 	lines->vertices[lines->vertex_count++] = x;
 	lines->vertices[lines->vertex_count++] = y;
@@ -85,7 +83,7 @@ static int Primitives2DTrianglesCreate(Primitives2DTriangles* triangles, const c
 	ignisGenerateVertexArray(&triangles->vao);
 	ignisAddArrayBufferLayout(&triangles->vao, PRIMITIVES2D_TRIANGLES_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, 0, layout, layout_size);
 
-	triangles->vertices = (float*)malloc(PRIMITIVES2D_TRIANGLES_BUFFER_SIZE * sizeof(float));
+	triangles->vertices = ignisMalloc(PRIMITIVES2D_TRIANGLES_BUFFER_SIZE * sizeof(float));
 	triangles->vertex_count = 0;
 
 	ignisCreateShadervf(&triangles->shader, vert, frag);
@@ -99,7 +97,7 @@ static void Primitives2DTrianglesDestroy(Primitives2DTriangles* triangles)
 
 	ignisDeleteVertexArray(&triangles->vao);
 
-	free(triangles->vertices);
+	ignisFree(triangles->vertices);
 }
 
 static void Primitives2DTrianglesStart(Primitives2DTriangles* triangles, const float* mat_view_proj)
@@ -109,8 +107,7 @@ static void Primitives2DTrianglesStart(Primitives2DTriangles* triangles, const f
 
 static void Primitives2DTrianglesFlush(Primitives2DTriangles* triangles)
 {
-	if (triangles->vertex_count == 0)
-		return;
+	if (triangles->vertex_count == 0) return;
 
 	ignisBindVertexArray(&triangles->vao);
 	ignisBufferSubData(&triangles->vao.array_buffers[0], 0, triangles->vertex_count * sizeof(float), triangles->vertices);
@@ -124,8 +121,7 @@ static void Primitives2DTrianglesFlush(Primitives2DTriangles* triangles)
 
 static void Primitives2DTrianglesVertex(Primitives2DTriangles* triangles, float x, float y, const IgnisColorRGBA color)
 {
-	if (triangles->vertex_count >= PRIMITIVES2D_TRIANGLES_BUFFER_SIZE)
-		Primitives2DTrianglesFlush(triangles);
+	if (triangles->vertex_count >= PRIMITIVES2D_TRIANGLES_BUFFER_SIZE) Primitives2DTrianglesFlush(triangles);
 
 	triangles->vertices[triangles->vertex_count++] = x;
 	triangles->vertices[triangles->vertex_count++] = y;

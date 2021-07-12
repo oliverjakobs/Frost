@@ -2,12 +2,15 @@
 
 #include "Frost/Frost.h"
 
-#include "toolbox/tb_str.h"
-
-void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ)
+void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* path)
 {
-	const char* t = tb_strdup(templ);
-	EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &t);
+	Template templ = (Template){ DebugMemDup(path, strlen(path) + 1) };
+	EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &templ);
+}
+
+void TemplateRelease(Template* templ)
+{
+	DebugConstFree(templ->path);
 }
 
 ZIndex EntityGetZIndex(Ecs* ecs, EcsEntityID entity)

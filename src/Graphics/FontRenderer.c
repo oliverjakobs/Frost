@@ -35,7 +35,7 @@ void FontRendererInit(const char* vert, const char* frag)
 
 	ignisLoadElementBuffer(&_render_data.vao, indices, FONTRENDERER_INDEX_COUNT, GL_STATIC_DRAW);
 
-	_render_data.vertices = malloc(FONTRENDERER_BUFFER_SIZE * sizeof(float));
+	_render_data.vertices = ignisMalloc(FONTRENDERER_BUFFER_SIZE * sizeof(float));
 	_render_data.vertex_index = 0;
 	_render_data.quad_count = 0;
 
@@ -50,10 +50,9 @@ void FontRendererInit(const char* vert, const char* frag)
 
 void FontRendererDestroy()
 {
-	free(_render_data.vertices);
+	ignisFree(_render_data.vertices);
 
 	ignisDeleteShader(&_render_data.shader);
-
 	ignisDeleteVertexArray(&_render_data.vao);
 }
 
