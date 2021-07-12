@@ -11,7 +11,8 @@
 
 #include <stdint.h>
 
-typedef struct
+typedef struct Console Console;
+struct Console
 {
 	int focus;
 
@@ -22,12 +23,12 @@ typedef struct
 	float cursor_tick;
 
 	void* user_data;
-	void (*execute)(void*, const char*);
+	void (*execute)(Console*, void*, const char*);
 
 	IgnisFont* font;
 	IgnisColorRGBA font_color;
 	IgnisColorRGBA bg_color;
-} Console;
+};
 
 void ConsoleInit(Console* console, void* user_data, void (*execute)(void*, const char*), IgnisFont* font);
 
@@ -42,8 +43,7 @@ void ConsoleExecuteCmd(Console* console);
 void ConsoleCharTyped(Console* console, char c);
 void ConsoleCharRemoveLast(Console* console);
 
-void ConsoleRenderBackground(const Console* console, float x, float y, float w, float h, const float* proj);
-void ConsoleRender(const Console* console, float x, float y, float padding, const float* proj);
+void ConsoleRender(const Console* console, float x, float y, float w, float h, float padding, const float* proj);
 
 void ConsoleOut(const Console* console, const char* fmt, ...);
 

@@ -4,13 +4,13 @@
 
 void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* path)
 {
-	Template templ = (Template){ DebugMemDup(path, strlen(path) + 1) };
+	Template templ = (Template){ FrostMemDup(path, strlen(path) + 1) };
 	EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &templ);
 }
 
 void TemplateRelease(Template* templ)
 {
-	DebugConstFree(templ->path);
+	FrostConstFree(templ->path);
 }
 
 ZIndex EntityGetZIndex(Ecs* ecs, EcsEntityID entity)

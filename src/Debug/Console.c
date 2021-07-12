@@ -10,7 +10,7 @@ const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
 const char* CONSOLE_PROMPT = "> ";
 
-void ConsoleInit(Console* console, void* user_data, void(*execute)(void*, const char*), IgnisFont* font)
+void ConsoleInit(Console* console, void* user_data, void(*execute)(Console*, void*, const char*), IgnisFont* font)
 {
 	memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
 	console->cusor_pos = 0;
@@ -77,7 +77,7 @@ void ConsoleExecuteCmd(Console* console)
 	/* NULL-terminate cmd */
 	ConsoleCharTyped(console, '\0');
 
-	console->execute(console->user_data, console->cmd_buffer);
+	console->execute(console, console->user_data, console->cmd_buffer);
 
 	/* reset cmd-buffer */
 	ConsoleResetCursor(console);
@@ -85,8 +85,7 @@ void ConsoleExecuteCmd(Console* console)
 
 void ConsoleCharTyped(Console* console, char c)
 {
-	if (console->cusor_pos >= CONSOLE_MAX_CMD_LENGTH)
-		return;
+	if (console->cusor_pos >= CONSOLE_MAX_CMD_LENGTH) return;
 
 	console->cmd_buffer[console->cusor_pos++] = c;
 }
@@ -95,22 +94,16 @@ void ConsoleCharRemoveLast(Console* console)
 {
 	--console->cusor_pos;
 
-	if (console->cusor_pos < 0)
-		console->cusor_pos = 0;
+	if (console->cusor_pos < 0) console->cusor_pos = 0;
 }
 
-void ConsoleRenderBackground(const Console* console, float x, float y, float w, float h, const float* proj)
+void ConsoleRender(const Console* console, float x, float y, float w, float h, float padding, const float* proj)
 {
-	if (!console->focus) return;
+	if (!console->focus || !console->font) return;
 
 	Primitives2DStart(proj);
 	Primitives2DFillRect(x, y, w, -h, console->bg_color);
 	Primitives2DFlush();
-}
-
-void ConsoleRender(const Console* console, float x, float y, float padding, const float* proj)
-{
-	if (!console->focus || !console->font) return;
 
 	float text_x = x + padding;
 	float text_y = y - padding - ignisFontGetHeight(console->font);

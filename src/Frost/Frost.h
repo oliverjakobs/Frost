@@ -1,12 +1,12 @@
 #ifndef FROST_H
 #define FROST_H
 
+#include "Memory.h"
 #include "SceneLoader.h"
 #include "SceneSaver.h"
+
 #include "Scenes/Scene.h"
 #include "Scenes/SceneEditor.h"
-
-#include "Debug/Memory.h"
 
 #include "Minimal/Minimal.h"
 

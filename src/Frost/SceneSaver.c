@@ -1,7 +1,7 @@
 #include "SceneSaver.h"
 
+#include "Memory.h"
 #include "FrostParser.h"
-#include "Debug/Memory.h"
 
 #include "toolbox/tb_file.h"
 
@@ -32,7 +32,7 @@ static int SceneSaveToFile(Scene* scene, const char* path, SceneSaveError(*save_
 
 int SceneSave(Scene* scene, const char* path)
 {
-	char* json = tb_file_read_alloc(path, "rb", DebugMalloc, DebugFree);
+	char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 
 	if (!json)
 	{
@@ -44,7 +44,7 @@ int SceneSave(Scene* scene, const char* path)
 	char map_path[APPLICATION_PATH_LEN];
 	tb_json_string(json, "{'map'", map_path, APPLICATION_PATH_LEN, NULL);
 
-	DebugFree(json);
+	FrostFree(json);
 
 	if (!SceneSaveToFile(scene, map_path, SceneSaveMap)) return 0;
 	return 1;

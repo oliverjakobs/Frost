@@ -12,15 +12,8 @@ void FrostDebuggerBindScene(FrostDebugger* debugger, Scene* scene, SceneEditor* 
 	debugger->editor = editor;
 }
 
-void ForstDebuggerShowInfo(FrostDebugger* debugger, int b)
-{
-	debugger->show_info = b;
-}
-
-void FrostDebuggerToggleInfo(FrostDebugger* debugger)
-{
-	debugger->show_info = !debugger->show_info;
-}
+void ForstDebuggerShowInfo(FrostDebugger* debugger, int b)	{ debugger->show_info = b; }
+void FrostDebuggerToggleInfo(FrostDebugger* debugger)		{ debugger->show_info = !debugger->show_info; }
 
 MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e)
 {
@@ -36,7 +29,7 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 {
 	FontRendererTextFieldBegin(x, y, 8.0f);
 
-	FontRendererTextFieldLine("Memory: %llu bytes", DebugMemoryGetBytes());
+	FontRendererTextFieldLine("Memory: %llu bytes", FrostMemoryGetBytes());
 	// FontRendererTextFieldLine("Peak: %llu bytes",		FrostMemGetPeak());
 	FontRendererTextFieldLine("------------------------");
 
@@ -83,8 +76,7 @@ void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 
 	FontRendererFlush();
 
-	ConsoleRenderBackground(&debugger->console, 0.0f, GuiGetScreenHeight(), GuiGetScreenWidth(), 32.0f, GuiGetScreenProjPtr());
-	ConsoleRender(&debugger->console, 0.0f, GuiGetScreenHeight(), 8.0f, GuiGetScreenProjPtr());
+	ConsoleRender(&debugger->console, 0.0f, GuiGetScreenHeight(), GuiGetScreenWidth(), 32.0f, 8.0f, GuiGetScreenProjPtr());
 }
 
 typedef enum
@@ -124,9 +116,8 @@ static ConsoleCmd _CmdGetType(const char* buffer)
 	return cmd;
 }
 
-void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer)
+void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const char* cmd_buffer)
 {
-	Console* console = &debugger->console; 
 	Scene* scene = debugger->scene;
 	SceneEditor* editor = debugger->editor;
 

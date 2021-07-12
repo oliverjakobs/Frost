@@ -52,7 +52,7 @@ void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 		inv.state = tb_json_parse(element.value, "{'state'", NULL, FrostParseInventoryState);
 
 		size_t size = sizeof(ItemID) * (size_t)inv.rows * (size_t)inv.cols;
-		inv.cells = DebugMalloc(size);
+		inv.cells = FrostMalloc(size);
 		if (!inv.cells) return;
 
 		memset(inv.cells, NULL_ITEM, size);
@@ -79,7 +79,7 @@ void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
 
 void InventoryRelease(Inventory* inv)
 {
-	if (inv->cells) DebugFree(inv->cells);
+	if (inv->cells) FrostFree(inv->cells);
 	inv->cells = NULL;
 }
 

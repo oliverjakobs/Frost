@@ -105,7 +105,7 @@ int main()
 
     MinimalDestroy(&app);
 
-    size_t bytes = DebugMemoryGetBytes();
+    size_t bytes = FrostMemoryGetBytes();
     if (bytes != 0) MINIMAL_WARN("%llu bytes not freed", bytes);
 
     return 0;
