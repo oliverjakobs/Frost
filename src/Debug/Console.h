@@ -14,23 +14,23 @@
 typedef struct Console Console;
 struct Console
 {
-	int focus;
+    int focus;
 
-	char cmd_buffer[CONSOLE_MAX_CMD_LENGTH];
-	int cusor_pos;
+    char cmd_buffer[CONSOLE_MAX_CMD_LENGTH];
+    int cusor_pos;
 
-	float cursor_size;
-	float cursor_tick;
+    float cursor_size;
+    float cursor_tick;
 
-	void* user_data;
-	void (*execute)(Console*, void*, const char*);
+    void* user_data;
+    void (*execute)(Console*, void*, const char*);
 
-	IgnisFont* font;
-	IgnisColorRGBA font_color;
-	IgnisColorRGBA bg_color;
+    IgnisFont* font;
+    IgnisColorRGBA font_color;
+    IgnisColorRGBA bg_color;
 };
 
-void ConsoleInit(Console* console, void* user_data, void (*execute)(void*, const char*), IgnisFont* font);
+void ConsoleInit(Console* console, void* user_data, void (*execute)(Console*, void*, const char*), IgnisFont* font);
 
 MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e);
 void ConsoleOnUpdate(Console* console, float deltatime);

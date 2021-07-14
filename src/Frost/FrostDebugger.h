@@ -24,6 +24,6 @@ MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e)
 void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime);
 void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app);
 
-void FrostExecuteConsoleCommand(FrostDebugger* debugger, const char* cmd_buffer);
+void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const char* cmd_buffer);
 
 #endif /* !FROST_DEBUGGER_H */

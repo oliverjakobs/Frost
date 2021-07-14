@@ -229,7 +229,7 @@ void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const
 		break;
 	}
 	default:
-		ConsoleOut(console, "Unkown command");
+		ConsoleOut(console, "Unkown command: %s", cmd_buffer);
 		break;
 	}
 
