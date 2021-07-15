@@ -269,7 +269,7 @@ size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len)
     return (element->error == TB_INI_OK) ? tb_ini_strncpy(dst, element->name, element->name_len, dst_len) : 0;
 }
 
-char* tb_ini_cvs(char* ini, const char* section, const char* prop, tb_ini_element* element)
+char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_element* element)
 {
     tb_ini_query(ini, section, prop, element);
     if (element->error != TB_INI_OK) return element->start;

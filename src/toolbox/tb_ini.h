@@ -48,10 +48,10 @@ size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
 
 /* 
  * functions to split quoted values into Comma Separated Values 
- * tb_ini_cvs:      creates an element where the value starts after the quote and the len is the number of CSV
- * tb_ini_cvs_step: returns next CSV till closing quote or EOF is reached
+ * tb_ini_csv:      creates an element where the value starts after the quote and the len is the number of CSV
+ * tb_ini_csv_step: returns next CSV till closing quote or EOF is reached
  */
-char* tb_ini_cvs(char* ini, const char* section, const char* prop, tb_ini_element* element);
+char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_element* element);
 char* tb_ini_csv_step(char* stream, tb_ini_element* element);
 
 /* returns a string describing the error */

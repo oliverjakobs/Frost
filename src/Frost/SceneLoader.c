@@ -199,7 +199,7 @@ SceneLoadError SceneLoadMap(Scene* scene, char* ini)
 	if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator)) return SCENE_LOAD_MAP_ERROR;
 
 	tb_ini_element types;
-	tb_ini_cvs(ini, "map", "types", &types);
+	tb_ini_csv(ini, "map", "types", &types);
 
 	if (types.error != TB_INI_OK || !TileMapStreamTypes(&scene->map, types.start, SceneStreamTileTypes, types.len))
 	{
@@ -208,7 +208,7 @@ SceneLoadError SceneLoadMap(Scene* scene, char* ini)
 	}
 
 	tb_ini_element tiles;
-	tb_ini_cvs(ini, "tiles", "layer0", &tiles);
+	tb_ini_csv(ini, "tiles", "layer0", &tiles);
 
 	if (types.error != TB_INI_OK || !TileMapStreamTiles(&scene->map, tiles.start, SceneStreamTiles, tiles.len))
 	{
