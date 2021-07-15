@@ -2,7 +2,7 @@
     "gravity": [ 0.0, -980.0 ],
     "item_atlas": { "path": "res/textures/items.png", "atlas": [ 1, 6 ] },
     "tile_set": { "path": "res/textures/tiles.png", "atlas": [ 3, 4 ] },
-    "map": "res/maps/map.json",
+    "map": "res/maps/map.ini",
     "textures": {
         "player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
         "trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },

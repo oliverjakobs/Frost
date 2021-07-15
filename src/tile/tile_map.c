@@ -67,9 +67,10 @@ int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*)
 
 	for (size_t index = 0; index < len; ++index)
 	{
+		if (!stream) return 0;
+
 		TileID id;
 		stream = next(stream, &id);
-		if (!stream) return 0;
 
 		map->tiles[index].id = id;
 		map->tiles[index].pos = TileMapGetTilePos(map, index);
@@ -85,8 +86,8 @@ int TileMapStreamTypes(TileMap* map, void* stream, void* (*next)(void*, TileType
 
 	for (size_t index = 0; index < len; ++index)
 	{
-		stream = next(stream, map->types + index);
 		if (!stream) return 0;
+		stream = next(stream, map->types + index);
 	}
 
 	map->types_count = len;

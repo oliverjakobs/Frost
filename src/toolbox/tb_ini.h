@@ -27,6 +27,7 @@ typedef struct
  * searches for section and if found calls tb_ini_query_section on it 
  * if prop is empty returns the specified section as element
  * if section is empty calls tb_ini_query_section on the current ini pos
+ * returns a pointer after into the ini file after the queried value
  */
 char* tb_ini_query(char* ini, const char* section, const char* prop, tb_ini_element* element);
 
@@ -44,6 +45,15 @@ size_t  tb_ini_query_string(char* ini, const char* section, const char* prop, ch
 
 /* copies the name of the element into the dst buffer (copies at most dst_len bytes)*/
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len);
+
+/* 
+ * functions to split quoted values into Comma Separated Values 
+ * tb_ini_cvs:      creates an element where the value starts after the quote and the len is the number of CSV
+ * tb_ini_cvs_step: returns next CSV till closing quote or EOF is reached
+ */
+
+char* tb_ini_cvs(char* ini, const char* section, const char* prop, tb_ini_element* element);
+char* tb_ini_csv_step(char* stream, tb_ini_element* element);
 
 /* returns a string describing the error */
 const char* tb_ini_get_error_desc(tb_ini_error error);

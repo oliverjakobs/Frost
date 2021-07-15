@@ -9,7 +9,7 @@ static inline int tb_ini_isspace(char c) { return c == ' ' || c == '\f' || c == 
 static inline int tb_ini_isalpha(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
 static inline int tb_ini_isalnum(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'); }
 
-/* skip forward till a whitespace char is reached or the cursor becomes invalid */
+/* skip forward till a non-whitespace char is reached or the cursor becomes invalid */
 static char* tb_ini_skip_whitespaces(char* cursor)
 {
     while (cursor && *cursor != '\0' && tb_ini_isspace(*cursor)) cursor++;
@@ -23,6 +23,12 @@ static size_t tb_ini_strncpy(char* dst, char* src, size_t len, size_t max_len)
     dst[len] = '\0';
 
     return len;
+}
+
+static int tb_ini_string_quote(char* cursor, int multiline)
+{
+    if (multiline)  return (cursor[0] == '\"' && cursor[1] == '\"' && cursor[2] == '\"');
+    else            return (cursor[0] == '\"');
 }
 
 /* create a value element with a length of (end-start) pointing to start */
@@ -90,25 +96,32 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
     ini = tb_ini_skip_whitespaces(++ini);
 
     char* start = ini;
+
     /* read quoted value */
     if (*ini == '\"')
     {
-        while (!tb_ini_isendln(*ini) && *ini != '\"') ini++;
+        int multiline = tb_ini_string_quote(ini, 1);
+        ini += multiline ? 3 : 1; /* skip opening quotes */
 
-        if (*ini++ != '\"') return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
+        while (*ini != '\0' && !tb_ini_string_quote(ini, multiline) && (multiline || !tb_ini_isendln(*ini))) ini++;
+
+        if (*ini == '\0' ||!tb_ini_string_quote(ini, multiline)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
+
+        ini += multiline ? 3 : 1; /* skip closing quotes */
+
+        /* check if line is empty after quoted value */
+        char* check = ini;
+        while (!tb_ini_isendln(*check))
+        {
+            if (!tb_ini_isblank(*check)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, check);
+            check++;
+        }
+
         return tb_ini_make_element(element, start, ini);
     }
 
     /* read standard value */
-    while (!tb_ini_isspace(*ini) && *ini != '\0') ini++;
-
-    /* check if line is empty after value */
-    char* check = ini;
-    while (!tb_ini_isendln(*check))
-    {
-        if (!tb_ini_isblank(*check)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, check);
-        check++;
-    }
+    while (ini && *ini != '\0' && !tb_ini_isendln(*ini)) ini++;
 
     return tb_ini_make_element(element, start, ini);
 }
@@ -254,6 +267,55 @@ size_t tb_ini_query_string(char* ini, const char* section, const char* prop, cha
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len)
 {
     return (element->error == TB_INI_OK) ? tb_ini_strncpy(dst, element->name, element->name_len, dst_len) : 0;
+}
+
+char* tb_ini_cvs(char* ini, const char* section, const char* prop, tb_ini_element* element)
+{
+    tb_ini_query(ini, section, prop, element);
+    if (element->error != TB_INI_OK) return element->start;
+
+    char* csv = element->start;
+
+    /* check if csv value start with at least one quote */
+    if (*csv != '\"') return tb_ini_make_error(element, TB_INI_BAD_VALUE, csv);
+
+    /* check if its a multiline string */
+    int multiline = (csv[1] == '\"' && csv[2] == '\"');
+
+    /* skip quotes appropriately */
+    csv += multiline ? 3 : 1;
+
+    element->start = csv;
+    element->len = 0;
+
+    /* count values in csv list */
+    while (csv && *csv != '\0' && *csv !='\"' && (multiline || *csv != '\n'))
+    {
+        /* TODO: check for line end without comma (except for last value) */
+        element->len += (*csv == ',');
+        csv++;
+    }
+
+    /* add last element if csv is not empty */
+    element->len += (element->len > 0);
+
+    return csv;
+}
+
+char* tb_ini_csv_step(char* stream, tb_ini_element* element)
+{
+    if (!stream) return NULL;
+
+    stream = tb_ini_skip_whitespaces(stream);
+    element->start = stream;
+
+    /* find end of value */
+    while (!tb_ini_isendln(*stream) && *stream != '\"' && *stream != ',') stream++;
+
+    element->len = stream - element->start;
+    
+    if (*stream == '\"') return NULL; /* End of Stream */
+    return ++stream; /* skip ',' after value */
 }
 
 const char* tb_ini_get_error_desc(tb_ini_error error)

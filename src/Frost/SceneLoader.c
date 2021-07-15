@@ -4,6 +4,7 @@
 #include "FrostParser.h"
 
 #include "toolbox/tb_file.h"
+#include "toolbox/tb_ini.h"
 
 static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*load_func)(Scene*, char*))
 {
@@ -174,44 +175,42 @@ SceneLoadError SceneLoadTextures(Scene* scene, char* json)
 
 static void* SceneStreamTiles(void* stream, TileID* id)
 {
-	tb_json_element element;
-	stream = tb_json_array_step(stream, &element);
-	tb_json_atoi(element.value, id);
+	tb_ini_element element;
+	stream = tb_ini_csv_step(stream, &element);
+	*id = atoi(element.start);
 	return stream;
 }
 
 static void* SceneStreamTileTypes(void* stream, TileType* type)
 {
-	tb_json_element element;
-	stream = tb_json_array_step(stream, &element);
-	*type = FrostParseTileType(element.value, element.bytelen);
+	tb_ini_element element;
+	stream = tb_ini_csv_step(stream, &element);
+	*type = FrostParseTileType(element.start, element.len);
 	return stream;
 }
 
-SceneLoadError SceneLoadMap(Scene* scene, char* json)
+SceneLoadError SceneLoadMap(Scene* scene, char* ini)
 {
-	size_t cols = tb_json_long(json, "{'size'[0", NULL, 0);
-	size_t rows = tb_json_long(json, "{'size'[1", NULL, 0);
+	size_t rows = tb_ini_query_int(ini, "map", "rows", 0);
+	size_t cols = tb_ini_query_int(ini, "map", "cols", 0);
 
-	float tile_size = tb_json_float(json, "{'tile_size'", NULL, 0.0f);
-
+	float tile_size = tb_ini_query_float(ini, "map", "tile", 0.0f);
+	 
 	if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator)) return SCENE_LOAD_MAP_ERROR;
 
-	tb_json_element types;
-	tb_json_read(json, &types, "{'tile_types'");
+	tb_ini_element types;
+	tb_ini_cvs(ini, "map", "types", &types);
 
-	if (!tb_json_is_type(&types, TB_JSON_ARRAY) || 
-		!TileMapStreamTypes(&scene->map, types.value, SceneStreamTileTypes, types.elements))
+	if (types.error != TB_INI_OK || !TileMapStreamTypes(&scene->map, types.start, SceneStreamTileTypes, types.len))
 	{
 		TileMapDestroy(&scene->map);
 		return SCENE_LOAD_STREAM_TYPES_ERROR;
 	}
 
-	tb_json_element tiles;
-	tb_json_read(json, &tiles, "{'tiles'");
+	tb_ini_element tiles;
+	tb_ini_cvs(ini, "tiles", "layer0", &tiles);
 
-	if (!tb_json_is_type(&tiles, TB_JSON_ARRAY) || 
-		!TileMapStreamTiles(&scene->map, tiles.value, SceneStreamTiles, tiles.elements))
+	if (types.error != TB_INI_OK || !TileMapStreamTiles(&scene->map, tiles.start, SceneStreamTiles, tiles.len))
 	{
 		TileMapDestroy(&scene->map);
 		return SCENE_LOAD_STREAM_MAP_ERROR;

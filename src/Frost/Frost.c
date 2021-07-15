@@ -41,25 +41,25 @@ int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLe
     char frag[APPLICATION_PATH_LEN];
 
     /* renderer2D */
-    tb_ini_query(config, "renderer2D", NULL, &section);
+    tb_ini_query(config, "renderer", NULL, &section);
     tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
     tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     Renderer2DInit(vert, frag);
 
     /* primitives2D */
-    tb_ini_query(config, "primitives2D", NULL, &section);
+    tb_ini_query(config, "renderer.primitives", NULL, &section);
     tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
     tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     Primitives2DInit(vert, frag);
 
     /* batchrenderer2D */
-    tb_ini_query(config, "batchrenderer2D", NULL, &section);
+    tb_ini_query(config, "renderer.batch", NULL, &section);
     tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
     tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     BatchRenderer2DInit(vert, frag);
 
     /* fontrenderer */
-    tb_ini_query(config, "fontrenderer", NULL, &section);
+    tb_ini_query(config, "renderer.font", NULL, &section);
     tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
     tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     FontRendererInit(vert, frag);
