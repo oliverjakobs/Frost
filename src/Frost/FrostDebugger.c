@@ -38,7 +38,7 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 	FontRendererTextFieldLine("Gravity: %4.2f, %4.2f", scene->gravity.x, scene->gravity.y);
 	FontRendererTextFieldLine("------------------------");
 
-	EcsEntityID player = 0;
+	EcsEntityID player = 1;
 	FontRendererTextFieldLine("Player ID: %d", player);
 	FontRendererTextFieldLine("State: %s", EntityGetStateString(&scene->ecs, player));
 	vec2 position = GetEntityPosition(&scene->ecs, player);

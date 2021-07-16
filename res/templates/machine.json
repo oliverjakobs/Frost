@@ -4,5 +4,16 @@
   },
   "sprite": {
     "texture": "machine"
+  },
+  "inventory": {
+    "id": "chest1",
+    "grid": [ 3, 2 ],
+    "align": [ "left", "center" ]
+  },
+  "interaction": {
+    "type": "RANGED",
+    "interaction": "OPEN_INVENTORY",
+    "key": "E",
+    "range": [ 64.0, 128.0 ]
   }
 }

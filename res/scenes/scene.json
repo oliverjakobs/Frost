@@ -4,10 +4,11 @@
     "tile_set": { "path": "res/textures/tiles.png", "atlas": [ 3, 4 ] },
     "map": "res/maps/map.ini",
     "textures": {
-        "player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
-        "trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
-        "door": { "path": "res/textures/door.png", "atlas": [ 1, 2 ] },
-        "chest": { "path": "res/textures/chest.png" }
+      "player": { "path": "res/textures/player.png", "atlas": [ 4, 6 ] },
+      "trees": { "path": "res/textures/trees.png", "atlas": [ 1, 5 ] },
+      "door": { "path": "res/textures/door.png", "atlas": [ 1, 2 ] },
+      "machine": { "path": "res/textures/machine.png" },
+      "items": { "path": "res/textures/items.png", "atlas": [ 1, 6 ] }
     },
     "background": [
         [ "res/textures/background/0.png", 0, 288, 1088, 600, 1 ],
