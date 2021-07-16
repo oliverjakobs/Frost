@@ -27,7 +27,7 @@ typedef struct
  * searches for section and if found calls tb_ini_query_section on it 
  * if prop is empty returns the specified section as element
  * if section is empty calls tb_ini_query_section on the current ini pos
- * returns a pointer after into the ini file after the queried value
+ * returns a pointer into the ini file after the queried value
  */
 char* tb_ini_query(char* ini, const char* section, const char* prop, tb_ini_element* element);
 
