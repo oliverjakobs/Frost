@@ -20,18 +20,15 @@ static GuiManager _gui;
 static int GuiAllocMapEntry(void* allocator, tb_hashmap_entry* entry, const void* key, void* value)
 {
 	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);
-
-	if (!entry->key) return 0;
-
 	entry->val = tb_mem_dup(allocator, value, sizeof(IgnisFont));
 
-	return entry->val != NULL;
+	return entry->key && entry->val;
 }
 
 static void GuiFreeMapEntry(void* allocator, tb_hashmap_entry* entry)
 {
-	tb_mem_constfree(allocator, entry->key);
 	ignisDeleteFont(entry->val);
+	tb_mem_constfree(allocator, entry->key);
 	tb_mem_free(allocator, entry->val);
 }
 
@@ -67,7 +64,6 @@ IgnisFont* GuiAddFont(const char* name, const char* path, float size)
 		if (entry != NULL) return entry;
 
 		MINIMAL_ERROR("[GUI] Failed to add font: %s (%s)\n", name, path);
-		ignisDeleteFont(&font);
 	}
 	return NULL;
 }

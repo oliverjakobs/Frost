@@ -8,18 +8,15 @@
 static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, const void* key, void* value)
 {
 	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);
-
-	if (!entry->key) return 0;
-
 	entry->val = tb_mem_dup(allocator, value, sizeof(IgnisTexture2D));
 
-	return entry->val != NULL;
+	return entry->key && entry->val;
 }
 
 static void ResourcesFreeEntry(void* allocator, tb_hashmap_entry* entry)
 {
-	tb_mem_constfree(allocator, entry->key);
 	ignisDeleteTexture2D(entry->val);
+	tb_mem_constfree(allocator, entry->key);
 	tb_mem_free(allocator, entry->val);
 }
 
@@ -53,7 +50,6 @@ IgnisTexture2D* ResourcesAddTexture2D(Resources* res, const char* name, const ch
 		if (entry != NULL) return entry;
 
 		MINIMAL_ERROR("[Scenes] Failed to add texture: %s (%s)", name, path);
-		ignisDeleteTexture2D(&texture);
 	}
 
 	return NULL;

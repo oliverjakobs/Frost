@@ -226,6 +226,8 @@ void* tb_hashmap_insert(tb_hashmap* map, const void* key, void* value)
     }
     else if (!map->entry_alloc(map->allocator, entry, key, value))
     {
+        /* clean up and return NULL */
+        if (map->entry_free) map->entry_free(map->allocator, entry);
         return NULL;
     }
 
