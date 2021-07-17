@@ -15,6 +15,13 @@ static char* tb_ini_skip(char* cursor, int(*what)(char))
     return cursor;
 }
 
+/* removes trailing spaces ignoring current cursor pos */
+static char* tb_ini_clip_tail(char* cursor)
+{
+    while (cursor && tb_ini_isblank(*(cursor - 1))) cursor--;
+    return cursor;
+}
+
 static size_t tb_ini_strncpy(char* dst, char* src, size_t len, size_t max_len)
 {
     if (len >= max_len) len = max_len - 1;
@@ -48,44 +55,14 @@ static char* tb_ini_make_error(tb_ini_element* element, tb_ini_error error, char
     return pos;
 }
 
-/* create a section element pointing to pos where len is the number of properties in that section */
-static char* tb_ini_make_section(tb_ini_element* element, char* start)
-{
-    element->start = start;
-    element->len = 0;
-    element->error = TB_INI_OK;
-
-    while (start && *start != '\0' && *start != '[')
-    {
-        while (start && !tb_ini_isendln(*start))
-        {
-            /* Note: Could this be tb_ini_isblank? */
-            if (!tb_ini_isspace(*start))
-            {
-                start = strpbrk(start, "\n\0");
-                element->len++;
-                continue;
-            }
-            start++;
-        }
-        
-        if (start && *start != '\0') start++;
-    }
-    return element->start;
-}
-
 static char* tb_ini_read_element(char* ini, tb_ini_element* element)
 {
     /* read key */
-    if (!tb_ini_isalpha(*ini)) return tb_ini_make_error(element, TB_INI_BAD_NAME, ini);
+    element->name = ini;
 
-    element->name = ini++;
-    while (tb_ini_isalnum(*ini))
-    {
-        if (*ini == '\0') return tb_ini_make_error(element, TB_INI_BAD_NAME, ini);
-        ini++;
-    }
-    element->name_len = ini - element->name;
+    while (ini && *ini != '\0' && *ini != '=' && !tb_ini_isendln(*ini)) ini++;
+
+    element->name_len = tb_ini_clip_tail(ini) - element->name;
 
     /* check for '=' between key and value */
     ini = tb_ini_skip(ini, tb_ini_isspace);
@@ -96,19 +73,18 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
 
     char* start = ini;
 
-    /* read quoted value */
-    if (*ini == '\"')
+    /* read grouped value */
+    if (*ini == '{')
     {
-        int multiline = tb_ini_string_quote(ini, 1);
-        ini += multiline ? 3 : 1; /* skip opening quotes */
+        ini++; /* skip opening braces */
 
-        while (*ini != '\0' && !tb_ini_string_quote(ini, multiline) && (multiline || !tb_ini_isendln(*ini))) ini++;
+        while (*ini != '\0' && *ini != '}') ini++;
 
-        if (*ini == '\0' ||!tb_ini_string_quote(ini, multiline)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
+        if (*ini == '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
 
-        ini += multiline ? 3 : 1; /* skip closing quotes */
+        ini++; /* skip closing braces */
 
-        /* check if line is empty after quoted value */
+        /* check if line is empty after grouped value */
         char* check = ini;
         while (!tb_ini_isendln(*check))
         {
@@ -122,7 +98,27 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
     /* read standard value */
     while (ini && *ini != '\0' && !tb_ini_isendln(*ini)) ini++;
 
-    return tb_ini_make_element(element, start, ini);
+    return tb_ini_make_element(element, start, tb_ini_clip_tail(ini));
+}
+
+/* create a section element pointing to pos where len is the number of properties in that section */
+static char* tb_ini_make_section(tb_ini_element* element, char* start)
+{
+    element->start = start;
+    element->len = 0;
+    element->error = TB_INI_OK;
+
+    while (start && *start != '\0' && *start != '[')
+    {
+        tb_ini_element prop;
+        start = tb_ini_read_element(start, &prop);
+
+        if (prop.error != TB_INI_OK) return tb_ini_make_error(element, TB_INI_BAD_VALUE, prop.start);
+        
+        element->len++;
+        start = tb_ini_skip(start, tb_ini_isspace);
+    }
+    return element->start;
 }
 
 static char* tb_ini_read_section(char* ini, const char* name, size_t len, tb_ini_element* element)
@@ -263,6 +259,14 @@ size_t tb_ini_query_string(char* ini, const char* section, const char* prop, cha
     return (element.error == TB_INI_OK) ? tb_ini_strncpy(dst, element.start, element.len, dst_len) : 0;
 }
 
+int tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_parse_func parse)
+{
+    tb_ini_element element;
+    tb_ini_query(ini, section, prop, &element);
+
+    return parse(element.start, element.len);
+}
+
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len)
 {
     return (element->error == TB_INI_OK) ? tb_ini_strncpy(dst, element->name, element->name_len, dst_len) : 0;
@@ -273,22 +277,14 @@ char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_elemen
     tb_ini_query(ini, section, prop, element);
     if (element->error != TB_INI_OK) return element->start;
 
-    char* csv = element->start;
+    /* check if element starts with a brace */
+    if (!element->start || *element->start != '{') return tb_ini_make_error(element, TB_INI_BAD_VALUE, element->start);
 
-    /* check if csv value start with at least one quote */
-    if (*csv != '\"') return tb_ini_make_error(element, TB_INI_BAD_VALUE, csv);
-
-    /* check if its a multiline string */
-    int multiline = (csv[1] == '\"' && csv[2] == '\"');
-
-    /* skip quotes appropriately */
-    csv += multiline ? 3 : 1;
-
-    element->start = csv;
+    char* csv = ++element->start;
     element->len = 0;
 
     /* count values in csv list */
-    while (csv && *csv != '\0' && *csv !='\"' && (multiline || *csv != '\n'))
+    while (*csv != '\0' && *csv != '}')
     {
         /* TODO: check for line end without comma (except for last value) */
         element->len += (*csv == ',');
@@ -296,7 +292,7 @@ char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_elemen
     }
 
     /* add last element if csv is not empty */
-    element->len += (element->len > 0);
+    element->len += ((tb_ini_clip_tail(csv) - element->start) > 0);
 
     return csv;
 }
@@ -309,11 +305,11 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element)
     element->start = stream;
 
     /* find end of value */
-    while (!tb_ini_isendln(*stream) && *stream != '\"' && *stream != ',') stream++;
+    while (!tb_ini_isendln(*stream) && *stream != '}' && *stream != ',') stream++;
 
-    element->len = stream - element->start;
+    element->len = tb_ini_clip_tail(stream) - element->start;
     
-    if (*stream == '\"') return NULL; /* End of Stream */
+    if (*stream == '}') return NULL; /* End of Stream */
     return ++stream; /* skip ',' after value */
 }
 

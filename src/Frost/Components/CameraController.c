@@ -1,22 +1,20 @@
 #include "CameraController.h"
 
-#include "Frost/Frost.h"
-
-#include "toolbox/tb_json.h"
+#include "Frost/FrostParser.h"
 #include "toolbox/toolbox.h"
 
-void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene)
+void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'camera'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "camera", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		CameraController comp =
 		{
 			&scene->camera,
 			SceneGetWidth(scene),
 			SceneGetHeight(scene),
-			tb_json_float(element.value, "{'smooth'", NULL, 0.0f)
+			tb_ini_query_float(element.start, NULL, "smooth", 0.0f)
 		};
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_CAMERA, &comp);

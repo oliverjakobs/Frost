@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void RigidBodyLoad(char* json, Ecs* ecs, EcsEntityID entity)
+void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
@@ -11,33 +11,33 @@ void RigidBodyLoad(char* json, Ecs* ecs, EcsEntityID entity)
 		return;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'rigidbody'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "rigidbody", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
-		TileBodyType type = tb_json_parse(element.value, "{'type'", NULL, FrostParseRigidBodyType);
+		TileBodyType type = tb_ini_parse(element.start, NULL, "type", FrostParseRigidBodyType);
 
-		float half_w = tb_json_float(element.value, "{'halfsize'[0", NULL, transform->size.x / 2.0f);
-		float half_h = tb_json_float(element.value, "{'halfsize'[1", NULL, transform->size.y / 2.0f);
+		float half_w = tb_ini_query_float(element.start, NULL, "half_width", transform->size.x / 2.0f);
+		float half_h = tb_ini_query_float(element.start, NULL, "half_height", transform->size.y / 2.0f);
 
 		RigidBody body;
 		body.filter = RIGID_BODY_FILTER_NONE;
 
-		tb_json_element filter;
-		tb_json_read(element.value, &filter, "{'filter'");
-		if (filter.error == TB_JSON_OK && filter.data_type == TB_JSON_ARRAY)
+		tb_ini_element filter;
+		tb_ini_csv(element.start, NULL, "filter", &filter);
+		if (filter.error == TB_INI_OK)
 		{
-			tb_json_element filter_bit;
-			char* value = filter.value;
-			for (size_t i = 0; i < filter.elements; ++i)
+			tb_ini_element filter_bit;
+			char* value = filter.start;
+			for (size_t i = 0; i < filter.len; ++i)
 			{
-				value = tb_json_array_step(value, &filter_bit);
-				body.filter |= FrostParseRigidBodyFilter(filter_bit.value, filter_bit.bytelen);
+				value = tb_ini_csv_step(value, &filter_bit);
+				body.filter |= FrostParseRigidBodyFilter(filter_bit.start, filter_bit.len);
 			}
 		}
 
-		body.offset.x = tb_json_float(element.value, "{'offset'[0", NULL, 0.0f);
-		body.offset.y = tb_json_float(element.value, "{'offset'[1", NULL, half_h);
+		body.offset.x = tb_ini_query_float(element.start, NULL, "offset_x", 0.0f);
+		body.offset.y = tb_ini_query_float(element.start, NULL, "offset_y", half_h);
 
 		vec2 position = vec2_add(transform->position, body.offset);
 		TileBodyInit(&body.body, type, position.x, position.y, half_w, half_h);

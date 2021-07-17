@@ -4,7 +4,7 @@
 
 #include "toolbox/toolbox.h"
 
-void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
+void InteractableLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
 	if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
 	{
@@ -12,20 +12,20 @@ void InteractableLoad(char* json, Ecs* ecs, EcsEntityID entity)
 		return;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'interaction'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "interaction", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		Interactable comp;
-		comp.type = tb_json_parse(element.value, "{'type'", NULL, FrostParseInteractionType);
-		comp.interaction = tb_json_parse(element.value, "{'interaction'", NULL, FrostParseInteraction);
-		comp.key = tb_json_parse(element.value, "{'key'", NULL, FrostParseInputKeyCode);
+		comp.type = tb_ini_parse(element.start, NULL, "type", FrostParseInteractionType);
+		comp.interaction = tb_ini_parse(element.start, NULL, "interaction", FrostParseInteraction);
+		comp.key = tb_ini_parse(element.start, NULL, "key", FrostParseInputKeyCode);
 
-		comp.range_min = tb_json_float(element.value, "{'range'[0", NULL, 0.0f);
-		comp.range_max = tb_json_float(element.value, "{'range'[1", NULL, 0.0f);
+		comp.range_min = tb_ini_query_float(element.start, NULL, "range_min", 0.0f);
+		comp.range_max = tb_ini_query_float(element.start, NULL, "range_max", 0.0f);
 
 		if (comp.type == INTERACTION_TYPE_TIMED)
-			comp.time = tb_json_float(element.value, "{'time'", NULL, 0.0f);
+			comp.time = tb_ini_query_float(element.start, NULL, "time", 0.0f);
 		else
 			comp.time = 0.0f;
 

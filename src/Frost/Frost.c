@@ -103,7 +103,7 @@ int FrostLoad(MinimalApp* app, const char* path)
     if (section.error != TB_INI_OK)
     {
         MINIMAL_ERROR("Failed to parse config (%s)", tb_ini_get_error_desc(section.error));
-        MinimalFree(config);
+        FrostFree(config);
         return MINIMAL_FAIL;
     }
 
@@ -121,7 +121,7 @@ int FrostLoad(MinimalApp* app, const char* path)
     if (!MinimalLoad(app, title, w, h, gl_version))
     {
         MINIMAL_ERROR("Failed to load minimal");
-        MinimalFree(config);
+        FrostFree(config);
         return MINIMAL_FAIL;
     }
 

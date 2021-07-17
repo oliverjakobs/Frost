@@ -2,10 +2,10 @@
 
 #include "Frost/FrostParser.h"
 
-void PlayerLoad(char* json, Ecs* ecs, EcsEntityID entity)
+void PlayerLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'player'");
+	tb_ini_element element;
+	tb_ini_query(ini, "player", NULL, &element);
 	if (element.error == TB_JSON_OK)
 	{
 		Player comp;

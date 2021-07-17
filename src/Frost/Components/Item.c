@@ -2,14 +2,14 @@
 
 #include "Frost/FrostParser.h"
 
-void ItemLoad(char* json, Ecs* ecs, EcsEntityID entity, int variant)
+void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'item'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "item", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		Item item;
-		item.id = FrostMatchVariant(element.value, "{'id'", variant);
+		item.id = FrostMatchVariantINI(element.start, NULL, "id", variant, 0);
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_ITEM, &item);
 	}

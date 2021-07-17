@@ -1,21 +1,18 @@
 #include "Movement.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
-#include "toolbox/tb_json.h"
-
-void MovementLoad(char* json, Ecs* ecs, EcsEntityID entity)
+void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'movement'");
-
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "movement", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		Movement comp;
 
 		comp.direction = MOVEMENT_LEFT;
-		comp.speed = tb_json_float(element.value, "{'speed'", NULL, 0.0f);
-		comp.jump_power = tb_json_float(element.value, "{'jumppower'", NULL, 0.0f);
+		comp.speed = tb_ini_query_float(element.start, NULL, "speed", 0.0f);
+		comp.jump_power = tb_ini_query_float(element.start, NULL, "jumppower", 0.0f);
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_MOVEMENT, &comp);
 	}

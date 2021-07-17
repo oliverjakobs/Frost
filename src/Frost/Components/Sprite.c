@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant)
+void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant)
 {
 	Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
 	if (!transform)
@@ -11,19 +11,19 @@ void SpriteLoad(char* json, Ecs* ecs, EcsEntityID entity, const Resources* res, 
 		return;
 	}
 
-	tb_json_element element;
-	tb_json_read(json, &element, "{'sprite'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "sprite", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		Sprite sprite;
 		sprite.flip = SPRITE_FLIP_NONE;
-		sprite.width = tb_json_float(element.value, "{'size'[0", NULL, transform->size.x);
-		sprite.height = tb_json_float(element.value, "{'size'[1", NULL, transform->size.y);
+		sprite.width = tb_ini_query_float(element.start, NULL, "width", transform->size.x);
+		sprite.height = tb_ini_query_float(element.start, NULL, "height", transform->size.y);
 
-		sprite.frame = FrostMatchVariant(element.value, "{'frame'", variant);
+		sprite.frame = FrostMatchVariantINI(element.start, NULL, "frame", variant, 0);
 
 		char texture[APPLICATION_STR_LEN];
-		tb_json_string(element.value, "{'texture'", texture, APPLICATION_STR_LEN, NULL);
+		tb_ini_query_string(element.start, NULL, "texture", texture, APPLICATION_STR_LEN);
 
 		sprite.texture = ResourcesGetTexture2D(res, texture);
 

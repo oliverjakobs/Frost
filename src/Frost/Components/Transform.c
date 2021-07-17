@@ -1,20 +1,18 @@
 #include "Transform.h"
 
-#include "Frost/Frost.h"
+#include "Frost/FrostParser.h"
 
-#include "toolbox/tb_json.h"
-
-void TransformLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 pos)
+void TransformLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 pos)
 {
-	tb_json_element element;
-	tb_json_read(json, &element, "{'transform'");
-	if (element.error == TB_JSON_OK)
+	tb_ini_element element;
+	tb_ini_query(ini, "transform", NULL, &element);
+	if (element.error == TB_INI_OK)
 	{
 		Transform transform;
 		transform.position = pos;
 
-		transform.size.x = tb_json_float(element.value, "{'size'[0", NULL, 0.0f);
-		transform.size.y = tb_json_float(element.value, "{'size'[1", NULL, 0.0f);
+		transform.size.x = tb_ini_query_float(element.start, NULL, "width", 0.0f);
+		transform.size.y = tb_ini_query_float(element.start, NULL, "height", 0.0f);
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_TRANSFORM, &transform);
 	}

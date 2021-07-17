@@ -191,15 +191,18 @@ static void* SceneStreamTileTypes(void* stream, TileType* type)
 
 SceneLoadError SceneLoadMap(Scene* scene, char* ini)
 {
-	size_t rows = tb_ini_query_int(ini, "map", "rows", 0);
-	size_t cols = tb_ini_query_int(ini, "map", "cols", 0);
+	tb_ini_element map;
+	tb_ini_query(ini, "map", NULL, &map);
 
-	float tile_size = tb_ini_query_float(ini, "map", "tile", 0.0f);
+	size_t rows = tb_ini_query_int(map.start, NULL, "rows", 0);
+	size_t cols = tb_ini_query_int(map.start, NULL, "cols", 0);
+
+	float tile_size = tb_ini_query_float(map.start, NULL, "tile", 0.0f);
 	 
 	if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator)) return SCENE_LOAD_MAP_ERROR;
 
 	tb_ini_element types;
-	tb_ini_csv(ini, "map", "types", &types);
+	tb_ini_csv(map.start, NULL, "types", &types);
 
 	if (types.error != TB_INI_OK || !TileMapStreamTypes(&scene->map, types.start, SceneStreamTileTypes, types.len))
 	{

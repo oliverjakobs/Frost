@@ -2,11 +2,13 @@
 #define FROST_PARSER_H
 
 #include "Frost.h"
+#include "toolbox/tb_ini.h"
 #include "toolbox/tb_json.h"
 
 #define FROST_VARIANT_STR "<VARIANT>"
 
 int FrostMatchVariant(char* json, char* query, int variant);
+int FrostMatchVariantINI(char* ini, char* section, char* prop, int variant, int def);
 
 /* ------------------| EntityState |-------------------------- */
 int FrostParseEntityState(const char* str, size_t max_count);

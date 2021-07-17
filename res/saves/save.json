@@ -1,9 +1,9 @@
 {
     "templates": [
-        [ "res/templates/player.json", [ 96, 288 ], 1 ],
-        [ "res/templates/tree.json", [ 800, 288 ], 2, 1 ],
-        [ "res/templates/tree.json", [ 960, 288 ], 0, 2 ],
-        [ "res/templates/door.json", [ 1200, 288 ], 0 ],
-        [ "res/templates/machine.json", [ 240, 288 ], 0 ]
+        [ "res/templates/player.ini", [ 96, 288 ], 1 ],
+        [ "res/templates/tree.ini", [ 800, 288 ], 2, 1 ],
+        [ "res/templates/tree.ini", [ 960, 288 ], 0, 2 ],
+        [ "res/templates/door.ini", [ 1200, 288 ], 0 ],
+        [ "res/templates/machine.ini", [ 240, 288 ], 0 ]
     ]
 }
