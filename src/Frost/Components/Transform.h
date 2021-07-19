@@ -7,17 +7,17 @@
 JSON - Template
 
 "transform": {
-	"size": [ <WIDTH:float>, <HEIGHT:float> ]
+    "size": [ <WIDTH:float>, <HEIGHT:float> ]
 }
 */
 
 typedef struct
 {
-	vec2 position;
-	vec2 size;
+    vec2 position;
+    vec2 size;
 } Transform;
 
-void TransformLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 pos);
+void TransformLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 pos);
 
 EcsEntityID GetEntityAt(const Ecs* ecs, vec2 pos);
 

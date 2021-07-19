@@ -5,19 +5,19 @@
 
 typedef enum
 {
-	MOVEMENT_RIGHT = 0,
-	MOVEMENT_DOWN,
-	MOVEMENT_LEFT,
-	MOVEMENT_UP
+    MOVEMENT_RIGHT = 0,
+    MOVEMENT_DOWN,
+    MOVEMENT_LEFT,
+    MOVEMENT_UP
 } MovementDirection;
 
 typedef struct
 {
-	MovementDirection direction;
-	float speed;
-	float jump_power;
+    MovementDirection direction;
+    float speed;
+    float bounce;
 } Movement;
 
-void MovementLoad(char* json, Ecs* ecs, EcsEntityID entity);
+void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity);
 
 #endif /* !MOVEMENT_H */

@@ -6,25 +6,24 @@
 
 typedef struct
 {
-	int start;
-	int length;
+    int start;
+    int length;
 
-	float delay;
+    float delay;
 } Animation;
 
 typedef struct
 {
-	Animation animations[NUM_ENTITY_STATES];
-	EntityState current;
-	int frame;
+    Animation animations[NUM_ENTITY_STATES];
+    EntityState current;
+    int frame;
 
-	float clock;
+    float clock;
 } Animator;
 
+void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity);
 void AnimatorRelease(Animator* animator);
 
 void AnimatorStart(Animator* animator, int start);
-
-void AnimatorLoad(char* json, Ecs* ecs, EcsEntityID entity);
 
 #endif /* !ANIMATOR_H */

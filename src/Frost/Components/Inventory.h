@@ -5,43 +5,43 @@
 
 typedef enum
 {
-	INV_HALIGN_NONE,
-	INV_HALIGN_LEFT,
-	INV_HALIGN_CENTER,
-	INV_HALIGN_RIGHT
-} InvHAlign;
+    INV_ALIGN_H_NONE,
+    INV_ALIGN_H_LEFT,
+    INV_ALIGN_H_CENTER,
+    INV_ALIGN_H_RIGHT
+} InventoryAlignH;
 
 typedef enum
 {
-	INV_VALIGN_NONE,
-	INV_VALIGN_TOP,
-	INV_VALIGN_CENTER,
-	INV_VALIGN_BOTTOM
-} InvVAlign;
+    INV_ALIGN_V_NONE,
+    INV_ALIGN_V_TOP,
+    INV_ALIGN_V_CENTER,
+    INV_ALIGN_V_BOTTOM
+} InventoryAlignV;
 
 typedef enum
 {
-	INVENTORY_CLOSED,
-	INVENTORY_OPEN,
-	INVENTORY_FIXED
+    INVENTORY_CLOSED,
+    INVENTORY_OPEN,
+    INVENTORY_FIXED
 } InventoryState;
 
 typedef struct
 {
-	vec2 pos;
+    vec2 pos;
 
-	float padding; /* padding at border */
-	float spacing; /* spacing between cells */
-	float cell_size;
+    float padding; /* padding at border */
+    float spacing; /* spacing between cells */
+    float cell_size;
 
-	int rows, cols;
+    int rows, cols;
 
-	InventoryState state;
+    InventoryState state;
 
-	ItemID* cells;
+    ItemID* cells;
 } Inventory;
 
-void InventoryLoad(char* json, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
+void InventoryLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
 void InventoryRelease(Inventory* inv);
 
 void InventoryToggle(Inventory* inv);

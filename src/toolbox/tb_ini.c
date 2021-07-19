@@ -214,7 +214,8 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
         section = strpbrk(section, "\n\0");
         section = tb_ini_skip(section, tb_ini_isspace);
     }
-    return NULL;
+
+    return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, NULL);
 }
 
 char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element)

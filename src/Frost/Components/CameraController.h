@@ -5,12 +5,12 @@
 
 typedef struct
 {
-	Camera* camera;
-	vec2 scene_size;
-	float smooth;
+    Camera* camera;
+    vec2 scene_size;
+    float smooth;
 } CameraController;
 
-void CameraControllerLoad(char* json, Ecs* ecs, EcsEntityID entity, Scene* scene);
+void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene);
 
 void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, float constraint);
 

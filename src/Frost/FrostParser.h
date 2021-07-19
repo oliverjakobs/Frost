@@ -16,8 +16,8 @@ const char* FrostEntityStateToString(EntityState value);
 
 /* ------------------| Inventory |---------------------------- */
 int FrostParseInventoryState(const char* str, size_t max_count);
-int FrostParseInventoryHAlign(const char* str, size_t max_count);
-int FrostParseInventoryVAlign(const char* str, size_t max_count);
+int FrostParseInventoryAlignH(const char* str, size_t max_count);
+int FrostParseInventoryAlignV(const char* str, size_t max_count);
 
 /* ------------------| Interaction |-------------------------- */
 int FrostParseInteraction(const char* str, size_t max_count);

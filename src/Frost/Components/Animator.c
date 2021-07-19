@@ -4,61 +4,58 @@
 
 #include <stdlib.h>
 
+/* TODO: improve animation storage */
+static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation* animation)
+{
+    if (state >= NUM_ENTITY_STATES || state < 0) return 0; 
+
+    animator->animations[state] = *animation;
+
+    if (animator->current == ENTITY_STATE_NULL) animator->current = state;
+
+    return 1;
+}
+
+void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+{
+    tb_ini_element element;
+    tb_ini_query_group(ini, "animation", &element);
+
+    if (element.error == TB_INI_OK)
+    {
+        Animator animator;
+
+        animator.current = ENTITY_STATE_NULL;
+        animator.clock = 0.0f;
+        animator.frame = 0;
+        memset(animator.animations, 0, NUM_ENTITY_STATES * sizeof(Animation));
+
+        while ((ini = tb_ini_query_group(ini, "animation", &element)) != NULL)
+        {
+            char name[APPLICATION_STR_LEN];
+            size_t name_len = tb_ini_name(&element, name, APPLICATION_STR_LEN);
+
+            EntityState state = FrostParseEntityState(name, name_len);
+
+            Animation animation;
+            animation.start = tb_ini_query_int(element.start, NULL, "start", 0);
+            animation.length = tb_ini_query_int(element.start, NULL, "length", 0);
+            animation.delay = tb_ini_query_float(element.start, NULL, "delay", 0.0f);
+
+            AnimatorAddAnimation(&animator, state, &animation);
+        }
+        EcsAddDataComponent(ecs, entity, COMPONENT_ANIMATOR, &animator);
+    }
+}
+
 /* kept for when storage is improved */
 void AnimatorRelease(Animator* block)
 {
-	// free(block);
+    // free(block);
 }
 
 void AnimatorStart(Animator* animator, int start)
 {
-	animator->frame = start;
-	animator->clock = 0.0f;
-}
-
-/* TODO: improve animation storage */
-static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation* animation)
-{
-	if (state >= NUM_ENTITY_STATES || state < 0) return 0; 
-
-	animator->animations[state] = *animation;
-
-	if (animator->current == ENTITY_STATE_NULL)
-		animator->current = state;
-
-	return 1;
-}
-
-void AnimatorLoad(char* json, Ecs* ecs, EcsEntityID entity)
-{
-	tb_json_element element;
-	tb_json_read(json, &element, "{'animation'");
-	if (element.error == TB_JSON_OK)
-	{
-		Animator animator;
-
-		animator.current = ENTITY_STATE_NULL;
-		animator.clock = 0.0f;
-		animator.frame = 0;
-		memset(animator.animations, 0, NUM_ENTITY_STATES * sizeof(Animation));
-
-		for (int i = 0; i < element.elements; i++)
-		{
-			tb_json_element key;
-			tb_json_read_param(element.value, &key, "{*", &i);
-
-			EntityState state = FrostParseEntityState(key.value, key.bytelen);
-
-			tb_json_element anim;
-			tb_json_read_format(element.value, &anim, "{'%.*s'", key.bytelen, key.value);
-
-			Animation animation;
-			animation.start = tb_json_int(anim.value, "[0", NULL, 0);
-			animation.length = tb_json_int(anim.value, "[1", NULL, 0);
-			animation.delay = tb_json_float(anim.value, "[2", NULL, 0.0f);
-
-			AnimatorAddAnimation(&animator, state, &animation);
-		}
-		EcsAddDataComponent(ecs, entity, COMPONENT_ANIMATOR, &animator);
-	}
+    animator->frame = start;
+    animator->clock = 0.0f;
 }

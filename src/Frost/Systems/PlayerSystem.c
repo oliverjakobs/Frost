@@ -18,7 +18,7 @@ void PlayerSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		velocity.y = body->body.velocity.y;
 
 		if (MinimalKeyDown(player->jump) && body->body.collision_state[TILE_BOTTOM])
-			velocity.y = movement->jump_power;
+			velocity.y = movement->bounce;
 		else if (!MinimalKeyDown(player->jump) && (velocity.y > 0.0f))
 			velocity.y *= 0.5f;
 

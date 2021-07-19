@@ -8,9 +8,9 @@ typedef int32_t ItemID;
 
 typedef struct
 {
-	ItemID id;
+    ItemID id;
 } Item;
 
-void ItemLoad(char* json, Ecs* ecs, EcsEntityID entity, int variant);
+void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant);
 
 #endif /* !ITEM_H */
