@@ -227,7 +227,7 @@ char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element)
     return tb_ini_make_section(element, start);
 }
 
-int tb_ini_query_bool(char* ini, const char* section, const char* prop, int def)
+int tb_ini_bool(char* ini, const char* section, const char* prop, int def)
 {
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
@@ -236,7 +236,7 @@ int tb_ini_query_bool(char* ini, const char* section, const char* prop, int def)
     return (strncmp(element.start, "true", element.len) == 0) ? 1 : 0;
 }
 
-int tb_ini_query_int(char* ini, const char* section, const char* prop, int def)
+int tb_ini_int(char* ini, const char* section, const char* prop, int def)
 {
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
@@ -244,7 +244,7 @@ int tb_ini_query_int(char* ini, const char* section, const char* prop, int def)
     return (element.error == TB_INI_OK) ? atoi(element.start) : def;
 }
 
-float tb_ini_query_float(char* ini, const char* section, const char* prop, float def)
+float tb_ini_float(char* ini, const char* section, const char* prop, float def)
 {
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
@@ -252,7 +252,7 @@ float tb_ini_query_float(char* ini, const char* section, const char* prop, float
     return (element.error == TB_INI_OK) ? (float)atof(element.start) : def;
 }
 
-size_t tb_ini_query_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len)
+size_t tb_ini_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len)
 {
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);

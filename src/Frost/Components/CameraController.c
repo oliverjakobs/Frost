@@ -14,7 +14,7 @@ void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene)
 			&scene->camera,
 			SceneGetWidth(scene),
 			SceneGetHeight(scene),
-			tb_ini_query_float(element.start, NULL, "smooth", 0.0f)
+			tb_ini_float(element.start, NULL, "smooth", 0.0f)
 		};
 		EcsAddDataComponent(ecs, entity, COMPONENT_CAMERA, &comp);
 	}

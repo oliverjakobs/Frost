@@ -38,10 +38,10 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
 char* tb_ini_query_group(char* ini, const char* group, tb_ini_element* element);
 
 /* utility functions to directly convert query to different types */
-int     tb_ini_query_bool(char* ini, const char* section, const char* prop, int def);
-int     tb_ini_query_int(char* ini, const char* section, const char* prop, int def);
-float   tb_ini_query_float(char* ini, const char* section, const char* prop, float def);
-size_t  tb_ini_query_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len);
+int     tb_ini_bool(char* ini, const char* section, const char* prop, int def);
+int     tb_ini_int(char* ini, const char* section, const char* prop, int def);
+float   tb_ini_float(char* ini, const char* section, const char* prop, float def);
+size_t  tb_ini_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len);
 
 typedef int(*tb_ini_parse_func)(const char* start, size_t len);
 int     tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_parse_func parse);

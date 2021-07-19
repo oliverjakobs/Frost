@@ -21,10 +21,10 @@ void InteractableLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 		comp.interaction = tb_ini_parse(element.start, NULL, "interaction", FrostParseInteraction);
 		comp.key = tb_ini_parse(element.start, NULL, "key", FrostParseInputKeyCode);
 
-		comp.range_min = tb_ini_query_float(element.start, NULL, "range_min", 0.0f);
-		comp.range_max = tb_ini_query_float(element.start, NULL, "range_max", 0.0f);
+		comp.range_min = tb_ini_float(element.start, NULL, "range_min", 0.0f);
+		comp.range_max = tb_ini_float(element.start, NULL, "range_max", 0.0f);
 
-		comp.time = (comp.type == INTERACTION_TYPE_TIMED) ? tb_ini_query_float(element.start, NULL, "time", 0.0f) : 0.0f;
+		comp.time = (comp.type == INTERACTION_TYPE_TIMED) ? tb_ini_float(element.start, NULL, "time", 0.0f) : 0.0f;
 
 		EcsAddDataComponent(ecs, entity, COMPONENT_INTERACTABLE, &comp);
 	}

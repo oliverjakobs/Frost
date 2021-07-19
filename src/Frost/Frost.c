@@ -10,9 +10,9 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
     switch (level)
     {
-    case IGNIS_WARN:		MINIMAL_WARN("%s", desc); break;
-    case IGNIS_ERROR:		MINIMAL_ERROR("%s", desc); break;
-    case IGNIS_CRITICAL:	MINIMAL_CRITICAL("%s", desc); break;
+    case IGNIS_WARN:     MINIMAL_WARN("%s", desc); break;
+    case IGNIS_ERROR:    MINIMAL_ERROR("%s", desc); break;
+    case IGNIS_CRITICAL: MINIMAL_CRITICAL("%s", desc); break;
     }
 }
 
@@ -42,26 +42,26 @@ int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLe
 
     /* renderer2D */
     tb_ini_query(config, "renderer", NULL, &section);
-    tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     Renderer2DInit(vert, frag);
 
     /* primitives2D */
     tb_ini_query(config, "renderer.primitives", NULL, &section);
-    tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     Primitives2DInit(vert, frag);
 
     /* batchrenderer2D */
     tb_ini_query(config, "renderer.batch", NULL, &section);
-    tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     BatchRenderer2DInit(vert, frag);
 
     /* fontrenderer */
     tb_ini_query(config, "renderer.font", NULL, &section);
-    tb_ini_query_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_query_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
+    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
     FontRendererInit(vert, frag);
 
     return MINIMAL_OK;
@@ -78,9 +78,9 @@ int FrostLoadGui(char* config, float w, float h)
         tb_ini_name(&font, font_name, APPLICATION_STR_LEN);
 
         char font_path[APPLICATION_PATH_LEN];
-        tb_ini_query_string(font.start, NULL, "path", font_path, APPLICATION_STR_LEN);
+        tb_ini_string(font.start, NULL, "path", font_path, APPLICATION_STR_LEN);
 
-        float font_size = tb_ini_query_float(font.start, NULL, "size", 0.0f);
+        float font_size = tb_ini_float(font.start, NULL, "size", 0.0f);
         GuiAddFont(font_name, font_path, font_size);
     }
 
@@ -108,13 +108,13 @@ int FrostLoad(MinimalApp* app, const char* path)
     }
 
     char title[APPLICATION_STR_LEN];
-    tb_ini_query_string(section.start, NULL, "title", title, APPLICATION_STR_LEN);
+    tb_ini_string(section.start, NULL, "title", title, APPLICATION_STR_LEN);
 
-    int w = tb_ini_query_int(section.start, NULL, "width", 0);
-    int h = tb_ini_query_int(section.start, NULL, "height", 0);
+    int w = tb_ini_int(section.start, NULL, "width", 0);
+    int h = tb_ini_int(section.start, NULL, "height", 0);
 
     char gl_version[APPLICATION_VER_STR_LEN];
-    tb_ini_query_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
+    tb_ini_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
     MinimalSetAllocator(FrostMemoryGetAllocator(), tb_mem_malloc, tb_mem_free);
     MinimalLoadCB load = MinimalSetLoadCallback(app, NULL);
@@ -137,8 +137,8 @@ int FrostLoad(MinimalApp* app, const char* path)
     tb_ini_query(config, "options", NULL, &section);
     if (section.error == TB_INI_OK)
     {
-        MinimalEnableDebug(app, tb_ini_query_bool(section.start, NULL, "debug", 0));
-        MinimalEnableVsync(app, tb_ini_query_bool(section.start, NULL, "vsync", 0));
+        MinimalEnableDebug(app, tb_ini_bool(section.start, NULL, "debug", 0));
+        MinimalEnableVsync(app, tb_ini_bool(section.start, NULL, "vsync", 0));
     }
 
     FrostFree(config);

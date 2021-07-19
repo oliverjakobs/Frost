@@ -17,8 +17,8 @@ void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity)
     {
         TileBodyType type = tb_ini_parse(element.start, NULL, "type", FrostParseRigidBodyType);
 
-        float half_w = tb_ini_query_float(element.start, NULL, "half_width", transform->size.x / 2.0f);
-        float half_h = tb_ini_query_float(element.start, NULL, "half_height", transform->size.y / 2.0f);
+        float half_w = tb_ini_float(element.start, NULL, "half_width", transform->size.x / 2.0f);
+        float half_h = tb_ini_float(element.start, NULL, "half_height", transform->size.y / 2.0f);
 
         RigidBody body;
         body.filter = RIGID_BODY_FILTER_NONE;
@@ -36,8 +36,8 @@ void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity)
             }
         }
 
-        body.offset.x = tb_ini_query_float(element.start, NULL, "offset_x", 0.0f);
-        body.offset.y = tb_ini_query_float(element.start, NULL, "offset_y", half_h);
+        body.offset.x = tb_ini_float(element.start, NULL, "offset_x", 0.0f);
+        body.offset.y = tb_ini_float(element.start, NULL, "offset_y", half_h);
 
         vec2 position = vec2_add(transform->position, body.offset);
         TileBodyInit(&body.body, type, position.x, position.y, half_w, half_h);

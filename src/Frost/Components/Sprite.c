@@ -17,13 +17,13 @@ void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, i
     {
         Sprite sprite;
         sprite.flip = SPRITE_FLIP_NONE;
-        sprite.width = tb_ini_query_float(element.start, NULL, "width", transform->size.x);
-        sprite.height = tb_ini_query_float(element.start, NULL, "height", transform->size.y);
+        sprite.width = tb_ini_float(element.start, NULL, "width", transform->size.x);
+        sprite.height = tb_ini_float(element.start, NULL, "height", transform->size.y);
 
         sprite.frame = FrostMatchVariantINI(element.start, NULL, "frame", variant, 0);
 
         char texture[APPLICATION_STR_LEN];
-        tb_ini_query_string(element.start, NULL, "texture", texture, APPLICATION_STR_LEN);
+        tb_ini_string(element.start, NULL, "texture", texture, APPLICATION_STR_LEN);
 
         sprite.texture = ResourcesGetTexture2D(res, texture);
 

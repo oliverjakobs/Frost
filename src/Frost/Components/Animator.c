@@ -38,9 +38,9 @@ void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
             EntityState state = FrostParseEntityState(name, name_len);
 
             Animation animation;
-            animation.start = tb_ini_query_int(element.start, NULL, "start", 0);
-            animation.length = tb_ini_query_int(element.start, NULL, "length", 0);
-            animation.delay = tb_ini_query_float(element.start, NULL, "delay", 0.0f);
+            animation.start = tb_ini_int(element.start, NULL, "start", 0);
+            animation.length = tb_ini_int(element.start, NULL, "length", 0);
+            animation.delay = tb_ini_float(element.start, NULL, "delay", 0.0f);
 
             AnimatorAddAnimation(&animator, state, &animation);
         }

@@ -41,11 +41,11 @@ void InventoryLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
     {
         Inventory inv;
 
-        inv.pos.x = tb_ini_query_float(element.start, NULL, "x", 0.0f);
-        inv.pos.y = tb_ini_query_float(element.start, NULL, "y", 0.0f);
+        inv.pos.x = tb_ini_float(element.start, NULL, "x", 0.0f);
+        inv.pos.y = tb_ini_float(element.start, NULL, "y", 0.0f);
 
-        inv.rows = tb_ini_query_int(element.start, NULL, "rows", 1);
-        inv.cols = tb_ini_query_int(element.start, NULL, "cols", 1);
+        inv.rows = tb_ini_int(element.start, NULL, "rows", 1);
+        inv.cols = tb_ini_int(element.start, NULL, "cols", 1);
 
         inv.state = tb_ini_parse(element.start, NULL, "state", FrostParseInventoryState);
 
