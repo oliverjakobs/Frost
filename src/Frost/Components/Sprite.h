@@ -24,7 +24,7 @@ typedef struct
     SpriteFlip flip;
 } Sprite;
 
-void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant);
+void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, Resources* res, int z_index, int variant);
 
 void SpriteGetSrcRect(const Sprite* sprite, float* src_x, float* src_y, float* src_w, float* src_h);
 

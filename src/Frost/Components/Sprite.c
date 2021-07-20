@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, int z_index, int variant)
+void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, Resources* res, int z_index, int variant)
 {
     Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
     if (!transform)
@@ -22,10 +22,14 @@ void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, i
 
         sprite.frame = FrostMatchVariantINI(element.start, NULL, "frame", variant, 0);
 
-        char texture[APPLICATION_STR_LEN];
-        tb_ini_string(element.start, NULL, "texture", texture, APPLICATION_STR_LEN);
+        /* load texture */
+        char path[APPLICATION_PATH_LEN];
+        tb_ini_string(element.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
-        sprite.texture = ResourcesGetTexture2D(res, texture);
+        int rows = tb_ini_int(element.start, NULL, "rows", 1);
+        int cols = tb_ini_int(element.start, NULL, "cols", 1);
+
+        sprite.texture = ResourcesLoadTexture2D(res, path, rows, cols);
 
         if (sprite.texture)
         {
@@ -34,7 +38,7 @@ void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, const Resources* res, i
         }
         else
         {
-            MINIMAL_ERROR("[Scenes] Found sprite but couldn't find texture");
+            MINIMAL_ERROR("[Scenes] Failed to load texture: %s", path);
         }
     }
 }

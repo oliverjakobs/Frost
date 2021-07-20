@@ -15,8 +15,7 @@ void ResourcesDestroy(Resources* res);
 
 void ResourcesClear(Resources* res);
 
-IgnisTexture2D* ResourcesAddTexture2D(Resources* res, const char* name, const char* path, int rows, int cols);
-IgnisTexture2D* ResourcesGetTexture2D(const Resources* res, const char* name);
-const char* ResourcesGetTexture2DName(const Resources* res, const IgnisTexture2D* texture);
+IgnisTexture2D* ResourcesLoadTexture2D(Resources* res, const char* path, int rows, int cols);
+const char* ResourcesGetTexture2DPath(const Resources* res, const IgnisTexture2D* texture);
 
 #endif /* !SCENE_RESOURCES_H */

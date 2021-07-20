@@ -256,8 +256,11 @@ size_t tb_ini_string(char* ini, const char* section, const char* prop, char* dst
 {
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
+    
+    if (element.error == TB_INI_OK) return tb_ini_strncpy(dst, element.start, element.len, dst_len);
 
-    return (element.error == TB_INI_OK) ? tb_ini_strncpy(dst, element.start, element.len, dst_len) : 0;
+    dst[0] = '\0';
+    return 0;
 }
 
 int tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_parse_func parse)

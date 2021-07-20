@@ -41,30 +41,18 @@ void ResourcesClear(Resources* res)
 	tb_hashmap_clear(&res->textures);
 }
 
-IgnisTexture2D* ResourcesAddTexture2D(Resources* res, const char* name, const char* path, int rows, int cols)
+IgnisTexture2D* ResourcesLoadTexture2D(Resources* res, const char* path, int rows, int cols)
 {
-	IgnisTexture2D texture;
-	if (ignisCreateTexture2D(&texture, path, rows, cols, 1, NULL))
-	{
-		IgnisTexture2D* entry = tb_hashmap_insert(&res->textures, name, &texture);
-		if (entry != NULL) return entry;
+	IgnisTexture2D* entry = tb_hashmap_find(&res->textures, path);
 
-		MINIMAL_ERROR("[Scenes] Failed to add texture: %s (%s)", name, path);
-	}
+	IgnisTexture2D new_entry;
+	if (!entry && ignisCreateTexture2D(&new_entry, path, rows, cols, 1, NULL))
+		entry = tb_hashmap_insert(&res->textures, path, &new_entry);
 
-	return NULL;
+	return entry;
 }
 
-IgnisTexture2D* ResourcesGetTexture2D(const Resources* res, const char* name)
-{
-	IgnisTexture2D* tex = tb_hashmap_find(&res->textures, name);
-
-	if (!tex) MINIMAL_WARN("[Scenes] Could not find texture: %s", name);
-
-	return tex;
-}
-
-const char* ResourcesGetTexture2DName(const Resources* res, const IgnisTexture2D* texture)
+const char* ResourcesGetTexture2DPath(const Resources* res, const IgnisTexture2D* texture)
 {
 	for (tb_hashmap_iter* iter = tb_hashmap_iterator(&res->textures); iter; iter = tb_hashmap_iter_next(&res->textures, iter))
 	{

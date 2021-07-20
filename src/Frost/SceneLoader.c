@@ -74,24 +74,6 @@ int SceneLoad(Scene* scene, const char* path)
     if (!SceneLoadTexture2D(element.value, &scene->tile_set)) 
         MINIMAL_WARN("[Scenes] Could not load item atlas.");
 
-    /* load textures */
-    tb_json_read(json, &element, "{'textures'");
-    for (int i = 0; i < element.elements; i++)
-    {
-        char name[APPLICATION_STR_LEN];
-        tb_json_string(element.value, "{*", name, APPLICATION_STR_LEN, &i);
-
-        tb_json_element texture;
-        tb_json_read_format(element.value, &texture, "{'%s'", name);
-
-        char path[APPLICATION_PATH_LEN];
-        tb_json_string(texture.value, "{'path'", path, APPLICATION_PATH_LEN, NULL);
-
-        int rows = tb_json_int(texture.value, "{'atlas'[0", NULL, 1);
-        int cols = tb_json_int(texture.value, "{'atlas'[1", NULL, 1);
-
-        ResourcesAddTexture2D(&scene->res, name, path, rows, cols);
-    }
 
     /* load background */
     tb_json_read(json, &element, "{'background'");
