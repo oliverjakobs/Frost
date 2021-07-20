@@ -20,7 +20,7 @@ void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, Resources* res, int z_i
         sprite.width = tb_ini_float(element.start, NULL, "width", transform->size.x);
         sprite.height = tb_ini_float(element.start, NULL, "height", transform->size.y);
 
-        sprite.frame = FrostMatchVariantINI(element.start, NULL, "frame", variant, 0);
+        sprite.frame = FrostMatchVariant(element.start, NULL, "frame", variant, 0);
 
         /* load texture */
         char path[APPLICATION_PATH_LEN];

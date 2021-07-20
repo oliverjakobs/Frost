@@ -219,34 +219,25 @@ SceneLoadError SceneLoadMap(Scene* scene, char* ini)
     return SCENE_LOAD_OK;
 }
 
-SceneLoadError SceneLoadSaveState(Scene* scene, char* json)
+SceneLoadError SceneLoadSaveState(Scene* scene, char* ini)
 {
-    tb_json_element element;
-    tb_json_read(json, &element, "{'templates'");
-    if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
+    tb_ini_element template;
+    while ((ini = tb_ini_group_next(ini, "template", &template)) != NULL)
     {
-        char* value = element.value;
+        char path[APPLICATION_PATH_LEN];
+        tb_ini_string(template.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
-        for (size_t i = 0; i < element.elements; ++i)
+        vec2 pos;
+        pos.x = tb_ini_float(template.start, NULL, "x", 0.0f);
+        pos.y = tb_ini_float(template.start, NULL, "y", 0.0f);
+
+        int z_index = tb_ini_int(template.start, NULL, "layer", 0);
+        int variant = tb_ini_int(template.start, NULL, "variant", 0);
+
+        /* Load Template */
+        if (!SceneLoadTemplate(scene, path, pos, z_index, variant))
         {
-            tb_json_element entity_template;
-            value = tb_json_array_step(value, &entity_template);
-
-            char templ[APPLICATION_PATH_LEN];
-            tb_json_string(entity_template.value, "[0", templ, APPLICATION_PATH_LEN, NULL);
-
-            vec2 pos;
-            pos.x = tb_json_float(entity_template.value, "[1[0", NULL, 0.0f);
-            pos.y = tb_json_float(entity_template.value, "[1[1", NULL, 0.0f);
-
-            int z_index = tb_json_int(entity_template.value, "[2", NULL, 0);
-            int variant = tb_json_int(entity_template.value, "[3", NULL, 0);
-
-            /* Load Template */
-            if (!SceneLoadTemplate(scene, templ, pos, z_index, variant))
-            {
-                MINIMAL_ERROR("[Scenes] Failed to load template %s", templ);
-            }
+            MINIMAL_WARN("[Scenes] Failed to load template %s", path);
         }
     }
 

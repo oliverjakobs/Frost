@@ -6,7 +6,7 @@ void PlayerLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
     tb_ini_element element;
     tb_ini_query(ini, "player", NULL, &element);
-    if (element.error == TB_JSON_OK)
+    if (element.error == TB_INI_OK)
     {
         Player comp;
         comp.move_left =  MINIMAL_KEY_A;

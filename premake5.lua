@@ -35,7 +35,7 @@ project "Frost"
 		"src/**.h",
 		"src/**.c",
 		--Resources
-		"res/**.json",
+		"res/**.ini",
 		"res/fonts/**.ttf",
 		"res/shaders/**.vert",
 		"res/shaders/**.frag",

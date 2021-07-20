@@ -2,7 +2,6 @@
 #define SCENE_SAVER_H
 
 #include "Scenes/Scene.h"
-#include "toolbox/tb_jwrite.h"
 
 typedef enum
 {
@@ -12,6 +11,6 @@ typedef enum
 
 int SceneSave(Scene* scene, const char* path);
 
-SceneSaveError SceneSaveMap(Scene* scene, tb_jwrite_control* jwc);
+SceneSaveError SceneSaveMap(Scene* scene);
 
 #endif /* !SCENE_SAVER_H */
