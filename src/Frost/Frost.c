@@ -72,7 +72,7 @@ int FrostLoadGui(char* config, float w, float h)
     if (!GuiInit(w, h, FrostMemoryGetAllocator())) return MINIMAL_FAIL;
 
     tb_ini_element font;
-    while ((config = tb_ini_query_group(config, "font", &font)) != NULL)
+    while ((config = tb_ini_group_next(config, "font", &font)) != NULL)
     {
         char font_name[APPLICATION_STR_LEN];
         tb_ini_name(&font, font_name, APPLICATION_STR_LEN);

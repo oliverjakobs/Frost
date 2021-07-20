@@ -19,7 +19,7 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
 void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
     tb_ini_element element;
-    tb_ini_query_group(ini, "animation", &element);
+    tb_ini_group_next(ini, "animation", &element);
 
     if (element.error == TB_INI_OK)
     {
@@ -30,7 +30,7 @@ void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
         animator.frame = 0;
         memset(animator.animations, 0, NUM_ENTITY_STATES * sizeof(Animation));
 
-        while ((ini = tb_ini_query_group(ini, "animation", &element)) != NULL)
+        while ((ini = tb_ini_group_next(ini, "animation", &element)) != NULL)
         {
             char name[APPLICATION_STR_LEN];
             size_t name_len = tb_ini_name(&element, name, APPLICATION_STR_LEN);

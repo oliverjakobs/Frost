@@ -40,8 +40,8 @@ struct Scene
 	vec2 gravity;
 
 	Resources res;
-	IgnisTexture2D item_atlas;
-	IgnisTexture2D tile_set;
+	IgnisTexture2D* item_atlas;
+	IgnisTexture2D* tile_set;
 
 	BackgroundLayer* background;
 };

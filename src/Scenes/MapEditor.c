@@ -98,9 +98,9 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
 		float h = PALETTE_TILE_SIZE;
 
 		float src_x, src_y, src_w, src_h;
-		GetTexture2DSrcRect(&scene->tile_set, i, &src_x, &src_y, &src_w, &src_h);
+		GetTexture2DSrcRect(scene->tile_set, i, &src_x, &src_y, &src_w, &src_h);
 
-		BatchRenderer2DRenderTextureSrc(&scene->tile_set, x, y, w, h, src_x, src_y, src_w, src_h);
+		BatchRenderer2DRenderTextureSrc(scene->tile_set, x, y, w, h, src_x, src_y, src_w, src_h);
 	}
 
 	BatchRenderer2DFlush();

@@ -27,92 +27,102 @@ static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*loa
     return 1;
 }
 
-static int SceneLoadTexture2D(char* json, IgnisTexture2D* texture)
+static IgnisTexture2D* SceneLoadTexture2D(char* ini, char* name, Resources* res)
 {
+    tb_ini_element texture;
+    tb_ini_query(ini, name, NULL, &texture);
+
+    if (texture.error != TB_INI_OK) return NULL;
+
     char path[APPLICATION_PATH_LEN];
-    tb_json_string(json, "{'path'", path, APPLICATION_PATH_LEN, NULL);
+    tb_ini_string(texture.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
-    int rows = tb_json_int(json, "{'atlas'[0", NULL, 1);
-    int cols = tb_json_int(json, "{'atlas'[1", NULL, 1);
+    int rows = tb_ini_int(texture.start, NULL, "rows", 1);
+    int cols = tb_ini_int(texture.start, NULL, "cols", 1);
 
-    return ignisCreateTexture2D(texture, path, rows, cols, 1, NULL);
+    return ResourcesLoadTexture2D(res, path, rows, cols);
 }
 
 int SceneLoad(Scene* scene, const char* path)
 {
     if (!scene) return 0;
 
-    char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
+    char* ini = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
 
-    if (!json)
+    if (!ini)
     {
         MINIMAL_ERROR("[Scenes] Couldn't read scene template: %s", path);
         return 0;
     }
 
+    tb_ini_element element;
+    tb_ini_query(ini, "scene", NULL, &element);
+
     /* load map */
     char map_path[APPLICATION_PATH_LEN];
-    tb_json_string(json, "{'map'", map_path, APPLICATION_PATH_LEN, NULL);
+    tb_ini_string(element.start, NULL, "map", map_path, APPLICATION_PATH_LEN);
 
     if (!SceneLoadFromFile(scene, map_path, SceneLoadMap))
     {
-        FrostFree(json);
+        FrostFree(ini);
         return 0;
     }
 
-    scene->gravity.x = tb_json_float(json, "{'gravity'[0", NULL, 0.0f);
-    scene->gravity.y = tb_json_float(json, "{'gravity'[1", NULL, 0.0f);
+    scene->gravity.x = 0.0f;
+    scene->gravity.y = tb_ini_float(element.start, NULL, "gravity", 0.0f);
 
     /* load item atlas */
-    tb_json_element element;
-    tb_json_read(json, &element, "{'item_atlas'");
-    if (!SceneLoadTexture2D(element.value, &scene->item_atlas))
+    if ((scene->item_atlas = SceneLoadTexture2D(ini, "item_atlas", &scene->res)) == NULL)
         MINIMAL_WARN("[Scenes] Could not load item atlas.");
 
     /* load tile set */
-    tb_json_read(json, &element, "{'tile_set'");
-    if (!SceneLoadTexture2D(element.value, &scene->tile_set)) 
-        MINIMAL_WARN("[Scenes] Could not load item atlas.");
-
+    if ((scene->tile_set = SceneLoadTexture2D(ini, "tile_set", &scene->res)) == NULL)
+        MINIMAL_WARN("[Scenes] Could not load tile set.");
 
     /* load background */
-    tb_json_read(json, &element, "{'background'");
-    if (element.error == TB_JSON_OK && element.data_type == TB_JSON_ARRAY)
+    tb_ini_element background;
+    tb_ini_query(ini, "background", NULL, &background);
+
+    if (background.error == TB_INI_OK)
     {
-        char* value = element.value;
-        scene->background = BackgroundInit(element.elements);
-        for (int i = 0; i < element.elements; i++)
+        float x = tb_ini_float(background.start, NULL, "x", 0.0f);
+        float y = tb_ini_float(background.start, NULL, "y", 0.0f);
+
+        float w = tb_ini_float(background.start, NULL, "w", 0.0f);
+        float h = tb_ini_float(background.start, NULL, "h", 0.0f);
+
+        tb_ini_query(ini, "background.layers", NULL, &background);
+
+        scene->background = BackgroundInit(background.len);
+        
+        tb_ini_element layer;
+        char* layer_start = background.start;
+        for (int i = 0; i < background.len; i++)
         {
-            tb_json_element layer;
-            value = tb_json_array_step(value, &layer);
-
-            char path[APPLICATION_PATH_LEN];
-            tb_json_string(layer.value, "[0", path, APPLICATION_PATH_LEN, NULL);
-
-            IgnisTexture2D texture;
-            if (!ignisCreateTexture2D(&texture, path, 1, 1, 1, NULL))
+            layer_start = tb_ini_property_next(layer_start, &layer);
+            if (layer.error == TB_INI_OK)
             {
-                MINIMAL_WARN("Failed to load background layer %d (%s)", i, path);
-                continue;
+                char path[APPLICATION_PATH_LEN];
+                tb_ini_name(&layer, path, APPLICATION_PATH_LEN);
+
+                IgnisTexture2D texture;
+                if (!ignisCreateTexture2D(&texture, path, 1, 1, 1, NULL))
+                {
+                    MINIMAL_WARN("Failed to load background layer %d (%s)", i, path);
+                    continue;
+                }
+
+                float parallax = tb_ini_element_to_float(&layer, 0.0f);
+                scene->background = BackgroundPushLayer(scene->background, texture, x, y, w, h, parallax);
             }
-
-            float x = tb_json_float(layer.value, "[1", NULL, 0.0f);
-            float y = tb_json_float(layer.value, "[2", NULL, 0.0f);
-
-            float w = tb_json_float(layer.value, "[3", NULL, 0.0f);
-            float h = tb_json_float(layer.value, "[4", NULL, 0.0f);
-
-            float parallax = tb_json_float(layer.value, "[5", NULL, 0.0f);
-
-            scene->background = BackgroundPushLayer(scene->background, texture, x, y, w, h, parallax);
         }
     }
 
     /* load save */
     char save_path[APPLICATION_PATH_LEN];
-    tb_json_string(json, "{'save'", save_path, APPLICATION_PATH_LEN, NULL);
+    tb_ini_string(element.start, NULL, "save", save_path, APPLICATION_PATH_LEN);
 
-    FrostFree(json);
+    FrostFree(ini);
 
     return SceneLoadFromFile(scene, save_path, SceneLoadSaveState);
 }

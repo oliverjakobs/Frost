@@ -7,6 +7,8 @@
 int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator)
 {
 	ResourcesInit(&scene->res, allocator);
+	scene->item_atlas = NULL;
+	scene->tile_set = NULL;
 
 	CameraCreateOrtho(&scene->camera, 0.0f, 0.0f, size.x, size.y);
 	scene->gravity = vec2_zero();
@@ -66,9 +68,6 @@ void SceneClearActive(Scene* scene)
 	EcsClear(&scene->ecs);
 
 	ResourcesClear(&scene->res);
-
-	ignisDeleteTexture2D(&scene->item_atlas);
-	ignisDeleteTexture2D(&scene->tile_set);
 }
 
 void SceneOnEvent(Scene* scene, const MinimalEvent* e)
@@ -88,7 +87,7 @@ void SceneOnRender(Scene* scene)
 {
 	BackgroundRender(scene->background, CameraGetViewProjectionPtr(&scene->camera));
 
-	TileMapRender(&scene->renderer, &scene->tile_set, scene->camera.viewProjection);
+	TileMapRender(&scene->renderer, scene->tile_set, scene->camera.viewProjection);
 
 	EcsOnRender(&scene->ecs, ECS_RENDER_STAGE_PRIMARY, scene, CameraGetViewProjectionPtr(&scene->camera));
 }
