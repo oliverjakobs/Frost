@@ -6,7 +6,6 @@
 static char* tb_ini_skip_whitespace(char* cursor)
 {
     while (cursor && (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '\r')) cursor++;
-
     return cursor;
 }
 
@@ -65,31 +64,28 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
     if (!ini) return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
 
     /* read key */
-    element->name = ini;
+    char* start = ini;
 
     while (*ini != '\0' && *ini != '\n' && *ini != '\r' && *ini != '=') ini++;
 
-    element->name_len = tb_ini_clip_tail(ini) - element->name;
+    element->name = start;
+    element->name_len = tb_ini_clip_tail(ini) - start;
 
-    /* check for '=' between key and value */
+    /* check for '=' between key and value and skip it with surrounding spaces */
     ini = tb_ini_skip_whitespace(ini);
     if (*ini != '=') return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
-
-    /* read the value*/
     ini = tb_ini_skip_whitespace(++ini);
 
-    char* start = ini;
+    /* read the value*/
+    start = ini;
 
     /* read grouped value */
     if (*ini == '{')
     {
-        ini++; /* skip opening braces */
-
         while (*ini != '\0' && *ini != '}') ini++;
-
-        if (*ini == '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
-
-        ini++; /* skip closing braces */
+        
+        /* skip closing braces */
+        if (*ini++ == '\0') return tb_ini_make_error(element, TB_INI_BAD_VALUE, start);
 
         /* check if line is empty after grouped value */
         char* check = ini;
@@ -108,38 +104,31 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
     return tb_ini_make_element(element, start, tb_ini_clip_tail(ini));
 }
 
-static char* tb_ini_read_section(char* ini, const char* name, size_t len, tb_ini_element* element)
+static char* tb_ini_read_section(char* ini, size_t len, tb_ini_element* element)
 {
-    char* start = ini;
-
     /* check if its the complete name */
-    ini = tb_ini_skip_whitespace(ini + len);
-
-    if (*ini == ']')
+    char* cursor = tb_ini_skip_whitespace(ini + len);
+    if (cursor && *cursor == ']')
     {
-        element->name = start;
+        element->name = ini;
         element->name_len = len;
-        return tb_ini_skip_whitespace(++ini);
+        return tb_ini_skip_whitespace(++cursor);
     }
 
-    return ini;
+    return cursor;
 }
 
-static char* tb_ini_read_group(char* ini, const char* name, size_t len, tb_ini_element* element)
+static char* tb_ini_read_group(char* ini, size_t len, tb_ini_element* element)
 {
-    ini += len;
-    if (*ini == '.')
+    ini += len; /* skip group name */
+    if (*ini++ == '.')
     {
         /* get section name */
-        char* start = ++ini;
+        char* start = ini;
         while (*ini != ']' && *ini != '\0') ini++;
 
         if (*ini == '\0') return NULL;
-
-        element->name = start;
-        element->name_len = ini - start;
-
-        return tb_ini_skip_whitespace(++ini);
+        return tb_ini_read_section(start, ini - start, element);
     }
     return ini;
 }
@@ -159,8 +148,8 @@ static char* tb_ini_find_section(char* ini, const char* name, int group, tb_ini_
         if (*ini == '[' && strncmp(++ini, name, name_len) == 0)
         {
             /* read section or group depending on the flag set */
-            if (group)  ini = tb_ini_read_group(ini, name, name_len, element);
-            else        ini = tb_ini_read_section(ini, name, name_len, element);
+            if (group)  ini = tb_ini_read_group(ini, name_len, element);
+            else        ini = tb_ini_read_section(ini, name_len, element);
 
             /* if ini == NULL: failed to read section/group -> return NULL */
             if (!ini) return NULL;
@@ -317,8 +306,7 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element)
 
     element->len = tb_ini_clip_tail(stream) - element->start;
     
-    if (*stream == '}') return NULL; /* End of Stream */
-    return ++stream; /* skip ',' after value */
+    return (*stream != '\0' && *stream != '}') ? ++stream : NULL;
 }
 
 const char* tb_ini_get_error_desc(tb_ini_error error)

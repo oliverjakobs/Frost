@@ -61,7 +61,7 @@ int     tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_pa
 /* 
  * functions to split quoted values into Comma Separated Values 
  * tb_ini_csv:      creates an element where the value starts after the quote and the len is the number of CSV
- * tb_ini_csv_step: returns next CSV till closing quote or EOF is reached
+ * tb_ini_csv_step: returns next CSV or NULL if closing brace or EOF is reached
  */
 char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_element* element);
 char* tb_ini_csv_step(char* stream, tb_ini_element* element);
