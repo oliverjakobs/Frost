@@ -3,22 +3,17 @@
 #include <string.h>
 #include <stdlib.h>
 
-static inline int tb_ini_isendln(char c) { return c == '\n' || c == '\r' || c == '\0'; }
-static inline int tb_ini_isblank(char c) { return c == ' ' || c == '\t' || c == '\v'; }
-static inline int tb_ini_isspace(char c) { return c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'; }
-static inline int tb_ini_isalpha(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
-static inline int tb_ini_isalnum(char c) { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'); }
-
-static char* tb_ini_skip(char* cursor, int(*what)(char))
+static char* tb_ini_skip_whitespace(char* cursor)
 {
-    while (cursor && *cursor != '\0' && what(*cursor)) cursor++;
+    while (cursor && (*cursor == ' ' || *cursor == '\t' || *cursor == '\n' || *cursor == '\r')) cursor++;
+
     return cursor;
 }
 
 /* removes trailing spaces ignoring current cursor pos */
 static char* tb_ini_clip_tail(char* cursor)
 {
-    while (cursor && tb_ini_isblank(*(cursor - 1))) cursor--;
+    while (cursor && (*(cursor-1) == ' ' || *(cursor-1) == '\t')) cursor--;
     return cursor;
 }
 
@@ -29,12 +24,6 @@ static size_t tb_ini_strncpy(char* dst, char* src, size_t len, size_t max_len)
     dst[len] = '\0';
 
     return len;
-}
-
-static int tb_ini_string_quote(char* cursor, int multiline)
-{
-    if (multiline)  return (cursor[0] == '\"' && cursor[1] == '\"' && cursor[2] == '\"');
-    else            return (cursor[0] == '\"');
 }
 
 /* create a value element with a length of (end-start) pointing to start */
@@ -73,19 +62,21 @@ static char* tb_ini_make_section(tb_ini_element* element, char* start)
 
 static char* tb_ini_read_element(char* ini, tb_ini_element* element)
 {
+    if (!ini) return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
+
     /* read key */
     element->name = ini;
 
-    while (ini && *ini != '\0' && *ini != '=' && !tb_ini_isendln(*ini)) ini++;
+    while (*ini != '\0' && *ini != '\n' && *ini != '\r' && *ini != '=') ini++;
 
     element->name_len = tb_ini_clip_tail(ini) - element->name;
 
     /* check for '=' between key and value */
-    ini = tb_ini_skip(ini, tb_ini_isspace);
+    ini = tb_ini_skip_whitespace(ini);
     if (*ini != '=') return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, ini);
 
     /* read the value*/
-    ini = tb_ini_skip(++ini, tb_ini_isspace);
+    ini = tb_ini_skip_whitespace(++ini);
 
     char* start = ini;
 
@@ -102,9 +93,9 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
 
         /* check if line is empty after grouped value */
         char* check = ini;
-        while (!tb_ini_isendln(*check))
+        while (*ini != '\0' && *ini != '\n' && *ini != '\r')
         {
-            if (!tb_ini_isblank(*check)) return tb_ini_make_error(element, TB_INI_BAD_VALUE, check);
+            if (*check != ' ' && *check != '\t') return tb_ini_make_error(element, TB_INI_BAD_VALUE, check);
             check++;
         }
 
@@ -112,7 +103,7 @@ static char* tb_ini_read_element(char* ini, tb_ini_element* element)
     }
 
     /* read standard value */
-    while (ini && *ini != '\0' && !tb_ini_isendln(*ini)) ini++;
+    while (*ini != '\0' && *ini != '\n' && *ini != '\r') ini++;
 
     return tb_ini_make_element(element, start, tb_ini_clip_tail(ini));
 }
@@ -122,13 +113,13 @@ static char* tb_ini_read_section(char* ini, const char* name, size_t len, tb_ini
     char* start = ini;
 
     /* check if its the complete name */
-    ini = tb_ini_skip(ini + len, tb_ini_isspace);
+    ini = tb_ini_skip_whitespace(ini + len);
 
     if (*ini == ']')
     {
         element->name = start;
         element->name_len = len;
-        return tb_ini_skip(++ini, tb_ini_isspace);
+        return tb_ini_skip_whitespace(++ini);
     }
 
     return ini;
@@ -148,7 +139,7 @@ static char* tb_ini_read_group(char* ini, const char* name, size_t len, tb_ini_e
         element->name = start;
         element->name_len = ini - start;
 
-        return tb_ini_skip(++ini, tb_ini_isspace);
+        return tb_ini_skip_whitespace(++ini);
     }
     return ini;
 }
@@ -197,7 +188,7 @@ char* tb_ini_query(char* ini, const char* section, const char* prop, tb_ini_elem
 char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* element)
 {
     size_t query_len = strlen(prop);
-    section = tb_ini_skip(section, tb_ini_isspace);
+    section = tb_ini_skip_whitespace(section);
 
     if (query_len == 0) return tb_ini_read_element(section, element);
 
@@ -208,7 +199,7 @@ char* tb_ini_query_section(char* section, const char* prop, tb_ini_element* elem
 
         /* skip to next property */
         section = strpbrk(section, "\n\0");
-        section = tb_ini_skip(section, tb_ini_isspace);
+        section = tb_ini_skip_whitespace(section);
     }
 
     return tb_ini_make_error(element, TB_INI_BAD_PROPERTY, NULL);
@@ -225,34 +216,18 @@ char* tb_ini_group_next(char* ini, const char* group, tb_ini_element* element)
 
 char* tb_ini_property_next(char* ini, tb_ini_element* element)
 {
-    ini = tb_ini_skip(ini, tb_ini_isspace);
+    ini = tb_ini_skip_whitespace(ini);
     return (ini && *ini != '\0' && *ini != '[') ? tb_ini_read_element(ini, element) : NULL;
 }
 
-int tb_ini_element_to_bool(tb_ini_element* element, int def)
-{
-    if (element->error != TB_INI_OK) return def;
-    return (strncmp(element->start, "true", element->len) == 0) ? 1 : 0;
-}
-
-int tb_ini_element_to_int(tb_ini_element* element, int def)
-{ 
-    return (element->error == TB_INI_OK) ? atoi(element->start) : def;
-}
-
-float tb_ini_element_to_float(tb_ini_element* element, float def)
-{ 
-    return (element->error == TB_INI_OK) ? (float)atof(element->start) : def;
-}
+int tb_ini_element_to_bool(tb_ini_element* element)     { return (strncmp(element->start, "true", element->len) == 0) ? 1 : 0; }
+int tb_ini_element_to_int(tb_ini_element* element)      { return atoi(element->start); }
+float tb_ini_element_to_float(tb_ini_element* element)  { return (float)atof(element->start); }
 
 size_t tb_ini_element_to_string(tb_ini_element* element, char* dst, size_t dst_len)
 {
-    if (element->error == TB_INI_OK) return tb_ini_strncpy(dst, element->start, element->len, dst_len);
-
-    dst[0] = '\0';
-    return 0;
+    return tb_ini_strncpy(dst, element->start, element->len, dst_len);
 }
-
 
 size_t tb_ini_name(const tb_ini_element* element, char* dst, size_t dst_len)
 {
@@ -267,7 +242,7 @@ int tb_ini_bool(char* ini, const char* section, const char* prop, int def)
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
 
-    return tb_ini_element_to_bool(&element, def);
+    return (element.error == TB_INI_OK) ? tb_ini_element_to_bool(&element) : def;
 }
 
 int tb_ini_int(char* ini, const char* section, const char* prop, int def)
@@ -275,7 +250,7 @@ int tb_ini_int(char* ini, const char* section, const char* prop, int def)
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
 
-    return tb_ini_element_to_int(&element, def);
+    return (element.error == TB_INI_OK) ? tb_ini_element_to_int(&element) : def;
 }
 
 float tb_ini_float(char* ini, const char* section, const char* prop, float def)
@@ -283,7 +258,7 @@ float tb_ini_float(char* ini, const char* section, const char* prop, float def)
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
 
-    return tb_ini_element_to_float(&element, def);
+    return (element.error == TB_INI_OK) ? tb_ini_element_to_float(&element) : def;
 }
 
 size_t tb_ini_string(char* ini, const char* section, const char* prop, char* dst, size_t dst_len)
@@ -291,7 +266,10 @@ size_t tb_ini_string(char* ini, const char* section, const char* prop, char* dst
     tb_ini_element element;
     tb_ini_query(ini, section, prop, &element);
 
-    return tb_ini_element_to_string(&element, dst, dst_len);
+    if (element.error == TB_INI_OK) return tb_ini_element_to_string(&element, dst, dst_len);
+
+    dst[0] = '\0';
+    return 0;
 }
 
 int tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_parse_func parse)
@@ -308,7 +286,7 @@ char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_elemen
     if (element->error != TB_INI_OK) return element->start;
 
     /* check if element starts with a brace */
-    if (!element->start || *element->start != '{') return tb_ini_make_error(element, TB_INI_BAD_VALUE, element->start);
+    if (*element->start != '{') return tb_ini_make_error(element, TB_INI_BAD_VALUE, element->start);
 
     char* csv = ++element->start;
     element->len = 0;
@@ -331,11 +309,11 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element)
 {
     if (!stream) return NULL;
 
-    stream = tb_ini_skip(stream, tb_ini_isspace);
+    stream = tb_ini_skip_whitespace(stream);
     element->start = stream;
 
     /* find end of value */
-    while (!tb_ini_isendln(*stream) && *stream != '}' && *stream != ',') stream++;
+    while (*stream != '\0' && *stream != '\n' && *stream != '\r' && *stream != '}' && *stream != ',') stream++;
 
     element->len = tb_ini_clip_tail(stream) - element->start;
     

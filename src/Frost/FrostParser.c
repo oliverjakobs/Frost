@@ -10,7 +10,7 @@ int FrostMatchVariant(char* ini, char* section, char* prop, int variant, int def
     if (element.error != TB_INI_OK) return def;
     if (strncmp(element.start, FROST_VARIANT_STR, element.len) == 0) return variant;
 
-    return atoi(element.start);
+    return tb_ini_element_to_int(&element);
 }
 
 /* ------------------| EntityState |-------------------------- */

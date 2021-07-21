@@ -112,7 +112,7 @@ int SceneLoad(Scene* scene, const char* path)
                     continue;
                 }
 
-                float parallax = tb_ini_element_to_float(&layer, 0.0f);
+                float parallax = tb_ini_element_to_float(&layer);
                 scene->background = BackgroundPushLayer(scene->background, texture, x, y, w, h, parallax);
             }
         }
@@ -168,7 +168,7 @@ static void* SceneStreamTiles(void* stream, TileID* id)
 {
     tb_ini_element element;
     stream = tb_ini_csv_step(stream, &element);
-    *id = atoi(element.start);
+    *id = tb_ini_element_to_int(&element);
     return stream;
 }
 
