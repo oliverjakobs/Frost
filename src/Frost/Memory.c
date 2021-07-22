@@ -1,8 +1,7 @@
 #include "Memory.h"
 
 #include "Minimal/Minimal.h"
-
-#include "toolbox/toolbox.h"
+#include "toolbox/tb_algorithm.h"
 
 typedef struct
 {

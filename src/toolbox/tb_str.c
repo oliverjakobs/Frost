@@ -72,3 +72,16 @@ char* tb_strsep(char** str_ptr, const char* sep)
 
 char tb_tolower(char c) { return (c >= 'A' && c <= 'Z') ? 'a' + (c - 'A') : c; }
 char tb_toupper(char c) { return (c >= 'a' && c <= 'z') ? 'A' + (c - 'a') : c; }
+
+char* tb_bitstr(char* buf, char value)
+{
+    char bit = 0;
+    char bits = sizeof(char) * 8;
+
+    for (char i = 1 << (bits - 1); i > 0; i = i / 2)
+        buf[bit++] = (value & i) ? '1' : '0'; 
+
+    buf[bit] = '\0';
+
+    return buf;
+}

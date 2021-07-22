@@ -1,7 +1,7 @@
 #include "CameraController.h"
 
 #include "Frost/FrostParser.h"
-#include "toolbox/toolbox.h"
+#include "toolbox/tb_algorithm.h"
 
 void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene)
 {
