@@ -33,7 +33,7 @@ void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e
 
 	if (MinimalEventMouseMoved(e, &mouse.x, &mouse.y))
 	{
-		mouse = vec2_sub(CameraGetMousePos(&scene->camera, mouse), editor->offset);
+		mouse = vec2_sub(CameraGetMousePosView(&scene->camera, mouse), editor->offset);
 
 		if (editor->clicked)
 			SetEntityPosition(&scene->ecs, editor->hover, grid_clip_vec2(scene->map.tile_size, mouse));
