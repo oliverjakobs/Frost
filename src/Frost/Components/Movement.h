@@ -3,6 +3,16 @@
 
 #include "Scenes/Scene.h"
 
+/*
+REQUIRES:
+  - transform
+
+TEMPLATE:
+[movement]
+speed = <float : 0.0>
+bounce = <float : 0.0>
+*/
+
 typedef enum
 {
     MOVEMENT_RIGHT = 0,

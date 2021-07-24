@@ -5,35 +5,29 @@
 
 /*
 REQUIRES:
-    - transform
+  - transform
 
 PARSE_RULES:
 
 InteractionType:
-    "TOGGLE"    -> INTERACTION_TYPE_TOGGLE
-    "RANGED"    -> INTERACTION_TYPE_RANGED
-    "TIMED"     -> INTERACTION_TYPE_TIMED
-    default     -> INTERACTION_TYPE_TOGGLE
+  "TOGGLE"  -> INTERACTION_TYPE_TOGGLE
+  "RANGED"  -> INTERACTION_TYPE_RANGED
+  "TIMED"   -> INTERACTION_TYPE_TIMED
+  default   -> INTERACTION_TYPE_TOGGLE
 
 Interaction:
-    "TOGGLE_DOOR"       -> INTERACTION_TOGGLE_DOOR
-    "OPEN_INVENTORY"    -> INTERACTION_OPEN_INVENTORY
-    default             -> INTERACTION_NONE
+  "TOGGLE_DOOR"     -> INTERACTION_TOGGLE_DOOR
+  "OPEN_INVENTORY"  -> INTERACTION_OPEN_INVENTORY
+  default           -> INTERACTION_NONE
 
-JSON - Template:
-
-"interaction": {
-    "type": <InteractionType>,
-    "interaction": <Interaction>,
-    "key": <KeyName>,
-    <IF type = INTERACTION_TYPE_TOGGLE>
-        "range": [ <MIN:float>, <MAX:float> ]
-    <IF type = INTERACTION_TYPE_RANGE>
-        "range": [ <ACTIVATION:float>, <LEAVE:float> ]
-    <IF type = INTERACTION_TYPE_TIMED>
-        "range": [ <MIN:float>, <MAX:float> ],
-        "time": <float>
-}
+TEMPLATE:
+[interaction]
+type = <InteractionType>
+interaction = <Interaction>
+key = <KeyName>
+range_min = <float : 0.0>
+range_max = <float : 0.0>
+time = <float : 0.0>
 */
 
 typedef enum

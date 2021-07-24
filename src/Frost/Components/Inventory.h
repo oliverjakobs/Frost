@@ -3,6 +3,44 @@
 
 #include "Item.h"
 
+/*
+PARSE_RULES:
+
+InventoryState:
+  OPEN      -> INVENTORY_OPEN
+  FIXED     -> INVENTORY_FIXED
+  default   -> INVENTORY_CLOSED
+
+InventoryAlignH:
+  LEFT      -> INV_ALIGN_H_LEFT
+  CENTER    -> INV_ALIGN_H_CENTER
+  RIGHT     -> INV_ALIGN_H_RIGHT
+  default   -> INV_ALIGN_H_NONE
+
+InventoryAlignV:
+  TOP       -> INV_ALIGN_V_TOP
+  CENTER    -> INV_ALIGN_V_CENTER
+  BOTTOM    -> INV_ALIGN_V_BOTTOM
+  default   -> INV_ALIGN_V_NONE
+
+TEMPLATE:
+[inventory]
+x = <float : 0.0>
+y = <float : 0.0>
+rows = <int : 1>
+cols = <int : 1>
+state = <InventoryState>
+align_h = <InventoryAlignH>
+align_v = <InventoryAlignV>
+*/
+
+typedef enum
+{
+    INVENTORY_CLOSED,
+    INVENTORY_OPEN,
+    INVENTORY_FIXED
+} InventoryState;
+
 typedef enum
 {
     INV_ALIGN_H_NONE,
@@ -18,13 +56,6 @@ typedef enum
     INV_ALIGN_V_CENTER,
     INV_ALIGN_V_BOTTOM
 } InventoryAlignV;
-
-typedef enum
-{
-    INVENTORY_CLOSED,
-    INVENTORY_OPEN,
-    INVENTORY_FIXED
-} InventoryState;
 
 typedef struct
 {

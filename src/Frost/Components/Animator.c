@@ -18,9 +18,14 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
 
 void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
+    if (!EcsGetDataComponent(ecs, entity, COMPONENT_SPRITE))
+    {
+        MINIMAL_ERROR("[ECS] Animator requires Sprite");
+        return;
+    }
+
     tb_ini_element element;
     tb_ini_group_next(ini, "animation", &element);
-
     if (element.error == TB_INI_OK)
     {
         Animator animator;

@@ -4,11 +4,10 @@
 #include "Scenes/Scene.h"
 
 /*
-JSON - Template
-
-"transform": {
-    "size": [ <WIDTH:float>, <HEIGHT:float> ]
-}
+TEMPLATE:
+[transform]
+width = <float : 0.0>
+height = <float : 0.0>
 */
 
 typedef struct

@@ -4,6 +4,12 @@
 
 void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 {
+    if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
+    {
+        MINIMAL_ERROR("[ECS] Movement requires Transform");
+        return;
+    }
+
     tb_ini_element element;
     tb_ini_query(ini, "movement", NULL, &element);
     if (element.error == TB_INI_OK)

@@ -3,6 +3,12 @@
 
 #include "Scenes/Scene.h"
 
+/*
+TEMPLATE:
+[camera]
+smooth = <float : 0.0>
+*/
+
 typedef struct
 {
     Camera* camera;

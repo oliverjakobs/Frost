@@ -5,6 +5,20 @@
 
 #include "Scenes/Scene.h"
 
+/*
+REQUIRES:
+  - transform
+
+TEMPLATE:
+[sprite]
+path = <str>
+width = <float : transform.width>
+height = <float : transform.height>
+frame = <int | VARIANT : 0> 
+rows = <int : 1>
+cols = <int : 1>
+*/
+
 typedef enum
 {
     SPRITE_FLIP_NONE = 0,

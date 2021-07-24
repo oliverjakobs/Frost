@@ -7,31 +7,30 @@
 
 /*
 REQUIRES:
-    - transform
+  - transform
 
 PARSE_RULES:
 
 TileBodyType:
-    "DYNAMIC"	-> TILE_BODY_DYNAMIC
-    default		-> TILE_BODY_STATIC
+  "DYNAMIC" -> TILE_BODY_DYNAMIC
+  default   -> TILE_BODY_STATIC
 
 RigidBodyFilter:
-    "WORLD"		-> RIGID_BODY_FILTER_WORLD
-    "PLAYER"	-> RIGID_BODY_FILTER_PLAYER
-    "NPC"		-> RIGID_BODY_FILTER_NPC
-    "DOOR"		-> RIGID_BODY_FILTER_DOOR
-    default		-> RIGID_BODY_FILTER_NONE
+  "WORLD"   -> RIGID_BODY_FILTER_WORLD
+  "PLAYER"  -> RIGID_BODY_FILTER_PLAYER
+  "NPC"     -> RIGID_BODY_FILTER_NPC
+  "DOOR"    -> RIGID_BODY_FILTER_DOOR
+  default   -> RIGID_BODY_FILTER_NONE
 
-JSON - Template:
+Template:
 
-"rigidbody": {
-    "type": <TileBodyType>,
-    "filter": [ <RigidBodyFilter>, ... ],
-    <OPTIONAL (default transform size / 2)>
-        "halfsize": [ <HALF_WIDTH:float>, <HALF_HEIGHT:float> ],
-    <OPTIONAL (default [ 0.0f, HALF_HEIGHT ])>
-        "offset": [ <X:float>, <Y:float> ],
-}
+[rigidbody]
+type = <TileBodyType>
+filter = { <RigidBodyFilter>, ... }
+half_width = <float : transform.width / 2>
+half_height = <float : transform.height / 2>
+offset_x = <float : 0.0>
+offset_y = <float : half_height>
 */
 
 typedef enum

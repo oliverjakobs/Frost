@@ -4,6 +4,17 @@
 #include "Scenes/Scene.h"
 #include "EntityState.h"
 
+/*
+REQUIRES:
+  - sprite
+
+TEMPLATE(grouped):
+[animation.<NAME>]
+start = <int : 0>
+length = <int : 0>
+delay = <float : 0.0>
+*/
+
 typedef struct
 {
     int start;

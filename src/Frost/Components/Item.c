@@ -9,7 +9,7 @@ void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant)
     if (element.error == TB_INI_OK)
     {
         Item item;
-        item.id = FrostMatchVariant(element.start, NULL, "id", variant, 0);
+        item.id = FrostMatchVariant(element.start, NULL, "id", variant, NULL_ITEM);
 
         EcsAddDataComponent(ecs, entity, COMPONENT_ITEM, &item);
     }

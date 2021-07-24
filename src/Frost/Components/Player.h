@@ -3,6 +3,11 @@
 
 #include "Scenes/Scene.h"
 
+/*
+TEMPLATE:
+[player]
+*/
+
 typedef struct
 {
     int move_left;
