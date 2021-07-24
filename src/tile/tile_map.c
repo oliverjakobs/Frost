@@ -58,7 +58,9 @@ int TileMapLoadTiles(TileMap* map, TileID* tiles, TileType* types, size_t types_
 void TileMapDestroy(TileMap* map)
 {
 	tb_mem_free(map->allocator, map->tiles);
+	map->tiles = NULL;
 	tb_mem_free(map->allocator, map->types);
+	map->types = NULL;
 }
 
 int TileMapStreamTiles(TileMap* map, void* stream, void* (*next)(void*, TileID*), size_t len)

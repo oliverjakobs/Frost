@@ -277,15 +277,28 @@ char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_elemen
     /* check if element starts with a brace */
     if (*element->start != '{') return tb_ini_make_error(element, TB_INI_BAD_VALUE, element->start);
 
-    char* csv = ++element->start;
+    /* skip opening brace and leading whitespaces */
+    char* csv = tb_ini_skip_whitespace(++element->start);
     element->len = 0;
 
     /* count values in csv list */
-    while (*csv != '\0' && *csv != '}')
+    while (*csv != '\0' && *csv != '\n' && *csv != '}')
     {
-        /* TODO: check for line end without comma (except for last value) */
-        element->len += (*csv == ',');
-        csv++;
+        /* search for next value end point */
+        csv = strpbrk(csv, ",}\n");
+        if (!csv) return tb_ini_make_error(element, TB_INI_BAD_VALUE, element->start);
+
+        if (*csv == ',')
+        {
+            element->len++;
+            csv = tb_ini_skip_whitespace(++csv);
+        }
+    }
+
+    if (*csv == '\n')
+    {
+        csv = tb_ini_skip_whitespace(csv);
+        if (*csv != '}') return tb_ini_make_error(element, TB_INI_BAD_VALUE, csv);
     }
 
     /* add last element if csv is not empty */
