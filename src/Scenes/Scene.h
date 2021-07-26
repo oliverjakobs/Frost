@@ -3,8 +3,8 @@
 
 #include "Camera.h"
 #include "Resources.h"
+#include "Background.h"
 
-#include "Graphics/Background.h"
 #include "Minimal/Minimal.h"
 
 #define APPLICATION_STR_LEN		32

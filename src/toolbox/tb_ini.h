@@ -1,6 +1,7 @@
 #ifndef TB_INI_H
 #define TB_INI_H
 
+#include <stdio.h>
 #include <stddef.h>
 
 typedef enum
@@ -65,6 +66,10 @@ int     tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_pa
  */
 char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_element* element);
 char* tb_ini_csv_step(char* stream, tb_ini_element* element);
+
+/* write utility */
+int tb_ini_write_section(FILE* const stream, const char* name, ...);
+int tb_ini_write_property(FILE* const stream, const char* name, const char* value, ...);
 
 /* returns a string describing the error */
 const char* tb_ini_get_error_desc(tb_ini_error error);

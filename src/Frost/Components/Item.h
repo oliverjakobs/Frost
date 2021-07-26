@@ -17,6 +17,6 @@ typedef struct
     ItemID id;
 } Item;
 
-void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant);
+void ItemLoad(char* ini, Scene* scene, EcsEntityID entity, int variant);
 
 #endif /* !ITEM_H */

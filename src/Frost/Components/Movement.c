@@ -2,9 +2,9 @@
 
 #include "Frost/FrostParser.h"
 
-void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+void MovementLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
-    if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
+    if (!EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM))
     {
         MINIMAL_ERROR("[ECS] Movement requires Transform");
         return;
@@ -20,6 +20,6 @@ void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity)
         comp.speed = tb_ini_float(element.start, NULL, "speed", 0.0f);
         comp.bounce = tb_ini_float(element.start, NULL, "bounce", 0.0f);
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_MOVEMENT, &comp);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_MOVEMENT, &comp);
     }
 }

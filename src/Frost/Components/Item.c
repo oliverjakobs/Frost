@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant)
+void ItemLoad(char* ini, Scene* scene, EcsEntityID entity, int variant)
 {
     tb_ini_element element;
     tb_ini_query(ini, "item", NULL, &element);
@@ -11,6 +11,6 @@ void ItemLoad(char* ini, Ecs* ecs, EcsEntityID entity, int variant)
         Item item;
         item.id = FrostMatchVariant(element.start, NULL, "id", variant, NULL_ITEM);
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_ITEM, &item);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ITEM, &item);
     }
 }

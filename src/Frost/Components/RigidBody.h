@@ -54,6 +54,6 @@ typedef struct
     RigidBodyFilter filter;
 } RigidBody;
 
-void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity);
+void RigidBodyLoad(char* ini, Scene* scene, EcsEntityID entity);
 
 #endif /* !RIGID_BODY_H */

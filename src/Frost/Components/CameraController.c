@@ -3,7 +3,7 @@
 #include "Frost/FrostParser.h"
 #include "toolbox/tb_algorithm.h"
 
-void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene)
+void CameraControllerLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
     tb_ini_element element;
     tb_ini_query(ini, "camera", NULL, &element);
@@ -15,7 +15,7 @@ void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene)
         comp.scene_size.y = SceneGetHeight(scene);
         comp.smooth = tb_ini_float(element.start, NULL, "smooth", 0.0f);
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_CAMERA, &comp);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_CAMERA, &comp);
     }
 }
 

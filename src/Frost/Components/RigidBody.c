@@ -2,9 +2,9 @@
 
 #include "Frost/FrostParser.h"
 
-void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+void RigidBodyLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
-    Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
+    Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
     if (!transform)
     {
         MINIMAL_ERROR("[ECS] RigidBody requires Transform");
@@ -44,6 +44,6 @@ void RigidBodyLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 
         if (type == TILE_BODY_DYNAMIC) TileBodySetSensor(&body.body, 2.0f, 2.0f);
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_RIGID_BODY, &body);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_RIGID_BODY, &body);
     }
 }

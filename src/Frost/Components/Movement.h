@@ -28,6 +28,6 @@ typedef struct
     float bounce;
 } Movement;
 
-void MovementLoad(char* ini, Ecs* ecs, EcsEntityID entity);
+void MovementLoad(char* ini, Scene* scene, EcsEntityID entity);
 
 #endif /* !MOVEMENT_H */

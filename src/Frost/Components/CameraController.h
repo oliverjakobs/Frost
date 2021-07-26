@@ -16,7 +16,7 @@ typedef struct
     float smooth;
 } CameraController;
 
-void CameraControllerLoad(char* ini, Ecs* ecs, EcsEntityID entity, Scene* scene);
+void CameraControllerLoad(char* ini, Scene* scene, EcsEntityID entity);
 
 void CameraControllerMoveConstrained(CameraController* controller, vec2 pos, float constraint);
 

@@ -72,7 +72,8 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 			MinimalGetCursorPos(&mouse.x, &mouse.y);
 			vec2 drop_pos = CameraGetMousePosView(&scene->camera, mouse);
 			ItemID id = inv_dragged->cells[dragged.cell];
-			if (SceneLoadTemplate(scene, "res/templates/item.json", drop_pos, 0, id))
+			EcsEntityID entity = EcsEntityGetNextID();
+			if (SceneLoadTemplate(scene, entity, "res/templates/item.json", drop_pos, 0, id))
 				InventorySetCellContent(inv_dragged, dragged.cell, NULL_ITEM);
 		}
 

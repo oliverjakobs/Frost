@@ -6,9 +6,10 @@
 typedef struct
 {
     const char* path;
+    int variant;
 } Template;
 
-void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ);
+void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* templ, int variant);
 void TemplateRelease(Template* templ);
 
 typedef int ZIndex;

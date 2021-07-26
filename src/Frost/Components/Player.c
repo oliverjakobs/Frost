@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void PlayerLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+void PlayerLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
     tb_ini_element element;
     tb_ini_query(ini, "player", NULL, &element);
@@ -13,6 +13,6 @@ void PlayerLoad(char* ini, Ecs* ecs, EcsEntityID entity)
         comp.move_right = MINIMAL_KEY_D;
         comp.jump =       MINIMAL_KEY_SPACE;
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_PLAYER, &comp);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_PLAYER, &comp);
     }
 }

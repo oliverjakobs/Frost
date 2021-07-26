@@ -6,27 +6,6 @@
 #include "toolbox/tb_file.h"
 #include "toolbox/tb_ini.h"
 
-static int SceneLoadFromFile(Scene* scene, const char* path, SceneLoadError(*load_func)(Scene*, char*))
-{
-    char* json = tb_file_read_alloc(path, "rb", FrostMalloc, FrostFree);
-    if (!json)
-    {
-        MINIMAL_ERROR("[Scenes] Failed to read file (%s).", path);
-        return 0;
-    }
-
-    SceneLoadError error = load_func(scene, json);
-    FrostFree(json);
-
-    if (error != SCENE_LOAD_OK)
-    {
-        MINIMAL_ERROR("[Scenes] %s.\n", SceneLoadErrorDesc(error));
-        return 0;
-    }
-
-    return 1;
-}
-
 static IgnisTexture2D* SceneLoadTexture2D(char* ini, char* name, Resources* res)
 {
     tb_ini_element texture;
@@ -55,21 +34,8 @@ int SceneLoad(Scene* scene, const char* path)
         return 0;
     }
 
-    tb_ini_element element;
-    tb_ini_query(ini, "scene", NULL, &element);
-
-    /* load map */
-    char map_path[APPLICATION_PATH_LEN];
-    tb_ini_string(element.start, NULL, "map", map_path, APPLICATION_PATH_LEN);
-
-    if (!SceneLoadFromFile(scene, map_path, SceneLoadMap))
-    {
-        FrostFree(ini);
-        return 0;
-    }
-
     scene->gravity.x = 0.0f;
-    scene->gravity.y = tb_ini_float(element.start, NULL, "gravity", 0.0f);
+    scene->gravity.y = tb_ini_float(ini, "scene", "gravity", 0.0f);
 
     /* load item atlas */
     if ((scene->item_atlas = SceneLoadTexture2D(ini, "item_atlas", &scene->res)) == NULL)
@@ -80,6 +46,82 @@ int SceneLoad(Scene* scene, const char* path)
         MINIMAL_WARN("[Scenes] Could not load tile set.");
 
     /* load background */
+    if (!SceneLoadBackground(scene, ini))
+    {
+        MINIMAL_WARN("[Scenes] Failed to load background.");
+        FrostFree(ini);
+        return 0;
+    }
+
+    /* load map */
+    if (!SceneLoadMap(scene, ini))
+    {
+        MINIMAL_WARN("[Scenes] Failed to load map.");
+        FrostFree(ini);
+        return 0;
+    }
+
+    /* load state */
+    if (!SceneLoadState(scene, ini))
+    {
+        MINIMAL_WARN("[Scenes] Failed to load save state.");
+        FrostFree(ini);
+        return 0;
+    }
+
+    FrostFree(ini);
+    return 1;
+}
+
+int SceneLoadTemplate(Scene* scene, EcsEntityID entity, const char* templ, vec2 pos, int z_index, int variant)
+{
+    char json[FROST_TEMPLATE_SIZE];
+    size_t size = tb_file_read_buf(templ, "rb", json, FROST_TEMPLATE_SIZE);
+    if (size == FROST_TEMPLATE_SIZE) MINIMAL_WARN("[Scenes] Template buffer may be too small");
+
+    if (size == 0)
+    {
+        MINIMAL_WARN("[Scenes] Couldn't read template (%s)", templ);
+        return 0;
+    }
+
+    EcsEntityUseID(entity);
+
+    /* Load components */
+    TemplateLoad(&scene->ecs, entity, templ, variant);
+    EntityStateLoad(&scene->ecs, entity, ENTITY_STATE_NULL);
+
+    TransformLoad(json, scene, entity, pos);
+    RigidBodyLoad(json, scene, entity);
+    SpriteLoad(json, scene, entity, z_index, variant);
+    AnimatorLoad(json, scene, entity);
+    MovementLoad(json, scene, entity);
+    CameraControllerLoad(json, scene, entity);
+    PlayerLoad(json, scene, entity);
+    InventoryLoad(json, scene, entity);
+    InteractableLoad(json, scene, entity);
+
+    return 1;
+}
+
+static void* SceneStreamTiles(void* stream, TileID* id)
+{
+    tb_ini_element element;
+    stream = tb_ini_csv_step(stream, &element);
+    *id = tb_ini_element_to_int(&element);
+    return stream;
+}
+
+static void* SceneStreamTileTypes(void* stream, TileType* type)
+{
+    tb_ini_element element;
+    stream = tb_ini_csv_step(stream, &element);
+    *type = FrostParseTileType(element.start, element.len);
+    return stream;
+}
+
+int SceneLoadBackground(Scene* scene, char* ini)
+{
     tb_ini_element background;
     tb_ini_query(ini, "background", NULL, &background);
 
@@ -94,7 +136,7 @@ int SceneLoad(Scene* scene, const char* path)
         tb_ini_query(ini, "background.layers", NULL, &background);
 
         scene->background = BackgroundInit(background.len);
-        
+
         tb_ini_element layer;
         char* layer_start = background.start;
         for (int i = 0; i < background.len; i++)
@@ -117,70 +159,10 @@ int SceneLoad(Scene* scene, const char* path)
             }
         }
     }
-
-    /* load save */
-    char save_path[APPLICATION_PATH_LEN];
-    tb_ini_string(element.start, NULL, "save", save_path, APPLICATION_PATH_LEN);
-
-    FrostFree(ini);
-
-    return SceneLoadFromFile(scene, save_path, SceneLoadSaveState);
-}
-
-int SceneLoadTemplate(Scene* scene, const char* templ, vec2 pos, int z_index, int variant)
-{
-    char json[FROST_TEMPLATE_SIZE];
-    size_t size = tb_file_read_buf(templ, "rb", json, FROST_TEMPLATE_SIZE);
-    if (size == FROST_TEMPLATE_SIZE) MINIMAL_WARN("[Scenes] Template buffer may be too small");
-
-    if (size == 0)
-    {
-        MINIMAL_WARN("[Scenes] Couldn't read template (%s)", templ);
-        return 0;
-    }
-
-    EcsEntityID entity = EcsEntityGetNextID();
-
-    /* Load components */
-    TemplateLoad(&scene->ecs, entity, templ);
-    EntityStateLoad(&scene->ecs, entity, ENTITY_STATE_NULL);
-
-    TransformLoad(json, &scene->ecs, entity, pos);
-    RigidBodyLoad(json, &scene->ecs, entity);
-    SpriteLoad(json, &scene->ecs, entity, &scene->res, z_index, variant);
-    AnimatorLoad(json, &scene->ecs, entity);
-    MovementLoad(json, &scene->ecs, entity);
-    CameraControllerLoad(json, &scene->ecs, entity, scene);
-    PlayerLoad(json, &scene->ecs, entity);
-    InventoryLoad(json, &scene->ecs, entity, scene->camera.size);
-    InteractableLoad(json, &scene->ecs, entity);
-
     return 1;
 }
 
-SceneLoadError SceneLoadTextures(Scene* scene, char* json)
-{
-
-    return SCENE_LOAD_OK;
-}
-
-static void* SceneStreamTiles(void* stream, TileID* id)
-{
-    tb_ini_element element;
-    stream = tb_ini_csv_step(stream, &element);
-    *id = tb_ini_element_to_int(&element);
-    return stream;
-}
-
-static void* SceneStreamTileTypes(void* stream, TileType* type)
-{
-    tb_ini_element element;
-    stream = tb_ini_csv_step(stream, &element);
-    *type = FrostParseTileType(element.start, element.len);
-    return stream;
-}
-
-SceneLoadError SceneLoadMap(Scene* scene, char* ini)
+int SceneLoadMap(Scene* scene, char* ini)
 {
     tb_ini_element map;
     tb_ini_query(ini, "map", NULL, &map);
@@ -188,26 +170,32 @@ SceneLoadError SceneLoadMap(Scene* scene, char* ini)
     size_t rows = tb_ini_int(map.start, NULL, "rows", 0);
     size_t cols = tb_ini_int(map.start, NULL, "cols", 0);
 
-    float tile_size = tb_ini_float(map.start, NULL, "tile", 0.0f);
+    float tile_size = tb_ini_float(map.start, NULL, "tile_size", 0.0f);
      
-    if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator)) return SCENE_LOAD_MAP_ERROR;
+    if (!TileMapLoad(&scene->map, rows, cols, tile_size, scene->allocator))
+    {
+        MINIMAL_WARN("[Scenes] Failed to load tile map.");
+        return 0;
+    }
 
     tb_ini_element types;
     tb_ini_csv(map.start, NULL, "types", &types);
 
     if (types.error != TB_INI_OK || !TileMapStreamTypes(&scene->map, types.start, SceneStreamTileTypes, types.len))
     {
+        MINIMAL_WARN("[Scenes] Failed to stream tile types.");
         TileMapDestroy(&scene->map);
-        return SCENE_LOAD_STREAM_TYPES_ERROR;
+        return 0;
     }
 
     tb_ini_element tiles;
-    tb_ini_csv(ini, "tiles", "layer0", &tiles);
+    tb_ini_csv(map.start, NULL, "tiles", &tiles);
 
     if (types.error != TB_INI_OK || !TileMapStreamTiles(&scene->map, tiles.start, SceneStreamTiles, tiles.len))
     {
+        MINIMAL_WARN("[Scenes] Failed to stream tiles.");
         TileMapDestroy(&scene->map);
-        return SCENE_LOAD_STREAM_MAP_ERROR;
+        return 0;
     }
 
     TileRendererBindMap(&scene->renderer, &scene->map);
@@ -216,14 +204,16 @@ SceneLoadError SceneLoadMap(Scene* scene, char* ini)
     TileMapSetBorder(&scene->map, TILE_LEFT, 1);
     TileMapSetBorder(&scene->map, TILE_RIGHT, 1);
 
-    return SCENE_LOAD_OK;
+    return 1;
 }
 
-SceneLoadError SceneLoadSaveState(Scene* scene, char* ini)
+int SceneLoadState(Scene* scene, char* ini)
 {
     tb_ini_element template;
     while ((ini = tb_ini_group_next(ini, "template", &template)) != NULL)
     {
+        EcsEntityID entity = atoi(template.name);
+
         char path[APPLICATION_PATH_LEN];
         tb_ini_string(template.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
@@ -232,28 +222,14 @@ SceneLoadError SceneLoadSaveState(Scene* scene, char* ini)
         pos.y = tb_ini_float(template.start, NULL, "y", 0.0f);
 
         int z_index = tb_ini_int(template.start, NULL, "layer", 0);
-        int variant = tb_ini_int(template.start, NULL, "variant", 0);
+        int variant = tb_ini_int(template.start, NULL, "variant", -1);
 
         /* Load Template */
-        if (!SceneLoadTemplate(scene, path, pos, z_index, variant))
+        if (!SceneLoadTemplate(scene, entity, path, pos, z_index, variant))
         {
             MINIMAL_WARN("[Scenes] Failed to load template %s", path);
         }
     }
 
-    return SCENE_LOAD_OK;
-}
-
-const char* SceneLoadErrorDesc(SceneLoadError error)
-{
-    switch (error)
-    {
-    case SCENE_LOAD_OK:					return "No error";
-    case SCENE_LOAD_READ_ERROR:			return "Failed to read file";
-    case SCENE_LOAD_MAP_ERROR:			return "Failed to load map";
-    case SCENE_LOAD_MAP_SIZE_ERROR:		return "Map size or tile size can not be zero";
-    case SCENE_LOAD_STREAM_MAP_ERROR:	return "Failed to stream tiles";
-    case SCENE_LOAD_STREAM_TYPES_ERROR: return "Failed to stream tile types";
-    default:							return "Unkown error";
-    }
+    return 1;
 }

@@ -155,8 +155,8 @@ void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const
 	}
 	case CONSOLE_CMD_CREATE:
 	{
-		char* args[2];
-		char* spec = ConsoleGetCMDArgs(cmd_buffer, 6, args, 2);
+		char* args[3];
+		char* spec = ConsoleGetCMDArgs(cmd_buffer, 6, args, 3);
 
 		if (!spec) break;
 
@@ -172,8 +172,8 @@ void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const
 			MinimalGetCursorPos(&mouse.x, &mouse.y);
 			vec2 pos = CameraGetMousePosView(&scene->camera, mouse);
 
-			if (SceneLoadTemplate(scene, args[0], pos, atoi(args[1]), 0))
-				ConsoleOut(console, "Created entity with template %s", args[0]);
+			if (SceneLoadTemplate(scene, atoi(args[0]), args[1], pos, atoi(args[2]), 0))
+				ConsoleOut(console, "Created entity with template %s", args[1]);
 		}
 		break;
 	}

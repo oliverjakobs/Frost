@@ -1,22 +1,17 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
-
-#include "Ignis/Ignis.h"
+#include "Graphics/Renderer.h"
 
 typedef struct
 {
-	IgnisTexture2D texture;
+    IgnisTexture2D texture;
 
-	float startpos;
-	float x, y;
-	float w, h;
+    float startpos;
+    float x, y;
+    float w, h;
 
-	float parallax;
+    float parallax;
 } BackgroundLayer;
 
 BackgroundLayer* BackgroundInit(size_t initial);
@@ -26,9 +21,5 @@ BackgroundLayer* BackgroundPushLayer(BackgroundLayer* bg, IgnisTexture2D tex, fl
 
 void BackgroundUpdate(BackgroundLayer* bg, float x, float deltatime);
 void BackgroundRender(const BackgroundLayer* bg, const float* mat_view_proj);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* !BACKGROUND_H */

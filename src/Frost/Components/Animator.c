@@ -16,9 +16,9 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
     return 1;
 }
 
-void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+void AnimatorLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
-    if (!EcsGetDataComponent(ecs, entity, COMPONENT_SPRITE))
+    if (!EcsGetDataComponent(&scene->ecs, entity, COMPONENT_SPRITE))
     {
         MINIMAL_ERROR("[ECS] Animator requires Sprite");
         return;
@@ -49,7 +49,7 @@ void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 
             AnimatorAddAnimation(&animator, state, &animation);
         }
-        EcsAddDataComponent(ecs, entity, COMPONENT_ANIMATOR, &animator);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_ANIMATOR, &animator);
     }
 }
 

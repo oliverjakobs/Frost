@@ -72,7 +72,7 @@ typedef struct
     ItemID* cells;
 } Inventory;
 
-void InventoryLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 screen_size);
+void InventoryLoad(char* ini, Scene* scene, EcsEntityID entity);
 void InventoryRelease(Inventory* inv);
 
 void InventoryToggle(Inventory* inv);

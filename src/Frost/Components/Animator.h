@@ -32,7 +32,7 @@ typedef struct
     float clock;
 } Animator;
 
-void AnimatorLoad(char* ini, Ecs* ecs, EcsEntityID entity);
+void AnimatorLoad(char* ini, Scene* scene, EcsEntityID entity);
 void AnimatorRelease(Animator* animator);
 
 void AnimatorStart(Animator* animator, int start);

@@ -4,10 +4,11 @@
 #include <string.h>
 #include <math.h>
 
-static EcsEntityID _entity_counter = ECS_NULL_ENTITY + 1;
+static EcsEntityID _entity_counter = ECS_NULL_ENTITY;
 
-void EcsEntityResetIDCounter()   { _entity_counter = ECS_NULL_ENTITY + 1; }
-EcsEntityID EcsEntityGetNextID() { return _entity_counter++; }
+void EcsEntityResetIDCounter()      { _entity_counter = ECS_NULL_ENTITY; }
+void EcsEntityUseID(EcsEntityID id) { _entity_counter = id; }
+EcsEntityID EcsEntityGetNextID()    { return ++_entity_counter; }
 
 int EcsEntryFill(EcsEntry* comp, EcsEntityID entity, const void* data, size_t size)
 {

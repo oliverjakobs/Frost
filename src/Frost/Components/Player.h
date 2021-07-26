@@ -15,6 +15,6 @@ typedef struct
     int jump;
 } Player;
 
-void PlayerLoad(char* ini, Ecs* ecs, EcsEntityID entity);
+void PlayerLoad(char* ini, Scene* scene, EcsEntityID entity);
 
 #endif /* !PLAYER_H */

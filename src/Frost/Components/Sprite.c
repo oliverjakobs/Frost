@@ -2,9 +2,9 @@
 
 #include "Frost/FrostParser.h"
 
-void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, Resources* res, int z_index, int variant)
+void SpriteLoad(char* ini, Scene* scene, EcsEntityID entity, int z_index, int variant)
 {
-    Transform* transform = EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM);
+    Transform* transform = EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM);
     if (!transform)
     {
         MINIMAL_ERROR("[ECS] Sprite requires Transform");
@@ -29,12 +29,12 @@ void SpriteLoad(char* ini, Ecs* ecs, EcsEntityID entity, Resources* res, int z_i
         int rows = tb_ini_int(element.start, NULL, "rows", 1);
         int cols = tb_ini_int(element.start, NULL, "cols", 1);
 
-        sprite.texture = ResourcesLoadTexture2D(res, path, rows, cols);
+        sprite.texture = ResourcesLoadTexture2D(&scene->res, path, rows, cols);
 
         if (sprite.texture)
         {
-            EcsAddDataComponent(ecs, entity, COMPONENT_SPRITE, &sprite);
-            EcsAddOrderComponent(ecs, entity, COMPONENT_Z_INDEX, &z_index);
+            EcsAddDataComponent(&scene->ecs, entity, COMPONENT_SPRITE, &sprite);
+            EcsAddOrderComponent(&scene->ecs, entity, COMPONENT_Z_INDEX, &z_index);
         }
         else
         {

@@ -2,7 +2,7 @@
 
 #include "Frost/FrostParser.h"
 
-void TransformLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 pos)
+void TransformLoad(char* ini, Scene* scene, EcsEntityID entity, vec2 pos)
 {
     tb_ini_element element;
     tb_ini_query(ini, "transform", NULL, &element);
@@ -14,7 +14,7 @@ void TransformLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 pos)
         transform.size.x = tb_ini_float(element.start, NULL, "width", 0.0f);
         transform.size.y = tb_ini_float(element.start, NULL, "height", 0.0f);
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_TRANSFORM, &transform);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM, &transform);
     }
 }
 

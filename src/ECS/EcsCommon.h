@@ -7,6 +7,7 @@ typedef int32_t EcsEntityID;
 #define ECS_NULL_ENTITY (0)
 
 void EcsEntityResetIDCounter();
+void EcsEntityUseID(EcsEntityID id);
 EcsEntityID EcsEntityGetNextID();
 
 typedef void (*EcsReleaseFunc)(void*);

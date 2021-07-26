@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 static char* tb_ini_skip_whitespace(char* cursor)
 {
@@ -320,6 +321,38 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element)
     element->len = tb_ini_clip_tail(stream) - element->start;
     
     return (*stream != '\0' && *stream != '}') ? ++stream : NULL;
+}
+
+int tb_ini_write_section(FILE* const stream, const char* name, ...)
+{
+    int result = fprintf(stream, "[");
+
+    va_list arg;
+    va_start(arg, name);
+    result += vfprintf(stream, name, arg);
+    va_end(arg);
+
+    result += fprintf(stream, "]\n");
+
+    return result;
+}
+
+int tb_ini_write_property(FILE* const stream, const char* name, const char* value, ...)
+{
+    int result = 0;
+    if (name && value)
+    {
+        result += fprintf(stream, "%s = ", name);
+
+        va_list arg;
+        va_start(arg, value);
+        result += vfprintf(stream, value, arg);
+        va_end(arg);
+
+    }
+    result += fprintf(stream, "\n");
+
+    return result;
 }
 
 const char* tb_ini_get_error_desc(tb_ini_error error)

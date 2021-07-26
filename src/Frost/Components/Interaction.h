@@ -55,7 +55,7 @@ typedef struct
     float time;
 } Interactable;
 
-void InteractableLoad(char* ini, Ecs* ecs, EcsEntityID entity);
+void InteractableLoad(char* ini, Scene* scene, EcsEntityID entity);
 
 int InteractionToggleDoor(Ecs* ecs, EcsEntityID entity, int i);
 int InteractionOpenInventory(Ecs* ecs, EcsEntityID entity, int active);

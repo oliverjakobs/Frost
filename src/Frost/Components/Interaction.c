@@ -3,9 +3,9 @@
 #include "Frost/FrostParser.h"
 #include "toolbox/tb_algorithm.h"
 
-void InteractableLoad(char* ini, Ecs* ecs, EcsEntityID entity)
+void InteractableLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
-	if (!EcsGetDataComponent(ecs, entity, COMPONENT_TRANSFORM))
+	if (!EcsGetDataComponent(&scene->ecs, entity, COMPONENT_TRANSFORM))
 	{
 		MINIMAL_ERROR("[ECS] Interactable requires Transform");
 		return;
@@ -25,7 +25,7 @@ void InteractableLoad(char* ini, Ecs* ecs, EcsEntityID entity)
 
 		comp.time = (comp.type == INTERACTION_TYPE_TIMED) ? tb_ini_float(element.start, NULL, "time", 0.0f) : 0.0f;
 
-		EcsAddDataComponent(ecs, entity, COMPONENT_INTERACTABLE, &comp);
+		EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INTERACTABLE, &comp);
 	}
 }
 

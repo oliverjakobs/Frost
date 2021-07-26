@@ -33,7 +33,7 @@ static void InventoryLoadContent(Inventory* inv, const char* path)
     InventorySetCellContent(inv, 1, 1);
 }
 
-void InventoryLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
+void InventoryLoad(char* ini, Scene* scene, EcsEntityID entity)
 {
     tb_ini_element element;
     tb_ini_query(ini, "inventory", NULL, &element);
@@ -64,11 +64,11 @@ void InventoryLoad(char* ini, Ecs* ecs, EcsEntityID entity, vec2 screen_size)
         InventoryAlignH align_h = tb_ini_parse(element.start, NULL, "align_h", FrostParseInventoryAlignH);
         InventoryAlignV align_v = tb_ini_parse(element.start, NULL, "align_v", FrostParseInventoryAlignV);
 
-        InventoryAlign(&inv, align_h, align_v, screen_size);
+        InventoryAlign(&inv, align_h, align_v, scene->camera.size);
 
         InventoryLoadContent(&inv, "");
 
-        EcsAddDataComponent(ecs, entity, COMPONENT_INVENTORY, &inv);
+        EcsAddDataComponent(&scene->ecs, entity, COMPONENT_INVENTORY, &inv);
     }
 }
 

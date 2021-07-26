@@ -2,9 +2,11 @@
 
 #include "Frost/Frost.h"
 
-void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* path)
+void TemplateLoad(Ecs* ecs, EcsEntityID entity, const char* path, int variant)
 {
-    Template templ = (Template){ FrostMemDup(path, strlen(path) + 1) };
+    Template templ;
+    templ.path = FrostMemDup(path, strlen(path) + 1);
+    templ.variant = variant;
     EcsAddOrderComponent(ecs, entity, COMPONENT_TEMPLATE, &templ);
 }
 
