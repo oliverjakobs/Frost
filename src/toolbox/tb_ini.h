@@ -4,6 +4,12 @@
 #include <stdio.h>
 #include <stddef.h>
 
+#ifdef _WIN32
+#define TB_INI_NEWLINE "\r\n"
+#else
+#define TB_INI_NEWLINE "\n"
+#endif
+
 typedef enum
 {
     TB_INI_OK,
@@ -70,6 +76,9 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element);
 /* write utility */
 int tb_ini_write_section(FILE* const stream, const char* name, ...);
 int tb_ini_write_property(FILE* const stream, const char* name, const char* value, ...);
+
+/* copy the content of src into the stream until the specified section/property is reached */
+int tb_ini_copy_till(FILE* const stream, char* src, const char* section, const char* prop);
 
 /* returns a string describing the error */
 const char* tb_ini_get_error_desc(tb_ini_error error);

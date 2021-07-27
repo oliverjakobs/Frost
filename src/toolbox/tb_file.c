@@ -9,41 +9,58 @@ char* tb_file_read(const char* path, const char* mode)
 
 char* tb_file_read_alloc(const char* path, const char* mode, void* (*mallocf)(size_t), void (*freef)(void*))
 {
-	FILE* file = fopen(path, mode);
-	if (!file) return NULL;
+	char* buffer = NULL;
+	FILE* stream = fopen(path, mode);
+
+	if (stream)
+	{
+		buffer = tb_file_readf_alloc(stream, mallocf, freef);
+		fclose(stream);
+	}
+
+	return buffer;
+}
+
+char* tb_file_readf(FILE* const stream)
+{
+	return tb_file_readf_alloc(stream, malloc, free);
+}
+
+char* tb_file_readf_alloc(FILE* const stream, void* (*mallocf)(size_t), void(*freef)(void*))
+{
+	if (!stream) return NULL;
 
 	/* find file size */
-	fseek(file, 0, SEEK_END);
-	size_t size = ftell(file);
-	rewind(file);
+	fseek(stream, 0, SEEK_END);
+	size_t size = ftell(stream);
+	rewind(stream);
 
 	char* buffer = mallocf(size + 1);
 	if (buffer)
 	{
-		if (fread(buffer, size, 1, file) != 1)
+		if (fread(buffer, size, 1, stream) != 1)
 		{
 			freef(buffer);
-			fclose(file);
+			fclose(stream);
 			return NULL;
 		}
 
 		buffer[size] = '\0'; /* zero terminate buffer */
 	}
 
-	fclose(file);
 	return buffer;
 }
 
 size_t tb_file_read_buf(const char* path, const char* mode, char* buf, size_t max_len)
 {
-	FILE* file = fopen(path, mode);
-	if (!file) return 0;
+	FILE* stream = fopen(path, mode);
+	if (!stream) return 0;
 
-	size_t size = fread(buf, 1, max_len - 1, file);
+	size_t size = fread(buf, 1, max_len - 1, stream);
 
 	buf[size] = '\0'; /* zero terminate buffer */
 
-	fclose(file);
+	fclose(stream);
 	return size + 1;
 }
 

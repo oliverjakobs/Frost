@@ -332,7 +332,7 @@ int tb_ini_write_section(FILE* const stream, const char* name, ...)
     result += vfprintf(stream, name, arg);
     va_end(arg);
 
-    result += fprintf(stream, "]\n");
+    result += fprintf(stream, "]" TB_INI_NEWLINE);
 
     return result;
 }
@@ -350,7 +350,30 @@ int tb_ini_write_property(FILE* const stream, const char* name, const char* valu
         va_end(arg);
 
     }
-    result += fprintf(stream, "\n");
+    result += fprintf(stream, TB_INI_NEWLINE);
+
+    return result;
+}
+
+int tb_ini_copy_till(FILE* const stream, char* src, const char* section, const char* prop)
+{
+    tb_ini_element element;
+    tb_ini_query(src, section, prop, &element);
+
+    int result = 0;
+
+    if (element.error == TB_INI_OK)
+    {
+        char* stop = element.name;
+
+        /* if element is a section back up till opening bracket is reached */
+        if (!prop)
+        {
+            while (*stop != '[') stop--;
+        }
+
+        while (src != stop) result += fputc(*(src++), stream);
+    }
 
     return result;
 }
