@@ -325,34 +325,51 @@ char* tb_ini_csv_step(char* stream, tb_ini_element* element)
 
 int tb_ini_write_section(FILE* const stream, const char* name, ...)
 {
-    int result = fprintf(stream, "[");
+    fprintf(stream, "[");
 
     va_list arg;
     va_start(arg, name);
-    result += vfprintf(stream, name, arg);
+    vfprintf(stream, name, arg);
     va_end(arg);
 
-    result += fprintf(stream, "]" TB_INI_NEWLINE);
+    fprintf(stream, "]" TB_INI_NEWLINE);
 
-    return result;
+    return 1;
 }
 
 int tb_ini_write_property(FILE* const stream, const char* name, const char* value, ...)
 {
-    int result = 0;
     if (name && value)
     {
-        result += fprintf(stream, "%s = ", name);
+        fprintf(stream, "%s = ", name);
 
         va_list arg;
         va_start(arg, value);
-        result += vfprintf(stream, value, arg);
+        vfprintf(stream, value, arg);
         va_end(arg);
 
     }
-    result += fprintf(stream, TB_INI_NEWLINE);
+    fprintf(stream, TB_INI_NEWLINE);
+    return 1;
+}
 
-    return result;
+int tb_ini_write_csv(FILE* const stream, const char* name, size_t size, size_t rows, tb_ini_write_value write, const void* data)
+{
+    size_t row_size = (rows > 0) ? size / rows : 0;
+
+    fprintf(stream, "%s = {", name);
+    for (size_t index = 0; index < size - 1; ++index)
+    {
+        if (rows > 0 && index % row_size == 0) fprintf(stream, TB_INI_NEWLINE "  ");
+        write(stream, data, index);
+        fputc(',', stream);
+    }
+    write(stream, data, size - 1);
+
+    if (rows > 0) fprintf(stream, TB_INI_NEWLINE "}" TB_INI_NEWLINE);
+    else          fputc('}', stream);
+
+    return 1;
 }
 
 int tb_ini_copy_till(FILE* const stream, char* src, const char* section, const char* prop)

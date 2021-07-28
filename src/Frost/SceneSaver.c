@@ -37,31 +37,16 @@ int SceneSave(Scene* scene, const char* path)
     FrostFree(ini);
     fclose(file);
 
-    if (!result)
-    {
-        MINIMAL_ERROR("[Scenes] Failed to save scene\n");
-        return 0;
-    }
-
-    return 1;
+    if (!result) MINIMAL_ERROR("[Scenes] Failed to save scene\n");
+    return result;
 }
+
+int SceneSaveTileID(FILE* const stream, const Tile* data, size_t index) { return fprintf(stream, "%*d", 2, data[index].id); }
 
 int SceneSaveMap(Scene* scene, FILE* const stream)
 {
-    fprintf(stream, "tiles = {");
-
-    size_t rows = scene->map.rows;
-    size_t cols = scene->map.cols;
-
-    for (size_t index = 0; index < (rows * cols); ++index)
-    {
-        if (index % cols == 0) fprintf(stream, TB_INI_NEWLINE "  ");
-        fprintf(stream, "%*d", 2, scene->map.tiles[index].id);
-        if (index < ((rows * cols) - 1)) fprintf(stream, ",");
-    }
-
-    fprintf(stream, TB_INI_NEWLINE "}" TB_INI_NEWLINE);
-    return 1;
+    size_t size = (scene->map.rows * scene->map.cols);
+    return tb_ini_write_csv(stream, "tiles", size, scene->map.rows, SceneSaveTileID, scene->map.tiles);
 }
 
 int SceneSaveState(Scene* scene, FILE* const stream)

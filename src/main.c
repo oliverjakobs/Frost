@@ -20,6 +20,8 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
     EcsEventSubscribe(&scene.ecs, INTERACTION_TOGGLE_DOOR, InteractionToggleDoor);
     EcsEventSubscribe(&scene.ecs, INTERACTION_OPEN_INVENTORY, InteractionOpenInventory);
 
+    SceneSaveMap(&scene, stdout);
+
     return MINIMAL_OK;
 }
 

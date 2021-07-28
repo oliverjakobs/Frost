@@ -66,7 +66,7 @@ typedef int(*tb_ini_parse_func)(const char* start, size_t len);
 int     tb_ini_parse(char* ini, const char* section, const char* prop, tb_ini_parse_func parse);
 
 /* 
- * functions to split quoted values into Comma Separated Values 
+ * functions to split grouped values into Comma Separated Values 
  * tb_ini_csv:      creates an element where the value starts after the quote and the len is the number of CSV
  * tb_ini_csv_step: returns next CSV or NULL if closing brace or EOF is reached
  */
@@ -74,8 +74,12 @@ char* tb_ini_csv(char* ini, const char* section, const char* prop, tb_ini_elemen
 char* tb_ini_csv_step(char* stream, tb_ini_element* element);
 
 /* write utility */
+/* TODO: right return values */
 int tb_ini_write_section(FILE* const stream, const char* name, ...);
 int tb_ini_write_property(FILE* const stream, const char* name, const char* value, ...);
+
+typedef int(*tb_ini_write_value)(FILE* const stream, const void* data, size_t index);
+int tb_ini_write_csv(FILE* const stream, const char* name, size_t size, size_t rows, tb_ini_write_value write, const void* data);
 
 /* copy the content of src into the stream until the specified section/property is reached */
 int tb_ini_copy_till(FILE* const stream, char* src, const char* section, const char* prop);
