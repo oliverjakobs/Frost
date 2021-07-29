@@ -10,7 +10,7 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
     FontRendererBindFontColor(GuiGetFont("gui"), IGNIS_WHITE);
 
-    FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.ini");
+    FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/mario.ini");
     FrostDebuggerInit(&debugger, 1, GuiGetFont("gui"));
     FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
@@ -19,8 +19,6 @@ MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
     /* temp event registration */
     EcsEventSubscribe(&scene.ecs, INTERACTION_TOGGLE_DOOR, InteractionToggleDoor);
     EcsEventSubscribe(&scene.ecs, INTERACTION_OPEN_INVENTORY, InteractionOpenInventory);
-
-    SceneSaveMap(&scene, stdout);
 
     return MINIMAL_OK;
 }

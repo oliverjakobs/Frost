@@ -30,7 +30,7 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 	FontRendererTextFieldBegin(x, y, 8.0f);
 
 	FontRendererTextFieldLine("Memory: %llu bytes", FrostMemoryGetBytes());
-	// FontRendererTextFieldLine("Peak: %llu bytes",		FrostMemGetPeak());
+	// FontRendererTextFieldLine("Peak: %llu bytes", FrostMemGetPeak());
 	FontRendererTextFieldLine("------------------------");
 
 	FontRendererTextFieldLine("Scene: %s", scene->path);

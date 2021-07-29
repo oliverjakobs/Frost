@@ -22,6 +22,7 @@ int TileMapLoad(TileMap* map, size_t rows, size_t cols, float tile_size, tb_allo
     map->types = NULL;
     map->types_count = 0;
 
+    if (map->tiles) memset(map->tiles, 0, sizeof(Tile) * rows * cols);
     return map->tiles != NULL;
 }
 

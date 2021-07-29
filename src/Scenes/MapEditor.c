@@ -48,7 +48,7 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
 	{
 		if (editor->tile_hover)
 		{
-			mouse = CameraGetMousePos(&scene->camera, mouse);
+			mouse = CameraGetMousePosView(&scene->camera, mouse);
 			TileMapSetAtPos(&scene->map, mouse, editor->palette_select, editor->set_mode);
 			TileRendererUpdateBuffers(&scene->renderer, &scene->map);
 		}
