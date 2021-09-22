@@ -26,7 +26,8 @@ typedef struct
 typedef struct
 {
     Animation animations[NUM_ENTITY_STATES];
-    EntityState current;
+    Animation* current;
+    EntityState state;
     int frame;
 
     float clock;
@@ -35,6 +36,6 @@ typedef struct
 void AnimatorLoad(char* ini, Scene* scene, EcsEntityID entity);
 void AnimatorRelease(Animator* animator);
 
-void AnimatorStart(Animator* animator, int start);
+void AnimatorStart(Animator* animator, Animation* animation);
 
 #endif /* !ANIMATOR_H */

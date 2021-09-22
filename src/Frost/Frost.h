@@ -54,7 +54,6 @@ typedef enum
 	COMPONENT_Z_INDEX
 } OrderComponentType;
 
-#include "Systems/EntityStateSystem.h"
 #include "Systems/PhysicsSystem.h"
 #include "Systems/PlayerSystem.h"
 #include "Systems/AnimationSystem.h"
@@ -64,7 +63,6 @@ typedef enum
 
 typedef enum
 {
-	UPDATE_STATE,
 	UPDATE_PHYSICS,
 	UPDATE_PLAYER,
 	UPDATE_ANIMATION,

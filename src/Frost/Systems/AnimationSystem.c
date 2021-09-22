@@ -2,20 +2,20 @@
 
 #include "Frost/Frost.h"
 
-static void AnimatorTick(Animator* animator, Animation* animation, float deltatime)
+static void AnimatorTick(Animator* animator, float deltatime)
 {
 	animator->clock += deltatime;
 
 	// change frame
-	if (animator->clock > animation->delay)
+	if (animator->clock > animator->current->delay)
 	{
 		animator->clock = 0.0f;
 		animator->frame++;
 	}
 
 	// restart animation
-	if (animator->frame >= animation->start + animation->length || animator->frame < animation->start)
-		AnimatorStart(animator, animation->start);
+	if (animator->frame >= animator->current->start + animator->current->length || animator->frame < animator->current->start)
+		AnimatorStart(animator, animator->current);
 }
 
 void AnimationSystem(Ecs* ecs, const Scene* scene, float deltatime)
@@ -26,13 +26,12 @@ void AnimationSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		Animator* animator = EcsMapIterValue(iter);
 		ECS_REQUIRE_MAP(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
 
-		Animation* current = &animator->animations[animator->current];
-		if (current)
+		if (animator->current)
 		{
 			EntityState state = EntityGetState(ecs, EcsMapIterKey(iter));
-			if (animator->current == state)
+			if (animator->state == state)
 			{
-				AnimatorTick(animator, current, deltatime);
+				AnimatorTick(animator, deltatime);
 			}
 			else
 			{
@@ -40,7 +39,7 @@ void AnimationSystem(Ecs* ecs, const Scene* scene, float deltatime)
 				if (animation)
 				{
 					AnimatorStart(animator, animation->start);
-					animator->current = state;
+					animator->state = state;
 				}
 			}
 

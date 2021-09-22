@@ -7,6 +7,12 @@ void EntityStateLoad(Ecs* ecs, EcsEntityID entity, EntityState state)
     EcsAddDataComponent(ecs, entity, COMPONENT_STATE, &state);
 }
 
+void EntitySetState(Ecs* ecs, EcsEntityID entity, EntityState state)
+{
+    EntityState* comp = EcsGetDataComponent(ecs, entity, COMPONENT_STATE);
+    if (comp) *comp = state;
+}
+
 EntityState EntityGetState(const Ecs* ecs, EcsEntityID entity)
 {
     EntityState* state = EcsGetDataComponent(ecs, entity, COMPONENT_STATE);

@@ -197,7 +197,6 @@ EcsOrderComponentLoader order_comps[] =
 
 EcsUpdateSystem update_systems[] =
 {
-    [UPDATE_STATE] =        { EntityStateSystem },
     [UPDATE_PHYSICS] =      { PhysicsSystem },
     [UPDATE_PLAYER] =       { PlayerSystem },
     [UPDATE_ANIMATION] =    { AnimationSystem },

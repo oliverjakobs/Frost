@@ -11,7 +11,7 @@ static int AnimatorAddAnimation(Animator* animator, EntityState state, Animation
 
     animator->animations[state] = *animation;
 
-    if (animator->current == ENTITY_STATE_NULL) animator->current = state;
+    if (animator->state == ENTITY_STATE_NULL) animator->state = state;
 
     return 1;
 }
@@ -30,7 +30,8 @@ void AnimatorLoad(char* ini, Scene* scene, EcsEntityID entity)
     {
         Animator animator;
 
-        animator.current = ENTITY_STATE_NULL;
+        animator.current = NULL;
+        animator.state = ENTITY_STATE_NULL;
         animator.clock = 0.0f;
         animator.frame = 0;
         memset(animator.animations, 0, NUM_ENTITY_STATES * sizeof(Animation));
@@ -59,8 +60,9 @@ void AnimatorRelease(Animator* block)
     // free(block);
 }
 
-void AnimatorStart(Animator* animator, int start)
+void AnimatorStart(Animator* animator, Animation* animation)
 {
-    animator->frame = start;
+    animator->current = animation;
+    animator->frame = animation->start;
     animator->clock = 0.0f;
 }
