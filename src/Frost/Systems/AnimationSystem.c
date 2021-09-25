@@ -26,28 +26,21 @@ void AnimationSystem(Ecs* ecs, const Scene* scene, float deltatime)
 		Animator* animator = EcsMapIterValue(iter);
 		ECS_REQUIRE_MAP(Sprite, ecs, sprite, iter, COMPONENT_SPRITE);
 
-		if (animator->current)
+		EntityState state = EntityGetState(ecs, EcsMapIterKey(iter));
+		if (animator->current && animator->state == state)
 		{
-			EntityState state = EntityGetState(ecs, EcsMapIterKey(iter));
-			if (animator->state == state)
-			{
-				AnimatorTick(animator, deltatime);
-			}
-			else
-			{
-				Animation* animation = &animator->animations[state];
-				if (animation)
-				{
-					AnimatorStart(animator, animation->start);
-					animator->state = state;
-				}
-			}
-
-			sprite->frame = animator->frame;
+			AnimatorTick(animator, deltatime);
 		}
 		else
 		{
-			sprite->frame = 0;
+			Animation* animation = &animator->animations[state];
+			if (animation)
+			{
+				AnimatorStart(animator, animation);
+				animator->state = state;
+			}
 		}
+
+		sprite->frame = animator->frame;
 	}
 }
