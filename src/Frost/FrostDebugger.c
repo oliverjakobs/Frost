@@ -15,7 +15,7 @@ void FrostDebuggerBindScene(FrostDebugger* debugger, Scene* scene, SceneEditor* 
 void ForstDebuggerShowInfo(FrostDebugger* debugger, int b)	{ debugger->show_info = b; }
 void FrostDebuggerToggleInfo(FrostDebugger* debugger)		{ debugger->show_info = !debugger->show_info; }
 
-MinimalBool FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e)
+int FrostDebuggerOnEvent(FrostDebugger* debugger, const MinimalEvent* e)
 {
 	return ConsoleOnEvent(&debugger->console, e);
 }
@@ -55,7 +55,7 @@ void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 	FontRendererStart(GuiGetScreenProjPtr());
 
 	/* fps */
-	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", app->timer.fps);
+	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", MinimalGetFps(app));
 
 	if (debugger->show_info)
 	{
@@ -169,7 +169,7 @@ void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const
 			}
 
 			vec2 mouse = { 0 };
-			MinimalGetCursorPos(&mouse.x, &mouse.y);
+			MinimalCursorPos(&mouse.x, &mouse.y);
 			vec2 pos = CameraGetMousePosView(&scene->camera, mouse);
 
 			if (SceneLoadTemplate(scene, atoi(args[0]), args[1], pos, atoi(args[2]), 0))

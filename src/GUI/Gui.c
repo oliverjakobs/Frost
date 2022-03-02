@@ -3,8 +3,6 @@
 #include "toolbox/tb_str.h"
 #include "toolbox/tb_hashmap.h"
 
-#include "Minimal/Minimal.h"
-
 #include "Scenes/Scene.h"
 
 typedef struct

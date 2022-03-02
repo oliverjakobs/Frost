@@ -3,8 +3,6 @@
 #include "toolbox/tb_str.h"
 #include "toolbox/tb_mem.h"
 
-#include "Minimal/Minimal.h"
-
 static int ResourcesAllocEntry(void* allocator, tb_hashmap_entry* entry, const void* key, void* value)
 {
 	entry->key = tb_mem_dup(allocator, key, strlen(key) + 1);

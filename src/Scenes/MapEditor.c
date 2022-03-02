@@ -2,6 +2,8 @@
 
 #include "SceneEditor.h"
 
+#include "Frost/Frost.h"
+
 #define PALETTE_TILE_SIZE	32.0f
 #define PALETTE_PADDING		20.0f
 #define PALETTE_HEIGHT		((2 * PALETTE_PADDING) + PALETTE_TILE_SIZE)
@@ -44,7 +46,7 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
         }
     }
 
-    if (MinimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
+    if (MinimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == GLFW_MOUSE_BUTTON_LEFT)
     {
         if (editor->tile_hover)
         {

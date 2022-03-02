@@ -8,9 +8,9 @@
 #include "Scenes/Scene.h"
 #include "Scenes/SceneEditor.h"
 
-#include "Minimal/Minimal.h"
-
 #include "GUI/Gui.h"
+
+#include "Minimal/Application.h"
 
 int FrostLoad(MinimalApp* app, const char* config);
 void FrostDestroy(MinimalApp* app);

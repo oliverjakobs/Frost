@@ -6,11 +6,11 @@ SceneEditor scene_editor;
 
 FrostDebugger debugger;
 
-MinimalBool OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
+int OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
     FontRendererBindFontColor(GuiGetFont("gui"), IGNIS_WHITE);
 
-    FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/mario.ini");
+    FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.ini");
     FrostDebuggerInit(&debugger, 1, GuiGetFont("gui"));
     FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
@@ -29,7 +29,7 @@ void OnDestroy(MinimalApp* app)
     FrostDestroy(app);
 }
 
-MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
+int OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
     if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
     {
@@ -39,19 +39,19 @@ MinimalBool OnEvent(MinimalApp* app, const MinimalEvent* e)
 
     switch (MinimalEventKeyPressed(e))
     {
-    case MINIMAL_KEY_ESCAPE:    MinimalClose(app); break;
-    case MINIMAL_KEY_F1:        SceneEditorToggleWorldMode(&scene_editor); break;
-    case MINIMAL_KEY_F2:        SceneEditorToggleMapMode(&scene_editor); break;
-    case MINIMAL_KEY_F3:        ConsoleToggleFocus(&debugger.console); break;
-    case MINIMAL_KEY_F6:        MinimalToggleVsync(app); break;
-    case MINIMAL_KEY_F7:        MinimalToggleDebug(app); break;
-    case MINIMAL_KEY_F8:        SceneEditorToggleGrid(&scene_editor); break;
-    case MINIMAL_KEY_F9:        FrostDebuggerToggleInfo(&debugger); break;
+    case GLFW_KEY_ESCAPE:    MinimalClose(app); break;
+    case GLFW_KEY_F1:        SceneEditorToggleWorldMode(&scene_editor); break;
+    case GLFW_KEY_F2:        SceneEditorToggleMapMode(&scene_editor); break;
+    case GLFW_KEY_F3:        ConsoleToggleFocus(&debugger.console); break;
+    case GLFW_KEY_F6:        MinimalToggleVsync(app); break;
+    case GLFW_KEY_F7:        MinimalToggleDebug(app); break;
+    case GLFW_KEY_F8:        SceneEditorToggleGrid(&scene_editor); break;
+    case GLFW_KEY_F9:        FrostDebuggerToggleInfo(&debugger); break;
     }
 
-    if (scene_editor.mode == SCENE_EDIT_MAP)        MinimalSetTitle(app, "Frost | Map Editor");
-    else if (scene_editor.mode == SCENE_EDIT_WORLD) MinimalSetTitle(app, "Frost | World Editor");
-    else                                            MinimalSetTitle(app, "Frost");
+    if (scene_editor.mode == SCENE_EDIT_MAP)        MinimalSetWindowTitle(app, "Frost | Map Editor");
+    else if (scene_editor.mode == SCENE_EDIT_WORLD) MinimalSetWindowTitle(app, "Frost | World Editor");
+    else                                            MinimalSetWindowTitle(app, "Frost");
 
     if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 

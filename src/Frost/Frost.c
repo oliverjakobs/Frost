@@ -1,5 +1,7 @@
 #include "Frost.h"
 
+#include "Minimal/Application.h"
+
 #include "ECS/EcsLoader.h"
 
 #include "toolbox/tb_ini.h"
@@ -115,7 +117,6 @@ int FrostLoad(MinimalApp* app, const char* path)
     char gl_version[APPLICATION_VER_STR_LEN];
     tb_ini_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-    MinimalSetAllocator(FrostMemoryGetAllocator(), tb_mem_malloc, tb_mem_free);
     MinimalLoadCB load = MinimalSetLoadCallback(app, NULL);
     if (!MinimalLoad(app, title, w, h, gl_version))
     {

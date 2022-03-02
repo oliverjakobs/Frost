@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-#include "Minimal/Minimal.h"
+// #include "Minimal/Application.h"
 
 #include "toolbox/tb_str.h"
 

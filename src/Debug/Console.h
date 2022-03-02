@@ -7,7 +7,7 @@
 #define CONSOLE_OUT_ROW_SIZE	64
 
 #include "Ignis/Ignis.h"
-#include "Minimal/Minimal.h"
+#include "Minimal/Event.h"
 
 #include <stdint.h>
 
@@ -32,7 +32,7 @@ struct Console
 
 void ConsoleInit(Console* console, void* user_data, void (*execute)(Console*, void*, const char*), IgnisFont* font);
 
-MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e);
+int ConsoleOnEvent(Console* console, const MinimalEvent* e);
 void ConsoleOnUpdate(Console* console, float deltatime);
 
 void ConsoleToggleFocus(Console* console);

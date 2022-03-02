@@ -22,7 +22,7 @@ void PlayerSystem(Ecs* ecs, const Scene* scene, float deltatime)
         else if (!MinimalKeyDown(player->jump) && (velocity.y > 0.0f))
             velocity.y *= 0.5f;
 
-        if (MinimalKeyPressed(MINIMAL_KEY_S))
+        if (MinimalKeyPressed(GLFW_KEY_S))
             body->body.drop = 1;
 
         if (velocity.x > 0.0f)

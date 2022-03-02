@@ -3,6 +3,8 @@
 #include "Graphics/FontRenderer.h"
 #include "Graphics/Primitives2D.h"
 
+#include "Minimal/Input.h"
+
 const float CONSOLE_CURSOR_ON = 1.0f;
 const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
@@ -26,14 +28,14 @@ void ConsoleInit(Console* console, void* user_data, void(*execute)(Console*, voi
     console->bg_color = (IgnisColorRGBA){ 0.1f, 0.1f, 0.1f, 0.8f };
 }
 
-MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e)
+int ConsoleOnEvent(Console* console, const MinimalEvent* e)
 {
     if (!console->focus) return 0;
 
     switch (MinimalEventKeyPressed(e))
     {
-    case MINIMAL_KEY_BACKSPACE: ConsoleCharRemoveLast(console); return 1;
-    case MINIMAL_KEY_ENTER:     ConsoleExecuteCmd(console);     return 1;
+    case GLFW_KEY_BACKSPACE: ConsoleCharRemoveLast(console); return 1;
+    case GLFW_KEY_ENTER:     ConsoleExecuteCmd(console);     return 1;
     }
 
     /* TODO: fix backspace char event */
@@ -45,7 +47,7 @@ MinimalBool ConsoleOnEvent(Console* console, const MinimalEvent* e)
 
     /* block key events */
     int32_t key = MinimalEventKey(e);
-    return MinimalKeycodeValid(key);
+    return key != GLFW_KEY_UNKNOWN;
 }
 
 void ConsoleOnUpdate(Console* console, float deltatime)

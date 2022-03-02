@@ -5,7 +5,7 @@
 #include "Resources.h"
 #include "Background.h"
 
-#include "Minimal/Minimal.h"
+#include "Minimal/Event.h"
 
 #define APPLICATION_STR_LEN		32
 #define APPLICATION_PATH_LEN	64
