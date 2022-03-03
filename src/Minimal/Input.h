@@ -7,7 +7,7 @@
 typedef int8_t MouseButton;
 typedef int16_t Key;
 
-// void MinimalUpdate(GLFWwindow* context);
+void MinimalUpdateInput(GLFWwindow* context);
 
 int MinimalKeyPressed(Key keycode);
 int MinimalKeyReleased(Key keycode);

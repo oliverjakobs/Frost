@@ -15,8 +15,7 @@ typedef int  (*MinimalEventCB)   (MinimalApp* app, const MinimalEvent* e);
 typedef void (*MinimalUpdateCB)  (MinimalApp* app, float deltatime);
 typedef void (*MinimalRenderCB)  (MinimalApp* app);
 
-struct MinimalApp
-{
+struct MinimalApp {
     GLFWwindow* window;
 
     MinimalLoadCB    on_load;

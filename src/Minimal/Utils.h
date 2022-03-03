@@ -43,8 +43,7 @@ typedef struct MinimalApp MinimalApp;
 
 #endif
 
-typedef enum
-{
+typedef enum {
     MINIMAL_LOG_TRACE,
     MINIMAL_LOG_INFO,
     MINIMAL_LOG_WARN,
