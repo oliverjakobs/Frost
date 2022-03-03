@@ -9,12 +9,27 @@ workspace "Frost"
 		"Release"
 	}
 
+	flags { "MultiProcessorCompile" }
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "On"
+		
+	filter "configurations:OptimizedDebug"
+		runtime "Debug"
+		symbols "On"
+		optimize "On"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "On"
+
 output_dir = "%{cfg.buildcfg}"
 
 group "Packages"
 
-include "packages/Ignis"
-include "packages/glfw"
+include "packages/Ignis.lua"
+include "packages/glfw.lua"
 
 group ""
 
@@ -56,19 +71,10 @@ project "Frost"
 		"packages/Ignis/src"
 	}
 
+	filter "system:linux"
+		links { "dl", "pthread" }
+		defines { "_X11" }
+
 	filter "system:windows"
 		systemversion "latest"
-		defines { "_CRT_SECURE_NO_WARNINGS" }
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "On"
-		
-	filter "configurations:OptimizedDebug"
-		runtime "Debug"
-		symbols "On"
-		optimize "On"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "On"
+		defines { "WINDOWS", "_CRT_SECURE_NO_WARNINGS" }
