@@ -4,72 +4,72 @@
 
 void EcsInit(Ecs* ecs)
 {
-    ecs->update_systems = NULL;
-    ecs->update_sys_cap = ecs->update_sys_len = 0;
+    ecs->update.entries = NULL;
+    ecs->update.cap = ecs->update.len = 0;
 
-    ecs->render_systems = NULL;
-    ecs->render_sys_cap = ecs->render_sys_len = 0;
+    ecs->render.entries = NULL;
+    ecs->render.cap = ecs->render.len = 0;
 
-    ecs->data_components = NULL;
-    ecs->data_comp_cap = ecs->data_comp_len = 0;
+    ecs->data.entries = NULL;
+    ecs->data.cap = ecs->data.len = 0;
 
-    ecs->order_components = NULL;
-    ecs->order_comp_cap = ecs->order_comp_len = 0;
+    ecs->order.entries = NULL;
+    ecs->order.cap = ecs->order.len = 0;
 
     memset(ecs->subscriptions, 0, ECS_MAX_EVENTS * sizeof(EcsEventCallback));
 }
 
 void EcsDestroy(Ecs* ecs)
 {
-    EcsMemFree(ecs->update_systems);
-    ecs->update_sys_cap = ecs->update_sys_len = 0;
+    EcsMemFree(ecs->update.entries);
+    ecs->update.cap = ecs->update.len = 0;
 
-    EcsMemFree(ecs->render_systems);
-    ecs->render_sys_cap = ecs->render_sys_len = 0;
+    EcsMemFree(ecs->render.entries);
+    ecs->render.cap = ecs->render.len = 0;
 
-    for (size_t i = 0; i < ecs->data_comp_len; ++i) EcsMapFree(&ecs->data_components[i]);
-    EcsMemFree(ecs->data_components);
-    ecs->data_comp_cap = ecs->data_comp_len = 0;
+    for (size_t i = 0; i < ecs->data.len; ++i) EcsMapFree(&ecs->data.entries[i]);
+    EcsMemFree(ecs->data.entries);
+    ecs->data.cap = ecs->data.len = 0;
 
-    for (size_t i = 0; i < ecs->order_comp_len; ++i) EcsListFree(&ecs->order_components[i]);
-    EcsMemFree(ecs->order_components);
-    ecs->order_comp_cap = ecs->order_comp_len = 0;
+    for (size_t i = 0; i < ecs->order.len; ++i) EcsListFree(&ecs->order.entries[i]);
+    EcsMemFree(ecs->order.entries);
+    ecs->order.cap = ecs->order.len = 0;
 }
 
 void EcsReserveSystems(Ecs* ecs, size_t update, size_t render)
 {
-    if (update > ecs->update_sys_cap)
+    if (update > ecs->update.cap)
     {
-        ecs->update_systems = EcsMemMalloc(update * sizeof(EcsUpdateSystem));
-        ecs->update_sys_cap = update;
+        ecs->update.entries = EcsMemMalloc(update * sizeof(EcsUpdateSystem));
+        ecs->update.cap = update;
     }
 
-    if (update > ecs->render_sys_cap)
+    if (update > ecs->render.cap)
     {
-        ecs->render_systems = EcsMemMalloc(render * sizeof(EcsRenderSystem));
-        ecs->render_sys_cap = render;
+        ecs->render.entries = EcsMemMalloc(render * sizeof(EcsRenderSystem));
+        ecs->render.cap = render;
     }
 }
 
 void EcsReserveComponents(Ecs* ecs, size_t data, size_t order)
 {
-    if (data > ecs->data_comp_cap)
+    if (data > ecs->data.cap)
     {
-        ecs->data_components = EcsMemMalloc(data * sizeof(EcsMap));
-        ecs->data_comp_cap = data;
+        ecs->data.entries = EcsMemMalloc(data * sizeof(EcsMap));
+        ecs->data.cap = data;
     }
 
-    if (order > ecs->order_comp_cap)
+    if (order > ecs->order.cap)
     {
-        ecs->order_components = EcsMemMalloc(order * sizeof(EcsList));
-        ecs->order_comp_cap = order;
+        ecs->order.entries = EcsMemMalloc(order * sizeof(EcsList));
+        ecs->order.cap = order;
     }
 }
 
 void EcsClear(Ecs* ecs)
 {
-    for (size_t i = 0; i < ecs->data_comp_len; ++i)  EcsMapClear(&ecs->data_components[i]);
-    for (size_t i = 0; i < ecs->order_comp_len; ++i) EcsListClear(&ecs->order_components[i]);
+    for (size_t i = 0; i < ecs->data.len; ++i)  EcsMapClear(&ecs->data.entries[i]);
+    for (size_t i = 0; i < ecs->order.len; ++i) EcsListClear(&ecs->order.entries[i]);
 
     EcsEntityResetIDCounter();
 }
@@ -81,42 +81,42 @@ static size_t EcsArrayPush(void** arr, size_t element_size, size_t cap, size_t l
 
 void EcsAddUpdateSystem(Ecs* ecs, EcsUpdateCallback update)
 {
-    ecs->update_sys_cap = EcsArrayPush(&ecs->update_systems, sizeof(EcsUpdateSystem), ecs->update_sys_cap, ecs->update_sys_len);
-    if (ecs->update_systems) ecs->update_systems[ecs->update_sys_len++] = ((EcsUpdateSystem) { update });
+    ecs->update.cap = EcsArrayPush(&ecs->update.entries, sizeof(EcsUpdateSystem), ecs->update.cap, ecs->update.len);
+    if (ecs->update.entries) ecs->update.entries[ecs->update.len++] = ((EcsUpdateSystem) { update });
 }
 
 void EcsAddRenderSystem(Ecs* ecs, EcsRenderStage stage, EcsRenderCallback render)
 {
-    ecs->render_sys_cap = EcsArrayPush(&ecs->render_systems, sizeof(EcsUpdateSystem), ecs->render_sys_cap, ecs->render_sys_len);
-    if (ecs->render_systems) ecs->render_systems[ecs->render_sys_len++] = ((EcsRenderSystem) { stage, render });
+    ecs->render.cap = EcsArrayPush(&ecs->render.entries, sizeof(EcsUpdateSystem), ecs->render.cap, ecs->render.len);
+    if (ecs->render.entries) ecs->render.entries[ecs->render.len++] = ((EcsRenderSystem) { stage, render });
 }
 
 void EcsOnUpdate(Ecs* ecs, void* world, float deltatime)
 {
-    for (size_t i = 0; i < ecs->update_sys_len; ++i)
-        ecs->update_systems[i].update(ecs, world, deltatime);
+    for (size_t i = 0; i < ecs->update.len; ++i)
+        ecs->update.entries[i].update(ecs, world, deltatime);
 }
 
 void EcsOnRender(const Ecs* ecs, EcsRenderStage stage, const void* world, const float* mat_view_proj)
 {
-    for (size_t i = 0; i < ecs->render_sys_len; ++i)
-        if (ecs->render_systems[i].stage == stage) ecs->render_systems[i].render(ecs, world, mat_view_proj);
+    for (size_t i = 0; i < ecs->render.len; ++i)
+        if (ecs->render.entries[i].stage == stage) ecs->render.entries[i].render(ecs, world, mat_view_proj);
 }
 
 void EcsRemoveEntity(Ecs* ecs, EcsEntityID entity)
 {
-    for (uint32_t i = 0; i < ecs->data_comp_len; ++i)  EcsRemoveDataComponent(ecs, entity, i);
-    for (uint32_t i = 0; i < ecs->order_comp_len; ++i) EcsRemoveOrderComponent(ecs, entity, i);
+    for (uint32_t i = 0; i < ecs->data.len; ++i)  EcsRemoveDataComponent(ecs, entity, i);
+    for (uint32_t i = 0; i < ecs->order.len; ++i) EcsRemoveOrderComponent(ecs, entity, i);
 }
 
 EcsMap* EcsGetComponentMap(const Ecs* ecs, EcsComponentType type)
 {
-    return type < ecs->data_comp_len ? &ecs->data_components[type] : NULL;
+    return type < ecs->data.len ? &ecs->data.entries[type] : NULL;
 }
 
 EcsList* EcsGetComponentList(const Ecs* ecs, EcsComponentType type)
 {
-    return type < ecs->order_comp_len ? &ecs->order_components[type] : NULL;
+    return type < ecs->order.len ? &ecs->order.entries[type] : NULL;
 }
 
 int EcsRegisterDataComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFunc release)
@@ -124,10 +124,10 @@ int EcsRegisterDataComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseFu
     EcsMap comp;
     if (!EcsMapAlloc(&comp, size, initial, release)) return 0;
 
-    ecs->data_comp_cap = EcsArrayPush(&ecs->data_components, sizeof(EcsMap), ecs->data_comp_cap, ecs->data_comp_len);
-    if (ecs->data_components) ecs->data_components[ecs->data_comp_len++] = comp;
+    ecs->data.cap = EcsArrayPush(&ecs->data.entries, sizeof(EcsMap), ecs->data.cap, ecs->data.len);
+    if (ecs->data.entries) ecs->data.entries[ecs->data.len++] = comp;
 
-    return ecs->data_comp_cap > 0;
+    return ecs->data.cap > 0;
 }
 
 void* EcsAddDataComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)
@@ -150,10 +150,10 @@ int EcsRegisterOrderComponent(Ecs* ecs, size_t size, size_t initial, EcsReleaseF
     EcsList comp;
     if (!EcsListAlloc(&comp, size, initial, release, cmp)) return 0;
 
-    ecs->order_comp_cap = EcsArrayPush(&ecs->order_components, sizeof(EcsList), ecs->order_comp_cap, ecs->order_comp_len);
-    if (ecs->order_components) ecs->order_components[ecs->order_comp_len++] = comp;
+    ecs->order.cap = EcsArrayPush(&ecs->order.entries, sizeof(EcsList), ecs->order.cap, ecs->order.len);
+    if (ecs->order.entries) ecs->order.entries[ecs->order.len++] = comp;
 
-    return ecs->order_comp_cap > 0;
+    return ecs->order.cap > 0;
 }
 
 void* EcsAddOrderComponent(Ecs* ecs, EcsEntityID entity, EcsComponentType type, const void* component)

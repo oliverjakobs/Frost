@@ -143,7 +143,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 
     FrostFree(config);
 
-    MINIMAL_INFO("[Minimal] Version: %s",     MinimalGetVersionString());
+    MINIMAL_INFO("[GLFW] Version: %s",        glfwGetVersionString());
     MINIMAL_INFO("[OpenGL] Version: %s",      ignisGetGLVersion());
     MINIMAL_INFO("[OpenGL] Vendor: %s",       ignisGetGLVendor());
     MINIMAL_INFO("[OpenGL] Renderer: %s",     ignisGetGLRenderer());
