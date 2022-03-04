@@ -17,7 +17,7 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
     }
 }
 
-int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
+int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d)
 {
     /* ingis initialization */
     ignisSetAllocator(FrostMemoryGetAllocator(), tb_mem_malloc, tb_mem_realloc, tb_mem_free);
@@ -37,55 +37,41 @@ int FrostLoadIgnis(char* config, IgnisColorRGBA clear_color, GLenum blend_s, GLe
     ignisEnableBlend(blend_s, blend_d);
     ignisSetClearColor(clear_color);
 
-    tb_ini_element section;
-    char vert[APPLICATION_PATH_LEN];
-    char frag[APPLICATION_PATH_LEN];
-
-    /* renderer2D */
-    tb_ini_query(config, "renderer", NULL, &section);
-    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
-    Renderer2DInit(vert, frag);
-
-    /* primitives2D */
-    tb_ini_query(config, "renderer.primitives", NULL, &section);
-    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
-    Primitives2DInit(vert, frag);
-
-    /* batchrenderer2D */
-    tb_ini_query(config, "renderer.batch", NULL, &section);
-    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
-    BatchRenderer2DInit(vert, frag);
-
-    /* fontrenderer */
-    tb_ini_query(config, "renderer.font", NULL, &section);
-    tb_ini_string(section.start, NULL, "vert", vert, APPLICATION_PATH_LEN);
-    tb_ini_string(section.start, NULL, "frag", frag, APPLICATION_PATH_LEN);
-    FontRendererInit(vert, frag);
+    /* renderer */
+    Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
+    Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
+    BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
+    FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
 
     return MINIMAL_OK;
 }
 
-int FrostLoadGui(char* config, float w, float h)
+void FrostDestroyGraphics()
 {
-    if (!GuiInit(w, h, FrostMemoryGetAllocator())) return MINIMAL_FAIL;
+    FontRendererDestroy();
+    Primitives2DDestroy();
+    BatchRenderer2DDestroy();
+    Renderer2DDestroy();
+}
 
-    tb_ini_element font;
-    while ((config = tb_ini_group_next(config, "font", &font)) != NULL)
-    {
-        char font_name[APPLICATION_STR_LEN];
-        tb_ini_name(&font, font_name, APPLICATION_STR_LEN);
-
-        char font_path[APPLICATION_PATH_LEN];
-        tb_ini_string(font.start, NULL, "path", font_path, APPLICATION_STR_LEN);
-
-        float font_size = tb_ini_float(font.start, NULL, "size", 0.0f);
-        GuiAddFont(font_name, font_path, font_size);
+int FrostLoadGui(uint32_t w, uint32_t h, const char* font)
+{
+    if (!GuiInit((float)w, (float)h, FrostMemoryGetAllocator())) {
+        MINIMAL_ERROR("[GUI] Failed to initialize gui");
+        return MINIMAL_FAIL;
     }
 
+    GuiAddFont("font", "res/fonts/OpenSans.ttf", 32.0);
+    GuiAddFont("gui", "res/fonts/ProggyTiny.ttf", 24.0);
+
+    FontRendererBindFontColor(GuiGetFont(font), IGNIS_WHITE);
+
     return MINIMAL_OK;
+}
+
+void FrostDestroyGui()
+{
+    GuiDestroy();
 }
 
 int FrostLoad(MinimalApp* app, const char* path)
@@ -117,21 +103,12 @@ int FrostLoad(MinimalApp* app, const char* path)
     char gl_version[APPLICATION_VER_STR_LEN];
     tb_ini_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-    MinimalLoadCB load = MinimalSetLoadCallback(app, NULL);
     if (!MinimalLoad(app, title, w, h, gl_version))
     {
         MINIMAL_ERROR("Failed to load minimal");
         FrostFree(config);
         return MINIMAL_FAIL;
     }
-
-    /* load ignis */
-    FrostLoadIgnis(config, IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    /* init gui manager */
-    FrostLoadGui(config, (float)w, (float)h);
-
-    int status = load ? load(app, w, h) : MINIMAL_OK;
 
     /* apply settings */
     tb_ini_query(config, "options", NULL, &section);
@@ -150,17 +127,7 @@ int FrostLoad(MinimalApp* app, const char* path)
     MINIMAL_INFO("[OpenGL] GLSL Version: %s", ignisGetGLSLVersion());
     MINIMAL_INFO("[Ignis] Version: %s",       ignisGetVersionString());
     
-    return status;
-}
-
-void FrostDestroy(MinimalApp* app)
-{
-    FontRendererDestroy();
-    Primitives2DDestroy();
-    BatchRenderer2DDestroy();
-    Renderer2DDestroy();
-
-    GuiDestroy();
+    return MINIMAL_OK;
 }
 
 int FrostLoadScene(Scene* scene, float w, float h, const char* start)

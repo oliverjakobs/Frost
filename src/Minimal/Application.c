@@ -76,20 +76,20 @@ void MinimalDestroy(MinimalApp* app) {
     glfwDestroyWindow(app->window);
 }
 
-void MinimalRun(MinimalApp* app, void(*clear_buffer)()) {
+void MinimalRun(MinimalApp* app) {
+    MINIMAL_ASSERT(app, "");
+    MINIMAL_ASSERT(app->on_update, "Update callback missing!");
+    MINIMAL_ASSERT(app->on_render, "render callback missing!");
+
     while (!glfwWindowShouldClose(app->window)) {
         MinimalTimerStart(&app->timer, glfwGetTime());
         MinimalUpdateInput(app->window);
 
         app->on_update(app, (float)app->timer.deltatime);
-
-        if (clear_buffer) clear_buffer();
-
         app->on_render(app);
 
-        if (app->debug) app->on_render_debug(app);
-
-        app->on_render_ui(app);
+        if (app->debug)        app->on_render_debug(app);
+        if (app->on_render_ui) app->on_render_ui(app);
 
         glfwPollEvents();
         glfwSwapBuffers(app->window);

@@ -13,7 +13,12 @@
 #include "Minimal/Application.h"
 
 int FrostLoad(MinimalApp* app, const char* config);
-void FrostDestroy(MinimalApp* app);
+
+int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d);
+void FrostDestroyGraphics();
+
+int FrostLoadGui(uint32_t w, uint32_t h, const char* font);
+void FrostDestroyGui();
 
 int FrostLoadScene(Scene* scene, float w, float h, const char* start);
 

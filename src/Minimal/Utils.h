@@ -11,6 +11,7 @@
 
 #ifndef _DEBUG
 #define MINIMAL_DISABLE_LOGGING
+#define MINIMAL_DISABLE_ASSERT
 #endif
 
 /* minimal version numbers */
@@ -53,6 +54,21 @@ typedef enum {
 
 void MinimalLoggerPrint(FILE* const stream, MinimalLogLevel level, const char* fmt, ...);
 void MinimalLoggerPrintV(FILE* const stream, MinimalLogLevel level, const char* fmt, va_list args);
+
+
+/* --------------------------| assert |---------------------------------- */
+#ifndef MINIMAL_DISABLE_ASSERT
+
+#include <assert.h>
+
+#define MINIMAL_ASSERT(expr, msg) assert(((void)(msg), (expr)))
+
+#else
+
+#define MINIMAL_ASSERT(expr, msg) 
+
+#endif
+
 
 /* --------------------------| timer |----------------------------------- */
 typedef struct

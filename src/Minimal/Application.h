@@ -37,7 +37,7 @@ int MinimalLoad(MinimalApp* app, const char* title, uint32_t w, uint32_t h, cons
 void MinimalDestroy(MinimalApp* app);
 
 /* --------------------------| game loop |------------------------------- */
-void MinimalRun(MinimalApp* app, void(*clear_buffer)());
+void MinimalRun(MinimalApp* app);
 void MinimalClose(MinimalApp* app);
 
 MinimalLoadCB    MinimalSetLoadCallback(MinimalApp* app, MinimalLoadCB callback);

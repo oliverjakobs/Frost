@@ -8,7 +8,11 @@ FrostDebugger debugger;
 
 int OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 {
-    FontRendererBindFontColor(GuiGetFont("gui"), IGNIS_WHITE);
+    /* load ignis */
+    FrostLoadGraphics(IGNIS_DARK_GREY, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    /* init gui manager */
+    FrostLoadGui(w, h, "gui");
 
     FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.ini");
     FrostDebuggerInit(&debugger, 1, GuiGetFont("gui"));
@@ -26,7 +30,8 @@ int OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
 void OnDestroy(MinimalApp* app)
 {
     SceneDestroy(&scene);
-    FrostDestroy(app);
+    FrostDestroyGui();
+    FrostDestroyGraphics();
 }
 
 int OnEvent(MinimalApp* app, const MinimalEvent* e)
@@ -63,6 +68,7 @@ int OnEvent(MinimalApp* app, const MinimalEvent* e)
 
 void OnUpdate(MinimalApp* app, float deltatime)
 {
+    glClear(GL_COLOR_BUFFER_BIT);
     if (debugger.console.focus)                     FrostDebuggerOnUpdate(&debugger, deltatime);
     else if (SceneEditorIsActive(&scene_editor))    SceneEditorOnUpdate(&scene_editor, deltatime);
     else                                            SceneOnUpdate(&scene, deltatime);
@@ -86,8 +92,6 @@ void OnRenderUI(MinimalApp* app)
     FrostDebuggerOnRenderUI(&debugger, app);
 }
 
-static void ClearBuffer() { glClear(GL_COLOR_BUFFER_BIT); }
-
 int main()
 {
     MinimalApp app = { 0 };
@@ -101,7 +105,7 @@ int main()
     MinimalSetRenderUICallback(&app, OnRenderUI);
 
     if (FrostLoad(&app, "config.ini"))
-        MinimalRun(&app, ClearBuffer);
+        MinimalRun(&app);
 
     MinimalDestroy(&app);
 
