@@ -1,16 +1,14 @@
 #include "Scene.h"
 
-// #include "Minimal/Application.h"
-
 #include "toolbox/tb_str.h"
 
-int SceneInit(Scene* scene, vec2 size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator)
+int SceneInit(Scene* scene, float x, float y, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator)
 {
 	ResourcesInit(&scene->res, allocator);
 	scene->item_atlas = NULL;
 	scene->tile_set = NULL;
 
-	CameraCreateOrtho(&scene->camera, 0.0f, 0.0f, size.x, size.y);
+	CameraCreateOrtho(&scene->camera, 0.0f, 0.0f, x, y);
 	scene->gravity = vec2_zero();
 
 	TileRendererInit(&scene->renderer);
@@ -72,8 +70,6 @@ void SceneClearActive(Scene* scene)
 
 void SceneOnEvent(Scene* scene, const MinimalEvent* e)
 {
-	if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
-		CameraSetProjectionOrtho(&scene->camera, (float)e->lParam, (float)e->rParam);
 }
 
 void SceneOnUpdate(Scene* scene, float deltatime)

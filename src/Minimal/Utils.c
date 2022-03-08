@@ -11,7 +11,7 @@ void MinimalGetVersion(int* major, int* minor, int* rev) {
 #define MINIMAL_CONCAT_VERSION(m, n, r) #m "." #n "." #r
 #define MINIMAL_MAKE_VERSION_STR(m, n, r) MINIMAL_CONCAT_VERSION(m, n, r)
 
-const char* MinimalGetVersionString(void) {
+const char* MinimalGetVersionString() {
     return MINIMAL_MAKE_VERSION_STR(MINIMAL_VERSION_MAJOR, MINIMAL_VERSION_MINOR, MINIMAL_VERSION_REVISION);
 }
 
@@ -77,13 +77,11 @@ void MinimalTimerStart(MinimalTimer* timer, double seconds) {
 
 void MinimalTimerEnd(MinimalTimer* timer, double seconds) {
     timer->frames++;
-    if ((seconds - timer->seconds) > 1.0)     {
+    if ((seconds - timer->seconds) > 1.0) {
         timer->seconds += 1.0;
         timer->fps = timer->frames;
         timer->frames = 0;
     }
 }
 
-uint32_t MinimalGetFps(const MinimalApp* app) {
-    return app->timer.fps;
-}
+uint32_t MinimalGetFps(const MinimalApp* app) { return app->timer.fps; }

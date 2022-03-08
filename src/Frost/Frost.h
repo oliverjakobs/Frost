@@ -20,7 +20,7 @@ void FrostDestroyGraphics();
 int FrostLoadGui(uint32_t w, uint32_t h, const char* font);
 void FrostDestroyGui();
 
-int FrostLoadScene(Scene* scene, float w, float h, const char* start);
+int FrostLoadScene(Scene* scene, uint32_t w, uint32_t h, const char* start);
 
 #include "Ecs/Ecs.h"
 

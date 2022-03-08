@@ -17,18 +17,12 @@
 #define MINIMAL_EVENT_MOUSE_MOVED       13
 #define MINIMAL_EVENT_MOUSE_SCROLLED    14
 
-struct MinimalEvent
-{
-    uint32_t type;
-    uint32_t uParam;
-    int32_t lParam;
-    int32_t rParam;
-};
-
 void MinimalDispatchEvent(MinimalApp* app, uint32_t type, uint32_t uParam, int32_t lParam, int32_t rParam);
 
 /* Utility */
 int MinimalCheckEventType(const MinimalEvent* e, uint32_t type);
+
+int MinimalEventWindowSize(const MinimalEvent* e, float* w, float* h);
 
 int32_t MinimalEventMouseButton(const MinimalEvent* e, float* x, float* y);
 int32_t MinimalEventMouseButtonPressed(const MinimalEvent* e, float* x, float* y);

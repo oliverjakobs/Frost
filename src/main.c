@@ -14,7 +14,7 @@ int OnLoad(MinimalApp* app, uint32_t w, uint32_t h)
     /* init gui manager */
     FrostLoadGui(w, h, "gui");
 
-    FrostLoadScene(&scene, (float)w, (float)h, "res/scenes/scene.ini");
+    FrostLoadScene(&scene, w, h, "res/scenes/scene.ini");
     FrostDebuggerInit(&debugger, 1, GuiGetFont("gui"));
     FrostDebuggerBindScene(&debugger, &scene, &scene_editor);
 
@@ -36,10 +36,12 @@ void OnDestroy(MinimalApp* app)
 
 int OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
-    if (MinimalCheckEventType(e, MINIMAL_EVENT_WINDOW_SIZE))
+    float w, h;
+    if (MinimalEventWindowSize(e, &w, &h))
     {
-        GuiSetViewport((float)e->lParam, (float)e->rParam);
-        glViewport(0, 0, e->lParam, e->rParam);
+        GuiSetViewport(w, h);
+        CameraSetProjectionOrtho(&scene.camera, w, h);
+        glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     }
 
     switch (MinimalEventKeyPressed(e))
@@ -68,41 +70,32 @@ int OnEvent(MinimalApp* app, const MinimalEvent* e)
 
 void OnUpdate(MinimalApp* app, float deltatime)
 {
+    // update
     glClear(GL_COLOR_BUFFER_BIT);
     if (debugger.console.focus)                     FrostDebuggerOnUpdate(&debugger, deltatime);
     else if (SceneEditorIsActive(&scene_editor))    SceneEditorOnUpdate(&scene_editor, deltatime);
     else                                            SceneOnUpdate(&scene, deltatime);
-}
 
-void OnRender(MinimalApp* app)
-{
+    // render
     SceneOnRender(&scene);
     SceneEditorOnRender(&scene_editor);
-}
 
-void OnRenderDebug(MinimalApp* app)
-{
-    if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
-}
+    // render debug
+    if (app->debug && !SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
 
-void OnRenderUI(MinimalApp* app)
-{
+    // render ui
     if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderUI(&scene);
-
     FrostDebuggerOnRenderUI(&debugger, app);
 }
 
 int main()
 {
-    MinimalApp app = { 0 };
-
-    MinimalSetLoadCallback(&app, OnLoad);
-    MinimalSetDestroyCallback(&app, OnDestroy);
-    MinimalSetEventCallback(&app, OnEvent);
-    MinimalSetUpdateCallback(&app, OnUpdate);
-    MinimalSetRenderCallback(&app, OnRender);
-    MinimalSetRenderDebugCallback(&app, OnRenderDebug);
-    MinimalSetRenderUICallback(&app, OnRenderUI);
+    MinimalApp app = { 
+        .on_load = OnLoad,
+        .on_destroy = OnDestroy,
+        .on_event = OnEvent,
+        .on_update = OnUpdate
+    };
 
     if (FrostLoad(&app, "config.ini"))
         MinimalRun(&app);

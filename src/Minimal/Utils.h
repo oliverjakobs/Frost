@@ -71,8 +71,7 @@ void MinimalLoggerPrintV(FILE* const stream, MinimalLogLevel level, const char* 
 
 
 /* --------------------------| timer |----------------------------------- */
-typedef struct
-{
+typedef struct {
     uint32_t frames;
     uint32_t fps;
 

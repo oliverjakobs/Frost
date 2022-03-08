@@ -56,7 +56,8 @@ void FrostDestroyGraphics()
 
 int FrostLoadGui(uint32_t w, uint32_t h, const char* font)
 {
-    if (!GuiInit((float)w, (float)h, FrostMemoryGetAllocator())) {
+    if (!GuiInit((float)w, (float)h, FrostMemoryGetAllocator()))
+    {
         MINIMAL_ERROR("[GUI] Failed to initialize gui");
         return MINIMAL_FAIL;
     }
@@ -72,6 +73,16 @@ int FrostLoadGui(uint32_t w, uint32_t h, const char* font)
 void FrostDestroyGui()
 {
     GuiDestroy();
+}
+
+static void FrostGetGLVersion(const char* version_str, int* major, int* minor)
+{
+    const char* sep = ".";
+    const char* major_str = version_str;
+    const char* minor_str = version_str + strcspn(version_str, sep) + 1;
+
+    if (major_str && major) *major = atoi(major_str);
+    if (minor_str && minor) *minor = atoi(minor_str);
 }
 
 int FrostLoad(MinimalApp* app, const char* path)
@@ -103,22 +114,24 @@ int FrostLoad(MinimalApp* app, const char* path)
     char gl_version[APPLICATION_VER_STR_LEN];
     tb_ini_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-    if (!MinimalLoad(app, title, w, h, gl_version))
-    {
-        MINIMAL_ERROR("Failed to load minimal");
-        FrostFree(config);
-        return MINIMAL_FAIL;
-    }
+    int gl_major, gl_minor;
+    FrostGetGLVersion(gl_version, &gl_major, &gl_minor);
 
     /* apply settings */
     tb_ini_query(config, "options", NULL, &section);
     if (section.error == TB_INI_OK)
     {
-        MinimalEnableDebug(app, tb_ini_bool(section.start, NULL, "debug", 0));
-        MinimalEnableVsync(app, tb_ini_bool(section.start, NULL, "vsync", 0));
+        app->debug = tb_ini_bool(section.start, NULL, "debug", 0);
+        app->vsync = tb_ini_bool(section.start, NULL, "vsync", 0);
     }
 
     FrostFree(config);
+
+    if (!MinimalLoad(app, title, w, h, gl_major, gl_minor))
+    {
+        MINIMAL_ERROR("Failed to load minimal");
+        return MINIMAL_FAIL;
+    }
 
     MINIMAL_INFO("[GLFW] Version: %s",        glfwGetVersionString());
     MINIMAL_INFO("[OpenGL] Version: %s",      ignisGetGLVersion());
@@ -130,12 +143,12 @@ int FrostLoad(MinimalApp* app, const char* path)
     return MINIMAL_OK;
 }
 
-int FrostLoadScene(Scene* scene, float w, float h, const char* start)
+int FrostLoadScene(Scene* scene, uint32_t w, uint32_t h, const char* start)
 {
-    SceneInit(scene, (vec2) { w, h }, SceneLoad, NULL, FrostMemoryGetAllocator());
+    SceneInit(scene, (float)w, (float)h, SceneLoad, NULL, FrostMemoryGetAllocator());
     FrostLoadEcs(&scene->ecs);
 
-    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+    glViewport(0, 0, w, h);
 
     SceneChangeActive(scene, start, 0);
 

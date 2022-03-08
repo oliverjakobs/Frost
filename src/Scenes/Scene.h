@@ -46,7 +46,7 @@ struct Scene
 	BackgroundLayer* background;
 };
 
-int SceneInit(Scene* scene, vec2 screen_size, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator);
+int SceneInit(Scene* scene, float x, float y, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator);
 void SceneDestroy(Scene* scene);
 
 void SceneChangeActive(Scene* scene, const char* path, int reload);
