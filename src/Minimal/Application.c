@@ -65,6 +65,7 @@ int MinimalLoad(MinimalApp* app, const char* title, uint32_t w, uint32_t h, int 
 void MinimalDestroy(MinimalApp* app) {
     if (app->on_destroy) app->on_destroy(app);
     glfwDestroyWindow(app->window);
+    glfwTerminate();
 }
 
 void MinimalRun(MinimalApp* app) {

@@ -78,13 +78,14 @@ void OnUpdate(MinimalApp* app, float deltatime)
 
     // render
     SceneOnRender(&scene);
-    SceneEditorOnRender(&scene_editor);
 
     // render debug
-    if (app->debug && !SceneEditorIsActive(&scene_editor)) SceneOnRenderDebug(&scene);
+    if (app->debug) SceneOnRenderDebug(&scene);
 
     // render ui
     if (!SceneEditorIsActive(&scene_editor)) SceneOnRenderUI(&scene);
+
+    SceneEditorOnRender(&scene_editor);
     FrostDebuggerOnRenderUI(&debugger, app);
 }
 
