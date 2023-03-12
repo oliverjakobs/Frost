@@ -5,7 +5,7 @@
 
 void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
-	BatchRenderer2DStart(mat_view_proj);
+	Batch2DSetViewProjection(mat_view_proj);
 
 	EcsList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
 	for (size_t index = 0; index < EcsListSize(list); ++index)
@@ -23,15 +23,15 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 		float src_x, src_y, src_w, src_h;
 		SpriteGetSrcRect(sprite, &src_x, &src_y, &src_w, &src_h);
 
-		BatchRenderer2DRenderTextureSrc(sprite->texture, x, y, w, h, src_x, src_y, src_w, src_h);
+		Batch2DRenderTextureSrc(sprite->texture, x, y, w, h, src_x, src_y, src_w, src_h);
 	}
 
-	BatchRenderer2DFlush();
+	Batch2DFlush();
 }
 
 void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
-	Primitives2DStart(mat_view_proj);
+	Primitives2DSetViewProjection(mat_view_proj);
 
 	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
 	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))

@@ -1,7 +1,6 @@
 ﻿#include "Console.h"
 
-#include "Graphics/FontRenderer.h"
-#include "Graphics/Primitives2D.h"
+#include "Graphics/Renderer.h"
 
 #include "Minimal/Input.h"
 
@@ -99,7 +98,7 @@ void ConsoleRender(const Console* console, float x, float y, float w, float h, f
 {
     if (!console->focus || !console->font) return;
 
-    Primitives2DStart(proj);
+    Primitives2DSetViewProjection(proj);
     Primitives2DFillRect(x, y, w, -h, console->bg_color);
     Primitives2DFlush();
 
@@ -109,7 +108,7 @@ void ConsoleRender(const Console* console, float x, float y, float w, float h, f
     char cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON) ? '_' : '\0';
 
     FontRendererBindFontColor(console->font, console->font_color);
-    FontRendererStart(proj);
+    FontRendererSetProjection(proj);
     FontRendererRenderTextFormat(text_x, text_y, "%s%.*s%c", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer, cursor);
     FontRendererFlush();
 }

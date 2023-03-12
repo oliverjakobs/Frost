@@ -4,9 +4,9 @@
 
 #include "Frost/Frost.h"
 
-#define PALETTE_TILE_SIZE	32.0f
-#define PALETTE_PADDING		20.0f
-#define PALETTE_HEIGHT		((2 * PALETTE_PADDING) + PALETTE_TILE_SIZE)
+#define PALETTE_TILE_SIZE   32.0f
+#define PALETTE_PADDING     20.0f
+#define PALETTE_HEIGHT      ((2 * PALETTE_PADDING) + PALETTE_TILE_SIZE)
 
 void MapEditorReset(MapEditor* editor)
 {
@@ -67,7 +67,7 @@ void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime)
 
 void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, float padding)
 {
-    Primitives2DStart(CameraGetViewProjectionPtr(&scene->camera));
+    Primitives2DSetViewProjection(CameraGetViewProjectionPtr(&scene->camera));
 
     if (show_grid) SceneEditorRenderGrid(scene, padding);
     TileMapRenderDebug(&scene->map);
@@ -83,14 +83,14 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
     Primitives2DFlush();
 
     /* UI */
-    Primitives2DStart(CameraGetProjectionPtr(&scene->camera));
+    Primitives2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
 
     Primitives2DFillRect(0.0f, 0.0f, scene->camera.size.x, PALETTE_HEIGHT, IGNIS_LIGHT_GREY);
 
     Primitives2DFlush();
 
     /* Palette */
-    BatchRenderer2DStart(CameraGetProjectionPtr(&scene->camera));
+    Batch2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
 
     for (size_t i = 0; i < scene->map.types_count; ++i)
     {
@@ -102,13 +102,13 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
         float src_x, src_y, src_w, src_h;
         GetTexture2DSrcRect(scene->tile_set, i, &src_x, &src_y, &src_w, &src_h);
 
-        BatchRenderer2DRenderTextureSrc(scene->tile_set, x, y, w, h, src_x, src_y, src_w, src_h);
+        Batch2DRenderTextureSrc(scene->tile_set, x, y, w, h, src_x, src_y, src_w, src_h);
     }
 
-    BatchRenderer2DFlush();
+    Batch2DFlush();
 
     /* UI Overlay */
-    Primitives2DStart(CameraGetProjectionPtr(&scene->camera));
+    Primitives2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
 
     if (editor->palette_hover >= 0)
     {

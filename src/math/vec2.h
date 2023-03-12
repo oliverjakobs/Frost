@@ -1,10 +1,12 @@
 #ifndef VEC2_H
 #define VEC2_H
 
+#include <stdint.h>
+
 typedef struct
 {
-	float x;
-	float y;
+    float x;
+    float y;
 } vec2;
 
 vec2 vec2_zero();
@@ -24,8 +26,8 @@ float vec2_distance(vec2 a, vec2 b);
 
 typedef struct
 {
-	int x;
-	int y;
+    uint32_t x;
+    uint32_t y;
 } vec2i;
 
 vec2i vec2i_zero();

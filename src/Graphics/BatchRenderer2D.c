@@ -1,188 +1,154 @@
-#include "BatchRenderer2D.h"
-
 #include "Renderer.h"
 
 typedef struct
 {
-	IgnisVertexArray vao;
-	IgnisShader shader;
+    IgnisShader shader;
+    GLint uniform_location_view_proj;
 
-	float* vertices;
-	size_t vertex_index;
+    IgnisVertexArray vao;
+    float vertices[BATCH2D_BUFFER_SIZE];
+    uint32_t vertex_index;
 
-	size_t quad_count;
+    GLsizei quad_count;
 
-	GLuint* texture_slots;
-	size_t texture_slot_index;
+    GLuint texture_slots[BATCH2D_TEXTURES];
+    uint32_t texture_slot_index;
+} Batch2DStorage;
 
-	GLint uniform_location_view_proj;
-} _BatchRenderer2DStorage;
+static Batch2DStorage render_data;
 
-static _BatchRenderer2DStorage _render_data;
-
-void BatchRenderer2DInit(const char* vert, const char* frag)
+void Batch2DInit(const char* vert, const char* frag)
 {
-	ignisGenerateVertexArray(&_render_data.vao);
+    ignisGenerateVertexArray(&render_data.vao);
 
-	IgnisBufferElement layout[] =
-	{
-		{GL_FLOAT, 3, GL_FALSE},	/* position */
-		{GL_FLOAT, 2, GL_FALSE},	/* Texture coords*/
-		{GL_FLOAT, 1, GL_FALSE}		/* Texture index */
-	};
+    IgnisBufferElement layout[] =
+    {
+        {GL_FLOAT, 3, GL_FALSE},    /* position */
+        {GL_FLOAT, 2, GL_FALSE},    /* Texture coords*/
+        {GL_FLOAT, 1, GL_FALSE}     /* Texture index */
+    };
 
-	ignisAddArrayBufferLayout(&_render_data.vao, BATCHRENDERER2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, 0, layout, 3);
+    ignisAddArrayBufferLayout(&render_data.vao, BATCH2D_BUFFER_SIZE * sizeof(float), NULL, GL_DYNAMIC_DRAW, 0, layout, 3);
 
-	GLuint indices[BATCHRENDERER2D_INDEX_COUNT];
-	GenerateIndices(indices, BATCHRENDERER2D_INDEX_COUNT, BATCHRENDERER2D_INDICES_PER_QUAD);
+    GLuint indices[BATCH2D_INDEX_COUNT];
+    GenerateQuadIndices(indices, BATCH2D_INDEX_COUNT);
 
-	ignisLoadElementBuffer(&_render_data.vao, indices, BATCHRENDERER2D_INDEX_COUNT, GL_STATIC_DRAW);
+    ignisLoadElementBuffer(&render_data.vao, indices, BATCH2D_INDEX_COUNT, GL_STATIC_DRAW);
 
-	ignisCreateShadervf(&_render_data.shader, vert, frag);
+    ignisCreateShadervf(&render_data.shader, vert, frag);
 
-	ignisUseShader(&_render_data.shader);
-	int samplers[BATCHRENDERER2D_TEXTURES];
-	for (int i = 0; i < BATCHRENDERER2D_TEXTURES; i++)
-	{
-		samplers[i] = i;
-	}
-	ignisSetUniform1iv(&_render_data.shader, "u_Textures", BATCHRENDERER2D_TEXTURES, samplers);
+    ignisUseShader(&render_data.shader);
+    int samplers[BATCH2D_TEXTURES];
+    for (int i = 0; i < BATCH2D_TEXTURES; i++)
+        samplers[i] = i;
 
-	_render_data.uniform_location_view_proj = ignisGetUniformLocation(&_render_data.shader, "u_ViewProjection");
+    ignisSetUniform1iv(&render_data.shader, "u_Textures", BATCH2D_TEXTURES, samplers);
 
-	_render_data.vertices = ignisMalloc(BATCHRENDERER2D_BUFFER_SIZE * sizeof(float));
-	_render_data.vertex_index = 0;
-	_render_data.quad_count = 0;
+    render_data.uniform_location_view_proj = ignisGetUniformLocation(&render_data.shader, "u_ViewProjection");
 
-	_render_data.texture_slots = ignisMalloc(BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
-	if (_render_data.texture_slots) memset(_render_data.texture_slots, 0, BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
-	_render_data.texture_slot_index = 0;
+    render_data.vertex_index = 0;
+    render_data.quad_count = 0;
+
+    render_data.texture_slot_index = 0;
 }
 
-void BatchRenderer2DDestroy()
+void Batch2DDestroy()
 {
-	ignisFree(_render_data.vertices);
-	ignisFree(_render_data.texture_slots);
-
-	ignisDeleteShader(&_render_data.shader);
-	ignisDeleteVertexArray(&_render_data.vao);
+    ignisDeleteShader(&render_data.shader);
+    ignisDeleteVertexArray(&render_data.vao);
 }
 
-void BatchRenderer2DStart(const float* mat_view_proj)
+void Batch2DSetViewProjection(const float* view_proj)
 {
-	ignisSetUniformMat4l(&_render_data.shader, _render_data.uniform_location_view_proj, mat_view_proj);
+    ignisSetUniformMat4l(&render_data.shader, render_data.uniform_location_view_proj, view_proj);
 }
 
-void BatchRenderer2DFlush()
+void Batch2DFlush()
 {
-	if (_render_data.vertex_index == 0) return;
+    if (render_data.vertex_index == 0) return;
 
-	ignisBindVertexArray(&_render_data.vao);
-	ignisBufferSubData(&_render_data.vao.array_buffers[0], 0, _render_data.vertex_index * sizeof(float), _render_data.vertices);
+    ignisBindVertexArray(&render_data.vao);
+    ignisBufferSubData(&render_data.vao.array_buffers[0], 0, render_data.vertex_index * sizeof(float), render_data.vertices);
 
-	ignisUseShader(&_render_data.shader);
+    ignisUseShader(&render_data.shader);
 
-	/* bind textures */
-	for (size_t i = 0; i < _render_data.texture_slot_index; i++)
-	{
-		glActiveTexture(GL_TEXTURE0 + (GLenum)i);
-		glBindTexture(GL_TEXTURE_2D, _render_data.texture_slots[i]);
-	}
+    /* bind textures */
+    for (size_t i = 0; i < render_data.texture_slot_index; i++)
+    {
+        glActiveTexture(GL_TEXTURE0 + (GLenum)i);
+        glBindTexture(GL_TEXTURE_2D, render_data.texture_slots[i]);
+    }
 
-	glDrawElements(GL_TRIANGLES, BATCHRENDERER2D_INDICES_PER_QUAD * (GLsizei)_render_data.quad_count, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, RENDERER_INDICES_PER_QUAD * render_data.quad_count, GL_UNSIGNED_INT, NULL);
 
-	_render_data.vertex_index = 0;
-	_render_data.quad_count = 0;
+    render_data.vertex_index = 0;
+    render_data.quad_count = 0;
 
-	/* textures */
-	memset(_render_data.texture_slots, 0, BATCHRENDERER2D_TEXTURES * sizeof(GLuint));
-	_render_data.texture_slot_index = 0;
+    /* textures */
+    render_data.texture_slot_index = 0;
 }
 
-static void _BatchRenderer2DPushValue(float value)
+void Batch2DPushVertex(float x, float y, float src_x, float src_y, uint32_t texture_index)
 {
-	if (_render_data.vertex_index >= BATCHRENDERER2D_BUFFER_SIZE)
-	{
-		_ignisErrorCallback(IGNIS_WARN, "[BatchRenderer2D] Vertex overflow");
-		return;
-	}
+    render_data.vertices[render_data.vertex_index++] = x;
+    render_data.vertices[render_data.vertex_index++] = y;
+    render_data.vertices[render_data.vertex_index++] = 0.0f;
 
-	_render_data.vertices[_render_data.vertex_index++] = value;
+    render_data.vertices[render_data.vertex_index++] = src_x;
+    render_data.vertices[render_data.vertex_index++] = src_y;
+
+    render_data.vertices[render_data.vertex_index++] = (float)texture_index;
 }
 
-void BatchRenderer2DRenderTexture(const IgnisTexture2D* texture, float x, float y, float w, float h)
+int find_texture(GLuint name, uint32_t* index)
 {
-	BatchRenderer2DRenderTextureSrc(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
+    for (uint32_t i = 0; i < render_data.texture_slot_index; i++)
+    {
+        if (render_data.texture_slots[i] == name)
+        {
+            *index = i;
+            return 1;
+        }
+    }
+    return 0;
 }
 
-void BatchRenderer2DRenderTextureFrame(const IgnisTexture2D* texture, float x, float y, float w, float h, size_t frame)
+void Batch2DRenderTexture(const IgnisTexture2D* texture, float x, float y, float w, float h)
 {
-	float src_x, src_y, src_w, src_h;
-	GetTexture2DSrcRect(texture, frame, &src_x, &src_y, &src_w, &src_h);
-
-	BatchRenderer2DRenderTextureSrc(texture, x, y, w, h, src_x, src_y, src_w, src_h);
+    Batch2DRenderTextureSrc(texture, x, y, w, h, 0.0f, 0.0f, 1.0f, 1.0f);
 }
 
-void BatchRenderer2DRenderTextureSrc(const IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+void Batch2DRenderTextureFrame(const IgnisTexture2D* texture, float x, float y, float w, float h, uint32_t frame)
 {
-	if (_render_data.quad_count >= BATCHRENDERER2D_MAX_QUADS || _render_data.texture_slot_index >= BATCHRENDERER2D_TEXTURES)
-		BatchRenderer2DFlush();
+    float src_x, src_y, src_w, src_h;
+    GetTexture2DSrcRect(texture, frame, &src_x, &src_y, &src_w, &src_h);
 
-	float texture_index = -1.0f;
-	for (size_t i = 0; i < _render_data.texture_slot_index; i++)
-	{
-		if (_render_data.texture_slots[i] == texture->name)
-		{
-			texture_index = (float)i;
-			break;
-		}
-	}
+    Batch2DRenderTextureSrc(texture, x, y, w, h, src_x, src_y, src_w, src_h);
+}
 
-	if (texture_index < 0.0f)
-	{
-		texture_index = (float)_render_data.texture_slot_index;
-		_render_data.texture_slots[_render_data.texture_slot_index++] = texture->name;
-	}
+void Batch2DRenderTextureSrc(const IgnisTexture2D* texture, float x, float y, float w, float h, float src_x, float src_y, float src_w, float src_h)
+{
+    if (render_data.vertex_index + BATCH2D_QUAD_SIZE >= BATCH2D_BUFFER_SIZE)
+        Batch2DFlush();
 
-	/* BOTTOM LEFT */
-	_BatchRenderer2DPushValue(x);
-	_BatchRenderer2DPushValue(y);
-	_BatchRenderer2DPushValue(0.0f);
+    uint32_t texture_index = 0;
+    if (!find_texture(texture->name, &texture_index))
+    {
+        texture_index = render_data.texture_slot_index;
 
-	_BatchRenderer2DPushValue(src_x);
-	_BatchRenderer2DPushValue(src_y);
+        if (render_data.texture_slot_index >= BATCH2D_TEXTURES)
+        {
+            Batch2DFlush();
+            render_data.texture_slot_index = 0; // supress warning
+        }
 
-	_BatchRenderer2DPushValue(texture_index);
+        render_data.texture_slots[render_data.texture_slot_index++] = texture->name;
+    }
 
-	/* BOTTOM RIGHT */
-	_BatchRenderer2DPushValue(x + w);
-	_BatchRenderer2DPushValue(y);
-	_BatchRenderer2DPushValue(0.0f);
+    Batch2DPushVertex(x,     y,     src_x,         src_y,         texture_index);   // bottom left
+    Batch2DPushVertex(x + w, y,     src_x + src_w, src_y,         texture_index);   // bottom right
+    Batch2DPushVertex(x + w, y + h, src_x + src_w, src_y + src_h, texture_index);   // top right
+    Batch2DPushVertex(x,     y + h, src_x,         src_y + src_h, texture_index);   // top left
 
-	_BatchRenderer2DPushValue(src_x + src_w);
-	_BatchRenderer2DPushValue(src_y);
-
-	_BatchRenderer2DPushValue(texture_index);
-
-	/* TOP RIGHT */
-	_BatchRenderer2DPushValue(x + w);
-	_BatchRenderer2DPushValue(y + h);
-	_BatchRenderer2DPushValue(0.0f);
-
-	_BatchRenderer2DPushValue(src_x + src_w);
-	_BatchRenderer2DPushValue(src_y + src_h);
-
-	_BatchRenderer2DPushValue(texture_index);
-
-	/* TOP LEFT */
-	_BatchRenderer2DPushValue(x);
-	_BatchRenderer2DPushValue(y + h);
-	_BatchRenderer2DPushValue(0.0f);
-
-	_BatchRenderer2DPushValue(src_x);
-	_BatchRenderer2DPushValue(src_y + src_h);
-
-	_BatchRenderer2DPushValue(texture_index);
-
-	_render_data.quad_count++;
+    render_data.quad_count++;
 }

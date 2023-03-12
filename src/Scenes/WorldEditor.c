@@ -49,7 +49,7 @@ void WorldEditorOnUpdate(WorldEditor* editor, Scene* scene, float deltatime)
 
 void WorldEditorOnRender(const WorldEditor* editor, Scene* scene, int show_grid, float padding)
 {
-	Primitives2DStart(CameraGetViewProjectionPtr(&scene->camera));
+	Primitives2DSetViewProjection(CameraGetViewProjectionPtr(&scene->camera));
 
 	if (show_grid) SceneEditorRenderGrid(scene, padding);
 

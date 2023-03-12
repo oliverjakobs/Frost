@@ -3,9 +3,9 @@
 
 typedef struct
 {
-	float x;
-	float y;
-	float z;
+    float x;
+    float y;
+    float z;
 } vec3;
 
 vec3 vec3_mult(vec3 v, float f);

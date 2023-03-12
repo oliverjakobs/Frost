@@ -38,10 +38,10 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
     ignisSetClearColor(clear_color);
 
     /* renderer */
-    Renderer2DInit("res/shaders/renderer2D.vert", "res/shaders/renderer2D.frag");
-    Primitives2DInit("res/shaders/primitives.vert", "res/shaders/primitives.frag");
-    BatchRenderer2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
-    FontRendererInit("res/shaders/font.vert", "res/shaders/font.frag");
+    Renderer2DInit();
+    Primitives2DInit();
+    FontRendererInit();
+    Batch2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 
     return MINIMAL_OK;
 }
@@ -50,7 +50,7 @@ void FrostDestroyGraphics()
 {
     FontRendererDestroy();
     Primitives2DDestroy();
-    BatchRenderer2DDestroy();
+    Batch2DDestroy();
     Renderer2DDestroy();
 }
 
@@ -133,12 +133,12 @@ int FrostLoad(MinimalApp* app, const char* path)
         return MINIMAL_FAIL;
     }
 
-    MINIMAL_INFO("[GLFW] Version: %s",        glfwGetVersionString());
-    MINIMAL_INFO("[OpenGL] Version: %s",      ignisGetGLVersion());
-    MINIMAL_INFO("[OpenGL] Vendor: %s",       ignisGetGLVendor());
-    MINIMAL_INFO("[OpenGL] Renderer: %s",     ignisGetGLRenderer());
+    MINIMAL_INFO("[GLFW] Version:        %s", glfwGetVersionString());
+    MINIMAL_INFO("[OpenGL] Version:      %s", ignisGetGLVersion());
+    MINIMAL_INFO("[OpenGL] Vendor:       %s", ignisGetGLVendor());
+    MINIMAL_INFO("[OpenGL] Renderer:     %s", ignisGetGLRenderer());
     MINIMAL_INFO("[OpenGL] GLSL Version: %s", ignisGetGLSLVersion());
-    MINIMAL_INFO("[Ignis] Version: %s",       ignisGetVersionString());
+    MINIMAL_INFO("[Ignis] Version:       %s", ignisGetVersionString());
     
     return MINIMAL_OK;
 }

@@ -30,21 +30,21 @@ void BackgroundUpdate(BackgroundLayer* bg, float x, float deltatime)
 
         layer->x = layer->startpos + (x * layer->parallax);
 
-        if (rel_dist > layer->startpos + layer->w)		layer->startpos += layer->w;
+        if (rel_dist > layer->startpos + layer->w)      layer->startpos += layer->w;
         else if (rel_dist < layer->startpos - layer->w) layer->startpos -= layer->w;
     }
 }
 
 void BackgroundRender(const BackgroundLayer* bg, const float* mat_view_proj)
 {
-    BatchRenderer2DStart(mat_view_proj);
+    Batch2DSetViewProjection(mat_view_proj);
 
     for (const BackgroundLayer* layer = bg; layer != tb_array_last(bg); layer++)
     {
-        BatchRenderer2DRenderTexture(&layer->texture, layer->x - layer->w, layer->y, layer->w, layer->h);
-        BatchRenderer2DRenderTexture(&layer->texture, layer->x, layer->y, layer->w, layer->h);
-        BatchRenderer2DRenderTexture(&layer->texture, layer->x + layer->w, layer->y, layer->w, layer->h);
+        Batch2DRenderTexture(&layer->texture, layer->x - layer->w, layer->y, layer->w, layer->h);
+        Batch2DRenderTexture(&layer->texture, layer->x, layer->y, layer->w, layer->h);
+        Batch2DRenderTexture(&layer->texture, layer->x + layer->w, layer->y, layer->w, layer->h);
     }
 
-    BatchRenderer2DFlush();
+    Batch2DFlush();
 }

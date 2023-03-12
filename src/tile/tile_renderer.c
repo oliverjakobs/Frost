@@ -140,7 +140,7 @@ void TileMapRenderDebug(const TileMap* map)
                 tile->pos.x + tile_size, tile->pos.y,
                 tile->pos.x + tile_size, tile->pos.y + tile_size
             };
-            Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
+            Primitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
             break;
         }
         case TILE_SLOPE_LEFT:
@@ -151,7 +151,7 @@ void TileMapRenderDebug(const TileMap* map)
                 tile->pos.x + tile_size, tile->pos.y,
                 tile->pos.x, tile->pos.y + tile_size
             };
-            Primitives2DRenderPolygon(vertices, 6, IGNIS_BLUE);
+            Primitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
             break;
         }
         case TILE_PLATFORM:

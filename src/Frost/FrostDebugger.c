@@ -52,7 +52,7 @@ static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* sce
 
 void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 {
-	FontRendererStart(GuiGetScreenProjPtr());
+	FontRendererSetProjection(GuiGetScreenProjPtr());
 
 	/* fps */
 	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", MinimalGetFps(app));

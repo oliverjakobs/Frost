@@ -12,14 +12,14 @@
 
 typedef struct
 {
-	vec2 min;
-	vec2 max;
+    vec2 min;
+    vec2 max;
 } rect;
 
 typedef struct
 {
-	vec2 start;
-	vec2 end;
+    vec2 start;
+    vec2 end;
 } line;
 
 #endif /* !MATH_H */
