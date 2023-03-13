@@ -9,7 +9,7 @@ const float CONSOLE_CURSOR_CYCLE = 1.2f;
 
 const char* CONSOLE_PROMPT = "> ";
 
-void ConsoleInit(Console* console, void* user_data, void(*execute)(Console*, void*, const char*), IgnisFont* font)
+void ConsoleInit(Console* console, void* user_data, ConsoleCB execute, IgnisFont* font)
 {
     memset(console->cmd_buffer, '\0', CONSOLE_MAX_CMD_LENGTH);
     console->cusor_pos = 0;

@@ -1,10 +1,10 @@
 #ifndef DEBUG_CONSOLE_H
 #define DEBUG_CONSOLE_H
 
-#define CONSOLE_MAX_CMD_LENGTH	64
+#define CONSOLE_MAX_CMD_LENGTH  64
 
-#define CONSOLE_OUT_BUF_SIZE	64
-#define CONSOLE_OUT_ROW_SIZE	64
+#define CONSOLE_OUT_BUF_SIZE    64
+#define CONSOLE_OUT_ROW_SIZE    64
 
 #include "Ignis/Ignis.h"
 #include "Minimal/Event.h"
@@ -12,6 +12,8 @@
 #include <stdint.h>
 
 typedef struct Console Console;
+typedef void (*ConsoleCB) (Console*, void*, const char*);
+
 struct Console
 {
     int focus;
@@ -23,14 +25,14 @@ struct Console
     float cursor_tick;
 
     void* user_data;
-    void (*execute)(Console*, void*, const char*);
+    ConsoleCB execute;
 
     IgnisFont* font;
     IgnisColorRGBA font_color;
     IgnisColorRGBA bg_color;
 };
 
-void ConsoleInit(Console* console, void* user_data, void (*execute)(Console*, void*, const char*), IgnisFont* font);
+void ConsoleInit(Console* console, void* user_data, ConsoleCB execute, IgnisFont* font);
 
 int ConsoleOnEvent(Console* console, const MinimalEvent* e);
 void ConsoleOnUpdate(Console* console, float deltatime);

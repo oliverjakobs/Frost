@@ -114,9 +114,6 @@ int FrostLoad(MinimalApp* app, const char* path)
     char gl_version[APPLICATION_VER_STR_LEN];
     tb_ini_string(section.start, NULL, "opengl", gl_version, APPLICATION_VER_STR_LEN);
 
-    int gl_major, gl_minor;
-    FrostGetGLVersion(gl_version, &gl_major, &gl_minor);
-
     /* apply settings */
     tb_ini_query(config, "options", NULL, &section);
     if (section.error == TB_INI_OK)
@@ -127,7 +124,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 
     FrostFree(config);
 
-    if (!minimalLoad(app, title, w, h, gl_major, gl_minor))
+    if (!minimalLoad(app, title, w, h, gl_version))
     {
         MINIMAL_ERROR("Failed to load minimal");
         return MINIMAL_FAIL;
