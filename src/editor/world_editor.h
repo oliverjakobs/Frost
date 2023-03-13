@@ -1,13 +1,13 @@
 #ifndef WORLD_EDITOR_H
 #define WORLD_EDITOR_H
 
-#include "Scene.h"
+#include "Scenes/Scene.h"
 
 typedef struct
 {
-	vec2 offset;
-	EcsEntityID hover;
-	int clicked;
+    vec2 offset;
+    EcsEntityID hover;
+    int clicked;
 } WorldEditor;
 
 void WorldEditorReset(WorldEditor* editor);

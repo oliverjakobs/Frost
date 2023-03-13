@@ -31,21 +31,21 @@ int ConsoleOnEvent(Console* console, const MinimalEvent* e)
 {
     if (!console->focus) return 0;
 
-    switch (MinimalEventKeyPressed(e))
+    switch (minimalEventKeyPressed(e))
     {
     case GLFW_KEY_BACKSPACE: ConsoleCharRemoveLast(console); return 1;
     case GLFW_KEY_ENTER:     ConsoleExecuteCmd(console);     return 1;
     }
 
     /* TODO: fix backspace char event */
-    if (MinimalCheckEventType(e, MINIMAL_EVENT_CHAR))
+    if (minimalCheckEventType(e, MINIMAL_EVENT_CHAR))
     {
-        ConsoleCharTyped(console, MinimalEventChar(e));
+        ConsoleCharTyped(console, minimalEventChar(e));
         return 1;
     }
 
     /* block key events */
-    int32_t key = MinimalEventKey(e);
+    int32_t key = minimalEventKey(e);
     return key != GLFW_KEY_UNKNOWN;
 }
 

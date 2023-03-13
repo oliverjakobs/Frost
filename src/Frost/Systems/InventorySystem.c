@@ -31,7 +31,7 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 	Inventory* inv_hover = NULL;
 	Inventory* inv_dragged = NULL;
 	vec2 mouse = { 0 };
-	MinimalCursorPos(&mouse.x, &mouse.y);
+	minimalCursorPos(&mouse.x, &mouse.y);
 	mouse = CameraGetMousePos(&scene->camera, mouse);
 
 	/* update hover cell */
@@ -56,11 +56,11 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 	}
 
 	/* update dragged item/cell */
-	if (MinimalMousePressed(GLFW_MOUSE_BUTTON_LEFT) && dragged.cell < 0)
+	if (minimalMousePressed(GLFW_MOUSE_BUTTON_LEFT) && dragged.cell < 0)
 	{
 		InventoryCellIDSet(&dragged, hover.entity, hover.cell);
 	}
-	else if (MinimalMouseReleased(GLFW_MOUSE_BUTTON_LEFT) && inv_dragged && dragged.cell >= 0)
+	else if (minimalMouseReleased(GLFW_MOUSE_BUTTON_LEFT) && inv_dragged && dragged.cell >= 0)
 	{
 		if (inv_hover && InventoryGetCellContent(inv_hover, hover.cell) == NULL_ITEM)
 		{
@@ -69,7 +69,7 @@ void InventoryUpdateSystem(Ecs* ecs, Scene* scene, float deltatime)
 		else if (!inv_hover && InventoryGetCellContent(inv_dragged, dragged.cell) != NULL_ITEM)
 		{
 			vec2 mouse = {0};
-			MinimalCursorPos(&mouse.x, &mouse.y);
+			minimalCursorPos(&mouse.x, &mouse.y);
 			vec2 drop_pos = CameraGetMousePosView(&scene->camera, mouse);
 			ItemID id = inv_dragged->cells[dragged.cell];
 			EcsEntityID entity = EcsEntityGetNextID();
@@ -150,7 +150,7 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 	if (dragged_inv && dragged.cell >= 0)
 	{
 		vec2 mouse_pos = { 0 };
-		MinimalCursorPos(&mouse_pos.x, &mouse_pos.y);
+		minimalCursorPos(&mouse_pos.x, &mouse_pos.y);
 		mouse_pos = CameraGetMousePos(&scene->camera, mouse_pos);
 
 		IgnisRect rect = {

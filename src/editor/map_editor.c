@@ -1,6 +1,6 @@
-#include "MapEditor.h"
+#include "map_editor.h"
 
-#include "SceneEditor.h"
+#include "scene_editor.h"
 
 #include "Frost/Frost.h"
 
@@ -31,7 +31,7 @@ static int MapEditorPaletteGetHover(vec2 m, size_t palette_size)
 void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
 {
     vec2 mouse = { 0 };
-    if (MinimalEventMouseMoved(e, &mouse.x, &mouse.y))
+    if (minimalEventMouseMoved(e, &mouse.x, &mouse.y))
     {
         mouse = CameraGetMousePos(&scene->camera, mouse);
         if (mouse.y > PALETTE_HEIGHT)
@@ -46,7 +46,7 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
         }
     }
 
-    if (MinimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == GLFW_MOUSE_BUTTON_LEFT)
+    if (minimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == GLFW_MOUSE_BUTTON_LEFT)
     {
         if (editor->tile_hover)
         {

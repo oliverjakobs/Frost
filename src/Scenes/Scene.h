@@ -7,8 +7,8 @@
 
 #include "Minimal/Event.h"
 
-#define APPLICATION_STR_LEN		32
-#define APPLICATION_PATH_LEN	64
+#define APPLICATION_STR_LEN     32
+#define APPLICATION_PATH_LEN    64
 #define APPLICATION_VER_STR_LEN 8
 
 #include "ECS/Ecs.h"
@@ -24,26 +24,26 @@ typedef (*SceneSaveFn)(Scene*, const char*);
 
 struct Scene
 {
-	Camera camera;
+    Camera camera;
 
-	Ecs ecs;
-	TileMap map;
-	TileRenderer renderer;
+    Ecs ecs;
+    TileMap map;
+    TileRenderer renderer;
 
-	SceneLoadFn load;
-	SceneSaveFn save;
-	tb_allocator* allocator;
-	
-	/* active scene specific data */
-	char path[APPLICATION_PATH_LEN];
+    SceneLoadFn load;
+    SceneSaveFn save;
+    tb_allocator* allocator;
+    
+    /* active scene specific data */
+    char path[APPLICATION_PATH_LEN];
 
-	vec2 gravity;
+    vec2 gravity;
 
-	Resources res;
-	IgnisTexture2D* item_atlas;
-	IgnisTexture2D* tile_set;
+    Resources res;
+    IgnisTexture2D* item_atlas;
+    IgnisTexture2D* tile_set;
 
-	BackgroundLayer* background;
+    BackgroundLayer* background;
 };
 
 int SceneInit(Scene* scene, float x, float y, SceneLoadFn load, SceneSaveFn save, tb_allocator* allocator);

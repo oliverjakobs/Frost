@@ -1,33 +1,30 @@
 #ifndef SCENE_EDITOR_H
 #define SCENE_EDITOR_H
 
-#include "Scene.h"
+#include "Scenes/Scene.h"
 
-#include "MapEditor.h"
-#include "WorldEditor.h"
+#include "map_editor.h"
+#include "world_editor.h"
 
 typedef enum
 {
-	SCENE_EDIT_NONE,
-	SCENE_EDIT_WORLD,
-	SCENE_EDIT_MAP
+    SCENE_EDIT_NONE,
+    SCENE_EDIT_WORLD,
+    SCENE_EDIT_MAP
 } SceneEditMode;
 
 typedef struct
 {
-	Scene* scene;
+    Scene* scene;
 
-	int showgrid;
+    int showgrid;
 
-	float cameraspeed;
-	float padding;
-	
-	SceneEditMode mode;
-	union
-	{
-		WorldEditor world;
-		MapEditor	map;
-	};
+    float cameraspeed;
+    float padding;
+    
+    SceneEditMode mode;
+    WorldEditor world;
+    MapEditor   map;
 } SceneEditor;
 
 void SceneEditorInit(SceneEditor* editor, Scene* scene, float cameraspeed, int padding, SceneEditMode mode);

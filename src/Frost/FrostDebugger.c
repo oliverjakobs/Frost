@@ -55,7 +55,7 @@ void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 	ignisFontRendererSetProjection(GuiGetScreenProjPtr());
 
 	/* fps */
-	ignisFontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", MinimalGetFps(app));
+	ignisFontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", minimalGetFps(app));
 
 	if (debugger->show_info)
 	{
@@ -169,7 +169,7 @@ void FrostExecuteConsoleCommand(Console* console, FrostDebugger* debugger, const
 			}
 
 			vec2 mouse = { 0 };
-			MinimalCursorPos(&mouse.x, &mouse.y);
+			minimalCursorPos(&mouse.x, &mouse.y);
 			vec2 pos = CameraGetMousePosView(&scene->camera, mouse);
 
 			if (SceneLoadTemplate(scene, atoi(args[0]), args[1], pos, atoi(args[2]), 0))

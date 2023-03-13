@@ -6,7 +6,7 @@
 #include "SceneSaver.h"
 
 #include "Scenes/Scene.h"
-#include "Scenes/SceneEditor.h"
+#include "editor/scene_editor.h"
 
 #include "GUI/Gui.h"
 

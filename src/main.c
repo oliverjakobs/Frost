@@ -37,28 +37,28 @@ void OnDestroy(MinimalApp* app)
 int OnEvent(MinimalApp* app, const MinimalEvent* e)
 {
     float w, h;
-    if (MinimalEventWindowSize(e, &w, &h))
+    if (minimalEventWindowSize(e, &w, &h))
     {
         GuiSetViewport(w, h);
         CameraSetProjectionOrtho(&scene.camera, w, h);
         glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     }
 
-    switch (MinimalEventKeyPressed(e))
+    switch (minimalEventKeyPressed(e))
     {
-    case GLFW_KEY_ESCAPE:    MinimalClose(app); break;
+    case GLFW_KEY_ESCAPE:    minimalClose(app); break;
     case GLFW_KEY_F1:        SceneEditorToggleWorldMode(&scene_editor); break;
     case GLFW_KEY_F2:        SceneEditorToggleMapMode(&scene_editor); break;
     case GLFW_KEY_F3:        ConsoleToggleFocus(&debugger.console); break;
-    case GLFW_KEY_F6:        MinimalToggleVsync(app); break;
-    case GLFW_KEY_F7:        MinimalToggleDebug(app); break;
+    case GLFW_KEY_F6:        minimalToggleVsync(app); break;
+    case GLFW_KEY_F7:        minimalToggleDebug(app); break;
     case GLFW_KEY_F8:        SceneEditorToggleGrid(&scene_editor); break;
     case GLFW_KEY_F9:        FrostDebuggerToggleInfo(&debugger); break;
     }
 
-    if (scene_editor.mode == SCENE_EDIT_MAP)        MinimalSetWindowTitle(app, "Frost | Map Editor");
-    else if (scene_editor.mode == SCENE_EDIT_WORLD) MinimalSetWindowTitle(app, "Frost | World Editor");
-    else                                            MinimalSetWindowTitle(app, "Frost");
+    if (scene_editor.mode == SCENE_EDIT_MAP)        minimalSetWindowTitle(app, "Frost | Map Editor");
+    else if (scene_editor.mode == SCENE_EDIT_WORLD) minimalSetWindowTitle(app, "Frost | World Editor");
+    else                                            minimalSetWindowTitle(app, "Frost");
 
     if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 
@@ -99,9 +99,9 @@ int main()
     };
 
     if (FrostLoad(&app, "config.ini"))
-        MinimalRun(&app);
+        minimalRun(&app);
 
-    MinimalDestroy(&app);
+    minimalDestroy(&app);
 
     size_t bytes = FrostMemoryGetBytes();
     if (bytes != 0) MINIMAL_WARN("%llu bytes not freed", bytes);

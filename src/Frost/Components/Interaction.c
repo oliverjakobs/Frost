@@ -56,12 +56,12 @@ void DispatchInteraction(Ecs* ecs, EcsEntityID entity, const Interactable* inter
 {
 	if (interactable->type == INTERACTION_TYPE_TOGGLE)
 	{
-		if (tb_betweenf(interactable->range_min, interactable->range_max, distance) && MinimalKeyHit(interactable->key))
+		if (tb_betweenf(interactable->range_min, interactable->range_max, distance) && minimalKeyHit(interactable->key))
 			EcsEventThrow(ecs, interactable->interaction, entity, 1);
 	}
 	else if (interactable->type == INTERACTION_TYPE_RANGED)
 	{
-		if (distance <= interactable->range_min && MinimalKeyHit(interactable->key))
+		if (distance <= interactable->range_min && minimalKeyHit(interactable->key))
 			EcsEventThrow(ecs, interactable->interaction, entity, 1);
 		else if (distance >= interactable->range_max)
 			EcsEventThrow(ecs, interactable->interaction, entity, 0);

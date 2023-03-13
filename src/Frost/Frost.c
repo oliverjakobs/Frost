@@ -127,7 +127,7 @@ int FrostLoad(MinimalApp* app, const char* path)
 
     FrostFree(config);
 
-    if (!MinimalLoad(app, title, w, h, gl_major, gl_minor))
+    if (!minimalLoad(app, title, w, h, gl_major, gl_minor))
     {
         MINIMAL_ERROR("Failed to load minimal");
         return MINIMAL_FAIL;

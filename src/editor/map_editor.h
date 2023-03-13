@@ -1,14 +1,14 @@
 #ifndef MAP_EDITOR_H
 #define MAP_EDITOR_H
 
-#include "Scene.h"
+#include "Scenes/Scene.h"
 
 typedef struct
 {
-	const Tile* tile_hover;
-	TileSetMode set_mode;
-	int palette_hover;
-	int palette_select;
+    const Tile* tile_hover;
+    TileSetMode set_mode;
+    int palette_hover;
+    int palette_select;
 } MapEditor;
 
 void MapEditorReset(MapEditor* editor);
