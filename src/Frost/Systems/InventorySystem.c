@@ -85,7 +85,7 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 {
 	/* render inventory backgrounds */
 	/* TODO: background texture */
-	Primitives2DSetViewProjection(mat_view_proj);
+	ignisPrimitives2DSetViewProjection(mat_view_proj);
 
 	IgnisColorRGBA bg = IGNIS_WHITE;
 	ignisBlendColorRGBA(&bg, 0.4f);
@@ -99,25 +99,25 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 		float width = InventoryGetWidth(inv);
 		float height = InventoryGetHeight(inv);
 
-		Primitives2DFillRect(inv->pos.x, inv->pos.y, width, height, bg);
-		Primitives2DRenderRect(inv->pos.x, inv->pos.y, width, height, IGNIS_WHITE);
+		ignisPrimitives2DFillRect(inv->pos.x, inv->pos.y, width, height, bg);
+		ignisPrimitives2DRenderRect(inv->pos.x, inv->pos.y, width, height, IGNIS_WHITE);
 
 		for (int cell = 0; cell < (inv->rows * inv->cols); ++cell)
 		{
 			vec2 pos = InventoryGetCellPos(inv, cell);
 			float size = inv->cell_size;
 
-			Primitives2DRenderRect(pos.x, pos.y, size, size, IGNIS_WHITE);
+			ignisPrimitives2DRenderRect(pos.x, pos.y, size, size, IGNIS_WHITE);
 
 			if (EcsMapIterKey(iter) == hover.entity && cell == hover.cell)
-				Primitives2DFillRect(pos.x, pos.y, size, size, IGNIS_WHITE);
+				ignisPrimitives2DFillRect(pos.x, pos.y, size, size, IGNIS_WHITE);
 		}
 	}
 
-	Primitives2DFlush();
+	ignisPrimitives2DFlush();
 
 	/* render inventory contents */
-	Batch2DSetViewProjection(mat_view_proj);
+	ignisBatch2DSetViewProjection(mat_view_proj);
 
 	Inventory* dragged_inv = NULL;
 	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
@@ -137,9 +137,12 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 			}
 
 			vec2 pos = InventoryGetCellPos(inv, cell);
-			float size = inv->cell_size;
-			size_t frame = inv->cells[cell];
-			Batch2DRenderTextureFrame(scene->item_atlas, pos.x, pos.y, size, size, frame);
+			IgnisRect rect = {
+				pos.x, pos.y,
+				inv->cell_size, inv->cell_size
+			};
+			uint32_t frame = inv->cells[cell];
+			ignisBatch2DRenderTextureFrame(scene->item_atlas, rect, frame);
 		}
 	}
 
@@ -149,13 +152,17 @@ void InventoryRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_
 		vec2 mouse_pos = { 0 };
 		MinimalCursorPos(&mouse_pos.x, &mouse_pos.y);
 		mouse_pos = CameraGetMousePos(&scene->camera, mouse_pos);
-		float size = dragged_inv->cell_size;
-		float x = mouse_pos.x - (size * 0.5f);
-		float y = mouse_pos.y - (size * 0.5f);
-		size_t frame = dragged_inv->cells[dragged.cell];
 
-		Batch2DRenderTextureFrame(scene->item_atlas, x, y, size, size, frame);
+		IgnisRect rect = {
+			mouse_pos.x - (dragged_inv->cell_size * 0.5f),
+			mouse_pos.y - (dragged_inv->cell_size * 0.5f),
+			dragged_inv->cell_size,
+			dragged_inv->cell_size
+		};
+
+		uint32_t frame = dragged_inv->cells[dragged.cell];
+		ignisBatch2DRenderTextureFrame(scene->item_atlas, rect, frame);
 	}
 
-	Batch2DFlush();
+	ignisBatch2DFlush();
 }

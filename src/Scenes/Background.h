@@ -1,7 +1,7 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include "Graphics/Renderer.h"
+#include "ignis/renderer/renderer.h"
 
 typedef struct
 {

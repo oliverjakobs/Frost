@@ -27,54 +27,54 @@ void FrostDebuggerOnUpdate(FrostDebugger* debugger, float deltatime)
 
 static void FrostDebugRenderInfo(const FrostDebugger* debugger, const Scene* scene, float x, float y)
 {
-	FontRendererTextFieldBegin(x, y, 8.0f);
+	ignisFontRendererTextFieldBegin(x, y, 8.0f);
 
-	FontRendererTextFieldLine("Memory: %llu bytes", FrostMemoryGetBytes());
+	ignisFontRendererTextFieldLine("Memory: %llu bytes", FrostMemoryGetBytes());
 	// FontRendererTextFieldLine("Peak: %llu bytes", FrostMemGetPeak());
-	FontRendererTextFieldLine("------------------------");
+	ignisFontRendererTextFieldLine("------------------------");
 
-	FontRendererTextFieldLine("Scene: %s", scene->path);
-	FontRendererTextFieldLine("Size: %4.2f, %4.2f", SceneGetWidth(scene), SceneGetHeight(scene));
-	FontRendererTextFieldLine("Gravity: %4.2f, %4.2f", scene->gravity.x, scene->gravity.y);
-	FontRendererTextFieldLine("------------------------");
+	ignisFontRendererTextFieldLine("Scene: %s", scene->path);
+	ignisFontRendererTextFieldLine("Size: %4.2f, %4.2f", SceneGetWidth(scene), SceneGetHeight(scene));
+	ignisFontRendererTextFieldLine("Gravity: %4.2f, %4.2f", scene->gravity.x, scene->gravity.y);
+	ignisFontRendererTextFieldLine("------------------------");
 
 	EcsEntityID player = 1;
-	FontRendererTextFieldLine("Player ID: %d", player);
-	FontRendererTextFieldLine("State: %s", EntityGetStateString(&scene->ecs, player));
+	ignisFontRendererTextFieldLine("Player ID: %d", player);
+	ignisFontRendererTextFieldLine("State: %s", EntityGetStateString(&scene->ecs, player));
 	vec2 position = GetEntityPosition(&scene->ecs, player);
-	FontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
-	FontRendererTextFieldLine("Precise Y: %f", position.y);
-	FontRendererTextFieldLine("------------------------");
+	ignisFontRendererTextFieldLine("Position: %4.2f, %4.2f", position.x, position.y);
+	ignisFontRendererTextFieldLine("Precise Y: %f", position.y);
+	ignisFontRendererTextFieldLine("------------------------");
 
-	FontRendererTextFieldLine("Camera:");
-	FontRendererTextFieldLine("Position: %4.2f, %4.2f", scene->camera.position.x, scene->camera.position.y);
+	ignisFontRendererTextFieldLine("Camera:");
+	ignisFontRendererTextFieldLine("Position: %4.2f, %4.2f", scene->camera.position.x, scene->camera.position.y);
 }
 
 void FrostDebuggerOnRenderUI(FrostDebugger* debugger, const MinimalApp* app)
 {
-	FontRendererSetProjection(GuiGetScreenProjPtr());
+	ignisFontRendererSetProjection(GuiGetScreenProjPtr());
 
 	/* fps */
-	FontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", MinimalGetFps(app));
+	ignisFontRendererRenderTextFormat(8.0f, 8.0f, "FPS: %d", MinimalGetFps(app));
 
 	if (debugger->show_info)
 	{
 		/* Settings */
-		FontRendererTextFieldBegin(GuiGetScreenWidth() - 220.0f, 8.0f, 8.0f);
+		ignisFontRendererTextFieldBegin(GuiGetScreenWidth() - 220.0f, 8.0f, 8.0f);
 
-		FontRendererTextFieldLine("F1: Toggle edit mode");
-		FontRendererTextFieldLine("F2: Toggle map edit mode");
-		FontRendererTextFieldLine("F3: Open console");
-		FontRendererTextFieldLine("F6: Toggle Vsync");
-		FontRendererTextFieldLine("F7: Toggle debug mode");
-		FontRendererTextFieldLine("F8: Toggle editor grid");
-		FontRendererTextFieldLine("F9: Toggle overlay");
+		ignisFontRendererTextFieldLine("F1: Toggle edit mode");
+		ignisFontRendererTextFieldLine("F2: Toggle map edit mode");
+		ignisFontRendererTextFieldLine("F3: Open console");
+		ignisFontRendererTextFieldLine("F6: Toggle Vsync");
+		ignisFontRendererTextFieldLine("F7: Toggle debug mode");
+		ignisFontRendererTextFieldLine("F8: Toggle editor grid");
+		ignisFontRendererTextFieldLine("F9: Toggle overlay");
 
 		/* Debug info */
 		FrostDebugRenderInfo(debugger, debugger->scene, GuiGetScreenWidth() - 480.0f, 8.0f);
 	}
 
-	FontRendererFlush();
+	ignisFontRendererFlush();
 
 	ConsoleRender(&debugger->console, 0.0f, GuiGetScreenHeight(), GuiGetScreenWidth(), 32.0f, 8.0f, GuiGetScreenProjPtr());
 }

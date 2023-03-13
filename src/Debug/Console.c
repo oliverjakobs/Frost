@@ -1,6 +1,6 @@
 ﻿#include "Console.h"
 
-#include "Graphics/Renderer.h"
+#include "ignis/renderer/renderer.h"
 
 #include "Minimal/Input.h"
 
@@ -98,19 +98,19 @@ void ConsoleRender(const Console* console, float x, float y, float w, float h, f
 {
     if (!console->focus || !console->font) return;
 
-    Primitives2DSetViewProjection(proj);
-    Primitives2DFillRect(x, y, w, -h, console->bg_color);
-    Primitives2DFlush();
+    ignisPrimitives2DSetViewProjection(proj);
+    ignisPrimitives2DFillRect(x, y, w, -h, console->bg_color);
+    ignisPrimitives2DFlush();
 
     float text_x = x + padding;
     float text_y = y - padding - ignisFontGetHeight(console->font);
 
     char cursor = (console->cursor_tick <= CONSOLE_CURSOR_ON) ? '_' : '\0';
 
-    FontRendererBindFontColor(console->font, console->font_color);
-    FontRendererSetProjection(proj);
-    FontRendererRenderTextFormat(text_x, text_y, "%s%.*s%c", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer, cursor);
-    FontRendererFlush();
+    ignisFontRendererBindFontColor(console->font, console->font_color);
+    ignisFontRendererSetProjection(proj);
+    ignisFontRendererRenderTextFormat(text_x, text_y, "%s%.*s%c", CONSOLE_PROMPT, console->cusor_pos, console->cmd_buffer, cursor);
+    ignisFontRendererFlush();
 }
 
 void ConsoleOut(const Console* console, const char* fmt, ...)

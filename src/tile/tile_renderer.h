@@ -3,7 +3,7 @@
 
 #include "tile_body.h"
 
-#include "Graphics/Renderer.h"
+#include "ignis/renderer/renderer.h"
 
 typedef struct TileRenderer
 {

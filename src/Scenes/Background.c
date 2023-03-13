@@ -37,14 +37,14 @@ void BackgroundUpdate(BackgroundLayer* bg, float x, float deltatime)
 
 void BackgroundRender(const BackgroundLayer* bg, const float* mat_view_proj)
 {
-    Batch2DSetViewProjection(mat_view_proj);
+    ignisBatch2DSetViewProjection(mat_view_proj);
 
     for (const BackgroundLayer* layer = bg; layer != tb_array_last(bg); layer++)
     {
-        Batch2DRenderTexture(&layer->texture, layer->x - layer->w, layer->y, layer->w, layer->h);
-        Batch2DRenderTexture(&layer->texture, layer->x, layer->y, layer->w, layer->h);
-        Batch2DRenderTexture(&layer->texture, layer->x + layer->w, layer->y, layer->w, layer->h);
+        ignisBatch2DRenderTexture(&layer->texture, (IgnisRect) { layer->x - layer->w, layer->y, layer->w, layer->h });
+        ignisBatch2DRenderTexture(&layer->texture, (IgnisRect) { layer->x, layer->y, layer->w, layer->h });
+        ignisBatch2DRenderTexture(&layer->texture, (IgnisRect) { layer->x + layer->w, layer->y, layer->w, layer->h });
     }
 
-    Batch2DFlush();
+    ignisBatch2DFlush();
 }

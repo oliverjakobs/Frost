@@ -1,7 +1,7 @@
 #ifndef SPRITE_H
 #define SPRITE_H
 
-#include "Ignis/Ignis.h"
+#include "ignis/ignis.h"
 
 #include "Scenes/Scene.h"
 
@@ -40,6 +40,6 @@ typedef struct
 
 void SpriteLoad(char* ini, Scene* scene, EcsEntityID entity, int z_index, int variant);
 
-void SpriteGetSrcRect(const Sprite* sprite, float* src_x, float* src_y, float* src_w, float* src_h);
+IgnisRect SpriteGetSrcRect(const Sprite* sprite);
 
 #endif /* !SPRITE_H */

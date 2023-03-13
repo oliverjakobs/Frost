@@ -1,7 +1,7 @@
 #ifndef SCENE_RESOURCES_H
 #define SCENE_RESOURCES_H
 
-#include "Graphics/Renderer.h"
+#include "ignis/renderer/renderer.h"
 
 #include "toolbox/tb_hashmap.h"
 

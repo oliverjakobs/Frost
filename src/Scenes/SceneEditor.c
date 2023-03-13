@@ -62,10 +62,10 @@ void SceneEditorRenderGrid(const Scene* scene, float padding)
 	float granularity = scene->map.tile_size;
 
 	for (float x = -padding; x <= SceneGetWidth(scene) + padding; x += granularity)
-		Primitives2DRenderLine(x, -padding, x, SceneGetHeight(scene) + padding, color);
+		ignisPrimitives2DRenderLine(x, -padding, x, SceneGetHeight(scene) + padding, color);
 
 	for (float y = -padding; y <= SceneGetHeight(scene) + padding; y += granularity)
-		Primitives2DRenderLine(-padding, y, SceneGetWidth(scene) + padding, y, color);
+		ignisPrimitives2DRenderLine(-padding, y, SceneGetWidth(scene) + padding, y, color);
 }
 
 void SceneEditorOnEvent(SceneEditor* editor, const MinimalEvent* e)

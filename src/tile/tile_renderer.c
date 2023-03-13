@@ -96,32 +96,32 @@ void TileMapRenderDebug(const TileMap* map)
     float tile_size = map->tile_size;
 
     /* map border */
-    Primitives2DRenderRect(0.0f, 0.0f, map->cols * tile_size, map->rows * tile_size, IGNIS_WHITE);
+    ignisPrimitives2DRenderRect(0.0f, 0.0f, map->cols * tile_size, map->rows * tile_size, IGNIS_WHITE);
 
     if (TileMapGetBorder(map, TILE_BOTTOM))
     {
         for (size_t i = 0; i < map->cols; ++i)
-            Primitives2DRenderRect(i * tile_size, -tile_size, tile_size, tile_size, IGNIS_BLACK);
+            ignisPrimitives2DRenderRect(i * tile_size, -tile_size, tile_size, tile_size, IGNIS_BLACK);
     }
 
     if (TileMapGetBorder(map, TILE_TOP))
     {
         float y = map->rows * tile_size;
         for (size_t i = 0; i < map->cols; ++i)
-            Primitives2DRenderRect(i * tile_size, y, tile_size, tile_size, IGNIS_BLACK);
+            ignisPrimitives2DRenderRect(i * tile_size, y, tile_size, tile_size, IGNIS_BLACK);
     }
 
     if (TileMapGetBorder(map, TILE_LEFT))
     {
         for (size_t i = 0; i < map->rows; ++i)
-            Primitives2DRenderRect(-tile_size, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
+            ignisPrimitives2DRenderRect(-tile_size, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
     }
 
     if (TileMapGetBorder(map, TILE_RIGHT))
     {
         float x = map->cols * tile_size;
         for (size_t i = 0; i < map->rows; ++i)
-            Primitives2DRenderRect(x, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
+            ignisPrimitives2DRenderRect(x, i * tile_size, tile_size, tile_size, IGNIS_BLACK);
     }
 
     for (size_t i = 0; i < (map->rows * map->cols); ++i)
@@ -130,7 +130,7 @@ void TileMapRenderDebug(const TileMap* map)
         switch (tile->type)
         {
         case TILE_SOLID:
-            Primitives2DRenderRect(tile->pos.x, tile->pos.y, tile_size, tile_size, IGNIS_WHITE);
+            ignisPrimitives2DRenderRect(tile->pos.x, tile->pos.y, tile_size, tile_size, IGNIS_WHITE);
             break;
         case TILE_SLOPE_RIGHT:
         {
@@ -140,7 +140,7 @@ void TileMapRenderDebug(const TileMap* map)
                 tile->pos.x + tile_size, tile->pos.y,
                 tile->pos.x + tile_size, tile->pos.y + tile_size
             };
-            Primitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
+            ignisPrimitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
             break;
         }
         case TILE_SLOPE_LEFT:
@@ -151,7 +151,7 @@ void TileMapRenderDebug(const TileMap* map)
                 tile->pos.x + tile_size, tile->pos.y,
                 tile->pos.x, tile->pos.y + tile_size
             };
-            Primitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
+            ignisPrimitives2DRenderPoly(vertices, 6, 0.0f, 0.0f, IGNIS_BLUE);
             break;
         }
         case TILE_PLATFORM:
@@ -159,7 +159,7 @@ void TileMapRenderDebug(const TileMap* map)
             float height = 4.0f;
             float x = tile->pos.x;
             float y = tile->pos.y + tile_size - height;
-            Primitives2DRenderRect(x, y, tile_size, height, IGNIS_CYAN);
+            ignisPrimitives2DRenderRect(x, y, tile_size, height, IGNIS_CYAN);
             break;
         }
         default:
@@ -174,24 +174,23 @@ void TileBodyRenderDebug(const TileBody* body)
     vec2 pos = vec2_sub(body->position, body->half_dim);
     vec2 dim = vec2_mult(body->half_dim, 2.0f);
 
-    if (body->type == TILE_BODY_DYNAMIC)
+    if (body->type != TILE_BODY_DYNAMIC)
     {
-        Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->on_slope ? IGNIS_BLUE : IGNIS_GREEN);
-
-        line sensor = TileBodyGetSensor(body, TILE_BOTTOM, body->position);
-        Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-        sensor = TileBodyGetSensor(body, TILE_TOP, body->position);
-        Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-        sensor = TileBodyGetSensor(body, TILE_LEFT, body->position);
-        Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
-
-        sensor = TileBodyGetSensor(body, TILE_RIGHT, body->position);
-        Primitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+        ignisPrimitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, IGNIS_WHITE);
+        return;
     }
-    else
-    {
-        Primitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, IGNIS_WHITE);
-    }
+
+    ignisPrimitives2DRenderRect(pos.x, pos.y, dim.x, dim.y, body->on_slope ? IGNIS_BLUE : IGNIS_GREEN);
+
+    line sensor = TileBodyGetSensor(body, TILE_BOTTOM, body->position);
+    ignisPrimitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+    sensor = TileBodyGetSensor(body, TILE_TOP, body->position);
+    ignisPrimitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+    sensor = TileBodyGetSensor(body, TILE_LEFT, body->position);
+    ignisPrimitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
+
+    sensor = TileBodyGetSensor(body, TILE_RIGHT, body->position);
+    ignisPrimitives2DRenderLine(sensor.start.x, sensor.start.y, sensor.end.x, sensor.end.y, IGNIS_WHITE);
 }

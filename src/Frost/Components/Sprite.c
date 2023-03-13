@@ -43,19 +43,21 @@ void SpriteLoad(char* ini, Scene* scene, EcsEntityID entity, int z_index, int va
     }
 }
 
-void SpriteGetSrcRect(const Sprite* sprite, float* src_x, float* src_y, float* src_w, float* src_h)
+IgnisRect SpriteGetSrcRect(const Sprite* sprite)
 {
-    GetTexture2DSrcRect(sprite->texture, sprite->frame, src_x, src_y, src_w, src_h);
+    IgnisRect src = ignisGetTexture2DSrcRect(sprite->texture, sprite->frame);
 
     if (sprite->flip == SPRITE_FLIP_HORIZONTAL || sprite->flip == SPRITE_FLIP_BOTH)
     {
-        *src_x += *src_w;
-        *src_w = -*src_w;
+        src.x += src.w;
+        src.w = -src.w;
     }
 
     if (sprite->flip == SPRITE_FLIP_VERTICAL || sprite->flip == SPRITE_FLIP_BOTH)
     {
-        *src_y += *src_h;
-        *src_h = -*src_h;
+        src.y += src.h;
+        src.h = -src.h;
     }
+
+    return src;
 }

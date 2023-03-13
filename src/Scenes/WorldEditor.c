@@ -49,7 +49,7 @@ void WorldEditorOnUpdate(WorldEditor* editor, Scene* scene, float deltatime)
 
 void WorldEditorOnRender(const WorldEditor* editor, Scene* scene, int show_grid, float padding)
 {
-	Primitives2DSetViewProjection(CameraGetViewProjectionPtr(&scene->camera));
+	ignisPrimitives2DSetViewProjection(CameraGetViewProjectionPtr(&scene->camera));
 
 	if (show_grid) SceneEditorRenderGrid(scene, padding);
 
@@ -59,11 +59,11 @@ void WorldEditorOnRender(const WorldEditor* editor, Scene* scene, int show_grid,
 
 		vec2 position = GetEntityPosition(&scene->ecs, editor->hover);
 
-		Primitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
-		Primitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
+		ignisPrimitives2DRenderRect(r.min.x, r.min.y, r.max.x - r.min.x, r.max.y - r.min.y, IGNIS_WHITE);
+		ignisPrimitives2DRenderCircle(position.x, position.y, 2.0f, IGNIS_WHITE);
 	}
 
 	TileMapRenderDebug(&scene->map);
 
-	Primitives2DFlush();
+	ignisPrimitives2DFlush();
 }

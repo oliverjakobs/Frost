@@ -5,7 +5,7 @@
 
 void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
-	Batch2DSetViewProjection(mat_view_proj);
+	ignisBatch2DSetViewProjection(mat_view_proj);
 
 	EcsList* list = EcsGetComponentList(ecs, COMPONENT_Z_INDEX);
 	for (size_t index = 0; index < EcsListSize(list); ++index)
@@ -15,29 +15,29 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 
 		vec2 pos = GetEntityPosition(ecs, EcsListEntityAt(list, index));
 
-		float x = pos.x - sprite->width / 2.0f;
-		float y = pos.y;
-		float w = sprite->width;
-		float h = sprite->height;
+		IgnisRect rect = {
+			pos.x - sprite->width / 2.0f,
+			pos.y,
+			sprite->width,
+			sprite->height
+		};
 
-		float src_x, src_y, src_w, src_h;
-		SpriteGetSrcRect(sprite, &src_x, &src_y, &src_w, &src_h);
-
-		Batch2DRenderTextureSrc(sprite->texture, x, y, w, h, src_x, src_y, src_w, src_h);
+		IgnisRect src = SpriteGetSrcRect(sprite);
+		ignisBatch2DRenderTextureSrc(sprite->texture, rect, src);
 	}
 
-	Batch2DFlush();
+	ignisBatch2DFlush();
 }
 
 void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
-	Primitives2DSetViewProjection(mat_view_proj);
+	ignisPrimitives2DSetViewProjection(mat_view_proj);
 
 	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
 	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
 	{
 		Transform* transform = EcsMapIterValue(iter);
-		Primitives2DRenderCircle(transform->position.x, transform->position.y, 2.0f, IGNIS_WHITE);
+		ignisPrimitives2DRenderCircle(transform->position.x, transform->position.y, 2.0f, IGNIS_WHITE);
 	}
 
 	map = EcsGetComponentMap(ecs, COMPONENT_INTERACTABLE);
@@ -45,8 +45,8 @@ void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view
 	{
 		Interactable* interactable = EcsMapIterValue(iter);
 		vec2 cen = GetEntityCenter(ecs, EcsMapIterKey(iter));
-		Primitives2DRenderCircle(cen.x, cen.y, interactable->range_min, IGNIS_WHITE);
-		Primitives2DRenderCircle(cen.x, cen.y, interactable->range_max, IGNIS_WHITE);
+		ignisPrimitives2DRenderCircle(cen.x, cen.y, interactable->range_min, IGNIS_WHITE);
+		ignisPrimitives2DRenderCircle(cen.x, cen.y, interactable->range_max, IGNIS_WHITE);
 	}
 
 	map = EcsGetComponentMap(ecs, COMPONENT_RIGID_BODY);
@@ -56,5 +56,5 @@ void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view
 		TileBodyRenderDebug(&body->body);
 	}
 
-	Primitives2DFlush();
+	ignisPrimitives2DFlush();
 }

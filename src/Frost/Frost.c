@@ -38,20 +38,20 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
     ignisSetClearColor(clear_color);
 
     /* renderer */
-    Renderer2DInit();
-    Primitives2DInit();
-    FontRendererInit();
-    Batch2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
+    ignisRenderer2DInit();
+    ignisPrimitives2DInit();
+    ignisFontRendererInit();
+    ignisBatch2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 
     return MINIMAL_OK;
 }
 
 void FrostDestroyGraphics()
 {
-    FontRendererDestroy();
-    Primitives2DDestroy();
-    Batch2DDestroy();
-    Renderer2DDestroy();
+    ignisFontRendererDestroy();
+    ignisPrimitives2DDestroy();
+    ignisBatch2DDestroy();
+    ignisRenderer2DDestroy();
 }
 
 int FrostLoadGui(uint32_t w, uint32_t h, const char* font)
@@ -65,7 +65,7 @@ int FrostLoadGui(uint32_t w, uint32_t h, const char* font)
     GuiAddFont("font", "res/fonts/OpenSans.ttf", 32.0);
     GuiAddFont("gui", "res/fonts/ProggyTiny.ttf", 24.0);
 
-    FontRendererBindFontColor(GuiGetFont(font), IGNIS_WHITE);
+    ignisFontRendererBindFontColor(GuiGetFont(font), IGNIS_WHITE);
 
     return MINIMAL_OK;
 }
