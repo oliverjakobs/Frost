@@ -30,7 +30,7 @@ typedef enum
 typedef struct
 {
     IgnisTexture2D* texture;
-    size_t frame;
+    uint32_t frame;
 
     float width;
     float height;

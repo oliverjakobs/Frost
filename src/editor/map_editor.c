@@ -92,7 +92,7 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
     /* Palette */
     ignisBatch2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
 
-    for (size_t i = 0; i < scene->map.types_count; ++i)
+    for (uint32_t i = 0; i < scene->map.types_count; ++i)
     {
         IgnisRect rect = {
             PALETTE_PADDING + (i * PALETTE_TILE_SIZE),

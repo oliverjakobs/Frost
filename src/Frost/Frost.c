@@ -11,9 +11,9 @@ static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
 {
     switch (level)
     {
-    case IGNIS_WARN:     MINIMAL_WARN("%s", desc); break;
-    case IGNIS_ERROR:    MINIMAL_ERROR("%s", desc); break;
-    case IGNIS_CRITICAL: MINIMAL_CRITICAL("%s", desc); break;
+    case IGNIS_LVL_WARN:     MINIMAL_WARN("%s", desc); break;
+    case IGNIS_LVL_ERROR:    MINIMAL_ERROR("%s", desc); break;
+    case IGNIS_LVL_CRITICAL: MINIMAL_CRITICAL("%s", desc); break;
     }
 }
 
