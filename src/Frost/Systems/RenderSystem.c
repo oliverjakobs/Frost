@@ -31,7 +31,7 @@ void RenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj
 
 void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view_proj)
 {
-	ignisPrimitives2DSetViewProjection(mat_view_proj);
+	ignisPrimitivesRendererSetViewProjection(mat_view_proj);
 
 	EcsMap* map = EcsGetComponentMap(ecs, COMPONENT_TRANSFORM);
 	for (EcsMapIter* iter = EcsMapIterator(map); iter; iter = EcsMapIterNext(map, iter))
@@ -56,5 +56,5 @@ void DebugRenderSystem(const Ecs* ecs, const Scene* scene, const float* mat_view
 		TileBodyRenderDebug(&body->body);
 	}
 
-	ignisPrimitives2DFlush();
+	ignisPrimitivesRendererFlush();
 }

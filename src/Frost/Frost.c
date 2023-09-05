@@ -1,19 +1,19 @@
 #include "Frost.h"
 
-#include "Minimal/Application.h"
-
 #include "ECS/EcsLoader.h"
 
 #include "toolbox/tb_ini.h"
 #include "toolbox/tb_file.h"
 
-static void FrostIgnisErrorCallback(ignisErrorLevel level, const char* desc)
+static void frostIgnisLogCallback(IgnisLogLevel level, const char* desc)
 {
     switch (level)
     {
-    case IGNIS_LVL_WARN:     MINIMAL_WARN("%s", desc); break;
-    case IGNIS_LVL_ERROR:    MINIMAL_ERROR("%s", desc); break;
-    case IGNIS_LVL_CRITICAL: MINIMAL_CRITICAL("%s", desc); break;
+    case IGNIS_LOG_TRACE:    MINIMAL_TRACE("%s", desc); break;
+    case IGNIS_LOC_INFO:     MINIMAL_INFO("%s", desc); break;
+    case IGNIS_LOG_WARN:     MINIMAL_WARN("%s", desc); break;
+    case IGNIS_LOG_ERROR:    MINIMAL_ERROR("%s", desc); break;
+    case IGNIS_LOG_CRITICAL: MINIMAL_CRITICAL("%s", desc); break;
     }
 }
 
@@ -21,7 +21,7 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
 {
     /* ingis initialization */
     ignisSetAllocator(FrostMemoryGetAllocator(), tb_mem_malloc, tb_mem_realloc, tb_mem_free);
-    ignisSetErrorCallback(FrostIgnisErrorCallback);
+    ignisSetLogCallback(frostIgnisLogCallback);
 
     int debug = 0;
 #ifdef _DEBUG
@@ -39,7 +39,7 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
 
     /* renderer */
     ignisRenderer2DInit();
-    ignisPrimitives2DInit();
+    ignisPrimitivesRendererInit();
     ignisFontRendererInit();
     ignisBatch2DInit("res/shaders/batchrenderer.vert", "res/shaders/batchrenderer.frag");
 
@@ -49,7 +49,7 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
 void FrostDestroyGraphics()
 {
     ignisFontRendererDestroy();
-    ignisPrimitives2DDestroy();
+    ignisPrimitivesRendererDestroy();
     ignisBatch2DDestroy();
     ignisRenderer2DDestroy();
 }
@@ -130,12 +130,12 @@ int FrostLoad(MinimalApp* app, const char* path)
         return MINIMAL_FAIL;
     }
 
-    MINIMAL_INFO("[GLFW] Version:        %s", glfwGetVersionString());
     MINIMAL_INFO("[OpenGL] Version:      %s", ignisGetGLVersion());
     MINIMAL_INFO("[OpenGL] Vendor:       %s", ignisGetGLVendor());
     MINIMAL_INFO("[OpenGL] Renderer:     %s", ignisGetGLRenderer());
     MINIMAL_INFO("[OpenGL] GLSL Version: %s", ignisGetGLSLVersion());
     MINIMAL_INFO("[Ignis] Version:       %s", ignisGetVersionString());
+    MINIMAL_INFO("[Minimal] Version:     %s", minimalGetVersionString());
     
     return MINIMAL_OK;
 }

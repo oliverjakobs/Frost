@@ -5,34 +5,43 @@
 
 typedef struct
 {
-	mat4 view;
-	mat4 projection;
-	mat4 viewProjection;
+    mat4 proj;
+    mat4 view_proj;
 
-	vec2 position;
-	vec2 size;
+    vec2 position;
+    vec2 size;
 } Camera;
 
-void CameraCreate(Camera* camera, float x, float y, float w, float h);
-void CameraCreateOrtho(Camera* camera, float x, float y, float w, float h);
-void CameraCreateVec(Camera* camera, vec2 pos, vec2 size);
-void CameraCreateOrthoVec(Camera* camera, vec2 pos, vec2 size);
+void cameraCreate(Camera* camera, float x, float y, float w, float h);
+void cameraCreateV(Camera* camera, vec2 pos, vec2 size);
 
-/* Call after changing size or position */
-void CameraUpdateViewOrtho(Camera* camera);
+/*
+ * --------------------------------------------------------------
+ *                          ortho
+ * --------------------------------------------------------------
+ */
+void cameraCreateOrtho(Camera* camera, float x, float y, float w, float h);
+void cameraCreateOrthoV(Camera* camera, vec2 pos, vec2 size);
 
-void CameraSetProjectionOrtho(Camera* camera, float w, float h);
-void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size);
+/* Call after manually changing size or position */
+void cameraUpdateViewOrtho(Camera* camera);
 
-void CameraSetPositionOrtho(Camera* camera, vec2 position);
-void CameraSetCenterOrtho(Camera* camera, vec2 center);
-vec2 CameraGetCenter(const Camera* camera);
+void cameraSetProjectionOrtho(Camera* camera, float w, float h);
+void cameraSetProjectionOrthoV(Camera* camera, vec2 size);
 
-vec2 CameraGetMousePos(const Camera* camera, vec2 mouse);
-vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse);
+void cameraSetPositionOrtho(Camera* camera, vec2 pos);
+void cameraSetCenterOrtho(Camera* camera, vec2 center);
 
-const float* CameraGetViewPtr(const Camera* camera);
-const float* CameraGetProjectionPtr(const Camera* camera);
-const float* CameraGetViewProjectionPtr(const Camera* camera);
+/*
+ * --------------------------------------------------------------
+ *                          get
+ * --------------------------------------------------------------
+ */
+vec2 cameraGetCenter(const Camera* camera);
+vec2 cameraGetMousePos(const Camera* camera, vec2 mouse);
+vec2 cameraGetMousePosView(const Camera* camera, vec2 mouse);
+
+const float* cameraGetProjectionPtr(const Camera* camera);
+const float* cameraGetViewProjectionPtr(const Camera* camera);
 
 #endif /* !CAMERA_H */

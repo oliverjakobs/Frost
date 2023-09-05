@@ -29,7 +29,6 @@ output_dir = "%{cfg.buildcfg}"
 group "Packages"
 
 include "packages/Ignis.lua"
-include "packages/glfw.lua"
 include "packages/Minimal.lua"
 
 group ""
@@ -60,7 +59,6 @@ project "Frost"
 
     links
     {
-        "GLFW",
         "Ignis",
         "Minimal",
         "opengl32"
@@ -69,7 +67,6 @@ project "Frost"
     includedirs
     {
         "src",
-        "packages/glfw/include",
         "packages/Ignis/src",
         "packages/Minimal/src"
     }

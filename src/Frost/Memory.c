@@ -1,6 +1,6 @@
 #include "Memory.h"
 
-#include "Minimal/Utils.h"
+#include "minimal/common.h"
 #include "toolbox/tb_algorithm.h"
 
 typedef struct

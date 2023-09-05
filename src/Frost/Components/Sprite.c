@@ -19,17 +19,17 @@ void SpriteLoad(char* ini, Scene* scene, EcsEntityID entity, int z_index, int va
         sprite.flip = SPRITE_FLIP_NONE;
         sprite.width = tb_ini_float(element.start, NULL, "width", transform->size.x);
         sprite.height = tb_ini_float(element.start, NULL, "height", transform->size.y);
+        sprite.rows = tb_ini_int(element.start, NULL, "rows", 1);
+        sprite.cols = tb_ini_int(element.start, NULL, "cols", 1);
 
         sprite.frame = FrostMatchVariant(element.start, NULL, "frame", variant, 0);
+
 
         /* load texture */
         char path[APPLICATION_PATH_LEN];
         tb_ini_string(element.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
-        int rows = tb_ini_int(element.start, NULL, "rows", 1);
-        int cols = tb_ini_int(element.start, NULL, "cols", 1);
-
-        sprite.texture = ResourcesLoadTexture2D(&scene->res, path, rows, cols);
+        sprite.texture = ResourcesLoadTexture2D(&scene->res, path);
 
         if (sprite.texture)
         {
@@ -45,7 +45,7 @@ void SpriteLoad(char* ini, Scene* scene, EcsEntityID entity, int z_index, int va
 
 IgnisRect SpriteGetSrcRect(const Sprite* sprite)
 {
-    IgnisRect src = ignisGetTexture2DSrcRect(sprite->texture, sprite->frame);
+    IgnisRect src = ignisGetTexture2DSrcRect(sprite->texture, sprite->cols, sprite->rows, sprite->frame);
 
     if (sprite->flip == SPRITE_FLIP_HORIZONTAL || sprite->flip == SPRITE_FLIP_BOTH)
     {

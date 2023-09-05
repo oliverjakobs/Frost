@@ -32,7 +32,7 @@ void TileRendererClear(TileRenderer* renderer);
 
 void TileRendererUpdateBuffers(TileRenderer* renderer, const TileMap* map);
 
-void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj);
+void TileMapRender(TileRenderer* renderer, IgnisTexture2D* texture, mat4 view_proj, int rows, int cols);
 
 void TileMapRenderDebug(const TileMap* map);
 void TileBodyRenderDebug(const TileBody* body);

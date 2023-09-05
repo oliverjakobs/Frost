@@ -41,7 +41,9 @@ struct Scene
 
     Resources res;
     IgnisTexture2D* item_atlas;
+    vec2i item_atlas_size;
     IgnisTexture2D* tile_set;
+    vec2i tile_set_size;
 
     BackgroundLayer* background;
 };

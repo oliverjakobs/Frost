@@ -32,12 +32,15 @@ int ResourcesInit(Resources* res, void* allocator)
 void ResourcesDestroy(Resources* res)   { tb_hashmap_destroy(&res->textures); }
 void ResourcesClear(Resources* res)     { tb_hashmap_clear(&res->textures); }
 
-IgnisTexture2D* ResourcesLoadTexture2D(Resources* res, const char* path, int rows, int cols)
+IgnisTexture2D* ResourcesLoadTexture2D(Resources* res, const char* path)
 {
     IgnisTexture2D* entry = tb_hashmap_find(&res->textures, path);
 
     IgnisTexture2D new_entry;
-    if (!entry && ignisCreateTexture2D(&new_entry, path, rows, cols, 1, NULL))
+    IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
+    config.mag_filter = IGNIS_NEAREST;
+    config.flip_on_load = 1;
+    if (!entry && ignisCreateTexture2D(&new_entry, path, &config))
         entry = tb_hashmap_insert(&res->textures, path, &new_entry);
 
     return entry;

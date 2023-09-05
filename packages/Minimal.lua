@@ -13,8 +13,12 @@ project "Minimal"
 
     includedirs
     {
-        "Minimal/src",
-        "glfw/include",
+        "Minimal/src"
+    }
+
+    defines
+    {
+        "MINIMAL_PLATFORM_WINDOWS"
     }
 
     filter "system:windows"

@@ -1,89 +1,81 @@
 #include "Camera.h"
 
-void CameraCreate(Camera* camera, float x, float y, float w, float h)
+void cameraCreate(Camera* camera, float x, float y, float w, float h)
 {
-	camera->view = mat4_indentity();
-	camera->projection = mat4_indentity();
-	camera->viewProjection = mat4_indentity();
+    camera->proj = mat4_identity();
+    camera->view_proj = mat4_identity();
 
-	camera->position.x = x;
-	camera->position.y = y;
-	camera->size.x = w;
-	camera->size.y = h;
+    camera->position.x = x;
+    camera->position.y = y;
+    camera->size.x = w;
+    camera->size.y = h;
 }
 
-void CameraCreateOrtho(Camera* camera, float x, float y, float w, float h)
+void cameraCreateV(Camera* camera, vec2 pos, vec2 size) { cameraCreate(camera, pos.x, pos.y, size.x, size.y); }
+
+void cameraCreateOrtho(Camera* camera, float x, float y, float w, float h)
 {
-	CameraCreate(camera, x, y, w, h);
-	CameraSetProjectionOrtho(camera, w, h);
+    cameraCreate(camera, x, y, w, h);
+    cameraSetProjectionOrtho(camera, w, h);
 }
 
-void CameraCreateVec(Camera* camera, vec2 pos, vec2 size)
+void cameraCreateOrthoV(Camera* camera, vec2 pos, vec2 size)
 {
-	CameraCreate(camera, pos.x, pos.y, size.x, size.y);
+    cameraCreateOrtho(camera, pos.x, pos.y, size.x, size.y);
 }
 
-void CameraCreateOrthoVec(Camera* camera, vec2 pos, vec2 size)
+void cameraUpdateViewOrtho(Camera* camera)
 {
-	CameraCreateOrtho(camera, pos.x, pos.y, size.x, size.y);
+    vec3 position = { -camera->position.x, -camera->position.y, 0.0f };
+    mat4 view = mat4_translate(mat4_identity(), position);
+    camera->view_proj = mat4_multiply(camera->proj, view);
 }
 
-void CameraUpdateViewOrtho(Camera* camera)
+void cameraSetProjectionOrtho(Camera* camera, float w, float h)
 {
-	mat4 transform = mat4_indentity();
-	transform = mat4_translate(transform, (vec3) { camera->position.x, camera->position.y, 0.0f });
+    camera->proj = mat4_ortho(0.0f, w, 0.0f, h, -1.0f, 1.0f);
 
-	camera->view = mat4_inverse(transform);
-	camera->viewProjection = mat4_multiply(camera->projection, camera->view);
+    camera->size.x = w;
+    camera->size.y = h;
+
+    cameraUpdateViewOrtho(camera);
 }
 
-void CameraSetProjectionOrtho(Camera* camera, float w, float h)
+void cameraSetProjectionOrthoV(Camera* camera, vec2 size)
 {
-	camera->projection = mat4_ortho(0.0f, w, 0.0f, h, -1.0f, 1.0f);
-
-	camera->size.x = w;
-	camera->size.y = h;
-
-	CameraUpdateViewOrtho(camera);
+    cameraSetProjectionOrtho(camera, size.x, size.y);
 }
 
-void CameraSetProjectionOrthoVec2(Camera* camera, vec2 size)
+void cameraSetPositionOrtho(Camera* camera, vec2 position)
 {
-	CameraSetProjectionOrtho(camera, size.x, size.y);
+    camera->position = position;
+    cameraUpdateViewOrtho(camera);
 }
 
-void CameraSetPositionOrtho(Camera* camera, vec2 position)
+void cameraSetCenterOrtho(Camera* camera, vec2 center)
 {
-	camera->position = position;
-	CameraUpdateViewOrtho(camera);
+    camera->position = vec2_sub(center, vec2_mult(camera->size, 0.5f));
+    cameraUpdateViewOrtho(camera);
 }
 
-void CameraSetCenterOrtho(Camera* camera, vec2 center)
+vec2 cameraGetCenter(const Camera* camera)
 {
-	camera->position.x = center.x - camera->size.x * 0.5f;
-	camera->position.y = center.y - camera->size.y * 0.5f;
-	CameraUpdateViewOrtho(camera);
+    return vec2_add(camera->position, vec2_mult(camera->size, 0.5f));
 }
 
-vec2 CameraGetCenter(const Camera* camera)
+vec2 cameraGetMousePos(const Camera* camera, vec2 mouse)
 {
-	return vec2_add((vec2) { camera->position.x, camera->position.y }, vec2_mult(camera->size, 0.5f));
+    mouse.x = mouse.x;
+    mouse.y = camera->size.y - mouse.y;
+    return mouse;
 }
 
-vec2 CameraGetMousePos(const Camera* camera, vec2 mouse)
+vec2 cameraGetMousePosView(const Camera* camera, vec2 mouse)
 {
-	mouse.x = mouse.x;
-	mouse.y = (camera->size.y - mouse.y);
-	return mouse;
+    mouse.x = mouse.x + camera->position.x;
+    mouse.y = -camera->size.y + (mouse.y + camera->position.y);
+    return mouse;
 }
 
-vec2 CameraGetMousePosView(const Camera* camera, vec2 mouse)
-{
-	mouse.x = mouse.x + camera->position.x;
-	mouse.y = (camera->size.y - mouse.y) + camera->position.y;
-	return mouse;
-}
-
-const float* CameraGetViewPtr(const Camera* camera)				{ return camera->view.v; }
-const float* CameraGetProjectionPtr(const Camera* camera)		{ return camera->projection.v; }
-const float* CameraGetViewProjectionPtr(const Camera* camera)	{ return camera->viewProjection.v; }
+const float* cameraGetProjectionPtr(const Camera* camera) { return camera->proj.v; }
+const float* cameraGetViewProjectionPtr(const Camera* camera) { return camera->view_proj.v; }

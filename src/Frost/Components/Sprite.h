@@ -35,6 +35,8 @@ typedef struct
     float width;
     float height;
 
+    int rows, cols;
+
     SpriteFlip flip;
 } Sprite;
 

@@ -10,7 +10,7 @@
 
 #include "GUI/Gui.h"
 
-#include "Minimal/Application.h"
+#include "minimal/minimal.h"
 
 int FrostLoad(MinimalApp* app, const char* config);
 

@@ -10,7 +10,7 @@ typedef struct
 
 float mat4_determinant(mat4 mat);
 
-mat4 mat4_indentity();
+mat4 mat4_identity();
 
 mat4 mat4_transpose(mat4 mat);
 mat4 mat4_inverse(mat4 mat);

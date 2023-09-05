@@ -77,12 +77,12 @@ void SceneEditorOnUpdate(SceneEditor* editor, float deltatime)
 
     vec2 position = editor->scene->camera.position;
 
-    if (minimalKeyDown(GLFW_KEY_A)) position.x -= editor->cameraspeed * deltatime;
-    if (minimalKeyDown(GLFW_KEY_D)) position.x += editor->cameraspeed * deltatime;
-    if (minimalKeyDown(GLFW_KEY_S)) position.y -= editor->cameraspeed * deltatime;
-    if (minimalKeyDown(GLFW_KEY_W)) position.y += editor->cameraspeed * deltatime;
+    if (minimalKeyDown(MINIMAL_KEY_A)) position.x -= editor->cameraspeed * deltatime;
+    if (minimalKeyDown(MINIMAL_KEY_D)) position.x += editor->cameraspeed * deltatime;
+    if (minimalKeyDown(MINIMAL_KEY_S)) position.y -= editor->cameraspeed * deltatime;
+    if (minimalKeyDown(MINIMAL_KEY_W)) position.y += editor->cameraspeed * deltatime;
 
-    CameraSetPositionOrtho(&editor->scene->camera, position);
+    cameraSetPositionOrtho(&editor->scene->camera, position);
 
     if (editor->mode == SCENE_EDIT_WORLD)       WorldEditorOnUpdate(&editor->world, editor->scene, deltatime);
     else if (editor->mode == SCENE_EDIT_MAP)    MapEditorOnUpdate(&editor->map, editor->scene, deltatime);

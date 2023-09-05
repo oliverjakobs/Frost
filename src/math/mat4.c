@@ -35,7 +35,7 @@ float mat4_determinant(mat4 mat)
     return determinant;
 }
 
-mat4 mat4_indentity()
+mat4 mat4_identity()
 {
     mat4 result;
     result.v[0] = 1.0f; result.v[4] = 0.0f; result.v[8] = 0.0f; result.v[12] = 0.0f;

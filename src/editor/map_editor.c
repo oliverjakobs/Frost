@@ -33,7 +33,7 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
     vec2 mouse = { 0 };
     if (minimalEventMouseMoved(e, &mouse.x, &mouse.y))
     {
-        mouse = CameraGetMousePos(&scene->camera, mouse);
+        mouse = cameraGetMousePos(&scene->camera, mouse);
         if (mouse.y > PALETTE_HEIGHT)
         {
             editor->tile_hover = TileMapAtPos(&scene->map, vec2_add(mouse, scene->camera.position));
@@ -46,11 +46,11 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
         }
     }
 
-    if (minimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == GLFW_MOUSE_BUTTON_LEFT)
+    if (minimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
     {
         if (editor->tile_hover)
         {
-            mouse = CameraGetMousePosView(&scene->camera, mouse);
+            mouse = cameraGetMousePosView(&scene->camera, mouse);
             TileMapSetAtPos(&scene->map, mouse, editor->palette_select, editor->set_mode);
             TileRendererUpdateBuffers(&scene->renderer, &scene->map);
         }
@@ -67,7 +67,7 @@ void MapEditorOnUpdate(MapEditor* editor, Scene* scene, float deltatime)
 
 void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, float padding)
 {
-    ignisPrimitives2DSetViewProjection(CameraGetViewProjectionPtr(&scene->camera));
+    ignisPrimitivesRendererSetViewProjection(cameraGetViewProjectionPtr(&scene->camera));
 
     if (show_grid) SceneEditorRenderGrid(scene, padding);
     TileMapRenderDebug(&scene->map);
@@ -80,17 +80,17 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
         ignisPrimitives2DRenderRect(pos.x,pos.y, tile_size, tile_size, IGNIS_GREEN);
     }
 
-    ignisPrimitives2DFlush();
+    ignisPrimitivesRendererFlush();
 
     /* UI */
-    ignisPrimitives2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
+    ignisPrimitivesRendererSetViewProjection(cameraGetProjectionPtr(&scene->camera));
 
     ignisPrimitives2DFillRect(0.0f, 0.0f, scene->camera.size.x, PALETTE_HEIGHT, IGNIS_LIGHT_GREY);
 
-    ignisPrimitives2DFlush();
+    ignisPrimitivesRendererFlush();
 
     /* Palette */
-    ignisBatch2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
+    ignisBatch2DSetViewProjection(cameraGetProjectionPtr(&scene->camera));
 
     for (uint32_t i = 0; i < scene->map.types_count; ++i)
     {
@@ -101,14 +101,14 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
             PALETTE_TILE_SIZE
         };
 
-        IgnisRect src = ignisGetTexture2DSrcRect(scene->tile_set, i);
+        IgnisRect src = ignisGetTexture2DSrcRect(scene->tile_set, scene->tile_set_size.x, scene->tile_set_size.y, i);
         ignisBatch2DRenderTextureSrc(scene->tile_set, rect, src);
     }
 
     ignisBatch2DFlush();
 
     /* UI Overlay */
-    ignisPrimitives2DSetViewProjection(CameraGetProjectionPtr(&scene->camera));
+    ignisPrimitivesRendererSetViewProjection(cameraGetProjectionPtr(&scene->camera));
 
     if (editor->palette_hover >= 0)
     {
@@ -129,5 +129,5 @@ void MapEditorOnRender(const MapEditor* editor, Scene* scene, int show_grid, flo
         ignisPrimitives2DRenderRect(x, y, PALETTE_TILE_SIZE, PALETTE_TILE_SIZE, IGNIS_WHITE);
     }
 
-    ignisPrimitives2DFlush();
+    ignisPrimitivesRendererFlush();
 }

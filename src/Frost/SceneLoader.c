@@ -16,10 +16,23 @@ static IgnisTexture2D* SceneLoadTexture2D(char* ini, char* name, Resources* res)
     char path[APPLICATION_PATH_LEN];
     tb_ini_string(texture.start, NULL, "path", path, APPLICATION_PATH_LEN);
 
-    int rows = tb_ini_int(texture.start, NULL, "rows", 1);
-    int cols = tb_ini_int(texture.start, NULL, "cols", 1);
+    return ResourcesLoadTexture2D(res, path);
+}
 
-    return ResourcesLoadTexture2D(res, path, rows, cols);
+static IgnisTexture2D* SceneLoadTextureAtlas2D(char* ini, char* name, Resources* res, vec2i* size)
+{
+    tb_ini_element texture;
+    tb_ini_query(ini, name, NULL, &texture);
+
+    if (texture.error != TB_INI_OK) return NULL;
+
+    char path[APPLICATION_PATH_LEN];
+    tb_ini_string(texture.start, NULL, "path", path, APPLICATION_PATH_LEN);
+
+    size->x = tb_ini_int(texture.start, NULL, "cols", 1);
+    size->y = tb_ini_int(texture.start, NULL, "rows", 1);
+
+    return ResourcesLoadTexture2D(res, path);
 }
 
 int SceneLoad(Scene* scene, const char* path)
@@ -38,11 +51,11 @@ int SceneLoad(Scene* scene, const char* path)
     scene->gravity.y = tb_ini_float(ini, "scene", "gravity", 0.0f);
 
     /* load item atlas */
-    if ((scene->item_atlas = SceneLoadTexture2D(ini, "item_atlas", &scene->res)) == NULL)
+    if ((scene->item_atlas = SceneLoadTextureAtlas2D(ini, "item_atlas", &scene->res, &scene->item_atlas_size)) == NULL)
         MINIMAL_WARN("[Scenes] Could not load item atlas.");
 
     /* load tile set */
-    if ((scene->tile_set = SceneLoadTexture2D(ini, "tile_set", &scene->res)) == NULL)
+    if ((scene->tile_set = SceneLoadTextureAtlas2D(ini, "tile_set", &scene->res, &scene->tile_set_size)) == NULL)
         MINIMAL_WARN("[Scenes] Could not load tile set.");
 
     /* load background */
@@ -148,7 +161,10 @@ int SceneLoadBackground(Scene* scene, char* ini)
                 tb_ini_name(&layer, path, APPLICATION_PATH_LEN);
 
                 IgnisTexture2D texture;
-                if (!ignisCreateTexture2D(&texture, path, 1, 1, 1, NULL))
+                IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
+                config.mag_filter = IGNIS_NEAREST;
+                config.flip_on_load = 1;
+                if (!ignisCreateTexture2D(&texture, path, &config))
                 {
                     MINIMAL_WARN("Failed to load background layer %d (%s)", i, path);
                     continue;

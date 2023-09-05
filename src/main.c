@@ -40,25 +40,25 @@ int OnEvent(MinimalApp* app, const MinimalEvent* e)
     if (minimalEventWindowSize(e, &w, &h))
     {
         GuiSetViewport(w, h);
-        CameraSetProjectionOrtho(&scene.camera, w, h);
+        cameraSetProjectionOrtho(&scene.camera, w, h);
         glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     }
 
     switch (minimalEventKeyPressed(e))
     {
-    case GLFW_KEY_ESCAPE:    minimalClose(app); break;
-    case GLFW_KEY_F1:        SceneEditorToggleWorldMode(&scene_editor); break;
-    case GLFW_KEY_F2:        SceneEditorToggleMapMode(&scene_editor); break;
-    case GLFW_KEY_F3:        ConsoleToggleFocus(&debugger.console); break;
-    case GLFW_KEY_F6:        minimalToggleVsync(app); break;
-    case GLFW_KEY_F7:        minimalToggleDebug(app); break;
-    case GLFW_KEY_F8:        SceneEditorToggleGrid(&scene_editor); break;
-    case GLFW_KEY_F9:        FrostDebuggerToggleInfo(&debugger); break;
+    case MINIMAL_KEY_ESCAPE:  minimalClose(app); break;
+    case MINIMAL_KEY_F1:      SceneEditorToggleWorldMode(&scene_editor); break;
+    case MINIMAL_KEY_F2:      SceneEditorToggleMapMode(&scene_editor); break;
+    case MINIMAL_KEY_F3:      ConsoleToggleFocus(&debugger.console); break;
+    case MINIMAL_KEY_F6:      minimalToggleVsync(app); break;
+    case MINIMAL_KEY_F7:      minimalToggleDebug(app); break;
+    case MINIMAL_KEY_F8:      SceneEditorToggleGrid(&scene_editor); break;
+    case MINIMAL_KEY_F9:      FrostDebuggerToggleInfo(&debugger); break;
     }
 
-    if (scene_editor.mode == SCENE_EDIT_MAP)        minimalSetWindowTitle(app, "Frost | Map Editor");
-    else if (scene_editor.mode == SCENE_EDIT_WORLD) minimalSetWindowTitle(app, "Frost | World Editor");
-    else                                            minimalSetWindowTitle(app, "Frost");
+    if (scene_editor.mode == SCENE_EDIT_MAP)        minimalSetTitle(app, "Frost | Map Editor");
+    else if (scene_editor.mode == SCENE_EDIT_WORLD) minimalSetTitle(app, "Frost | World Editor");
+    else                                            minimalSetTitle(app, "Frost");
 
     if (FrostDebuggerOnEvent(&debugger, e)) return MINIMAL_OK;
 
@@ -68,13 +68,13 @@ int OnEvent(MinimalApp* app, const MinimalEvent* e)
     return MINIMAL_OK;
 }
 
-void OnUpdate(MinimalApp* app, float deltatime)
+void OnTick(MinimalApp* app, float deltatime)
 {
     // update
     glClear(GL_COLOR_BUFFER_BIT);
-    if (debugger.console.focus)                     FrostDebuggerOnUpdate(&debugger, deltatime);
-    else if (SceneEditorIsActive(&scene_editor))    SceneEditorOnUpdate(&scene_editor, deltatime);
-    else                                            SceneOnUpdate(&scene, deltatime);
+    if (debugger.console.focus)                   FrostDebuggerOnUpdate(&debugger, deltatime);
+    else if (SceneEditorIsActive(&scene_editor))  SceneEditorOnUpdate(&scene_editor, deltatime);
+    else                                          SceneOnUpdate(&scene, deltatime);
 
     // render
     SceneOnRender(&scene);
@@ -95,7 +95,7 @@ int main()
         .on_load = OnLoad,
         .on_destroy = OnDestroy,
         .on_event = OnEvent,
-        .on_update = OnUpdate
+        .on_tick = OnTick
     };
 
     if (FrostLoad(&app, "config.ini"))

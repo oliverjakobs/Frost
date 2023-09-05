@@ -33,8 +33,8 @@ int ConsoleOnEvent(Console* console, const MinimalEvent* e)
 
     switch (minimalEventKeyPressed(e))
     {
-    case GLFW_KEY_BACKSPACE: ConsoleCharRemoveLast(console); return 1;
-    case GLFW_KEY_ENTER:     ConsoleExecuteCmd(console);     return 1;
+    case MINIMAL_KEY_BACKSPACE: ConsoleCharRemoveLast(console); return 1;
+    case MINIMAL_KEY_ENTER:     ConsoleExecuteCmd(console);     return 1;
     }
 
     /* TODO: fix backspace char event */
@@ -46,7 +46,7 @@ int ConsoleOnEvent(Console* console, const MinimalEvent* e)
 
     /* block key events */
     int32_t key = minimalEventKey(e);
-    return key != GLFW_KEY_UNKNOWN;
+    return key != MINIMAL_KEY_UNKNOWN;
 }
 
 void ConsoleOnUpdate(Console* console, float deltatime)
@@ -98,9 +98,9 @@ void ConsoleRender(const Console* console, float x, float y, float w, float h, f
 {
     if (!console->focus || !console->font) return;
 
-    ignisPrimitives2DSetViewProjection(proj);
+    ignisPrimitivesRendererSetViewProjection(proj);
     ignisPrimitives2DFillRect(x, y, w, -h, console->bg_color);
-    ignisPrimitives2DFlush();
+    ignisPrimitivesRendererFlush();
 
     float text_x = x + padding;
     float text_y = y - padding - ignisFontGetHeight(console->font);
