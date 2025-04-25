@@ -46,7 +46,7 @@ void MapEditorOnEvent(MapEditor* editor, Scene* scene, const MinimalEvent* e)
         }
     }
 
-    if (minimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
+    if (minimalEventMouseButtonPressed(e, MINIMAL_MOUSE_BUTTON_LEFT, &mouse.x, &mouse.y))
     {
         if (editor->tile_hover)
         {

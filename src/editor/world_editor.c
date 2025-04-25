@@ -13,7 +13,7 @@ void WorldEditorReset(WorldEditor* editor)
 void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e)
 {
     vec2 mouse = { 0 };
-    if (minimalEventMouseButtonPressed(e, &mouse.x, &mouse.y) == MINIMAL_MOUSE_BUTTON_LEFT)
+    if (minimalEventMouseButtonPressed(e, MINIMAL_MOUSE_BUTTON_LEFT, &mouse.x, &mouse.y))
     {
         if (editor->hover != ECS_NULL_ENTITY)
         {
@@ -23,7 +23,8 @@ void WorldEditorOnEvent(WorldEditor* editor, Scene* scene, const MinimalEvent* e
         }
     }
 
-    if (minimalEventMouseButtonReleased(e, NULL, NULL) == MINIMAL_MOUSE_BUTTON_LEFT)
+
+    if (minimalEventMouseButtonReleased(e, MINIMAL_MOUSE_BUTTON_LEFT, NULL, NULL))
     {
         editor->offset = vec2_zero();
         editor->clicked = 0;

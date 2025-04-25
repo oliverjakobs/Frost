@@ -36,11 +36,11 @@ IgnisTexture2D* ResourcesLoadTexture2D(Resources* res, const char* path)
 {
     IgnisTexture2D* entry = tb_hashmap_find(&res->textures, path);
 
-    IgnisTexture2D new_entry;
+    IgnisTexture2D new_entry = { 0 };
     IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
     config.mag_filter = IGNIS_NEAREST;
     config.flip_on_load = 1;
-    if (!entry && ignisCreateTexture2D(&new_entry, path, &config))
+    if (!entry && ignisLoadTexture2D(&new_entry, path, &config))
         entry = tb_hashmap_insert(&res->textures, path, &new_entry);
 
     return entry;

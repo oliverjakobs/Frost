@@ -38,7 +38,7 @@ int ConsoleOnEvent(Console* console, const MinimalEvent* e)
     }
 
     /* TODO: fix backspace char event */
-    if (minimalCheckEventType(e, MINIMAL_EVENT_CHAR))
+    if (minimalEventIsType(e, MINIMAL_EVENT_CHAR))
     {
         ConsoleCharTyped(console, minimalEventChar(e));
         return 1;

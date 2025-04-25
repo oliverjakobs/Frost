@@ -160,11 +160,11 @@ int SceneLoadBackground(Scene* scene, char* ini)
                 char path[APPLICATION_PATH_LEN];
                 tb_ini_name(&layer, path, APPLICATION_PATH_LEN);
 
-                IgnisTexture2D texture;
+                IgnisTexture2D texture = { 0 };
                 IgnisTextureConfig config = IGNIS_DEFAULT_CONFIG;
                 config.mag_filter = IGNIS_NEAREST;
                 config.flip_on_load = 1;
-                if (!ignisCreateTexture2D(&texture, path, &config))
+                if (!ignisLoadTexture2D(&texture, path, &config))
                 {
                     MINIMAL_WARN("Failed to load background layer %d (%s)", i, path);
                     continue;

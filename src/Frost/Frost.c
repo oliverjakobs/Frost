@@ -28,7 +28,7 @@ int FrostLoadGraphics(IgnisColorRGBA clear_color, GLenum blend_s, GLenum blend_d
     debug = 1;
 #endif
 
-    if (!ignisInit(debug))
+    if (!ignisInit(minimalGetGLProcAddress, debug))
     {
         MINIMAL_ERROR("[IGNIS] Failed to initialize Ignis");
         return MINIMAL_FAIL;
